@@ -1,0 +1,530 @@
+Overlay_SetAction( "Jetski/Menu/Rejoindre")
+{
+	if( l_bUseNetwork )
+	{
+		Network_ClientSendMessage( "GameClient", pack_int( msRefreshGamesList) + pack_int( l_gameName->length()) + l_gameName);
+	};
+};
+
+Overlay_SetAction( "Jetski/Menu/Creer")
+{
+	Echo( "Jetski/Menu/Creer");
+	if( l_bUseNetwork )
+	{
+		Network_ClientSendMessage( "GameClient", pack_int( msCreateGame) + pack_int( l_gameName->length()) + l_gameName);
+	};
+	else
+	{
+		l_creator = true;
+		Overlay_Hide( "Jetski/AvailableGames");
+		Overlay_Hide( "Jetski/Title");
+		Overlay_Hide( "Jetski/Menu");
+		Overlay_Show( "Jetski/WaitingOpponent");
+		OverlayElement_GetByName( "Jetski/Menu/Creer")->Hide();
+		OverlayElement_GetByName( "Jetski/Menu/Rejoindre")->Hide();
+		OverlayElement_GetByName( "Jetski/Menu/Jouer")->Show();
+
+		jetski_sex = jetski_mainSex;
+		jetski_currentBody = jetski_mainBody;
+		jetski_currentHair = jetski_mainHair;
+		jetski_currentHairMaterial = jetski_mainHairMaterial;
+		jetski_currentDress = jetski_mainDress;
+		jetski_currentSkin = jetski_mainSkin;
+		jetski_currentEyeMaterial = jetski_mainEyeMaterial;
+		jetski_currentBrow = jetski_mainBrow;
+		jetski_currentBrowMaterial = jetski_mainBrowMaterial;
+		jetski_currentBeard = jetski_mainBeard;
+		jetski_currentBeardMaterial = jetski_mainBeardMaterial;
+		jetski_currentEyeLashMaterial = jetski_mainEyeLashMaterial;
+		jetski_currentLipstickMaterial = jetski_mainLipstickMaterial;
+		LoadPlayer( jetski_charName, true, dummyOverlay, 0);
+
+		Echo( "CreateGame - " + jetski_charName);
+	};
+};
+
+Overlay_SetAction( "Jetski/Menu/Jouer")
+{
+	Overlay_Hide( "Jetski/WaitingOpponent");
+	OverlayElement_GetByName( "Jetski/Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Jetski/Menu/Recommencer")->Show();
+	Overlay_Hide( "Jetski/Menu");
+
+	if ( ! l_paused && ! l_finished)
+	{
+		Network_ClientSendMessage( "GameClient", pack_int( msGameStart));
+	};
+};
+
+Overlay_SetAction( "Jetski/Menu/Recommencer")
+{
+	Overlay_Hide( "Jetski/Menu");
+	g_score = 0;
+	Network_ClientSendMessage( "GameClient", pack_int( msGameStart));
+//	BeginGame();
+};
+
+Overlay_SetAction( "Jetski/Menu/Regles")
+{
+	HideTitle();
+	Overlay_Hide( "Jetski/Menu");
+	Overlay_Show( "Jetski/Regles");
+};
+
+Overlay_SetAction( "Jetski/Menu/Commandes")
+{
+	HideTitle();
+	Overlay_Hide( "Jetski/Menu");
+	Overlay_Show( "Jetski/Commandes");
+};
+
+Overlay_SetAction( "Jetski/Menu/Options")
+{
+	HideTitle();
+	Overlay_Hide( "Jetski/Menu");
+	Overlay_Show( "Jetski/Options");
+};
+
+Overlay_SetAction( "Jetski/Commandes/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Jetski/Commandes");
+	Overlay_Show( "Jetski/Menu");
+};
+
+Overlay_SetAction( "Jetski/Regles/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Jetski/Regles");
+	Overlay_Show( "Jetski/Menu");
+};
+
+Overlay_SetAction( "Jetski/Options/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Jetski/Options");
+	Overlay_Show( "Jetski/Menu");
+};
+
+Overlay_SetAction( "Jetski/Options/MusicOnOff")
+{
+	l_music = ( ! l_music);
+	Sound_MuteMusic( l_music);
+
+	if ( ! l_music)
+	{
+		OverlayElement_GetByName( "Jetski/Options/MusicOnOff")->SetMaterial( "On");
+	}
+	else
+	{
+		OverlayElement_GetByName( "Jetski/Options/MusicOnOff")->SetMaterial( "Off");
+	};
+};
+
+Overlay_SetAction( "Jetski/Options/SoundOnOff")
+{
+	l_sound = ( ! l_sound);
+	Sound_MuteSFX( l_sound);
+
+	if ( ! l_sound)
+	{
+		OverlayElement_GetByName( "Jetski/Options/SoundOnOff")->SetMaterial( "On");
+	}
+	else
+	{
+		OverlayElement_GetByName( "Jetski/Options/SoundOnOff")->SetMaterial( "Off");
+	};
+};
+
+void TimerMusic()
+{
+	timer( "MusicChangeVolume", TIMERTYPE_PERMANENT, 0.0)
+	{
+		l_ticPos = MOUSE_POSITION_X - l_ticMusic->GetAbsoluteLeft();
+		l_ticMusic->Translate( l_ticPos, 0.0);
+
+		l_ticMusic->LimitToParent();
+
+		l_musicVol = l_ticMusic->GetLeft() / l_relativeRegletteWidth;
+
+		Sound_SetMusicVolume( l_musicVol);
+	};
+};
+
+void TimerSound()
+{
+	timer( "SoundChangeVolume", TIMERTYPE_PERMANENT, 0.0)
+	{
+		l_ticPos = MOUSE_POSITION_X - l_ticSound->GetAbsoluteLeft();
+		l_ticSound->Translate( l_ticPos, 0.0);
+
+		l_ticSound->LimitToParent();
+
+		l_soundVol = l_ticSound->GetLeft() / l_relativeRegletteWidth;
+
+		Sound_SetSFXVolume( l_soundVol);
+	};
+};
+
+Overlay_SetAction( "Jetski/Options/RegletteMusic")
+{
+	TimerMusic();
+};
+
+Overlay_SetAction( "Jetski/Options/TicMusic")
+{
+	TimerMusic();
+};
+
+Overlay_SetAction( "Jetski/Options/RegletteSound")
+{
+	TimerSound();
+};
+
+Overlay_SetAction( "Jetski/Options/TicSound")
+{
+	TimerSound();
+};
+
+Overlay_SetAction( "Jetski/AvailableGames/ButtonJoin")
+{
+	Network_ClientSendMessage( "GameClient", pack_int( msJoinGame) + pack_int( l_gameName->length()) + l_gameName + pack_int( l_selectedId));
+};
+
+Overlay_SetAction( "Jetski/AvailableGames/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Jetski/AvailableGames");
+	Overlay_Show( "Jetski/Menu");
+};
+
+SetMouseRDownScript()
+{
+	Timer_Kill( "Mouse_RButtonDown");
+
+	if (l_inGame && ! l_paused)
+	{
+		timer( "Mouse_RButtonDown", TIMERTYPE_PERMANENT, 0.0)
+		{
+//			l_rootCamera->GetParent()->Yaw( 150.0 * MOUSE_DIFFERENCE_X);
+			l_currentPitch = l_previousPitch + (100.0 * MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT);
+
+			if (l_currentPitch > -10.0)
+			{
+				l_currentPitch = -10.0;
+			}
+			elseif (l_currentPitch < (-30.0))
+			{
+				l_currentPitch = (-30.0);
+			};
+
+			l_rootCamera->GetParent()->Pitch( l_currentPitch - l_previousPitch);
+			l_previousPitch = l_currentPitch;
+		};
+	};
+};
+
+SetMouseLUpScript()
+{
+	Timer_Kill( "MusicChangeVolume");
+	Timer_Kill( "SoundChangeVolume");
+};
+
+
+
+SetMouseRUpScript()
+{
+	Timer_Kill( "Mouse_RButtonDown");
+};
+
+SetMouseWheelUpScript()
+{
+	if (l_inGame && ! l_paused)
+	{
+		l_currentZoom = V3_GetLength( l_rootCamera->GetPosition() * 0.9);
+
+		if (l_currentZoom < 500.0)
+		{
+			l_currentZoom = 500.0;
+		};
+
+		l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (l_currentZoom / V3_GetLength( l_rootCamera->GetPosition())));
+	};
+};
+
+SetMouseWheelDownScript()
+{
+	if (l_inGame && ! l_paused)
+	{
+		l_currentZoom = V3_GetLength( l_rootCamera->GetPosition() * 1.11);
+
+		if (l_currentZoom > 1000.0)
+		{
+			l_currentZoom = 1000.0;
+		};
+
+		l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (l_currentZoom / V3_GetLength( l_rootCamera->GetPosition())));
+	};
+};
+
+BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
+{
+	if (l_inGame && ! l_inRock)
+	{
+		Timer_Kill( "LeftUnTurn");
+
+		timer( "LeftTurn", TIMERTYPE_PERMANENT, 0.0)
+		{
+			l_currentTimeTurn += GENERAL_ELAPSED_TIME;
+
+			if (l_currentTimeTurn >= l_animationTimeTurn)
+			{
+				l_currentTimeTurn = l_animationTimeTurn;
+			};
+
+			l_hommeAnimationGroup->SetTimeAnimation( "gauche", l_currentTimeTurn);
+			l_jetskiAnimationGroup->SetTimeAnimation( "gauche", l_currentTimeTurn);
+
+			l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), -l_virageAngle * (l_currentTimeTurn - l_previousTimeTurn) / l_animationTimeTurn);
+			l_previousTimeTurn = l_currentTimeTurn;
+		};
+
+		if (l_paused)
+		{
+			Timer_Pause( "LeftTurn");
+		};
+	};
+};
+
+BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
+{
+	if (l_inGame && ! l_inRock)
+	{
+		Timer_Kill( "RightUnTurn");
+
+		timer( "RightTurn", TIMERTYPE_PERMANENT, 0.0)
+		{
+			l_currentTimeTurn = l_currentTimeTurn - GENERAL_ELAPSED_TIME;
+
+			if (l_currentTimeTurn <= -l_animationTimeTurn)
+			{
+				l_currentTimeTurn = (-l_animationTimeTurn);
+			};
+
+			l_hommeAnimationGroup->SetTimeAnimation( "droite", -l_currentTimeTurn);
+			l_jetskiAnimationGroup->SetTimeAnimation( "droite", -l_currentTimeTurn);
+
+			l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), -l_virageAngle * (l_currentTimeTurn - l_previousTimeTurn) / l_animationTimeTurn);
+			l_previousTimeTurn = l_currentTimeTurn;
+		};
+
+		if (l_paused)
+		{
+			Timer_Pause( "RightTurn");
+		};
+	};
+};
+
+BindKey( KEYCODE_LEFT, BINDKEY_UP)
+{
+
+	if (l_inGame && ! l_inRock)
+	{
+		Timer_Kill( "LeftTurn");
+
+		timer( "LeftUnTurn", TIMERTYPE_PERMANENT, 0.0)
+		{
+			l_currentTimeTurn = l_currentTimeTurn - GENERAL_ELAPSED_TIME;
+
+			if (l_currentTimeTurn < 0.0)
+			{
+				l_currentTimeTurn = 0.0;
+			};
+
+			l_hommeAnimationGroup->SetTimeAnimation( "gauche", l_currentTimeTurn);
+			l_jetskiAnimationGroup->SetTimeAnimation( "gauche", l_currentTimeTurn);
+
+			l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), -l_virageAngle * (l_currentTimeTurn - l_previousTimeTurn) / l_animationTimeTurn);
+			l_previousTimeTurn = l_currentTimeTurn;
+
+			if (l_currentTimeTurn == 0.0)
+			{
+				Timer_Kill( "LeftUnTurn");
+			};
+		};
+
+		if (l_paused)
+		{
+			Timer_Pause( "LeftUnTurn");
+		};
+	};
+};
+
+BindKey( KEYCODE_RIGHT, BINDKEY_UP)
+{
+	if (l_inGame && ! l_inRock)
+	{
+		Timer_Kill( "RightTurn");
+
+		timer( "RightUnTurn", TIMERTYPE_PERMANENT, 0.0)
+		{
+			l_currentTimeTurn = l_currentTimeTurn + GENERAL_ELAPSED_TIME;
+
+			if (l_currentTimeTurn > 0.0)
+			{
+				l_currentTimeTurn = 0.0;
+			};
+
+			l_hommeAnimationGroup->SetTimeAnimation( "droite", -l_currentTimeTurn);
+			l_jetskiAnimationGroup->SetTimeAnimation( "droite", -l_currentTimeTurn);
+
+			l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), -l_virageAngle * (l_currentTimeTurn - l_previousTimeTurn) / l_animationTimeTurn);
+			l_previousTimeTurn = l_currentTimeTurn;
+
+			if (l_currentTimeTurn == 0.0)
+			{
+				Timer_Kill( "RightUnTurn");
+			};
+		};
+
+		if (l_paused)
+		{
+			Timer_Pause( "RightUnTurn");
+		};
+	};
+};
+
+BindKey( KEYCODE_UP, BINDKEY_DOWN)
+{
+	if (l_inGame && ! l_inRock && ! Timer_Exists( "Accelerating"))
+	{
+		Timer_Kill( "Breaking");
+
+		timer( "Accelerating", TIMERTYPE_REPEAT, 0.05)
+		{
+			l_previousVelocity = l_currentVelocity;
+			l_jetOrientation = l_waveNode->GetOrientation() * UNIT_Z;
+
+			if ( ! l_inRock)
+			{
+				l_currentVelocity = SetVector3( (l_currentVelocity[0]) + (l_jetOrientation[0]) * l_acceleration * 0.05, 0.0, (l_currentVelocity[2]) + (l_jetOrientation[2]) * l_acceleration * 0.05);
+			}
+			else
+			{
+				l_currentVelocity = SetVector3( (l_currentVelocity[0]) - (l_jetOrientation[0]) * l_acceleration * 0.05, 0.0, (l_currentVelocity[2]) - (l_jetOrientation[2]) * l_acceleration * 0.05);
+			};
+		};
+
+		if (l_paused)
+		{
+			Timer_Pause( "Accelerating");
+		};
+	};
+};
+
+BindKey( KEYCODE_UP, BINDKEY_REPEATED)
+{
+	if (l_inGame && ! l_inRock && ! Timer_Exists( "Accelerating"))
+	{
+		Timer_Kill( "Breaking");
+
+		timer( "Accelerating", TIMERTYPE_REPEAT, 0.05)
+		{
+			l_previousVelocity = l_currentVelocity;
+			l_jetOrientation = l_waveNode->GetOrientation() * UNIT_Z;
+
+			if ( ! l_inRock)
+			{
+				l_currentVelocity = SetVector3( (l_currentVelocity[0]) + (l_jetOrientation[0]) * l_acceleration * 0.05, 0.0, (l_currentVelocity[2]) + (l_jetOrientation[2]) * l_acceleration * 0.05);
+			}
+			else
+			{
+				l_currentVelocity = SetVector3( (l_currentVelocity[0]) - (l_jetOrientation[0]) * l_acceleration * 0.05, 0.0, (l_currentVelocity[2]) - (l_jetOrientation[2]) * l_acceleration * 0.05);
+			};
+		};
+
+		if (l_paused)
+		{
+			Timer_Pause( "Accelerating");
+		};
+	};
+};
+
+BindKey( KEYCODE_UP, BINDKEY_UP)
+{
+	if (l_inGame && ! l_inRock && Timer_Exists( "Accelerating"))
+	{
+		Timer_Kill( "Accelerating");
+	};
+};
+
+BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
+{
+	if (l_inGame && ! l_inRock)
+	{
+		Timer_Kill( "Accelerating");
+
+		if (l_currentVelocity->Length() > 0.0)
+		{
+			timer( "Breaking", TIMERTYPE_REPEAT, 0.1)
+			{
+				l_previousVelocity = l_currentVelocity;
+				l_currentVelocity = l_currentVelocity * (1.0 - 4 * l_frottement);
+
+				if ((l_currentVelocity[0]) <= 0.1)
+				{
+					l_currentVelocity = SetVector3( 0.0, 0.0, (l_currentVelocity[2]));
+				};
+
+				if ((l_currentVelocity[2]) <= 0.1)
+				{
+					l_currentVelocity = SetVector3( (l_currentVelocity[0]), 0.0, 0.0);
+				};
+
+				if (l_currentVelocity->Length() == 0.0)
+				{
+					Timer_Kill( "Breaking");
+				};
+			};
+
+			if (l_paused)
+			{
+				Timer_Pause( "Breaking");
+			};
+		};
+	};
+};
+
+BindKey( KEYCODE_DOWN, BINDKEY_UP)
+{
+	if (l_inGame && ! l_inRock)
+	{
+		Timer_Kill( "Breaking");
+	};
+};
+
+BindKey( KEYCODE_SPACE, BINDKEY_DOWN)
+{
+	if (l_inGame && ! l_inRock)
+	{
+		l_spaceHit = true;
+		timer( "SpaceTimeOut", TIMERTYPE_ONCE, 1.0)
+		{
+			l_spaceHit = false;
+		};
+	};
+};
+
+BindKey( KEYCODE_SPACE, BINDKEY_UP)
+{
+	if (l_inGame && ! l_inRock && Timer_Exists( "SpaceTimeOut"))
+	{
+		Timer_Kill( "SpaceTimeOut");
+		l_spaceHit = false;
+	};
+};
+
+timer( "Initialisation", TIMERTYPE_ONCE, 0.0)
+{
+	Initialise();
+};

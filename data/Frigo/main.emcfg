@@ -1,0 +1,19 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Frigo
+{
+	muse_file Frigo.muse
+	data_file Datas.zip
+	data_file Interface.zip
+	scene_file Interface.emscene
+	scene_file Frigo.emscene
+	load_script_file Structures.emscript
+	load_script_file Fridge.emscript
+	load_script_file Magnets.emscript
+	load_script_file Objects.emscript
+	load_script_file Friends.emscript
+	load_script_file Frigo.emscript
+	load_script_file Interface.emscript
+}
+
+start_scene Frigo

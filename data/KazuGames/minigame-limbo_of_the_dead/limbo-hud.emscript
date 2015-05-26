@@ -1,0 +1,250 @@
+void ShowTitle()
+{
+	if (l_titleShown)
+	{
+		Overlay_Show( "Title");
+	};
+};
+
+void HideTitle()
+{
+	if (l_titleShown)
+	{
+		Overlay_Hide( "Title");
+	};
+};
+
+Overlay_SetAction( "Menu/Commandes")
+{
+	HideTitle();
+	Overlay_Show( "Commandes");
+	Overlay_Hide( "Menu");
+};
+
+Overlay_SetAction( "Commandes/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Commandes");
+	Overlay_Show( "Menu");
+};
+
+Overlay_SetAction( "Menu/Options")
+{
+	HideTitle();
+	Overlay_Show( "Options");
+	Overlay_Hide( "Menu");
+};
+
+Overlay_SetAction( "Options/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Options");
+	Overlay_Show( "Menu");
+};
+
+Overlay_SetAction( "Menu/Regles")
+{
+	HideTitle();
+	Overlay_Show( "Regles");
+	Overlay_Hide( "Menu");
+};
+
+Overlay_SetAction( "Regles/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Regles");
+	Overlay_Show( "Menu");
+};
+
+Overlay_SetAction( "Menu/Scores")
+{
+	HideTitle();
+	Overlay_Show( "Scores");
+	Overlay_Hide( "Menu");
+};
+
+Overlay_SetAction( "Scores/Retour")
+{
+	ShowTitle();
+	Overlay_Hide( "Scores");
+	Overlay_Show( "Menu");
+};
+
+Overlay_SetAction( "Menu/Jouer")
+{
+	HideTitle();
+	l_titleShown = false;
+	Overlay_Show( "Ready");
+	Overlay_Hide( "Menu");
+	Overlay_Show( "Score");
+	Overlay_Show( "Interface");
+	Overlay_Show( "BarreDroite");
+	Overlay_Show( "Life");
+	OverlayElement_GetByName( "Menu/Recommencer")->Show();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+};
+
+Overlay_SetAction( "Menu/Recommencer")
+{
+	KazuPlayGame();
+	if (l_infos == "ok" || g_fucked)
+	{
+		Overlay_Hide( "Menu");
+		Overlay_Show( "Ready");
+		Overlay_Show( "Life");
+		Overlay_Show( "Interface");
+		Overlay_Show( "BarreDroite");
+		g_niveau = 1;
+		AnimationGroup_GetByName( "PersoAnims")->StopAllAnimations();
+//		InitPlayerAnimation();
+	};
+};
+
+Overlay_SetAction("Ready")
+{
+	if (OverlayElement_GetByName( "Ready/Text")->GetCaption() != "Go !")
+	{
+		OverlayElement_GetByName( "Ready/Text")->SetCaption( "Go !");
+		timer( "once", TIMERTYPE_ONCE, 1.0)
+		{
+			Overlay_Hide( "Ready");
+			Overlay_Show( "BarreDroite");
+			_startLevel();
+		};
+		
+		g_currentNextArrow = 5;
+		g_successInARow = 0;
+		g_failsInARow = 0;
+		g_score = 0;
+		g_multiplier = 1.15;
+		g_number = 0.0;
+		g_vie = c_strartingLives;
+		_updateScore();
+	};		
+};
+
+Overlay_SetAction( "Options/MusicOnOff")
+{
+	l_music = ( ! l_music);
+	Sound_MuteMusic( l_music);
+
+	if (l_music)
+	{
+		OverlayElement_GetByName( "Options/MusicOnOff")->SetMaterial( "On");
+	}
+	else
+	{
+		OverlayElement_GetByName( "Options/MusicOnOff")->SetMaterial( "Off");
+	};
+};
+
+Overlay_SetAction( "Options/SoundOnOff")
+{
+	l_sound = ( ! l_sound);
+	Sound_MuteSFX( l_sound);
+
+	if (l_sound)
+	{
+		OverlayElement_GetByName( "Options/SoundOnOff")->SetMaterial( "On");
+	}
+	else
+	{
+		OverlayElement_GetByName( "Options/SoundOnOff")->SetMaterial( "Off");
+	};
+};
+
+void TimerSound()
+{
+	timer( "SoundChangeVolume", TIMERTYPE_PERMANENT, 0.0)
+	{
+		l_ticPos = MOUSE_POSITION_X - l_ticSound->GetAbsoluteLeft();
+		l_ticSound->Translate( l_ticPos, 0.0);
+
+		l_ticSound->LimitToParent();
+
+		l_soundVol = l_ticSound->GetLeft() / c_relativeRegletteWidth;
+		Sound_SetSFXVolume( l_soundVol);
+	};
+};
+
+void TimerMusic()
+{
+	timer( "MusicChangeVolume", TIMERTYPE_PERMANENT, 0.0)
+	{
+		l_ticPos = MOUSE_POSITION_X - l_ticMusic->GetAbsoluteLeft();
+		l_ticMusic->Translate( l_ticPos, 0.0);
+
+		l_ticMusic->LimitToParent();
+
+		l_musicVol = l_ticMusic->GetLeft() / c_relativeRegletteWidth;
+		Sound_SetMusicVolume( l_musicVol);
+	};
+};
+
+Overlay_SetAction( "Options/RegletteMusic")
+{
+	TimerMusic();
+};
+
+Overlay_SetAction( "Options/RegletteSound")
+{
+	TimerSound();
+};
+
+Overlay_SetAction( "Options/TicMusic")
+{
+	TimerMusic();
+};
+
+Overlay_SetAction( "Options/TicSound")
+{
+	TimerSound();
+};
+
+SetMouseLUpScript()
+{
+	Timer_Kill( "MusicChangeVolume");
+	Timer_Kill( "SoundChangeVolume");
+};
+
+void _checkKey()
+{
+	if ( ! g_consumed)
+	{
+		g_consumed = true;
+		l_overlay = OverlayElement_GetByName( "Fleche_" + itoa( g_currentNextArrow));
+		if (l_overlay->GetMaterialName() == l_tempString)
+		{
+			_success();
+		}
+		else
+		{
+			_fail();
+		};
+	};
+};
+
+BindKey( KEYCODE_UP, BINDKEY_DOWN)
+{
+	l_tempString = "InterfaceLimbo/Fleche_UP";
+	_checkKey();
+};
+
+BindKey( KEYCODE_DOWN, BINDKEY_DOWN)
+{
+	l_tempString = "InterfaceLimbo/Fleche_DOWN";
+	_checkKey();
+};
+
+BindKey( KEYCODE_LEFT, BINDKEY_DOWN)
+{
+	l_tempString = "InterfaceLimbo/Fleche_LEFT";
+	_checkKey();
+};
+
+BindKey( KEYCODE_RIGHT, BINDKEY_DOWN)
+{
+	l_tempString = "InterfaceLimbo/Fleche_RIGHT";
+	_checkKey();
+};

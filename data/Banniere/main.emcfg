@@ -1,0 +1,11 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Banniere
+{
+	muse_file Banniere.muse
+	data_file data-ban.zip
+	scene_file demo-ban.emscene
+	load_script_file demo-ban.emscript
+}
+
+start_scene Banniere

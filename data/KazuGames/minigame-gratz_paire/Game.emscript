@@ -1,0 +1,340 @@
+bool l_gameStarted;
+bool l_inGame;
+bool l_titleShown;
+bool l_music;
+bool l_sound;
+bool l_endRevealed;
+
+real l_ticPos;
+real l_musicVol;
+real l_soundVol;
+real l_relativeRegletteWidth;
+
+overlay l_ticMusic;
+overlay l_ticSound;
+
+int l_nbRevealedCards;
+int l_revealedCard1;
+int l_revealedCard2;
+int l_rand;
+int i;
+int l_nbTries;
+int l_totalRevealedCards;
+int l_nbMaxErrors;
+
+vector3 l_minPitch;
+vector3 l_maxPitch;
+vector3 l_currentPitch;
+
+string l_sequence;
+string l_strCard;
+string l_name;
+
+object l_revealedCard;
+
+void UpdateErrors()
+{
+	OverlayElement_GetByName("Score/NbErreursText")->SetCaption( itoa( l_nbTries) + " / " + itoa( l_nbMaxErrors - 1));
+};
+
+void SetCardStr()
+{
+	l_strCard = itoa( l_rand);
+	if (l_rand == 10)
+	{
+		l_strCard = "A";
+	}
+	elseif (l_rand == 11)
+	{
+		l_strCard = "B";
+	}
+	elseif (l_rand == 12)
+	{
+		l_strCard = "C";
+	};
+};
+
+void ShuffleCards()
+{
+	l_nbRevealedCards = 0;
+	l_sequence->clear();
+	for (i = 1 ; i <= 12 ; i++)
+	{
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		l_rand = rtoi( rand( 1.5, 12.5));
+		SetCardStr();
+		while (l_sequence->find( l_strCard) != npos)
+		{
+			l_rand = rtoi( rand( 1.5, 12.5));
+			SetCardStr();
+		};
+		l_sequence = l_sequence + l_strCard;
+		Object_GetByName( "Carte_" + itoa( l_rand))->SetParent( SceneNode_GetByName( "Carte_" + itoa( i)));
+	};
+	Echo( l_sequence);
+};
+
+void StopGame()
+{
+	l_gameStarted = false;
+	l_inGame = false;
+	Timer_KillAll();
+	SceneNode_GetByName( "Carte_1")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_2")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_3")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_4")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_5")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_6")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_7")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_8")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_9")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_10")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_11")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	SceneNode_GetByName( "Carte_12")->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+};
+
+void PauseGame()
+{
+	Timer_PauseAll();
+	Overlay_Hide( "MenuInGame");
+	Overlay_Show( "Menu");
+	Overlay_Hide( "Score");
+	l_inGame = false;
+};
+
+void ContinueGame()
+{
+	Timer_PlayAll();
+	Overlay_Hide( "Menu");
+	Overlay_Show( "MenuInGame");
+	Overlay_Show( "Score");
+	l_inGame = true;
+};
+
+void BeginGame()
+{
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
+	Overlay_Hide( "Menu");
+	Overlay_Show( "MenuInGame");
+	Overlay_Hide( "Title");
+	Overlay_Show( "Score");
+	l_titleShown = false;
+	l_gameStarted = true;
+	l_inGame = true;
+	l_nbTries = 0;
+	l_totalRevealedCards = 0;
+	UpdateErrors();
+	ShuffleCards();
+	l_endRevealed = true;
+};
+
+void EndGame()
+{
+	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "Score");
+	l_gameStarted = false;
+	l_inGame = false;
+	_submitHighscore();
+	timer( "EndGameAndCheckRS", TIMERTYPE_ONCE, 3.0)
+	{
+		Overlay_Hide( "WinGame");
+		Overlay_Hide( "LoseGame");
+		CheckClearToGo();
+		if (g_clearToGo && ! c_modeInstant)
+		{
+			Overlay_Show( "Menu");
+			OverlayElement_GetByName( "Menu/Jouer")->Hide();
+			OverlayElement_GetByName( "Menu/Continuer")->Hide();
+			OverlayElement_GetByName( "Menu/Recommencer")->Show();
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
+			if (g_free)
+			{
+				OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
+			}
+			elseif (g_freeLimited)
+			{
+				OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
+			}
+			elseif (g_priced)
+			{
+				OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
+			}
+			elseif (g_abonne)
+			{
+				OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
+			};
+		}
+		else
+		{
+			Overlay_Hide( "Menu");
+			if ( ! c_modeInstant)
+			{
+				string l_endCaption;
+				l_endCaption->clear();
+				real l_lineWidth;
+				l_lineWidth = 0.0;
+				Echo( "End - not instant - " + l_infos);
+				if (l_infos == "no more free")
+				{
+					Echo( "End - not instant - not free");
+					l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
+					l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+				}
+				else
+				{
+					Echo( "End - not instant - no money");
+					l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
+					l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+					l_endCaption += endl + "Vous ne disposez pas de ce montant";
+				};
+				OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
+				OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
+				Overlay_Show( "FinMiniGame");
+			};
+		};
+	};
+};
+
+void RevealCard()
+{
+	if (l_revealedCard->GetParent()->GetOrientation()->GetAngle() == 0.0)
+	{
+		l_nbRevealedCards = l_nbRevealedCards + 1;
+		l_name = l_revealedCard->GetName();
+		strSplitOne( l_name, "_");
+		if (l_nbRevealedCards == 1)
+		{
+			l_revealedCard1 = atoi( l_name);
+		}
+		else
+		{
+			l_revealedCard2 = atoi( l_name);
+		};
+		Sound_Play_Global( "Card");
+		l_endRevealed = false;
+		timer( "RevealCard", TIMERTYPE_CONTINUOUS, 1.0)
+		{
+			l_currentPitch = V3_LinearInterpolation( l_minPitch, l_maxPitch, CURRENTTIMER_TIME_LEFT);
+			l_revealedCard->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
+		};
+
+		if (l_nbRevealedCards == 2)
+		{
+			l_nbRevealedCards = 0;
+			timer( "EndGame", TIMERTYPE_ONCE, 1.0)
+			{
+				if ( rtoi( abs( itor( l_revealedCard1) - itor( l_revealedCard2))) == 6)
+				{
+					l_endRevealed = true;
+					l_totalRevealedCards = l_totalRevealedCards + 2;
+					if (l_totalRevealedCards == 12)
+					{
+						g_score = (l_nbMaxErrors - l_nbTries) * 1000;
+						Echo( itoa( g_score));
+						UpdateScore();
+						if ( ! c_modeInstant)
+						{
+							Overlay_Show( "WinGame");
+						};
+						EndGame();
+					};
+				}
+				else
+				{
+					l_nbTries = l_nbTries + 1;
+					if (l_nbTries < l_nbMaxErrors)
+					{
+						UpdateErrors();
+						l_endRevealed = false;
+						timer( "UnrevealCards", TIMERTYPE_CONTINUOUS, 1.0)
+						{
+							l_currentPitch = V3_LinearInterpolation( l_minPitch, l_maxPitch, CURRENTTIMER_TIME_ELAPSED);
+							Object_GetByName( "Carte_" + itoa( l_revealedCard1))->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
+							Object_GetByName( "Carte_" + itoa( l_revealedCard2))->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
+						};
+						timer( "EndUnrevealCard", TIMERTYPE_ONCE, 1.0)
+						{
+							l_endRevealed = true;
+						};
+					}
+					else
+					{
+						if ( ! c_modeInstant)
+						{
+							Overlay_Show( "LoseGame");
+						};
+						EndGame();
+					};
+				};
+			};
+		}
+		else
+		{
+			timer( "EndRevealCard", TIMERTYPE_ONCE, 1.0)
+			{
+				l_endRevealed = true;
+			};
+		};
+	};
+};
+
+void ChooseCard()
+{
+	if (l_endRevealed)
+	{
+		l_revealedCard = MousePickupObject( MOUSE_POSITION_X, MOUSE_POSITION_Y, false);
+		if (l_revealedCard != NULL && l_revealedCard->GetName()->find( "Carte_") != npos)
+		{
+			RevealCard();
+		};
+	};
+};
+
+void InitialiseGame()
+{
+	l_titleShown = true;
+	l_endRevealed = true;
+	l_sound = false;
+	l_music = false;
+	l_nbMaxErrors = 5;
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+
+
+	l_minPitch = VECTOR3_ZERO;
+	l_maxPitch = SetVector3( 180.0, 0.0, 0.0);
+
+	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "Commandes");
+	Overlay_Hide( "Regles");
+	Overlay_Hide( "Options");
+	Overlay_Hide( "WinGame");
+	Overlay_Hide( "LoseGame");
+	Overlay_Hide( "FinInstant");
+	Overlay_Hide( "Score");
+	Overlay_Hide( "Scores");
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+
+	Sound_Play_Global( "Ambiance");
+
+	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
+	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
+	Overlay_Hide( "FinMiniGame");
+};
+
+InitialiseGame();

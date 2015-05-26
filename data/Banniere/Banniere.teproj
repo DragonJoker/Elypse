@@ -1,0 +1,17 @@
+Banniere
+Resolution
+640 480
+Colour
+0 0 0
+ShowDebug
+ShowFPS
+Scene
+Banniere
+SceneFiles
+demo-ban.emscene
+LoadScriptFiles
+demo-ban.emscript
+DataFiles
+data-ban
+DataFolders
+Sons

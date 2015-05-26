@@ -1,0 +1,81 @@
+ambient_light 1.0 1.0 1.0 1.0
+
+post_effect MotionBlur
+
+// SCENE NODES
+
+scene_node JetSkiSkyNode
+{
+	scale 2.5 2.5 2.5
+}
+
+scene_node CameraNode
+{
+}
+
+scene_node SeaNode
+{
+	scale 5 5 5
+}
+
+// OBJECTS
+
+object Beach
+{
+	mesh plage.mesh
+	attach_to SeaNode
+}
+
+object Sea
+{
+	mesh mer.mesh
+	attach_to SeaNode
+}
+
+object Sky
+{
+	mesh ciel.mesh
+	attach_to JetSkiSkyNode
+}
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction -0.50 -0.71 -0.50
+	diffuse 0.90 0.90 0.90 1.00
+	specular 0.70 0.70 0.70 1.00
+}
+
+light light_02
+{
+	type directional
+	direction 0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_03
+{
+	type directional
+	direction 0.50 -0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_04
+{
+	type directional
+	direction -0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+// CAMERAS
+
+camera RootCamera
+{
+	position 0.0 0.0 800.0
+	attach_to CameraNode
+}

@@ -1,0 +1,50 @@
+project Gratz-Paire
+{
+	resolution		640 480
+	colour			0 0 0
+	anti_aliasing	4x
+	show_debug		true
+	show_fps		true
+	scene Gratz-Paire
+	{
+		scene_files
+		{
+			Game.emscene
+			Interface.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Gratzpaire
+			Interface
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			kazu
+		}
+	}
+	scene kazu
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu.zip
+		}
+	}
+}

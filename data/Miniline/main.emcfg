@@ -1,0 +1,30 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Chat
+{
+	muse_file Chat.muse
+	data_file data-chat.zip
+	scene_file chat.emscene
+	load_script_file chat.emscript
+	load_script_file chat_menu.emscript
+	load_script_file chat_kb.emscript
+	load_script_file chat_network.emscript
+}
+
+scene Paradiz
+{
+	muse_file Paradiz.muse
+	scene_file paradiz.emscene
+	load_script_file paradiz.emscript
+}
+
+scene Miniline
+{
+	muse_file Miniline.muse
+	data_file data-common.zip
+	scene_file common.emscene
+	load_script_file common.emscript
+	load_script_file network.emscript
+}
+
+start_scene Miniline

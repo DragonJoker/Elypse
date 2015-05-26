@@ -1,0 +1,382 @@
+int mrUnavailableToAnonymous;
+
+mrJoin = 2;
+mrQuit = 3;
+mrAvatar = 4;
+mrRooms = 5;
+mrUpdate = 6;
+mrWalk = 7;
+mrTurn = 8;
+mrWhisp = 9;
+mrWhispOK = 10;
+mrWhispFail = 11;
+mrBeginWalk = 12;
+mrEndWalk = 13;
+mrEmote = 14;
+mrNewFriendDoesntExist = 15;
+mrNewFriendAlreadyFriend = 16;
+mrNewFriendAsk = 17;
+mrNewIgnoredDoesntExist = 18;
+mrNewIgnoredAlreadyIgnored = 19;
+mrNewIgnoredDone = 20;
+mrUpdateFriendsList = 21;
+mrUpdateIgnoredList = 22;
+mrNewFriendRefuse = 23;
+mrNewFriendAccept = 24;
+mrTalk = 25;
+mrKickUser = 26;
+mrBeginRun = 27;
+mrEndRun = 28;
+mrSitDown = 40;
+mrSitUp = 41;
+mrUnavailableToAnonymous = 43;
+
+SetNetworkScript()
+{
+	if (NETWORK_CURRENT_MESSAGE == "disconnected")
+	{
+		ChatShowMessageBox( "CONNEXION ERROR", "Vous avez ete deconnecte du serveur", true, false);
+		Overlay_SetAction( "Chat/MessageBox/OKButton")
+		{
+			g_fucked = true;
+			Overlay_Hide( "Chat/MessageBox");
+		}
+	}
+	else
+	{
+		int chat_sns_stringLength;
+		int chat_sns_index;
+		string chat_sns_name;
+		chat_sns_index = 0;
+		ChatMessage chat_sns_chatMessage;
+	
+		int chat_sns_header;
+		chat_sns_header = unpack_int( substr( NETWORK_CURRENT_MESSAGE, 0, 4));
+	
+		string chat_sns_message;
+		chat_sns_message = substr( NETWORK_CURRENT_MESSAGE, 4, npos);
+	
+//		Echo( "Chat - Received : " + itoa( chat_sns_header));
+	
+		if (chat_sns_header == mrWhispOK)
+		{
+//			Echo( "Chat - SetNetworkScript - WhispOk");
+			CharacterTalk( chat_whispMessage);
+			chat_whispMessage.Message->clear();
+			chat_displayedMessage->clear();
+			ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+		}
+		elseif (chat_sns_header == mrWhispFail)
+		{
+//			Echo( "Chat - SetNetworkScript - WhispFail");
+			chat_sns_chatMessage.Colour = chat_errorMessageColour;
+			chat_sns_chatMessage.Sender = g_mainChar.Character.Name;
+			chat_sns_chatMessage.Type = mtError;
+			chat_sns_chatMessage.Message = "Votre correspondant n'est pas connecte";
+
+			CharacterTalk( chat_sns_chatMessage);
+			chat_displayedMessage->clear();
+			ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+		}
+		elseif (chat_sns_header == mrRooms)
+		{
+//			Echo( "Chat - SetNetworkScript - Rooms");
+			LoadRooms( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrJoin)
+		{
+//			Echo( "Chat - SetNetworkScript - Join");
+			LoadCharInfos( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrQuit)
+		{
+//			Echo( "Chat - SetNetworkScript - Quit");
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, 0, 4));
+			RemoveCharacter( substr( chat_sns_message, 4, chat_sns_stringLength));
+		}
+		elseif (chat_sns_header == mrUpdate)
+		{
+//			Echo( "Chat - SetNetworkScript - Update");
+			UpdateCurrentChar( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrWalk)
+		{
+			CurrentCharWalk( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrTurn)
+		{
+//			Echo( "Chat - SetNetworkScript - Turn");
+			CurrentCharTurn( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrTalk)
+		{
+//			Echo( "Chat - SetNetworkScript - Talk");
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			chat_sns_index = chat_sns_index + chat_sns_stringLength;
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+
+			chat_sns_chatMessage.Colour = chat_normalMessageColour;
+			chat_sns_chatMessage.Sender = chat_sns_name;
+			chat_sns_chatMessage.Message = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			chat_sns_chatMessage.Type = mtNormal;
+	
+			CharacterTalk( chat_sns_chatMessage);
+		}
+		elseif (chat_sns_header == mrWhisp)
+		{
+//			Echo( "Chat - SetNetworkScript - Whisp");
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			chat_sns_index = chat_sns_index + chat_sns_stringLength;
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+
+			chat_sns_chatMessage.Colour = chat_whispMessageColour;
+			chat_sns_chatMessage.Sender = chat_sns_name;
+			chat_sns_chatMessage.Message = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			chat_sns_chatMessage.Type = mtWhisp;
+	
+			CharacterTalk( chat_sns_chatMessage);
+		}
+		elseif (chat_sns_header == mrBeginWalk)
+		{
+//			Echo( "Chat - SetNetworkScript - BeginWalk");
+			CharacterBeginWalk( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrEndWalk)
+		{
+//			Echo( "Chat - SetNetworkScript - EndWalk");
+			CharacterEndWalk( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrEmote)
+		{
+			string chat_sns_emote;
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			chat_sns_index = chat_sns_index + chat_sns_stringLength;
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_emote = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+	
+			CharacterEmote( chat_sns_name, chat_sns_emote);
+			BuildEmoteMessage( chat_sns_emote);
+
+			chat_sns_chatMessage.Colour = chat_emoteMessageColour;
+			chat_sns_chatMessage.Sender = chat_sns_name;
+			chat_sns_chatMessage.Message = stringResult;
+			chat_sns_chatMessage.Type = mtEmote;
+
+			CharacterTalk( chat_sns_chatMessage);
+		}
+		elseif (chat_sns_header == mrNewFriendAsk)
+		{
+//			Echo( "Chat - SetNetworkScript - NewFriendAsk");
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message,chat_sns_index, chat_sns_stringLength);
+//			Echo( "Chat - SetNetworkScript - NewFriendAsk : " + chat_sns_name);
+	
+			ChatShowMessageBox( "NOUVEL AMI", chat_sns_name + " souhaite faire partie de votre liste d'amis", true, true);
+			Overlay_SetAction( "Chat/MessageBox/OKButton")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+				Network_ClientSendMessage( "ChatClient", pack_int( msNewFriendAccept) + pack_int( chat_sns_name->length()) + chat_sns_name);
+			}
+			Overlay_SetAction( "Chat/MessageBox/OKButton/Text")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+				Network_ClientSendMessage( "ChatClient", pack_int( msNewFriendAccept) + pack_int( chat_sns_name->length()) + chat_sns_name);
+			}
+			Overlay_SetAction( "Chat/MessageBox/CancelButton")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+				Network_ClientSendMessage( "ChatClient", pack_int( msNewFriendRefuse) + pack_int( chat_sns_name->length()) + chat_sns_name);
+			}
+			Overlay_SetAction( "Chat/MessageBox/CancelButton/Text")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+				Network_ClientSendMessage( "ChatClient", pack_int( msNewFriendRefuse) + pack_int( chat_sns_name->length()) + chat_sns_name);
+			}
+		}
+		elseif (chat_sns_header == mrNewFriendAccept)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+	
+			ChatShowMessageBox( "NOUVEL AMI", chat_sns_name + " a accepte de faire partie de votre liste d'amis", true, false);
+			Overlay_SetAction( "Chat/MessageBox/OKButton")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+			}
+			Overlay_SetAction( "Chat/MessageBox/OKButton/Text")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+			}
+		}
+		elseif (chat_sns_header == mrNewFriendRefuse)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+	
+			ChatShowMessageBox( "NOUVEL AMI", chat_sns_name + " a refuse de faire partie de votre liste d'amis", true, false);
+			Overlay_SetAction( "Chat/MessageBox/OKButton")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+			}
+			Overlay_SetAction( "Chat/MessageBox/OKButton/Text")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+			}
+		}
+		elseif (chat_sns_header == mrUpdateFriendsList)
+		{
+			FlushFriendsList();
+			UpdateFriendsList( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrUpdateIgnoredList)
+		{
+			FlushIgnoredList();
+			UpdateIgnoredList( chat_sns_message);
+		}
+		elseif (chat_sns_header == mrNewIgnoredDoesntExist)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+
+			chat_sns_chatMessage.Colour = chat_errorMessageColour;
+			chat_sns_chatMessage.Sender = g_mainChar.Character.Name;
+			chat_sns_chatMessage.Message = chat_sns_name + " n'existe pas ou n'est pas connecte";
+			chat_sns_chatMessage.Type = mtError;
+
+			CharacterTalk( chat_sns_chatMessage);
+			chat_displayedMessage->clear();
+			ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+		}
+		elseif (chat_sns_header == mrNewFriendDoesntExist)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+
+			chat_sns_chatMessage.Colour = chat_errorMessageColour;
+			chat_sns_chatMessage.Sender = g_mainChar.Character.Name;
+			chat_sns_chatMessage.Message = chat_sns_name + " n'existe pas ou n'est pas connecte";
+			chat_sns_chatMessage.Type = mtError;
+
+			CharacterTalk( chat_sns_chatMessage);
+			chat_displayedMessage->clear();
+			ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+		}
+		elseif (chat_sns_header == mrNewIgnoredAlreadyIgnored)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+
+			chat_sns_chatMessage.Colour = chat_errorMessageColour;
+			chat_sns_chatMessage.Sender = g_mainChar.Character.Name;
+			chat_sns_chatMessage.Message = chat_sns_name + " est deja dans votre liste d'ignores";
+			chat_sns_chatMessage.Type = mtError;
+
+			CharacterTalk( chat_sns_chatMessage);
+			chat_displayedMessage->clear();
+			ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+		}
+		elseif (chat_sns_header == mrNewFriendAlreadyFriend)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+
+			chat_sns_chatMessage.Colour = chat_errorMessageColour;
+			chat_sns_chatMessage.Sender = g_mainChar.Character.Name;
+			chat_sns_chatMessage.Message = chat_sns_name + " est deja dans votre liste d'amis";
+			chat_sns_chatMessage.Type = mtError;
+
+			CharacterTalk( chat_sns_chatMessage);
+			chat_displayedMessage->clear();
+			ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+		}
+		elseif (chat_sns_header == mrNewIgnoredDone)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+	
+			Network_ClientSendMessage( "ChatClient", pack_int( msUpdateIgnoredList));
+		}
+		elseif (chat_sns_header == mrKickUser)
+		{
+			Network_CloseClient( "ChatClient");
+			ChatShowMessageBox( "CONNEXION ERROR", "Vous vous etes connecte a partir d'un autre pc", true, false);
+			Overlay_SetAction( "Chat/MessageBox/OKButton")
+			{
+				g_fucked = true;
+				Overlay_Hide( "Chat/MessageBox");
+			}
+		}
+		elseif (chat_sns_header == mrBeginRun)
+		{
+//			Echo( "Chat - SetNetworkScript - BeginRun");
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			StartAnimation( "run", chat_sns_name);
+		}
+		elseif (chat_sns_header == mrEndRun)
+		{
+//			Echo( "Chat - SetNetworkScript - EndRun");
+			int chat_sns_stillWalking;
+			chat_sns_stillWalking = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			if (chat_sns_stillWalking == 0)
+			{
+				CharacterEndWalk( substr( chat_sns_message, 4, npos));
+			}
+			else
+			{
+				chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+				chat_sns_index = chat_sns_index + 4;
+				chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+				chat_sns_index = chat_sns_index + chat_sns_stringLength;
+
+				CurrentCharWalk( substr( chat_sns_message, 4, npos));
+				timer( "EndCharRun" + chat_sns_name, TIMERTYPE_ONCE, 0.25)
+				{
+					StartAnimation( "Marche", chat_sns_name);
+				}
+			}
+		}
+		elseif (chat_sns_header == mrSitDown)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			StartAnimation( "sitdown", chat_sns_name);
+		}
+		elseif (chat_sns_header == mrSitUp)
+		{
+			chat_sns_stringLength = unpack_int( substr( chat_sns_message, chat_sns_index, 4));
+			chat_sns_index = chat_sns_index + 4;
+			chat_sns_name = substr( chat_sns_message, chat_sns_index, chat_sns_stringLength);
+			StartAnimation( "situp", chat_sns_name);
+		}
+		elseif (chat_sns_header == mrUnavailableToAnonymous)
+		{
+			Echo( "Received Unavalaible message");
+			ChatShowMessageBox( "IMPOSSIBLE", "Action impossible aux comptes " + endl + "anonymes, inscrivez vous", true, false);
+			Overlay_SetAction( "Chat/MessageBox/OKButton")
+			{
+				Overlay_Hide( "Chat/MessageBox");
+			}
+		}
+	}
+}

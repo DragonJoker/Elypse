@@ -1,0 +1,52 @@
+project JetTonSki
+{
+	resolution		640 480
+	colour			0 0 0
+	scene JetTonSki
+	{
+		scene_files
+		{
+			Interface.emscene
+			JetSki.emscene
+			Sounds.emscene
+		}
+		load_script_files
+		{
+			Variables.emscript
+			Scores.emscript
+			Perso.emscript
+			JetSki.emscript
+			Interface.emscript
+			Network.emscript
+		}
+		data_files_3d
+		{
+			data-Jetski
+			Interfaces
+			Plage
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			kazu
+		}
+	}
+	scene kazu
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+	}
+}

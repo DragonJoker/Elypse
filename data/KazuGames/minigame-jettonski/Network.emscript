@@ -1,0 +1,731 @@
+void _processAvatarMessage( string pam_message)
+{
+	jetski_sex = unpack_int( substr( pam_message, 0, 4));
+	jetski_currentBody = unpack_int( substr( pam_message, 4, 4));
+	jetski_currentSkin = unpack_int( substr( pam_message, 8, 4));
+	jetski_currentHair = unpack_int( substr( pam_message, 12, 4));
+	jetski_currentHairMaterial = unpack_int( substr( pam_message, 16, 4));
+	jetski_currentDress = unpack_int( substr( pam_message, 20, 4));
+	jetski_currentEyeMaterial = unpack_int( substr( pam_message, 24, 4));
+	jetski_currentBrow = unpack_int( substr( pam_message, 28, 4));
+	jetski_currentBrowMaterial = unpack_int( substr( pam_message, 32, 4));	
+
+	if (jetski_sex == 0)
+	{
+		jetski_currentBeard = unpack_int( substr( pam_message, 36, 4));
+		jetski_currentBeardMaterial = unpack_int( substr( pam_message, 40, 4));
+	}
+	else
+	{
+		jetski_currentEyeLashMaterial = unpack_int( substr( pam_message, 36, 4));
+		jetski_currentLipstickMaterial = unpack_int( substr( pam_message, 40, 4));
+	};
+};
+
+void LoadMainCharInfos( string lmci_message)
+{
+	_processAvatarMessage( lmci_message);
+
+	jetski_mainSex = jetski_sex;
+	jetski_mainBody = jetski_currentBody;
+	jetski_mainHair = jetski_currentHair;
+	jetski_mainHairMaterial = jetski_currentHairMaterial;
+	jetski_mainDress = jetski_currentDress;
+	jetski_mainSkin = jetski_currentSkin;
+	jetski_mainEyeMaterial = jetski_currentEyeMaterial;
+	jetski_mainBrow = jetski_currentBrow;
+	jetski_mainBrowMaterial = jetski_currentBrowMaterial;
+	jetski_mainBeard = jetski_currentBeard;
+	jetski_mainBeardMaterial = jetski_currentBeardMaterial;
+	jetski_mainEyeLashMaterial = jetski_currentEyeLashMaterial;
+	jetski_mainLipstickMaterial = jetski_currentLipstickMaterial;
+};
+
+void JoinGame( string jg_message)
+{
+	int jg_place;
+	jg_place = unpack_int( substr( jg_message, 0, 4));
+	l_creator = false;
+	Overlay_Hide( "Jetski/AvailableGames");
+	Overlay_Hide( "Jetski/Title");
+	Overlay_Show( "Jetski/Menu");
+	OverlayElement_GetByName( "Jetski/Menu/Rejoindre")->Hide();
+	OverlayElement_GetByName( "Jetski/Menu/Creer")->Hide();
+
+	jetski_sex = jetski_mainSex;
+	jetski_currentBody = jetski_mainBody;
+	jetski_currentHair = jetski_mainHair;
+	jetski_currentHairMaterial = jetski_mainHairMaterial;
+	jetski_currentDress = jetski_mainDress;
+	jetski_currentSkin = jetski_mainSkin;
+	jetski_currentEyeMaterial = jetski_mainEyeMaterial;
+	jetski_currentBrow = jetski_mainBrow;
+	jetski_currentBrowMaterial = jetski_mainBrowMaterial;
+	jetski_currentBeard = jetski_mainBeard;
+	jetski_currentBeardMaterial = jetski_mainBeardMaterial;
+	jetski_currentEyeLashMaterial = jetski_mainEyeLashMaterial;
+	jetski_currentLipstickMaterial = jetski_mainLipstickMaterial;
+	LoadPlayer( jetski_charName, false, dummyOverlay, jg_place);
+
+	Echo( "JoinGame - " + l_selectedGame);
+//	OverlayElement_GetByName( "Jetski/OpponentName" + itoa( l_nbPlayers) + "/Text")->SetCaption( l_selectedGame);
+};
+
+void CreateGame()
+{
+	l_creator = true;
+	Overlay_Hide( "Jetski/AvailableGames");
+	Overlay_Hide( "Jetski/Title");
+	Overlay_Hide( "Jetski/Menu");
+	Overlay_Show( "Jetski/WaitingOpponent");
+	OverlayElement_GetByName( "Jetski/Menu/Creer")->Hide();
+	OverlayElement_GetByName( "Jetski/Menu/Rejoindre")->Hide();
+	OverlayElement_GetByName( "Jetski/Menu/Jouer")->Show();
+
+	jetski_sex = jetski_mainSex;
+	jetski_currentBody = jetski_mainBody;
+	jetski_currentHair = jetski_mainHair;
+	jetski_currentHairMaterial = jetski_mainHairMaterial;
+	jetski_currentDress = jetski_mainDress;
+	jetski_currentSkin = jetski_mainSkin;
+	jetski_currentEyeMaterial = jetski_mainEyeMaterial;
+	jetski_currentBrow = jetski_mainBrow;
+	jetski_currentBrowMaterial = jetski_mainBrowMaterial;
+	jetski_currentBeard = jetski_mainBeard;
+	jetski_currentBeardMaterial = jetski_mainBeardMaterial;
+	jetski_currentEyeLashMaterial = jetski_mainEyeLashMaterial;
+	jetski_currentLipstickMaterial = jetski_mainLipstickMaterial;
+	LoadPlayer( jetski_charName, true, dummyOverlay, 0);
+
+	Echo( "CreateGame - " + jetski_charName);
+};
+
+void ClickGame()
+{
+	string cg_strId;
+	string cg_gameName;
+	overlay cg_panel;
+	cg_panel = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	if (cg_panel->GetName()->find( "/Name") != npos || cg_panel->GetName()->find( "/Count") != npos)
+	{
+		cg_panel = cg_panel->GetParent();
+	};
+	cg_strId = cg_panel->GetName();
+	strSplitOne( cg_strId, "/");
+	strSplitOne( cg_strId, "/");
+	strSplitOne( cg_strId, "/");
+	l_selectedId = atoi( strSplitOne( cg_strId, "/"));
+	cg_gameName = cg_strId;
+	
+//	Echo( "ClickGame - Panel : " + cg_panel->GetName() + " - Initiator : " + cg_strId);
+
+	if (l_clicked && cg_gameName == l_selectedGame)
+	{
+		cg_panel->SetMaterial( "Base/Invisible");
+		cg_panel->SetBorderMaterial( "Base/Invisible");
+		Network_ClientSendMessage( "GameClient", pack_int( msJoinGame) + pack_int( l_gameName->length()) + l_gameName + pack_int( l_selectedId));
+	}
+	else
+	{
+		if (l_selectedPanel != NULL)
+		{
+			l_selectedPanel->SetMaterial( "Base/Invisible");
+			l_selectedPanel->SetBorderMaterial( "Base/Invisible");
+		};
+		cg_panel->SetMaterial( "Base/LowAlphaBlack");
+		cg_panel->SetBorderMaterial( "Base/Black");
+		l_selectedPanel = cg_panel;
+		l_selectedGame = cg_gameName;
+		l_clicked = true;
+		timer( "GSDoubleClick", TIMERTYPE_ONCE, 0.5)
+		{
+			l_clicked = false;
+		};
+	};
+};
+
+void AddGame( string ag_name, int ag_idGame, int ag_nbPeople)
+{
+	Echo( "AddGame : " + ag_name + " - " + itoa( ag_nbPeople));
+	overlay ag_container;
+	overlay ag_nameOV;
+	overlay ag_nbPeopleOV;
+	string ag_baseName;
+	ag_baseName = "Jetski/AvailableGames/List/" + itoa( ag_idGame) + "/" + ag_name;
+
+	if ( ! OverlayElement_Exists( ag_baseName))
+	{
+		ag_container = OverlayElement_Create( ag_baseName, "BorderPanelZone", "Jetski/AvailableGames/List");
+	}
+	else
+	{
+		ag_container = OverlayElement_GetByName( ag_baseName);
+	};
+	ag_container->SetMaterial( "Base/Invisible");
+	ag_container->SetBorderMaterial( "Base/Invisible");
+	ag_container->SetMouseOverMaterial( "Base/LowAlphaBlack");
+	ag_container->SetTBBorderSize( 1.0 / GENERAL_SCREEN_HEIGHT, 1.0 / GENERAL_SCREEN_HEIGHT);
+	ag_container->SetLRBorderSize( 1.0 / GENERAL_SCREEN_WIDTH, 1.0 / GENERAL_SCREEN_WIDTH);
+	ag_container->SetLeft( 0.0);
+	ag_container->SetTop( 1.0 + (l_gamesCount * 20));
+	ag_container->SetWidth( OverlayElement_GetByName( "Jetski/AvailableGames/List")->GetWidth());
+	ag_container->SetHeight( 20.0);
+
+	if ( ! OverlayElement_Exists( ag_baseName + "/Name"))
+	{
+		ag_nameOV = OverlayElement_Create( ag_baseName + "/Name", "MinigameText", ag_baseName);
+	}
+	else
+	{
+		ag_nameOV = OverlayElement_GetByName( ag_baseName + "/Name");
+	};
+	ag_nameOV->SetFontSize( 22.0);
+	ag_nameOV->SetLeft( 5.0);
+	ag_nameOV->SetTop( 2.0);
+	ag_nameOV->SetWidth( OverlayElement_GetByName( "Jetski/AvailableGames/List")->GetWidth() * 60.0 / 100.0);
+	ag_nameOV->SetHeight( 20.0);
+	ag_nameOV->SetCaption( ag_name);
+
+	if ( ! OverlayElement_Exists( ag_baseName + "/Count"))
+	{
+		ag_nbPeopleOV = OverlayElement_Create( ag_baseName + "/Count", "MinigameText", ag_baseName);
+	}
+	else
+	{
+		ag_nbPeopleOV = OverlayElement_GetByName( ag_baseName + "/Count");
+	};
+	ag_nbPeopleOV->SetFontSize( 22.0);
+	ag_nbPeopleOV->SetLeft( 5.0 + OverlayElement_GetByName( "Jetski/AvailableGames/List")->GetWidth() * 70.0 / 100.0);
+	ag_nbPeopleOV->SetTop( 2.0);
+	ag_nbPeopleOV->SetWidth( OverlayElement_GetByName( "Jetski/AvailableGames/List")->GetWidth() * 40.0 / 100.0);
+	ag_nbPeopleOV->SetHeight( 20.0);
+	ag_nbPeopleOV->SetCaption( itoa( ag_nbPeople));
+
+	Overlay_SetAction( ag_baseName)
+	{
+		ClickGame();
+	};
+
+	Overlay_SetAction( ag_baseName + "/Name")
+	{
+		ClickGame();
+	};
+
+	Overlay_SetAction( ag_baseName + "/Count")
+	{
+		ClickGame();
+	};
+
+	l_gamesCount++;
+};
+
+void RefreshGamesList( string rgl_pMessage)
+{
+	l_gamesCount = 0;
+	int rgl_gamesCount;
+	int rgl_msgIndex;
+	rgl_msgIndex = 0;
+	rgl_gamesCount = unpack_int( substr( rgl_pMessage, rgl_msgIndex, 4));
+	rgl_msgIndex += 4;
+	int rgl_strLength;
+	string rgl_name;
+	int rgl_gameId;
+	int rgl_nbPeople;
+	for (i = 0 ; i < rgl_gamesCount ; i++)
+	{
+		rgl_gameId = unpack_int( substr( rgl_pMessage, rgl_msgIndex, 4));
+		rgl_msgIndex += 4;
+		rgl_nbPeople = unpack_int( substr( rgl_pMessage, rgl_msgIndex, 4));
+		rgl_msgIndex += 4;
+		rgl_strLength = unpack_int( substr( rgl_pMessage, rgl_msgIndex, 4));
+		rgl_msgIndex += 4;
+		rgl_name = substr( rgl_pMessage, rgl_msgIndex, rgl_strLength);
+		rgl_msgIndex += rgl_strLength;
+		AddGame( rgl_name, rgl_gameId, rgl_nbPeople);
+	};
+
+	OverlayElement_GetByName( "Jetski/AvailableGames/StartedNb")->SetCaption( itoa( rtoi( rand( 10.0, 15.0))));
+	HideTitle();
+	Overlay_Show( "Jetski/AvailableGames");
+	Overlay_Hide( "Jetski/Menu");
+};
+
+void GetCharIndex( string gci_name)
+{
+	l_charIndex = -1;
+	bool gci_found;
+	gci_found = false;
+	for (i = 0 ; i < l_distantCharName->Size() && ! gci_found ; i++)
+	{
+		if ((l_distantCharName[i]) == gci_name)
+		{
+//			Echo( "GetCharIndex - " + gci_name + " found at index " + itoa( i));
+			l_charIndex = i;
+			gci_found = true;
+		};
+	};
+};
+
+void AddPlayer( string ap_message)
+{
+	int ap_index;
+	int ap_length;
+	int ap_place;
+	string ap_name;
+	bool ap_found;
+	ap_found = false;
+
+	ap_index = 0;
+	ap_length = unpack_int( substr( ap_message, ap_index, 4));
+	ap_index += 4;
+	ap_name = substr( ap_message, ap_index, ap_length);
+	ap_index += ap_length;
+	ap_place = unpack_int( substr( ap_message, ap_index, 4));
+	ap_index += 4;
+
+	_processAvatarMessage( substr( ap_message, ap_index, npos));
+
+	Echo( "AddPlayer - " + ap_name);
+
+	OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( ap_name + endl + " a rejoint la partie");
+	for (i = 0 ; i < 3 && ! ap_found ; i++)
+	{
+		if (OverlayElement_GetByName( "Jetski/OpponentName" + itoa( i) + "/Text")->GetCaption()->empty())
+		{
+			Echo( "found name ov");
+			OverlayElement_GetByName( "Jetski/OpponentName" + itoa( l_nbPlayers - 1) + "/Text")->SetCaption( ap_name);
+			l_nameOv->Add( OverlayElement_GetByName( "Jetski/OpponentName" + itoa( l_nbPlayers - 1)));
+			ap_found = true;
+		};
+	};
+
+	if (ap_name == l_selectedGame)
+	{
+		LoadPlayer( ap_name, true, OverlayElement_GetByName( "Jetski/OpponentName" + itoa( l_nbPlayers - 1)), 0);
+	}
+	else
+	{
+		LoadPlayer( ap_name, false, OverlayElement_GetByName( "Jetski/OpponentName" + itoa( l_nbPlayers - 1)), ap_place);
+	};
+
+	l_distantBeginPos->Add( SetVector3( 100.0, 200.0, 300.0));
+	l_distantEndPos->Add( SetVector3( 100.0, 200.0, 300.0));
+	l_distantCurrentPos->Add( SetVector3( 100.0, 200.0, 300.0));
+	l_distantVirageAngle->Add( 0.0);
+	l_distantPercent->Add( 0.0);
+	l_distantScore->Add( 0);
+	l_distantFinished->Add( false);
+	l_distantCharName->Add( ap_name);
+	l_distantBeginOrient->Add( SetQuaternion( SetVector3(0.0, 0.0, 0.0), 0.0));
+	l_distantEndOrient->Add( SetQuaternion( SetVector3(0.0, 0.0, 0.0), 0.0));
+
+	l_nbPlayers++;
+	if (l_creator)
+	{
+		Overlay_Show( "Jetski/Menu");
+	};
+};
+
+void RemovePlayer( string rp_message)
+{
+	int rp_nameSize;
+	string rp_name;
+	rp_nameSize = unpack_int( substr( rp_message, 0, 4));
+	rp_name = substr( rp_message, 4, rp_nameSize);
+	GetCharIndex( rp_name);
+
+	(l_distantJetSkiNode[l_charIndex])->Hide();
+	(l_distantWaveNode[l_charIndex])->Hide();
+	Overlay_Show( "Jetski/WaitingOpponent");
+	OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( (l_distantCharName[l_charIndex]) + endl + "a quitte la partie");
+	Overlay_Hide( "Jetski/OpponentName" + itoa( l_charIndex));
+	OverlayElement_GetByName( "Jetski/OpponentName" + itoa( l_charIndex) + "/Text")->SetCaption( "");
+	if (rp_name != l_selectedGame)
+	{
+		timer( "Wait" + rp_name + "Quit", TIMERTYPE_ONCE, 2.0)
+		{
+			Overlay_Hide( "Jetski/WaitingOpponent");
+		};
+	};
+	l_nbPlayers--;
+
+	l_distantBeginPos->Erase( l_charIndex);
+	l_distantEndPos->Erase( l_charIndex);
+	l_distantCurrentPos->Erase( l_charIndex);
+	l_distantOffsetX->Erase( l_charIndex);
+	l_distantOffsetZ->Erase( l_charIndex);
+	l_distantVirageAngle->Erase( l_charIndex);
+	l_distantJetSkiNode->Erase( l_charIndex);
+	l_distantWaveNode->Erase( l_charIndex);
+	l_distantPercent->Erase( l_charIndex);
+	l_distantScore->Erase( l_charIndex);
+	l_distantFinished->Erase( l_charIndex);
+	l_distantCharName->Erase( l_charIndex);
+	l_nameOv->Erase( l_charIndex);
+	l_distantBeginOrient->Erase( l_charIndex);
+	l_distantEndOrient->Erase( l_charIndex);
+};
+
+void UpdateDistantPlayer( string udp_name, string udp_message)
+{
+	Timer_Kill( "UpdateDistantPos_" + udp_name);
+
+	int udp_index;
+	int udp_underScoreIndex;
+	scene_node udp_distantCurrentNode;
+	udp_index = 0;
+
+	GetCharIndex( udp_name);
+	if (l_charIndex >= 0)
+	{
+		udp_distantCurrentNode = (l_distantJetSkiNode[l_charIndex]);
+
+		vector3 l_currentBeginPos;
+		l_currentBeginPos = udp_distantCurrentNode->GetPosition();
+		l_distantBeginPos->Set( l_charIndex, l_currentBeginPos);
+
+		vector3 l_currentEndPos;
+		l_currentEndPos = unpack_vector3( substr( udp_message, udp_index, 12));
+		udp_index += 12;
+		l_distantEndPos->Set( l_charIndex, l_currentEndPos);
+
+		quaternion l_currentBeginOrient;
+		l_currentBeginOrient = udp_distantCurrentNode->GetOrientation();
+		l_distantBeginOrient->Set( l_charIndex, l_currentBeginOrient);
+
+		quaternion l_currentEndOrient;
+		l_currentEndOrient = unpack_quaternion( substr( udp_message, udp_index, 16));
+		udp_index += 16;
+		l_distantEndOrient->Set( l_charIndex, l_currentEndOrient);
+
+		l_distantPercent->Set( l_charIndex, unpack_real( substr( udp_message, udp_index, 4)));
+		udp_index += 4;
+
+		vector3 l_currentCurrentPos;
+		quaternion l_currentCurrentOrient;
+		timer( "UpdateDistantPos_" + udp_name, TIMERTYPE_CONTINUOUS, 0.25)
+		{
+			udp_name = CURRENTTIMER_SELF->GetName();
+			udp_underScoreIndex = strFind( udp_name, "_");
+			udp_name = substr( udp_name, udp_underScoreIndex + 1, npos);
+			GetCharIndex( udp_name);
+
+			if (l_charIndex >= 0)
+			{
+				udp_distantCurrentNode = (l_distantJetSkiNode[l_charIndex]);
+
+				l_currentBeginPos = (l_distantBeginPos[l_charIndex]);
+				l_currentEndPos = (l_distantEndPos[l_charIndex]);
+				l_currentCurrentPos = V3_LinearInterpolation( l_currentBeginPos, l_currentEndPos, CURRENTTIMER_TIME_LEFT / 0.25);
+				udp_distantCurrentNode->SetPosition( l_currentCurrentPos);
+
+				l_currentBeginOrient = (l_distantBeginOrient[l_charIndex]);
+				l_currentEndOrient = (l_distantEndOrient[l_charIndex]);
+				l_currentCurrentOrient = Quat_Slerp( l_currentBeginOrient, l_currentEndOrient, CURRENTTIMER_TIME_ELAPSED / 0.25);
+				udp_distantCurrentNode->SetOrientation( l_currentCurrentOrient);
+			};
+		};
+
+		l_position = 1;
+		for (i = 0 ; i < l_distantPercent->Size() ; i++)
+		{
+			if ((l_distantPercent[i]) >= l_percent)
+			{
+				l_position++;
+			};
+		};
+	};
+};
+
+void EndNetGame( string eng_name, string eng_message)
+{
+	GetCharIndex( eng_name);
+	int eng_index;
+	eng_index = 0;
+	l_distantScore->Set( l_charIndex, unpack_int( substr( eng_message, eng_index, 4)));
+	l_distantFinished->Set( l_charIndex, true);
+	eng_index += 4;
+
+	OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( (l_distantCharName[l_charIndex]) + " a fini la " + endl + " course avec " + itoa( l_distantScore[l_charIndex]) + "pts");
+	Overlay_Show( "Jetski/WaitingOpponent");
+
+	bool eng_distantFinished;
+	eng_distantFinished = l_finished;
+	for (i = 0 ; i < l_distantFinished->Size() ; i++)
+	{
+		eng_distantFinished = (l_distantFinished[i]) && eng_distantFinished;
+	};
+
+	if (eng_distantFinished)
+	{
+		bool eng_win;
+		eng_win = true;
+		for (i = 0 ; i < l_distantScore->Size() ; i++)
+		{
+			eng_win = eng_win && ((l_distantScore[i]) < g_score);
+		};
+		
+		if (eng_win)
+		{
+			OverlayElement_GetByName( "Jetski/Result")->SetMaterial( "Gagne");
+		}
+		else
+		{
+			OverlayElement_GetByName( "Jetski/Result")->SetMaterial( "Perdu");
+		};
+		Overlay_Show( "Jetski/Result");
+		Overlay_Hide( "Jetski/WaitingOpponent");
+		Overlay_Show( "Jetski/Menu");
+		g_score = 0;
+	};
+};
+
+void BeginNetGame()
+{
+/*
+	if (l_creator)
+	{
+		if (l_firstPlay)
+		{
+			BeginGame();
+		}
+		else
+		{
+			KazuPlayGame();
+			if (l_infos == "ok" || g_fucked)
+			{
+				BeginGame();
+			};
+		};
+
+		BeginGame();
+	}
+	else
+	{
+*/
+		Overlay_Hide( "Jetski/Title");
+		Overlay_Hide( "Jetski/Menu");
+		Overlay_Hide( "Jetski/Options");
+		Overlay_Hide( "Jetski/Regles");
+		Overlay_Hide( "Jetski/Commandes");
+		BeginGame();
+//	};
+};
+
+void DistantStartExclusiveAnimation( string dsea_pAnimName, string dsea_pCharName)
+{
+	string dsea_animName;
+	string dsea_charName;
+	string dsea_timerName;
+	animation_group dsea_charAnims;
+	animation_group dsea_jetskiAnims;
+	int dsea_animNameIndex;
+	int dsea_charNameIndex;
+	dsea_animName = dsea_pAnimName;
+	dsea_charName = dsea_pCharName;
+	dsea_charAnims = AnimationGroup_GetByName( "Homme/" + dsea_charName);
+	dsea_jetskiAnims = AnimationGroup_GetByName( "JetSki_Animation/" + dsea_charName);
+	if (dsea_charAnims != NULL && dsea_jetskiAnims != NULL)
+	{
+		Echo( "StartExclusiveAnimation - " + dsea_animName + " - " + dsea_charName);
+		dsea_charAnims->StopAnimation( "droite");
+		dsea_jetskiAnims->StopAnimation( "droite");
+		dsea_charAnims->StopAnimation( "gauche");
+		dsea_jetskiAnims->StopAnimation( "gauche");
+		dsea_charAnims->StopAnimation( "run");
+		dsea_jetskiAnims->StopAnimation( "run");
+		dsea_charAnims->StartAnimation( dsea_animName);
+		dsea_jetskiAnims->StartAnimation( dsea_animName);
+		
+		timer( "End_" + dsea_animName + "/" + dsea_charName, TIMERTYPE_ONCE, dsea_charAnims->GetObject( dsea_charName + "_Body")->GetAnimation( dsea_animName)->GetLength())
+		{
+			dsea_timerName = CURRENTTIMER_SELF->GetName();
+			dsea_animNameIndex = dsea_timerName->find( "_");
+			dsea_charNameIndex = dsea_timerName->find( "/");
+			dsea_animName = substr( dsea_timerName, dsea_animNameIndex + 1, dsea_charNameIndex - (dsea_animNameIndex + 1));
+			dsea_charName = substr( dsea_timerName, dsea_charNameIndex + 1, npos);
+			Echo( dsea_animName + " - " + dsea_charName);
+			dsea_charAnims = AnimationGroup_GetByName( "Homme/" + dsea_charName);
+			dsea_jetskiAnims = AnimationGroup_GetByName( "JetSki_Animation/" + dsea_charName);
+	
+			dsea_charAnims->StartAnimation( "droite");
+			dsea_jetskiAnims->StartAnimation( "droite");
+			dsea_charAnims->StartAnimation( "gauche");
+			dsea_jetskiAnims->StartAnimation( "gauche");
+			dsea_charAnims->PauseAnimation( "droite");
+			dsea_jetskiAnims->PauseAnimation( "droite");
+			dsea_charAnims->PauseAnimation( "gauche");
+			dsea_jetskiAnims->PauseAnimation( "gauche");
+			dsea_charAnims->StartAnimation( "run");
+			dsea_jetskiAnims->StartAnimation( "run");
+		};
+	};
+};
+
+void DistantCharFall( string dcf_name)
+{
+	DistantStartExclusiveAnimation( "crash", dcf_name);
+};
+
+void DistantCharJump( string dcj_name)
+{
+	DistantStartExclusiveAnimation( "jump", dcj_name);
+};
+
+void DistantCharLoop( string dcl_name)
+{
+	DistantStartExclusiveAnimation( "looping", dcl_name);
+};
+
+void TreatGameMessage( string tgm_message)
+{
+	int tgm_index;
+	tgm_index = 0;
+
+	int tgm_nameSize;
+	tgm_nameSize = unpack_int( substr( tgm_message, tgm_index, 4));
+	tgm_index += 4;
+
+	string tgm_name;
+	tgm_name = substr( tgm_message, tgm_index, tgm_nameSize);
+	tgm_index += tgm_nameSize;
+
+	int tgm_header;
+	tgm_header = unpack_int( substr( tgm_message, tgm_index, 4));
+	tgm_index += 4;
+
+	if ( ! tgm_name->empty())
+	{
+		if (tgm_header == gmUpdate)
+		{
+			UpdateDistantPlayer( tgm_name, substr( tgm_message, tgm_index, npos));
+		}
+		elseif (tgm_header == gmEndGame)
+		{
+			Echo( jetski_charName + " Received GameMessage : EndRun");
+			EndNetGame( tgm_name, substr( tgm_message, tgm_index, npos));
+		}
+		elseif (tgm_header == gmFall)
+		{
+			DistantCharFall( tgm_name);
+		}
+		elseif (tgm_header == gmJump)
+		{
+			DistantCharJump( tgm_name);
+		}
+		elseif (tgm_header == gmLooping)
+		{
+			DistantCharLoop( tgm_name);
+		};
+	};
+};
+
+void GameEnded()
+{
+	l_inGame = false;
+	Timer_Kill( "Pret-3");
+	Timer_Kill( "Pret-2");
+	Timer_Kill( "Pret-1");
+	Timer_Kill( "Pret-go");
+	Timer_Kill( "Pret-vanish");
+	Timer_Kill( "Friction");
+	Timer_Kill( "Gaming");
+	OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( "La partie est terminee");
+	Overlay_Show( "Jetski/WaitingOpponent");
+};
+
+SetNetworkScript()
+{
+	if (NETWORK_CURRENT_MESSAGE == "disconnected")
+	{
+		Echo( "Disconnected");
+		OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( "Impossible de" + endl + "se connecter");
+	}
+	else
+	{
+		int sns_index;
+		sns_index = 0;
+	
+		int sns_header;
+		sns_header = unpack_int( substr( NETWORK_CURRENT_MESSAGE, 0, 4));
+		sns_index += 4;
+
+		if (sns_header == mrConnectOK)
+		{
+			Echo( jetski_charName + " Connected");
+			Echo( l_gameName);
+			Overlay_Hide( "Jetski/WaitingOpponent");
+			Network_ClientSendMessage( "GameClient", pack_int( msGameInfo) + pack_int( l_gameName->length()) + l_gameName);
+			Overlay_Show( "Jetski/Menu");
+		}
+		elseif (sns_header == mrConnectFail)
+		{
+			Echo( jetski_charName + " Not connected");
+			OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( "Impossible de" + endl + "se connecter");
+			Overlay_Show( "Jetski/WaitingOpponent");
+		}
+		elseif (sns_header == mrCreateGameOK)
+		{
+			OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( "En attente" + endl + "d'un adversaire");
+			Echo( jetski_charName + " Received Game Created Message");
+			CreateGame();
+		}
+		elseif (sns_header == mrGameDontExist)
+		{
+			Echo( jetski_charName + " Received Game Doesn't Exist Message");
+		}
+		elseif (sns_header == mrGameAlreadyCreated)
+		{
+			Echo( jetski_charName + " Received Game Already Created Message");
+		}
+		elseif (sns_header == mrGameStart)
+		{
+			Echo( jetski_charName + " Received GameStart Message");
+			BeginNetGame();
+		}
+		else
+		{
+			string sns_message;
+			sns_message = substr( NETWORK_CURRENT_MESSAGE, sns_index, npos);
+	
+			if (sns_header == mrAvatar)
+			{
+				Echo( jetski_charName + " Received Avatar Message");
+				LoadMainCharInfos( sns_message);
+			}
+			elseif (sns_header == mrJoinGameOK)
+			{
+				Echo( jetski_charName + " Received GameJoinOK Message");
+				JoinGame( sns_message);
+			}
+			elseif (sns_header == mrRefreshGamesList)
+			{
+				Echo( jetski_charName + " Received RefreshGamesList message");
+				RefreshGamesList( sns_message);
+			}
+			elseif (sns_header == mrJoinGame)
+			{
+				Echo( jetski_charName + " GameJoin Message");
+				AddPlayer( sns_message);
+			}
+			elseif (sns_header == mrGame)
+			{
+				TreatGameMessage( sns_message);
+			}
+			elseif (sns_header == mrEndGame)
+			{
+				GameEnded();
+			}
+			elseif (sns_header == mrQuitGame)
+			{
+				Echo( jetski_charName + " Received GameQuit Message");
+				RemovePlayer( sns_message);
+			}
+			elseif (sns_header == mrGameInfo)
+			{
+				l_maxPlayers = unpack_int( substr( sns_message, 0, 4));
+				Echo( jetski_charName + " Received GameInfos Message - Max Players : " + itoa( l_maxPlayers));
+			};
+		};
+	};
+};

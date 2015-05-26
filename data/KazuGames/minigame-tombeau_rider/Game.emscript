@@ -1,0 +1,909 @@
+bool l_sound;
+bool l_music;
+bool l_inGame;
+bool l_paused;
+bool l_inZombie;
+bool l_leftDown;
+bool l_rightDown;
+bool l_gameStarted;
+bool l_riding;
+bool l_titleShown;
+
+real l_musicVol;
+real l_soundVol;
+real l_acceleration;
+real l_gravity;
+real l_runTime;
+real l_elapsedTime;
+real l_diffTime;
+real l_previousTime;
+real l_currentPitch;
+real l_previousPitch;
+real l_wantedPitch;
+real l_currentZoom;
+real l_playedAnimLength;
+real l_zombieRadius;
+real l_statueRadius;
+real l_nearestZombie;
+real l_nearestStatue;
+real l_currentAngle;
+real l_maxRunTime;
+real l_runTimeSave;
+real l_beginTime;
+real l_lineWidth;
+
+int l_nbMinute;
+int l_nbSeconde;
+int l_nbCentieme;
+int l_maxLevel;
+int l_currentLevel;
+int l_nbZombies;
+int l_nbStatues;
+int l_nbSteps;
+int i;
+int j;
+int l_statueValue;
+int l_zombieValue;
+int l_nbMaxZombies;
+int l_zombieSavaged;
+int l_statueRetrieved;
+int l_nbLives;
+
+vector3 l_currentVelocity;
+vector3 l_previousVelocity;
+vector3 l_zombiePosition;
+vector3 l_statuePosition;
+vector3 l_position;
+vector3 l_orientation;
+vector3 l_top;
+vector3 l_bottom;
+vector3 l_finishBegin;
+vector3 l_finishMiddle;
+vector3 l_finishEnd;
+vector3 l_startFontSize;
+vector3 l_endFontSize;
+vector3 l_currentFontSize;
+vector3 l_overlayPosition;
+
+overlay l_start;
+overlay l_scoreInGame;
+overlay l_chronoInGame;
+
+scene_node l_rootNode;
+scene_node l_charNode;
+scene_node l_zombieNode;
+scene_node l_statueNode;
+
+animation_group l_charAnims;
+animation_group l_zombiesAnims;
+
+string l_animName;
+string l_previousAnimName;
+
+object l_momieCorps;
+object l_momieBande;
+object l_momieGant;
+object l_momieMasque;
+object l_momieTenue;
+object l_statue;
+
+real l_ticPos;
+real l_relativeRegletteWidth;
+real l_relativeTicWidth;
+
+overlay l_ticMusic;
+overlay l_ticSound;
+
+camera l_rootCamera;
+
+void PlaceCamera()
+{
+	timer( "PlaceCamera", TIMERTYPE_REPEAT, 0.0)
+	{
+		if (CURRENTTIMER_NUMEXECS <= 90)
+		{
+			l_currentZoom = l_currentZoom - 140.0;
+			l_rootCamera->GetParent()->Yaw( 2.0);
+			l_rootCamera->GetParent()->Pitch( -1.0);
+			l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (l_currentZoom / V3_GetLength( l_rootCamera->GetPosition())));
+		}
+		else
+		{
+			Timer_Kill( "PlaceCamera");
+		};
+	};
+};
+
+void HideZombies()
+{
+	for (i = 0 ; i < l_nbMaxZombies ; i++)
+	{
+		if (SceneNode_Exists( "ZombieNode_" + itoa( i)))
+		{
+			SceneNode_GetByName( "ZombieNode_" + itoa( i))->Hide();
+			Object_GetByName( "ZombieCorps_" + itoa( i))->Hide();
+		};
+	};
+};
+
+void HideStatues()
+{
+	for (i = 0 ; i < l_nbStatues ; i++)
+	{
+		if (SceneNode_Exists( "StatueNode" + itoa( i)))
+		{
+			SceneNode_GetByName( "StatueNode" + itoa( i))->Hide();
+			Object_GetByName( "Statue" + itoa( i))->Hide();
+		};
+	};
+};
+
+void PlaceZombies()
+{
+	HideZombies();
+	l_nbMaxZombies = 0;
+	l_nbSteps = 2 * (l_currentLevel + 1);
+	for (i = 0 ; i <= l_nbSteps ; i++)
+	{
+		if (i % 2 == 0)
+		{
+			l_nbZombies = i / 2;
+		}
+		else
+		{
+			l_nbZombies = (i + 1) / 2;
+		};
+		for (j = (0 - l_nbZombies) ; j <= l_nbZombies ; j++)
+		{
+			if ( ! SceneNode_Exists( "ZombieNode_" + itoa( l_nbMaxZombies)))
+			{
+				l_zombieNode = SceneNode_Create( "ZombieNode_" + itoa( l_nbMaxZombies));
+				l_zombieNode->Yaw( 180.0);
+
+				l_momieCorps = Object_Create( "ZombieCorps_" + itoa( l_nbMaxZombies), "corpsmomie.mesh");
+				l_momieBande = Object_Create( "ZombieBandes_" + itoa( l_nbMaxZombies), "bandemomie.mesh");
+				l_momieGant = Object_Create( "ZombieGant_" + itoa( l_nbMaxZombies), "gantmomie.mesh");
+				l_momieMasque = Object_Create( "ZombieMasque_" + itoa( l_nbMaxZombies), "masquemomie.mesh");
+				l_momieTenue = Object_Create( "ZombieTenue_" + itoa( l_nbMaxZombies), "tenumomie.mesh");
+	
+				l_momieCorps->SetParent( l_zombieNode);
+				l_momieBande->SetParent( l_zombieNode);
+				l_momieGant->SetParent( l_zombieNode);
+				l_momieMasque->SetParent( l_zombieNode);
+				l_momieTenue->SetParent( l_zombieNode);
+	
+				l_zombiesAnims->AddObject( l_momieCorps);
+				l_zombiesAnims->AddObject( l_momieBande);
+				l_zombiesAnims->AddObject( l_momieGant);
+				l_zombiesAnims->AddObject( l_momieMasque);
+				l_zombiesAnims->AddObject( l_momieTenue);
+	
+				l_zombiesAnims->GetObject( "ZombieCorps_" + itoa( l_nbMaxZombies))->GetAnimation( "marche")->SetLooped( true);
+				l_zombiesAnims->GetObject( "ZombieBandes_" + itoa( l_nbMaxZombies))->GetAnimation( "marche")->SetLooped( true);
+				l_zombiesAnims->GetObject( "ZombieGant_" + itoa( l_nbMaxZombies))->GetAnimation( "marche")->SetLooped( true);
+				l_zombiesAnims->GetObject( "ZombieMasque_" + itoa( l_nbMaxZombies))->GetAnimation( "marche")->SetLooped( true);
+				l_zombiesAnims->GetObject( "ZombieTenue_" + itoa( l_nbMaxZombies))->GetAnimation( "marche")->SetLooped( true);
+			}
+			else
+			{
+				l_zombieNode = SceneNode_GetByName( "ZombieNode_" + itoa( l_nbMaxZombies));
+				l_zombieNode->Show();
+				Object_GetByName( "ZombieCorps_" + itoa( l_nbMaxZombies))->Show();
+			};
+			l_zombiePosition = V3_LinearInterpolation( l_bottom, l_top, (itor( i) / itor( l_nbSteps)));
+			l_zombiePosition = SetVector3( (800.0 * itor( j)) + rand( -500.0, 500.0), (l_zombiePosition[1]), (l_zombiePosition[2]));
+			l_zombieNode->SetPosition( l_zombiePosition);
+			l_nbMaxZombies++;
+		};
+	};
+	l_zombiesAnims->StartAnimation( "marche");
+};
+
+void PlaceStatues()
+{
+	HideStatues();
+	l_nbStatues = 2 * (l_currentLevel + 1) * (l_currentLevel + 1);
+	for (i = 0 ; i < l_nbStatues ; i++)
+	{
+		if ( ! SceneNode_Exists( "StatueNode" + itoa( i)))
+		{
+			l_statueNode = SceneNode_Create( "StatueNode" + itoa( i));
+			l_statueNode->Yaw( 180.0);
+			l_statueNode->SetScale( SetVector3( 2.0, 2.0, 2.0));
+
+			l_statue = Object_Create( "Statue" + itoa( i), "statuette.mesh");
+			l_statue->SetMaterial( "statuette/Or");
+
+			l_statue->SetParent( l_statueNode);
+		}
+		else
+		{
+			l_statueNode = SceneNode_GetByName( "StatueNode" + itoa( i));
+			l_statueNode->Show();
+			Object_GetByName( "Statue" + itoa( i))->Show();
+		};
+		l_statuePosition = V3_LinearInterpolation( l_bottom, l_top, (itor( i) / itor( l_nbStatues)));
+		l_statuePosition = SetVector3( 40.0 + rand( -200.0 * itor( i) / (itor( l_currentLevel) / 2.0) , 200.0 * itor( i) / (itor( l_currentLevel) / 2.0)), (l_statuePosition[1]) + 30.0, (l_statuePosition[2]));
+		l_statueNode->SetPosition( l_statuePosition);
+	};
+	l_zombiesAnims->StartAnimation( "marche");
+};
+
+void UpdateChrono()
+{
+	l_nbMinute = rtoi( l_runTime) / 60;
+	l_runTime = l_runTime - itor( l_nbMinute * 60);
+	l_nbSeconde = rtoi( l_runTime);
+	l_runTime = l_runTime - itor( l_nbSeconde);
+	l_nbCentieme = rtoi( l_runTime * 100.0);
+	l_chronoInGame->SetCaption( itoa( l_nbMinute) + "m" + itoa( l_nbSeconde) + "s" + itoa( l_nbCentieme));
+};
+
+void UpdateMaxTime()
+{
+	l_nbMinute = rtoi( l_maxRunTime) / 60;
+	l_runTime = l_maxRunTime - itor( l_nbMinute * 60);
+	l_nbSeconde = rtoi( l_runTime);
+	l_runTime = l_runTime - itor( l_nbSeconde);
+	l_nbCentieme = rtoi( l_runTime * 100.0);
+	OverlayElement_GetByName( "TopRight/TotalTime/Var")->SetCaption( itoa( l_nbMinute) + "m" + itoa( l_nbSeconde) + "s" + itoa( l_nbCentieme));
+};
+
+void LaunchDescent();
+
+void AdjustStartPosition()
+{
+	l_lineWidth = GetLineWidth( l_start->GetCaption(), "Egyptian", 24.0);
+	l_start->SetPosition( SetVector3( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2, (GENERAL_SCREEN_HEIGHT - 24.0) / 2.0, 0.0));
+};
+
+void PlayerReady()
+{
+	l_inGame = false;
+	timer ("Pret", TIMERTYPE_CONTINUOUS, 5.0)
+	{
+		if (CURRENTTIMER_TIME_ELAPSED >= 1.0 && CURRENTTIMER_TIME_ELAPSED < 2.0)
+		{
+			if (l_start->GetCaption() != "3")
+			{
+				l_start->SetCaption( "3");
+				AdjustStartPosition();				
+				l_start->Show();
+			};
+		}
+		elseif (CURRENTTIMER_TIME_ELAPSED >= 2.0 && CURRENTTIMER_TIME_ELAPSED < 3.0)
+		{
+			if (l_start->GetCaption() == "3")
+			{
+				l_start->SetCaption( "2");
+				AdjustStartPosition();
+			};
+		}
+		elseif (CURRENTTIMER_TIME_ELAPSED >= 3.0 && CURRENTTIMER_TIME_ELAPSED < 4.0)
+		{
+			if (l_start->GetCaption() == "2")
+			{
+				l_start->SetCaption( "1");
+				AdjustStartPosition();
+			};
+		}
+		elseif (CURRENTTIMER_TIME_ELAPSED >= 4.0)
+		{
+			if (l_start->GetCaption() == "1")
+			{
+				l_start->SetCaption( "Go !");
+				AdjustStartPosition();
+			};
+		};
+	};
+	timer ("FinPret", TIMERTYPE_ONCE, 5.0)
+	{
+		l_start->Hide();
+		l_start->SetCaption( "Level " + itoa( l_currentLevel + 1));
+		AdjustStartPosition();
+		Timer_Play( "Riding");
+		LaunchDescent();
+	};
+};
+
+void StartLevel()
+{
+	PlaceZombies();
+	PlaceStatues();
+	PlayerReady();
+};
+
+void StartGame()
+{
+	l_riding = false;
+	l_rightDown = false;
+	l_leftDown = false;
+	l_inZombie = false;
+	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+	l_previousVelocity = l_currentVelocity;
+	l_acceleration = 0.0;
+	l_runTimeSave = 0.0;
+
+	l_charNode->SetPosition( SetVector3( 40.0, 16439.0, 1935.0));
+	l_charNode->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+
+	l_animName = "Ouverture";
+	l_charAnims->StopAnimation( "Droite");
+	l_charAnims->StopAnimation( "Gauche");
+	l_charAnims->StartAnimation( "Ouverture");
+	l_charAnims->PauseAnimation( "Ouverture");
+
+	Overlay_Hide( "Title");
+	Overlay_Hide( "Menu");
+	Overlay_Show( "Score");
+	Overlay_Show( "MenuInGame");
+	Overlay_Show( "TopRight");
+	l_start->Show();
+	l_statueRetrieved = -1;
+	l_zombieSavaged = -1;
+	l_elapsedTime = 0.0;
+	l_inGame = true;
+	l_paused = false;
+
+	l_runTime = 0.0;
+	l_nbMinute = 0;
+	l_nbSeconde = 0;
+	l_nbCentieme = 0;
+	UpdateChrono();
+	UpdateScore();
+
+	l_charAnims->StartAnimation( "Ouverture");
+	timer ("FinOuverture", TIMERTYPE_ONCE, l_charAnims->GetObject( rider_charName + "_Body")->GetAnimation( "Ouverture")->GetLength())
+	{
+		Object_GetByName( "CouvercleSarcophage")->Hide();
+		l_animName = "Stand";
+		StartLevel();
+		timer( "OrientSarcophagus", TIMERTYPE_REPEAT, 0.0)
+		{
+			if (CURRENTTIMER_NUMEXECS <= 30)
+			{
+				l_charNode->Translate( SetVector3( 0.0, 0.0, 4.0));
+				l_charNode->Pitch( 1.5);
+			}
+			else
+			{
+				Timer_Kill( "OrientSarcophagus");
+			};
+		};
+	};
+};
+
+void ZoomText()
+{
+	l_overlayPosition = OverlayElement_GetByName( "End")->GetPosition();
+	timer("ZoomText", TIMERTYPE_CONTINUOUS, 2.0)
+	{
+		l_currentFontSize = V3_LinearInterpolation( l_startFontSize, l_endFontSize, CURRENTTIMER_TIME_LEFT / 2.0);
+		OverlayElement_GetByName( "End")->SetFontSize( l_currentFontSize[0]);
+		l_lineWidth = GetLineWidth( OverlayElement_GetByName( "End")->GetCaption(), "Egyptian", l_currentFontSize[0]);
+		l_overlayPosition = SetVector3( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0, (GENERAL_SCREEN_HEIGHT - l_currentFontSize[0]) / 2.0, l_overlayPosition[2]);
+		OverlayElement_GetByName( "End")->SetPosition( l_overlayPosition);
+	};
+};
+
+void EndGame()
+{
+	Overlay_Hide( "MenuInGame");
+	CheckClearToGo();
+	if (g_clearToGo)
+	{
+		Overlay_Show( "Menu");
+		Overlay_Hide( "Score");
+		Overlay_Hide( "TopRight");
+		OverlayElement_GetByName( "Menu/Jouer")->Hide();
+		OverlayElement_GetByName( "Menu/Continuer")->Hide();
+		OverlayElement_GetByName( "Menu/Recommencer")->Show();
+		OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
+		if (g_free)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
+		}
+		elseif (g_freeLimited)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
+		}
+		elseif (g_priced)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
+		}
+		elseif (g_abonne)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
+		};
+	}
+	else
+	{
+		Overlay_Hide( "Menu");
+		if ( ! c_modeInstant)
+		{
+			string l_endCaption;
+			l_endCaption->clear();
+			real l_lineWidth;
+			l_lineWidth = 0.0;
+			Echo( "End - not instant - " + l_infos);
+			if (l_infos == "no more free")
+			{
+				Echo( "End - not instant - not free");
+				l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
+				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+			}
+			else
+			{
+				Echo( "End - not instant - no money");
+				l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
+				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+				l_endCaption += endl + "Vous ne disposez pas de ce montant";
+			};
+			OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
+			OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
+			Overlay_Show( "FinMiniGame");
+		};
+	};
+};
+
+void LoseGame()
+{
+	l_start->Hide();
+	OverlayElement_GetByName( "End")->Show();
+	OverlayElement_GetByName( "End")->SetMaterial( "Perdu");
+	Overlay_Show( "End");
+	timer( "LoseGame", TIMERTYPE_ONCE, 2.0)
+	{
+		Overlay_Hide( "End");
+		EndGame();
+	};
+};
+
+void WinGame()
+{
+	l_start->Hide();
+	OverlayElement_GetByName( "End")->Show();
+	OverlayElement_GetByName( "End")->SetMaterial( "Gagne");
+	Overlay_Show( "End");
+	timer( "LoseGame", TIMERTYPE_ONCE, 2.0)
+	{
+		Overlay_Hide( "End");
+		EndGame();
+	};
+};
+
+void LaunchDescent()
+{
+	l_beginTime = l_elapsedTime;
+	l_previousTime = l_elapsedTime;
+	l_inGame = true;
+	l_riding = true;
+
+	timer( "MaxTime", TIMERTYPE_ONCE, l_maxRunTime)
+	{
+		LoseGame();
+	};
+	timer( "Riding", TIMERTYPE_CONTINUOUS, l_maxRunTime)
+	{
+		l_previousVelocity = l_currentVelocity;
+		l_diffTime = l_elapsedTime - l_previousTime;
+		l_previousTime = l_elapsedTime;
+
+		if ( ! l_inZombie)
+		{
+			l_currentVelocity = SetVector3( (l_currentVelocity[0]) + (l_acceleration * l_diffTime * 2.0), (l_currentVelocity[1]) + (l_gravity * l_diffTime), 0.0);
+		}
+		else
+		{
+			l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+		};
+
+		l_position = l_charNode->GetPosition();
+
+		if ((l_position[0]) > 3000.0)
+		{
+			l_currentVelocity = SetVector3( 0.0, (l_currentVelocity[1]), 0.0);
+			l_charNode->SetPosition( SetVector3( 3000.0, l_position[1], l_position[2]));
+		}
+		elseif ((l_position[0]) < -3000.0)
+		{
+			l_currentVelocity = SetVector3( 0.0, l_currentVelocity[1], 0.0);
+			l_charNode->SetPosition( SetVector3( -3000.0, l_position[1], l_position[2]));
+		};
+
+		if ((l_position[1]) < 350.0)
+		{
+			l_zombieSavaged = -1;
+			l_statueRetrieved = -1;
+			l_nbLives++;
+			if (l_nbLives > 5)
+			{
+				l_nbLives = 5;
+			};
+			l_charAnims->StopAnimation( "Stand");
+			l_charAnims->StopAnimation( "Droite");
+			l_charAnims->StopAnimation( "Gauche");
+			l_animName = "End";
+			l_charAnims->StartAnimation( "End");
+			timer( "endEnd", TIMERTYPE_ONCE, l_charAnims->GetObject( rider_charName + "_Body")->GetAnimation( "End")->GetLength())
+			{
+				l_previousAnimName = "Stand";
+				l_animName = "Stand";
+				l_charAnims->StartAnimation( "Stand");
+			};
+			OverlayElement_GetByName( "Life" + itoa( l_nbLives))->Show();
+			l_inGame = false;
+			l_currentVelocity	= SetVector3( 0.0, 0.0, 0.0);
+			l_previousVelocity = l_currentVelocity;
+			l_acceleration = 0.0;
+			if (l_currentLevel < l_maxLevel)
+			{
+				if (l_currentLevel == 1)
+				{
+					l_zombieValue = 500;
+					l_statueValue = 1000;
+					l_maxRunTime = 11.0;
+					UpdateMaxTime();
+				}
+				elseif (l_currentLevel == 2)
+				{
+					l_zombieValue = 700;
+					l_statueValue = 1400;
+					l_maxRunTime = 10.0;
+					UpdateMaxTime();
+				}
+				elseif (l_currentLevel == 3)
+				{
+					l_zombieValue = 1000;
+					l_statueValue = 2000;
+					l_maxRunTime = 6.0;
+					UpdateMaxTime();
+				};
+				l_currentLevel++;
+				timer( "NextLevel", TIMERTYPE_ONCE, 1.0)
+				{
+					StartGame();
+				};
+			}
+			else
+			{
+				Echo( "coucoucoucoucoucoucoucou");
+				g_score = g_score + (l_nbLives * 3000);
+				UpdateScore();
+				_submitHighscore();
+				WinGame();
+			};
+			Timer_Kill( "MaxTime");
+			Timer_Kill( "Riding");
+		};
+
+		if (l_currentVelocity->Length() > 0.0)
+		{
+			l_charNode->Translate( SetVector3( 100.0 * (l_currentVelocity[0]) * GENERAL_ELAPSED_TIME, -100.0 * (l_currentVelocity[1]) * GENERAL_ELAPSED_TIME, 100.0 * (l_currentVelocity[1]) * GENERAL_ELAPSED_TIME));
+		};
+
+		if (l_inGame)
+		{
+			l_elapsedTime += GENERAL_ELAPSED_TIME;
+			l_runTime = l_elapsedTime - l_beginTime;
+			l_runTimeSave = l_runTime;
+			UpdateChrono();
+			for (i = 0 ; i < l_nbMaxZombies ; i++)
+			{
+				if (l_zombieSavaged == i)
+				{
+					continue();
+				};
+
+				l_zombieNode = SceneNode_GetByName( "ZombieNode_" + itoa( i));
+				if ( ! Object_GetByName( "ZombieCorps_" + itoa( i))->IsVisible())
+				{
+					continue();
+				};
+				l_nearestZombie = (l_zombieNode->GetPosition() - l_charNode->GetPosition())->Length();
+
+				if (l_nearestZombie < l_zombieRadius)
+				{
+					l_rightDown = false;
+					l_leftDown = false;
+					l_charAnims->StopAnimation( "Droite");
+					l_charAnims->StopAnimation( "Gauche");
+					l_charAnims->StopAnimation( "Stand");
+					l_animName = "End";
+					l_charAnims->StartAnimation( "End");
+					timer( "endEnd", TIMERTYPE_ONCE, l_charAnims->GetObject(rider_charName + "_Body")->GetAnimation( "End")->GetLength())
+					{
+						l_animName = "Stand";
+						l_charAnims->StartAnimation( "Stand");
+					};
+					g_score = g_score - l_zombieValue;
+					UpdateScore();
+					l_inZombie = true;
+					OverlayElement_GetByName( "Life" + itoa( l_nbLives))->Hide();
+					l_nbLives = l_nbLives - 1;
+
+					Sound_Play( "Ouch", "PersoNode");
+
+					l_previousVelocity = (-2.0) * l_currentVelocity;
+					l_currentVelocity = SetVector3( (-2.0) * l_currentVelocity[0], 0.0, (-2.0) * l_currentVelocity[2]);
+					l_zombieSavaged = i;
+					l_charAnims->PauseAnimation( "Stand");
+
+					timer( "EndCrash", TIMERTYPE_ONCE, 2.0)
+					{
+						l_inZombie = false;
+						l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+						l_acceleration = 0.0;
+						l_previousVelocity = l_currentVelocity;
+
+						l_animName = "Stand";
+						l_charAnims->StartAnimation( "Stand");
+
+						if (l_nbLives < 0)
+						{
+							Timer_Kill( "MaxTime");
+							Timer_Kill( "Riding");
+							LoseGame();
+						};
+
+						SceneNode_GetByName( "ZombieNode_" + itoa( l_zombieSavaged))->Hide();
+						Object_GetByName( "ZombieCorps_" + itoa( l_zombieSavaged))->Hide();
+					};
+
+					break();
+				};
+			};
+			for (i = 0 ; i < l_nbStatues ; i++)
+			{
+				if (l_statueRetrieved == i)
+				{
+					continue();
+				};
+
+				l_statueNode = SceneNode_GetByName( "StatueNode" + itoa( i));
+				if ( ! Object_GetByName( "Statue" + itoa( i))->IsVisible())
+				{
+					continue();
+				};
+				l_nearestStatue = (l_statueNode->GetPosition() - l_charNode->GetPosition())->Length();
+
+				if (l_nearestStatue < l_statueRadius)
+				{
+					g_score = g_score + l_statueValue;
+					UpdateScore();
+
+					Sound_Play_Global( "Statue");
+
+					l_statueRetrieved = i;
+
+					SceneNode_GetByName( "StatueNode" + itoa( l_statueRetrieved))->Hide();
+					Object_GetByName( "Statue" + itoa( l_statueRetrieved))->Hide();
+				};
+			};
+		};
+	};
+};
+
+void BeginGame()
+{
+	Overlay_Show( "MenuInGame");
+
+	l_statueValue = 700;
+	l_zombieValue = 300;
+
+	g_score = 0;
+	UpdateScore();
+	l_gameStarted = true;
+
+	l_currentZoom = 15000.0;
+	l_currentPitch = 30.0;
+
+	l_currentLevel = 1;
+	l_maxRunTime = 12.0;
+	UpdateMaxTime();
+
+	l_titleShown = false;
+
+	OverlayElement_GetByName( "Life4")->Hide();
+	OverlayElement_GetByName( "Life5")->Hide();
+
+	l_rootCamera->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+	l_rootCamera->SetPosition( SetVector3( 0.0, 0.0, 15000.0));
+	PlaceCamera();
+	StartGame();
+};
+
+void PauseGame()
+{
+	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "Score");
+	Overlay_Hide( "TopRight");
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	Overlay_Show( "Menu");
+	Timer_PauseAll();
+	l_charAnims->PauseAnimation( l_animName);
+	l_zombiesAnims->PauseAnimation( "marche");
+	l_paused = true;
+};
+
+void StopGame()
+{
+	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "End");
+	Overlay_Hide( "Score");
+	Overlay_Hide( "TopRight");
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	Overlay_Show( "Menu");
+
+	l_paused = false;
+	l_inGame = false;
+	l_gameStarted = false;
+
+	OverlayElement_GetByName( "Life1")->Show();
+	OverlayElement_GetByName( "Life2")->Show();
+	OverlayElement_GetByName( "Life3")->Show();
+	OverlayElement_GetByName( "Life4")->Hide();
+	OverlayElement_GetByName( "Life5")->Hide();
+	l_start->SetCaption( "Level 1");
+	AdjustStartPosition();
+	l_start->Hide();
+
+	l_nbLives = 3;
+
+	g_score = 0;
+	UpdateScore();
+	l_runTime = 0.0;
+	UpdateChrono();
+
+	Timer_KillAll();
+
+	l_charAnims->StopAnimation( "Droite");
+	l_charAnims->StopAnimation( "Gauche");
+	l_charAnims->StopAnimation( "Stand");
+	l_charAnims->StopAnimation( "End");
+	l_charAnims->StopAnimation( "Ouverture");
+
+	l_zombiesAnims->StopAnimation( "marche");
+	l_zombiesAnims->StopAnimation( "projeter");
+
+	Object_GetByName( "CouvercleSarcophage")->Show();
+
+	HideZombies();
+	HideStatues();
+};
+
+void ContinueGame()
+{
+	Overlay_Hide( "Menu");
+	Overlay_Show( "Score");
+	Overlay_Show( "MenuInGame");
+	Overlay_Show( "TopRight");
+	l_paused = false;
+
+	Timer_Play( "Pret");
+	Timer_Play( "PlaceCamera");
+	if (l_inGame)
+	{
+		Timer_Play( "Riding");
+	};
+	Timer_Play( "endEnd");
+	Timer_Play( "Launch");
+	Timer_Play( "FinPret");
+	Timer_Play( "NextLevel");
+	Timer_Play( "LaunchLevel");
+	Timer_Play( "FinPretNext");
+	Timer_Play( "FinOuverture");
+	Timer_Play( "OrientSarcophagus");
+	Timer_Play( "EndCrash");
+
+	
+	l_charAnims->StartAnimation( l_animName);
+
+	l_zombiesAnims->StartAnimation( "marche");
+};
+
+void Initialise()
+{
+	l_sound = false;
+	l_music = false;
+	l_inGame = false;
+	l_paused = false;
+	l_gameStarted = false;
+	l_titleShown = true;
+	l_currentPitch = 30.0;
+	l_previousPitch = 30.0;
+	l_currentZoom = 15000.0;
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+	l_previousVelocity = SetVector3( 0.0, 0.0, 0.0);
+	l_top = SetVector3( 40.0, 15040.0, 3235.0);
+	l_bottom = SetVector3( 40.0, 1900.0, 16500.0);
+	l_acceleration = 0.0;
+	l_gravity = 9.81;
+	g_score = 0;
+	l_nbMinute = 0;
+	l_nbSeconde = 0;
+	l_nbCentieme = 0;
+	l_maxLevel = 4;
+	l_currentLevel = 1;
+	l_nbLives = 3;
+	l_nbMaxZombies = 0;
+	l_nbStatues = 0;
+	l_statueValue = 700;
+	l_zombieValue = 300;
+	l_runTime = 0.0;
+	l_elapsedTime = 0.0;
+	l_wantedPitch = 330.0;
+	l_zombieRadius = 200.0;
+	l_statueRadius = 200.0;
+
+	l_start = OverlayElement_GetByName( "Start");
+	l_start->Hide();
+	AdjustStartPosition();
+	l_scoreInGame = OverlayElement_GetByName( "Score/Text");
+	l_chronoInGame = OverlayElement_GetByName( "TopRight/Chrono/Var");
+
+	l_rootNode = SceneNode_GetByName( "root node");
+	l_charNode = SceneNode_GetByName( "PersoNode");
+	l_rootCamera = Camera_GetByName( "RootCamera");
+
+	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+
+	l_charAnims = AnimationGroup_GetByName( "PersoAnims");
+	l_zombiesAnims = AnimationGroup_GetByName( "Zombies");
+
+	l_animName = "ouverture";
+	l_charAnims->StartAnimation( "ouverture");
+	l_charAnims->PauseAnimation( "ouverture");
+
+	Overlay_Hide( "Commandes");
+	Overlay_Hide( "End");
+	Overlay_Hide( "Options");
+	Overlay_Hide( "Regles");
+	Overlay_Hide( "Scores");
+	Overlay_Hide( "Score");
+	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "TopRight");
+	Overlay_Hide( "Menu");
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+	l_relativeTicWidth = l_ticMusic->GetWidth() / GENERAL_SCREEN_WIDTH;
+
+	Sound_Play_Global( "Ambiance");
+
+	l_startFontSize = SetVector3( 24.0, 0.0, 0.0);
+	l_endFontSize = SetVector3( 48.0, 0.0, 0.0);
+	l_currentFontSize = SetVector3( 24.0, 0.0, 0.0);
+
+	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
+	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
+	Overlay_Hide( "FinMiniGame");
+
+	if (c_modeConcours)
+	{
+		OverlayElement_GetByName( "Menu/Scores")->Hide();
+		OverlayElement_GetByName( "Menu/Jouer")->SetTop( 10.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+		OverlayElement_GetByName( "Menu/Continuer")->SetTop( 10.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+		OverlayElement_GetByName( "Menu/Recommencer")->SetTop( 10.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+		OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetTop( 20.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+		OverlayElement_GetByName( "Menu/Commandes")->SetTop( 32.5 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+		OverlayElement_GetByName( "Menu/Regles")->SetTop( 57.5 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+		OverlayElement_GetByName( "Menu/Options")->SetTop( 80.0 * OverlayElement_GetByName( "Menu")->GetHeight() / 100.0);
+	};
+
+	InitialiseNetwork();
+};

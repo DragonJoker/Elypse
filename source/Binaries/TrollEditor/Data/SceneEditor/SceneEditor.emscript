@@ -1,0 +1,1156 @@
+PostEffect_Enable( "MotionBlur", false);
+Overlay_HideAll();
+Overlay_Show( "SceneEditor/Menu");
+Overlay_Show( "SceneEditor/ObjectPositions");
+
+object currentEntity;
+object currentEntity2;
+
+bool lockSelection;
+bool leftControlDown;
+bool leftAltDown;
+bool mode_shift;
+bool snapSelection;
+bool g_wireframeMode;
+
+real obj_position_x;
+real obj_position_y;
+real obj_position_z;
+real current_rotation;
+real current_translate;
+real grid_factor;
+real total_rotation;
+real g_rotation_step;
+real total_scale;
+
+int obj_select_axis;
+int current_mode;
+int i;
+int selectedAxis;
+int axisListChoose;
+int last_known_action;
+
+
+string obj_pos;
+string over_name;
+string last_overlay_name;
+string file_to_save;
+
+vector3 position;
+vector3 last_ground_position;
+vector3 total_translation;
+vector3 rotation_axis;
+
+overlay currentOverlay;
+
+camera RootCamera;
+
+RootCamera = Camera_GetByName("RootCamera");
+
+lockSelection = false;
+leftControlDown = false;
+leftAltDown = false;
+snapSelection = true;
+currentEntity = NULL;
+current_mode = 1;
+last_overlay_name = "Select";
+mode_shift = false;
+selectedAxis = 0;
+axisListChoose = 0;
+last_known_action = 0;
+
+
+g_wireframeMode = false;
+
+grid_factor = 5.0;
+g_rotation_step = 1.0;
+
+file_to_save = "C:\Program Files\ForDevStudio\EMuse\rsc\emuseScene.emscene";
+
+int g_mode;
+string g_name;
+
+void MenuFunc( )
+{
+	if(current_mode != g_mode)
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/" + last_overlay_name)->SetMaterial("Base/Icon/"+last_overlay_name);
+		last_overlay_name = g_name;
+		OverlayElement_GetByName("SceneEditor/Menu/" + g_name)->SetMaterial("Base/Icon/"+g_name+"_A");
+		current_mode = g_mode;
+	};
+	if(axisListChoose != 0)
+	{
+		Overlay_Hide("SceneEditor/AxisList");
+		axisListChoose = 0;
+	};
+};
+
+void PrintNewCoords()
+{
+	obj_position_x = (currentEntity->GetParent()->GetPosition())[0];
+	obj_position_y = (currentEntity->GetParent()->GetPosition())[1];
+	obj_position_z = (currentEntity->GetParent()->GetPosition())[2];
+	OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionX")->SetCaption(rtoa(obj_position_x));
+	OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionY")->SetCaption(rtoa(obj_position_y));
+	OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionZ")->SetCaption(rtoa(obj_position_z));
+};
+
+void SetPosition()
+{
+	OverlayElement_GetByName(over_name)->SetCaption(rtoa(ator(obj_pos)));
+	if( obj_select_axis == 1)
+	{
+		obj_position_x = ator(obj_pos);
+	}
+	elseif( obj_select_axis == 2)
+	{
+		obj_position_y = ator(obj_pos);
+	}
+	elseif( obj_select_axis == 3)
+	{
+		obj_position_z = ator(obj_pos);
+	}
+	else
+	{
+		obj_pos = "";
+	};
+	OverlayElement_GetByName(over_name)->SetTextColour(COLOUR_WHITE);
+	if(currentEntity != NULL)
+	{
+		total_translation = SetVector3(obj_position_x,obj_position_y,obj_position_z) - currentEntity->GetParent()->GetPosition();
+		currentEntity->GetParent()->SetPosition(SetVector3(obj_position_x,obj_position_y,obj_position_z));
+		last_known_action = 5;
+	};
+	over_name = "";
+};
+
+void Mouse_LButtonDown()
+{
+	if(!over_name->empty())
+	{
+		SetPosition();
+	};
+	if(current_mode == 1)
+	{
+		if(!lockSelection)
+		{
+			currentEntity2 = NULL;
+			currentEntity2 = MousePickupObject(MOUSE_POSITION_X,MOUSE_POSITION_Y,true);
+			if(currentEntity2!=NULL)
+			{
+				if(currentEntity != NULL && !mode_shift)
+				{
+					currentEntity->ShowBoundingBox(false);
+					Echo("Showbounding box");
+				};
+
+				currentEntity = currentEntity2;
+				OverlayElement_GetByName("ObjectName")->Show();
+				if(currentEntity->GetParent()!=NULL)
+				{
+					OverlayElement_GetByName("ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+					currentEntity->ShowBoundingBox(true);
+					PrintNewCoords();
+				}
+				else
+				{
+					OverlayElement_GetByName("ObjectName")->SetCaption("None");
+				};
+			};
+			if(currentEntity == NULL)
+			{
+				OverlayElement_GetByName("ObjectName")->Hide();
+			};
+		};
+	}
+	elseif(current_mode == 2)
+	{
+		timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+		{
+			RootCamera->GetParent()->Yaw( 300.0 * (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH));
+			RootCamera->GetParent()->Pitch( 200.0 * (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT));
+		};
+	}
+	elseif(current_mode == 3)
+	{
+		timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+		{
+			RootCamera->GetParent()->Translate((RootCamera->GetLocalXAxis()) * (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * (RootCamera->GetPosition()->Length()) 
+									+ (RootCamera->GetLocalYAxis()) * (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * ((-1.0)*RootCamera->GetPosition()->Length()));
+		};
+	}
+	elseif(current_mode == 4)
+	{
+		current_rotation = 0.0;
+		total_rotation = 0.0;
+		last_known_action = 4;
+		if(!lockSelection)
+		{
+			currentEntity2 = NULL;
+			currentEntity2 = MousePickupObject(MOUSE_POSITION_X,MOUSE_POSITION_Y,true);
+			if(currentEntity2!=NULL)
+			{
+				if(currentEntity != NULL && !mode_shift)
+				{
+					currentEntity->ShowBoundingBox(false);
+				};
+
+				currentEntity = currentEntity2;
+				OverlayElement_GetByName("SceneEditor/ObjectName")->Show();
+				if(currentEntity->GetParent()!=NULL)
+				{
+					OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+	
+					currentEntity->ShowBoundingBox(true);
+				
+					PrintNewCoords();
+				}
+				else
+				{
+					OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption("None");
+				};
+			};
+			if(currentEntity == NULL)
+			{
+				OverlayElement_GetByName("SceneEditor/ObjectName")->Hide();
+			};
+		};
+		
+		if(currentEntity!=NULL)
+		{
+			if( selectedAxis == 1 )
+			{
+				rotation_axis = SetVector3(1.0,0.0,0.0);
+			}
+			elseif( selectedAxis == 2 )
+			{
+				rotation_axis = SetVector3(0.0,1.0,0.0);
+			}
+			elseif( selectedAxis == 3 )
+			{
+				rotation_axis = SetVector3(0.0,0.0,1.0);
+			};
+			timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+			{
+				current_rotation = current_rotation + (100.0 * MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH);
+				while(current_rotation > g_rotation_step)
+				{
+					if(currentEntity!=NULL)
+					{
+						currentEntity->GetParent()->Rotate( rotation_axis, - g_rotation_step );
+						current_rotation = current_rotation - g_rotation_step;
+						total_rotation = total_rotation - g_rotation_step;
+					};
+				};
+				
+				while(current_rotation < (- g_rotation_step))
+				{
+					currentEntity->GetParent()->Rotate( rotation_axis,g_rotation_step);
+					total_rotation = total_rotation + g_rotation_step;
+					current_rotation = current_rotation + g_rotation_step;
+				};
+			};
+		};
+	}
+	elseif(current_mode == 5)
+	{
+		last_known_action = 5;
+		total_translation = SetVector3(0.0,0.0,0.0);
+		if(!lockSelection)
+		{
+			currentEntity2 = NULL;
+			currentEntity2 = MousePickupObject( MOUSE_POSITION_X, MOUSE_POSITION_Y,true);
+			if(currentEntity2!=NULL)
+			{
+				if(currentEntity != NULL && !mode_shift)
+				{
+					currentEntity->ShowBoundingBox(false);
+				};
+
+				currentEntity = currentEntity2;
+				OverlayElement_GetByName("SceneEditor/ObjectName")->Show();
+				if(currentEntity->GetParent()!=NULL)
+				{
+					OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+
+					currentEntity->ShowBoundingBox(true);
+				
+					PrintNewCoords();
+				}
+				else
+				{
+					OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption("None");
+				};
+			};
+			if(currentEntity == NULL)
+			{
+				OverlayElement_GetByName("SceneEditor/ObjectName")->Hide();
+			};
+		};
+		if(currentEntity != NULL)
+		{
+			position = GetGroundCoords( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+			if(snapSelection)
+			{
+				position = V3_SnapCoords(position,grid_factor);
+			};
+			
+			if( selectedAxis == 1 )
+			{
+				last_ground_position = SetVector3(position[0],(currentEntity->GetParent()->GetPosition())[1],(currentEntity->GetParent()->GetPosition())[2]);
+				timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+				{
+					position = GetGroundCoords( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+					if(snapSelection)
+					{
+						position = V3_SnapCoords(position,grid_factor);
+					};
+					position = SetVector3(position[0],(currentEntity->GetParent()->GetPosition())[1],(currentEntity->GetParent()->GetPosition())[2]);
+					currentEntity->GetParent()->Translate( position - last_ground_position );
+					total_translation = total_translation + position - last_ground_position;
+					last_ground_position = position;
+					PrintNewCoords();
+				};
+			}
+			elseif( selectedAxis == 2 )
+			{
+				last_ground_position = currentEntity->GetParent()->GetPosition();
+				timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+				{
+					current_translate = (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition());
+					if(snapSelection)
+					{
+						position = V3_SnapCoords( last_ground_position + SetVector3(0.0,current_translate,0.0),grid_factor);
+					}
+					else
+					{
+						position = last_ground_position + SetVector3(0.0,current_translate,0.0);
+					};
+					last_ground_position = last_ground_position + SetVector3(0.0,current_translate,0.0);
+					if(position != currentEntity->GetParent()->GetPosition() )
+					{
+						total_translation = total_translation + position - (currentEntity->GetParent()->GetPosition());
+						currentEntity->GetParent()->Translate( position - (currentEntity->GetParent()->GetPosition()) );
+						PrintNewCoords();
+					};
+				};
+			}
+			elseif( selectedAxis == 3 )
+			{
+				last_ground_position = SetVector3((currentEntity->GetParent()->GetPosition())[0],(currentEntity->GetParent()->GetPosition())[1],position[2]);
+				timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+				{
+					position = GetGroundCoords( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+					if(snapSelection)
+					{
+						position = V3_SnapCoords(position,grid_factor);
+					};
+					position = SetVector3((currentEntity->GetParent()->GetPosition())[0],(currentEntity->GetParent()->GetPosition())[1],position[2]);
+					currentEntity->GetParent()->Translate( position - last_ground_position );
+					total_translation = total_translation + position - last_ground_position;
+					last_ground_position = position;
+					PrintNewCoords();
+				};
+			}
+			elseif( selectedAxis == 4 )
+			{
+				last_ground_position = currentEntity->GetParent()->GetPosition();
+				timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+				{
+					if(snapSelection)
+					{
+						position = V3_SnapCoords( last_ground_position + SetVector3( (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * V3_GetLength(RootCamera->GetPosition()),(MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition()) ,0.0),grid_factor);
+					}
+					else
+					{
+						position = last_ground_position + SetVector3( (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * V3_GetLength(RootCamera->GetPosition()), (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition()) ,0.0);
+					};
+					last_ground_position = last_ground_position + SetVector3( (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * V3_GetLength(RootCamera->GetPosition()), (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition()) ,0.0);
+					if(position != currentEntity->GetParent()->GetPosition() )
+					{
+						total_translation = total_translation + position - (currentEntity->GetParent()->GetPosition());
+						currentEntity->GetParent()->Translate( position - (currentEntity->GetParent()->GetPosition()) );
+						PrintNewCoords();
+					};
+				};
+			}
+			elseif( selectedAxis == 5 )
+			{
+				last_ground_position = currentEntity->GetParent()->GetPosition();
+				timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+				{
+					if(snapSelection)
+					{
+						position = V3_SnapCoords( last_ground_position + SetVector3(0.0 , (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition()) , (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * V3_GetLength(RootCamera->GetPosition())),grid_factor);
+					}
+					else
+					{
+						position = last_ground_position + SetVector3(0.0 , (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition()) , (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * V3_GetLength(RootCamera->GetPosition()));
+					};
+					last_ground_position = last_ground_position + SetVector3(0.0 , (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * V3_GetLength(RootCamera->GetPosition()) , (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * V3_GetLength(RootCamera->GetPosition()));
+					if(position != currentEntity->GetParent()->GetPosition() )
+					{
+						total_translation = total_translation + position - (currentEntity->GetParent()->GetPosition());
+						currentEntity->GetParent()->Translate( position - (currentEntity->GetParent()->GetPosition()) );
+						PrintNewCoords();
+					};
+				};
+			}
+			elseif( selectedAxis == 6 )
+			{
+				last_ground_position = SetVector3(position[0],(currentEntity->GetParent()->GetPosition())[1],position[2]);
+				timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+				{
+					position = GetGroundCoords(MOUSE_POSITION_X,MOUSE_POSITION_Y);
+					if(snapSelection)
+					{
+						position = V3_SnapCoords(position,grid_factor);
+					};
+					position = SetVector3(position[0],(currentEntity->GetParent()->GetPosition())[1],position[2]);
+					currentEntity->GetParent()->Translate( position - last_ground_position );
+					total_translation = total_translation + position - last_ground_position;
+					last_ground_position = position;
+					PrintNewCoords();
+				};
+			};
+		};
+	}
+	elseif(current_mode == 6)
+	{
+		if(!lockSelection)
+		{
+			currentEntity2 = NULL;
+			currentEntity2 = MousePickupObject(MOUSE_POSITION_X,MOUSE_POSITION_Y,true);
+			if(currentEntity2!=NULL)
+			{
+				if(currentEntity != NULL && !mode_shift)
+				{
+					currentEntity->ShowBoundingBox(false);
+				};
+
+				currentEntity = currentEntity2;
+				OverlayElement_GetByName("SceneEditor/ObjectName")->Show();
+				if(currentEntity->GetParent()!=NULL)
+				{
+					OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+
+					currentEntity->ShowBoundingBox(true);
+				
+					PrintNewCoords();
+				}
+				else
+				{
+					OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption("None");
+				};
+			};
+			if(currentEntity == NULL)
+			{
+				OverlayElement_GetByName("SceneEditor/ObjectName")->Hide();
+			};
+		};
+		if(currentEntity!=NULL)
+		{
+			last_known_action = 6;
+			total_scale = 1.0;
+			timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+			{
+				total_scale = total_scale * 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH);
+				currentEntity->GetParent()->Scale( SetVector3( 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH), 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH), 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH)));
+			};
+		};
+	};
+};
+
+void Mouse_LButtonUp()
+{
+	Timer_Kill("mouse_LButtonDown");
+};
+
+void Mouse_MButtonDown()
+{
+	if(leftAltDown)
+	{
+		timer("mouse_MButtonDown",TIMERTYPE_PERMANENT,0.0)
+		{
+			RootCamera->GetParent()->Yaw( 300.0 * MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH);
+			RootCamera->GetParent()->Pitch( 200.0 * MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT);
+		};
+	}
+	else
+	{
+		timer("mouse_MButtonDown",TIMERTYPE_PERMANENT,0.0)
+		{
+			RootCamera->GetParent()->Translate((RootCamera->GetLocalXAxis()) * (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH) * (V3_GetLength(RootCamera->GetPosition())));
+			RootCamera->GetParent()->Translate((RootCamera->GetLocalYAxis()) * (MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT) * (-1.0*V3_GetLength(RootCamera->GetPosition())));
+		};
+	};
+};
+
+void Mouse_MButtonUp()
+{
+	Timer_Kill("mouse_MButtonDown");
+};
+
+void Mouse_WheelUp()
+{
+	RootCamera->SetPosition((RootCamera->GetPosition() )* 0.90);
+};
+
+void Mouse_WheelDown()
+{
+	RootCamera->SetPosition((RootCamera->GetPosition()) * 1.11);
+};
+
+BindKey(82,BINDKEY_DOWN)
+{
+	if(currentEntity!=NULL)
+	{
+		last_known_action = 6;
+		total_scale = 1.0;
+		timer("ObjectScale",TIMERTYPE_PERMANENT,0.0)
+		{
+			total_scale = total_scale * 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH);
+			currentEntity->GetParent()->Scale( SetVector3( 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH), 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH), 1.0 + (MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH)));
+		};
+	};
+};
+
+BindKey(KEYCODE_R,BINDKEY_UP)
+{
+	Timer_Kill("ObjectScale");
+};
+
+BindKey(KEYCODE_Z,BINDKEY_DOWN)
+{
+	if(leftControlDown)
+	{
+		if(currentEntity != NULL)
+		{
+			if( last_known_action == 5 )
+			{
+				total_translation = (-1.0)*total_translation;
+				currentEntity->GetParent()->Translate(total_translation);
+				PrintNewCoords();
+			}
+			elseif( last_known_action == 4 )
+			{
+				total_rotation = 0.0 - total_rotation;
+				currentEntity->GetParent()->Rotate( rotation_axis , total_rotation );
+			}
+			elseif( last_known_action == 6 )
+			{
+				total_scale = 1.0 / total_scale;
+				currentEntity->GetParent()->Scale( SetVector3( total_scale, total_scale, total_scale));
+			};
+		};
+	}
+	else
+	{
+		if(currentEntity != NULL)
+		{
+			RootCamera->SetPosition((RootCamera->GetPosition())*(3.0*(currentEntity->GetBoundingRadius())/V3_GetLength(RootCamera->GetPosition())));
+			RootCamera->GetParent()->SetPosition(currentEntity->GetParent()->GetPosition());
+		};
+	};
+};
+
+
+BindKey(KEYCODE_SPACE,BINDKEY_DOWN)
+{
+	if(lockSelection)
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Lock")->SetMaterial("Base/Icon/Lock");
+	}
+	else
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Lock")->SetMaterial("Base/Icon/Lock_A");
+	};
+	lockSelection = !lockSelection;
+};
+
+BindKey(KEYCODE_CTRL,BINDKEY_DOWN)
+{
+	leftControlDown = true;
+};
+
+BindKey(KEYCODE_CTRL,BINDKEY_UP)
+{
+	leftControlDown = false;
+};
+
+BindKey(KEYCODE_ALT,BINDKEY_DOWN)
+{
+	leftAltDown = true;
+};
+
+BindKey(KEYCODE_ALT,BINDKEY_UP)
+{
+	leftAltDown = false;
+};
+
+BindKey(KEYCODE_E,BINDKEY_DOWN)
+{
+	current_rotation = 0.0;
+	total_rotation = 0.0;
+	last_known_action = 4;
+	if(currentEntity!=NULL)
+	{
+		rotation_axis = SetVector3(0.0,1.0,0.0);
+		timer("ObjectRotation",TIMERTYPE_PERMANENT,0.0)
+		{
+			current_rotation = current_rotation + (100.0*MOUSE_DIFFERENCE_X);
+			while(current_rotation > g_rotation_step)
+			{
+				if(currentEntity!=NULL)
+				{
+					currentEntity->GetParent()->Rotate( rotation_axis, - g_rotation_step );
+					current_rotation = current_rotation - g_rotation_step;
+					total_rotation = total_rotation - g_rotation_step;
+				};
+			};
+			
+			while(current_rotation < (- g_rotation_step))
+			{
+				currentEntity->GetParent()->Rotate( rotation_axis,g_rotation_step);
+				total_rotation = total_rotation + g_rotation_step;
+				current_rotation = current_rotation + g_rotation_step;
+			};
+		};
+	};	
+};
+
+BindKey(KEYCODE_D,BINDKEY_UP)
+{
+	if(currentEntity != NULL)
+	{
+		currentEntity->ShowBoundingBox(false);
+		currentEntity = ObjectDuplicate(currentEntity);
+		currentEntity->ShowBoundingBox(true);
+		OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+	};
+};
+
+BindKey(KEYCODE_E,BINDKEY_UP)
+{
+	Timer_Kill("ObjectRotation");
+};
+
+BindKey(KEYCODE_F12,BINDKEY_UP)
+{
+	SaveScript(file_to_save);
+	Overlay_Show("SceneEditor/Saved");
+	timer("FileSaved",TIMERTYPE_ONCE,1.5)
+	{
+		Overlay_Hide("SceneEditor/Saved");
+	};
+};
+
+BindKey(KEYCODE_S,BINDKEY_UP)
+{
+	if(leftControlDown)
+	{
+		SaveScript(file_to_save);
+		Overlay_Show("SceneEditor/Saved");
+		timer("FileSaved",TIMERTYPE_ONCE,1.5)
+		{
+			Overlay_Hide("SceneEditor/Saved");
+		};
+	}
+	else
+	{
+		snapSelection = !snapSelection;
+		if(snapSelection)
+		{
+			if(currentEntity!=NULL)
+			{
+				currentEntity->GetParent()->SetPosition(V3_SnapCoords(currentEntity->GetParent()->GetPosition(),grid_factor));
+				PrintNewCoords();
+			};
+			OverlayElement_GetByName("SceneEditor/Menu/Snap")->SetMaterial("Base/Icon/Snap_A");
+		}
+		else
+		{
+			OverlayElement_GetByName("SceneEditor/Menu/Snap")->SetMaterial("Base/Icon/Snap");
+		};
+	};
+};
+
+BindKey(KEYCODE_W,BINDKEY_DOWN)
+{
+	last_known_action = 5;
+	total_translation = SetVector3(0.0,0.0,0.0);
+	if(currentEntity!=NULL)
+	{
+		position = GetGroundCoords(MOUSE_POSITION_X,MOUSE_POSITION_Y);
+		
+		if(snapSelection)
+		{
+			position = V3_SnapCoords(position,grid_factor);
+		};
+		last_ground_position = position;
+		timer("ObjectMove",TIMERTYPE_PERMANENT,0.0)
+		{
+			position = GetGroundCoords(MOUSE_POSITION_X,MOUSE_POSITION_Y);
+			if(snapSelection)
+			{
+				position = V3_SnapCoords(position,grid_factor);
+			};
+			position = SetVector3(position[0],0.0,position[2]);
+			currentEntity->GetParent()->Translate( position - last_ground_position );
+			total_translation = total_translation + position - last_ground_position;
+			last_ground_position = position;
+			PrintNewCoords();
+		};
+	};
+};
+
+BindKey(KEYCODE_W,BINDKEY_UP)
+{
+	Timer_Kill("ObjectMove");
+};
+
+BindKey(KEYCODE_DEL,BINDKEY_DOWN)
+{
+	if(currentEntity !=NULL )
+	{
+		ObjectDelete(currentEntity);
+		obj_position_x = 0.0;
+		obj_position_y = 0.0;
+		obj_position_z = 0.0;
+		OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionX")->SetCaption("0");
+		OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionY")->SetCaption("0");
+		OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionZ")->SetCaption("0");
+		currentEntity =NULL;
+	};
+};
+
+BindKey(KEYCODE_NP_0,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("0");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_1,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("1");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_2,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("2");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_3,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("3");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_4,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("4");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_5,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("5");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_6,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("6");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_7,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("7");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_8,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("8");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_9,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("9");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_DOT,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc(".");
+	OverlayElement_GetByName(over_name)->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_NP_MINUS,BINDKEY_DOWN)
+{
+	obj_pos = obj_pos+atoc("-");
+	OverlayElement_GetByName(over_name )->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_BACKSPACE,BINDKEY_DOWN)
+{
+	obj_pos = substr(obj_pos,0,strlen(obj_pos)-1);
+	OverlayElement_GetByName(over_name )->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_BACKSPACE,BINDKEY_REPEATED)
+{
+	obj_pos = substr(obj_pos,0,strlen(obj_pos)-1);
+	OverlayElement_GetByName(over_name )->SetCaption(obj_pos);
+};
+
+BindKey(KEYCODE_ENTER,BINDKEY_DOWN)
+{
+	if(!over_name->empty())
+	{
+		SetPosition();
+	};
+};
+
+BindKey(KEYCODE_F2,BINDKEY_DOWN)
+{
+	g_wireframeMode = !g_wireframeMode;
+	RootCamera->ModeWireFrame(g_wireframeMode);
+	if(g_wireframeMode)
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Wireframe")->SetMaterial("Base/Icon/Wireframe_A");
+	}
+	else
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Wireframe")->SetMaterial("Base/Icon/Wireframe");
+	};
+};
+
+BindKey(KEYCODE_SHIFT,BINDKEY_DOWN)
+{
+	mode_shift = true;
+};
+
+BindKey(KEYCODE_SHIFT,BINDKEY_UP)
+{
+	mode_shift = false;
+};
+
+Overlay_SetAction("SceneEditor/Menu/Lock")
+{
+	if(lockSelection)
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Lock")->SetMaterial("Base/Icon/Lock");
+	}
+	else
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Lock")->SetMaterial("Base/Icon/Lock_A");
+	};
+	lockSelection = !lockSelection;
+};
+
+Overlay_SetAction("SceneEditor/Menu/Select")
+{
+	g_mode = 1;
+	g_name = "Select";
+	MenuFunc();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Rotate")
+{
+	Overlay_Show("SceneEditor/AxisList");
+	axisListChoose = 2;
+	OverlayElement_GetByName("SceneEditor/AxisList")->SetLeft(OverlayElement_GetByName("SceneEditor/Menu/Rotate")->GetAbsoluteLeft());
+	OverlayElement_GetByName("SceneEditor/AxisList/XY")->Hide();
+	OverlayElement_GetByName("SceneEditor/AxisList/XZ")->Hide();
+	OverlayElement_GetByName("SceneEditor/AxisList/YZ")->Hide();
+	OverlayElement_GetByName("SceneEditor/AxisList/XY/Text")->Hide();
+	OverlayElement_GetByName("SceneEditor/AxisList/XZ/Text")->Hide();
+	OverlayElement_GetByName("SceneEditor/AxisList/YZ/Text")->Hide();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Pan")
+{
+	g_mode = 3;
+	g_name = "Pan";
+	MenuFunc();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Arc_Rotate")
+{
+	g_mode = 2;
+	g_name = "Arc_Rotate";
+	MenuFunc();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Move")
+{
+	Overlay_Show("SceneEditor/AxisList");
+	axisListChoose = 1;
+	OverlayElement_GetByName("SceneEditor/AxisList")->SetLeft( OverlayElement_GetByName("SceneEditor/Menu/Move")->GetAbsoluteLeft());
+	OverlayElement_GetByName("SceneEditor/AxisList/XY")->Show();
+	OverlayElement_GetByName("SceneEditor/AxisList/XZ")->Show();
+	OverlayElement_GetByName("SceneEditor/AxisList/YZ")->Show();
+	OverlayElement_GetByName("SceneEditor/AxisList/XY/Text")->Show();
+	OverlayElement_GetByName("SceneEditor/AxisList/XZ/Text")->Show();
+	OverlayElement_GetByName("SceneEditor/AxisList/YZ/Text")->Show();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Scale")
+{
+	g_mode = 6;
+	g_name = "Scale";
+	MenuFunc();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Grid")
+{
+	g_mode = 7;
+	g_name = "Grid";
+	MenuFunc();
+};
+
+Overlay_SetAction("SceneEditor/Menu/Snap")
+{
+	snapSelection = !snapSelection;
+	if(snapSelection)
+	{
+		if(currentEntity!=NULL)
+		{
+			currentEntity->GetParent()->SetPosition(V3_SnapCoords(currentEntity->GetParent()->GetPosition(),grid_factor));
+			obj_position_x = (currentEntity->GetParent()->GetPosition())[0];
+			obj_position_y = (currentEntity->GetParent()->GetPosition())[1];
+			obj_position_z = (currentEntity->GetParent()->GetPosition())[2];
+			OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionX")->SetCaption(rtoa(obj_position_x));
+			OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionY")->SetCaption(rtoa(obj_position_y));
+			OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionZ")->SetCaption(rtoa(obj_position_z));
+		};
+		OverlayElement_GetByName("SceneEditor/Menu/Snap")->SetMaterial("Base/Icon/Snap_A");
+	}
+	else
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Snap")->SetMaterial("Base/Icon/Snap");
+	};
+};
+
+Overlay_SetAction("SceneEditor/Menu/Zoom")
+{
+	if(currentEntity != NULL)
+	{
+		RootCamera->SetPosition((RootCamera->GetPosition())*(3.0*(currentEntity->GetBoundingRadius())/V3_GetLength(RootCamera->GetPosition())));
+		RootCamera->GetParent()->SetPosition(currentEntity->GetParent()->GetPosition());
+	};
+};
+
+Overlay_SetAction("SceneEditor/ObjectPositions/ObjectPosX/Panel")
+{
+	if(over_name != "")
+	{
+		SetPosition();
+	};
+	over_name = "SceneEditor/ObjectPositions/ObjectPositionX";
+	obj_select_axis = 1;
+	OverlayElement_GetByName(over_name)->SetTextColour(COLOUR_RED);
+	obj_pos = rtoa((currentEntity->GetParent()->GetPosition())[0]);
+};
+
+Overlay_SetAction("SceneEditor/ObjectPositions/ObjectPosY/Panel")
+{
+	if(over_name != "")
+	{
+		SetPosition();
+	};
+	over_name = "SceneEditor/ObjectPositions/ObjectPositionY";
+	obj_select_axis = 2;
+	OverlayElement_GetByName(over_name)->SetTextColour(COLOUR_RED);
+	obj_pos = rtoa((currentEntity->GetParent()->GetPosition())[1]);
+};
+
+Overlay_SetAction("SceneEditor/ObjectPositions/ObjectPosZ/Panel")
+{
+	if(over_name != "")
+	{
+		SetPosition();
+	};
+	over_name = "SceneEditor/ObjectPositions/ObjectPositionZ";
+	obj_select_axis = 3;
+	OverlayElement_GetByName(over_name)->SetTextColour(COLOUR_RED);
+	obj_pos = rtoa((currentEntity->GetParent()->GetPosition())[2]);
+};
+
+Overlay_SetAction("SceneEditor/AxisList/X")
+{
+	if( axisListChoose == 1 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Move/Axis")->SetMaterial("Base/LowAlphaDarkRed");
+		g_mode = 5;
+		g_name = "Move";
+		MenuFunc();
+	}
+	elseif( axisListChoose == 2 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Rotate/Axis")->SetMaterial("Base/LowAlphaDarkRed");
+		g_mode = 4;
+		g_name = "Rotate";
+		MenuFunc();
+	};
+	selectedAxis = 1;
+};
+
+Overlay_SetAction("SceneEditor/AxisList/Y")
+{
+	if( axisListChoose == 1 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Move/Axis")->SetMaterial("Base/LowAlphaDarkBlue");
+		g_mode = 5;
+		g_name = "Move";
+		MenuFunc();
+	}
+	elseif( axisListChoose == 2 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Rotate/Axis")->SetMaterial("Base/LowAlphaDarkRed");
+		g_mode = 4;
+		g_name = "Rotate";
+		MenuFunc();
+	};
+	selectedAxis = 2;
+};
+
+Overlay_SetAction("SceneEditor/AxisList/Z")
+{
+	if( axisListChoose == 1 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Move/Axis")->SetMaterial("Base/LowAlphaDarkGreen");
+		g_mode = 5;
+		g_name = "Move";
+		MenuFunc();
+	}
+	elseif( axisListChoose == 2 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Rotate/Axis")->SetMaterial("Base/LowAlphaDarkRed");
+		g_mode = 4;
+		g_name = "Rotate";
+		MenuFunc();
+	};
+	selectedAxis = 3;
+};
+
+Overlay_SetAction("SceneEditor/AxisList/XY")
+{
+	if( axisListChoose == 1 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Move/Axis")->SetMaterial("Base/LowAlphaBrightGreen");
+		g_mode = 5;
+		g_name = "Move";
+		MenuFunc();
+	};
+	selectedAxis = 4;
+};
+
+Overlay_SetAction("SceneEditor/AxisList/YZ")
+{
+	if( axisListChoose == 1 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Move/Axis")->SetMaterial("Base/LowAlphaDarkGreen");
+		g_mode = 5;
+		g_name = "Move";
+		MenuFunc();
+	};
+	selectedAxis = 5;
+};
+
+Overlay_SetAction("SceneEditor/AxisList/XZ")
+{
+	if( axisListChoose == 1 )
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Move/Axis")->SetMaterial("Base/LowAlphaDarkGreen");
+		g_mode = 5;
+		g_name = "Move";
+		MenuFunc();
+	};
+	selectedAxis = 6;
+};
+
+Overlay_SetAction("SceneEditor/Menu/Save")
+{
+	SaveScript(file_to_save);
+	Overlay_Show("SceneEditor/Saved");
+	timer("FileSaved",TIMERTYPE_ONCE,1.5)
+	{
+		Overlay_Hide("SceneEditor/Saved");
+	};
+};
+
+Overlay_SetAction("SceneEditor/Menu/Import")
+{
+	if(currentEntity != NULL)
+	{
+		currentEntity->ShowBoundingBox(false);
+	};
+	currentEntity = ImportMesh();
+	if(currentEntity != NULL)
+	{
+		currentEntity->ShowBoundingBox(true);
+		OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+	};
+};
+
+Overlay_SetAction("SceneEditor/Menu/Copy")
+{
+	if(currentEntity !=NULL )
+	{
+		currentEntity->ShowBoundingBox(false);
+		currentEntity = ObjectDuplicate(currentEntity);
+		currentEntity->ShowBoundingBox(true);
+		OverlayElement_GetByName("SceneEditor/ObjectName")->SetCaption(currentEntity->GetParent()->GetName());
+	};
+};
+
+Overlay_SetAction("SceneEditor/Menu/Delete")
+{
+	if(currentEntity !=NULL )
+	{
+		ObjectDelete(currentEntity);
+		obj_position_x = 0.0;
+		obj_position_y = 0.0;
+		obj_position_z = 0.0;
+		OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionX")->SetCaption("0");
+		OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionY")->SetCaption("0");
+		OverlayElement_GetByName("SceneEditor/ObjectPositions/ObjectPositionZ")->SetCaption("0");
+		currentEntity =NULL;
+	};
+};
+
+Overlay_SetAction("SceneEditor/Menu/Reset")
+{
+	if(currentEntity !=NULL && currentEntity->GetParent() != NULL)
+	{
+		currentEntity->GetParent()->Reset();
+		total_scale = 1.0;
+		total_rotation = 0.0;
+		total_translation = SetVector3(0.0,0.0,0.0);
+	};
+};
+
+Overlay_SetAction("SceneEditor/Menu/Wireframe")
+{
+	g_wireframeMode = !g_wireframeMode;
+	RootCamera->ModeWireFrame(g_wireframeMode);
+	if(g_wireframeMode)
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Wireframe")->SetMaterial("Base/Icon/Wireframe_A");
+	}
+	else
+	{
+		OverlayElement_GetByName("SceneEditor/Menu/Wireframe")->SetMaterial("Base/Icon/Wireframe");
+	};
+
+};
+
+Overlay_Hide("SceneEditor/Saved");
+Overlay_Hide("SceneEditor/AxisList");

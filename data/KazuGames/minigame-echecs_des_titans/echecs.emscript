@@ -1,0 +1,913 @@
+void UpdatePlayerName()
+{
+	if (l_creator)
+	{
+		if (g_turn)
+		{
+			OverlayElement_GetByName( "Echecs/Player/Text")->SetCaption( "Au joueur demon" + endl + l_distantCharName);
+		}
+		else
+		{
+			OverlayElement_GetByName( "Echecs/Player/Text")->SetCaption( "Au joueur ange" + endl + "(vous)");
+		};
+	}
+	else
+	{
+		if (g_turn)
+		{
+			OverlayElement_GetByName( "Echecs/Player/Text")->SetCaption( "Au joueur demon" + endl + "(vous)");
+		}
+		else
+		{
+			OverlayElement_GetByName( "Echecs/Player/Text")->SetCaption( "Au joueur ange" + endl + l_distantCharName);
+		};
+	};
+};
+
+void IsMyTurn()
+{
+	if (l_creator)
+	{
+		g_myTurn = (! g_turn);
+	}
+	else
+	{
+		g_myTurn = g_turn;
+	};
+};
+
+void _loose()
+{
+	OverlayElement_GetByName( "Echecs/Result")->SetMaterial( "Perdu");
+	Overlay_Show( "Echecs/Result");
+	if (l_creator)
+	{
+		OverlayElement_GetByName( "Echecs/Menu/Recommencer")->Show();
+		OverlayElement_GetByName( "Echecs/Menu/Creer")->Hide();
+		OverlayElement_GetByName( "Echecs/Menu/Rejoindre")->Hide();
+		Overlay_Show( "Echecs/Menu");
+	};
+};
+
+void _win()
+{
+	OverlayElement_GetByName( "Echecs/Result")->SetMaterial( "Gagne");
+	Overlay_Show( "Echecs/Result");
+	if (l_creator)
+	{
+		OverlayElement_GetByName( "Echecs/Menu/Recommencer")->Show();
+		OverlayElement_GetByName( "Echecs/Menu/Creer")->Hide();
+		OverlayElement_GetByName( "Echecs/Menu/Rejoindre")->Hide();
+		Overlay_Show( "Echecs/Menu");
+	};
+};
+
+void AbandonGame()
+{
+	Overlay_Hide( "Echecs/Abandon");
+	g_inGame = false;
+	_loose();
+	Network_ClientSendMessage( "EchecsClient", pack_int( msGame) + pack_int( gm_abandon));
+	OverlayElement_GetByName( "Echecs/WaitingOpponent/Text")->SetCaption( "Vous avez" + endl + "abandonne");
+	Overlay_Show( "Echecs/WaitingOpponent");
+	Overlay_Hide( "Echecs/Player");
+};
+
+void _getType()
+{
+	if (l_char != ' ')
+	{
+		if (isUpper( l_char))
+		{
+			l_tempChar = strGetChar( g_pieceNature, ctoi(l_char) - 49);
+		}
+		else
+		{
+			l_tempChar = strGetChar( g_pieceNature, ctoi(l_char) - 97);
+		};
+	}
+	else
+	{
+		l_tempChar = ' ';
+	};
+};
+
+void _clearAttaques()
+{
+	g_attaque  = "        ";
+	g_attaque += "        ";
+	g_attaque += "        ";
+	g_attaque += "        ";
+	g_attaque += "        ";
+	g_attaque += "        ";
+	g_attaque += "        ";
+	g_attaque += "        ";
+	g_echec = false;
+};
+
+void ReplaceAll()
+{
+	g_placementPieces = g_placementPieces_save;
+	g_pieceNature = g_pieceNature_save;
+
+	Overlay_Hide( "ChangementPion");
+	Object_GetByName( "fx_selected")->Hide();
+	g_cantPlay = false;
+	string l_char2;
+	string l_char3;
+
+	for (i = 0 ; i < 64; i ++)
+	{
+		l_char = strGetChar( g_placementPieces, i);
+		if (l_char != ' ')
+		{
+			l_object = Object_GetByName("Piece_" + l_char);
+			if (l_object != NULL)
+			{
+				Object_Destroy( l_object);
+			};
+
+			_getType();
+			l_char2 = ctoa( l_char);
+			l_char2->lowerCase();
+			l_char3 = ctoa( l_char);
+			if (l_char3 == l_char2)
+			{
+				l_tempString = ctoa( l_tempChar) + "_echec_ange.mesh";
+			}
+			else
+			{
+				l_tempString = ctoa( l_tempChar) + "_echec_demon.mesh";
+			};
+
+			l_object = Object_Create( "Piece_" + l_char, l_tempString);
+			l_object->SetParent( SceneNode_GetByName( "Piece_" + l_char));
+			l_object->GetParent()->Reset();
+			l_object->GetParent()->SetPosition( c_verticalOffset + SetVector3( 5.0 * (i % 8) - 17.5, 0.0, 5.0 * ( i / 8) - 17.5));
+		};
+	};
+};
+
+void _checkAttaques();
+
+void GetAtCoords()
+{
+	l_char = strGetChar( g_placementPieces, l_x + 8 * l_y);
+	if (l_char != ' ')
+	{
+		l_node = SceneNode_GetByName( "Piece_" + l_char);
+	}
+	else
+	{
+		l_node = NULL;
+	};
+};
+
+void _deselect()
+{
+	Object_GetByName( "fx_selected")->Hide();
+	l_pastNode = NULL;
+};
+
+void _confirmedMove()
+{
+	Echo( "recorded move : " + itoa( l_previousPositionX) + " / " + itoa( l_previousPositionY));
+	strSetChar( g_recordedMovements, l_previousPositionX + l_previousPositionY * 8, 'X');
+};
+
+void _select()
+{
+	Echo( "Select Piece - Selected node position : " + vtoa( l_pastNode->GetPosition()));
+	SceneNode_GetByName( "fx_selected")->SetPosition( l_pastNode->GetPosition() + SetVector3( 0.0, 0.9, 0.0));
+	Object_GetByName( "fx_selected")->Show();
+};
+
+void _move()
+{
+	l_pastNode->SetPosition( l_position + c_offset + c_verticalOffset);
+	strSetChar( g_placementPieces, l_previousPositionX + 8 * l_previousPositionY, ' ');
+//	Echo( "_move : " + itoa(l_x) + "x" + itoa( l_y));
+	strSetChar( g_placementPieces, l_x + 8 * l_y, strGetChar( l_pastNode->GetName(), 6));
+};
+
+void _endTurn()
+{
+	g_turn = ! g_turn;
+	IsMyTurn();
+	_deselect();
+	_checkAttaques();
+	UpdatePlayerName();
+};
+
+void _take()
+{
+	l_temp = l_x + 8*l_y;
+	Object_GetByName( "Piece_" + strGetChar( g_placementPieces, l_temp))->Hide();
+	strSetChar( g_placementPieces, l_temp, ' ');
+};
+
+void SendChangePionMessage()
+{
+	string scpm_message;
+	scpm_message = pack_int( msGame) + pack_int( gm_change);
+	scpm_message += pack_int( l_x) + pack_int( l_y);
+	scpm_message += g_pionRequiredToChange;
+	scpm_message += l_tempChar;
+	Network_ClientSendMessage( "EchecsClient", scpm_message);
+};
+
+void _changePionTo()
+{
+	g_cantPlay = false;
+	Overlay_Hide( "ChangementPion");
+
+	if ( g_turn)
+	{
+		l_temp = (ctoi( g_pionRequiredToChange - 'a'));
+		l_tempString = ctoa( l_tempChar) + "_echec_ange.mesh";
+	}
+	else
+	{
+		l_temp = (ctoi( g_pionRequiredToChange - 'A') + 16);
+		l_tempString = ctoa( l_tempChar) + "_echec_demon.mesh";
+	};
+	Object_Destroy( Object_GetByName( "Piece_" + g_pionRequiredToChange));
+	l_object = Object_Create( "Piece_" + g_pionRequiredToChange, l_tempString);
+	l_object->SetParent( SceneNode_GetByName( "Piece_" + g_pionRequiredToChange));
+	l_object->Show();
+	strSetChar( g_placementPieces, l_x + 8 * l_y, g_pionRequiredToChange);
+	strSetChar( g_pieceNature, l_temp, l_tempChar);
+};
+
+void Take();
+void _checkMove_King();
+
+void _detailCheckLine()
+{
+	l_tempBool = true;
+	
+	for (i = 1 ; i < l_temp && l_tempBool ; i ++)
+	{
+		if (' ' != strGetChar( g_placementPieces, l_previousPositionX + 8 * l_previousPositionY + i * (8 * l_tempY + l_tempX)))
+		{
+			l_tempBool = false;
+		};
+	};
+};
+
+void _checkMove_Fou()
+{
+	if (l_diffX == l_diffY || l_diffX == (-l_diffY))
+	{
+		l_tempY = 1;
+		l_tempX = 1;
+		
+		if (l_diffX < 0)
+		{
+			l_tempX = -1;
+		};
+		
+		if (l_diffY < 0)
+		{
+			l_tempY = -1;
+		};
+		
+		l_temp  = l_diffX / l_tempX;
+		
+		_detailCheckLine();
+	};
+};
+
+void _checkMove_Tour()
+{
+	if (l_diffX == 0 || l_diffY == 0)
+	{
+		l_tempY = 1;
+		l_tempX = 1;
+		
+		if (l_diffX < 0)
+		{
+			l_tempX = -1;
+		}
+		elseif(l_diffX == 0)
+		{
+			l_tempX = 0;
+		};
+		
+		if (l_diffY < 0)
+		{
+			l_tempY = -1;
+		}
+		elseif (l_diffY == 0)
+		{
+			l_tempY = 0;
+		};
+		
+		if (l_diffX != 0)
+		{
+			l_temp = l_diffX / l_tempX;
+		}
+		else
+		{
+			l_temp = l_diffY / l_tempY;
+		};
+		
+		_detailCheckLine();
+	};
+};
+
+void _checkMove_Pion()
+{
+	if (l_diffX == 0)
+	{
+		l_tempY = 1;
+		l_tempX = 1;
+		
+		if (g_turn)
+		{
+			l_tempY = -1;
+			l_tempX = 6;
+		};
+		
+		if (l_diffY == l_tempY)
+		{
+			l_tempBool = true;
+		}
+		elseif (l_tempX == l_previousPositionY && l_diffY == l_tempY * 2 && ' ' == strGetChar( g_placementPieces, l_previousPositionX + 8 * (l_previousPositionY + l_tempY)))
+		{
+			l_tempBool = true;
+		};
+
+		if ((g_turn && l_y == 0) || (l_y == 7 && (!g_turn)))
+		{
+			Overlay_Show( "ChangementPion");
+			g_cantPlay = true;
+			g_pionRequiredToChange = l_char;
+		};
+	};
+};
+
+void _checkTake_Pion()
+{
+	l_tempY = 1;
+	l_tempX = 7;
+	if (g_turn)
+	{
+		l_tempY = -1;
+		l_tempX = 0;
+	};
+	if ((l_diffX == 1 || l_diffX == (-1))
+	&&	l_tempY == l_diffY)
+	{
+		l_tempBool = true;
+		if (l_y == l_tempX)
+		{
+			Overlay_Show( "ChangementPion");
+			g_cantPlay = true;
+			g_pionRequiredToChange = l_char;
+		};
+	};
+};
+
+void _checkMove_Knight()
+{
+	if ((l_diffX * l_diffY == 2) || (l_diffX * l_diffY == (-2)))
+	{
+		l_tempBool = true;
+	};
+};
+
+void _applyCastling()
+{
+	_move();
+	if (l_diffX > 0)
+	{
+		l_tempX = 1;
+		l_tempY = 7;
+		if (g_turn)
+		{
+			l_tempChar = 'P';
+		}
+		else
+		{
+			l_tempChar = 'h';
+		};
+	}
+	else
+	{
+		l_tempX = 0;
+		l_tempY = 0;
+		if (g_turn)
+		{
+			l_tempChar = 'I';
+		}
+		else
+		{
+			l_tempChar = 'a';
+		};
+	};
+	
+	g_placementPieces_save = g_placementPieces;
+	g_pieceNature_save = g_pieceNature;
+
+	strSetChar( g_placementPieces_save, l_previousPositionX + l_previousPositionY * 8 + l_tempX, l_tempChar);
+	strSetChar( g_placementPieces_save, l_tempY + l_previousPositionY * 8, ' ');
+
+	_confirmedMove();
+	
+	ReplaceAll();
+
+	Echo( "ApplyCastling End Turn");
+
+	_endTurn();
+};
+
+void _castle()
+{
+	if (strGetChar( g_attaque, l_x + (8 * l_y)) == ' ' && strGetChar( g_attaque, l_x + (8 * l_y) - (l_diffX / 2)) == ' ')
+	{
+		if (strGetChar( g_placementPieces, l_x + 8 * l_y) == ' ' && strGetChar( g_placementPieces, l_x + 8 * l_y - (l_diffX / 2)) == ' ')
+		{
+			if (l_diffX > 0 && (strGetChar( g_placementPieces, l_x + 8 * l_y + 1) != ' '))
+			{
+				Echo( "great castling compromised due to piece in the way");
+			}
+			else
+			{
+				Echo( "castling ok");
+				_applyCastling();
+			};
+		}
+		else
+		{
+			Echo( "castling compromised due to piece in the way");
+		};
+	}
+	else
+	{
+		Echo( "tile under attack for castling ? ");
+	};
+};
+
+void _checkMove_King()
+{
+	if (l_diffX > (-2) && l_diffX < (2) && l_diffY < 2 && l_diffY > (-2))
+	{
+		if (strGetChar( g_attaque, l_x + 8 * l_y) == ' ')
+		{
+			l_tempBool = true;
+		};
+	};
+	
+	if (l_diffY == 0 && ((l_diffX == (-2) && l_x == 1)) || ((l_diffX == 2 && l_x == 5)))
+	{
+		if (((g_turn && (l_y == 7))
+		|| ((!g_turn) && (l_y == 0)))
+		 && strGetChar( g_recordedMovements, 3 + 8 * l_y) == ' ')
+		{
+			_castle();
+		};
+	};
+};
+
+void _checkKingStatus()
+{
+	_checkAttaques();
+
+	if (g_echec)
+	{
+		if (g_myTurn)
+		{
+			OverlayElement_GetByName( "Echecs/Result")->SetMaterial( "Echecs/Echec");
+			Overlay_Show( "Echecs/Result");
+			timer( "WaitEnd", TIMERTYPE_ONCE, 2.0)
+			{
+				Overlay_Hide( "Echecs/Result");
+			};
+		};
+		ReplaceAll();
+	}
+	else
+	{
+		_confirmedMove();
+		Echo( "CheckKingStatus End Turn");
+		_endTurn();
+	};
+};
+
+void SendMoveMessage()
+{
+	Echo( "SendMoveMessage");
+	string smm_message;
+	smm_message = pack_int( gm_move);
+	smm_message += pack_int( l_pastNode->GetName()->length()) + l_pastNode->GetName();
+	smm_message += pack_vector3( l_position);
+	smm_message += pack_int( l_previousPositionX) + pack_int( l_previousPositionY);
+	smm_message += pack_int( l_x) + pack_int( l_y);
+	Network_ClientSendMessage( "EchecsClient", pack_int( msGame) + smm_message);
+};
+
+void Move()
+{
+	l_char = strGetChar( l_pastNode->GetName(), 6);
+	l_diffX = l_x - l_previousPositionX;
+	l_diffY = l_y - l_previousPositionY;
+	l_tempBool = false;
+
+	_getType();
+	
+	if (l_tempChar == 'P')
+	{
+		_checkMove_Pion();
+	}
+	elseif (l_tempChar == 'T')
+	{
+		_checkMove_Tour();
+	}
+	elseif (l_tempChar == 'C')
+	{
+		_checkMove_Knight();
+	}
+	elseif (l_tempChar == 'K')
+	{
+		_checkMove_King();
+	}
+	elseif (l_tempChar == 'Q')
+	{
+		_checkMove_Fou();
+		if ( ! l_tempBool)
+		{
+			_checkMove_Tour();
+		};
+	}
+	elseif (l_tempChar == 'F')
+	{
+		_checkMove_Fou();
+	};
+
+	if (l_tempBool)
+	{
+		SendMoveMessage();
+		g_placementPieces_save = g_placementPieces;
+		g_pieceNature_save = g_pieceNature;
+		_move();
+		_checkKingStatus();
+	};
+};
+
+void SendTakeMessage()
+{
+	string stm_message;
+	stm_message = pack_int( gm_take);
+	stm_message += pack_int( l_pastNode->GetName()->length()) + l_pastNode->GetName();
+	stm_message += pack_vector3( l_position);
+	stm_message += pack_int( l_previousPositionX) + pack_int( l_previousPositionY);
+	stm_message += pack_int( l_x) + pack_int( l_y);
+	Network_ClientSendMessage( "EchecsClient", pack_int( msGame) + stm_message);
+};
+
+void Take()
+{
+	l_char = strGetChar( l_pastNode->GetName(), 6);
+	l_diffX = l_x - l_previousPositionX;
+	l_diffY = l_y - l_previousPositionY;
+	l_tempBool = false;
+
+	_getType();
+	
+	if (l_tempChar == 'P')
+	{
+		_checkTake_Pion();
+	}
+	elseif (l_tempChar == 'T')
+	{
+		_checkMove_Tour();
+	}
+	elseif (l_tempChar == 'C')
+	{
+		_checkMove_Knight();
+	}
+	elseif (l_tempChar == 'K')
+	{
+		_checkMove_King();
+	}
+	elseif (l_tempChar == 'Q')
+	{
+		_checkMove_Fou();
+		if ( ! l_tempBool)
+		{
+			_checkMove_Tour();
+		};
+	}
+	elseif (l_tempChar == 'F')
+	{
+		_checkMove_Fou();
+	};
+	
+	if (l_tempBool)
+	{
+		SendTakeMessage();
+		g_placementPieces_save = g_placementPieces;
+		g_pieceNature_save = g_pieceNature;
+		_take();
+		_move();
+		_checkKingStatus();
+//		g_cantPlay = true;
+	};
+};
+
+void _detail_attackLine()
+{
+	l_tempX = l_x + l_diffX;
+	l_tempY = l_y + l_diffY;
+	while ( l_tempX >= 0 && l_tempX <= 7 && l_tempY >= 0 && l_tempY <= 7)
+	{
+		l_tempChar = strGetChar( g_placementPieces, l_tempX + l_tempY * 8);
+		if (' ' != l_tempChar)
+		{
+			if ((('L' == l_tempChar) && g_turn) || ((!g_turn) && ('d' == l_tempChar)))
+			{
+				strSetChar( g_attaque, l_tempX + l_tempY * 8, 'X');
+				Echo( "attacked a king : " + itoa(l_tempX) + "/" + itoa(l_tempY));
+				g_echec = true;
+			};
+			break();
+		};
+		
+		strSetChar( g_attaque, l_tempX + l_tempY * 8, 'X');
+		l_tempX = l_tempX + l_diffX;
+		l_tempY = l_tempY + l_diffY;
+	};
+};
+
+void _detail_attackCase()
+{
+	if(l_tempX >= 0 && l_tempX <= 7 && l_tempY >= 0 && l_tempY <= 7)
+	{
+		l_tempChar = strGetChar( g_placementPieces, l_tempX + l_tempY * 8);
+		if (l_tempChar == ' ' || (g_turn == isLower( l_tempChar)))
+		{
+			strSetChar( g_attaque, l_tempX + l_tempY * 8, 'X');
+			l_tempChar = strGetChar( g_placementPieces, l_tempX + l_tempY * 8);
+			if ((l_tempChar == 'd' && g_turn) || (!g_turn && l_tempChar == 'L'))
+			{
+				Echo( "_detail_attackCase - Echec au roi !!");
+				g_echec = true;
+			};
+		};
+	};
+};
+
+bool l_wasEchec;
+
+void _pion_checkAttacks()
+{
+	if (g_turn)
+	{
+		l_tempY = l_y + 1;
+	}
+	else
+	{
+		l_tempY = l_y - 1;
+	};
+	l_wasEchec = g_echec;
+	l_tempX = l_x - 1; _detail_attackCase();
+	l_tempX = l_x + 1; _detail_attackCase();
+	if (g_echec && ! l_wasEchec)
+	{
+		Echo( "_pion_checkAttacks - Echec au roi");
+	};
+};
+
+void _knight_checkAttacks()
+{
+	l_wasEchec = g_echec;
+	l_tempX = l_x + 2; l_tempY = l_y + 1; _detail_attackCase();
+	l_tempX = l_x + 2; l_tempY = l_y - 1; _detail_attackCase();
+	l_tempX = l_x + 1; l_tempY = l_y + 2; _detail_attackCase();
+	l_tempX = l_x + 1; l_tempY = l_y - 2; _detail_attackCase();
+	l_tempX = l_x - 2; l_tempY = l_y + 1; _detail_attackCase();
+	l_tempX = l_x - 2; l_tempY = l_y - 1; _detail_attackCase();
+	l_tempX = l_x - 1; l_tempY = l_y + 2; _detail_attackCase();
+	l_tempX = l_x - 1; l_tempY = l_y - 2; _detail_attackCase();
+	if (g_echec && ! l_wasEchec)
+	{
+		Echo( "_knight_checkAttacks - Echec au roi");
+	};
+};
+
+void _roi_checkAttacks()
+{
+	l_wasEchec = g_echec;
+	l_tempX = l_x + 1;	l_tempY = l_y + 1;	_detail_attackCase();
+	l_tempX = l_x + 1;	l_tempY = l_y;		_detail_attackCase();
+	l_tempX = l_x + 1;	l_tempY = l_y - 1;	_detail_attackCase();
+	l_tempX = l_x ;		l_tempY = l_y - 1;	_detail_attackCase();
+	l_tempX = l_x ;		l_tempY = l_y + 1;	_detail_attackCase();
+	l_tempX = l_x - 2;	l_tempY = l_y + 1;	_detail_attackCase();
+	l_tempX = l_x - 1;	l_tempY = l_y;		_detail_attackCase();
+	l_tempX = l_x - 1;	l_tempY = l_y - 1;	_detail_attackCase();
+	if (g_echec && ! l_wasEchec)
+	{
+		Echo( "_roi_checkAttacks - Echec au roi");
+	};
+};
+
+void _fou_checkAttacks()
+{
+	l_wasEchec = g_echec;
+	l_diffX =  1;	l_diffY =  1;	_detail_attackLine();
+	l_diffX = -1;	l_diffY = -1;	_detail_attackLine();
+	l_diffX = -1;	l_diffY =  1;	_detail_attackLine();
+	l_diffX =  1;	l_diffY = -1;	_detail_attackLine();
+	if (g_echec && ! l_wasEchec)
+	{
+		Echo( "_fou_checkAttacks - Echec au roi");
+	};
+};
+
+void _tour_checkAttacks()
+{
+	l_wasEchec = g_echec;
+	l_diffX =  1;	l_diffY =  0;	_detail_attackLine();
+	l_diffX = -1;	l_diffY =  0;	_detail_attackLine();
+	l_diffX =  0;	l_diffY =  1;	_detail_attackLine();
+	l_diffX =  0;	l_diffY = -1;	_detail_attackLine();
+	if (g_echec && ! l_wasEchec)
+	{
+		Echo( "_tour_checkAttacks - Echec au roi");
+	};
+};
+
+void _processAttacks()
+{
+	if (l_char == 'P')
+	{
+		_pion_checkAttacks();
+	}
+	elseif (l_char == 'T')
+	{
+		_tour_checkAttacks();
+	}
+	elseif (l_char == 'C')
+	{
+		_knight_checkAttacks();
+	}
+	elseif (l_char == 'K')
+	{
+		_roi_checkAttacks();
+	}
+	elseif (l_char == 'F')
+	{
+		_fou_checkAttacks();
+	}
+	elseif (l_char == 'Q')
+	{
+		Echo( "Reine");
+		_fou_checkAttacks();
+		_tour_checkAttacks();
+	};
+};
+
+void _checkAttaques()
+{
+	_clearAttaques();
+	for (i = 0 ; i < 64; i ++)
+	{
+		l_char = strGetChar( g_placementPieces, i);
+		l_x = i % 8;
+		l_y = i / 8;
+		GetAtCoords();
+		if (l_node != NULL)
+		{
+			l_char = strGetChar( l_node->GetName(), 6);
+			if (g_turn == isLower(l_char))
+			{
+				_getType();
+				l_char = l_tempChar;
+				_processAttacks();
+			};
+		};
+	};
+};
+
+void InitialiseEchecsGame()
+{
+	g_placementPieces  = "abcdefgh";
+	g_placementPieces += "ijklmnop";
+	g_placementPieces += "        ";
+	g_placementPieces += "        ";
+	g_placementPieces += "        ";
+	g_placementPieces += "        ";
+	g_placementPieces += "ABCDEFGH";
+	g_placementPieces += "IJKLMNOP";
+
+	g_recordedMovements  = "        ";
+	g_recordedMovements += "        ";
+	g_recordedMovements += "        ";
+	g_recordedMovements += "        ";
+	g_recordedMovements += "        ";
+	g_recordedMovements += "        ";
+	g_recordedMovements += "        ";
+	g_recordedMovements += "        ";
+
+	g_pieceNature 	   = "TCFKQFCT";
+	g_pieceNature	  += "PPPPPPPP";
+	
+	g_pieceNature  	  += "PPPPPPPP";
+	g_pieceNature 	  += "TCFKQFCT";
+
+	g_placementPieces_save = g_placementPieces;
+	g_pieceNature_save = g_pieceNature;
+
+	_clearAttaques();
+
+	ReplaceAll();
+
+	g_turn = false;
+	g_cantPlay = false;
+	g_echec = false;
+};
+
+void InitialiseEchecs()
+{
+	mrConnectOK = 0;
+	mrConnectFail = 1;
+	mrJoinGameOK = 29;
+	mrCreateGameOK = 30;
+	mrGameDontExist = 31;
+	mrGameAlreadyCreated = 32;
+	mrGameStart = 33;
+	mrRefreshGamesList = 34;
+	mrJoinGameFail = 35;
+	mrGame = 36;
+	mrEndGame = 37;
+	mrJoinGame = 38;
+	mrQuitGame = 39;
+
+	msConnect = 0;
+	msRefreshGamesList = 23;
+	msJoinGame = 24;
+	msCreateGame = 25;
+	msGame = 26;
+	msQuitGame = 27;
+	msGameStart = 31;
+
+	gm_move = 0;
+	gm_take = 1;
+	gm_change = 2;
+	gm_abandon = 3;
+
+	current_pitch = 20.0;
+
+	l_clicked = false;
+
+	RootCamera = Camera_GetByName( "RootCamera");
+	RootCamera->GetParent()->Pitch( -30.0);
+	RootCamera->GetParent()->Yaw( 40.0);
+
+	c_offset = SetVector3( 2.5, 0.0, 2.5);
+	c_verticalOffset = SetVector3( 0.0, 0.1, 0.0);
+
+	l_titleShown = true;
+	l_sound = false;
+	l_music = false;
+	g_inGame = false;
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Echecs/Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Echecs/Options/TicSound");
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Echecs/Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+	l_relativeTicWidth = l_ticMusic->GetWidth() / GENERAL_SCREEN_WIDTH;
+
+	InitialiseEchecsGame();
+
+	echecs_pass = l_pass;
+	echecs_login = l_login;
+
+	Overlay_Hide( "Echecs/AvailableGames");
+	Overlay_Hide( "Echecs/WaitingOpponent");
+	Overlay_Hide( "Echecs/Commandes");
+	Overlay_Hide( "Echecs/Regles");
+	Overlay_Hide( "Echecs/Options");
+	Overlay_Hide( "Echecs/Player");
+	Overlay_Hide( "Echecs/Menu");
+	Overlay_Hide( "Echecs/Result");
+	Overlay_Hide( "Echecs/Abandon");
+	OverlayElement_GetByName( "Echecs/Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Echecs/Menu/Recommencer")->Hide();
+
+	Network_CreateClient( "EchecsClient");
+	Network_ConnectClient( "EchecsClient", g_serverAddr, g_serverPort);
+
+	OverlayElement_GetByName( "Echecs/WaitingOpponent/Text")->SetCaption( "Connection...");
+	Overlay_Show( "Echecs/WaitingOpponent");
+
+	timer("waitconnect", TIMERTYPE_ONCE, 2.0)
+	{
+		Network_ClientSendMessage( "EchecsClient", pack_int( 0) + pack_int( echecs_login->length()) + echecs_login + pack_int( echecs_pass->length()) + echecs_pass);
+	};
+};
+
+InitialiseEchecs();

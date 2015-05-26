@@ -1,0 +1,88 @@
+string l_namesAndScores;
+string l_names;
+string l_scores;
+
+int l_index;
+int g_score;
+
+string l_gameName = "421";
+string c_highscorePage;
+
+if (c_modeInstant)
+{
+	c_highscorePage = "http://www.kazugame.com/end_instant_gagnant.php";
+}
+else
+{
+	c_highscorePage = "http://www.kazugame.com/score.php";
+};
+
+void _retrieveHighScores()
+{
+	if ( ! c_modeInstant)
+	{
+		l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + l_gameName, EMPTY_STRING);
+	
+		l_index = strFind( l_namesAndScores, "<br>");
+	
+		l_names = substr( l_namesAndScores, 0, l_index);
+		l_scores = substr( l_namesAndScores, l_index + 4, strlen( l_namesAndScores));
+	
+		l_names = l_names->replace( "|", endl);
+		l_scores = str_replace( l_scores, "|", endl);
+	
+		OverlayElement_GetByName( "Scores/Names")->SetCaption( l_names);
+		OverlayElement_GetByName( "Scores/Scores")->SetCaption( l_scores);
+	};
+};
+
+void _submitHighscore()
+{
+	if ( ! c_modeInstant)
+	{
+		Echo( "_submitHighscore - Non instant - " + c_highscorePage);
+		l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + l_gameName);
+	}
+	else
+	{
+		Echo( "_submitHighscore - Instant - " + c_highscorePage);
+		Overlay_Hide( "Fin");
+		if (g_score != 0)
+		{
+			l_namesAndScores = StringFromUrl( c_highscorePage, "win=1&id_instant=" + itoa( c_instantID));
+		}
+		else
+		{
+			l_namesAndScores = StringFromUrl( c_highscorePage, "win=0&id_instant=" + itoa( c_instantID));
+		};
+
+		string l_finInstantCaption;
+
+		if (l_namesAndScores == "win")
+		{
+			l_finInstantCaption = "Vous avez gagne le lot";
+		}
+		elseif (l_namesAndScores == "lose")
+		{
+			l_finInstantCaption = "Vous n'avez pas gagne le lot";
+		}
+		elseif (l_namesAndScores == "no money")
+		{
+			l_finInstantCaption = "Credits insuffisants";
+		}
+		elseif (l_namesAndScores == "tech error")
+		{
+			l_finInstantCaption = "Probleme technique";
+		}
+		else
+		{
+			l_finInstantCaption = "Vous n'etes pas connecte";
+		};
+		OverlayElement_GetByName( "FinInstant")->SetCaption( l_finInstantCaption);
+		OverlayElement_GetByName( "FinInstant")->SetLeft( (GENERAL_SCREEN_WIDTH - GetLineWidth( l_finInstantCaption, "Minigame", 50.0)) / 2.0);
+		Overlay_Show( "FinInstant");
+	};
+	Echo( "_submitHighscore" + l_namesAndScores);
+};
+
+

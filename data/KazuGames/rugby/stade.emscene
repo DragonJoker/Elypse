@@ -1,0 +1,1597 @@
+ambient_light 0.1 0.1 0.1 0
+
+physics_simulation Main
+{
+	gravity 0.0 0.0 0.0
+	steptime 0.001
+	steptime_limit 0.05
+	timescale 1.0
+	default_damping 0.1 0.9
+	default_auto_disable 0.1 1.0 1.0
+	cfm 0.01
+	erp 0.99
+}
+
+physics ballon
+{
+	bouncyness 0.8
+	friction 0.9
+	roll_friction 500.0
+	roll_dampen -0.9
+}
+
+physics phybarre
+{
+	bouncyness 0.8
+	friction 0.9
+	roll_friction 500.0
+	roll_dampen -0.9
+}
+
+scene_node but_stade_1
+{
+ 	position 0 0 -4965
+	orientation 0 -1 0 180
+}
+
+scene_node CameraNode
+{
+ 	position -645.308 878.711 689.419
+	orientation 0.0540861 -0.998513 0.00680329 14.3911
+}
+
+scene_node rosace_1
+{
+	parent CameraNode
+	inherit_orientation true
+	position 0 55 600
+}
+
+scene_node rosace_2
+{
+	parent rosace_1
+	inherit_orientation true
+	orientation 1 0 0 15.0
+	scale 0.01 0.01 0.01
+}
+
+scene_node rosace
+{
+	parent rosace_2
+	inherit_orientation true
+	inherit_scale true
+}
+
+scene_node graduation_1
+{
+	parent CameraNode
+	inherit_orientation true
+	position 0 55 600
+	orientation 1 0 0 15.0
+}
+
+scene_node graduation
+{
+	parent graduation_1
+	inherit_orientation true
+	scale 0.01 0.01 0.01
+}
+
+scene_node skydome_node
+{
+scale 0.5 0.5 0.5
+}
+
+scene_node Cercle_droit
+{
+	position 200 900 -4000
+	scale 2 2 2
+
+}
+
+scene_node Cercle_gauche
+{
+	position -200 900 -4000
+	scale 2 2 2
+
+}
+
+scene_node Cercle_but
+{
+	position 0 700 -4965
+}
+
+scene_node morpion
+{
+	position 0 0 -5000
+}
+
+scene_node croix_1
+{
+	parent but_stade_1
+	position -190 500 0
+}
+scene_node croix_2
+{
+	parent but_stade_1 
+	position 0 500 0
+}
+scene_node croix_3
+{
+	parent but_stade_1 
+	position 190 500 0
+}
+scene_node croix_4
+{
+	parent but_stade_1
+	position -190 900 0
+}
+scene_node croix_5
+{
+	parent but_stade_1
+	position 0 900 0
+}
+scene_node croix_6
+{
+	parent but_stade_1 
+	position 190 900 0
+}
+scene_node croix_7
+{
+	parent but_stade_1 
+	position -190 1300 0
+}
+scene_node croix_8
+{
+	parent but_stade_1
+	position 0 1300 0
+}
+scene_node croix_9
+{
+	parent but_stade_1
+	position 190 1300 0
+}
+
+scene_node drapeau_exterieur_stade_11
+{
+ 	position -5540 3200 11705
+}
+
+scene_node drapeau_stade_2
+{
+ 	position -3365 110 -7165
+	orientation 0 -1 0 177.5
+}
+
+scene_node loge_stade_5
+{
+ 	position -4145 0 -2835
+	orientation 0 1 0 90
+}
+
+scene_node drapeau_exterieur_stade_05
+{
+ 	position -10005 3200 -3970
+}
+
+scene_node poteau_stade
+{
+ 	position -3455 0 -2765
+}
+
+scene_node projecteur_int_stade_11
+{
+ 	position 4800 4300 5455
+	orientation 0 1 0 270
+}
+
+scene_node poteau_stade_5
+{
+ 	position 3455 0 -2765
+}
+
+scene_node projecteur_int_stade_4
+{
+ 	position -3770 4300 -7640
+	orientation 0 1 0 44.9999
+}
+
+scene_node tee_plastique
+{
+ 	position 0 0 -30
+}
+
+scene_node drapeau_stade_13_3
+{
+ 	position -280 1475 4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node but_stade_1_coll
+{
+ 	position 0 0 -4965
+}
+
+scene_node drapeau_exterieur_stade_15
+{
+ 	position -9240 3200 -8380
+}
+
+scene_node drapeau_stade_6
+{
+ 	position 3455 110 -4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node loge_stade_1
+{
+ 	position -4145 0 -1875
+	orientation 0 1 0 89.9999
+}
+
+scene_node poteau_stade_7
+{
+ 	position 3455 0 2765
+}
+
+scene_node projecteur_int_stade_2
+{
+ 	position 4800 4300 -5455
+	orientation 0 -1 0 84.9999
+}
+
+scene_node drapeau_exterieur_stade_01
+{
+ 	position 10005 3200 -25.0002
+}
+
+scene_node drapeau_exterieur_stade_12
+{
+ 	position 9240 3200 8380
+}
+
+scene_node drapeau_stade_13_1
+{
+ 	position 280 1475 4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node loge_stade
+{
+ 	position -4145 0 1875
+	orientation 0 1 0 90
+}
+
+scene_node loge_stade_6
+{
+ 	position 4145 0 -2835
+	orientation 0 1 0 270
+}
+
+scene_node projecteur_int_stade
+{
+ 	position -4800 4300 2000
+	orientation 0 1 0 89.9999
+}
+
+scene_node projecteur_stade_1
+{
+ 	position 8200 0 -13000
+	orientation 0 -1 0 40
+}
+
+scene_node drapeau_exterieur_stade_08
+{
+ 	position 0 3200 13000
+}
+
+scene_node drapeau_stade_11_1
+{
+ 	position 3455 110 2765
+	orientation 0 -1 0 177.5
+}
+
+scene_node drapeau_stade_4
+{
+ 	position -3455 110 -4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node poteau_stade_10
+{
+ 	position -3365 0 7165
+}
+
+scene_node poteau_stade_9
+{
+ 	position 3455 0 4965
+}
+
+scene_node projecteur_int_stade_14
+{
+ 	position 3770 4300 -7640
+	orientation 0 -1 0 44.9999
+}
+
+scene_node drapeau_exterieur_stade_03
+{
+ 	position 10005 3200 -3970
+}
+
+scene_node drapeau_exterieur_stade_10
+{
+ 	position -5540 3200 -11705
+}
+
+scene_node drapeau_stade_3
+{
+ 	position -3365 110 7165
+	orientation 0 -1 0 177.5
+}
+
+scene_node loge_stade_4
+{
+ 	position 4145 0 1875
+	orientation 0 1 0 270
+}
+
+scene_node projecteur_int_stade_9
+{
+ 	position -4800 4300 -2000
+	orientation 0 1 0 89.9999
+}
+
+scene_node projecteur_stade_3
+{
+ 	position -8200 0 13000
+	orientation 0 -1 0 220
+}
+
+scene_node drapeau_stade_11
+{
+ 	position 3455 110 -2765
+	orientation 0 -1 0 177.5
+}
+
+scene_node projecteur_int_stade_12
+{
+ 	position 3770 4300 7675
+	orientation 0 1 0 225
+}
+
+scene_node Camera2
+{
+ 	position 0 30 0
+}
+
+scene_node drapeau_exterieur_stade_16
+{
+ 	position -9240 3200 8380
+}
+
+scene_node drapeau_stade_1
+{
+ 	position -3455 110 4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node loge_stade_2
+{
+ 	position -4145 0 2835
+	orientation 0 1 0 90
+}
+
+scene_node poteau_stade_2
+{
+ 	position -3365 0 -7165
+}
+
+scene_node projecteur_int_stade_7
+{
+ 	position -3770 4300 7675
+	orientation 0 1 0 140
+}
+
+scene_node drapeau_exterieur_stade_04
+{
+ 	position -10005 3200 0
+	orientation 0 -1 0 9.99973
+}
+
+scene_node drapeau_stade_13
+{
+ 	position -280 1475 -4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node drapeau_stade_8
+{
+ 	position 3365 110 7165
+	orientation 0 -1 0 177.5
+}
+
+scene_node projecteur_int_stade_10
+{
+ 	position -4800 4300 -5455
+	orientation 0 1 0 84.9999
+}
+
+scene_node drapeau_exterieur_stade_14
+{
+ 	position 9240 3200 -8380
+}
+
+scene_node drapeau_stade_7
+{
+ 	position 3455 110 4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node poteau_stade_4
+{
+ 	position 3455 0 -4965
+}
+
+scene_node projecteur_int_stade_5
+{
+ 	position -1455 4300 -8705
+	orientation 0 1 0 14.9997
+}
+
+scene_node drapeau_exterieur_stade_06
+{
+ 	position -10005 3200 3960
+}
+
+scene_node drapeau_exterieur_stade_09
+{
+ 	position 5540 3200 -11705
+}
+
+scene_node drapeau_stade_5
+{
+ 	position 3365 110 -7165
+	orientation 0 -1 0 177.5
+}
+
+scene_node poteau_stade_6
+{
+ 	position -3455 0 2765
+}
+
+scene_node projecteur_int_stade_15
+{
+ 	position 1455 4300 -8705
+	orientation 0 -1 0 14.9997
+}
+
+scene_node projecteur_int_stade_3
+{
+ 	position -4800 4300 5455
+	orientation 0 1 0 95
+}
+
+scene_node ballon_rugby
+{
+ 	position 0 20 -30
+	orientation -1 0 0 82.5001
+}
+
+scene_node CamBallon
+{
+	parent ballon_rugby
+}
+
+scene_node fleche
+{
+	parent ballon_rugby
+	scale 2 2 2
+}
+
+
+
+scene_node drapeau_exterieur_stade_13
+{
+ 	position 5540 3200 11705
+}
+
+scene_node loge_stade_7
+{
+ 	position 4145 0 -1875
+	orientation 0 1 0 270
+}
+
+scene_node poteau_stade_1
+{
+ 	position -3455 0 -4965
+}
+
+scene_node projecteur_int_stade_8
+{
+ 	position 4800 4300 2000
+	orientation 0 -1 0 90.0001
+}
+
+scene_node projecteur_stade_2
+{
+ 	position 8200 0 13000
+	orientation 0 -1 0 130
+}
+
+scene_node but_stade
+{
+ 	position 0 0 4965
+	orientation 0 1 0 180
+}
+
+scene_node drapeau_stade_10
+{
+ 	position -3455 110 -2765
+	orientation 0 -1 0 177.5
+}
+
+scene_node poteau_stade_10_1
+{
+ 	position 3365 0 7165
+}
+
+scene_node poteau_stade_8
+{
+ 	position -3455 0 4965
+}
+
+scene_node projecteur_int_stade_1
+{
+ 	position 4800 4300 -2000
+	orientation 0 -1 0 90.0001
+}
+
+scene_node projecteur_int_stade_13
+{
+ 	position 1455 4300 8750
+	orientation 0 1 0 195
+}
+
+scene_node drapeau_exterieur_stade_02
+{
+ 	position 10005 3200 3960
+}
+
+scene_node poteau_stade_3
+{
+ 	position 3365 0 -7165
+}
+
+scene_node projecteur_int_stade_6
+{
+ 	position -1455 4300 8750
+	orientation 0 1 0 165
+}
+
+scene_node drapeau_stade_12
+{
+ 	position -3455 110 2765
+	orientation 0 -1 0 177.5
+}
+
+scene_node drapeau_stade_9
+{
+ 	position 280 1475 -4965
+	orientation 0 -1 0 177.5
+}
+
+scene_node loge_stade_3
+{
+ 	position 4145 0 2835
+	orientation 0 1 0 270
+}
+
+scene_node projecteur_stade
+{
+ 	position -8200 0 -13000
+	orientation 0 1 0 40
+}
+
+scene_node drapeau_exterieur_stade_07
+{
+ 	position 0 3200 -13000
+}
+
+scene_node cadran_stade
+{
+ 	position 0 4500 -9165
+}
+
+
+// Scene node joueur
+ 
+scene_node player_node
+{
+	position 0 0 0	
+}
+
+scene_node player_man_node
+{
+	parent player_node
+	inherit_orientation true
+	position 0 0 -97.5
+}
+
+
+
+//Objects
+
+object cadran_stade
+{
+	mesh cadran_stade.mesh
+	shadows true
+	attach_to cadran_stade
+}
+
+object cadran_stade_ecran
+{
+	mesh cadran_stade_ecran.mesh
+	shadows true
+	attach_to cadran_stade
+}
+
+object ballon_rugby
+{
+	mesh ballon_rugby.mesh
+	shadows true
+	attach_to ballon_rugby
+	
+	use_physics ballon
+	{
+		bounding_sphere 15.0
+	}
+}
+
+object but_stade
+{
+	mesh but_stade.mesh
+	shadows true
+	attach_to but_stade
+}
+
+object but_stade_1
+{
+	mesh but_stade.mesh
+	attach_to but_stade_1_coll
+}
+
+object complexe_stade
+{
+	mesh complexe_stade.mesh
+}
+
+object complexe_stade_public_01
+{
+	mesh complexe_stade_public_01.mesh
+	material complexe_stade_public_02
+}
+
+object complexe_stade_public_02
+{
+	mesh complexe_stade_public_02.mesh
+ 
+}
+
+object complexe_stade_public_03
+{
+	mesh complexe_stade_public_03.mesh
+ 
+}
+
+object complexe_stade_public_04
+{
+	mesh complexe_stade_public_04.mesh
+ 
+	material complexe_stade_public_02
+}
+
+object complexe_stade_public_05
+{
+	mesh complexe_stade_public_05.mesh
+ 
+}
+
+object complexe_stade_public_06
+{
+	mesh complexe_stade_public_06.mesh
+ 
+	material complexe_stade_public_02
+}
+
+object complexe_stade_secu
+{
+	mesh complexe_stade_secu.mesh
+ 
+}
+
+object drapeau_exterieur_stade_01
+{
+	mesh drapeau_exterieur_stade_01.mesh
+	attach_to drapeau_exterieur_stade_01
+}
+
+object drapeau_exterieur_stade_02
+{
+	mesh drapeau_exterieur_stade_02.mesh
+	attach_to drapeau_exterieur_stade_02
+}
+
+object drapeau_exterieur_stade_03
+{
+	mesh drapeau_exterieur_stade_03.mesh
+	attach_to drapeau_exterieur_stade_03
+}
+
+object drapeau_exterieur_stade_04
+{
+	mesh drapeau_exterieur_stade_04.mesh
+	attach_to drapeau_exterieur_stade_04
+}
+
+object drapeau_exterieur_stade_05
+{
+	mesh drapeau_exterieur_stade_05.mesh
+	attach_to drapeau_exterieur_stade_05
+}
+
+object drapeau_exterieur_stade_06
+{
+	mesh drapeau_exterieur_stade_06.mesh
+	attach_to drapeau_exterieur_stade_06
+}
+
+object drapeau_exterieur_stade_07
+{
+	mesh drapeau_exterieur_stade_07.mesh
+	attach_to drapeau_exterieur_stade_07
+}
+
+object drapeau_exterieur_stade_08
+{
+	mesh drapeau_exterieur_stade_08.mesh
+	attach_to drapeau_exterieur_stade_08
+}
+
+object drapeau_exterieur_stade_09
+{
+	mesh drapeau_exterieur_stade_09.mesh
+	attach_to drapeau_exterieur_stade_09
+}
+
+object drapeau_exterieur_stade_10
+{
+	mesh drapeau_exterieur_stade_10.mesh
+	attach_to drapeau_exterieur_stade_10
+}
+
+object drapeau_exterieur_stade_11
+{
+	mesh drapeau_exterieur_stade_11.mesh
+	attach_to drapeau_exterieur_stade_11
+}
+
+object drapeau_exterieur_stade_12
+{
+	mesh drapeau_exterieur_stade_12.mesh
+	attach_to drapeau_exterieur_stade_12
+}
+
+object drapeau_exterieur_stade_13
+{
+	mesh drapeau_exterieur_stade_13.mesh
+	attach_to drapeau_exterieur_stade_13
+}
+
+object drapeau_exterieur_stade_14
+{
+	mesh drapeau_exterieur_stade_14.mesh
+	attach_to drapeau_exterieur_stade_14
+}
+
+object drapeau_exterieur_stade_15
+{
+	mesh drapeau_exterieur_stade_15.mesh
+	attach_to drapeau_exterieur_stade_15
+}
+
+object drapeau_exterieur_stade_16
+{
+	mesh drapeau_exterieur_stade_16.mesh
+	attach_to drapeau_exterieur_stade_16
+}
+
+object drapeau_stade_1
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_1
+}
+
+object drapeau_stade_10
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_10
+}
+
+object drapeau_stade_11
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_11
+}
+
+object drapeau_stade_11_1
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_11_1
+}
+
+object drapeau_stade_12
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_12
+}
+
+object drapeau_stade_13
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_13
+}
+
+object drapeau_stade_13_1
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_13_1
+}
+
+object drapeau_stade_13_3
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_13_3
+}
+
+object drapeau_stade_2
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_2
+}
+
+object drapeau_stade_3
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_3
+}
+
+object drapeau_stade_4
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_4
+}
+
+object drapeau_stade_5
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_5
+}
+
+object drapeau_stade_6
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_6
+}
+
+object drapeau_stade_7
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_7
+}
+
+object drapeau_stade_8
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_8
+}
+
+object drapeau_stade_9
+{
+	mesh drapeau_stade.mesh
+	attach_to drapeau_stade_9
+}
+
+object fleche
+{
+	mesh fleche.mesh
+	attach_to fleche
+}
+
+object loge_stade
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade
+}
+
+object loge_stade_1
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_1
+}
+
+object loge_stade_2
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_2
+}
+
+object loge_stade_3
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_3
+}
+
+object loge_stade_4
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_4
+}
+
+object loge_stade_5
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_5
+}
+
+object loge_stade_6
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_6
+}
+
+object loge_stade_7
+{
+	mesh loge_stade.mesh
+	attach_to loge_stade_7
+}
+
+object poteau_stade
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade
+}
+
+object poteau_stade_1
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_1
+}
+
+object poteau_stade_10
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_10
+}
+
+object poteau_stade_10_1
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_10_1
+}
+
+object poteau_stade_2
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_2
+}
+
+object poteau_stade_3
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_3
+}
+
+object poteau_stade_4
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_4
+}
+
+object poteau_stade_5
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_5
+}
+
+object poteau_stade_6
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_6
+}
+
+object poteau_stade_7
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_7
+}
+
+object poteau_stade_8
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_8
+}
+
+object poteau_stade_9
+{
+	mesh poteau_stade.mesh
+	shadows true
+	attach_to poteau_stade_9
+}
+
+object projecteur_int_stade
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade
+}
+
+object projecteur_int_stade_1
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_1
+}
+
+object projecteur_int_stade_10
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_10
+}
+
+object projecteur_int_stade_11
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_11
+}
+
+object projecteur_int_stade_12
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_12
+}
+
+object projecteur_int_stade_13
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_13
+}
+
+object projecteur_int_stade_14
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_14
+}
+
+object projecteur_int_stade_15
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_15
+}
+
+object projecteur_int_stade_2
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_2
+}
+
+object projecteur_int_stade_3
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_3
+}
+
+object projecteur_int_stade_4
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_4
+}
+
+object projecteur_int_stade_5
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_5
+}
+
+object projecteur_int_stade_6
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_6
+}
+
+object projecteur_int_stade_7
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_7
+}
+
+object projecteur_int_stade_8
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_8
+}
+
+object projecteur_int_stade_9
+{
+	mesh projecteur_int_stade.mesh
+	attach_to projecteur_int_stade_9
+}
+
+object projecteur_stade
+{
+	mesh projecteur_stade.mesh
+	attach_to projecteur_stade
+}
+
+object projecteur_stade_1
+{
+	mesh projecteur_stade.mesh
+	attach_to projecteur_stade_1
+}
+
+object projecteur_stade_2
+{
+	mesh projecteur_stade.mesh
+	attach_to projecteur_stade_2
+}
+
+object projecteur_stade_3
+{
+	mesh projecteur_stade.mesh
+	attach_to projecteur_stade_3
+}
+
+object pub_stade
+{
+	mesh pub_stade.mesh
+	shadows true
+ 
+}
+
+object skydome_stade
+{
+	mesh skydome_stade.mesh
+ 
+}
+
+object tee_plastique
+{
+	mesh tee_plastique.mesh
+	shadows true
+	attach_to tee_plastique
+}
+
+object terrain_stade
+{
+	mesh terrain_stade.mesh
+ 
+}
+
+
+
+//objet
+
+object coll_miss_but1
+{
+	mesh coll_ms_but_stade_01.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_ms_but_stade_01.mesh
+		static
+		phantom
+	}
+}
+
+object coll_miss_but2
+{
+	mesh coll_ms_but_stade_02.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_ms_but_stade_02.mesh
+		static
+		phantom
+	}
+}
+
+object coll_miss_but3
+{
+	mesh coll_ms_but_stade_03.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_ms_but_stade_03.mesh
+		static
+		phantom
+	}
+}
+
+object coll_but
+{
+	mesh coll_sc_but_stade.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_sc_but_stade.mesh
+		static
+		phantom
+	}
+}
+
+
+
+object coll_pf_complexe_stade_01
+{
+	mesh coll_pf_complexe_stade_01.mesh
+ 	use_physics phybarre
+	{
+		bounding_box 20000.0 10000.0 20000.0
+		{
+			translate 0 -5000.0 0
+		}
+		static
+	}
+}
+
+object coll_pf_complexe_stade_02
+{
+	mesh coll_pf_complexe_stade_02.mesh
+ 	use_physics phybarre
+	{
+		bounding_mesh coll_pf_complexe_stade_02.mesh
+		phantom
+	}
+}
+
+object coll_pf_complexe_stade_03
+{
+	mesh coll_pf_complexe_stade_03.mesh
+ 	use_physics phybarre
+	{
+		bounding_mesh coll_pf_complexe_stade_03.mesh
+		phantom
+	}
+}
+
+object coll_pf_complexe_stade_04
+{
+	mesh coll_pf_complexe_stade_04.mesh
+ 	use_physics phybarre
+	{
+		bounding_mesh coll_pf_complexe_stade_04.mesh
+		phantom
+	}
+	
+}
+
+object coll_pf_complexe_stade_05
+{
+	mesh coll_pf_complexe_stade_05.mesh
+ 	use_physics phybarre
+	{
+		bounding_mesh coll_pf_complexe_stade_05.mesh
+		phantom
+	}
+}
+
+object coll_pf_but_stade_01
+{
+	mesh coll_pf_but_stade_01.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_pf_but_stade_01.mesh
+		static
+	}
+}
+
+object coll_pf_but_stade_02
+{
+	mesh coll_pf_but_stade_02.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_pf_but_stade_02.mesh
+		static
+	}
+}
+
+object coll_pf_but_stade_03
+{
+	mesh coll_pf_but_stade_03.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_pf_but_stade_03.mesh
+		static
+	}
+}
+
+object coll_pf_but_stade_04
+{
+	mesh coll_pf_but_stade_04.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_pf_but_stade_04.mesh
+		static
+	}
+	
+}
+
+object coll_pf_but_stade_05
+{
+	mesh coll_pf_but_stade_05.mesh
+	attach_to but_stade_1_coll
+	use_physics phybarre
+	{
+		bounding_mesh coll_pf_but_stade_05.mesh
+		static
+	}
+}
+
+
+object Cercle_but
+{
+	mesh cercle.mesh
+	attach_to Cercle_but
+}
+
+object Cercle_droit
+{
+	mesh cercle.mesh
+	attach_to Cercle_droit
+}
+
+object Cercle_gauche
+{
+	mesh cercle.mesh
+	attach_to Cercle_gauche
+}
+
+object Cercle_Coll_but
+{
+	mesh coll_pf_cercle.mesh
+	attach_to Cercle_but
+	use_physics phybarre
+	{
+		bounding_sphere 3.5
+		initial_force 0.0 0.0 0.0
+		phantom
+	}
+}
+object Cercle_Coll_droit
+{
+	mesh coll_pf_cercle.mesh
+	attach_to Cercle_droit
+	use_physics phybarre
+	{
+		bounding_sphere 3.5
+		initial_force 0.0 0.0 0.0
+		phantom
+	}
+}
+
+object Cercle_Coll_gauche
+{
+	mesh coll_pf_cercle.mesh
+	attach_to Cercle_gauche
+	use_physics phybarre
+	{
+		bounding_sphere 3.5
+		initial_force 0.0 0.0 0.0
+		phantom
+	}
+}
+
+object morpion
+{
+	mesh grille.mesh
+	attach_to morpion
+}
+object croix_1
+{
+	mesh croix.mesh
+	attach_to croix_1
+}
+object croix_2
+{
+	mesh croix.mesh
+	attach_to croix_2
+}
+object croix_3
+{
+	mesh croix.mesh
+	attach_to croix_3
+}
+object croix_4
+{
+	mesh croix.mesh
+	attach_to croix_4
+}
+object croix_5
+{
+	mesh croix.mesh
+	attach_to croix_5
+}
+object croix_6
+{
+	mesh croix.mesh
+	attach_to croix_6
+}
+object croix_7
+{
+	mesh croix.mesh
+	attach_to croix_7
+}
+object croix_8
+{
+	mesh croix.mesh
+	attach_to croix_8
+}
+object croix_9
+{
+	mesh croix.mesh
+	attach_to croix_9
+}
+object rosace
+{
+	mesh rose_vents.mesh
+	attach_to rosace
+}
+
+object graduation
+{
+	mesh graduation_rose.mesh
+	attach_to graduation
+}
+
+// object player 
+
+object player_hair
+{
+	mesh coupe_08.mesh
+	attach_to player_man_node
+}
+object player_head
+{
+	mesh tete.mesh
+	attach_to player_man_node
+}
+object player_chest
+{
+	mesh poitrine_maillot_foot.mesh
+	attach_to player_man_node
+}
+object player_legs
+{
+	mesh jambes_short_foot.mesh
+	attach_to player_man_node
+}
+object player_shoes
+{
+	mesh chaussure_basket_foot.mesh
+	attach_to player_man_node
+}
+
+//Lights
+
+light light_01
+{
+	type directional
+	direction -0.497468 -0.710669 -0.497468
+	diffuse 0.5 0.5 0.5
+	specular 0.9 0.9 0.9
+}
+
+light light_02
+{
+	type directional
+	direction 0.497468 -0.710669 0.497468
+	diffuse 0.3 0.3 0.3
+	specular 0.8 0.8 0.8
+}
+
+light light_03
+{
+	type directional
+	direction 0.497468 -0.710669 -0.497468
+	diffuse 0.3 0.3 0.3
+	specular 0.8 0.8 0.8
+}
+
+light light_04
+{
+	type directional
+	direction -0.497468 -0.710669 0.497468
+	diffuse 0.3 0.3 0.3
+	specular 0.8 0.8 0.8
+}
+
+light light_05
+{
+	type directional
+	direction 0 1 0
+	diffuse 0.3 0.3 0.3
+	specular 0.8 0.8 0.8
+}
+
+//Cameras
+
+camera RootCamera
+{
+	position 0 78.5322 4188.38
+	attach_to CameraNode
+}
+
+animation_group drapeaux_exterieurs_stade
+{
+	add_object drapeau_exterieur_stade_01
+	add_object drapeau_exterieur_stade_02
+	add_object drapeau_exterieur_stade_03
+	add_object drapeau_exterieur_stade_04
+	add_object drapeau_exterieur_stade_05
+	add_object drapeau_exterieur_stade_06
+	add_object drapeau_exterieur_stade_07
+	add_object drapeau_exterieur_stade_08
+	add_object drapeau_exterieur_stade_09
+	add_object drapeau_exterieur_stade_10
+	add_object drapeau_exterieur_stade_11
+	add_object drapeau_exterieur_stade_12
+	add_object drapeau_exterieur_stade_13
+	add_object drapeau_exterieur_stade_14
+	add_object drapeau_exterieur_stade_15
+	add_object drapeau_exterieur_stade_16
+}
+animation_group Fleche_Ballon
+{
+	add_object fleche
+}
+
+animation_group Drapeaux
+{
+	add_object drapeau_stade_1
+	add_object drapeau_stade_2
+	add_object drapeau_stade_3
+	add_object drapeau_stade_4
+	add_object drapeau_stade_5
+	add_object drapeau_stade_6
+	add_object drapeau_stade_7
+	add_object drapeau_stade_8
+	add_object drapeau_stade_9
+	add_object drapeau_stade_10
+	add_object drapeau_stade_11
+	add_object drapeau_stade_11_1
+	add_object drapeau_stade_12
+	add_object drapeau_stade_13
+	add_object drapeau_stade_13_1
+}
+
+animation_group anim_player
+{
+	add_object player_hair
+	add_object player_head
+	add_object player_chest
+	add_object player_legs
+	add_object player_shoes
+}
+

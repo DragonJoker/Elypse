@@ -1,0 +1,702 @@
+int g_currentNextArrow;
+int i;
+int g_successInARow;
+int g_failsInARow;
+int g_score;
+int g_niveau;
+int c_strartingLives;
+int g_vie;
+int g_numFleches;
+
+overlay l_overlay;
+
+string l_tempString;
+
+bool g_consumed;
+bool g_success;
+bool l_titleShown;
+
+real g_multiplier;
+real g_number;
+real c_baseTimeStep;
+real c_offset;
+real g_timestep;
+real c_downSpeed;
+real l_real;
+
+bool l_music;
+bool l_sound;
+real l_musicVol;
+real l_soundVol;
+real l_ticPos;
+real c_relativeRegletteWidth;
+overlay l_ticMusic;
+overlay l_ticSound;
+
+void ZombiesPlayAnimation( int p_level)
+{
+	AnimationGroup_GetByName( "ZombieAnims")->StopAllAnimations();
+	AnimationGroup_GetByName( "ZombieAnims")->StartAnimation( "niv" + itoa( p_level));
+	timer( "EndZombieAnim", TIMERTYPE_ONCE, AnimationGroup_GetByName( "ZombieAnims")->GetObject( "Zombie01")->GetAnimation( "niv" + itoa( p_level))->GetLength() - 0.05)
+	{
+		AnimationGroup_GetByName( "ZombieAnims")->PauseAnimation( "niv" + itoa( p_level));
+	};
+};
+
+void EndGame()
+{
+	CheckClearToGo();
+	if (g_clearToGo)
+	{
+		OverlayElement_GetByName( "Ready/Text")->SetCaption( "Ready ?");
+		Overlay_Hide( "Perdu");
+		Overlay_Show( "Menu");
+		if (g_free)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
+		}
+		elseif (g_freeLimited)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
+		}
+		elseif (g_priced)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
+		}
+		elseif (g_abonne)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
+		};
+	};
+};
+
+void GameOver()
+{
+	Timer_Kill( "fleches going down");
+	Overlay_Hide( "Life");
+	Overlay_Hide( "BarreDroite");
+	
+	g_consumed = true;
+	AnimationGroup_GetByName( "PersoAnims")->StopAllAnimations();
+	AnimationGroup_GetByName( "PersoAnims")->StartAnimation( "tombe");
+	
+	Overlay_Show( "Fin");
+	_beginHighscorePhase();
+
+	timer( "position fin", TIMERTYPE_ONCE, AnimationGroup_GetByName( "PersoAnims")->GetObject( limbo_charName + "_Body")->GetAnimation( "tombe")->GetLength() - 0.05)
+	{
+		AnimationGroup_GetByName( "PersoAnims")->PauseAnimation( "tombe");
+		AnimationGroup_GetByName( "PersoAnims")->SetTimeAnimation( "tombe", AnimationGroup_GetByName( "PersoAnims")->GetObject( limbo_charName + "_Body")->GetAnimation( "tombe")->GetLength());
+	};
+
+	timer( "EndGame", TIMERTYPE_ONCE, 2.0)
+	{
+		EndGame();
+	};
+};
+
+void _resetTambours()
+{
+	OverlayElement_GetByName( "InterfaceLimbo/Fleche_LEFT/Tambour")->SetMaterial( "Base/Invisible");
+	OverlayElement_GetByName( "InterfaceLimbo/Fleche_RIGHT/Tambour")->SetMaterial( "Base/Invisible");
+	OverlayElement_GetByName( "InterfaceLimbo/Fleche_UP/Tambour")->SetMaterial( "Base/Invisible");
+	OverlayElement_GetByName( "InterfaceLimbo/Fleche_DOWN/Tambour")->SetMaterial( "Base/Invisible");
+};
+
+void _randomise()
+{
+	l_real = rand( 0.0, itor( g_numFleches));
+	if (l_real < 1.0)
+	{
+		l_tempString = "InterfaceLimbo/Fleche_UP";
+		l_overlay->SetLeft( c_offset);
+	}
+	elseif (l_real < 2.0)
+	{
+		l_tempString = "InterfaceLimbo/Fleche_DOWN";
+		l_overlay->SetLeft( 2.0 * c_offset);
+	}
+	elseif (l_real < 3.0)
+	{
+		l_tempString = "InterfaceLimbo/Fleche_RIGHT";
+		l_overlay->SetLeft( 0.0);
+	}
+	else
+	{
+		l_tempString = "InterfaceLimbo/Fleche_LEFT";
+		l_overlay->SetLeft( 3.0 * c_offset);
+	};
+	
+	l_overlay->SetMaterial( l_tempString);
+};
+
+void _updateScore()
+{
+	if (g_score < 0)
+	{
+		g_score = 0;
+	};
+ 	OverlayElement_GetByName( "Score/Text")->SetCaption( itoa( g_score));
+	OverlayElement_GetByName( "Life/Bar2")->SetWidth( 10.0 * itor(20 - g_vie));
+};
+
+void _success()
+{
+	g_success = true;
+	g_successInARow ++;
+	g_failsInARow = 0;
+	g_score += g_niveau * 100;
+	if (g_successInARow > 3)
+	{
+		g_successInARow = 0;
+		g_score += g_niveau * 200;
+		g_vie++;
+		if (g_vie > c_strartingLives)
+		{
+			g_vie = c_strartingLives;
+		};
+	};
+	
+	OverlayElement_GetByName( l_tempString + "/Tambour")->SetMaterial( "InterfaceLimbo/Tambour_Vert");
+	_updateScore();
+};
+
+void _fail()
+{
+	g_successInARow = 0;
+	g_failsInARow ++;
+	g_vie--;
+	g_score += g_niveau * (-20);
+	
+	if (g_failsInARow > 3)
+	{
+		g_failsInARow = 0;
+		g_score += g_niveau * (-100);
+	};
+	
+	_updateScore();
+	
+	if (g_vie == 0)
+	{
+		GameOver();
+	};
+	
+	OverlayElement_GetByName( l_tempString + "/Tambour")->SetMaterial( "InterfaceLimbo/Tambour_Rouge");
+};
+
+void _finalBarreChange()
+{
+	SceneNode_GetByName( "barre2")->SetPosition( (itor( g_niveau/2) * (-15.0) + 135.0) * UNIT_Y);
+};
+
+void _upSpeed()
+{
+	g_multiplier = g_multiplier * 1.1;
+};
+
+void _upFleches()
+{
+	if (g_numFleches < 4)
+	{
+		g_numFleches ++;
+	};
+};
+
+void _passLevel()
+{
+	g_niveau ++;
+	g_number = 0.0;
+
+	AnimationGroup_GetByName( "PersoAnims")->StopAnimation( g_animName);
+
+	if (g_niveau < 8 && (g_niveau % 2 == 1))
+	{
+		_upFleches();
+		g_animName = "niv" + itoa( (1 + g_niveau) / 2);
+		ZombiesPlayAnimation( (1 + g_niveau) / 2);
+	}
+	else
+	{
+		_upSpeed();
+	};
+	
+	
+	AnimationGroup_GetByName( "PersoAnims")->StartAnimation( g_animName);
+	AnimationGroup_GetByName( "PersoAnims")->PauseAnimation( g_animName);
+	AnimationGroup_GetByName( "PersoAnims")->SetAnimationTimeScale( g_animName, 0.5);
+};
+
+void _startTimer();
+
+void _resumeAnimation()
+{
+	Timer_Kill( "animatin_resume");
+	
+	AnimationGroup_GetByName( "PersoAnims")->StartAnimation( g_animName);
+
+	timer( "animatin_resume", TIMERTYPE_ONCE, c_baseTimeStep / g_multiplier)
+	{
+		AnimationGroup_GetByName( "PersoAnims")->PauseAnimation( g_animName);
+	};
+};
+
+void _startTimer()
+{
+	timer( "fleches going down", TIMERTYPE_PERMANENT, 0.0)
+	{
+		for ( i = 1 ; i < 6 ; i ++)
+		{
+			l_overlay = OverlayElement_GetByName( "Fleche_" + itoa( i));
+			l_overlay->Translate( 0.0, c_downSpeed * g_multiplier * GENERAL_ELAPSED_TIME);
+			
+			if (l_overlay->GetTop() > ( OverlayElement_GetByName( "BarreDroite")->GetHeight()))
+			{
+				l_overlay->Translate( 0.0, -1.0 * OverlayElement_GetByName( "BarreDroite")->GetHeight());
+				g_currentNextArrow --;
+				if (g_currentNextArrow == 0)
+				{
+					g_currentNextArrow = 5;
+				};
+
+				_resetTambours();
+
+				if (g_consumed && g_success)
+				{
+					g_number = g_number + c_baseTimeStep / g_multiplier;
+					_resumeAnimation();
+				}
+				else
+				{
+					l_tempString = l_overlay->GetMaterialName();
+					_fail();
+				};
+				g_success = false;
+				g_consumed = false;
+				_randomise();
+			};
+		};
+	};
+};
+
+void _startLevel()
+{
+	AnimationGroup_GetByName( "PersoAnims")->StartAnimation( g_animName);
+	AnimationGroup_GetByName( "PersoAnims")->PauseAnimation( g_animName);
+	AnimationGroup_GetByName( "PersoAnims")->SetAnimationTimeScale( g_animName, 0.5);
+	timer( "limbo timer end", TIMERTYPE_PERMANENT, 8.6)
+	{
+		if (g_number > 8.7)
+		{
+			Timer_Kill( "fleches going down");
+			_passLevel();
+			_startTimer();
+		};
+	};
+
+	_startTimer();
+};
+
+void InitialiseManMeshes()
+{
+	g_manBodyNames = "Normal|end";
+	g_manBodyMeshes = "corps.mesh|end";
+	g_manMaxBodies = 1;
+
+	g_manHairsNames = "Normale|";
+	g_manHairsMeshes = "coiffe_coupe.mesh|";
+	g_manHairsNames += "Punk|";
+	g_manHairsMeshes += "coiffe_punk.mesh|";
+	g_manHairsNames += "Queue de cheval|";
+	g_manHairsMeshes += "coiffe_queuedechev.mesh|";
+	g_manHairsNames += "Mage|";
+	g_manHairsMeshes += "coiffe_mage.mesh|";
+	g_manHairsNames += "Casque Joe|";
+	g_manHairsMeshes += "coiffe_joe.mesh|";
+	g_manHairsNames += "Ecouteurs|";
+	g_manHairsMeshes += "coiffe_musique.mesh|";
+	g_manHairsNames += "Casque Romain|";
+	g_manHairsMeshes += "coiffe_romain.mesh|";
+	g_manHairsNames += "Casque Viking|";
+	g_manHairsMeshes += "coiffe_viking.mesh|";
+	g_manHairsNames += "Cowboy|";
+	g_manHairsMeshes += "coiffe_cowboy.mesh|";
+	g_manHairsNames += "Haut de forme|";
+	g_manHairsMeshes += "coiffe_hauteforme.mesh|";
+	g_manHairsNames += "Alien|";
+	g_manHairsMeshes += "coiffe_alien.mesh|";
+	g_manHairsNames += "Aluk|";
+	g_manHairsMeshes += "coiffe_aluc.mesh|";
+	g_manHairsNames += "Angelique|";
+	g_manHairsMeshes += "coiffe_ange.mesh|";
+	g_manHairsNames += "Batboy|";
+	g_manHairsMeshes += "coiffe_batman.mesh|";
+	g_manHairsNames += "Demoniaque|";
+	g_manHairsMeshes += "coiffe_demon.mesh|";
+	g_manHairsNames += "Drake|";
+	g_manHairsMeshes += "coiffe_drake.mesh|";
+	g_manHairsNames += "Elfique|";
+	g_manHairsMeshes += "coiffe_elfe.mesh|";
+	g_manHairsNames += "Loup-garou|";
+	g_manHairsMeshes += "coiffe_garou.mesh|";
+	g_manHairsNames += "Goku|";
+	g_manHairsMeshes += "coiffe_goku.mesh|";
+	g_manHairsNames += "Halloween|";
+	g_manHairsMeshes += "coiffe_haloween.mesh|";
+	g_manHairsNames += "Lunk|";
+	g_manHairsMeshes += "coiffe_lunk.mesh|";
+	g_manHairsNames += "Robot|";
+	g_manHairsMeshes += "coiffe_robot.mesh|";
+	g_manHairsNames += "Terminator|";
+	g_manHairsMeshes += "coiffe_termina.mesh|";
+	g_manHairsNames += "Ent|";
+	g_manHairsMeshes += "coiffe_trent.mesh|";
+	g_manHairsNames += "Vampire|";
+	g_manHairsMeshes += "coiffe_vampire.mesh|";
+	g_manHairsNames += "Ninja|";
+	g_manHairsMeshes += "coiffe_ninja.mesh|";
+	g_manHairsNames += "Casquette endroit|";
+	g_manHairsMeshes += "coiffe_casquettef.mesh|";
+	g_manHairsNames += "Casquette envers|";
+	g_manHairsMeshes += "coiffe_casquetteb.mesh|";
+	g_manHairsNames += "end";
+	g_manHairsMeshes += "end";
+	g_manMaxHairs = 28;
+
+	g_manHairsColoursNames = "Blond|";
+	g_manHairsMaterials = "corpsminiboy/cheveux-blond|";
+	g_manHairsColoursNames += "Noir|";
+	g_manHairsMaterials += "corpsminiboy/cheveux|";
+	g_manHairsColoursNames += "Chatain|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-chatain|";
+	g_manHairsColoursNames += "Roux|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-roux|";
+	g_manHairsColoursNames += "Gris|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-gris|";
+	g_manHairsColoursNames += "Blanc|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-blanc|";
+	g_manHairsColoursNames += "end";
+	g_manHairsMaterials += "end";
+	g_manMaxHairsMaterials = 6;
+
+	g_manDressesNames = "Torse nu|";
+	g_manDressesMeshes = "none|";
+	g_manDressesNames += "Cache poussiere|";
+	g_manDressesMeshes += "tenue_cachepouss.mesh|";
+	g_manDressesNames += "Blouson|";
+	g_manDressesMeshes += "tenue_blouzon.mesh|";
+	g_manDressesNames += "Plastron romain|";
+	g_manDressesMeshes += "tenue_romain.mesh|";
+	g_manDressesNames += "Plastron viking|";
+	g_manDressesMeshes += "tenue_viking.mesh|";
+	g_manDressesNames += "Robe mage|";
+	g_manDressesMeshes += "tenue_mage.mesh|";
+	g_manDressesNames += "Indy|";
+	g_manDressesMeshes += "tenue_indiana.mesh|";
+	g_manDressesNames += "Alien|";
+	g_manDressesMeshes += "tenue_alien.mesh|";
+	g_manDressesNames += "Aluk|";
+	g_manDressesMeshes += "tenue_aluc.mesh|";
+	g_manDressesNames += "Angelique|";
+	g_manDressesMeshes += "tenue_ange.mesh|";
+	g_manDressesNames += "Batboy|";
+	g_manDressesMeshes += "tenue_batman.mesh|";
+	g_manDressesNames += "Demoniaque|";
+	g_manDressesMeshes += "tenue_demon.mesh|";
+	g_manDressesNames += "Drake|";
+	g_manDressesMeshes += "tenue_drake.mesh|";
+	g_manDressesNames += "Loup-garou|";
+	g_manDressesMeshes += "tenue_garou.mesh|";
+	g_manDressesNames += "Lunk|";
+	g_manDressesMeshes += "tenue_lunk.mesh|";
+	g_manDressesNames += "Robot|";
+	g_manDressesMeshes += "tenue_robot.mesh|";
+	g_manDressesNames += "Ent|";
+	g_manDressesMeshes += "tenue_trent.mesh|";
+	g_manDressesNames += "Vampire|";
+	g_manDressesMeshes += "tenue_vampire.mesh|";
+	g_manDressesNames += "Ninja|";
+	g_manDressesMeshes += "tenue_ninja.mesh|";
+	g_manDressesNames += "Goku|";
+	g_manDressesMeshes += "tenue_goku.mesh|";
+	g_manDressesNames += "end";
+	g_manDressesMeshes += "end";
+	g_manMaxDresses = 20;
+
+	g_manSkinsNames = "Blanc|";
+	g_manSkinsMaterials = "corpsminiboy/peau|";
+	g_manSkinsNames += "Mat|";
+	g_manSkinsMaterials += "corpsminiboy/peau-mat|";
+	g_manSkinsNames += "Noir|";
+	g_manSkinsMaterials += "corpsminiboy/peau-noir|";
+	g_manSkinsNames += "Jaune|";
+	g_manSkinsMaterials += "corpsminiboy/peau-jaune|";
+	g_manSkinsNames += "Demon|";
+	g_manSkinsMaterials += "corpsminiboy/peau-demon|";
+	g_manSkinsNames += "Alien|";
+	g_manSkinsMaterials += "corpsminiboy/peau-alien|";
+	g_manSkinsNames += "Drake|";
+	g_manSkinsMaterials += "corpsminiboy/peau-drake|";
+	g_manSkinsNames += "Loup Garou|";
+	g_manSkinsMaterials += "corpsminiboy/peau-garou|";
+	g_manSkinsNames += "Robot|";
+	g_manSkinsMaterials += "corpsminiboy/peau-robot|";
+	g_manSkinsNames += "Ent|";
+	g_manSkinsMaterials += "corpsminiboy/peau-trent|";
+	g_manSkinsNames += "Vampire|";
+	g_manSkinsMaterials += "corpsminiboy/peau-vampire|";
+	g_manSkinsNames += "end";
+	g_manSkinsMaterials += "end";
+	g_manMaxSkins = 11;
+
+	g_manBeardsNames = "Aucune|";
+	g_manBeardsMeshes = "none|";
+	g_manBeardsNames += "Barbe|";
+	g_manBeardsMeshes += "poils_barbe.mesh|";
+	g_manBeardsNames += "Barbe longue|";
+	g_manBeardsMeshes += "poils_barbelongue.mesh|";
+	g_manBeardsNames += "Barbiche|";
+	g_manBeardsMeshes += "poils_barbiche.mesh|";
+	g_manBeardsNames += "Bouc|";
+	g_manBeardsMeshes += "poils_bouc.mesh|";
+	g_manBeardsNames += "Moustache|";
+	g_manBeardsMeshes += "poils_moustache.mesh|";
+	g_manBeardsNames += "Pattes|";
+	g_manBeardsMeshes += "poils_pattes.mesh|";
+	g_manBeardsNames += "end";
+	g_manBeardsMeshes += "end";
+	g_manMaxBeards = 7;
+
+	g_manBrowsNames = "Aucun|";
+	g_manBrowsMeshes = "none|";
+	g_manBrowsNames += "Sourcils|";
+	g_manBrowsMeshes += "sourcils.mesh|";
+	g_manBrowsNames += "end";
+	g_manBrowsMeshes += "end";
+	g_manMaxBrows = 2;
+
+	g_manEyesColoursNames = "Noirs|";
+	g_manEyesMaterials = "corpsminiboy/iris|";
+	g_manEyesColoursNames += "Bleus|";
+	g_manEyesMaterials += "corpsminiboy/iris-bleu|";
+	g_manEyesColoursNames += "Verts|";
+	g_manEyesMaterials += "corpsminiboy/iris-vert|";
+	g_manEyesColoursNames += "Marrons|";
+	g_manEyesMaterials += "corpsminiboy/iris-marron|";
+	g_manEyesColoursNames += "Rouges|";
+	g_manEyesMaterials += "corpsminiboy/iris-rouge|";
+	g_manEyesColoursNames += "Jaunes|";
+	g_manEyesMaterials += "corpsminiboy/iris-jaune|";
+	g_manEyesColoursNames += "end";
+	g_manEyesMaterials += "end";
+	g_manMaxEyesMaterials = 6;
+};
+
+void InitialiseWomanMeshes()
+{
+	g_womanBodyNames = "Normal|end";
+	g_womanBodyMeshes = "corpsgirl.mesh|end";
+	g_womanMaxBodies = 1;
+
+	g_womanHairsNames = "Couettes|";
+	g_womanHairsMeshes = "coiffe_couettesgirl.mesh|";
+	g_womanHairsNames += "Detaches|";
+	g_womanHairsMeshes += "coiffe_detachegirl.mesh|";
+	g_womanHairsNames += "Queue de cheval|";
+	g_womanHairsMeshes += "coiffe_queuedechevgirl.mesh|";
+	g_womanHairsNames += "Chouquette|";
+	g_womanHairsMeshes += "coiffe_chouquettegirl.mesh|";
+	g_womanHairsNames += "Mage|";
+	g_womanHairsMeshes += "coiffe_magegirl.mesh|";
+	g_womanHairsNames += "Ecouteurs|";
+	g_womanHairsMeshes += "coiffe_casquemusiquegirl.mesh|";
+	g_womanHairsNames += "Cowgirl|";
+	g_womanHairsMeshes += "coiffe_cowgirl.mesh|";
+	g_womanHairsNames += "Catgirl|";
+	g_womanHairsMeshes += "coiffe_catwomangirl.mesh|";
+	g_womanHairsNames += "Ange|";
+	g_womanHairsMeshes += "coiffe_angegirl.mesh|";
+	g_womanHairsNames += "Demone|";
+	g_womanHairsMeshes += "coiffe_demonegirl.mesh|";
+	g_womanHairsNames += "Haut de forme|";
+	g_womanHairsMeshes += "coiffe_hauteformegirl.mesh|";
+	g_womanHairsNames += "Meche|";
+	g_womanHairsMeshes += "coiffe_mechegirl.mesh|";
+	g_womanHairsNames += "Robot|";
+	g_womanHairsMeshes += "coiffe_robotgirl.mesh|";
+	g_womanHairsNames += "Ent|";
+	g_womanHairsMeshes += "coiffe_trentgirl.mesh|";
+	g_womanHairsNames += "Tresse afro|";
+	g_womanHairsMeshes += "coiffe_tresseafrogirl.mesh|";
+	g_womanHairsNames += "Halloween|";
+	g_womanHairsMeshes += "coiffe_haloweengirl.mesh|";
+	g_womanHairsNames += "Vampire|";
+	g_womanHairsMeshes += "coiffe_vampiregirl.mesh|";
+	g_womanHairsNames += "end";
+	g_womanHairsMeshes += "end";
+	g_womanMaxHairs = 17;
+
+	g_womanHairsColoursNames = "Noirs|";
+	g_womanHairsMaterials = "corpsminigirl/cheveux|";
+	g_womanHairsColoursNames += "Chatains|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-chatain|";
+	g_womanHairsColoursNames += "Blonds|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-blond|";
+	g_womanHairsColoursNames += "Roux|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-roux|";
+	g_womanHairsColoursNames += "Gris|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-gris|";
+	g_womanHairsColoursNames += "Blancs|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-blanc|";
+	g_womanHairsColoursNames += "end";
+	g_womanHairsMaterials += "end";
+	g_womanMaxHairsMaterials = 6;
+
+	g_womanDressesNames = "Sportive|";
+	g_womanDressesMeshes = "none|";
+	g_womanDressesNames += "Cowboy|";
+	g_womanDressesMeshes += "tenue_cowgirl.mesh|";
+	g_womanDressesNames += "Robe mage|";
+	g_womanDressesMeshes += "tenue_magegirl.mesh|";
+	g_womanDressesNames += "Catgirl|";
+	g_womanDressesMeshes += "tenue_catwomangirl.mesh|";
+	g_womanDressesNames += "Ange|";
+	g_womanDressesMeshes += "tenue_angegirl.mesh|";
+	g_womanDressesNames += "Demone|";
+	g_womanDressesMeshes += "tenue_demonegirl.mesh|";
+	g_womanDressesNames += "Jupe|";
+	g_womanDressesMeshes += "tenue_jupegirl.mesh|";
+	g_womanDressesNames += "Robe echancree|";
+	g_womanDressesMeshes += "tenue_robechancregirl.mesh|";
+	g_womanDressesNames += "Robe chinoise|";
+	g_womanDressesMeshes += "tenue_robechinegirl.mesh|";
+	g_womanDressesNames += "Robe medievale|";
+	g_womanDressesMeshes += "tenue_robemedgirl.mesh|";
+	g_womanDressesNames += "Robot|";
+	g_womanDressesMeshes += "tenue_robotgirl.mesh|";
+	g_womanDressesNames += "Shorty|";
+	g_womanDressesMeshes += "tenue_shortigirl.mesh|";
+	g_womanDressesNames += "Ent|";
+	g_womanDressesMeshes += "tenue_trentgirl.mesh|";
+	g_womanDressesNames += "Vampire|";
+	g_womanDressesMeshes += "tenue_vampiregirl.mesh|";
+	g_womanDressesNames += "end";
+	g_womanDressesMeshes += "end";
+	g_womanMaxDresses = 14;
+
+	g_womanSkinsNames = "Blanc|";
+	g_womanSkinsMaterials = "corpsminigirl/peau|";
+	g_womanSkinsNames += "Mat|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-mat|";
+	g_womanSkinsNames += "Noir|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-noir|";
+	g_womanSkinsNames += "Jaune|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-jaune|";
+	g_womanSkinsNames += "Demon|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-demon|";
+	g_womanSkinsNames += "Ent|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-trent|";
+	g_womanSkinsNames += "Vampire|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-vampire|";
+	g_womanSkinsNames += "end";
+	g_womanSkinsMaterials += "end";
+	g_womanMaxSkins = 7;
+
+	g_womanBrowsNames = "Aucun|";
+	g_womanBrowsMeshes = "none|";
+	g_womanBrowsNames += "Sourcils|";
+	g_womanBrowsMeshes += "sourcilsgirl.mesh|";
+	g_womanBrowsNames += "end";
+	g_womanBrowsMeshes += "end";
+	g_womanMaxBrows = 2;
+
+	g_womanEyesColoursNames = "Noirs|";
+	g_womanEyesMaterials = "corpsminigirl/iris|";
+	g_womanEyesColoursNames += "Bleus|";
+	g_womanEyesMaterials += "corpsminigirl/iris-bleu|";
+	g_womanEyesColoursNames += "Verts|";
+	g_womanEyesMaterials += "corpsminigirl/iris-vert|";
+	g_womanEyesColoursNames += "Marrons|";
+	g_womanEyesMaterials += "corpsminigirl/iris-marron|";
+	g_womanEyesColoursNames += "Rouges|";
+	g_womanEyesMaterials += "corpsminigirl/iris-rouge|";
+	g_womanEyesColoursNames += "Jaunes|";
+	g_womanEyesMaterials += "corpsminigirl/iris-jaune|";
+	g_womanEyesColoursNames += "end";
+	g_womanEyesMaterials += "end";
+	g_womanMaxEyesMaterials = 6;
+
+	g_womanEyeLashesColoursNames = "Aucun|";
+	g_womanEyeLashesMaterials = "yeuxcorpsgirl.jpg|";
+	g_womanEyeLashesColoursNames += "Noir|";
+	g_womanEyeLashesMaterials += "yeuxnoirs.jpg|";
+	g_womanEyeLashesColoursNames += "Bleu|";
+	g_womanEyeLashesMaterials += "yeuxbleus.jpg|";
+	g_womanEyeLashesColoursNames += "Rose|";
+	g_womanEyeLashesMaterials += "yeuxroses.jpg|";
+	g_womanEyeLashesColoursNames += "end";
+	g_womanEyeLashesMaterials += "end";
+	g_womanMaxEyeLashesMaterials = 4;
+
+	g_womanLipsticksColoursNames = "Aucun|";
+	g_womanLipsticksMaterials = "transparent.jpg|";
+	g_womanLipsticksColoursNames += "Noir|";
+	g_womanLipsticksMaterials += "levrenoire.jpg|";
+	g_womanLipsticksColoursNames += "Bleu|";
+	g_womanLipsticksMaterials += "levrebleu.jpg|";
+	g_womanLipsticksColoursNames += "Rose|";
+	g_womanLipsticksMaterials += "levrerose.jpg|";
+	g_womanLipsticksColoursNames += "end";
+	g_womanLipsticksMaterials += "end";
+	g_womanMaxLipsticksMaterials = 4;
+};
+
+void InitialiseLimbo()
+{
+	l_titleShown = true;
+
+	g_niveau = 1;
+	g_numFleches = 2;
+	c_strartingLives = 20;
+
+	c_baseTimeStep = 0.7;
+	c_offset = -38.0;
+	g_timestep = 0.4;
+	c_downSpeed = 60.0;
+
+//	AnimationGroup_GetByName( "Cheers")->StartAnimation( "yeah");
+//	AnimationGroup_GetByName( "Cheers")->GetObject( "limbo_1")->GetAnimation( "yeah")->SetTime( 0.5);
+
+	Overlay_Hide( "Scores");
+	Overlay_Hide( "Score");
+	Overlay_Hide( "Fin");
+	Overlay_Hide( "Commandes");
+	Overlay_Hide( "Options");
+	Overlay_Hide( "Regles");
+	Overlay_Hide( "Ready");
+	Overlay_Hide( "Life");
+	Overlay_Hide( "BarreDroite");
+	Overlay_Hide( "Interface");
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	Overlay_Hide( "Menu");
+
+	ZombiesPlayAnimation( 1);
+
+	Sound_Play_Global( "Ambiance");
+
+	l_sound = true;
+	l_music = true;
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
+	c_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+
+	InitialiseManMeshes();
+	InitialiseWomanMeshes();
+
+	InitialiseNetwork();
+};
+
+InitialiseLimbo();

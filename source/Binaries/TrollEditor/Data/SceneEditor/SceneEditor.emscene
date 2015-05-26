@@ -1,0 +1,420 @@
+overlay SceneEditor/Menu
+{
+	class PanelZone
+	size 480 32
+	position -240 5
+	align top center
+
+	element SceneEditor/Menu/Save
+	{
+		class Icon
+		material Base/Icon/Save
+		position 0 0
+		element SceneEditor/Menu/Save/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Import
+	{
+		class Icon
+		material Base/Icon/Import
+		position 32 0
+		element SceneEditor/Menu/Import/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Arc_Rotate
+	{
+		class Icon
+		material Base/Icon/Arc_Rotate
+		position 64 0
+		element Arc_Rotate/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Pan
+	{
+		class Icon
+		material Base/Icon/Pan
+		position 96 0
+		element SceneEditor/Menu/Pan/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Lock
+	{
+		class Icon
+		material Base/Icon/Lock
+		position 128 0
+		element SceneEditor/Menu/Lock/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Zoom
+	{
+		class Icon
+		material Base/Icon/Zoom
+		position 160 0
+		element SceneEditor/Menu/Zoom/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Select
+	{
+		class Icon
+		material Base/Icon/Select_A
+		position 192 0
+		element SceneEditor/Menu/Select/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Move
+	{
+		class Icon
+		material Base/Icon/Move
+		position 224 0
+		element SceneEditor/Menu/Move/Axis
+		{
+			class PanelZone
+			material Base/Invisible
+			position 16 16
+			size 16 16
+		}
+		element SceneEditor/Menu/Move/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Rotate
+	{
+		class Icon
+		material Base/Icon/Rotate
+		position 256 0
+		element SceneEditor/Menu/Rotate/Axis
+		{
+			class PanelZone
+			material Base/Invisible
+			position 16 16
+			size 16 16
+		}
+		element SceneEditor/Menu/Rotate/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Scale
+	{
+		class Icon
+		material Base/Icon/Scale
+		position 288 0
+		element SceneEditor/Menu/Scale/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Copy
+	{
+		class Icon
+		material Base/Icon/Copy
+		position 320 0
+		element SceneEditor/Menu/Copy/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Delete
+	{
+		class Icon
+		material Base/Icon/Delete
+		position 352 0
+		element SceneEditor/Menu/Delete/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Snap
+	{
+		class Icon
+		material Base/Icon/Snap_A
+		position 384 0
+		element SceneEditor/Menu/Snap/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Reset
+	{
+		class Icon
+		material Base/Icon/Reset
+		position 416 0
+		element SceneEditor/Menu/Reset/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+	element SceneEditor/Menu/Wireframe
+	{
+		class Icon
+		material Base/Icon/Wireframe
+		position 448 0
+		element SceneEditor/Menu/Wireframe/MouseOver
+		{
+			class PanelZone
+			position 0 0
+			size 32 32
+			material Base/Invisible
+			mouse_over_material Base/LowAlphaPureWhite
+		}
+	}
+}
+
+overlay SceneEditor/ObjectPositions
+{
+	class PanelZone
+	position -180 -34
+	size 360 24
+	align bottom center
+	material Base/LowAlphaBlack
+	element SceneEditor/ObjectPositions/ObjectPosX/Panel
+	{
+		class PanelZone
+		position 10 2
+		size 100 20
+		material Base/HighAlphaBrightGrey
+		mouse_over_material Base/HighAlphaPureWhite
+		
+		element SceneEditor/ObjectPositions/ObjectPositionX
+		{
+			class TextZone
+			position 5 5
+			text 0
+		}
+	}
+	element SceneEditor/ObjectPositions/ObjectPosY/Panel
+	{
+		class PanelZone
+		position 130 2
+		size 100 20
+		material Base/HighAlphaBrightGrey
+		mouse_over_material Base/HighAlphaPureWhite
+		
+		element SceneEditor/ObjectPositions/ObjectPositionY
+		{
+			class TextZone
+			position 5 5
+			text 0
+		}
+	}
+	element SceneEditor/ObjectPositions/ObjectPosZ/Panel
+	{
+		class PanelZone
+		position 250 2
+		size 100 20
+		material Base/HighAlphaBrightGrey
+		mouse_over_material Base/HighAlphaPureWhite
+		
+		element SceneEditor/ObjectPositions/ObjectPositionZ
+		{
+			class TextZone
+			position 5 5
+			text 0
+		}
+	}
+}
+
+overlay SceneEditor/ObjectName
+{
+	class TextZone
+	position -50 -50
+	align bottom center
+	size 100 20
+}
+
+overlay SceneEditor/Saved
+{
+	class BorderPanelZone
+	position -120 -60
+	size 110 50
+	align bottom right
+	material Base/MediumAlphaBlack
+	border_material Base/HighAlphaPureWhite
+	border_size 2 2 2 2
+	element SceneEditor/Saved/Text
+	{
+		class TextZone
+		text Saved
+		text_align both
+	}
+}
+
+overlay SceneEditor/AxisList
+{
+	class GroupZone
+	position 0 37
+	size 32 196
+	element SceneEditor/AxisList/X
+	{
+		class PanelZone
+		material Base/MediumAlphaBlack
+		position 0 0
+		size 32 32
+		mouse_over_material Base/HighAlphaGrey
+		element SceneEditor/AxisList/X/Text
+		{
+			class TextZone
+			position 0 0
+			size 32 32
+			text_colour 0.7 0.7 1.0
+			text X
+			text_align both
+		}
+	}
+	element SceneEditor/AxisList/Y
+	{
+		class PanelZone
+		material Base/MediumAlphaBlack
+		position 0 32
+		size 32 32
+		mouse_over_material Base/HighAlphaGrey
+		element SceneEditor/AxisList/Y/Text
+		{
+			class TextZone
+			position 0 0
+			size 32 32
+			text_colour 0.7 0.7 1.0
+			text Y
+			text_align both
+		}
+	}
+	element SceneEditor/AxisList/Z
+	{
+		class PanelZone
+		material Base/MediumAlphaBlack
+		position 0 64
+		size 32 32
+		mouse_over_material Base/HighAlphaGrey
+		element SceneEditor/AxisList/Z/Text
+		{
+			class TextZone
+			position 0 0
+			size 32 32
+			text_colour 0.7 0.7 1.0
+			text Z
+			text_align both
+		}
+	}
+	element SceneEditor/AxisList/XY
+	{
+		class PanelZone
+		material Base/MediumAlphaBlack
+		position 0 96
+		size 32 32
+		mouse_over_material Base/HighAlphaGrey
+		element SceneEditor/AxisList/XY/Text
+		{
+			class TextZone
+			position 0 0
+			size 32 32
+			text_colour 0.7 0.7 1.0
+			text XY
+			text_align both
+		}
+	}
+	element SceneEditor/AxisList/YZ
+	{
+		class PanelZone
+		material Base/MediumAlphaBlack
+		position 0 128
+		size 32 32
+		mouse_over_material Base/HighAlphaGrey
+		element SceneEditor/AxisList/YZ/Text
+		{
+			class TextZone
+			position 0 0
+			size 32 32
+			text_colour 0.7 0.7 1.0
+			text YZ
+			text_align both
+		}
+	}
+	element SceneEditor/AxisList/XZ
+	{
+		class PanelZone
+		material Base/MediumAlphaBlack
+		position 0 160
+		size 32 32
+		mouse_over_material Base/HighAlphaGrey
+		element SceneEditor/AxisList/XZ/Text
+		{
+			class TextZone
+			position 0 0
+			size 32 32
+			text_colour 0.7 0.7 1.0
+			text XZ
+			text_align both
+		}
+	}
+}

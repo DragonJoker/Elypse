@@ -1,0 +1,17 @@
+9Box
+Resolution
+640 480
+Colour
+1 1 1
+ShowDebug
+ShowFPS
+Scene
+demo-9box
+SceneFiles
+9box.emscene
+9box-hud.emscene
+LoadScriptFiles
+9box.emscript
+DataFiles
+data-9box.zip
+data-9box-hud.zip

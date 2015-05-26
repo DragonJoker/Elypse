@@ -1,0 +1,108 @@
+// OVERLAYS
+
+overlay Connexion/Background
+{
+	class PanelZone
+	position 0% 0%
+	size 100% 100%
+	material Connexion/Background
+	z_index 100
+}
+
+overlay Connexion/MessageBox
+{
+	class ChatPanel
+	position 35% 70%
+	size 30% 20%
+	border_size 32.0 32.0 32.0 32.0
+	z_index 499
+
+	element Connexion/MessageBox/Title
+	{
+		class PanelZone
+		position 10% 10%
+		size 80% 20%
+		material Base/Invisible
+
+		element Connexion/MessageBox/Title/Text
+		{
+			class ChatText
+			font_size 25
+			position 0% 10%
+			size 100% 80%
+			text TITLE
+			text_align center
+		}
+	}
+
+	element Connexion/MessageBox/Caption
+	{
+		class PanelZone
+		position 10% 30%
+		size 80% 40%
+		material Base/Invisible
+
+		element Connexion/MessageBox/Caption/Text
+		{
+			class ChatText
+			font_size 20
+			position 0% 10%
+			size 100% 80%
+			text CAPTION
+			text_align center
+		}
+	}
+
+	element Connexion/MessageBox/ButtonOK
+	{
+		class BorderPanelZone
+		position 25% 70%
+		size 50% 25%
+		material Chat/Validate
+		mouse_over_material Chat/ValidateMO
+	}
+}
+
+overlay Connexion/Connexion
+{
+	class ChatPanel
+	position 35% 40%
+	size 30% 20%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Connexion/Connexion/Text
+	{
+		class ChatText
+		position 0% 40%
+		size 100% 20%
+		font_size 24.0
+		text ...Connexion...
+		text_align center
+		
+	}
+}
+
+// PHYSICS
+
+physics_simulation Main
+{
+	auto_update false
+}
+
+physics SolPhys
+{
+	bouncyness 0.0
+	friction 1.0
+}
+
+physics VerticPhys
+{
+	bouncyness 1.0
+	friction 1.0
+}
+
+physics Perso
+{
+	bouncyness 0.0
+	friction 1.0
+}

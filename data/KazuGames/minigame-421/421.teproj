@@ -1,0 +1,28 @@
+project 421
+{
+	resolution		640 480
+	colour			1 1 1
+	scene 421
+	{
+		scene_files
+		{
+			Game.emscene
+			Interface.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			421
+			Interface
+		}
+		data_files_other
+		{
+			Sons
+		}
+	}
+}

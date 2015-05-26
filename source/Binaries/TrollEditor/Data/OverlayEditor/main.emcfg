@@ -1,0 +1,15 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Editeur
+{
+	load_script_file OverlayEditor.emscript
+}
+
+scene Connexion
+{
+	scene_file connexion.emscene
+	muse_file file://D:\Script\Skyrock\Miniline.muse
+}
+
+start_scene Connexion
+start_scene Editeur

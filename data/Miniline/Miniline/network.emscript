@@ -1,0 +1,58 @@
+int mrConnectOK;
+int mrConnectFail;
+int msConnect;
+
+void ShowMessageBox( string smb_title, string smb_caption)
+{
+	OverlayElement_GetByName( "Connexion/MessageBox/Title/Text")->SetCaption( smb_title);
+	OverlayElement_GetByName( "Connexion/MessageBox/Caption/Text")->SetCaption( smb_caption);
+	Overlay_Show( "Connexion/MessageBox");
+}
+
+SetNetworkScript()
+{
+	if (NETWORK_CURRENT_MESSAGE == "disconnected")
+	{
+		OverlayElement_GetByName( "Connexion/Connexion/Text")->SetCaption( "Impossible de se connecter");
+	}
+	else
+	{
+		int conn_sns_header;
+		conn_sns_header = unpack_int( substr( NETWORK_CURRENT_MESSAGE, 0, 4));
+		if (conn_sns_header == mrConnectOK)
+		{
+			Overlay_Hide( "Connexion/Background");
+			Overlay_Hide( "Connexion/Connexion");
+			Scene_Load( "Perso");
+			Scene_Load( "Custo");
+		}
+		else
+		{
+			ShowMessageBox( "CONNEXION ERROR", "Mauvais login ou mot de passe");
+		}
+	}
+}
+
+void InitialiseNetwork()
+{
+	Overlay_Hide( "Connexion/MessageBox");
+
+	mrConnectOK = 0;
+	mrConnectFail = 1;
+	msConnect = 0;
+
+	string cn_login;
+	string cn_pass;
+	cn_login = l_login;
+	cn_pass = l_pass;
+
+	Network_CreateClient( "ChatClient");
+//	Network_ConnectClient( "ChatClient", "ns368997.ovh.net", 48621);
+//	Network_ConnectClient( "ChatClient", "192.168.0.115", 48621);
+	Network_ConnectClient( "ChatClient", "82.66.41.235", 48621);
+
+	timer( "Connection", TIMERTYPE_ONCE, 2.0)
+	{
+		Network_ClientSendMessage( "ChatClient", pack_int( msConnect) + pack_int( cn_login->length()) + cn_login + pack_int( cn_pass->length()) + cn_pass);
+	}
+}

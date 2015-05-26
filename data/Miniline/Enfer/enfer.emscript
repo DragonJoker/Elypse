@@ -1,0 +1,84 @@
+SetMouseLDownScript()
+{
+	MouseLDown();
+}
+
+SetMouseLUpScript()
+{
+	MouseLUp();
+}
+
+SetMouseWheelDownScript()
+{
+	CameraZoomOut();
+}
+
+SetMouseWheelUpScript()
+{
+	CameraZoomIn();
+}
+
+void InitialiseEnferCollisions()
+{
+	g_portals->Clear();
+	g_portals->Add( "EnferToEden");
+
+	g_flatGrounds->Clear();
+	g_flatGrounds->Add( "TroneSol");
+	g_flatGrounds->Add( "SolKiosque");
+	g_flatGrounds->Add( "Sol");
+
+	g_angleGrounds->Clear();
+	g_angleGrounds->Add( "TroneEscalier");
+	g_angleGrounds->Add( "KiosqueEscalier");
+
+	g_notGrounds->Clear();
+	g_notGrounds->Add( "Fontaine");
+	g_notGrounds->Add( "Squelette");
+	g_notGrounds->Add( "Crane");
+	g_notGrounds->Add( "Crane01");
+	g_notGrounds->Add( "Crane02");
+	g_notGrounds->Add( "Kiosque");
+	g_notGrounds->Add( "SkyDome");
+	g_notGrounds->Add( "Arbre");
+	g_notGrounds->Add( "Arbre01");
+	g_notGrounds->Add( "Arbre02");
+	g_notGrounds->Add( "Arbre03");
+	g_notGrounds->Add( "Banc");
+	g_notGrounds->Add( "Banc01");
+	g_notGrounds->Add( "Banc02");
+	g_notGrounds->Add( "Banc03");
+	g_notGrounds->Add( "Lampadaire");
+	g_notGrounds->Add( "Stalagmite");
+	g_notGrounds->Add( "Stalagmite01");
+	g_notGrounds->Add( "Stalagmite02");
+	g_notGrounds->Add( "Stalagmite03");
+	g_notGrounds->Add( "Stalagmite04");
+	g_notGrounds->Add( "Stalagmite05");
+	g_notGrounds->Add( "Stalagmite06");
+	g_notGrounds->Add( "Table");
+	g_notGrounds->Add( "Trone");
+}
+
+void InitialiseEnfer()
+{
+	Echo( "InitialiseEnfer - Begin");
+	g_inGame = true;
+	g_mainChar.Walking = false;
+	g_mainChar.Running = false;
+	g_currentZone = "Enfer";
+	Scene_Load( "RoomSelection");
+	Scene_Load( "Chat");
+	Overlay_Hide( "RoomSelection/Background");
+	Overlay_Hide( "RoomsList");
+
+	InitialiseEnferCollisions();
+
+	g_mainChar.Character.Node = SceneNode_GetByName( "PlayerNode");
+	LoadMainCharacter();
+
+	InitialiseCamera();
+
+}
+
+InitialiseEnfer();

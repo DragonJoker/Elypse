@@ -1,0 +1,809 @@
+string g_manBodyMeshes;
+string g_manBodyNames;
+int g_manMaxBodies;
+string g_womanBodyMeshes;
+string g_womanBodyNames;
+int g_womanMaxBodies;
+
+string g_manHairsMeshes;
+string g_manHairsNames;
+int g_manMaxHairs;
+string g_womanHairsMeshes;
+string g_womanHairsNames;
+int g_womanMaxHairs;
+
+string g_manHairsMaterials;
+string g_manHairsColoursNames;
+int g_manMaxHairsMaterials;
+string g_womanHairsMaterials;
+string g_womanHairsColoursNames;
+int g_womanMaxHairsMaterials;
+
+string g_manBeardsMeshes;
+string g_manBeardsNames;
+int g_manMaxBeards;
+
+string g_manBrowsMeshes;
+string g_manBrowsNames;
+int g_manMaxBrows;
+
+string g_womanBrowsMeshes;
+string g_womanBrowsNames;
+int g_womanMaxBrows;
+
+string g_manEyesMaterials;
+string g_manEyesColoursNames;
+int g_manMaxEyesMaterials;
+
+string g_womanEyesMaterials;
+string g_womanEyesColoursNames;
+int g_womanMaxEyesMaterials;
+
+string g_womanEyeLashesMaterials;
+string g_womanEyeLashesColoursNames;
+int g_womanMaxEyeLashesMaterials;
+
+string g_womanLipsticksMaterials;
+string g_womanLipsticksColoursNames;
+int g_womanMaxLipsticksMaterials;
+
+string g_manDressesMeshes;
+string g_manDressesNames;
+int g_manMaxDresses;
+string g_womanDressesMeshes;
+string g_womanDressesNames;
+int g_womanMaxDresses;
+
+string g_manSkinsMaterials;
+string g_manSkinsNames;
+int g_manMaxSkins;
+string g_womanSkinsMaterials;
+string g_womanSkinsNames;
+int g_womanMaxSkins;
+
+object g_mainCharBodyObject;
+
+string common_selectedMesh;
+string common_selectedName;
+string common_selectedMaterial;
+
+int i;
+
+string limbo_charName;
+
+string limbo_manBodyMeshes;
+string limbo_manHairsMeshes;
+string limbo_manHairsMaterials;
+string limbo_manDressesMeshes;
+string limbo_manSkinsMaterials;
+string limbo_manEyesMaterials;
+string limbo_manBrowsMeshes;
+string limbo_manBrowsMaterials;
+string limbo_manBeardsMeshes;
+string limbo_manBeardsMaterials;
+
+string limbo_manBodyNames;
+string limbo_manHairsNames;
+string limbo_manHairsColoursNames;
+string limbo_manDressesNames;
+string limbo_manSkinsNames;
+string limbo_manEyesColoursNames;
+string limbo_manBrowsNames;
+string limbo_manBrowsColoursNames;
+string limbo_manBeardsNames;
+string limbo_manBeardsColoursNames;
+
+string limbo_womanBodyMeshes;
+string limbo_womanHairsMeshes;
+string limbo_womanHairsMaterials;
+string limbo_womanDressesMeshes;
+string limbo_womanEyesMaterials;
+string limbo_womanSkinsMaterials;
+string limbo_womanBrowsMeshes;
+string limbo_womanBrowsMaterials;
+string limbo_womanEyeLashesMaterials;
+string limbo_womanLipsticksMaterials;
+
+string limbo_womanBodyNames;
+string limbo_womanHairsNames;
+string limbo_womanHairsColoursNames;
+string limbo_womanDressesNames;
+string limbo_womanSkinsNames;
+string limbo_womanEyesColoursNames;
+string limbo_womanBrowsNames;
+string limbo_womanBrowsColoursNames;
+string limbo_womanEyeLashesColoursNames;
+string limbo_womanLipsticksColoursNames;
+
+string limbo_selectedMesh;
+string limbo_selectedMaterial;
+string limbo_selectedName;
+string limbo_tmpMeshes;
+string limbo_tmpMaterials;
+string limbo_tmpNames;
+
+string limbo_currentBodyMesh;
+string limbo_currentHairMesh;
+string limbo_currentHairColour;
+string limbo_currentDressMesh;
+string limbo_currentSkinMaterial;
+string limbo_currentEyeColour;
+string limbo_currentBrowMesh;
+string limbo_currentBrowColour;
+string limbo_currentBeardMesh;
+string limbo_currentBeardColour;
+string limbo_currentEyeLashColour;
+string limbo_currentLipstickColour;
+
+string limbo_currentBodyName;
+string limbo_currentHairName;
+string limbo_currentHairColourName;
+string limbo_currentDressName;
+string limbo_currentSkinName;
+string limbo_currentEyeColourName;
+string limbo_currentBeardName;
+string limbo_currentBeardColourName;
+string limbo_currentBrowName;
+string limbo_currentBrowColourName;
+string limbo_currentEyeLashColourName;
+string limbo_currentLipstickColourName;
+
+int limbo_sex;
+int limbo_currentBody;
+int limbo_currentHair;
+int limbo_currentHairMaterial;
+int limbo_currentDress;
+int limbo_currentSkin;
+int limbo_currentEyeMaterial;
+int limbo_currentBrow;
+int limbo_currentBrowMaterial;
+int limbo_currentBeard;
+int limbo_currentBeardMaterial;
+int limbo_currentEyeLashMaterial;
+int limbo_currentLipstickMaterial;
+
+object limbo_body;
+object limbo_lEye;
+object limbo_rEye;
+object limbo_hair;
+object limbo_beard;
+object limbo_brow;
+object limbo_dress;
+
+int limbo_manMaxHairs;
+int limbo_manMaxHairsMaterials;
+int limbo_manMaxDresses;
+int limbo_manMaxBodies;
+int limbo_manMaxSkins;
+int limbo_manMaxEyesMaterials;
+int limbo_manMaxBrows;
+int limbo_manMaxBrowsMaterials;
+int limbo_manMaxBeards;
+int limbo_manMaxBeardsMaterials;
+
+int limbo_womanMaxHairs;
+int limbo_womanMaxHairsMaterials;
+int limbo_womanMaxDresses;
+int limbo_womanMaxBodies;
+int limbo_womanMaxSkins;
+int limbo_womanMaxEyesMaterials;
+int limbo_womanMaxBrows;
+int limbo_womanMaxBrowsMaterials;
+int limbo_womanMaxEyeLashesMaterials;
+int limbo_womanMaxLipsticksMaterials;
+
+scene_node limbo_playerNode;
+
+bool limbo_mouseLeftDown;
+
+animation_group limbo_persoAnims;
+animated_object limbo_bodyAnims;
+animated_object limbo_lEyeAnims;
+animated_object limbo_rEyeAnims;
+animated_object limbo_hairAnims;
+animated_object limbo_beardAnims;
+animated_object limbo_browAnims;
+animated_object limbo_dressAnims;
+
+int msConnect;
+
+int mrConnectOK;
+int mrConnectFail;
+int mrAvatar;
+
+string limbo_pass;
+
+string g_animName;
+
+void BuildSectionAnimations( animation_group ba_persoAnims, animated_object ba_object)
+{
+	Echo( "BuildSectionAnimations - Begin");
+	ba_persoAnims->StopAllAnimations();
+	ba_persoAnims->StopAllAnimations();
+	ba_persoAnims->SetAnimationTimeOut( "niv1", 0.2);
+	ba_persoAnims->SetAnimationTimeOut( "niv2", 0.2);
+	ba_persoAnims->SetAnimationTimeOut( "niv3", 0.2);
+	ba_persoAnims->SetAnimationTimeOut( "niv4", 0.2);
+	ba_persoAnims->SetAnimationTimeOut( "tombe", 0.2);
+	ba_object->GetAnimation( "niv1")->SetLooped( true);
+	ba_object->GetAnimation( "niv2")->SetLooped( true);
+	ba_object->GetAnimation( "niv3")->SetLooped( true);
+	ba_object->GetAnimation( "niv4")->SetLooped( true);
+	g_animName = "niv1";
+	ba_persoAnims->StartAnimation( g_animName);
+	ba_persoAnims->PauseAnimation( g_animName);
+	Echo( "BuildSectionAnimations - End");
+};
+
+void GetMeshAndName( int gman_index, int gman_maxIndex, string gman_meshes, string gman_names)
+{
+	string gman_tmpMeshes;
+	string gman_tmpNames;
+	gman_tmpNames = gman_names;
+	gman_tmpMeshes = gman_meshes;
+	int gman_meshIndex;
+	int gman_nameIndex;
+	for (i = 0 ; i <= gman_index && i < gman_maxIndex ; i++)
+	{
+		gman_meshIndex = gman_tmpMeshes->find( "|");
+		common_selectedMesh = substr( gman_tmpMeshes, 0, gman_meshIndex);
+		gman_tmpMeshes = substr( gman_tmpMeshes, gman_meshIndex + 1, npos);
+
+		gman_nameIndex = gman_tmpNames->find( "|");
+		common_selectedName = substr( gman_tmpNames, 0, gman_nameIndex);
+		gman_tmpNames = substr( gman_tmpNames, gman_nameIndex + 1, npos);
+	};
+};
+
+void GetMaterialAndName( int gmaan_index, int gmaan_maxIndex, string gmaan_materials, string gmaan_names)
+{
+	string gmaan_tmpMaterials;
+	string gmaan_tmpNames;
+	gmaan_tmpNames = gmaan_names;
+	int gmaan_materialIndex;
+	int gmaan_nameIndex;
+	gmaan_tmpMaterials = gmaan_materials;
+	for (i = 0 ; i <= gmaan_index && i < gmaan_maxIndex ; i++)
+	{
+		gmaan_materialIndex = gmaan_tmpMaterials->find( "|");
+		common_selectedMaterial = substr( gmaan_tmpMaterials, 0, gmaan_materialIndex);
+		gmaan_tmpMaterials = substr( gmaan_tmpMaterials, gmaan_materialIndex + 1, npos);
+
+		gmaan_nameIndex = gmaan_tmpNames->find( "|");
+		common_selectedName = substr( gmaan_tmpNames, 0, gmaan_nameIndex);
+		gmaan_tmpNames = substr( gmaan_tmpNames, gmaan_nameIndex + 1, npos);
+	};
+};
+
+void BuildManBody()
+{
+//	Echo( "BuildManBody");
+	GetMeshAndName( limbo_currentBody, g_manMaxBodies, g_manBodyMeshes, g_manBodyNames);
+	limbo_currentBodyMesh = common_selectedMesh;
+
+	limbo_body = Object_CreateWithSkeleton( limbo_charName + "_Body", limbo_currentBodyMesh, "limboofthedead.skeleton");
+	limbo_body->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_body);
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_body->GetName()));
+
+	limbo_lEye = Object_CreateWithSkeleton( limbo_charName + "_LEye", "oeilg.mesh", "limboofthedead.skeleton");
+	limbo_lEye->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_lEye);
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_lEye->GetName()));
+
+	limbo_rEye = Object_CreateWithSkeleton( limbo_charName + "_REye", "oeild.mesh", "limboofthedead.skeleton");
+	limbo_rEye->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_rEye);
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_rEye->GetName()));
+};
+
+void BuildManHair()
+{
+//	Echo( "BuildManHair");
+	GetMeshAndName( limbo_currentHair, g_manMaxHairs, g_manHairsMeshes, g_manHairsNames);
+	limbo_currentHairMesh = common_selectedMesh;
+
+	limbo_hair = Object_CreateWithSkeleton( limbo_charName + "_Hair", limbo_currentHairMesh, "limboofthedead.skeleton");
+	limbo_hair->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_hair);
+
+	for (i = 0 ; i < limbo_hair->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_hair->GetSubMaterialName( i)->find( "peau") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, limbo_currentSkinMaterial);
+		};
+
+		if (limbo_hair->GetSubMaterialName( i)->find( "cheveux") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, limbo_currentHairColour);
+		};
+	};
+
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_hair->GetName()));
+};
+
+void BuildManHairColour()
+{
+//	Echo( "BuildManHairColour");
+	GetMaterialAndName( limbo_currentHairMaterial, g_manMaxHairsMaterials, g_manHairsMaterials, g_manHairsColoursNames);
+	limbo_currentHairColour = common_selectedMaterial;
+
+	for (i = 0 ; i < limbo_hair->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_hair->GetSubMaterialName( i)->find( "cheveux") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, common_selectedMaterial);
+		};
+	};
+};
+
+void BuildManDress()
+{
+//	Echo( "BuildManDress");
+	GetMeshAndName( limbo_currentDress, g_manMaxDresses, g_manDressesMeshes, g_manDressesNames);
+	limbo_currentDressMesh = common_selectedMesh;
+
+	if (common_selectedMesh != "none")
+	{
+		limbo_dress = Object_CreateWithSkeleton( limbo_charName + "_Dress", limbo_currentDressMesh, "limboofthedead.skeleton");
+		limbo_dress->SetParent( limbo_playerNode);
+		limbo_persoAnims->AddObject( limbo_dress);
+		BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_dress->GetName()));
+
+		for (i = 0 ; i < limbo_dress->GetNumSubMaterials() ; i++)
+		{
+			if (limbo_dress->GetSubMaterialName( i)->find( "peau") != npos)
+			{
+				limbo_dress->SetSubMaterial( i, common_selectedMaterial);
+			};
+		};
+	}
+	else
+	{
+		limbo_dress = NULL;
+	};
+};
+
+void BuildManSkin()
+{
+//	Echo( "BuildManSkin");
+	GetMaterialAndName( limbo_currentSkin, g_manMaxSkins, g_manSkinsMaterials, g_manSkinsNames);
+	limbo_currentSkinMaterial = common_selectedMaterial + "/" + limbo_charName;
+
+	if (Material_Exists( limbo_currentSkinMaterial))
+	{
+		Material_Destroy( limbo_currentSkinMaterial);
+	};
+
+	Material_CreateCopy( common_selectedMaterial, limbo_currentSkinMaterial);
+
+	for (i = 0 ; i < limbo_body->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_body->GetSubMaterialName( i)->find( "peau") != npos)
+		{
+			limbo_body->SetSubMaterial( i, limbo_currentSkinMaterial);
+		};
+	};
+
+	for (i = 0 ; i < limbo_hair->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_hair->GetSubMaterialName( i)->find( "peau") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, limbo_currentSkinMaterial);
+		};
+	};
+
+	if (limbo_dress != NULL)
+	{
+		for (i = 0 ; i < limbo_dress->GetNumSubMaterials() ; i++)
+		{
+			if (limbo_dress->GetSubMaterialName( i)->find( "peau") != npos)
+			{
+				limbo_dress->SetSubMaterial( i, limbo_currentSkinMaterial);
+			};
+		};
+	};
+};
+
+void BuildManEyeColour()
+{
+//	Echo( "BuildManEyeColour");
+	GetMaterialAndName( limbo_currentEyeMaterial, g_manMaxEyesMaterials, g_manEyesMaterials, g_manEyesColoursNames);
+	limbo_currentEyeColour = common_selectedMaterial;
+	limbo_lEye->SetSubMaterial( 1, common_selectedMaterial);
+	limbo_rEye->SetSubMaterial( 1, common_selectedMaterial);
+};
+
+void BuildManBrow()
+{
+//	Echo( "BuildManBrow");
+	GetMeshAndName( limbo_currentBrow, g_manMaxBrows, g_manBrowsMeshes, g_manBrowsNames);
+	limbo_currentBrowMesh = common_selectedMesh;
+
+	if (common_selectedMesh != "none")
+	{
+		limbo_brow = Object_CreateWithSkeleton( limbo_charName + "_Brow", limbo_currentBrowMesh, "limboofthedead.skeleton");
+		limbo_brow->SetParent( limbo_playerNode);
+		limbo_persoAnims->AddObject( limbo_brow);
+
+		limbo_brow->SetMaterial( limbo_currentBrowColour);
+
+		for (i = 0 ; i < limbo_brow->GetNumSubMaterials() ; i++)
+		{
+			if (limbo_brow->GetSubMaterialName( i)->find( "cheveux") != npos)
+			{
+				limbo_brow->SetSubMaterial( i, limbo_currentBrowColour);
+			};
+		};
+	
+		BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_brow->GetName()));
+	}
+	else
+	{
+		limbo_brow = NULL;
+	};
+};
+
+void BuildManBrowColour()
+{
+//	Echo( "BuildManBrowColour");
+	GetMaterialAndName( limbo_currentBrowMaterial, g_manMaxHairsMaterials, g_manHairsMaterials, g_manHairsColoursNames);
+	limbo_currentBrowColour = common_selectedMaterial;
+	if (limbo_brow != NULL)
+	{
+		limbo_brow->SetMaterial( common_selectedMaterial);
+	};
+};
+
+void BuildManBeard()
+{
+//	Echo( "BuildManBeard");
+	GetMeshAndName( limbo_currentBeard, g_manMaxBeards, g_manBeardsMeshes, g_manBeardsNames);
+	limbo_currentBeardMesh = common_selectedMesh;
+
+	if (common_selectedMesh != "none")
+	{
+		limbo_beard = Object_CreateWithSkeleton( limbo_charName + "_Beard", limbo_currentBeardMesh, "limboofthedead.skeleton");
+		limbo_beard->SetParent( limbo_playerNode);
+		limbo_persoAnims->AddObject( limbo_beard);
+	
+		for (i = 0 ; i < limbo_beard->GetNumSubMaterials() ; i++)
+		{
+			if (limbo_beard->GetSubMaterialName( i)->find( "cheveux") != npos)
+			{
+				limbo_beard->SetMaterial( limbo_currentBeardColour);
+			};
+		};
+	
+		BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_beard->GetName()));
+	}
+	else
+	{
+		limbo_beard = NULL;
+	};
+};
+
+void BuildManBeardColour()
+{
+//	Echo( "BuildManBeardColour");
+	GetMaterialAndName( limbo_currentBeardMaterial, g_manMaxHairsMaterials, g_manHairsMaterials, g_manHairsColoursNames);
+	limbo_currentBeardColour = common_selectedMaterial;
+	if (limbo_beard != NULL)
+	{
+		limbo_beard->SetMaterial( common_selectedMaterial);
+	};
+};
+
+void BuildWomanBody()
+{
+//	Echo( "BuildWomanBody");
+	GetMeshAndName( limbo_currentBody, g_womanMaxBodies, g_womanBodyMeshes, g_womanBodyNames);
+	limbo_currentBodyMesh = common_selectedMesh;
+	limbo_currentBodyName = common_selectedName;
+
+	limbo_body = Object_CreateWithSkeleton( limbo_charName + "_Body", limbo_currentBodyMesh, "limboofthedeadgirl.skeleton");
+	limbo_body->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_body);
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_body->GetName()));
+
+	limbo_lEye = Object_CreateWithSkeleton( limbo_charName + "_LEye", "oeilggirl.mesh", "limboofthedeadgirl.skeleton");
+	limbo_lEye->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_lEye);
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_lEye->GetName()));
+
+	limbo_rEye = Object_CreateWithSkeleton( limbo_charName + "_REye", "oeildgirl.mesh", "limboofthedeadgirl.skeleton");
+	limbo_rEye->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_rEye);
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_rEye->GetName()));
+};
+
+void BuildWomanHair()
+{
+//	Echo( "BuildWomanHair");
+	GetMeshAndName( limbo_currentHair, g_womanMaxHairs, g_womanHairsMeshes, g_womanHairsNames);
+	limbo_currentHairMesh = common_selectedMesh;
+
+	limbo_hair = Object_CreateWithSkeleton( limbo_charName + "_Hair", limbo_currentHairMesh, "limboofthedeadgirl.skeleton");
+	limbo_hair->SetParent( limbo_playerNode);
+	limbo_persoAnims->AddObject( limbo_hair);
+
+	for (i = 0 ; i < limbo_hair->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_hair->GetSubMaterialName( i)->find( "peau") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, limbo_currentSkinMaterial);
+		};
+
+		if (limbo_hair->GetSubMaterialName( i)->find( "cheveux") != npos)
+		{
+//			Echo( g_currentCharHairColour);
+			limbo_hair->SetSubMaterial( i, limbo_currentHairColour);
+		};
+	};
+
+	BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_hair->GetName()));
+};
+
+void BuildWomanHairColour()
+{
+//	Echo( "BuildManHairColour");
+	GetMaterialAndName( limbo_currentHairMaterial, g_womanMaxHairsMaterials, g_womanHairsMaterials, g_womanHairsColoursNames);
+	limbo_currentHairColour = common_selectedMaterial;
+
+	for (i = 0 ; i < limbo_hair->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_hair->GetSubMaterialName( i)->find( "cheveux") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, common_selectedMaterial);
+		};
+	};
+};
+
+void BuildWomanDress()
+{
+//	Echo( "BuildWomanDress");
+	GetMeshAndName( limbo_currentDress, g_womanMaxDresses, g_womanDressesMeshes, g_womanDressesNames);
+	limbo_currentDressMesh = common_selectedMesh;
+	limbo_currentDressName = common_selectedName;
+
+	if (common_selectedMesh != "none")
+	{
+		limbo_dress = Object_CreateWithSkeleton( limbo_charName + "_Dress", limbo_currentDressMesh, "limboofthedeadgirl.skeleton");
+		limbo_dress->SetParent( limbo_playerNode);
+		limbo_persoAnims->AddObject( limbo_dress);
+		BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_dress->GetName()));
+	}
+	else
+	{
+		limbo_dress = NULL;
+	};
+};
+
+void BuildWomanEyeLash()
+{
+//	Echo( "BuildWomanEyeLashColour");
+	GetMaterialAndName( limbo_currentEyeLashMaterial, g_womanMaxEyeLashesMaterials, g_womanEyeLashesMaterials, g_womanEyeLashesColoursNames);
+	limbo_currentEyeLashColour = common_selectedMaterial;
+	if (Material_Exists( limbo_currentSkinMaterial))
+	{
+		if (limbo_currentEyeLashMaterial == 0)
+		{
+			limbo_currentEyeLashColour = "yeux" + Material_GetByName( limbo_currentSkinMaterial)->GetImageName( 0);
+		};
+		Material_GetByName( limbo_currentSkinMaterial)->ChangeImage( 1, limbo_currentEyeLashColour);
+	};
+};
+
+void BuildWomanLipstick()
+{
+//	Echo( "BuildWomanLipstickColour");
+	GetMaterialAndName( limbo_currentLipstickMaterial, g_womanMaxLipsticksMaterials, g_womanLipsticksMaterials, g_womanLipsticksColoursNames);
+	limbo_currentLipstickColour = common_selectedMaterial;
+	if (Material_Exists( limbo_currentSkinMaterial))
+	{
+		if (limbo_currentLipstickMaterial == 0)
+		{
+			limbo_currentLipstickColour = "levre" + Material_GetByName( limbo_currentSkinMaterial)->GetImageName( 0);
+		};
+		Material_GetByName( limbo_currentSkinMaterial)->ChangeImage( 2, limbo_currentLipstickColour);
+	};
+};
+
+void BuildWomanSkin()
+{
+//	Echo( "BuildWomanSkin");
+	GetMaterialAndName( limbo_currentSkin, g_womanMaxSkins, g_womanSkinsMaterials, g_womanSkinsNames);
+	limbo_currentSkinMaterial = common_selectedMaterial + "/" + limbo_charName;
+
+	if (Material_Exists( limbo_currentSkinMaterial))
+	{
+		Material_Destroy( limbo_currentSkinMaterial);
+	};
+
+	Material_CreateCopy( common_selectedMaterial, limbo_currentSkinMaterial);
+
+	for (i = 0 ; i < limbo_body->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_body->GetSubMaterialName( i)->find( "peau") != npos)
+		{
+			limbo_body->SetSubMaterial( i, limbo_currentSkinMaterial);
+		};
+	};
+
+	for (i = 0 ; i < limbo_hair->GetNumSubMaterials() ; i++)
+	{
+		if (limbo_hair->GetSubMaterialName( i)->find( "peau") != npos)
+		{
+			limbo_hair->SetSubMaterial( i, limbo_currentSkinMaterial);
+		};
+	};
+
+	if (limbo_dress != NULL)
+	{
+		for (i = 0 ; i < limbo_dress->GetNumSubMaterials() ; i++)
+		{
+			if (limbo_dress->GetSubMaterialName( i)->find( "peau") != npos)
+			{
+				limbo_dress->SetSubMaterial( i, limbo_currentSkinMaterial);
+			};
+		};
+	};
+};
+
+void BuildWomanEyeColour()
+{
+//	Echo( "BuildWomanEyeColour");
+	GetMaterialAndName( limbo_currentEyeMaterial, g_womanMaxEyesMaterials, g_womanEyesMaterials, g_womanEyesColoursNames);
+	limbo_currentEyeColour = common_selectedMaterial;
+	limbo_lEye->SetSubMaterial( 1, common_selectedMaterial);
+	limbo_rEye->SetSubMaterial( 1, common_selectedMaterial);
+};
+
+void BuildWomanBrow()
+{
+//	Echo( "BuildWomanBrow");
+	GetMeshAndName( limbo_currentBrow, g_womanMaxBrows, g_womanBrowsMeshes, g_womanBrowsNames);
+	limbo_currentBrowMesh = common_selectedMesh;
+
+	if (common_selectedMesh != "none")
+	{
+		limbo_brow = Object_CreateWithSkeleton( limbo_charName + "_Brow", limbo_currentBrowMesh, "limboofthedeadgirl.skeleton");
+		limbo_brow->SetParent( limbo_playerNode);
+		limbo_persoAnims->AddObject( limbo_brow);
+
+		limbo_brow->SetMaterial( limbo_currentBrowColour);
+
+		for (i = 0 ; i < limbo_brow->GetNumSubMaterials() ; i++)
+		{
+			if (limbo_brow->GetSubMaterialName( i)->find( "cheveux") != npos)
+			{
+				limbo_brow->SetSubMaterial( i, limbo_currentBrowColour);
+			};
+		};
+	
+		BuildSectionAnimations( limbo_persoAnims, limbo_persoAnims->GetObject( limbo_brow->GetName()));
+	}
+	else
+	{
+		limbo_brow = NULL;
+	};
+};
+
+void BuildWomanBrowColour()
+{
+//	Echo( "BuildWomanBrowColour");
+	GetMaterialAndName( limbo_currentBrowMaterial, g_womanMaxHairsMaterials, g_womanHairsMaterials, g_womanHairsColoursNames);
+	limbo_currentBrowColour = common_selectedMaterial;
+	if (limbo_brow != NULL)
+	{
+		limbo_brow->SetMaterial( common_selectedMaterial);
+	};
+};
+
+void _processAvatarMessage( string pam_message)
+{
+	limbo_sex = unpack_int( substr( pam_message, 0, 4));
+	limbo_currentBody = unpack_int( substr( pam_message, 4, 4));
+	limbo_currentSkin = unpack_int( substr( pam_message, 8, 4));
+	limbo_currentHair = unpack_int( substr( pam_message, 12, 4));
+	limbo_currentHairMaterial = unpack_int( substr( pam_message, 16, 4));
+	limbo_currentDress = unpack_int( substr( pam_message, 20, 4));
+	limbo_currentEyeMaterial = unpack_int( substr( pam_message, 24, 4));
+	limbo_currentBrow = unpack_int( substr( pam_message, 28, 4));
+	limbo_currentBrowMaterial = unpack_int( substr( pam_message, 32, 4));
+
+	limbo_persoAnims = AnimationGroup_GetByName( "PersoAnims");
+
+	if (limbo_sex == 0)
+	{
+		limbo_currentBeard = unpack_int( substr( pam_message, 36, 4));
+		limbo_currentBeardMaterial = unpack_int( substr( pam_message, 40, 4));
+		BuildManBody();
+		BuildManHair();
+		BuildManBeard();
+		BuildManBrow();
+		BuildManDress();
+		BuildManEyeColour();
+		BuildManHairColour();
+		BuildManBeardColour();
+		BuildManBrowColour();
+		BuildManSkin();
+	}
+	else
+	{
+		limbo_currentEyeLashMaterial = unpack_int( substr( pam_message, 36, 4));
+		limbo_currentLipstickMaterial = unpack_int( substr( pam_message, 40, 4));
+		BuildWomanBody();
+		BuildWomanHair();
+		BuildWomanDress();
+		BuildWomanBrow();
+		BuildWomanEyeColour();
+		BuildWomanHairColour();
+		BuildWomanBrowColour();
+		BuildWomanSkin();
+		BuildWomanEyeLash();
+		BuildWomanLipstick();
+	};
+};
+
+SetNetworkScript()
+{
+	if (NETWORK_CURRENT_MESSAGE == "disconnected")
+	{
+		Echo( "Disconnected");
+		OverlayElement_GetByName( "Connexion/Text")->SetCaption( "Impossible de" + endl + "se connecter");
+		Overlay_Show( "Connexion");
+		Overlay_Hide( "Menu");
+	}
+	else
+	{
+		int limbo_sns_header;
+		limbo_sns_header = unpack_int( substr( NETWORK_CURRENT_MESSAGE, 0, 4));
+
+		if (limbo_sns_header == mrConnectOK)
+		{
+			Overlay_Hide( "Connexion");
+			Overlay_Show( "Menu");
+			Echo( "Connected");
+		}
+		elseif (limbo_sns_header == mrConnectFail)
+		{
+			Echo( "Not Connected");
+			OverlayElement_GetByName( "Connexion/Text")->SetCaption( "Mauvais Login" + endl + "ou mot de passe");
+		}
+		else
+		{
+			string limbo_sns_message;
+			limbo_sns_message = substr( NETWORK_CURRENT_MESSAGE, 4, npos);
+
+			if (limbo_sns_header == mrAvatar)
+			{
+				Echo( "Received avatar message");
+				_processAvatarMessage( limbo_sns_message);
+			};
+		};
+	};
+};
+
+void InitialiseNetwork()
+{
+	Scene_Load( "Perso");
+	limbo_charName = l_login;
+	limbo_pass = l_pass;
+
+	msConnect = 0;
+
+	mrConnectOK = 0;
+	mrConnectFail = 1;
+	mrAvatar = 4;
+
+	limbo_playerNode = SceneNode_GetByName( "PersoNode");
+
+	Network_CreateClient( "LimboClient");
+	Network_ConnectClient( "LimboClient", g_serverAddr, g_serverPort);
+	timer( "WaitConnect", TIMERTYPE_ONCE, 1.0)
+	{
+		Network_ClientSendMessage( "LimboClient", pack_int( msConnect) + pack_int( limbo_charName->length()) + limbo_charName + pack_int( limbo_pass->length()) + limbo_pass);
+	};
+};

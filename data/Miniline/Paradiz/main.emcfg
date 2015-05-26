@@ -1,0 +1,11 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Paradiz
+{
+	muse_file Paradiz.muse
+	data_file data-paradiz.zip
+	scene_file paradiz.emscene
+	load_script_file paradiz.emscript
+}
+
+start_scene Paradiz

@@ -1,0 +1,2019 @@
+struct ChatMessage
+{
+	string Sender;
+	string Target;
+	string Message;
+	colour Colour;
+	int Type;
+}
+
+struct Scrollbar
+{
+	overlay Elevator;
+	overlay ElevatorContainer;
+	overlay Panel;
+	overlay DisplayedPanel;
+	real PanelHeight;
+	real DisplayedPanelHeight;
+	real ElevatorHeight;
+	real ContainerHeight;
+	real Ratio;
+	real PanelTop;
+	real ElevatorTop;
+	int Count;
+	string BaseName;
+}
+
+Scrollbar chat_messagesScrollbar;
+Scrollbar chat_friendsScrollbar;
+Scrollbar chat_ignoredScrollbar;
+
+real chat_lineHeight;
+
+string chat_normalLetter;
+string chat_shiftLetter;
+string chat_altLetter;
+string chat_letter;
+
+string stringResult;
+ChatMessage chat_whispMessage;
+int chat_currentMessageIndex;
+overlay chat_messageField;
+vector3 g_posTmp;
+
+string chat_fontName;
+real chat_fontHeight;
+
+bool l_shiftDown;
+bool l_altDown;
+bool chat_typeFriendName;
+bool chat_typeIgnoredName;
+
+//int chat_messagesScrollbar.Count;
+int chat_lastDeletedMessage;
+int chat_maxDisplayedMessages;
+colour chat_normalMessageColour;
+colour chat_whispMessageColour;
+colour chat_errorMessageColour;
+colour chat_emoteMessageColour;
+int mtNormal;
+int mtWhisp;
+int mtError;
+int mtEmote;
+
+string chat_selectedRoom;
+overlay chat_selectedPanel;
+bool chat_clicked;
+
+string chat_selectedFriend;
+string chat_selectedIgnored;
+
+int chat_maxNameLetters;
+int chat_maxMessageLetters;
+
+string chat_typedFriendName;
+string chat_displayedFriendName;
+int chat_currentFriendNameIndex;
+overlay chat_friendNameField;
+
+string chat_typedIgnoredName;
+string chat_displayedIgnoredName;
+int chat_currentIgnoredNameIndex;
+overlay chat_ignoredNameField;
+
+array <string> chat_friendsList;
+array <string> chat_ignoredList;
+
+bool l_musicMuted;
+bool l_soundMuted;
+real l_musicVol;
+real l_soundVol;
+real l_ticPos;
+real l_relativeRegletteWidth;
+overlay l_ticMusic;
+overlay l_ticSound;
+
+void UpdateScrollbarElevator( Scrollbar us_scrollbar)
+{
+	us_scrollbar.PanelHeight = us_scrollbar.Panel->GetHeight();
+	us_scrollbar.DisplayedPanelHeight = us_scrollbar.DisplayedPanel->GetHeight();
+	us_scrollbar.ContainerHeight = us_scrollbar.ElevatorContainer->GetHeight();
+	us_scrollbar.PanelTop = 0.0 - us_scrollbar.Panel->GetTop();
+	us_scrollbar.Ratio = us_scrollbar.DisplayedPanelHeight / us_scrollbar.PanelHeight;
+	if (us_scrollbar.Ratio > 1.0)
+	{
+		us_scrollbar.Ratio = 1.0;
+	}
+
+	us_scrollbar.ElevatorHeight = us_scrollbar.ContainerHeight * us_scrollbar.Ratio;
+	us_scrollbar.ElevatorTop = us_scrollbar.PanelTop * us_scrollbar.Ratio;
+
+	if (us_scrollbar.ElevatorHeight < 16.0)
+	{
+		us_scrollbar.ElevatorHeight = 16.0;
+	}
+	if (us_scrollbar.ElevatorTop < 0.0)
+	{
+		us_scrollbar.ElevatorTop = 0.0;
+	}
+	elseif (us_scrollbar.ElevatorTop + us_scrollbar.ElevatorHeight > us_scrollbar.ContainerHeight)
+	{
+		us_scrollbar.ElevatorTop = us_scrollbar.ContainerHeight - us_scrollbar.ElevatorHeight;
+	}
+
+	us_scrollbar.Elevator->SetHeight( us_scrollbar.ElevatorHeight);
+	us_scrollbar.Elevator->SetTop( us_scrollbar.ElevatorTop);
+}
+
+void UpdatePanel( Scrollbar up_scrollbar)
+{
+	overlay up_overlay;
+	int up_i;
+	up_scrollbar.PanelTop = up_scrollbar.Panel->GetTop();
+	for (up_i = 0 ; up_i < up_scrollbar.Count ; up_i++)
+	{
+		up_overlay = OverlayElement_GetByName( up_scrollbar.BaseName + itoa( up_i) + "/Container");
+		if (up_overlay->GetTop() + up_scrollbar.PanelTop < 0.0)
+		{
+			up_overlay->Hide();
+		}
+		elseif (up_overlay->GetTop() + up_scrollbar.PanelTop + 20.0 > up_scrollbar.DisplayedPanelHeight + 2.0)
+		{
+			up_overlay->Hide();
+		}
+		else
+		{
+			up_overlay->Show();
+		}
+	}
+}
+
+void ScrollbarElevator( Scrollbar se_scrollbar)
+{
+	se_scrollbar.PanelHeight = se_scrollbar.Panel->GetHeight();
+	se_scrollbar.DisplayedPanelHeight = se_scrollbar.DisplayedPanel->GetHeight();
+	se_scrollbar.ElevatorHeight = se_scrollbar.Elevator->GetHeight();
+	se_scrollbar.ContainerHeight = se_scrollbar.ElevatorContainer->GetHeight();
+	se_scrollbar.Ratio = se_scrollbar.ContainerHeight / se_scrollbar.PanelHeight;
+	if (se_scrollbar.ElevatorHeight < se_scrollbar.ContainerHeight)
+	{
+/*
+		int se_count;
+		se_count = chat_messagesScrollbar.Count;
+		string se_baseName;
+		se_baseName = "Chat/Messages/";
+		if (se_scrollbar.Elevator->GetName()->find( "Friends") != npos)
+		{
+			se_count = chat_friendsScrollbar.Count;
+			se_baseName = "Chat/FriendsPanel/List/";
+		}
+		elseif (se_scrollbar.Elevator->GetName()->find( "Ignored") != npos)
+		{
+			se_count = chat_ignoredScrollbar.Count;
+			se_baseName = "Chat/IgnoredPanel/List/";
+		}
+*/
+		real se_difference;
+		se_scrollbar.ElevatorTop = se_scrollbar.Elevator->GetTop();
+		se_scrollbar.PanelTop = se_scrollbar.Panel->GetTop();
+	
+		timer( "ElevatorScroll", TIMERTYPE_PERMANENT, 0.0)
+		{
+			se_difference = MOUSE_DIFFERENCE_Y;
+			se_scrollbar.ElevatorTop = se_scrollbar.ElevatorTop + se_difference;
+//			Echo( itoa( se_elevatorTop) + " - " + itoa( se_elevatorHeight) + " - " + itoa( se_containerHeight));
+			se_scrollbar.PanelTop = se_scrollbar.PanelTop - (se_difference / se_scrollbar.Ratio);
+			if (se_scrollbar.ElevatorTop < 0.0)
+			{
+				se_scrollbar.ElevatorTop = 0.0;
+				se_scrollbar.PanelTop = 0.0;
+			}
+			elseif (se_scrollbar.ElevatorTop + se_scrollbar.ElevatorHeight > se_scrollbar.ContainerHeight)
+			{
+				se_scrollbar.ElevatorTop = se_scrollbar.ContainerHeight - se_scrollbar.ElevatorHeight;
+				se_scrollbar.PanelTop = se_scrollbar.DisplayedPanelHeight - se_scrollbar.PanelHeight;
+			}
+			se_scrollbar.Elevator->SetTop( se_scrollbar.ElevatorTop);
+			se_scrollbar.Panel->SetTop( se_scrollbar.PanelTop);
+			UpdatePanel( se_scrollbar);
+		}
+	}
+}
+
+void ChatAdjustTextToField( string cattf_text, int cattf_index, overlay cattf_field, real cattf_fontSize)
+{
+	real cattf_fieldWidth;
+	cattf_fieldWidth = cattf_field->GetParent()->GetWidth();
+	real cattf_offset;
+	cattf_offset = cattf_field->GetLeft();
+	real cattf_textWidth;
+
+	cattf_textWidth = GetLineWidth( cattf_text, "ComicBold", cattf_fontSize + 6.0);
+	char cattf_char;
+	if (cattf_textWidth > cattf_fieldWidth - cattf_offset)
+	{
+		Echo( "Text too large");
+		string cattf_displayedText;
+		bool cattf_maxReached;
+		cattf_textWidth = 0.0;
+		cattf_displayedText->clear();
+		cattf_maxReached = false;
+		real cattf_charWidth;
+		for (i = cattf_index ; i >= 0 && cattf_maxReached == false ; i = i - 1)
+		{
+			cattf_char = strGetChar( cattf_text, i);
+			cattf_charWidth = GetCharWidth( cattf_char, "ComicBold", cattf_fontSize + 6.0);
+			if (cattf_textWidth + cattf_charWidth > cattf_fieldWidth - cattf_offset)
+			{
+				cattf_maxReached = true;
+			}
+			else
+			{
+				cattf_displayedText = cattf_char + cattf_displayedText;
+				cattf_textWidth = cattf_textWidth + cattf_charWidth;
+			}
+		}
+		cattf_field->SetCaption( cattf_displayedText);
+	}
+	else
+	{
+		cattf_field->SetCaption( cattf_text);
+	}
+}
+
+string l_friendName;
+int l_friendIndex;
+
+void GetFriend( int gf_index)
+{
+	if (gf_index < chat_friendsList->Size() && gf_index >= 0)
+	{
+		l_friendName = chat_friendsList[gf_index];
+	}
+}
+
+void FlushFriendsList()
+{
+	for (i = 0 ; i < chat_friendsList->Size() ; i++)
+	{
+		OverlayElement_Destroy( chat_friendsScrollbar.BaseName + itoa( i) + "/Name");
+		OverlayElement_Destroy( chat_friendsScrollbar.BaseName + itoa( i) + "/Room");
+		OverlayElement_Destroy( chat_friendsScrollbar.BaseName + itoa( i) + "/Container");
+	}
+	chat_friendsScrollbar.Count = 0;
+	chat_friendsList->Clear();
+	chat_friendsScrollbar.Panel->SetHeight( 0.0);
+	chat_friendsScrollbar.Panel->SetTop( 0.0);
+	chat_friendsScrollbar.PanelHeight = 0.0;
+	chat_friendsScrollbar.PanelTop = 0.0;
+}
+
+void SelectFriend()
+{
+	OverlayElement_GetByName( chat_friendsScrollbar.BaseName + itoa( l_friendIndex) + "/Container")->SetMaterial( "Base/Invisible");
+	OverlayElement_GetByName( chat_friendsScrollbar.BaseName + itoa( l_friendIndex) + "/Container")->SetBorderMaterial( "Base/Invisible");
+
+	string sf_friendName;
+	overlay sf_panel;
+	sf_panel = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	if (sf_panel->GetName()->find( "/Name") != npos || sf_panel->GetName()->find( "/Room") != npos)
+	{
+		sf_panel = sf_panel->GetParent();
+	}
+	sf_friendName = sf_panel->GetName();
+	strSplitOne( sf_friendName, "/");
+	strSplitOne( sf_friendName, "/");
+	strSplitOne( sf_friendName, "/");
+	int sf_index;
+	sf_index = atoi( strSplitOne( sf_friendName, "/"));
+	l_friendIndex = sf_index;
+
+	GetFriend( sf_index);
+	chat_selectedFriend = l_friendName;
+	OverlayElement_GetByName( chat_friendsScrollbar.BaseName + itoa( sf_index) + "/Container")->SetMaterial( "Base/LowAlphaBlack");
+	OverlayElement_GetByName( chat_friendsScrollbar.BaseName + itoa( sf_index) + "/Container")->SetBorderMaterial( "Base/Black");
+}
+
+void AddFriend( string af_friendName, string af_roomName)
+{
+	overlay af_container;
+	overlay af_name;
+	overlay af_room;
+	string af_baseName;
+	af_baseName = chat_friendsScrollbar.BaseName + itoa( chat_friendsScrollbar.Count);
+
+	if (OverlayElement_Exists( af_baseName + "/Container"))
+	{
+		af_container = OverlayElement_GetByName( af_baseName + "/Container");
+	}
+	else
+	{
+		af_container = OverlayElement_Create( af_baseName + "/Container", "BorderPanelZone", "Chat/FriendsPanel/List");
+	}
+	af_container->SetMaterial( "Base/Invisible");
+	af_container->SetBorderMaterial( "Base/Invisible");
+	af_container->SetMouseOverMaterial( "Base/LowAlphaBlack");
+	af_container->SetTBBorderSize( 1.0 / GENERAL_SCREEN_HEIGHT, 1.0 / GENERAL_SCREEN_HEIGHT);
+	af_container->SetLRBorderSize( 1.0 / GENERAL_SCREEN_WIDTH, 1.0 / GENERAL_SCREEN_WIDTH);
+	af_container->SetTop( 1.0 + (chat_friendsScrollbar.Count * 20.0));
+	af_container->SetLeft( 0.0);
+	af_container->SetSize( chat_friendsScrollbar.Panel->GetWidth(), 20.0);
+
+	if ( ! OverlayElement_Exists( af_baseName + "/Name"))
+	{
+		af_name = OverlayElement_Create( af_baseName + "/Name", "ChatText", af_baseName + "/Container");
+	}
+	else
+	{
+		af_name = OverlayElement_GetByName( af_baseName + "/Name");
+	}
+	af_name->SetTop( 2.0);
+	af_name->SetLeft( 5.0);
+	af_name->SetSize( (chat_friendsScrollbar.Panel->GetWidth() * 67.0 / 100.0) - 5.0, 20.0);
+	af_name->SetFontSize( 20.0);
+	af_name->SetCaption( af_friendName);
+
+	if ( ! OverlayElement_Exists( af_baseName + "/Room"))
+	{
+		af_room = OverlayElement_Create( af_baseName + "/Room", "ChatText", af_baseName + "/Container");
+	}
+	else
+	{
+		af_room = OverlayElement_GetByName( af_baseName + "/Room");
+	}
+	af_room->SetTop( 2.0);
+	af_room->SetLeft( 5.0 + chat_friendsScrollbar.Panel->GetWidth() * 70.0 / 100.0);
+	af_room->SetSize( (chat_friendsScrollbar.Panel->GetWidth() * 30.0 / 100.0) - 5.0, 20.0);
+	af_room->SetFontSize( 20.0);
+	af_room->SetCaption( af_roomName);
+
+	Overlay_SetAction( af_baseName + "/Container")
+	{
+		SelectFriend();
+	}
+
+	Overlay_SetAction( af_baseName + "/Name")
+	{
+		SelectFriend();
+	}
+
+	Overlay_SetAction( af_baseName + "/Room")
+	{
+		SelectFriend();
+	}
+
+	chat_friendsScrollbar.Count++;
+	chat_friendsList->Add( af_friendName);
+	chat_friendsScrollbar.Panel->SetHeight( OverlayElement_GetByName( "Chat/FriendsPanel/List")->GetHeight() + 20.0);
+	UpdatePanel( chat_friendsScrollbar);
+	UpdateScrollbarElevator( chat_friendsScrollbar);
+}
+
+void UpdateFriendsList( string ufl_message)
+{
+	int ufl_stringLength;
+	int ufl_index;
+	string ufl_friendName;
+	string ufl_friendRoom;
+	int ufl_count;
+
+	chat_friendsScrollbar.Count = 0;
+	ufl_index = 0;
+	chat_friendsList->Clear();
+
+	ufl_count = unpack_int( substr( ufl_message, ufl_index, 4));
+	ufl_index = ufl_index + 4;
+
+	for (i = 0 ; i < ufl_count ; i++)
+	{
+		ufl_stringLength = unpack_int( substr( ufl_message, ufl_index, 4));
+		ufl_index = ufl_index + 4;
+		ufl_friendName = substr( ufl_message, ufl_index, ufl_stringLength);
+		ufl_index = ufl_index + ufl_stringLength;
+		ufl_stringLength = unpack_int( substr( ufl_message, ufl_index, 4));
+		ufl_index = ufl_index + 4;
+		ufl_friendRoom = substr( ufl_message, ufl_index, ufl_stringLength);
+		ufl_index = ufl_index + ufl_stringLength;
+
+		AddFriend( ufl_friendName, ufl_friendRoom);
+	}
+
+	ufl_count = 20;
+
+	for (i = 0 ; i < ufl_count ; i++)
+	{
+		ufl_friendName = "coin " + itoa( i);
+		ufl_friendRoom = "Eden";
+		ufl_index = ufl_index + ufl_stringLength;
+
+		AddFriend( ufl_friendName, ufl_friendRoom);
+	}
+}
+
+void RemoveFriend()
+{
+	Network_ClientSendMessage( "ChatClient", pack_int( msRemoveFriend) + pack_int( chat_selectedFriend->length()) + chat_selectedFriend);
+	Network_ClientSendMessage( "ChatClient", pack_int( msUpdateFriendsList));
+	chat_selectedFriend->clear();
+}
+
+string l_ignoredName;
+int l_ignoredIndex;
+
+void GetIgnored( int gi_index)
+{
+	if (gi_index < chat_ignoredList->Size() && gi_index >= 0)
+	{
+		l_ignoredName = chat_ignoredList[gi_index];
+	}
+}
+
+void FlushIgnoredList()
+{
+	for (i = 0 ; i < chat_ignoredList->Size() ; i++)
+	{
+		OverlayElement_Destroy( chat_ignoredScrollbar.BaseName + itoa( i) + "/Name");
+		OverlayElement_Destroy( chat_ignoredScrollbar.BaseName + itoa( i) + "/Container");
+	}
+	chat_ignoredScrollbar.Count = 0;
+	chat_ignoredList->Clear();
+	chat_ignoredScrollbar.Panel->SetHeight( 0.0);
+	chat_ignoredScrollbar.Panel->SetTop( 0.0);
+	chat_ignoredScrollbar.PanelHeight = 0.0;
+	chat_ignoredScrollbar.PanelTop = 0.0;
+}
+
+void SelectIgnored()
+{
+	OverlayElement_GetByName( chat_ignoredScrollbar.BaseName + itoa( l_ignoredIndex) + "/Container")->SetMaterial( "Base/Invisible");
+	OverlayElement_GetByName( chat_ignoredScrollbar.BaseName + itoa( l_ignoredIndex) + "/Container")->SetBorderMaterial( "Base/Invisible");
+
+	string si_ignoredName;
+	overlay si_panel;
+	si_panel = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	if (si_panel->GetName()->find( "/Name") != npos)
+	{
+		si_panel = si_panel->GetParent();
+	}
+	si_ignoredName = si_panel->GetName();
+	strSplitOne( si_ignoredName, "/");
+	strSplitOne( si_ignoredName, "/");
+	strSplitOne( si_ignoredName, "/");
+	int si_index;
+	si_index = atoi( strSplitOne( si_ignoredName, "/"));
+	l_ignoredIndex = si_index;
+
+	GetIgnored( si_index);
+	chat_selectedIgnored = l_ignoredName;
+	OverlayElement_GetByName( chat_ignoredScrollbar.BaseName + itoa( si_index) + "/Container")->SetMaterial( "Base/LowAlphaBlack");
+	OverlayElement_GetByName( chat_ignoredScrollbar.BaseName + itoa( si_index) + "/Container")->SetBorderMaterial( "Base/Black");
+}
+
+void AddIgnored( string ai_ignoredName, bool ai_connected)
+{
+	overlay ai_container;
+	overlay ai_name;
+	string ai_baseName;
+	ai_baseName = chat_ignoredScrollbar.BaseName + itoa( chat_ignoredScrollbar.Count);
+
+	if (OverlayElement_Exists( ai_baseName + "/Container"))
+	{
+		ai_container = OverlayElement_GetByName( ai_baseName + "/Container");
+	}
+	else
+	{
+		ai_container = OverlayElement_Create( ai_baseName + "/Container", "BorderPanelZone", "Chat/IgnoredPanel/List");
+	}
+	ai_container->SetMaterial( "Base/Invisible");
+	ai_container->SetBorderMaterial( "Base/Invisible");
+	ai_container->SetMouseOverMaterial( "Base/LowAlphaBlack");
+	ai_container->SetTBBorderSize( 1.0 / GENERAL_SCREEN_HEIGHT, 1.0 / GENERAL_SCREEN_HEIGHT);
+	ai_container->SetLRBorderSize( 1.0 / GENERAL_SCREEN_WIDTH, 1.0 / GENERAL_SCREEN_WIDTH);
+	ai_container->SetPosition( SetVector3( 0.0, 1.0 + (chat_ignoredScrollbar.Count * 20), 0.0));
+	ai_container->SetSize( chat_ignoredScrollbar.Panel->GetWidth(), 20.0);
+
+	if ( ! OverlayElement_Exists( ai_baseName + "/Name"))
+	{
+		ai_name = OverlayElement_Create( ai_baseName + "/Name", "ChatText", ai_baseName + "/Container");
+	}
+	else
+	{
+		ai_name = OverlayElement_GetByName( ai_baseName + "/Name");
+	}
+	ai_name->SetPosition( SetVector3( 5.0, 2.0, 0.0));
+	ai_name->SetSize( chat_ignoredScrollbar.Panel->GetWidth(), 20.0);
+	ai_name->SetFontSize( 20.0);
+	ai_name->SetCaption( ai_ignoredName);
+
+	Overlay_SetAction( ai_baseName + "/Container")
+	{
+		SelectIgnored();
+	}
+
+	Overlay_SetAction( ai_baseName + "/Name")
+	{
+		SelectIgnored();
+	}
+
+	chat_ignoredScrollbar.Count++;
+	chat_ignoredList->Add( ai_ignoredName);
+	chat_ignoredScrollbar.Panel->SetHeight( chat_ignoredScrollbar.Panel->GetHeight() + 20.0);
+	UpdatePanel( chat_ignoredScrollbar);
+	UpdateScrollbarElevator( chat_ignoredScrollbar);
+}
+
+void UpdateIgnoredList( string uil_message)
+{
+	int uil_stringLength;
+	int uil_index;
+	string uil_ignoredName;
+	bool uil_ignoredConnected;
+	int uil_count;
+	int uil_i;
+
+	chat_ignoredScrollbar.Count = 0;
+	uil_index = 0;
+	chat_ignoredList->Clear();
+
+	uil_count = unpack_int( substr( uil_message, uil_index, 4));
+	uil_index = uil_index + 4;
+	for (uil_i = 0 ; uil_i < uil_count ; uil_i++)
+	{
+		uil_stringLength = unpack_int( substr( uil_message, uil_index, 4));
+		uil_index = uil_index + 4;
+		uil_ignoredName = substr( uil_message, uil_index, uil_stringLength);
+		uil_index = uil_index + uil_stringLength;
+		uil_ignoredConnected = (substr( uil_message, uil_index, 1) == "1");
+		uil_index = uil_index + 1;
+
+		AddIgnored( uil_ignoredName, uil_ignoredConnected);
+	}
+}
+
+void RemoveIgnored()
+{
+	Network_ClientSendMessage( "ChatClient", pack_int( msRemoveIgnored) + pack_int( chat_selectedIgnored->length()) + chat_selectedIgnored);
+	Network_ClientSendMessage( "ChatClient", pack_int( msUpdateIgnoredList));
+	chat_selectedIgnored->clear();
+}
+
+void ChatShowMessageBox( string csmb_title, string csmb_caption, bool csmb_showOK, bool csmb_showCancel)
+{
+	OverlayElement_GetByName( "Chat/MessageBox/Title/Text")->SetCaption( csmb_title);
+	OverlayElement_GetByName( "Chat/MessageBox/Caption/Text")->SetCaption( csmb_caption);
+	OverlayElement_GetByName( "Chat/MessageBox/OKButton")->SetVisible( csmb_showOK);
+	OverlayElement_GetByName( "Chat/MessageBox/CancelButton")->SetVisible( csmb_showCancel);
+	if (csmb_showOK && csmb_showCancel)
+	{
+		Echo( "Both buttons");
+		OverlayElement_GetByName( "Chat/MessageBox/OKButton")->SetLeft( OverlayElement_GetByName( "Chat/MessageBox")->GetWidth() * 10.0 / 100.0);
+		OverlayElement_GetByName( "Chat/MessageBox/CancelButton")->SetLeft( OverlayElement_GetByName( "Chat/MessageBox")->GetWidth() * 55.0 / 100.0);
+	}
+	elseif (csmb_showOK)
+	{
+		Echo( "Buttons OK");
+		OverlayElement_GetByName( "Chat/MessageBox/OKButton")->SetLeft( (OverlayElement_GetByName( "Chat/MessageBox")->GetWidth() - OverlayElement_GetByName( "Chat/MessageBox/OKButton")->GetWidth()) / 2.0);
+	}
+	else
+	{
+		Echo( "Buttons Cancel");
+		OverlayElement_GetByName( "Chat/MessageBox/CancelButton")->SetLeft( (OverlayElement_GetByName( "Chat/MessageBox")->GetWidth() - OverlayElement_GetByName( "Chat/MessageBox/CancelButton")->GetWidth()) / 2.0);
+	}
+	Overlay_Show( "Chat/MessageBox");
+}
+
+void StartAnimation( string sa_animationName, string sa_charName)
+{
+	Timer_Kill( "BlockWalk");
+	animation_group sa_charAnims;
+	animated_object sa_animatedObject;
+	sa_charAnims = AnimationGroup_GetByName( sa_charName + "Anims");
+	sa_animatedObject = sa_charAnims->GetObject( sa_charName + "_Body");
+	sa_charAnims->StopAllAnimations();
+	sa_charAnims->StartAnimation( sa_animationName);
+	if (sa_animationName != "Marche" && sa_animationName != "run" && g_mainChar.Character.Name == sa_charName)
+	{
+		timer( "BlockWalk", TIMERTYPE_CONTINUOUS, sa_animatedObject->GetAnimation( sa_animationName)->GetLength())
+		{
+			g_mainChar.Walking = false;
+			g_mainChar.Backward = false;
+		}
+	}
+}
+
+void SitOnFloor( string sof_charName)
+{
+	StartAnimation( "sitdown", sof_charName);
+	Network_ClientSendMessage( "ChatClient", pack_int( msSitDown));
+	g_mainChar.Sitting = true;
+	g_mainChar.SittingOnFloor = true;
+	animation_group sof_charAnims;
+	animated_object sof_animatedObject;
+	sof_charAnims = AnimationGroup_GetByName( sof_charName + "Anims");
+	sof_animatedObject = sof_charAnims->GetObject( sof_charName + "_Body");
+	MoveCameraTo( -200.0);
+	timer( "EndSitting", TIMERTYPE_ONCE, sof_animatedObject->GetAnimation( "sitdown")->GetLength())
+	{
+		g_mainChar.Sat = true;
+		g_mainChar.SatOnFloor = true;
+		g_mainChar.Sitting = false;
+		g_mainChar.SittingOnFloor = false;
+	}
+}
+
+void GetUpFromFloor( string guff_charName)
+{
+	StartAnimation( "situp", guff_charName);
+	Network_ClientSendMessage( "ChatClient", pack_int( msSitUp));
+	g_mainChar.Sitting = true;
+	g_mainChar.SittingOnFloor = true;
+	g_mainChar.Sat = false;
+	g_mainChar.SatOnFloor = false;
+	animation_group guff_charAnims;
+	animated_object guff_animatedObject;
+	guff_charAnims = AnimationGroup_GetByName( guff_charName + "Anims");
+	guff_animatedObject = guff_charAnims->GetObject( guff_charName + "_Body");
+	MoveCameraTo( 0.0);
+	timer( "EndGettingUp", TIMERTYPE_ONCE, guff_animatedObject->GetAnimation( "situp")->GetLength())
+	{
+		g_mainChar.Sitting = false;
+		g_mainChar.SittingOnFloor = false;
+	}
+}
+
+void BuildBulle( string bb_charName)
+{
+	overlay bb_container;
+	if ( ! OverlayElement_Exists( "Chat/Bulles/" + bb_charName))
+	{
+		bb_container = OverlayElement_Create( "Chat/Bulles/" + bb_charName, "PanelZone", "Chat/Bulles");
+	}
+	else
+	{
+		bb_container = OverlayElement_GetByName( "Chat/Bulles/" + bb_charName);
+	}
+	bb_container->SetMaterial( "Base/Invisible");
+	bb_container->SetPosition( SetVector3( 0.0, 0.0, 0.0));
+	bb_container->SetSize( 150.0, 150.0);
+
+	overlay bb_fleche;
+	if ( ! OverlayElement_Exists( "Chat/Bulles/" + bb_charName + "/Fleche"))
+	{
+		bb_fleche = OverlayElement_Create( "Chat/Bulles/" + bb_charName + "/Fleche", "Chat/FlecheBulle", "Chat/Bulles/" + bb_charName);
+	}
+	else
+	{
+		bb_fleche = OverlayElement_GetByName( "Chat/Bulles/" + bb_charName + "/Fleche");
+	}
+	bb_fleche->SetPosition( SetVector3( 50.0, 98.0, 0.0));
+	bb_fleche->SetSize( 32.0, 32.0);
+
+	overlay bb_bulle_noir;
+	if ( ! OverlayElement_Exists( "Chat/Bulles/" + bb_charName + "/Bulle/Noir"))
+	{
+		bb_bulle_noir = OverlayElement_Create( "Chat/Bulles/" + bb_charName + "/Bulle/Noir", "Chat/Bulle/Noir", "Chat/Bulles/" + bb_charName);
+	}
+	else
+	{
+		bb_bulle_noir = OverlayElement_GetByName( "Chat/Bulles/" + bb_charName + "/Bulle/Noir");
+	}
+	bb_bulle_noir->SetPosition( SetVector3( 8.0, 8.0, 0.0));
+	bb_bulle_noir->SetSize( 100.0, 100.0);
+
+	overlay bb_bulle_blanc;
+	if ( ! OverlayElement_Exists( "Chat/Bulles/" + bb_charName + "/Bulle/Blanc"))
+	{
+		bb_bulle_blanc = OverlayElement_Create( "Chat/Bulles/" + bb_charName + "/Bulle/Blanc", "Chat/Bulle/Blanc", "Chat/Bulles/" + bb_charName + "/Bulle/Noir");
+	}
+	else
+	{
+		bb_bulle_blanc = OverlayElement_GetByName( "Chat/Bulles/" + bb_charName + "/Bulle/Blanc");
+	}
+	bb_bulle_blanc->SetPosition( SetVector3( 2.0, 2.0, 0.0));
+	bb_bulle_blanc->SetSize( 96.0, 96.0);
+
+	overlay bb_bulle_text;
+	if ( ! OverlayElement_Exists( "Chat/Bulles/" + bb_charName + "/Bulle/Text"))
+	{
+		bb_bulle_text = OverlayElement_Create( "Chat/Bulles/" + bb_charName + "/Bulle/Text", "ChatBulleText", "Chat/Bulles/" + bb_charName + "/Bulle/Blanc");
+	}
+	else
+	{
+		bb_bulle_text = OverlayElement_GetByName( "Chat/Bulles/" + bb_charName + "/Bulle/Text");
+	}
+	bb_bulle_text->SetTextColour( SetColourRGBA( 0.0, 0.0, 0.0, 1.0));
+	bb_bulle_text->SetPosition( SetVector3( 10.0, 10.0, 0.0));
+	bb_bulle_text->SetSize( 90.0, 90.0);
+//	Echo( "Bulle Text : " + rtoa( bb_bulle_text->GetFontSize() * GENERAL_SCREEN_HEIGHT));
+
+	bb_container->Hide();
+}
+
+void BuildName ( string bn_charName)
+{
+	overlay bn_name;
+	if ( ! OverlayElement_Exists( "Chat/Names/" + bn_charName))
+	{
+		bn_name = OverlayElement_Create( "Chat/Names/" + bn_charName, "ChatNameText", "Chat/Names");
+	}
+	else
+	{
+		bn_name = OverlayElement_GetByName( "Chat/Names/" + bn_charName);
+	}
+	bn_name->SetFontSize( 20.0);
+	bn_name->SetWidth( GetLineWidth( bn_charName, "ComicBold", 30.0));
+	bn_name->SetCaption( bn_charName);
+	scene_node bn_node;
+	vector3 bn_position;
+	timer( "Update_" + bn_charName + "_NamePosition", TIMERTYPE_PERMANENT, 0.0)
+	{
+		bn_charName = CURRENTTIMER_SELF->GetName();
+		strSplitOne( bn_charName, "_");
+		bn_charName = strSplitOne( bn_charName, "_");
+		bn_name = OverlayElement_GetByName( "Chat/Names/" + bn_charName);
+		bn_node = SceneNode_GetByName( bn_charName + "_Node");
+
+		if (g_rootCamera->IsPositionVisible( bn_node->GetAbsolutePosition()))
+		{
+			bn_name->Show();
+			bn_position = bn_node->GetPosition();
+			bn_position = SetVector3( bn_position[0], (bn_position[1]) + 450.0, bn_position[2]);
+			bn_position = V3_ProjectOnScreen( bn_position);
+			bn_position = SetVector3( (bn_position[0]) - (bn_name->GetWidth() / 2.0), (bn_position[1]) - bn_name->GetHeight(), 0.0);
+			bn_name->SetPosition( bn_position);
+		}
+		else
+		{
+			bn_name->Hide();
+		}
+	}
+}
+
+void ResizeBulle( string rb_charName, real rb_width, real rb_height)
+{
+	overlay rb_container;
+	rb_container = OverlayElement_GetByName( "Chat/Bulles/" + rb_charName);
+	overlay rb_bulle_text;
+	rb_bulle_text = OverlayElement_GetByName( "Chat/Bulles/" + rb_charName + "/Bulle/Text");
+	overlay rb_fleche;
+	rb_fleche = OverlayElement_GetByName( "Chat/Bulles/" + rb_charName + "/Fleche");
+	overlay rb_bulle_blanc;
+	rb_bulle_blanc = OverlayElement_GetByName( "Chat/Bulles/" + rb_charName + "/Bulle/Blanc");
+	overlay rb_bulle_noir;
+	rb_bulle_noir = OverlayElement_GetByName( "Chat/Bulles/" + rb_charName + "/Bulle/Noir");
+
+	rb_container->SetSize( rb_width + 50.0, rb_height + 50.0);
+	rb_bulle_noir->SetSize( rb_width + 20.0, rb_height + 20.0);
+	rb_bulle_blanc->SetSize( rb_width + 16.0, rb_height + 16.0);
+	rb_bulle_text->SetSize( rb_width, rb_height);
+	rb_bulle_text->SetLeft( 8.0);
+	rb_bulle_text->SetTop( 8.0);
+	rb_fleche->SetLeft( rb_width / 2.0);
+	rb_fleche->SetTop( rb_height + 16.0);
+}
+
+void PutTextInBulle( ChatMessage ptib_message)
+{
+	string ptib_displayedMessage;
+	string ptib_line;
+	int ptib_index;
+	real ptib_height;
+	real ptib_width;
+	real ptib_maxWidth;
+	real ptib_charWidth;
+	bool ptib_added;
+
+	ptib_displayedMessage->clear();
+	ptib_line->clear();
+	ptib_height = chat_fontHeight;
+	ptib_width = 0.0;
+	ptib_maxWidth = 0.0;
+	ptib_added = false;
+
+	Echo( "PutTextInBulle : " + ptib_message.Message);
+
+	for (ptib_index = 0 ; ptib_index < ptib_message.Message->length() ; ptib_index++)
+	{
+		ptib_added = false;
+		ptib_charWidth = GetCharWidth( strGetChar( ptib_message.Message, ptib_index), chat_fontName, chat_fontHeight + 10.0);
+
+		if (ptib_width + ptib_charWidth >= 200.0)
+		{
+			if (ptib_width + ptib_charWidth > ptib_maxWidth)
+			{
+				ptib_maxWidth = ptib_width + ptib_charWidth;
+			}
+			ptib_added = true;
+			ptib_displayedMessage = ptib_displayedMessage + ptib_line + endl;
+			ptib_line->clear();
+			ptib_width = 0.0;
+			ptib_height = ptib_height + chat_fontHeight;
+		}
+
+		ptib_line = ptib_line + strGetChar( ptib_message.Message, ptib_index);
+		ptib_width = GetLineWidth( ptib_line, chat_fontName, chat_fontHeight + 10.0);
+
+		if (ptib_width > ptib_maxWidth)
+		{
+			ptib_maxWidth = ptib_width;
+		}
+	}
+
+	if ( ! ptib_added)
+	{
+		ptib_displayedMessage = ptib_displayedMessage + ptib_line;
+	}
+
+	ResizeBulle( ptib_message.Sender, ptib_maxWidth, ptib_height);
+
+	OverlayElement_GetByName( "Chat/Bulles/" + ptib_message.Sender + "/Bulle/Text")->SetCaption( ptib_displayedMessage);
+	OverlayElement_GetByName( "Chat/Bulles/" + ptib_message.Sender + "/Bulle/Text")->SetFontSize( chat_fontHeight);
+	ptib_displayedMessage->clear();
+	ptib_line->clear();
+	ptib_maxWidth = 0.0;
+}
+
+void ShowBulle( ChatMessage sb_message)
+{
+	overlay sb_container;
+	sb_container = OverlayElement_GetByName( "Chat/Bulles/" + sb_message.Sender);
+	overlay sb_bulle_text;
+	sb_bulle_text = OverlayElement_GetByName( "Chat/Bulles/" + sb_message.Sender + "/Bulle/Text");
+	overlay sb_fleche;
+	sb_fleche = OverlayElement_GetByName( "Chat/Bulles/" + sb_message.Sender + "/Fleche");
+	overlay sb_bulle_blanc;
+	sb_bulle_blanc = OverlayElement_GetByName( "Chat/Bulles/" + sb_message.Sender + "/Bulle/Blanc");
+	overlay sb_bulle_noir;
+	sb_bulle_noir = OverlayElement_GetByName( "Chat/Bulles/" + sb_message.Sender + "/Bulle/Noir");
+
+	if (Timer_Exists( "WaitRead" + sb_message.Sender + "Text"))
+	{
+		Timer_Kill( "WaitRead" + sb_message.Sender + "Text");
+		Timer_Kill( "Update" + sb_message.Sender + "BullePosition");
+	}
+
+	scene_node sb_node;
+	if (sb_message.Sender == g_mainChar.Character.Name)
+	{
+		sb_node = g_mainChar.Character.Node;
+	}
+	else
+	{
+		sb_node = SceneNode_GetByName( sb_message.Sender + "_Node");
+	}
+
+	Echo( "ShowBulle : " + sb_message.Message);
+
+	PutTextInBulle( sb_message);
+
+	string sb_charName;
+	sb_charName = sb_message.Sender;
+	timer( "Update_" + sb_charName + "_BullePosition", TIMERTYPE_CONTINUOUS, 4.0)
+	{
+		sb_charName = CURRENTTIMER_SELF->GetName();
+		strSplitOne( sb_charName, "_");
+		sb_charName = strSplitOne( sb_charName, "_");
+		sb_container = OverlayElement_GetByName( "Chat/Bulles/" + sb_charName);
+		sb_bulle_noir = OverlayElement_GetByName( "Chat/Bulles/" + sb_charName + "/Bulle/Noir");
+		if (sb_charName == g_mainChar.Character.Name)
+		{
+			sb_node = g_mainChar.Character.Node;
+		}
+		else
+		{
+			sb_node = SceneNode_GetByName( sb_charName + "_Node");
+		}
+
+		if (g_rootCamera->IsPositionVisible( sb_node->GetAbsolutePosition()))
+		{
+			sb_container->Show();
+			g_posTmp = sb_node->GetPosition();
+			g_posTmp = SetVector3( g_posTmp[0], (g_posTmp[1]) + 450.0, g_posTmp[2]);
+			g_posTmp = V3_ProjectOnScreen( g_posTmp);
+			g_posTmp = SetVector3( (g_posTmp[0]) - (sb_bulle_noir->GetWidth() / 2.0), (g_posTmp[1]) - sb_bulle_noir->GetHeight(), 0.0);
+			sb_container->SetPosition( g_posTmp);
+		}
+		else
+		{
+			sb_container->Hide();
+		}
+	}
+
+	timer( "WaitRead" + sb_charName + "Text", TIMERTYPE_ONCE, 4.0)
+	{
+		sb_container->Hide();
+	}
+}
+
+void ShrinkChatField()
+{
+	Timer_Kill( "ExpandChatField");
+	vector3 scf_beginPos;
+	vector3 scf_endPos;
+	vector3 scf_currentPos;
+	real scf_cornerWidth;
+	real scf_fieldWidth;
+	scf_fieldWidth = OverlayElement_GetByName( "Chat/Field/Container")->GetWidth();
+	scf_cornerWidth = OverlayElement_GetByName( "Chat/Corner")->GetWidth() / 2.0;
+	scf_beginPos = OverlayElement_GetByName( "Chat/Field/Container")->GetPosition();
+	scf_endPos = SetVector3( GENERAL_SCREEN_WIDTH - OverlayElement_GetByName( "Chat/Toolbar/Command")->GetWidth() + (OverlayElement_GetByName( "Chat/Corner")->GetWidth() / 2.0) + 32.0, scf_beginPos[1], 0.0);
+	timer( "ShrinkChatField", TIMERTYPE_CONTINUOUS, 1.0)
+	{
+		scf_currentPos = V3_SinusInterpolation( scf_endPos, scf_beginPos, CURRENTTIMER_TIME_ELAPSED);
+		OverlayElement_GetByName( "Chat/Field/Container")->SetPosition( scf_currentPos);
+		OverlayElement_GetByName( "Chat/Corner")->SetLeft( (scf_fieldWidth - (scf_currentPos[0])) - scf_cornerWidth);
+	}
+}
+
+void ExpandChatField()
+{
+	Timer_Kill( "ShrinkChatField");
+	vector3 ecf_beginPos;
+	vector3 ecf_endPos;
+	vector3 ecf_currentPos;
+	real ecf_cornerWidth;
+	real ecf_fieldWidth;
+	ecf_fieldWidth = OverlayElement_GetByName( "Chat/Field/Container")->GetWidth();
+	ecf_cornerWidth = OverlayElement_GetByName( "Chat/Corner")->GetWidth() / 2.0;
+	ecf_beginPos = OverlayElement_GetByName( "Chat/Field/Container")->GetPosition();
+	ecf_endPos = SetVector3( 0.0, ecf_beginPos[1], 0.0);
+	timer( "ExpandChatField", TIMERTYPE_CONTINUOUS, 1.0)
+	{
+		ecf_currentPos = V3_SinusInterpolation( ecf_endPos, ecf_beginPos, CURRENTTIMER_TIME_ELAPSED);
+		OverlayElement_GetByName( "Chat/Field/Container")->SetPosition( ecf_currentPos);
+		OverlayElement_GetByName( "Chat/Corner")->SetLeft( (ecf_fieldWidth - (ecf_currentPos[0])) - ecf_cornerWidth);
+	}
+}
+
+void HideEmoteMenu()
+{
+	Overlay_Hide( "Chat/EmotesMenu");
+	chat_showEmotes = false;
+	OverlayElement_GetByName( "Chat/Toolbar/Emotes")->SetMaterial( "Chat/Emotes");
+}
+
+void HideFriendsMenu()
+{
+	Overlay_Hide( "Chat/FriendsIgnoredList");
+	Overlay_Hide( "Chat/NewFriend");
+	Overlay_Hide( "Chat/NewIgnored");
+	chat_typeFriendName = false;
+	chat_typeIgnoredName = false;
+	chat_showFriendsList = false;
+	OverlayElement_GetByName( "Chat/Toolbar/Friends")->SetMaterial( "Chat/Friends");
+}
+
+void HideRoomsMenu()
+{
+	Overlay_Hide( "RoomsList");
+	rs_showRoomsList = false;
+	OverlayElement_GetByName( "Chat/Toolbar/Rooms")->SetMaterial( "Chat/Rooms");
+}
+
+void HideMenu()
+{
+	Overlay_Hide( "Chat/Menu");
+	chat_showMenu = false;
+	OverlayElement_GetByName( "Chat/Toolbar/Menu")->SetMaterial( "Chat/BtnMenu");
+	Overlay_Hide( "Chat/Options");
+	Overlay_Hide( "Chat/Commands");
+}
+
+void ToggleEmoteMenu()
+{
+	chat_showEmotes = ( ! chat_showEmotes);
+	if (chat_showEmotes)
+	{
+		HideFriendsMenu();
+		HideRoomsMenu();
+		HideMenu();
+		vector3 cte_position;
+		cte_position = OverlayElement_GetByName( "Chat/Toolbar/Emotes")->GetAbsolutePosition();
+		cte_position = SetVector3( (cte_position[0]) - OverlayElement_GetByName( "Chat/EmotesMenu")->GetWidth(), (cte_position[1]) - OverlayElement_GetByName( "Chat/EmotesMenu")->GetHeight(), 0.0);
+		if ((cte_position[0]) < 0.0)
+		{
+			cte_position = SetVector3( 0.0, cte_position[1], 0.0);
+		}
+		OverlayElement_GetByName( "Chat/EmotesMenu")->SetPosition( cte_position);
+		Overlay_Show( "Chat/EmotesMenu");
+		OverlayElement_GetByName( "Chat/Toolbar/Emotes")->SetMaterial( "Chat/EmotesSel");
+	}
+	else
+	{
+		HideEmoteMenu();
+	}
+}
+
+void ToggleFriendsMenu()
+{
+	chat_showFriendsList = ( ! chat_showFriendsList);
+	if (chat_showFriendsList)
+	{
+		HideEmoteMenu();
+		HideRoomsMenu();
+		HideMenu();
+		OverlayElement_GetByName( "Chat/FriendsTab")->SetMaterial( "Base/MediumAlphaPureWhite");
+		OverlayElement_GetByName( "Chat/IgnoredTab")->SetMaterial( "Base/MediumAlphaBlack");
+		OverlayElement_GetByName( "Chat/FriendsPanel")->SetVisible( true);
+		OverlayElement_GetByName( "Chat/IgnoredPanel")->SetVisible( false);
+		Overlay_Show( "Chat/FriendsIgnoredList");
+		OverlayElement_GetByName( "Chat/Toolbar/Friends")->SetMaterial( "Chat/FriendsSel");
+		Network_ClientSendMessage( "ChatClient", pack_int( msUpdateFriendsList));
+	}
+	else
+	{
+		HideFriendsMenu();
+	}
+}
+
+void ToggleRoomsMenu()
+{
+	rs_showRoomsList = ( ! rs_showRoomsList);
+	if (rs_showRoomsList)
+	{
+		HideEmoteMenu();
+		HideFriendsMenu();
+		HideMenu();
+		UpdateRoomsList();
+		Overlay_Show( "RoomsList");
+		OverlayElement_GetByName( "Chat/Toolbar/Rooms")->SetMaterial( "Chat/RoomsSel");
+	}
+	else
+	{
+		HideRoomsMenu();
+	}
+}
+
+void ToggleMenu()
+{
+	chat_showMenu = ( ! chat_showMenu);
+	if (chat_showMenu)
+	{
+		HideEmoteMenu();
+		HideFriendsMenu();
+		HideRoomsMenu();
+		Overlay_Show( "Chat/Menu");
+		OverlayElement_GetByName( "Chat/Toolbar/Menu")->SetMaterial( "Chat/BtnMenuSel");
+	}
+	else
+	{
+		HideMenu();
+	}
+}
+
+void MoveMessages( real mm_offset)
+{
+	Echo( "MoveMessages");
+	real mm_containerTop;
+	mm_containerTop = chat_messagesScrollbar.Panel->GetTop() + mm_offset;
+	chat_messagesScrollbar.Panel->SetTop( mm_containerTop);
+	chat_messagesScrollbar.PanelTop = 0.0 - mm_containerTop;
+	int mm_it;
+	overlay mm_overlay;
+	for (mm_it = 0 ; mm_it < chat_messagesScrollbar.Count ; mm_it++)
+	{
+		if (OverlayElement_Exists( "Chat/Messages/" + itoa( mm_it) + "/Container"))
+		{
+			mm_overlay = OverlayElement_GetByName( "Chat/Messages/" + itoa( mm_it) + "/Container");
+			if (mm_overlay->GetTop() + mm_containerTop < 0.0)
+			{
+				Echo( "Must hide " + mm_overlay->GetName() + " (before)");
+				mm_overlay->Hide();
+			}
+			elseif (mm_overlay->GetTop() + mm_containerTop + 20.0 > chat_messagesScrollbar.DisplayedPanel->GetHeight())
+			{
+				Echo( "Must hide " + mm_overlay->GetName() + " (after)");
+				mm_overlay->Hide();
+			}
+			else
+			{
+				mm_overlay->Show();
+			}
+		}
+	}
+}
+
+void MoveMessages_Bis( real mm2_offset)
+{
+	Echo( "MoveMessages_Bis");
+	real mm2_containerTop;
+	real mm2_overlayTop;
+	mm2_containerTop = chat_messagesScrollbar.Panel->GetTop();
+	int mm2_it;
+	overlay mm2_overlay;
+	for (mm2_it = 0 ; mm2_it < chat_messagesScrollbar.Count ; mm2_it++)
+	{
+		if (OverlayElement_Exists( "Chat/Messages/" + itoa( mm2_it) + "/Container"))
+		{
+			mm2_overlay = OverlayElement_GetByName( "Chat/Messages/" + itoa( mm2_it) + "/Container");
+			mm2_overlayTop = mm2_overlay->GetTop() + mm2_offset;
+			mm2_overlay->SetTop( mm2_overlayTop);
+
+			if (mm2_overlayTop + mm2_containerTop < 0.0)
+			{
+				Echo( "Must hide " + mm2_overlay->GetName() + " (before)");
+				mm2_overlay->Hide();
+			}
+			elseif (mm2_overlayTop + mm2_containerTop + 20.0 > chat_messagesScrollbar.DisplayedPanel->GetHeight())
+			{
+				Echo( "Must hide " + mm2_overlay->GetName() + " (after)");
+				mm2_overlay->Hide();
+			}
+			else
+			{
+				Echo( "Must show " + mm2_overlay->GetName());
+				mm2_overlay->Show();
+			}
+		}
+	}
+}
+
+void AddMessage( ChatMessage am_message)
+{
+	MoveMessages( 0.0 - chat_lineHeight);
+
+	int amtl_messageCount;
+	amtl_messageCount = 0;
+
+	overlay amtl_messagesContainer;
+	real amtl_messagesContainerHeight;
+	real amtl_messagesContainerWidth;
+	amtl_messagesContainer = chat_messagesScrollbar.Panel;
+	amtl_messagesContainerHeight = amtl_messagesContainer->GetHeight() + chat_lineHeight;
+	amtl_messagesContainerWidth = amtl_messagesContainer->GetWidth();
+	amtl_messagesContainer->SetHeight( amtl_messagesContainerHeight);
+	chat_messagesScrollbar.PanelHeight = amtl_messagesContainerHeight;
+
+	overlay amtl_messageContainer;
+	string amtl_baseName;
+	amtl_baseName = "Chat/Messages/" + itoa( chat_messagesScrollbar.Count);
+	amtl_messageContainer = OverlayElement_Create( amtl_baseName + "/Container", "PanelZone", "Chat/Message/Container");
+	amtl_messageContainer->SetMaterial( "Base/Invisible");
+	amtl_messageContainer->SetWidth( amtl_messagesContainerWidth);
+	amtl_messageContainer->SetHeight( chat_lineHeight);
+	amtl_messageContainer->SetTop( amtl_messagesContainerHeight - chat_lineHeight);
+	amtl_messageContainer->SetLeft( 5.0);
+	amtl_messageContainer->Show();
+
+	real amtl_scrollbarWidth;
+	amtl_scrollbarWidth = OverlayElement_GetByName( "Chat/Messages/Scrollbar")->GetWidth();
+
+	real amtl_trueWidth;
+	amtl_trueWidth = amtl_messageContainer->GetLeft() + amtl_scrollbarWidth;
+
+	real amtl_nameWidth;
+	amtl_nameWidth = 0.0;
+	if ( ! am_message.Sender->empty())
+	{
+		overlay amtl_messageName;
+		string amtl_nameCaption;
+		amtl_nameCaption = "[" + am_message.Sender + "] :";
+		amtl_nameWidth = GetLineWidth( amtl_nameCaption, chat_fontName, chat_fontHeight + 5.0);
+		amtl_messageName = OverlayElement_Create( amtl_baseName + "/Name", "ChatMessagesListText", amtl_baseName + "/Container");
+		amtl_messageName->SetCaption( amtl_nameCaption);
+		amtl_messageName->SetTextColour( am_message.Colour);
+		amtl_messageName->SetFontSize( 20.0);
+		amtl_messageName->SetWidth( amtl_nameWidth);
+		amtl_messageName->SetLeft( 0.0);
+		amtl_messageName->SetTop( 2.0);
+		amtl_messageName->Show();
+	}
+
+	amtl_trueWidth += amtl_nameWidth;
+
+	overlay amtl_messageOV;
+	string amtl_messageCaption;
+	real amtl_messageWidth;
+	amtl_messageCaption = am_message.Message;
+	amtl_messageWidth = GetLineWidth( amtl_messageCaption, chat_fontName, 30.0);
+	if (amtl_messageWidth > amtl_messagesContainerWidth - amtl_trueWidth)
+	{
+		real amtl_lineWidth;
+		real amtl_charWidth;
+		string amtl_lMessage;
+		amtl_lMessage = amtl_messageCaption;
+		amtl_messageCaption->clear();
+		string amtl_line;
+		char amtl_char;
+		int amtl_index;
+		amtl_lineWidth = 0.0;
+		for (amtl_index = 0 ; amtl_index < amtl_lMessage->length() ; amtl_index++)
+		{
+			amtl_char = strGetChar( amtl_lMessage, amtl_index);
+			amtl_charWidth = GetCharWidth( amtl_char, chat_fontName, 27.0);
+			if (amtl_lineWidth + amtl_charWidth > amtl_messagesContainerWidth - amtl_trueWidth)
+			{
+				amtl_messageOV = OverlayElement_Create( amtl_baseName + "/Message", "ChatMessagesListText", amtl_baseName + "/Container");
+				amtl_messageOV->SetCaption( amtl_line);
+				amtl_messageOV->SetTextColour( am_message.Colour);
+				amtl_messageOV->SetFontSize( 20.0);
+				amtl_messageOV->SetWidth( amtl_lineWidth);
+				amtl_messageOV->SetLeft( amtl_nameWidth + 30.0);
+				amtl_messageOV->SetTop( 2.0);
+				amtl_messageOV->Show();
+
+				chat_messagesScrollbar.Count += 1;
+				amtl_messageCount += 1;
+				amtl_messagesContainerHeight = amtl_messagesContainer->GetHeight() + chat_lineHeight;
+				amtl_messagesContainer->SetHeight( amtl_messagesContainerHeight);
+				MoveMessages( 0.0 - chat_lineHeight);
+
+				amtl_baseName = "Chat/Messages/" + itoa( chat_messagesScrollbar.Count);
+				amtl_messageContainer = OverlayElement_Create( amtl_baseName + "/Container", "PanelZone", "Chat/Message/Container");
+				amtl_messageContainer->SetMaterial( "Base/Invisible");
+				amtl_messageContainer->SetWidth( amtl_messagesContainerWidth);
+				amtl_messageContainer->SetHeight( chat_lineHeight);
+				amtl_messageContainer->SetTop( amtl_messagesContainerHeight - chat_lineHeight);
+				amtl_messageContainer->SetLeft( 5.0);
+				amtl_messageContainer->Show();
+
+				amtl_line->clear();
+				amtl_lineWidth = 0.0;
+			}
+			amtl_line = amtl_line + amtl_char;
+			amtl_lineWidth = amtl_lineWidth + amtl_charWidth;
+		}
+		if ( ! amtl_line->empty())
+		{
+			amtl_messageOV = OverlayElement_Create( amtl_baseName + "/Message", "ChatMessagesListText", amtl_baseName + "/Container");
+			amtl_messageOV->SetCaption( amtl_line);
+			amtl_messageOV->SetTextColour( am_message.Colour);
+			amtl_messageOV->SetFontSize( 20.0);
+			amtl_messageOV->SetWidth( amtl_lineWidth);
+			amtl_messageOV->SetLeft( amtl_nameWidth + 30.0);
+			amtl_messageOV->SetTop( 2.0);
+			amtl_messageOV->Show();
+			amtl_line->clear();
+			amtl_lineWidth = 0.0;
+			chat_messagesScrollbar.Count += 1;
+			amtl_messageCount += 1;
+		}
+	}
+	else
+	{
+		amtl_messageOV = OverlayElement_Create( amtl_baseName + "/Message", "ChatMessagesListText", amtl_baseName + "/Container");
+		amtl_messageOV->SetCaption( amtl_messageCaption);
+		amtl_messageOV->SetTextColour( am_message.Colour);
+		amtl_messageOV->SetFontSize( 20.0);
+		amtl_messageOV->SetWidth( amtl_messageWidth);
+		if ( ! am_message.Sender->empty())
+		{
+			amtl_messageOV->SetLeft( amtl_nameWidth + 30.0);
+		}
+		amtl_messageOV->SetTop( 2.0);
+		amtl_messageOV->Show();
+
+		chat_messagesScrollbar.Count += 1;
+		amtl_messageCount += 1;
+	}
+
+	if (chat_messagesScrollbar.Count > chat_maxDisplayedMessages)
+	{
+		for (i = 0 ; i < amtl_messageCount ; i++)
+		{
+			OverlayElement_Destroy( "Chat/Messages/" + itoa( chat_lastDeletedMessage) + "/Container");
+			amtl_messagesContainerHeight = amtl_messagesContainer->GetHeight() - chat_lineHeight;
+			MoveMessages_Bis( 0.0 - chat_lineHeight);
+			amtl_messagesContainer->SetHeight( amtl_messagesContainerHeight);
+			chat_lastDeletedMessage += 1;
+			MoveMessages( chat_lineHeight - 0.05);
+			
+		}
+	}
+}
+
+void CharacterTalk( ChatMessage ct_message)
+{
+	if (ct_message.Type == mtNormal)
+	{
+//		Echo( "CharacterTalk - Normal - " + ct_charName);
+
+		string ct_animationName;
+		ct_animationName = AnimationGroup_GetByName( ct_message.Sender + "Anims")->GetObject( ct_message.Sender + "_Body")->GetPlayingAnimationName( 0);
+
+		if (ct_animationName == "stand")
+		{
+			StartAnimation( "parle", ct_message.Sender);
+		}
+
+		ShowBulle( ct_message);
+		AddMessage( ct_message);
+	}
+	elseif (ct_message.Type == mtWhisp)
+	{
+//		Echo( "CharacterTalk - " + ct_message + " - Name : " + ct_charName);
+		ct_message.Target = strSplitOne( ct_message.Message, " ");
+		ct_message.Sender = ct_message.Sender + " a " + ct_message.Target;
+		AddMessage( ct_message);
+	}
+	elseif (ct_message.Type == mtEmote)
+	{
+		ct_message.Message = ct_message.Sender + " " + ct_message.Message;
+		ct_message.Sender->clear();
+		AddMessage( ct_message);
+	}
+	elseif (ct_message.Type == mtError)
+	{
+		ct_message.Sender->clear();
+		AddMessage( ct_message);
+	}
+	UpdateScrollbarElevator( chat_messagesScrollbar);
+}
+
+void SendNormalMessage( ChatMessage snm_message)
+{
+	snm_message.Colour = chat_normalMessageColour;
+	if ( ! g_mainChar.Sitting && ! g_mainChar.Sat)
+	{
+		StartAnimation( "parle", g_mainChar.Character.Name);
+	}
+//	Echo( "SendNormalMessage : " + snm_message);
+	Network_ClientSendMessage( "ChatClient", pack_int( msTalk) + pack_int( snm_message.Message->length()) + snm_message.Message);
+}
+
+void SendWhispMessage( ChatMessage swm_message)
+{
+	chat_whispMessage.Message = swm_message.Message;
+	chat_whispMessage.Type = swm_message.Type;
+	chat_whispMessage.Sender = swm_message.Sender;
+	chat_whispMessage.Colour = chat_whispMessageColour;
+	Network_ClientSendMessage( "ChatClient", pack_int( msWhisp) + pack_int( swm_message.Message->length()) + swm_message.Message);
+}
+
+void SendEmoteMessage( ChatMessage scm_message)
+{
+	scm_message.Colour = chat_emoteMessageColour;
+}
+
+void SendMessage( string sm_pMessage)
+{
+//	Echo( "SendMessage - Begin");
+
+	ChatMessage sm_message;
+	sm_message.Message = sm_pMessage;
+	string sm_messageType;
+	sm_messageType = strSplitOne( sm_message.Message, " ");
+	if (sm_messageType == "/whisp" || sm_messageType == "/w")
+	{
+		sm_message.Type = mtWhisp;
+		sm_message.Sender = g_mainChar.Character.Name;
+		SendWhispMessage( sm_message);
+	}
+	elseif (sm_messageType == "/normal")
+	{
+		sm_message.Type = mtNormal;
+		sm_message.Sender = g_mainChar.Character.Name;
+		SendNormalMessage( sm_message);
+		CharacterTalk( sm_message);
+		sm_message.Message->clear();
+		chat_displayedMessage->clear();
+		ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+	}
+	elseif (sm_messageType == "/emote")
+	{
+		sm_message.Type = mtEmote;
+		sm_message.Sender = g_mainChar.Character.Name;
+		SendEmoteMessage( sm_message);
+		strSplitOne( sm_message.Message, " ");
+		CharacterTalk( sm_message);
+		sm_message.Message->clear();
+		chat_displayedMessage->clear();
+		ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+	}
+
+//	Echo( "SendMessage - End");
+}
+
+void StartRunning()
+{
+	if ( ! g_mainChar.Running)
+	{
+//		Echo( "StartRunning");
+		g_mainChar.Running = true;
+		StartAnimation( "run", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msBeginRun));
+	}
+}
+
+void StartWalking( bool sw_backward)
+{
+/*
+	if ( ! g_walking)
+	{
+*/
+		if (l_shiftDown && ! sw_backward)
+		{
+			StartRunning();
+		}
+		else
+		{
+			g_mainChar.Running = false;
+//			Echo( "StartWalking");
+			StartAnimation( "Marche", g_mainChar.Character.Name);
+			Network_ClientSendMessage( "ChatClient", pack_int( msBeginWalk));
+		}
+		g_mainChar.Walking = true;
+		g_mainChar.Backward = sw_backward;
+//	}
+}
+
+void EndWalking()
+{
+//	Echo( "walking : " + btoa( g_walking));
+	if (g_mainChar.Walking)
+	{
+		if (g_mainChar.Running)
+		{
+//			Echo( "EndWalking - EndRunning");
+			StartAnimation( "stand2", g_mainChar.Character.Name);
+			Network_ClientSendMessage( "ChatClient", pack_int( msEndRun) + pack_int( 0) + pack_real( (g_mainChar.Position)[0]) + pack_real( (g_mainChar.Position)[1]) + pack_real( (g_mainChar.Position)[2]) + pack_int( btoi( g_mainChar.Backward)));
+		}
+		else
+		{
+//			Echo( "EndWalking - EndWalking");
+			StartAnimation( "stand2", g_mainChar.Character.Name);
+			Network_ClientSendMessage( "ChatClient", pack_int( msEndWalk) + pack_real( (g_mainChar.Position)[0]) + pack_real( (g_mainChar.Position)[1]) + pack_real( (g_mainChar.Position)[2]) + pack_int( btoi( g_mainChar.Backward)));
+		}
+		g_mainChar.LastSentYaw = 0.0;
+
+		g_mainChar.Walking = false;
+		g_mainChar.Backward = false;
+		g_mainChar.Running = false;
+	}
+}
+
+void EndRunning()
+{
+	if (g_mainChar.Running)
+	{
+//		Echo( "EndRunning");
+		g_mainChar.Running = false;
+		StartAnimation( "Marche", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEndRun) + pack_int( 1) + pack_real( (g_mainChar.Position)[0]) + pack_real( (g_mainChar.Position)[1]) + pack_real( (g_mainChar.Position)[2]) + pack_int( btoi( g_mainChar.Backward)));
+//		g_walking = true;
+	}
+}
+
+void EndTurning()
+{
+	Network_ClientSendMessage( "ChatClient", pack_int( msTurn) + pack_real( g_mainChar.LastSentYaw));
+	g_mainChar.LastSentYaw = 0.0;
+	g_mainChar.TurningLeft = false;
+	g_mainChar.TurningRight = false;
+}
+
+void LoadCharInfos( string lci_infos)
+{
+	int lci_stringLength;
+	real lci_x;
+	real lci_y;
+	real lci_z;
+	int lci_index;
+	bool lci_sat;
+	lci_index = 0;
+
+	lci_stringLength = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Name = substr( lci_infos, lci_index, lci_stringLength);
+	lci_index += lci_stringLength;
+	g_currentChar.Sex = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Body = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Skin = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Hair = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.HairMaterial = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Dress = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.EyeMaterial = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Brow = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.BrowMaterial = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Special01 = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	g_currentChar.Special02 = unpack_int( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+
+	lci_x = unpack_real( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	lci_y = unpack_real( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	lci_z = unpack_real( substr( lci_infos, lci_index, 4));
+	lci_index += 4;
+	lci_sat = (unpack_int( substr( lci_infos, lci_index, 4)) == 1);
+
+
+	g_distantChars->Add( g_currentChar.Name, g_currentChar);
+	g_distantCharsNames->Add( g_currentChar.Name);
+//	Echo( "LoadCharInfos - Name : " + g_currentCharName);
+	scene_node lci_node;
+	lci_node = SceneNode_Create( g_currentChar.Name + "_Node");
+	lci_node->SetPosition( SetVector3( lci_x, lci_y, lci_z));
+	g_currentChar.Node = lci_node;
+	BuildBulle( g_currentChar.Name);
+	BuildName( g_currentChar.Name);
+	SceneNode_Create( g_currentChar.Name + "_TargetNode");
+	SceneNode_Create( g_currentChar.Name + "_StartNode");
+
+	LoadCharacter();
+
+	if (lci_sat)
+	{
+		StartAnimation( "sitdown", g_currentChar.Name);
+	}
+}
+
+void CurrentCharTurn( string cct_message)
+{
+	real cct_yaw;
+	string cct_charName;
+	int cct_stringLength;
+
+	cct_stringLength = unpack_int( substr( cct_message, 0, 4));
+	cct_charName = substr( cct_message, 4, cct_stringLength);
+	cct_yaw = unpack_real( substr( cct_message, 4 + cct_stringLength, 4));
+
+	scene_node cct_charNode;
+	scene_node cct_charStartNode;
+	scene_node cct_charTargetNode;
+	cct_charNode = SceneNode_GetByName( cct_charName + "_Node");
+	cct_charTargetNode = SceneNode_GetByName( cct_charName + "_TargetNode");
+	cct_charStartNode = SceneNode_GetByName( cct_charName + "_StartNode");
+	if (cct_charNode != NULL)
+	{
+		Timer_Kill("DistantCharTurn_" + cct_charName);
+		quaternion cct_beginYaw;
+		cct_beginYaw = cct_charNode->GetOrientation();
+		cct_charStartNode->SetOrientation( cct_beginYaw);
+
+		quaternion cct_endYaw;
+		cct_charTargetNode->SetOrientation( cct_beginYaw);
+		cct_charTargetNode->Yaw( cct_yaw);
+		cct_endYaw = cct_charTargetNode->GetOrientation();
+
+		quaternion cct_currentYaw;
+		timer ("DistantCharTurn_" + cct_charName, TIMERTYPE_CONTINUOUS, 0.25)
+		{
+			cct_charName = CURRENTTIMER_SELF->GetName();
+			strSplitOne( cct_charName, "_");
+
+			cct_charNode = SceneNode_GetByName( cct_charName + "_Node");
+			cct_charTargetNode = SceneNode_GetByName( cct_charName + "_TargetNode");
+			cct_charStartNode = SceneNode_GetByName( cct_charName + "_StartNode");
+
+			cct_beginYaw = cct_charStartNode->GetOrientation();
+			cct_endYaw = cct_charTargetNode->GetOrientation();
+
+			cct_currentYaw = Quat_Slerp( cct_beginYaw, cct_endYaw, CURRENTTIMER_TIME_ELAPSED / 0.25);
+
+			cct_charNode->Reset();
+			cct_charNode->SetOrientation( cct_currentYaw);
+		}
+	}
+}
+
+void CurrentCharWalk( string ccw_message)
+{
+	real ccw_x;
+	real ccw_y;
+	real ccw_z;
+	bool ccw_backward;
+	bool ccw_running;
+	string ccw_charName;
+	int ccw_index;
+	int ccw_stringLength;
+
+	ccw_index = 0;
+	ccw_stringLength = unpack_int( substr( ccw_message, ccw_index, 4));
+	ccw_index += 4;
+	ccw_charName = substr( ccw_message, ccw_index, ccw_stringLength);
+	ccw_index += ccw_stringLength;
+	ccw_x = unpack_real( substr( ccw_message, ccw_index, 4));
+	ccw_index += 4;
+	ccw_y = unpack_real( substr( ccw_message, ccw_index, 4));
+	ccw_index += 4;
+	ccw_z = unpack_real( substr( ccw_message, ccw_index, 4));
+	ccw_index += 4;
+	ccw_backward = itob( unpack_int( substr( ccw_message, ccw_index, 4)));
+	ccw_index += 4;
+	ccw_running = itob( unpack_int( substr( ccw_message, ccw_index, 4)));
+	ccw_index += 4;
+
+	string ccw_animationName;
+	ccw_animationName = AnimationGroup_GetByName( ccw_charName + "Anims")->GetObject( ccw_charName + "_Body")->GetPlayingAnimationName( 0);
+	if (ccw_running)
+	{
+		if (ccw_animationName != "run")
+		{
+			AnimationGroup_GetByName( ccw_charName + "Anims")->StopAllAnimations();
+			AnimationGroup_GetByName( ccw_charName + "Anims")->StartAnimation( "run");
+		}
+	}
+	elseif (ccw_animationName != "Marche")
+	{
+		AnimationGroup_GetByName( ccw_charName + "Anims")->StopAllAnimations();
+		AnimationGroup_GetByName( ccw_charName + "Anims")->StartAnimation( "Marche");
+	}
+
+	scene_node ccw_charNode;
+	scene_node ccw_charTargetNode;
+	scene_node ccw_charStartNode;
+	ccw_charNode = SceneNode_GetByName( ccw_charName + "_Node");
+	ccw_charTargetNode = SceneNode_GetByName( ccw_charName + "_TargetNode");
+	ccw_charStartNode = SceneNode_GetByName( ccw_charName + "_StartNode");
+	if (ccw_charNode != NULL)
+	{
+		Timer_Kill("DistantCharWalk_" + ccw_charName);
+
+		vector3 ccw_beginPosition;
+		ccw_beginPosition = ccw_charNode->GetPosition();
+		ccw_charStartNode->SetPosition( ccw_beginPosition);
+
+		vector3 ccw_endPosition;
+		ccw_endPosition = SetVector3( ccw_x, ccw_y, ccw_z);
+		ccw_charTargetNode->SetPosition( ccw_endPosition);
+
+		quaternion ccw_beginOrientation;
+		ccw_beginOrientation = ccw_charNode->GetOrientation();
+		ccw_charStartNode->SetOrientation( ccw_beginOrientation);
+
+		quaternion ccw_endOrientation;
+		ccw_endPosition = SetVector3( ccw_endPosition[0], 0.0, ccw_endPosition[2]);
+		ccw_beginPosition = SetVector3( ccw_beginPosition[0], 0.0, ccw_beginPosition[2]);
+		if (ccw_backward)
+		{
+			ccw_endOrientation = V3_GetRotationTo( NEGATIVE_UNIT_Z, ccw_endPosition - ccw_beginPosition);
+		}
+		else
+		{
+			ccw_endOrientation = V3_GetRotationTo( UNIT_Z, ccw_endPosition - ccw_beginPosition);
+		}
+		ccw_charTargetNode->SetOrientation( ccw_endOrientation);
+
+		vector3 ccw_currentPosition;
+		quaternion ccw_currentOrientation;
+		timer ("DistantCharWalk_" + ccw_charName, TIMERTYPE_CONTINUOUS, 0.25)
+		{
+			ccw_charName = CURRENTTIMER_SELF->GetName();
+			strSplitOne( ccw_charName, "_");
+
+			ccw_charNode = SceneNode_GetByName( ccw_charName + "_Node");
+			ccw_charTargetNode = SceneNode_GetByName( ccw_charName + "_TargetNode");
+			ccw_charStartNode = SceneNode_GetByName( ccw_charName + "_StartNode");
+
+			ccw_beginPosition = ccw_charStartNode->GetPosition();
+			ccw_endPosition = ccw_charTargetNode->GetPosition();
+			ccw_currentPosition = V3_LinearInterpolation( ccw_endPosition, ccw_beginPosition, CURRENTTIMER_TIME_ELAPSED / 0.25);
+			ccw_beginPosition = ccw_charNode->GetPosition();
+			ccw_charNode->SetPosition( ccw_currentPosition);
+
+			ccw_beginOrientation = ccw_charStartNode->GetOrientation();
+			ccw_endOrientation = ccw_charTargetNode->GetOrientation();
+			ccw_currentOrientation = Quat_Slerp( ccw_beginOrientation, ccw_endOrientation, CURRENTTIMER_TIME_ELAPSED / 0.25);
+			ccw_charNode->SetOrientation( ccw_currentOrientation);
+		}
+	}
+}
+
+void UpdateCurrentChar( string ucc_message)
+{
+	real ucc_x;
+	real ucc_y;
+	real ucc_z;
+	real ucc_yaw;
+	string ucc_charName;
+	int ucc_stringLength;
+
+	ucc_stringLength = unpack_int( substr( ucc_message, 0, 4));
+	ucc_charName = substr( ucc_message, 4, ucc_stringLength);
+	ucc_x = unpack_real( substr( ucc_message, 4 + ucc_stringLength, 4));
+	ucc_y = unpack_real( substr( ucc_message, 8 + ucc_stringLength, 4));
+	ucc_z = unpack_real( substr( ucc_message, 12 + ucc_stringLength, 4));
+	ucc_yaw = unpack_real( substr( ucc_message, 16 + ucc_stringLength, 4));
+
+	scene_node ucc_charNode;
+	ucc_charNode = SceneNode_GetByName( ucc_charName + "_Node");
+	if (ucc_charNode != NULL)
+	{
+		ucc_charNode->SetPosition( SetVector3( ucc_x, ucc_y, ucc_z));
+		ucc_charNode->Reset();
+		ucc_charNode->Yaw( ucc_yaw);
+	}
+}
+
+void CharacterBeginWalk( string cbw_message)
+{
+	int cbw_stringLength;
+	string cbw_charName;
+
+	cbw_stringLength = unpack_int( substr( cbw_message, 0, 4));
+	cbw_charName = substr( cbw_message, 4, cbw_stringLength);
+
+//	Echo( "CharacterBeginWalk - " + cbw_charName);
+	StartAnimation( "Marche", cbw_charName);
+}
+
+void CharacterEndWalk( string cew_message)
+{
+	int cew_stringLength;
+	string cew_charName;
+
+	cew_stringLength = unpack_int( substr( cew_message, 0, 4));
+	cew_charName = substr( cew_message, 4, cew_stringLength);
+
+	CurrentCharWalk( cew_message + pack_int( 0));
+	timer( "EndCharWalk" + cew_charName, TIMERTYPE_ONCE, 0.25)
+	{
+		StartAnimation( "stand2", cew_charName);
+	}
+}
+
+void CharacterEmote( string ce_charName, string ce_emote)
+{
+	string ce_animationName;
+	ce_animationName = AnimationGroup_GetByName( ce_charName + "Anims")->GetObject( ce_charName + "_Body")->GetPlayingAnimationName( 0);
+	if (ce_charName != g_mainChar.Character.Name && ce_animationName != "sitdown" && ce_animationName != "sit" && ce_animationName != "situp")
+	{
+		StartAnimation( ce_emote, ce_charName);
+	}
+//	Echo( "CharacterEmote - Name : " + ce_charName + " - Emote : " + ce_emote);
+}
+
+void BuildEmoteMessage( string bem_emote)
+{
+	if (bem_emote == "oui")
+	{
+		stringResult = "acquiesce";
+	}
+	elseif (bem_emote == "non")
+	{
+		stringResult = "refuse";
+	}
+	elseif (bem_emote == "coucou")
+	{
+		stringResult = "fait coucou";
+	}
+	elseif (bem_emote == "rire")
+	{
+		stringResult = "rit";
+	}
+	elseif (bem_emote == "pleure")
+	{
+		stringResult = "pleure";
+	}
+	elseif (bem_emote == "bisou")
+	{
+		stringResult = "fait un bisou";
+	}
+	elseif (bem_emote == "etonnement")
+	{
+		stringResult = "s'etonne";
+	}
+	elseif (bem_emote == "colere")
+	{
+		stringResult = "est colerique";
+	}
+}
+
+void BeginTalking()
+{
+//	Echo( "BeginTalking - Begin");
+	chat_displayedMessage = l_message + "|";
+	chat_currentMessageIndex = l_message->length();
+	ChatAdjustTextToField( chat_displayedMessage, chat_currentMessageIndex, chat_messageField, 16.0);
+//	Echo( "BeginTalking - End");
+}
+
+void UpdateMusicTick()
+{
+	l_ticMusic->Translate( l_ticPos, 0.0);
+
+	l_ticMusic->LimitToParent();
+
+	l_musicVol = l_ticMusic->GetLeft() / l_relativeRegletteWidth;
+
+	Sound_SetMusicVolume( l_musicVol);
+}
+
+void UpdateSoundTick()
+{
+	l_ticSound->Translate( l_ticPos, 0.0);
+
+	l_ticSound->LimitToParent();
+
+	l_soundVol = l_ticSound->GetLeft() / l_relativeRegletteWidth;
+
+	Sound_SetSFXVolume( l_soundVol);
+}
+
+void ReadConfigLine( string rcl_line)
+{
+	int rcl_index;
+	string rcl_strValue;
+	if (rcl_line->find( "xInvert") != npos)
+	{
+		if (rcl_line->find( "true") != npos)
+		{
+			g_xMouseModifier = 1.0;
+			OverlayElement_GetByName( "Chat/Options/InvertHorizTick")->SetMaterial( "Chat/On");
+		}
+		else
+		{
+			g_xMouseModifier = -1.0;
+			OverlayElement_GetByName( "Chat/Options/InvertHorizTick")->SetMaterial( "Chat/Off");
+		}
+	}
+	elseif (rcl_line->find( "yInvert") != npos)
+	{
+		if (rcl_line->find( "true") != npos)
+		{
+			g_yMouseModifier = -1.0;
+			OverlayElement_GetByName( "Chat/Options/InvertVerticTick")->SetMaterial( "Chat/On");
+		}
+		else
+		{
+			g_yMouseModifier = 1.0;
+			OverlayElement_GetByName( "Chat/Options/InvertVerticTick")->SetMaterial( "Chat/Off");
+		}
+	}
+	elseif (rcl_line->find( "soundMuted") != npos)
+	{
+		l_soundMuted = (rcl_line->find( "true") != npos);
+		Sound_MuteSFX( l_soundMuted);
+		if (l_soundMuted)
+		{
+			OverlayElement_GetByName( "Chat/Options/SoundOnOff")->SetMaterial( "Chat/Off");
+		}
+		else
+		{
+			OverlayElement_GetByName( "Chat/Options/SoundOnOff")->SetMaterial( "Chat/On");
+		}
+	}
+	elseif (rcl_line->find( "musicMuted") != npos)
+	{
+		l_musicMuted = (rcl_line->find( "true") != npos);
+		Sound_MuteMusic( l_musicMuted);
+		if (l_musicMuted)
+		{
+			OverlayElement_GetByName( "Chat/Options/MusicOnOff")->SetMaterial( "Chat/Off");
+		}
+		else
+		{
+			OverlayElement_GetByName( "Chat/Options/MusicOnOff")->SetMaterial( "Chat/On");
+		}
+	}
+	elseif (rcl_line->find( "soundVolume") != npos)
+	{
+		rcl_index = rcl_line->find( "=");
+		rcl_strValue = substr( rcl_line, rcl_index + 1, npos);
+		l_soundVol = ator( rcl_strValue);
+		l_ticSound->SetLeft( l_soundVol * l_relativeRegletteWidth);
+		l_ticSound->LimitToParent();
+		Sound_SetSFXVolume( l_soundVol);
+	}
+	elseif (rcl_line->find( "musicVolume") != npos)
+	{
+		rcl_index = rcl_line->find( "=");
+		rcl_strValue = substr( rcl_line, rcl_index + 1, npos);
+		l_musicVol = ator( rcl_strValue);
+		l_ticMusic->SetLeft( l_musicVol * l_relativeRegletteWidth);
+		l_ticMusic->LimitToParent();
+		Sound_SetMusicVolume( l_musicVol);
+	}
+}
+
+void ReadConfigFile()
+{
+	OpenForRead();
+	string rcf_line;
+	rcf_line = ReadLine();
+	while ( ! rcf_line->empty())
+	{
+		ReadConfigLine( rcf_line);
+		rcf_line = ReadLine();		
+	}
+	CloseForRead();
+}
+
+void WriteConfigFile()
+{
+	DestroyConfigFile();
+	if (g_xMouseModifier == 1.0)
+	{
+		WriteLine( "xInvert=true");
+	}
+	else
+	{
+		WriteLine( "xInvert=false");
+	}
+
+	if (g_yMouseModifier == -1.0)
+	{
+		WriteLine( "yInvert=true");
+	}
+	else
+	{
+		WriteLine( "yInvert=false");
+	}
+
+	if (l_soundMuted)
+	{
+		WriteLine( "soundMuted=true");
+	}
+	else
+	{
+		WriteLine( "soundMuted=false");
+	}
+
+	if (l_musicMuted)
+	{
+		WriteLine( "musicMuted=true");
+	}
+	else
+	{
+		WriteLine( "musicMuted=false");
+	}
+	WriteLine( "soundVolume=" + rtoa( l_soundVol));
+	WriteLine( "musicVolume=" + rtoa( l_musicVol));
+}
+
+void InitialiseChat()
+{
+//	Echo( "InitialiseChat - Begin");
+	BuildBulle( g_mainChar.Character.Name);
+	chat_fontHeight = 16.0;
+	chat_fontName = "ComicBold";
+	g_mainChar.Talking = false;
+	chat_messageField = OverlayElement_GetByName( "Chat/Field/Text");
+	chat_friendNameField = OverlayElement_GetByName( "Chat/NewFriend/NameField/Text");
+	chat_ignoredNameField = OverlayElement_GetByName( "Chat/NewIgnored/NameField/Text");
+	Overlay_Hide( "Chat/EmotesMenu");
+	chat_showEmotes = false;
+	chat_showFriendsList = false;
+	rs_showRoomsList = false;
+	chat_showMenu = false;
+	chat_lineHeight = 20.0;
+	chat_clicked = false;
+	mtNormal = 0;
+	mtWhisp = 1;
+	mtEmote = 2;
+	mtError = 3;
+	Overlay_Hide( "Chat/MessageBox");
+	Overlay_Hide( "Chat/FriendsIgnoredList");
+	Overlay_Hide( "Chat/NewFriend");
+	Overlay_Hide( "Chat/NewIgnored");
+	Overlay_Hide( "Chat/Menu");
+	Overlay_Hide( "Chat/Options");
+	Overlay_Hide( "Chat/Commands");
+	OverlayElement_GetByName( "Chat/IgnoredPanel")->SetVisible( false);
+	chat_friendsList->Clear();
+	chat_ignoredList->Clear();
+	chat_normalMessageColour = SetColourRGBA( 0.0, 0.0, 0.0, 1.0);
+	chat_whispMessageColour = SetColourRGBA( 1.0, 0.0, 1.0, 1.0);
+	chat_errorMessageColour = SetColourRGBA( 1.0, 0.0, 0.0, 1.0);
+	chat_emoteMessageColour = SetColourRGBA( 0.0, 0.0, 1.0, 1.0);
+	chat_maxNameLetters = 32;
+	chat_maxMessageLetters = 100;
+
+	l_soundMuted = false;
+	l_musicMuted = false;
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Chat/Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Chat/Options/TicSound");
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Chat/Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+
+	ReadConfigFile();
+	chat_lastDeletedMessage = 0;
+	chat_maxDisplayedMessages = 6;
+
+	chat_messagesScrollbar.Elevator = OverlayElement_GetByName( "Chat/Messages/Scrollbar/Elevator");
+	chat_messagesScrollbar.ElevatorContainer = OverlayElement_GetByName( "Chat/Messages/Scrollbar/ElevatorContainer");
+	chat_messagesScrollbar.Panel = OverlayElement_GetByName( "Chat/Message/Container");
+	chat_messagesScrollbar.DisplayedPanel = OverlayElement_GetByName( "Chat/Messages/Container");
+	chat_messagesScrollbar.BaseName = "Chat/Messages/";
+	chat_messagesScrollbar.Count = 0;
+
+	chat_friendsScrollbar.Elevator = OverlayElement_GetByName( "Chat/FriendsPanel/Scrollbar/Elevator");
+	chat_friendsScrollbar.ElevatorContainer = OverlayElement_GetByName( "Chat/FriendsPanel/Scrollbar/ElevatorContainer");
+	chat_friendsScrollbar.Panel = OverlayElement_GetByName( "Chat/FriendsPanel/List");
+	chat_friendsScrollbar.DisplayedPanel = OverlayElement_GetByName( "Chat/FriendsPanel/List/Container");
+	chat_friendsScrollbar.BaseName = "Chat/FriendsPanel/List/";
+	chat_friendsScrollbar.Count = 0;
+
+	chat_ignoredScrollbar.Elevator = OverlayElement_GetByName( "Chat/IgnoredPanel/Scrollbar/Elevator");
+	chat_ignoredScrollbar.ElevatorContainer = OverlayElement_GetByName( "Chat/IgnoredPanel/Scrollbar/ElevatorContainer");
+	chat_ignoredScrollbar.Panel = OverlayElement_GetByName( "Chat/IgnoredPanel/List");
+	chat_ignoredScrollbar.DisplayedPanel = OverlayElement_GetByName( "Chat/IgnoredPanel/List/Container");
+	chat_ignoredScrollbar.BaseName = "Chat/IgnoredPanel/List/";
+	chat_ignoredScrollbar.Count = 0;
+//	Echo( "InitialiseChat - End");
+}
+
+InitialiseChat();

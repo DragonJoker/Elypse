@@ -1,0 +1,32 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Tombeau Rider
+{
+	data_file Game.zip
+	data_file Interface.zip
+	scene_file Interface.emscene
+	scene_file Game.emscene
+	load_script_file Scores.emscript
+	load_script_file Network.emscript
+	load_script_file Game.emscript
+	load_script_file Interface.emscript
+}
+
+scene Perso
+{
+	muse_file Perso.muse
+	data_file data-perso.zip
+}
+
+<code>
+string c_sceneName = "Tombeau Rider";
+</code>
+
+scene kazu
+{
+	muse_file kazusplash.muse
+	data_file kazu.zip
+	scene_file kazu.emscene
+	load_script_file kazu.emscript
+}
+start_scene kazu

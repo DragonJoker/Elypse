@@ -1,0 +1,700 @@
+object currentEntity;
+real current_pitch;
+real previous_pitch;
+real current_zoom;
+real previous_zoom;
+real l_left;
+
+
+bool NotBloked;
+NotBloked = true;
+
+bool backBas;
+backBas = false;
+
+bool backGauche;
+backGauche = false;
+
+bool IsMenuBasSort;
+IsMenuBasSort = false;
+
+bool IsMenuGaucheSort;
+IsMenuGaucheSort = false;
+
+current_pitch = 0.0;
+previous_pitch = 0.0;
+current_zoom = 300.0;
+previous_zoom = 300.0;
+
+vector3 l_listPosition;
+vector3 l_listPosition2;
+
+camera RootCamera;
+
+RootCamera = Camera_GetByName("RootCamera");
+
+// touche A
+BindKey(65,BINDKEY_DOWN)
+{
+	Timer_Kill("MenuCustomisationBas");
+	Echo("OverlayElement_GetByName("MenuCustomisationBas")->SetPosX" + rtoa(OverlayElement_GetByName("MenuCustomisationBas")->GetTop()));
+};
+
+// touche Q
+BindKey(81,BINDKEY_DOWN)
+{
+
+		Echo("GetPosY  " + rtoa(OverlayElement_GetByName("MenuCustomisationBas")->GetTop()));
+		OverlayElement_GetByName("MenuCustomisationBas")->SetTop((-1.0));
+};
+
+void MenuBasRentre()
+{
+	timer("MenuCustomisation_out",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		OverlayElement_GetByName("MenuCustomisationBas")->SetTop((-0.50)*CURRENTTIMER_TIME_LEFT - 0.05 );
+	};
+	timer("MenuCustomisation_out_control",TIMERTYPE_ONCE,1.0)
+	{
+		OverlayElement_GetByName("fleche_menu_botte_bas")->SetMaterial("Menu/fleche_menu_botte_bas");
+		OverlayElement_GetByName("MenuCustomisationBas")->SetTop(-0.05);
+		NotBloked = true;
+	};	
+};
+
+void MenuBasSort()
+{
+		timer("MenuCustomisation_in",TIMERTYPE_CONTINUOUS,1.0)
+		{
+			OverlayElement_GetByName("MenuCustomisationBas")->SetTop((0.50)*CURRENTTIMER_TIME_LEFT -0.55 );
+			
+		};
+		timer("MenuCustomisation_in_control",TIMERTYPE_ONCE,1.0)
+		{
+			OverlayElement_GetByName("fleche_menu_botte_bas")->SetMaterial("Menu/fleche_menu_botte_haut");
+			OverlayElement_GetByName("MenuCustomisationBas")->SetTop(-0.55);
+			NotBloked = true;
+		};	
+};		
+
+void MenuGaucheRentre()
+{
+	timer("MenuCustomisation_out",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		OverlayElement_GetByName("MenuCustomisationGauche")->SetLeft((0.7)*CURRENTTIMER_TIME_LEFT - 1.2 );
+
+	};
+	timer("MenuCustomisation_out_control",TIMERTYPE_ONCE,1.0)
+	{
+		OverlayElement_GetByName("fleche_menu_botte_Gauche")->SetMaterial("Menu/fleche_menu_botte_Gauche");
+		OverlayElement_GetByName("MenuCustomisationGauche")->SetLeft(-1.2);
+		NotBloked = true;
+	};
+};
+
+void MenuGaucheSort()
+{
+		timer("MenuCustomisation_in",TIMERTYPE_CONTINUOUS,1.0)
+		{
+			OverlayElement_GetByName("MenuCustomisationGauche")->SetLeft((-0.7)*CURRENTTIMER_TIME_LEFT - 0.5);
+		};
+		timer("MenuCustomisation_in_control",TIMERTYPE_ONCE,1.0)
+		{
+			OverlayElement_GetByName("fleche_menu_botte_Gauche")->SetMaterial("Menu/fleche_menu_botte_Droite");
+			OverlayElement_GetByName("MenuCustomisationGauche")->SetLeft(-0.5);
+			NotBloked = true;
+		};	
+};
+
+void Mouse_LButtonDown()
+{
+	Timer_Kill("mouse_LButtonDown");
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		RootCamera->GetParent()->Yaw(150.0*MOUSE_DIFFERENCE_X);
+		current_pitch = previous_pitch + (100.0*MOUSE_DIFFERENCE_Y);
+		if(current_pitch>(0.0))
+		{
+			current_pitch = (0.0);
+		}
+		elseif(current_pitch<(-80.0))
+		{
+			current_pitch = (-80.0);
+		};
+		RootCamera->GetParent()->Pitch(current_pitch-previous_pitch);
+		previous_pitch = current_pitch;
+	};
+};
+
+void Mouse_LButtonUp()
+{
+	Timer_Kill("mouse_LButtonDown");
+};
+
+void Mouse_WheelUp()
+{
+	current_zoom = V3_GetLength((RootCamera->GetPosition()) * 0.90);
+	if(current_zoom < 120.0)
+	{
+		current_zoom = 120.0;
+	};
+	RootCamera->SetPosition((RootCamera->GetPosition()) * (current_zoom / V3_GetLength(RootCamera->GetPosition())));
+};
+
+void Mouse_WheelDown()
+{
+	current_zoom = V3_GetLength((RootCamera->GetPosition()) * 1.11);
+	if(current_zoom > 300.0)
+	{
+		current_zoom = 300.0;
+	};
+	RootCamera->SetPosition((RootCamera->GetPosition()) * (current_zoom / V3_GetLength(RootCamera->GetPosition())));
+};
+
+Overlay_SetAction("Botte1")
+{
+	Object_GetByName("bottes")->SetSubMaterial(0,"bottes/cuir");
+	Mirror_Update("TestMirror");
+	
+	
+	OverlayElement_GetByName("Botte1")->SetMaterial("Menu/bottes_01_select");
+	OverlayElement_GetByName("Botte2")->SetMaterial("Menu/bottes_02");
+	OverlayElement_GetByName("Botte3")->SetMaterial("Menu/bottes_03");
+	OverlayElement_GetByName("Botte4")->SetMaterial("Menu/bottes_04");
+	OverlayElement_GetByName("Botte5")->SetMaterial("Menu/bottes_05");
+	
+	OverlayElement_GetByName("Botte1")->SetMouseOverMaterial("Menu/bottes_01_select");
+	OverlayElement_GetByName("Botte2")->SetMouseOverMaterial("Menu/bottes_02_negatif");
+	OverlayElement_GetByName("Botte3")->SetMouseOverMaterial("Menu/bottes_03_negatif");
+	OverlayElement_GetByName("Botte4")->SetMouseOverMaterial("Menu/bottes_04_negatif");
+	OverlayElement_GetByName("Botte5")->SetMouseOverMaterial("Menu/bottes_05_negatif");
+	
+};
+Overlay_SetAction("Botte2")
+{
+	Object_GetByName("bottes")->SetSubMaterial(0,"bottes/cuir_02");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("Botte1")->SetMaterial("Menu/bottes_01");
+	OverlayElement_GetByName("Botte2")->SetMaterial("Menu/bottes_02_select");
+	OverlayElement_GetByName("Botte3")->SetMaterial("Menu/bottes_03");
+	OverlayElement_GetByName("Botte4")->SetMaterial("Menu/bottes_04");
+	OverlayElement_GetByName("Botte5")->SetMaterial("Menu/bottes_05");
+	
+	
+	OverlayElement_GetByName("Botte1")->SetMouseOverMaterial("Menu/bottes_01_negatif");
+	OverlayElement_GetByName("Botte2")->SetMouseOverMaterial("Menu/bottes_02_select");
+	OverlayElement_GetByName("Botte3")->SetMouseOverMaterial("Menu/bottes_03_negatif");
+	OverlayElement_GetByName("Botte4")->SetMouseOverMaterial("Menu/bottes_04_negatif");
+	OverlayElement_GetByName("Botte5")->SetMouseOverMaterial("Menu/bottes_05_negatif");
+};
+Overlay_SetAction("Botte3")
+{
+	Object_GetByName("bottes")->SetSubMaterial(0,"bottes/cuir_03");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("Botte1")->SetMaterial("Menu/bottes_01");
+	OverlayElement_GetByName("Botte2")->SetMaterial("Menu/bottes_02");
+	OverlayElement_GetByName("Botte3")->SetMaterial("Menu/bottes_03_select");
+	OverlayElement_GetByName("Botte4")->SetMaterial("Menu/bottes_04");
+	OverlayElement_GetByName("Botte5")->SetMaterial("Menu/bottes_05");
+	
+	OverlayElement_GetByName("Botte1")->SetMouseOverMaterial("Menu/bottes_01_negatif");
+	OverlayElement_GetByName("Botte2")->SetMouseOverMaterial("Menu/bottes_02_negatif");
+	OverlayElement_GetByName("Botte3")->SetMouseOverMaterial("Menu/bottes_03_select");
+	OverlayElement_GetByName("Botte4")->SetMouseOverMaterial("Menu/bottes_04_negatif");
+	OverlayElement_GetByName("Botte5")->SetMouseOverMaterial("Menu/bottes_05_negatif");
+};
+Overlay_SetAction("Botte4")
+{
+	Object_GetByName("bottes")->SetSubMaterial(0,"bottes/cuir_04");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("Botte1")->SetMaterial("Menu/bottes_01");
+	OverlayElement_GetByName("Botte2")->SetMaterial("Menu/bottes_02");
+	OverlayElement_GetByName("Botte3")->SetMaterial("Menu/bottes_03");
+	OverlayElement_GetByName("Botte4")->SetMaterial("Menu/bottes_04_select");
+	OverlayElement_GetByName("Botte5")->SetMaterial("Menu/bottes_05");
+	
+	OverlayElement_GetByName("Botte1")->SetMouseOverMaterial("Menu/bottes_01_negatif");
+	OverlayElement_GetByName("Botte2")->SetMouseOverMaterial("Menu/bottes_02_negatif");
+	OverlayElement_GetByName("Botte3")->SetMouseOverMaterial("Menu/bottes_03_negatif");
+	OverlayElement_GetByName("Botte4")->SetMouseOverMaterial("Menu/bottes_04_select");
+	OverlayElement_GetByName("Botte5")->SetMouseOverMaterial("Menu/bottes_05_negatif");
+};
+Overlay_SetAction("Botte5")
+{
+	Object_GetByName("bottes")->SetSubMaterial(0,"bottes/cuir_05");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("Botte1")->SetMaterial("Menu/bottes_01");
+	OverlayElement_GetByName("Botte2")->SetMaterial("Menu/bottes_02");
+	OverlayElement_GetByName("Botte3")->SetMaterial("Menu/bottes_03");
+	OverlayElement_GetByName("Botte4")->SetMaterial("Menu/bottes_04");
+	OverlayElement_GetByName("Botte5")->SetMaterial("Menu/bottes_05_select");
+	
+	OverlayElement_GetByName("Botte1")->SetMouseOverMaterial("Menu/bottes_01_negatif");
+	OverlayElement_GetByName("Botte2")->SetMouseOverMaterial("Menu/bottes_02_negatif");
+	OverlayElement_GetByName("Botte3")->SetMouseOverMaterial("Menu/bottes_03_negatif");
+	OverlayElement_GetByName("Botte4")->SetMouseOverMaterial("Menu/bottes_04_negatif");
+	OverlayElement_GetByName("Botte5")->SetMouseOverMaterial("Menu/bottes_05_select");
+};
+
+Overlay_SetAction("Ceinture1")
+{
+	Object_GetByName("bottes")->SetSubMaterial(1,"bottes/ceinture");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("Ceinture1")->SetMaterial("Menu/ceinture_01_select");
+	OverlayElement_GetByName("Ceinture2")->SetMaterial("Menu/ceinture_02");
+	OverlayElement_GetByName("Ceinture3")->SetMaterial("Menu/ceinture_03");
+	OverlayElement_GetByName("Ceinture4")->SetMaterial("Menu/ceinture_04");
+	OverlayElement_GetByName("Ceinture5")->SetMaterial("Menu/ceinture_05");
+	
+	OverlayElement_GetByName("Ceinture1")->SetMouseOverMaterial("Menu/ceinture_01_select");
+	OverlayElement_GetByName("Ceinture2")->SetMouseOverMaterial("Menu/ceinture_02_negatif");
+	OverlayElement_GetByName("Ceinture3")->SetMouseOverMaterial("Menu/ceinture_03_negatif");
+	OverlayElement_GetByName("Ceinture4")->SetMouseOverMaterial("Menu/ceinture_04_negatif");
+	OverlayElement_GetByName("Ceinture5")->SetMouseOverMaterial("Menu/ceinture_05_negatif");
+};
+Overlay_SetAction("Ceinture2")
+{
+	Object_GetByName("bottes")->SetSubMaterial(1,"bottes/ceinture_02");
+	Mirror_Update("TestMirror");
+		
+	OverlayElement_GetByName("Ceinture1")->SetMaterial("Menu/ceinture_01");
+	OverlayElement_GetByName("Ceinture2")->SetMaterial("Menu/ceinture_02_select");
+	OverlayElement_GetByName("Ceinture3")->SetMaterial("Menu/ceinture_03");
+	OverlayElement_GetByName("Ceinture4")->SetMaterial("Menu/ceinture_04");
+	OverlayElement_GetByName("Ceinture5")->SetMaterial("Menu/ceinture_05");
+	
+	OverlayElement_GetByName("Ceinture1")->SetMouseOverMaterial("Menu/ceinture_01_negatif");
+	OverlayElement_GetByName("Ceinture2")->SetMouseOverMaterial("Menu/ceinture_02_select");
+	OverlayElement_GetByName("Ceinture3")->SetMouseOverMaterial("Menu/ceinture_03_negatif");
+	OverlayElement_GetByName("Ceinture4")->SetMouseOverMaterial("Menu/ceinture_04_negatif");
+	OverlayElement_GetByName("Ceinture5")->SetMouseOverMaterial("Menu/ceinture_05_negatif");
+};
+Overlay_SetAction("Ceinture3")
+{
+	Object_GetByName("bottes")->SetSubMaterial(1,"bottes/ceinture_03");
+	Mirror_Update("TestMirror");
+		
+	OverlayElement_GetByName("Ceinture1")->SetMaterial("Menu/ceinture_01");
+	OverlayElement_GetByName("Ceinture2")->SetMaterial("Menu/ceinture_02");
+	OverlayElement_GetByName("Ceinture3")->SetMaterial("Menu/ceinture_03_select");
+	OverlayElement_GetByName("Ceinture4")->SetMaterial("Menu/ceinture_04");
+	OverlayElement_GetByName("Ceinture5")->SetMaterial("Menu/ceinture_05");
+	
+	OverlayElement_GetByName("Ceinture1")->SetMouseOverMaterial("Menu/ceinture_01_negatif");
+	OverlayElement_GetByName("Ceinture2")->SetMouseOverMaterial("Menu/ceinture_02_negatif");
+	OverlayElement_GetByName("Ceinture3")->SetMouseOverMaterial("Menu/ceinture_03_select");
+	OverlayElement_GetByName("Ceinture4")->SetMouseOverMaterial("Menu/ceinture_04_negatif");
+	OverlayElement_GetByName("Ceinture5")->SetMouseOverMaterial("Menu/ceinture_05_negatif");
+};
+Overlay_SetAction("Ceinture4")
+{
+	Object_GetByName("bottes")->SetSubMaterial(1,"bottes/ceinture_04");
+	Mirror_Update("TestMirror");
+		
+	OverlayElement_GetByName("Ceinture1")->SetMaterial("Menu/ceinture_01");
+	OverlayElement_GetByName("Ceinture2")->SetMaterial("Menu/ceinture_02");
+	OverlayElement_GetByName("Ceinture3")->SetMaterial("Menu/ceinture_03");
+	OverlayElement_GetByName("Ceinture4")->SetMaterial("Menu/ceinture_04_select");
+	OverlayElement_GetByName("Ceinture5")->SetMaterial("Menu/ceinture_05");
+	
+	OverlayElement_GetByName("Ceinture1")->SetMouseOverMaterial("Menu/ceinture_01_negatif");
+	OverlayElement_GetByName("Ceinture2")->SetMouseOverMaterial("Menu/ceinture_02_negatif");
+	OverlayElement_GetByName("Ceinture3")->SetMouseOverMaterial("Menu/ceinture_03_negatif");
+	OverlayElement_GetByName("Ceinture4")->SetMouseOverMaterial("Menu/ceinture_04_select");
+	OverlayElement_GetByName("Ceinture5")->SetMouseOverMaterial("Menu/ceinture_05_negatif");
+};
+Overlay_SetAction("Ceinture5")
+{
+	Object_GetByName("bottes")->SetSubMaterial(1,"bottes/ceinture_05");
+	Mirror_Update("TestMirror");
+		
+	OverlayElement_GetByName("Ceinture1")->SetMaterial("Menu/ceinture_01");
+	OverlayElement_GetByName("Ceinture2")->SetMaterial("Menu/ceinture_02");
+	OverlayElement_GetByName("Ceinture3")->SetMaterial("Menu/ceinture_03");
+	OverlayElement_GetByName("Ceinture4")->SetMaterial("Menu/ceinture_04");
+	OverlayElement_GetByName("Ceinture5")->SetMaterial("Menu/ceinture_05_select");
+	
+	OverlayElement_GetByName("Ceinture1")->SetMouseOverMaterial("Menu/ceinture_01_negatif");
+	OverlayElement_GetByName("Ceinture2")->SetMouseOverMaterial("Menu/ceinture_02_negatif");
+	OverlayElement_GetByName("Ceinture3")->SetMouseOverMaterial("Menu/ceinture_03_negatif");
+	OverlayElement_GetByName("Ceinture4")->SetMouseOverMaterial("Menu/ceinture_04_negatif");
+	OverlayElement_GetByName("Ceinture5")->SetMouseOverMaterial("Menu/ceinture_05_select");
+};
+
+Overlay_SetAction("BoucleMat1")
+{
+	Object_GetByName("boucle1")->SetMaterial("boucles");
+	Object_GetByName("boucle2")->SetMaterial("boucles");
+	Object_GetByName("boucle3")->SetMaterial("boucles");
+	Object_GetByName("boucle4")->SetMaterial("boucles");
+	Object_GetByName("boucle5")->SetMaterial("boucles");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMaterial("Menu/boucles_01_select");
+	OverlayElement_GetByName("BoucleMat2")->SetMaterial("Menu/boucles_02");
+	OverlayElement_GetByName("BoucleMat3")->SetMaterial("Menu/boucles_03");
+	OverlayElement_GetByName("BoucleMat4")->SetMaterial("Menu/boucles_04");
+	OverlayElement_GetByName("BoucleMat5")->SetMaterial("Menu/boucles_05");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMouseOverMaterial("Menu/boucles_01_select");
+	OverlayElement_GetByName("BoucleMat2")->SetMouseOverMaterial("Menu/boucles_02_negatif");
+	OverlayElement_GetByName("BoucleMat3")->SetMouseOverMaterial("Menu/boucles_03_negatif");
+	OverlayElement_GetByName("BoucleMat4")->SetMouseOverMaterial("Menu/boucles_04_negatif");
+	OverlayElement_GetByName("BoucleMat5")->SetMouseOverMaterial("Menu/boucles_05_negatif");
+	
+	Echo("BoucleMat1");
+};
+Overlay_SetAction("BoucleMat2")
+{
+	Object_GetByName("boucle1")->SetMaterial("boucles_02");
+	Object_GetByName("boucle2")->SetMaterial("boucles_02");
+	Object_GetByName("boucle3")->SetMaterial("boucles_02");
+	Object_GetByName("boucle4")->SetMaterial("boucles_02");
+	Object_GetByName("boucle5")->SetMaterial("boucles_02");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMaterial("Menu/boucles_01");
+	OverlayElement_GetByName("BoucleMat2")->SetMaterial("Menu/boucles_02_select");
+	OverlayElement_GetByName("BoucleMat3")->SetMaterial("Menu/boucles_03");
+	OverlayElement_GetByName("BoucleMat4")->SetMaterial("Menu/boucles_04");
+	OverlayElement_GetByName("BoucleMat5")->SetMaterial("Menu/boucles_05");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMouseOverMaterial("Menu/boucles_01_negatif");
+	OverlayElement_GetByName("BoucleMat2")->SetMouseOverMaterial("Menu/boucles_02_select");
+	OverlayElement_GetByName("BoucleMat3")->SetMouseOverMaterial("Menu/boucles_03_negatif");
+	OverlayElement_GetByName("BoucleMat4")->SetMouseOverMaterial("Menu/boucles_04_negatif");
+	OverlayElement_GetByName("BoucleMat5")->SetMouseOverMaterial("Menu/boucles_05_negatif");
+	
+	Echo("BoucleMat2");
+};
+Overlay_SetAction("BoucleMat3")
+{
+	Object_GetByName("boucle1")->SetMaterial("boucles_03");
+	Object_GetByName("boucle2")->SetMaterial("boucles_03");
+	Object_GetByName("boucle3")->SetMaterial("boucles_03");
+	Object_GetByName("boucle4")->SetMaterial("boucles_03");
+	Object_GetByName("boucle5")->SetMaterial("boucles_03");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMaterial("Menu/boucles_01");
+	OverlayElement_GetByName("BoucleMat2")->SetMaterial("Menu/boucles_02");
+	OverlayElement_GetByName("BoucleMat3")->SetMaterial("Menu/boucles_03_select");
+	OverlayElement_GetByName("BoucleMat4")->SetMaterial("Menu/boucles_04");
+	OverlayElement_GetByName("BoucleMat5")->SetMaterial("Menu/boucles_05");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMouseOverMaterial("Menu/boucles_01_negatif");
+	OverlayElement_GetByName("BoucleMat2")->SetMouseOverMaterial("Menu/boucles_02_negatif");
+	OverlayElement_GetByName("BoucleMat3")->SetMouseOverMaterial("Menu/boucles_03_select");
+	OverlayElement_GetByName("BoucleMat4")->SetMouseOverMaterial("Menu/boucles_04_negatif");
+	OverlayElement_GetByName("BoucleMat5")->SetMouseOverMaterial("Menu/boucles_05_negatif");
+	
+	Echo("BoucleMat3");
+};
+Overlay_SetAction("BoucleMat4")
+{
+	Object_GetByName("boucle1")->SetMaterial("boucles_04");
+	Object_GetByName("boucle2")->SetMaterial("boucles_04");
+	Object_GetByName("boucle3")->SetMaterial("boucles_04");
+	Object_GetByName("boucle4")->SetMaterial("boucles_04");
+	Object_GetByName("boucle5")->SetMaterial("boucles_04");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMaterial("Menu/boucles_01");
+	OverlayElement_GetByName("BoucleMat2")->SetMaterial("Menu/boucles_02");
+	OverlayElement_GetByName("BoucleMat3")->SetMaterial("Menu/boucles_03");
+	OverlayElement_GetByName("BoucleMat4")->SetMaterial("Menu/boucles_04_select");
+	OverlayElement_GetByName("BoucleMat5")->SetMaterial("Menu/boucles_05");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMouseOverMaterial("Menu/boucles_01_negatif");
+	OverlayElement_GetByName("BoucleMat2")->SetMouseOverMaterial("Menu/boucles_02_negatif");
+	OverlayElement_GetByName("BoucleMat3")->SetMouseOverMaterial("Menu/boucles_03_negatif");
+	OverlayElement_GetByName("BoucleMat4")->SetMouseOverMaterial("Menu/boucles_04_select");
+	OverlayElement_GetByName("BoucleMat5")->SetMouseOverMaterial("Menu/boucles_05_negatif");
+	
+	Echo("BoucleMat4");
+};
+Overlay_SetAction("BoucleMat5")
+{
+	Object_GetByName("boucle1")->SetMaterial("boucles_05");
+	Object_GetByName("boucle2")->SetMaterial("boucles_05");
+	Object_GetByName("boucle3")->SetMaterial("boucles_05");
+	Object_GetByName("boucle4")->SetMaterial("boucles_05");
+	Object_GetByName("boucle5")->SetMaterial("boucles_05");
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMaterial("Menu/boucles_01");
+	OverlayElement_GetByName("BoucleMat2")->SetMaterial("Menu/boucles_02");
+	OverlayElement_GetByName("BoucleMat3")->SetMaterial("Menu/boucles_03");
+	OverlayElement_GetByName("BoucleMat4")->SetMaterial("Menu/boucles_04");
+	OverlayElement_GetByName("BoucleMat5")->SetMaterial("Menu/boucles_05_select");
+	
+	OverlayElement_GetByName("BoucleMat1")->SetMouseOverMaterial("Menu/boucles_01_negatif");
+	OverlayElement_GetByName("BoucleMat2")->SetMouseOverMaterial("Menu/boucles_02_negatif");
+	OverlayElement_GetByName("BoucleMat3")->SetMouseOverMaterial("Menu/boucles_03_negatif");
+	OverlayElement_GetByName("BoucleMat4")->SetMouseOverMaterial("Menu/boucles_04_negatif");
+	OverlayElement_GetByName("BoucleMat5")->SetMouseOverMaterial("Menu/boucles_05_select");
+	
+	Echo("BoucleMat5");
+};
+
+Overlay_SetAction("BoucleMod1")
+{
+	Object_GetByName("boucle1")->Show();
+	Object_GetByName("boucle2")->Hide();
+	Object_GetByName("boucle3")->Hide();
+	Object_GetByName("boucle4")->Hide();
+	Object_GetByName("boucle5")->Hide();
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMaterial("Menu/bouclesModele_01_select");
+	OverlayElement_GetByName("BoucleMod2")->SetMaterial("Menu/bouclesModele_02");
+	OverlayElement_GetByName("BoucleMod3")->SetMaterial("Menu/bouclesModele_03");
+	OverlayElement_GetByName("BoucleMod4")->SetMaterial("Menu/bouclesModele_04");
+	OverlayElement_GetByName("BoucleMod5")->SetMaterial("Menu/bouclesModele_05");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMouseOverMaterial("Menu/bouclesModele_01_select");
+	OverlayElement_GetByName("BoucleMod2")->SetMouseOverMaterial("Menu/bouclesModele_02_negatif");
+	OverlayElement_GetByName("BoucleMod3")->SetMouseOverMaterial("Menu/bouclesModele_03_negatif");
+	OverlayElement_GetByName("BoucleMod4")->SetMouseOverMaterial("Menu/bouclesModele_04_negatif");
+	OverlayElement_GetByName("BoucleMod5")->SetMouseOverMaterial("Menu/bouclesModele_05_negatif");
+};
+Overlay_SetAction("BoucleMod2")
+{
+	Object_GetByName("boucle1")->Hide();
+	Object_GetByName("boucle2")->Show();
+	Object_GetByName("boucle3")->Hide();
+	Object_GetByName("boucle4")->Hide();
+	Object_GetByName("boucle5")->Hide();
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMaterial("Menu/bouclesModele_01");
+	OverlayElement_GetByName("BoucleMod2")->SetMaterial("Menu/bouclesModele_02_select");
+	OverlayElement_GetByName("BoucleMod3")->SetMaterial("Menu/bouclesModele_03");
+	OverlayElement_GetByName("BoucleMod4")->SetMaterial("Menu/bouclesModele_04");
+	OverlayElement_GetByName("BoucleMod5")->SetMaterial("Menu/bouclesModele_05");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMouseOverMaterial("Menu/bouclesModele_01_negatif");
+	OverlayElement_GetByName("BoucleMod2")->SetMouseOverMaterial("Menu/bouclesModele_02_select");
+	OverlayElement_GetByName("BoucleMod3")->SetMouseOverMaterial("Menu/bouclesModele_03_negatif");
+	OverlayElement_GetByName("BoucleMod4")->SetMouseOverMaterial("Menu/bouclesModele_04_negatif");
+	OverlayElement_GetByName("BoucleMod5")->SetMouseOverMaterial("Menu/bouclesModele_05_negatif");
+};
+Overlay_SetAction("BoucleMod3")
+{
+	Object_GetByName("boucle1")->Hide();
+	Object_GetByName("boucle2")->Hide();
+	Object_GetByName("boucle3")->Show();
+	Object_GetByName("boucle4")->Hide();
+	Object_GetByName("boucle5")->Hide();
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMaterial("Menu/bouclesModele_01");
+	OverlayElement_GetByName("BoucleMod2")->SetMaterial("Menu/bouclesModele_02");
+	OverlayElement_GetByName("BoucleMod3")->SetMaterial("Menu/bouclesModele_03_select");
+	OverlayElement_GetByName("BoucleMod4")->SetMaterial("Menu/bouclesModele_04");
+	OverlayElement_GetByName("BoucleMod5")->SetMaterial("Menu/bouclesModele_05");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMouseOverMaterial("Menu/bouclesModele_01_negatif");
+	OverlayElement_GetByName("BoucleMod2")->SetMouseOverMaterial("Menu/bouclesModele_02_negatif");
+	OverlayElement_GetByName("BoucleMod3")->SetMouseOverMaterial("Menu/bouclesModele_03_select");
+	OverlayElement_GetByName("BoucleMod4")->SetMouseOverMaterial("Menu/bouclesModele_04_negatif");
+	OverlayElement_GetByName("BoucleMod5")->SetMouseOverMaterial("Menu/bouclesModele_05_negatif");
+};
+Overlay_SetAction("BoucleMod4")
+{
+	Object_GetByName("boucle1")->Hide();
+	Object_GetByName("boucle2")->Hide();
+	Object_GetByName("boucle3")->Hide();
+	Object_GetByName("boucle4")->Show();
+	Object_GetByName("boucle5")->Hide();
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMaterial("Menu/bouclesModele_01");
+	OverlayElement_GetByName("BoucleMod2")->SetMaterial("Menu/bouclesModele_02");
+	OverlayElement_GetByName("BoucleMod3")->SetMaterial("Menu/bouclesModele_03");
+	OverlayElement_GetByName("BoucleMod4")->SetMaterial("Menu/bouclesModele_04_select");
+	OverlayElement_GetByName("BoucleMod5")->SetMaterial("Menu/bouclesModele_05");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMouseOverMaterial("Menu/bouclesModele_01_negatif");
+	OverlayElement_GetByName("BoucleMod2")->SetMouseOverMaterial("Menu/bouclesModele_02_negatif");
+	OverlayElement_GetByName("BoucleMod3")->SetMouseOverMaterial("Menu/bouclesModele_03_negatif");
+	OverlayElement_GetByName("BoucleMod4")->SetMouseOverMaterial("Menu/bouclesModele_04_select");
+	OverlayElement_GetByName("BoucleMod5")->SetMouseOverMaterial("Menu/bouclesModele_05_negatif");
+};
+Overlay_SetAction("BoucleMod5")
+{
+	Object_GetByName("boucle1")->Hide();
+	Object_GetByName("boucle2")->Hide();
+	Object_GetByName("boucle3")->Hide();
+	Object_GetByName("boucle4")->Hide();
+	Object_GetByName("boucle5")->Show();
+	Mirror_Update("TestMirror");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMaterial("Menu/bouclesModele_01");
+	OverlayElement_GetByName("BoucleMod2")->SetMaterial("Menu/bouclesModele_02");
+	OverlayElement_GetByName("BoucleMod3")->SetMaterial("Menu/bouclesModele_03");
+	OverlayElement_GetByName("BoucleMod4")->SetMaterial("Menu/bouclesModele_04");
+	OverlayElement_GetByName("BoucleMod5")->SetMaterial("Menu/bouclesModele_05_select");
+	
+	OverlayElement_GetByName("BoucleMod1")->SetMouseOverMaterial("Menu/bouclesModele_01_negatif");
+	OverlayElement_GetByName("BoucleMod2")->SetMouseOverMaterial("Menu/bouclesModele_02_negatif");
+	OverlayElement_GetByName("BoucleMod3")->SetMouseOverMaterial("Menu/bouclesModele_03_negatif");
+	OverlayElement_GetByName("BoucleMod4")->SetMouseOverMaterial("Menu/bouclesModele_04_negatif");
+	OverlayElement_GetByName("BoucleMod5")->SetMouseOverMaterial("Menu/bouclesModele_05_select");
+};
+
+Overlay_SetAction("Bouton1")
+{		
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		current_zoom = V3_GetLength((RootCamera->GetPosition()) * (1.0 + (CURRENTTIMER_TIME_LEFT)));
+		if(current_zoom > 300.0)
+		{
+			current_zoom = 300.0;
+		};
+		RootCamera->SetPosition((RootCamera->GetPosition()) * (current_zoom / V3_GetLength(RootCamera->GetPosition())));
+	};
+};
+Overlay_SetAction("Bouton2")
+{		
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		current_zoom = V3_GetLength((RootCamera->GetPosition()) * (1.0 - (CURRENTTIMER_TIME_LEFT)));
+		if(current_zoom < 120.0)
+		{
+			current_zoom = 120.0;
+		};
+		RootCamera->SetPosition((RootCamera->GetPosition()) * (current_zoom / V3_GetLength(RootCamera->GetPosition())));
+	};
+};
+Overlay_SetAction("Bouton3")
+{		
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		current_pitch = previous_pitch + (100.0*CURRENTTIMER_TIME_LEFT);
+		if(current_pitch > (0.0))
+		{
+			current_pitch = (0.0);
+		};
+		RootCamera->GetParent()->Pitch(current_pitch-previous_pitch);
+		previous_pitch = current_pitch;
+	};
+};
+Overlay_SetAction("Bouton4")
+{		
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		current_pitch = previous_pitch + ((-100.0)*CURRENTTIMER_TIME_LEFT);
+		if(current_pitch < (-80.0))
+		{
+			current_pitch = (-80.0);
+		};
+		RootCamera->GetParent()->Pitch(current_pitch-previous_pitch);
+		previous_pitch = current_pitch;
+	};
+};
+Overlay_SetAction("Bouton5")
+{		
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		RootCamera->GetParent()->Yaw(150.0*CURRENTTIMER_TIME_LEFT);
+	};
+};
+Overlay_SetAction("Bouton6")
+{		
+	timer("mouse_LButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		RootCamera->GetParent()->Yaw(-150.0*CURRENTTIMER_TIME_LEFT);
+		
+	};
+	
+};
+
+Overlay_SetAction("fleche_menu_botte_bas")
+{		
+	if(NotBloked)
+	{
+		NotBloked = false;
+		if(backBas)
+		{
+			backBas = false;
+			IsMenuBasSort = false;
+			MenuBasRentre();
+		}
+		else
+		{
+			backBas = true;
+			IsMenuBasSort = true;
+			if(IsMenuGaucheSort)
+			{
+				timer("Menu_attente_sort",TIMERTYPE_ONCE,0.9)
+				{
+					MenuBasSort();
+				};
+			}
+			else
+			{
+				MenuBasSort();
+			};
+			timer("Menu_attente_sort",TIMERTYPE_ONCE,0.9)
+			{
+				MenuBasSort();
+			};
+			if(IsMenuGaucheSort)
+			{
+				MenuGaucheRentre();
+				backGauche = false;
+				IsMenuGaucheSort = false;
+			};
+		};
+	};
+	
+};
+
+Overlay_SetAction("fleche_menu_botte_Gauche")
+{	
+	if(NotBloked)
+	{
+		NotBloked = false;
+		if(backGauche)
+		{
+			backGauche = false;
+			IsMenuGaucheSort = false;
+			MenuGaucheRentre();
+		}
+		else
+		{
+			backGauche = true;
+			IsMenuGaucheSort = true;
+			if(IsMenuBasSort)
+			{
+				timer("Menu_attente_sort",TIMERTYPE_ONCE,0.9)
+				{
+					MenuGaucheSort();
+				};
+			}
+			else
+			{
+				MenuGaucheSort();
+			};
+			if(IsMenuBasSort)
+			{
+				MenuBasRentre();
+				backBas = false;
+				IsMenuBasSort = false;
+			};
+		};
+	};
+};
+
+Object_GetByName("boucle1")->Show();
+Object_GetByName("boucle2")->Hide();
+Object_GetByName("boucle3")->Hide();
+Object_GetByName("boucle4")->Hide();
+Object_GetByName("boucle5")->Hide();
+Mirror_Update("TestMirror");

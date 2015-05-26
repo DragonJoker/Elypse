@@ -1,0 +1,1743 @@
+object currentEntity;
+object currentEntity2;
+currentEntity2 = NULL;
+
+string Placement_Piece;
+Placement_Piece = " P P P P PP P P P P  P P P P PP P P P P                      p p p p pp p p p p  p p p p pp p p p p  p p p p p";
+
+Placement_Piece = "           P P P  P p   d    p  PPpP   P                                                                      ";
+Placement_Piece = " P P P P PP P P P P  P P P P PP P P P P                      p p p p pp p p p p  p p p p pp p p p p  p p p p p";
+
+
+
+string Attaque_noir;
+Attaque_noir = "--------------------------------------------------------------------------------------------------------------";
+
+string Attaque_blanc;
+Attaque_blanc = "--------------------------------------------------------------------------------------------------------------";
+
+string zone_mouvement;
+zone_mouvement = "--------------------------------------------------------------------------------------------------------------";
+
+string case_temp;
+
+string case_temp_Deplacement;
+
+string case_temp_DeplacementAnnule;
+
+string case_temp_Deplacement_continue;
+
+string case_a_traiter;
+
+real Position_Depart_X;
+Position_Depart_X = 0.0;
+
+real Position_Depart_Y;
+Position_Depart_Y = 0.0;
+
+real Position_Arrive_X;
+Position_Arrive_X = 0.0;
+
+real Position_Arrive_Y;
+Position_Arrive_Y = 0.0;
+
+real Taille_Casse;
+Taille_Casse = 5.0;
+
+string Entity_object;
+
+string Entity_Name;
+Entity_Name = "pion_noir_1";
+
+string Entity_Name_continue;
+Entity_Name_continue = "-";
+
+string Entity_Name_old;
+
+string Entity_Name_case;
+
+string Entity_Material;
+
+string Piece_Selectionner;
+
+string piece_manger;
+
+string Joueur_courant;
+Joueur_courant = "BLANC";
+
+bool SelectionPiece;
+SelectionPiece = false;
+
+bool RoiAttaque;
+RoiAttaque = false;
+
+bool Roquetour1blanc;
+Roquetour1blanc = true;
+
+bool Roquetour2blanc;
+Roquetour2blanc = true;
+
+bool Roquetour1noir;
+Roquetour1noir = true;
+
+bool Roquetour2noir;
+Roquetour2noir = true;
+
+bool blanc_turn;
+blanc_turn = true;
+
+bool joueur_continue;
+joueur_continue = false;
+
+bool noir_continue;
+noir_continue = true;
+
+bool RoiBlancMat;
+RoiBlancMat = false;
+
+bool RoiNoirMat;
+RoiNoirMat = false;
+
+bool RoiBlancPat;
+RoiBlancPat = false;
+
+bool RoiNoirPat;
+RoiNoirPat = false;
+
+int i;
+i = 0;
+
+int x;
+x = 0;
+
+int Deplx;
+Deplx = 0;
+
+int Deply;
+Deply = 0;
+
+int DeplxAnnule;
+DeplxAnnule = 0;
+
+int DeplyAnnule;
+DeplyAnnule = 0;
+
+int Deplx_continue;
+DeplyAnnule = 0;
+
+int Deply_continue;
+DeplxAnnule = 0;
+
+int ArriveX;
+ArriveX = 0;
+
+int ArriveY;
+ArriveY = 0;
+
+int ArriveXAnnule;
+ArriveXAnnule = 0;
+
+int ArriveYAnnule;
+ArriveYAnnule = 0;
+
+int PositionRoiBlanc;
+PositionRoiBlanc = 0;
+
+int PositionRoiNoir;
+PositionRoiNoir = 0;
+
+int position_case_X;
+position_case_X = 0;
+
+int y;
+y = 0;
+
+int j;
+j = 0;
+
+int k;
+k = 0;
+
+int signeX;
+signeX = 0;
+
+int signeY;
+signeY = 0;
+
+int MangePiecenoir;
+MangePiecenoir = 0;
+
+vector3 PlacementPieceNoirTuer;
+PlacementPieceNoirTuer = SceneNode_GetByName("case_A1")->GetPosition() + SetVector3((-10.0), 0.0,0.0);
+
+int MangePieceBlanc;
+MangePieceBlanc = 0;
+
+vector3 PlacementPieceBlancTuer;
+PlacementPieceBlancTuer = SceneNode_GetByName("case_E10")->GetPosition() + SetVector3(10.0, 0.0,0.0);
+
+real current_camera_yaw;
+
+camera RootCamera;
+RootCamera = Camera_GetByName("RootCamera");
+
+//force le placement direct au jeux
+RootCamera->GetParent()->Reset();
+RootCamera->SetPosition(SetVector3(0.0,0.0,100.0));
+RootCamera->GetParent()->Pitch(-75.0);
+// control sourie
+real wanted_zoom;
+real current_zoom;	
+real current_pitch;
+real previous_pitch;
+real previous_zoom;	
+real yaw_speed;
+real pitch_speed;
+wanted_zoom = 80.0;
+current_pitch = 0.0;
+previous_pitch = -20.0;
+current_zoom = 200.0;
+previous_zoom = 3000.0;	
+// control sourie
+
+// touche R
+BindKey(82,BINDKEY_DOWN)
+{
+	Echo("R");
+	RootCamera->GetParent()->Yaw(180.0);
+};
+void Reset_color()
+{
+
+	Object_GetByName("Pion_blanc_1")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_2")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_3")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_4")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_5")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_6")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_7")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_8")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_9")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_10")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_11")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_12")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_13")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_14")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_15")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_16")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_17")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_18")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_19")->SetMaterial("blanc");
+	Object_GetByName("Pion_blanc_20")->SetMaterial("blanc");
+	
+
+	Object_GetByName("pion_noir_1")->SetMaterial("noir");
+	Object_GetByName("pion_noir_2")->SetMaterial("noir");
+	Object_GetByName("pion_noir_3")->SetMaterial("noir");
+	Object_GetByName("pion_noir_4")->SetMaterial("noir");
+	Object_GetByName("pion_noir_5")->SetMaterial("noir");
+	Object_GetByName("pion_noir_6")->SetMaterial("noir");
+	Object_GetByName("pion_noir_7")->SetMaterial("noir");
+	Object_GetByName("pion_noir_8")->SetMaterial("noir");
+	Object_GetByName("pion_noir_9")->SetMaterial("noir");
+	Object_GetByName("pion_noir_10")->SetMaterial("noir");
+	Object_GetByName("pion_noir_11")->SetMaterial("noir");
+	Object_GetByName("pion_noir_12")->SetMaterial("noir");
+	Object_GetByName("pion_noir_13")->SetMaterial("noir");
+	Object_GetByName("pion_noir_14")->SetMaterial("noir");
+	Object_GetByName("pion_noir_15")->SetMaterial("noir");
+	Object_GetByName("pion_noir_16")->SetMaterial("noir");
+	Object_GetByName("pion_noir_17")->SetMaterial("noir");
+	Object_GetByName("pion_noir_18")->SetMaterial("noir");
+	Object_GetByName("pion_noir_19")->SetMaterial("noir");
+	Object_GetByName("pion_noir_20")->SetMaterial("noir");
+	
+};
+
+
+void fctMangePieceNoir()
+{
+
+	if(substr((ClosestObject(SetVector3(Position_Arrive_X + itor(signeX * 5),0.1, Position_Arrive_Y + itor(signeY * 5))))->GetName(),0,4) != "case")
+	{
+	
+		Placement_Piece = substr(Placement_Piece,0,(ArriveY+signeY-1)*10+ArriveX+signeX-1) + " " + substr(Placement_Piece,(ArriveY+signeY-1)*10+ArriveX+signeX,strlen(Placement_Piece));
+
+	
+		(ClosestObject(SetVector3(Position_Arrive_X + itor(signeX * 5),0.1, Position_Arrive_Y + itor(signeY * 5))))->GetParent()->SetPosition(PlacementPieceNoirTuer);
+		PlacementPieceNoirTuer = PlacementPieceNoirTuer + SetVector3(0.0, 0.0,5.0);
+		MangePiecenoir++;
+		
+		if(MangePiecenoir == 10)
+		{
+			//PlacementPieceNoirTuer = PlacementPieceNoirTuer + Vector3(5.0, 0.0,(-40.0));
+			PlacementPieceNoirTuer = PlacementPieceNoirTuer + SetVector3((-5.0), 0.0,(-50.0));
+		};
+	};	
+};
+
+void fctMangePieceBlanc()
+{
+
+	if(substr((ClosestObject(SetVector3(Position_Arrive_X + itor(signeX * 5),0.1, Position_Arrive_Y + itor(signeY * 5))))->GetName(),0,4) != "case")
+	{
+		
+		Placement_Piece = substr(Placement_Piece,0,(ArriveY+signeY-1)*10+ArriveX+signeX-1) + " " + substr(Placement_Piece,(ArriveY+signeY-1)*10+ArriveX+signeX,strlen(Placement_Piece));
+
+		(ClosestObject(SetVector3(Position_Arrive_X + itor(signeX * 5),0.1, Position_Arrive_Y + itor(signeY * 5))))->GetParent()->SetPosition(PlacementPieceBlancTuer);
+		PlacementPieceBlancTuer = PlacementPieceBlancTuer + SetVector3(0.0, 0.0,(-5.0));
+		MangePieceBlanc++;
+		
+		if(MangePieceBlanc == 10)
+		{
+			//PlacementPieceNoirTuer = PlacementPieceNoirTuer + Vector3(5.0, 0.0,(-40.0));
+			PlacementPieceBlancTuer = PlacementPieceBlancTuer + SetVector3(5.0, 0.0,50.0);
+		};
+	};
+	
+};
+
+
+void BalayageAttaque()
+{
+
+	Attaque_noir  = "--------------------------------------------------------------------------------------------------------------";
+	Attaque_blanc = "--------------------------------------------------------------------------------------------------------------";
+
+	for(i=1;i<100;i++)
+	{
+		y=1;
+		x = i;
+		
+		while(x > 10)
+		{
+			y = y + 1;
+			x = x - 10;
+		};
+		
+		case_temp = substr(Placement_Piece,i-1,1);		
+		
+		if(case_temp == "P")
+		{
+
+			k=y+1;
+
+			if(x > 1 && substr(Placement_Piece,(k-1)*10+x-2,1) == " ")
+			{
+				Attaque_blanc = substr(Attaque_blanc,0,(k-1)*10+x-2) + "X" + substr(Attaque_blanc,(k-1)*10+x-1,strlen(Attaque_blanc));
+			};
+			
+			if(x < 10 && substr(Placement_Piece,(k-1)*10+x,1) == " ")
+			{
+				Attaque_blanc = substr(Attaque_blanc,0,(k-1)*10+x) + "X" + substr(Attaque_blanc,(k-1)*10+x+1,strlen(Attaque_blanc));				
+			};
+			
+			if(Deplx > 2 && (substr(Placement_Piece,(k-1)*10+x-2,1) == "p" || substr(Placement_Piece,(k-1)*10+x-2,1) == "d") && substr(Placement_Piece,k*10+x-3,1) == " ")
+			{
+				Attaque_blanc = substr(Attaque_blanc,0,k*10+x-3) + "X" + substr(Attaque_blanc,k*10+x-2,strlen(Attaque_blanc));
+			};
+
+			if(Deplx < 9 && (substr(Placement_Piece,(k-1)*10+x,1) == "p" || substr(Placement_Piece,(k-1)*10+x,1) == "d") && substr(Placement_Piece,k*10+x+1,1) == " ")
+			{
+				Attaque_blanc = substr(Attaque_blanc,0,k*10+x+1) + "X" + substr(Attaque_blanc,k*10+x+2,strlen(Attaque_blanc));				
+			};
+
+		}
+		elseif(case_temp == "D")
+		{
+			
+			k=y+1;
+			for(j=x+1;j<11;j++)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,(k-1)*10+j-1) + "X" + substr(Attaque_blanc,(k-1)*10+j,strlen(Attaque_blanc));
+						
+					}
+					
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,k*10+j) + "X" + substr(Attaque_blanc,k*10+j+1,strlen(Attaque_blanc));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k++;
+			};
+
+			k=y-1;
+			for(j=x+1;j<11;j++)
+			{	
+				if(k > 0)
+				{
+				
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,(k-1)*10+j-1) + "X" + substr(Attaque_blanc,(k-1)*10+j,strlen(Attaque_blanc));
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,k*10+j) + "X" + substr(Attaque_blanc,k*10+j+1,strlen(Attaque_blanc));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k--;
+			};
+
+			k=y+1;
+			for(j=x-1;j>0;j--)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,(k-1)*10+j-1) + "X" + substr(Attaque_blanc,(k-1)*10+j,strlen(Attaque_blanc));
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j-2,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,k*10+j-2) + "X" + substr(Attaque_blanc,k*10+j-1,strlen(Attaque_blanc));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k++;
+			};	
+			
+			k=y-1;
+			for(j=x-1;j>0;j--)
+			{	
+
+				if(k > 0)
+				{
+				
+			
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,(k-1)*10+j-1) + "X" + substr(Attaque_blanc,(k-1)*10+j,strlen(Attaque_blanc));
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,(k-2)*10+j-2,1) == " ")
+					{
+						Attaque_blanc = substr(Attaque_blanc,0,(k-2)*10+j-2) + "X" + substr(Attaque_blanc,(k-2)*10+j-1,strlen(Attaque_blanc));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k--;
+				
+				
+			};	
+
+		}
+		elseif(case_temp == "p")
+		{
+		
+			k=y-1;
+
+			if(x > 1 && substr(Placement_Piece,(k-1)*10+x-2,1) == " ")
+			{
+				Attaque_noir = substr(Attaque_noir,0,(k-1)*10+x-2) + "X" + substr(Attaque_noir,(k-1)*10+x-1,strlen(Attaque_noir));
+			};
+			
+			if(x < 10 && substr(Placement_Piece,(k-1)*10+x,1) == " ")
+			{
+				Attaque_noir = substr(Attaque_noir,0,(k-1)*10+x) + "X" + substr(Attaque_noir,(k-1)*10+x+1,strlen(Attaque_noir));				
+			};
+	
+			
+			if(Deplx > 2 && (substr(Placement_Piece,(k-1)*10+x-2,1) == "P" || substr(Placement_Piece,(k-1)*10+x-2,1) == "D") && substr(Placement_Piece,(k-2)*10+x-3,1) == " ")
+			{
+				Attaque_noir = substr(Attaque_noir,0,(k-2)*10+x-3) + "X" + substr(Attaque_noir,(k-2)*10+x-2,strlen(Attaque_noir));
+			};
+
+			if(Deplx < 9 && (substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,(k-2)*10+x+1,1) == " ")
+			{
+				Attaque_noir = substr(Attaque_noir,0,(k-2)*10+x+1) + "X" + substr(Attaque_noir,(k-2)*10+x+2,strlen(Attaque_noir));				
+			};
+
+		}
+		elseif(case_temp == "d")
+		{
+			
+			k=y+1;
+			for(j=x+1;j<11;j++)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,(k-1)*10+j-1) + "X" + substr(Attaque_noir,(k-1)*10+j,strlen(Attaque_noir));
+						
+					}
+				
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,k*10+j,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,k*10+j) + "X" + substr(Attaque_noir,k*10+j+1,strlen(Attaque_noir));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k++;
+			};
+
+			k=y-1;
+			for(j=x+1;j<11;j++)
+			{	
+				if(k > 0)
+				{
+				
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,(k-1)*10+j-1) + "X" + substr(Attaque_noir,(k-1)*10+j,strlen(Attaque_noir));
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,(k-2)*10+j,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,(k-2)*10+j) + "X" + substr(Attaque_noir,(k-2)*10+j+1,strlen(Attaque_noir));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k--;
+			};
+
+			k=y+1;
+			for(j=x-1;j>0;j--)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,(k-1)*10+j-1) + "X" + substr(Attaque_noir,(k-1)*10+j,strlen(Attaque_noir));
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,k*10+j-2,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,k*10+j-2) + "X" + substr(Attaque_noir,k*10+j-1,strlen(Attaque_noir));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k++;
+			};	
+
+			
+			k=y-1;
+			for(j=x-1;j>0;j--)
+			{	
+
+				if(k > 0)
+				{
+				
+			
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,(k-1)*10+j-1) + "X" + substr(Attaque_noir,(k-1)*10+j,strlen(Attaque_noir));
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,(k-2)*10+j-2,1) == " ")
+					{
+						Attaque_noir = substr(Attaque_noir,0,(k-2)*10+j-2) + "X" + substr(Attaque_noir,(k-2)*10+j-1,strlen(Attaque_noir));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k--;
+				
+				
+			};	
+
+		};
+	
+	};
+
+	Echo("*********************************************************");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,0,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,10,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,20,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,30,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,40,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,50,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,60,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,70,10) + "*");	
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,80,10) + "*");
+	Echo("Attaque_blanc       : *" + substr(Attaque_blanc,90,10) + "*");	
+	Echo("*********************************************************");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,0,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,10,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,20,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,30,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,40,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,50,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,60,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,70,10) + "*");		
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,80,10) + "*");
+	Echo("Attaque_noir        : *" + substr(Attaque_noir,90,10) + "*");			
+	Echo("*********************************************************");
+	
+	
+};
+
+
+void ZoneDeplacement()
+{
+	zone_mouvement = "--------------------------------------------------------------------------------------------------------------";
+
+	if(Deplx <11 && Deplx > 0)
+	{
+		
+		Echo("case_temp_Deplacement   : " + case_temp_Deplacement);
+	
+	
+		if(case_temp_Deplacement == "P")
+		{
+			k=Deply+1;
+			
+			if(Deplx > 1 && substr(Placement_Piece,(k-1)*10+Deplx-2,1) == " ")
+			{
+				if(!joueur_continue)
+				{
+					zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx-2) + "X" + substr(zone_mouvement,(k-1)*10+Deplx-1,strlen(zone_mouvement));
+				};
+			};
+			
+			if(Deplx < 10 && substr(Placement_Piece,(k-1)*10+Deplx,1) == " ")
+			{
+				if(!joueur_continue)
+				{
+					zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx) + "X" + substr(zone_mouvement,(k-1)*10+Deplx+1,strlen(zone_mouvement));				
+				};
+			};
+			
+			
+			if(Deplx > 2 && (substr(Placement_Piece,(k-1)*10+Deplx-2,1) == "p" || substr(Placement_Piece,(k-1)*10+Deplx-2,1) == "d") && substr(Placement_Piece,k*10+Deplx-3,1) == " ")
+			{
+				zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx-2) + " " + substr(zone_mouvement,(k-1)*10+Deplx-1,strlen(zone_mouvement));
+				zone_mouvement = substr(zone_mouvement,0,k*10+Deplx-3) + "X" + substr(zone_mouvement,k*10+Deplx-2,strlen(zone_mouvement));
+			};
+
+			if(Deplx < 9 && (substr(Placement_Piece,(k-1)*10+Deplx,1) == "p" || substr(Placement_Piece,(k-1)*10+Deplx,1) == "d") && substr(Placement_Piece,k*10+Deplx+1,1) == " ")
+			{
+				zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx) + " " + substr(zone_mouvement,(k-1)*10+Deplx+1,strlen(zone_mouvement));				
+				zone_mouvement = substr(zone_mouvement,0,k*10+Deplx+1) + "X" + substr(zone_mouvement,k*10+Deplx+2,strlen(zone_mouvement));				
+			};
+		}
+		elseif(case_temp_Deplacement == "D")
+		{
+			
+			k=Deply+1;
+			for(j=Deplx+1;j<11;j++)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,k*10+j) + "X" + substr(zone_mouvement,k*10+j+1,strlen(zone_mouvement));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k++;
+			};
+
+			k=Deply-1;
+			for(j=Deplx+1;j<11;j++)
+			{	
+				if(k > 0)
+				{
+				
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+						
+					}
+					
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,k*10+j) + "X" + substr(zone_mouvement,k*10+j+1,strlen(zone_mouvement));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k--;
+			};
+
+			k=Deply+1;
+			for(j=Deplx-1;j>0;j--)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j-2,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,k*10+j-2) + "X" + substr(zone_mouvement,k*10+j-1,strlen(zone_mouvement));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k++;
+			};	
+			
+			k=Deply-1;
+			for(j=Deplx-1;j>0;j--)
+			{	
+
+				if(k > 0)
+				{
+				
+			
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,(k-2)*10+j-2,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,(k-2)*10+j-2) + "X" + substr(zone_mouvement,(k-2)*10+j-1,strlen(zone_mouvement));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k--;
+				
+				
+			};	
+
+		}
+		elseif(case_temp_Deplacement == "p")
+		{
+			k=Deply-1;
+			if(Deplx > 1 && substr(Placement_Piece,(k-1)*10+Deplx-2,1) == " ")
+			{
+				if(!joueur_continue)
+				{
+					zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx-2) + "X" + substr(zone_mouvement,(k-1)*10+Deplx-1,strlen(zone_mouvement));
+				};
+			};
+
+			if(Deplx < 10 && substr(Placement_Piece,(k-1)*10+Deplx,1) == " ")
+			{
+				if(!joueur_continue)
+				{
+					zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx) + "X" + substr(zone_mouvement,(k-1)*10+Deplx+1,strlen(zone_mouvement));				
+				};
+			};
+
+			if(Deplx > 2 && (substr(Placement_Piece,(k-1)*10+Deplx-2,1) == "P" || substr(Placement_Piece,(k-1)*10+Deplx-2,1) == "D") && substr(Placement_Piece,(k-2)*10+Deplx-3,1) == " ")
+			{
+				zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx-2) + " " + substr(zone_mouvement,(k-1)*10+Deplx-1,strlen(zone_mouvement));
+				zone_mouvement = substr(zone_mouvement,0,(k-2)*10+Deplx-3) + "X" + substr(zone_mouvement,(k-2)*10+Deplx-2,strlen(zone_mouvement));
+			};
+
+			if(Deplx < 9 && (substr(Placement_Piece,(k-1)*10+Deplx,1) == "P" || substr(Placement_Piece,(k-1)*10+Deplx-2,1) == "D") && substr(Placement_Piece,(k-2)*10+Deplx+1,1) == " ")
+			{
+				zone_mouvement = substr(zone_mouvement,0,(k-1)*10+Deplx) + " " + substr(zone_mouvement,(k-1)*10+Deplx+1,strlen(zone_mouvement));				
+				zone_mouvement = substr(zone_mouvement,0,(k-2)*10+Deplx+1) + "X" + substr(zone_mouvement,(k-2)*10+Deplx+2,strlen(zone_mouvement));				
+			};
+
+		}
+		elseif(case_temp_Deplacement == "d")
+		{
+
+			k=Deply+1;
+			for(j=Deplx+1;j<11;j++)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+						
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d") && substr(Placement_Piece,k*10+j,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,k*10+j) + "X" + substr(zone_mouvement,k*10+j+1,strlen(zone_mouvement));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k++;
+			};
+
+			k=Deply-1;
+			for(j=Deplx+1;j<11;j++)
+			{	
+				if(k > 0)
+				{
+				
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 11;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,(k-2)*10+j,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,(k-2)*10+j) + "X" + substr(zone_mouvement,(k-2)*10+j+1,strlen(zone_mouvement));
+						j = 11;
+					}
+					else
+					{
+						j = 11;
+					};
+
+				}
+				else
+				{
+					j = 11;
+				};
+				k--;
+			};
+
+			k=Deply+1;
+			for(j=Deplx-1;j>0;j--)
+			{	
+				if(k < 11)
+				{
+
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,k*10+j-2,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,k*10+j-2) + "X" + substr(zone_mouvement,k*10+j-1,strlen(zone_mouvement));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k++;
+			};	
+
+			
+			k=Deply-1;
+			for(j=Deplx-1;j>0;j--)
+			{	
+
+				if(k > 0)
+				{
+				
+			
+					if(substr(Placement_Piece,(k-1)*10+j-1,1) == " ")
+					{
+						if(!joueur_continue)
+						{
+							zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + "X" + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						};
+					}
+					elseif(substr(Placement_Piece,(k-1)*10+j-1,1) == "p" || substr(Placement_Piece,(k-1)*10+j-1,1) == "d")
+					{
+						j = 0;
+					}
+					elseif((substr(Placement_Piece,(k-1)*10+j-1,1) == "P" || substr(Placement_Piece,(k-1)*10+j-1,1) == "D") && substr(Placement_Piece,(k-2)*10+j-2,1) == " ")
+					{
+						zone_mouvement = substr(zone_mouvement,0,(k-1)*10+j-1) + " " + substr(zone_mouvement,(k-1)*10+j,strlen(zone_mouvement));
+						zone_mouvement = substr(zone_mouvement,0,(k-2)*10+j-2) + "X" + substr(zone_mouvement,(k-2)*10+j-1,strlen(zone_mouvement));
+						j = 0;
+					}
+					else
+					{
+						j = 0;
+					};
+
+				}
+				else
+				{
+					j = 0;
+				};
+				k--;
+				
+				
+			};	
+
+
+		};
+	};
+
+};
+
+void gestionpiece()
+{
+	
+	if(SelectionPiece == true)
+	{
+
+		if(!joueur_continue)
+		{
+
+			Deplx = rtoi((Position_Depart_X+27.5)/5.0);
+			Deply = rtoi((Position_Depart_Y+27.5)/5.0);
+			case_temp_Deplacement = substr(Entity_Name,0,1);
+
+		}else
+		{
+			
+			Entity_Name = Entity_Name_continue;
+			Deplx = Deplx_continue;
+			Deply = Deply_continue;
+			case_temp_Deplacement = case_temp_Deplacement_continue;
+
+		};
+		
+		ArriveX = rtoi((Position_Arrive_X+27.5)/5.0);
+		ArriveY = rtoi((Position_Arrive_Y+27.5)/5.0);
+		DeplxAnnule = rtoi((Position_Depart_X+22.5)/5.0);
+		DeplyAnnule = rtoi((Position_Depart_Y+22.5)/5.0);
+		ArriveXAnnule = rtoi((Position_Arrive_X+22.5)/5.0);
+		ArriveYAnnule = rtoi((Position_Arrive_Y+22.5)/5.0);
+		case_temp_DeplacementAnnule = substr(Entity_Name,0,1);
+		
+		ZoneDeplacement();
+
+		if(substr(zone_mouvement,(ArriveY-1)*10+ArriveX-1,1) == "X")
+		{			
+			if(!RoiBlancMat && !RoiNoirMat)
+			{
+				if(blanc_turn)
+				{
+					
+
+					Placement_Piece = substr(Placement_Piece,0,(Deply-1)*10+Deplx-1) + " " + substr(Placement_Piece,(Deply-1)*10+Deplx,strlen(Placement_Piece));
+					Placement_Piece = substr(Placement_Piece,0,(ArriveY-1)*10+ArriveX-1) + case_temp_Deplacement + substr(Placement_Piece,(ArriveY-1)*10+ArriveX,strlen(Placement_Piece));
+					
+					Object_GetByName(Entity_Name)->GetParent()->SetPosition(SetVector3(Position_Arrive_X,0.1, Position_Arrive_Y));
+					Object_GetByName(Entity_Name)->SetMaterial("blanc");
+					
+					SelectionPiece = false;
+					blanc_turn = !blanc_turn;
+
+					//SI ON MANGE					
+					if(Deplx - ArriveX < 0 )
+					{
+						signeX = -1;
+						
+					}
+					else(Deplx - ArriveX > 0)
+					{
+						signeX = 1;
+					};
+	
+					if(Deply - ArriveY < 0 )
+					{
+						signeY = -1;
+						
+					}
+					else(Deply - ArriveY > 0)
+					{
+						signeY = 1;
+					};
+					
+					if(substr(zone_mouvement,(ArriveY+signeY-1)*10+ArriveX+signeX-1,1) == " ")
+					{
+					
+						fctMangePieceNoir();
+
+						Deplx = ArriveX;
+						Deply = ArriveY;
+						ZoneDeplacement();
+						
+						if(strFind(zone_mouvement," ") == -1)
+						{
+
+							joueur_continue = false;
+							
+							Deplx_continue = -1;
+							Deply_continue = -1;
+							Entity_Name_continue  = " ";
+							case_temp_Deplacement_continue = " ";
+
+						}
+						else
+						{
+							blanc_turn = !blanc_turn;
+							joueur_continue = true;
+							
+							Deplx_continue = ArriveX;
+							Deply_continue = ArriveY;
+							
+							Entity_Name_continue  = Entity_Name;
+							case_temp_Deplacement_continue = case_temp_Deplacement;
+
+						};
+
+					};
+
+					//cas special du roi qui mange
+					BalayageAttaque();
+
+					if(strFind(Attaque_noir, "X") == -1)
+					{
+						RoiNoirMat = true;
+						
+						OverlayElement_GetByName("info")->SetCaption("NOIR GAGNE");
+						//blanc gagne
+					};
+					
+					if(strFind(Attaque_blanc, "X") == -1)
+					{
+						RoiBlancMat = true;
+						
+						OverlayElement_GetByName("info")->SetCaption("BLANC GAGNE");
+						//blanc gagne
+					};
+
+					//transfo dame
+					if(ArriveY == 10)
+					{
+						//changer le pion en dame
+						Object_Destroy(Object_GetByName(Entity_Name));
+						Object_Create("D" + Entity_Name,"pion_dame_dame.mesh");
+						Object_GetByName("D" + Entity_Name)->SetMaterial("blanc");
+						Object_GetByName("D" + Entity_Name)->SetParent(SceneNode_GetByName(Entity_Name));
+						Object_GetByName("D" + Entity_Name)->GetParent()->SetPosition(SetVector3(Position_Arrive_X,0.0, Position_Arrive_Y));
+										
+						Placement_Piece = substr(Placement_Piece,0,(ArriveY-1)*10+ArriveX-1) + "D" + substr(Placement_Piece,(ArriveY-1)*10+ArriveX,strlen(Placement_Piece));
+
+					};
+				}
+				else
+				{	
+				
+				//Echec ou pas au roi blanc
+					Placement_Piece = substr(Placement_Piece,0,(Deply-1)*10+Deplx-1) + " " + substr(Placement_Piece,(Deply-1)*10+Deplx,strlen(Placement_Piece));
+					Placement_Piece = substr(Placement_Piece,0,(ArriveY-1)*10+ArriveX-1) + case_temp_Deplacement + substr(Placement_Piece,(ArriveY-1)*10+ArriveX,strlen(Placement_Piece));
+					
+					Object_GetByName(Entity_Name)->GetParent()->SetPosition(SetVector3(Position_Arrive_X,0.1, Position_Arrive_Y));
+					Object_GetByName(Entity_Name)->SetMaterial("noir");
+					
+					SelectionPiece = false;
+					blanc_turn = !blanc_turn;
+
+					//SI ON MANGE					
+					
+					if(Deplx - ArriveX < 0 )
+					{
+						signeX = -1;
+						
+					}
+					else(Deplx - ArriveX > 0)
+					{
+						signeX = 1;
+					};
+					
+					if(Deply - ArriveY < 0 )
+					{
+						signeY = -1;
+						
+					}
+					else(Deply - ArriveY > 0)
+					{
+						signeY = 1;
+					};
+					
+					if(substr(zone_mouvement,(ArriveY+signeY-1)*10+ArriveX+signeX-1,1) == " ")
+					{
+					
+						fctMangePieceBlanc();
+
+						Deplx = ArriveX;
+						Deply = ArriveY;
+						ZoneDeplacement();
+						
+						if(strFind(zone_mouvement," ") == -1)
+						{
+
+							joueur_continue = false;
+							
+							Deplx_continue = -1;
+							Deply_continue = -1;
+							Entity_Name_continue  = " ";
+							case_temp_Deplacement_continue = " ";
+
+						}
+						else
+						{
+							blanc_turn = !blanc_turn;
+							joueur_continue = true;
+							
+							Deplx_continue = ArriveX;
+							Deply_continue = ArriveY;
+							
+							Entity_Name_continue  = Entity_Name;
+							case_temp_Deplacement_continue = case_temp_Deplacement;
+
+						};
+
+					};
+
+					//fin de partie
+					BalayageAttaque();
+
+					if(strFind(Attaque_blanc, "X") == -1)
+					{
+						RoiBlancMat = true;
+						
+						OverlayElement_GetByName("info")->SetCaption("BLANC GAGNE");
+						//blanc gagne
+					};
+					
+					if(strFind(Attaque_noir, "X") == -1)
+					{
+						RoiNoirMat = true;
+						
+						OverlayElement_GetByName("info")->SetCaption("NOIR GAGNE");
+						//blanc gagne
+					};
+					
+					//transfo dame
+					if(ArriveY == 1)
+					{
+					
+						//changer le pion en dame
+						Object_Destroy(Object_GetByName(Entity_Name));
+						Object_Create("d" + Entity_Name,"pion_dame_dame.mesh");
+						Object_GetByName("d" + Entity_Name)->SetMaterial("noir");
+						Object_GetByName("d" + Entity_Name)->SetParent(SceneNode_GetByName(Entity_Name));
+						Object_GetByName("d" + Entity_Name)->GetParent()->SetPosition(SetVector3(Position_Arrive_X,0.0, Position_Arrive_Y));
+										
+						Placement_Piece = substr(Placement_Piece,0,(ArriveY-1)*10+ArriveX-1) + "D" + substr(Placement_Piece,(ArriveY-1)*10+ArriveX,strlen(Placement_Piece));
+
+					};
+
+				};
+			};
+		};
+		
+		if(RoiBlancMat)
+		{
+			OverlayElement_GetByName("info")->SetCaption("NOIR GAGNE");
+		};
+		
+		if(RoiNoirMat)
+		{
+			OverlayElement_GetByName("info")->SetCaption("BLANC GAGNE");
+		};
+
+	};
+};
+			
+void Mouse_LButtonDown()
+{
+	Reset_color();
+
+	currentEntity2 = MousePickupObject(MOUSE_POSITION_X,MOUSE_POSITION_Y,false);
+	
+	Echo("--------------------------");
+	Echo("currentEntity2   :  " + currentEntity2->GetName());
+	Echo("--------------------------");
+	
+	if(currentEntity2!=NULL)
+	{
+		//currentEntity2->ShowBoundingBox(true);
+		//currentEntity2->SetMaterial("Base/DarkRed");
+	
+		if(!blanc_turn)
+		{
+			OverlayElement_GetByName("info")->SetCaption("TOUR NOIR");
+		};
+		
+		if(blanc_turn)
+		{
+			OverlayElement_GetByName("info")->SetCaption("TOUR BLANC");
+		};
+		
+		
+	
+		Entity_object = substr(currentEntity2->GetName(),0,4);
+		
+		if(Entity_object == "echi")
+		{
+			Entity_object = " ";
+			currentEntity2 = NULL;
+		};
+
+		if(Entity_object != "case")
+		{
+			Entity_object = "piece";
+		};
+			
+		if(Entity_object == "case")
+		{
+			Entity_Name_case = currentEntity2->GetName();
+		
+			Position_Arrive_X = (currentEntity2->GetParent()->GetPosition())[0]);
+			Position_Arrive_Y = (currentEntity2->GetParent()->GetPosition())[2]);
+
+			gestionpiece();
+			Echo("----CASSE----");
+		};
+		
+		//si c'est une piece
+		if(Entity_object == "piece")
+		{
+			if(strFind(Entity_Name, "blanc")== (-1))
+			{
+				Object_GetByName(Entity_Name)->SetMaterial("noir");
+			}
+			else
+			{
+				Object_GetByName(Entity_Name)->SetMaterial("blanc");
+			};
+			
+			Entity_Name_old = Entity_Name;
+			Entity_Name = currentEntity2->GetName();
+			currentEntity = currentEntity2;
+			Entity_Name_case = currentEntity2->GetName();
+			Entity_Material = Object_GetByName(Entity_Name)->GetMaterialName();
+		
+			Position_Arrive_X = (currentEntity2->GetParent()->GetPosition())[0]);
+			Position_Arrive_Y = (currentEntity2->GetParent()->GetPosition())[2]);
+			
+			//on touche encore un piece mais adverse
+			if(blanc_turn && (strFind(Entity_Name,"noir") != (-1)) && SelectionPiece)
+			{				
+				Entity_Name = Entity_Name_old;
+				gestionpiece();
+				
+				Echo("piece de adverse selectionner");
+			}
+			elseif(!blanc_turn && (strFind(Entity_Name,"blanc") != (-1)) && SelectionPiece)
+			{
+				Entity_Name = Entity_Name_old;
+				gestionpiece();
+				
+				Echo("piece de adverse selectionner");
+			};
+			
+			
+			//on touche un piece des son camps
+			if(blanc_turn && (strFind(Entity_Name,"blanc") != (-1)))
+			{
+				Position_Depart_X = ((Object_GetByName(Entity_Name)->GetParent()->GetPosition())[0]);
+				Position_Depart_Y = ((Object_GetByName(Entity_Name)->GetParent()->GetPosition())[2]);
+			
+				SelectionPiece = true;
+				Object_GetByName(Entity_Name)->SetMaterial("Base/HighAlphaRed");
+				
+				Echo("piece de son camps selectionner");
+
+			}
+			elseif(!blanc_turn && (strFind(Entity_Name,"noir") != (-1)))
+			{
+				Position_Depart_X = ((Object_GetByName(Entity_Name)->GetParent()->GetPosition())[0]);
+				Position_Depart_Y = ((Object_GetByName(Entity_Name)->GetParent()->GetPosition())[2]);
+			
+				SelectionPiece = true;
+				Object_GetByName(Entity_Name)->SetMaterial("Base/HighAlphaRed");
+				
+				Echo("piece de son camps selectionner");
+
+			};
+
+			Echo("----PIECE----");
+		};
+
+		if(blanc_turn && (strFind(Entity_Name,"blanc") != (-1)))
+		{
+			SelectionPiece = true;
+			Object_GetByName(Entity_Name)->SetMaterial("Base/HighAlphaRed");
+			
+		}
+		elseif(!blanc_turn && (strFind(Entity_Name,"noir") != (-1)))
+		{
+			SelectionPiece = true;
+			Object_GetByName(Entity_Name)->SetMaterial("Base/HighAlphaRed");
+
+		};
+		
+	};
+
+};
+
+
+
+void Mouse_RButtonDown()
+{
+// control sourie
+	Timer_Kill("MouseLDown");
+	timer("mouse_MButtonDown",TIMERTYPE_PERMANENT,0.0)
+	{
+		RootCamera->GetParent()->Yaw(300.0*MOUSE_DIFFERENCE_X);
+		current_pitch = previous_pitch + (200.0*MOUSE_DIFFERENCE_Y);
+		if(current_pitch>(40.0))
+		{
+			current_pitch = (40.0);
+		}
+		elseif(current_pitch<(-40.0))
+		{
+			current_pitch = (-40.0);
+		};
+
+		RootCamera->GetParent()->Pitch(current_pitch-previous_pitch);
+		previous_pitch = current_pitch;
+		
+	};
+// control sourie
+
+};
+
+// control sourie
+void Mouse_RButtonUp()
+{
+	Timer_Kill("mouse_LButtonDown");
+	Timer_Kill("mouse_MButtonDown");
+	Timer_Kill("MouseLDown");
+	
+	pitch_speed = 0.0;
+	yaw_speed = 0.0;
+};
+
+void Mouse_WheelUp()
+{
+//	Echo("wanted_zoom : " + rtoa(wanted_zoom));
+//	Echo("current_zoom : " + rtoa(current_zoom));
+
+	wanted_zoom = wanted_zoom * 0.85 ;
+
+	if(wanted_zoom < 80.0 )
+	{
+		wanted_zoom = 80.0;
+	};
+	
+	
+	Timer_Kill("Camera_Zoom");
+	Timer_Kill("MouseLDown");
+	timer("Camera_Zoom",TIMERTYPE_CONTINUOUS, 0.3)
+	{
+		current_zoom = current_zoom + ( wanted_zoom - current_zoom ) * 3.33 * GENERAL_ELAPSED_TIME;
+		RootCamera->SetPosition((RootCamera->GetPosition()) * (current_zoom / V3_GetLength(RootCamera->GetPosition())));
+	};
+};
+
+void Mouse_WheelDown()
+{
+
+//Echo("wanted_zoom : " + rtoa(wanted_zoom));
+//Echo("current_zoom : " + rtoa(current_zoom));
+	
+		wanted_zoom = wanted_zoom * 1.10;
+		
+		if(wanted_zoom > 250.0 )
+		{
+			wanted_zoom = 250.0;
+		};
+		
+		Timer_Kill("Camera_Zoom");
+		timer("Camera_Zoom",TIMERTYPE_CONTINUOUS, 0.3)
+		{
+			current_zoom = current_zoom + ( wanted_zoom - current_zoom ) * 3.33 * GENERAL_ELAPSED_TIME;
+			RootCamera->SetPosition((RootCamera->GetPosition()) * (current_zoom / V3_GetLength(RootCamera->GetPosition())));
+		};
+	
+};
+// control sourie
+
+// touche R
+BindKey(82,BINDKEY_DOWN)
+{
+	Echo("*********change coter*********");
+						
+	blanc_turn = !blanc_turn;
+
+
+};
+
+
+
+// touche Q
+BindKey(81,BINDKEY_DOWN)
+{
+			
+			Echo("-------------------");
+			Echo(" RoiBlancMat  :  " + btoa(RoiBlancMat));	
+			Echo(" RoiNoirMat   :  " + btoa(RoiNoirMat));
+			Echo("-------------------");
+/*
+			BalayageAttaque();	
+			ZoneDeplacement();			
+*/
+			Echo("case_temp_Deplacement :" + case_temp_Deplacement);			
+			Echo("---------------------2");
+			Echo("j            :" + itoa(j));
+			Echo("k            :" + itoa(k));
+			Echo("---------------------2");
+				
+			Echo("len               :" + itoa(strlen(Attaque_noir)));
+			Echo("X            :" + itoa(x));
+			Echo("Y            :" + itoa(y));
+			Echo("----------------*****************************Entity_Name    :" + Entity_Name);
+			Echo("----------------*****************************SelectionPiece :" + btoa(SelectionPiece));
+			Echo("----------------******************************blanc_turn    :" + btoa(blanc_turn));
+			
+
+			Echo("-FINAL-");
+			Echo("len Placement_Piece :" + itoa(strlen(Placement_Piece)));
+			Echo("len Attaque_blanc   :" + itoa(strlen(Attaque_blanc)));
+			Echo("len Attaque_noir    :" + itoa(strlen(Attaque_noir)));
+			Echo("len zone_mouvement  :" + itoa(strlen(zone_mouvement)));
+		
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,0,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,10,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,20,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,30,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,40,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,50,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,60,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,70,10) + "*");	
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,80,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,90,10) + "*");	
+
+			Echo("*********************************************************");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,0,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,10,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,20,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,30,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,40,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,50,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,60,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,70,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,80,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,90,10) + "*");	
+			Echo("*********************************************************");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,0,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,10,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,20,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,30,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,40,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,50,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,60,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,70,10) + "*");		
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,80,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,90,10) + "*");
+			
+			Echo("*********************************************************");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,0,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,10,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,20,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,30,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,40,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,50,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,60,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,70,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,80,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,90,10) + "*");
+			
+			Echo("*********************************************************");
+};
+
+// touche W
+BindKey(87,BINDKEY_DOWN)
+{
+
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,0,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,10,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,20,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,30,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,40,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,50,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,60,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,70,10) + "*");	
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,80,10) + "*");
+			Echo("Placement_Piece     : *" + substr(Placement_Piece,90,10) + "*");	
+
+			Echo("*********************************************************");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,0,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,10,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,20,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,30,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,40,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,50,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,60,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,70,10) + "*");	
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,80,10) + "*");
+			Echo("Attaque_blanc       : *" + substr(Attaque_blanc,90,10) + "*");	
+			Echo("*********************************************************");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,0,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,10,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,20,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,30,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,40,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,50,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,60,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,70,10) + "*");		
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,80,10) + "*");
+			Echo("Attaque_noir        : *" + substr(Attaque_noir,90,10) + "*");			
+			Echo("*********************************************************");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,0,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,10,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,20,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,30,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,40,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,50,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,60,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,70,10) + "*");	
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,80,10) + "*");
+			Echo("zone_mouvement      : *" + substr(zone_mouvement,90,10) + "*");	
+			Echo("*********************************************************");
+
+
+
+};		
+// touche O
+BindKey(79,BINDKEY_DOWN)
+{
+	Echo("*********   RESET   *********");
+	
+	SceneNode_GetByName("Pion_blanc")->SetPosition(SetVector3(20.0,100.0, -15.0));
+	SceneNode_GetByName("Pion_blanc_1")->SetPosition(SetVector3(15.0,100.0, -15.0));
+	SceneNode_GetByName("Pion_blanc_2")->SetPosition(SetVector3(10.0,100.0, -15.0));
+	SceneNode_GetByName("Pion_blanc_3")->SetPosition(SetVector3(5.0,100.0, -15.0));
+	
+	
+	SceneNode_GetByName("Pion_blanc_4")->SetPosition(SetVector3(0.0,100.0, -15.0));
+	SceneNode_GetByName("Pion_blanc_5")->SetPosition(SetVector3(-5.0,100.0, -15.0));
+	SceneNode_GetByName("Pion_blanc_6")->SetPosition(SetVector3(-10.0,100.0, -15.0));
+	SceneNode_GetByName("Pion_blanc_7")->SetPosition(SetVector3(-15.0,100.0, -15.0));
+	
+	SceneNode_GetByName("Tour_blanc")->SetPosition(SetVector3(20.0,100.0, -20.0));
+	SceneNode_GetByName("Cheval_blanc_1")->SetPosition(SetVector3(15.0,100.0, -20.0));
+	SceneNode_GetByName("Fou_blanc_1")->SetPosition(SetVector3(10.0,100.0, -20.0));
+	SceneNode_GetByName("Dame_blanc")->SetPosition(SetVector3(5.0,100.0, -20.0));
+	SceneNode_GetByName("Roi_blanc")->SetPosition(SetVector3(0.0,100.0, -20.0));
+	SceneNode_GetByName("Fou_blanc")->SetPosition(SetVector3(-5.0,100.0, -20.0));
+	SceneNode_GetByName("Cheval_blanc")->SetPosition(SetVector3(-10.0,100.0, -20.0));
+	SceneNode_GetByName("Tour_blanc_1")->SetPosition(SetVector3(-15.0,100.0, -20.0));
+	
+	
+	SceneNode_GetByName("pion_noir")->SetPosition(SetVector3(20.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_1")->SetPosition(SetVector3(15.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_2")->SetPosition(SetVector3(10.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_3")->SetPosition(SetVector3(5.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_4")->SetPosition(SetVector3(0.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_5")->SetPosition(SetVector3(-5.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_6")->SetPosition(SetVector3(-10.0,100.0, 10.0));
+	SceneNode_GetByName("pion_noir_7")->SetPosition(SetVector3(-15.0,100.0, 10.0));
+	
+	SceneNode_GetByName("tour_noir")->SetPosition(SetVector3(20.0,100.0, 15.0));
+	SceneNode_GetByName("cheval_noir_1")->SetPosition(SetVector3(15.0,100.0, 15.0));
+	SceneNode_GetByName("fou_noir_1")->SetPosition(SetVector3(10.0,100.0, 15.0));
+	SceneNode_GetByName("dame_noir")->SetPosition(SetVector3(5.0,100.0, 15.0));
+	SceneNode_GetByName("roi_noir")->SetPosition(SetVector3(0.0,100.0, 15.0));
+	SceneNode_GetByName("fou_noir")->SetPosition(SetVector3(-5.0,100.0, 15.0));
+	SceneNode_GetByName("cheval_noir")->SetPosition(SetVector3(-10.0,100.0, 15.0));
+	SceneNode_GetByName("tour_noir_1")->SetPosition(SetVector3(-15.0,100.0, 15.0));
+
+};
+
+

@@ -1,0 +1,183 @@
+ambient_light 0.4 0.4 0.4 1
+background_colour 1.0 1.0 1.0 1
+
+mirror TestMirror
+{
+	position 0 0 0
+	direction 0 1 0
+	resolution 1024
+	auto_updates false false
+	material sol/Sol 0.5
+}
+
+scene_node CameraNode
+{
+	orientation -0.561857 -0.813505 -0.150085 36.3557
+}
+
+scene_node Meuble
+{
+	position 0 0 0
+}
+
+
+scene_node axesX
+{
+	position 0 0 0
+	
+
+}
+
+scene_node axesY
+{
+	position 0 0 0
+}
+
+scene_node axesZ
+{
+	position 0 0 0
+}
+
+
+
+scene_node tirroir1
+{
+	parent Meuble 
+	inherit_orientation true
+}
+
+scene_node tirroir2
+{
+	parent Meuble 
+	inherit_orientation true
+}
+
+scene_node tirroir3
+{
+	parent Meuble 
+	inherit_orientation true
+}
+
+scene_node tirroir4
+{
+	parent Meuble 
+	inherit_orientation true
+}
+
+scene_node porte_1
+{
+	parent Meuble 
+	inherit_orientation true
+}
+
+scene_node porte_2
+{
+	parent Meuble 
+	inherit_orientation true
+}
+
+object Meuble
+{
+	mesh demeyere_corps.mesh
+	attach_to Meuble
+}
+
+object tirroir1
+{
+	mesh demeyere_tirroir_01.mesh
+	attach_to tirroir1
+}
+
+object tirroir2
+{
+	mesh demeyere_tirroir_02.mesh
+	attach_to tirroir2
+}
+
+object tirroir3
+{
+	mesh demeyere_tirroir_03.mesh
+	attach_to tirroir3
+}
+
+object tirroir4
+{
+	mesh demeyere_tirroir_04.mesh
+	attach_to tirroir4
+}
+
+object porte_1
+{
+	mesh demeyere_porte_01.mesh
+	attach_to porte_1
+}
+
+object porte_2
+{
+	mesh demeyere_porte_02.mesh
+	attach_to porte_2
+}
+
+object Lampe
+{
+	mesh lampe.mesh
+	attach_to Meuble
+}
+
+object plane
+{
+	mesh sol.mesh
+	
+}
+
+object axes
+{
+	mesh axes.mesh
+	
+}
+
+light light_01
+{
+	type directional
+	direction -0.7 -0.5 -0.7
+	diffuse 1.0 1.0 1.0 
+	specular 1.0 1.0 1.0
+}
+
+light light_04
+{
+	type directional
+	direction 0.7 -0.5 0.7
+	diffuse 1.0 1.0 1.0 
+	specular 1.0 1.0 1.0
+}
+
+camera RootCamera
+{
+	position 0 0 450.0
+	attach_to CameraNode
+}
+
+billboard axesX
+{
+	size 15 15
+	element 0 100 -25
+	attach_to axesX
+	material axes/axesX
+}
+
+billboard axesY
+{
+	size 15 15
+	element -85 40 -25
+	attach_to axesY
+	material axes/axesY
+}
+
+billboard axesZ
+{
+	size 15 15
+	element -85 100 0
+	attach_to axesZ
+	material axes/axesZ
+}

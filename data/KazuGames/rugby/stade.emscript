@@ -1,0 +1,2587 @@
+real l_pastYaw;
+
+real l_playerAnimLength;
+l_playerAnimLength = 0.0;
+
+string nom_joueur;
+nom_joueur = "Anonyme";
+
+string PlayeId;
+PlayeId = "";
+
+string NomUrlTemp;
+NomUrlTemp = "";
+
+string ValeurTemp;
+ValeurTemp = "";
+
+string Url_State;
+Url_State = "";
+
+string Url_Fin;
+Url_Fin = "";
+
+string UrlTemp;
+UrlTemp = "_";
+
+string Url_Begin;
+Url_Begin = "";
+
+string l_playerAnimName;
+l_playerAnimName="";
+
+
+//score debut
+int score_temp;
+
+int score_temp_buff;
+
+int score_top_1;
+score_top_1 = 15000;
+
+int score_top_2;
+score_top_2 = 14000;
+
+int score_top_3;
+score_top_3 = 13000;
+
+int score_top_4;
+score_top_4 = 12000;
+
+int score_top_5;
+score_top_5 = 11000;
+
+int score_top_6;
+score_top_6 = 10000;
+
+int score_top_7;
+score_top_7 = 9000;
+
+int score_top_8;
+score_top_8 = 8000;
+
+int score_top_9;
+score_top_9 = 1000;
+
+int score_top_10;
+score_top_10 = 2;
+
+string score_nom_temp_buff;
+score_nom_temp_buff = " ";
+
+string score_nom_temp;
+score_nom_temp = " ";
+
+string score_nom_1;
+score_nom_1 = "Yassine";
+
+string score_nom_2;
+score_nom_2 = "Aurelien";
+
+string score_nom_3;
+score_nom_3 = "Romain";
+
+string score_nom_4;
+score_nom_4 = "Marc";
+
+string score_nom_5;
+score_nom_5 = "Loic";
+
+string score_nom_6;
+score_nom_6 = "Sylvain";
+
+string score_nom_7;
+score_nom_7 = "Martin";
+
+string score_nom_8;
+score_nom_8 = "Mohamed";
+
+string score_nom_9;
+score_nom_9 = "Philipe";
+
+string score_nom_10;
+score_nom_10 = "Nicolas";
+//score fin
+
+
+int foule1_numMat;
+foule1_numMat = 0;
+
+int foule2_numMat;
+foule2_numMat = 0;
+
+int foule3_numMat;
+foule3_numMat = 0;
+
+int bonus4;
+bonus4 = 0;
+
+int bonus8;
+bonus8 = 0;
+
+int bonusNS;
+bonusNS = 0;
+
+int Volume_Son;
+Volume_Son = 1;
+
+int g_niveau;
+g_niveau = 1 ;
+
+int rules_pages;
+rules_pages = 1;
+
+int temp_bonus;
+temp_bonus = 0;
+
+int bonus_lvl;
+bonus_lvl = 0;
+
+int CercleDroiteHit;
+CercleDroiteHit = 0;
+
+int num_lives;
+num_lives = 3;
+
+int g_zone_index;
+g_zone_index = 0;
+
+int morpions_bonus;
+morpions_bonus = 10;
+
+int morpions_goal;
+morpions_goal = 0;
+
+int Rand_Morp;
+Rand_Morp = 0;
+
+int g_score;
+g_score = 0;
+
+
+bool TraitementUrl_OK;
+TraitementUrl_OK = false;
+
+bool URL_Err;
+URL_Err = false;
+
+bool FINALLY_ASPX;
+FINALLY_ASPX = false;
+
+bool g_bonusOK;
+g_bonusOK = false;
+
+bool g_bonushardOK;
+g_bonushardOK = false;
+
+
+bool IsHelp;
+IsHelp =  false;
+
+bool IsScore;
+IsScore =  false;
+
+bool IsFame;
+IsFame =  true;
+
+bool Istranslation;
+Istranslation =  false;
+
+bool can_shoot;
+can_shoot = true;
+
+bool restart;
+restart = false;
+
+bool started;
+started = false;
+
+bool IsCollBut;
+IsCollBut = false;
+
+bool Tir_But_OK;
+Tir_But_OK = false;
+
+real wind_angle;
+vector3 wind;
+
+real Pas_X;
+Pas_X = 20.0;
+
+real Signe_X;
+Signe_X = 1.0;
+
+real courbure;
+
+real powaaaa;
+powaaaa = 0.0;
+
+real wind_power;
+wind_power = 0.0;
+
+real flech_pitch;
+real fleche_yaw;
+
+real current_timer;
+
+real BALLONX;
+BALLONX = 0.0;
+real BALLONY;
+BALLONY = 0.0;
+real BALLONZ;
+BALLONZ = 0.0;
+
+real MAXBALLONX;
+MAXBALLONX = 280.0;
+	
+real MINBALLONX;
+MINBALLONX = (-280.0);
+
+real current_camera_yaw;
+
+real timerscore;
+timerscore = 0.0;
+
+real Timer_max;
+Timer_max = 0.0;
+
+real posx;
+real posy;
+real rotation;
+
+real speedX;
+speedX = 0.0;
+
+real speedY;
+speedY = 0.0;
+
+real speedZ;
+speedZ = 0.0;
+
+vector3 l_oldPos;
+
+quaternion end;
+quaternion start;
+quaternion wind_orientation;
+
+object ballon;
+ballon = Object_GetByName("ballon_rugby");
+
+Object_GetByName("rosace")->Hide();
+Object_GetByName("graduation")->Hide();
+Overlay_Hide("NiceShot");
+Overlay_Hide("Jauge_Group");
+Overlay_Hide("Rules");
+Overlay_Hide("Lives");
+Overlay_Hide("GameOver");
+//Overlay_Hide("ERREUR_COM");
+Overlay_Hide("Goal");
+Overlay_Hide("Failed");
+Overlay_Hide("wind_text");
+Overlay_Hide("Niv");
+Overlay_Hide("score_menu");
+Overlay_Hide("HighScores");
+Object_GetByName("fleche")->Hide();
+Object_GetByName("coll_pf_complexe_stade_01")->Hide();
+Object_GetByName("coll_but")->Hide();
+Object_GetByName("coll_pf_but_stade_01")->Hide();
+Object_GetByName("coll_pf_but_stade_02")->Hide();
+Object_GetByName("coll_pf_but_stade_03")->Hide();
+Object_GetByName("coll_pf_but_stade_04")->Hide();
+Object_GetByName("coll_pf_but_stade_05")->Hide();
+Object_GetByName("Cercle_Coll_droit")->Hide();
+Object_GetByName("Cercle_Coll_gauche")->Hide();
+Object_GetByName("Cercle_Coll_but")->Hide();
+Object_GetByName("Cercle_gauche")->Hide();
+Object_GetByName("Cercle_droit")->Hide();
+Object_GetByName("Cercle_but")->Hide();
+Object_GetByName("morpion")->Hide();
+Object_GetByName("croix_1")->Hide();
+Object_GetByName("croix_2")->Hide();
+Object_GetByName("croix_3")->Hide();
+Object_GetByName("croix_4")->Hide();
+Object_GetByName("croix_5")->Hide();
+Object_GetByName("croix_6")->Hide();
+Object_GetByName("croix_7")->Hide();
+Object_GetByName("croix_8")->Hide();
+Object_GetByName("croix_9")->Hide();
+Object_GetByName("coll_miss_but1")->Hide();
+Object_GetByName("coll_miss_but2")->Hide();
+Object_GetByName("coll_miss_but3")->Hide();
+Object_GetByName("coll_pf_complexe_stade_01")->Hide();
+Object_GetByName("coll_pf_complexe_stade_02")->Hide();
+Object_GetByName("coll_pf_complexe_stade_03")->Hide();
+Object_GetByName("coll_pf_complexe_stade_04")->Hide();
+Object_GetByName("coll_pf_complexe_stade_05")->Hide();
+
+
+camera RootCamera;
+
+bool placing_ballon;
+placing_ballon = false;
+
+bool directing_ballon;
+directing_ballon = false;
+
+bool effect_ballon;
+effect_ballon = false;
+
+bool effect_ballon_eff;
+effect_ballon_eff = false;
+
+bool power_ballon;
+power_ballon = false;
+
+bool POSITIONBALLON;
+POSITIONBALLON = false;
+
+bool change_rot;
+
+bool goallllll;
+goallllll = false;
+
+bool nice_shot;
+
+vector3 position;
+
+RootCamera = Camera_GetByName("RootCamera");
+
+RootCamera->GetParent()->Reset();
+RootCamera->GetParent()->SetPosition(SetVector3(0.0,20.0,-30.0));
+RootCamera->SetPosition(SetVector3(0.0,1000.0,3000.0));
+RootCamera->GetParent()->Pitch(5.0);
+RootCamera->GetParent()->Yaw(-30.0);
+
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("droite_gauche")->Start();
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("droite_gauche")->Pause();
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("droite_gauche")->SetTime(0.5);
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("courbe")->Start();
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("courbe")->Pause();
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("courbe")->SetTime(0.0);
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("long")->Start();
+AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("long")->Pause();
+
+current_camera_yaw = -30.0;
+
+Sound_Play_Global("rugby_Foule_continue");
+
+void LaunchPlayerAnim()
+{
+	Timer_Kill( "anim_player");
+	Timer_Kill( "PlayerEndAnim");
+	Timer_Kill( "PlayerPauseAnim");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "tir");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "tir");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "win");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "win");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "loose");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "loose");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+	AnimationGroup_GetByName( "anim_player")->StartAnimation( "stand");
+	timer("anim_player", TIMERTYPE_REPEAT, 2.6)
+	{
+		AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+		AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+		AnimationGroup_GetByName( "anim_player")->StartAnimation( "stand");
+	};
+};
+
+void PlayerStartAnim( string p_playerAnimName, real p_playerAnimLength)
+{
+	Timer_Kill( "anim_player");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "win");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "win");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "loose");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "loose");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+	AnimationGroup_GetByName( "anim_player")->StartAnimation( p_playerAnimName);
+
+	timer( "PlayerEndAnim", TIMERTYPE_ONCE, p_playerAnimLength)
+	{
+		AnimationGroup_GetByName( "anim_player")->StopAnimation( p_playerAnimName);
+		LaunchPlayerAnim();
+	};
+};
+
+void cal_highscore()
+{
+	if(g_score > score_top_1)
+	{	
+		
+		score_temp = score_top_1;
+		score_top_1 = g_score;
+			
+		score_temp_buff = score_top_2;
+		score_top_2 = score_temp;
+		
+		score_temp = score_top_3;
+		score_top_3 = score_temp_buff;
+		
+		score_temp_buff = score_top_4;
+		score_top_4 = score_temp;
+		
+		score_temp = score_top_5;
+		score_top_5 = score_temp_buff;
+		
+		score_temp_buff = score_top_6;
+		score_top_6 = score_temp;
+		
+		score_temp = score_top_7;
+		score_top_7 = score_temp_buff;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+		
+
+		score_nom_temp = score_nom_1;
+		score_nom_1 = nom_joueur;
+		
+		score_nom_temp_buff = score_nom_2;
+		score_nom_2 = score_nom_temp;
+		
+		score_nom_temp = score_nom_3;
+		score_nom_3 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_4;
+		score_nom_4 = score_nom_temp;
+		
+		score_nom_temp = score_nom_5;
+		score_nom_5 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_6;
+		score_nom_6 = score_nom_temp;
+		
+		score_nom_temp = score_nom_7;
+		score_nom_7 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	
+	}elseif(g_score > score_top_2)
+	{
+		
+		score_temp_buff = score_top_2;
+		score_top_2 = g_score;
+		
+		score_temp = score_top_3;
+		score_top_3 = score_temp_buff;
+		
+		score_temp_buff = score_top_4;
+		score_top_4 = score_temp;
+		
+		score_temp = score_top_5;
+		score_top_5 = score_temp_buff;
+		
+		score_temp_buff = score_top_6;
+		score_top_6 = score_temp;
+		
+		score_temp = score_top_7;
+		score_top_7 = score_temp_buff;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+		
+		score_nom_temp_buff = score_nom_2;
+		score_nom_2 = nom_joueur;
+		
+		score_nom_temp = score_nom_3;
+		score_nom_3 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_4;
+		score_nom_4 = score_nom_temp;
+		
+		score_nom_temp = score_nom_5;
+		score_nom_5 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_6;
+		score_nom_6 = score_nom_temp;
+		
+		score_nom_temp = score_nom_7;
+		score_nom_7 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+		
+	}elseif(g_score > score_top_3)
+	{
+		score_temp = score_top_3;
+		score_top_3 = g_score;
+		
+		score_temp_buff = score_top_4;
+		score_top_4 = score_temp;
+		
+		score_temp = score_top_5;
+		score_top_5 = score_temp_buff;
+		
+		score_temp_buff = score_top_6;
+		score_top_6 = score_temp;
+		
+		score_temp = score_top_7;
+		score_top_7 = score_temp_buff;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+		
+		score_nom_temp = score_nom_3;
+		score_nom_3 = nom_joueur;
+		
+		score_nom_temp_buff = score_nom_4;
+		score_nom_4 = score_nom_temp;
+		
+		score_nom_temp = score_nom_5;
+		score_nom_5 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_6;
+		score_nom_6 = score_nom_temp;
+		
+		score_nom_temp = score_nom_7;
+		score_nom_7 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	
+	}elseif(g_score > score_top_4)
+	{
+	
+		score_temp_buff = score_top_4;
+		score_top_4 = g_score;
+		
+		score_temp = score_top_5;
+		score_top_5 = score_temp_buff;
+		
+		score_temp_buff = score_top_6;
+		score_top_6 = score_temp;
+		
+		score_temp = score_top_7;
+		score_top_7 = score_temp_buff;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+		
+		score_nom_temp_buff = score_nom_4;
+		score_nom_4 = nom_joueur;
+		
+		score_nom_temp = score_nom_5;
+		score_nom_5 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_6;
+		score_nom_6 = score_nom_temp;
+		
+		score_nom_temp = score_nom_7;
+		score_nom_7 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+
+	}elseif(g_score > score_top_5)
+	{
+		score_temp = score_top_5;
+		score_top_5 = g_score;
+		
+		score_temp_buff = score_top_6;
+		score_top_6 = score_temp;
+		
+		score_temp = score_top_7;
+		score_top_7 = score_temp_buff;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+
+		score_nom_temp = score_nom_5;
+		score_nom_5 = nom_joueur;
+		
+		score_nom_temp_buff = score_nom_6;
+		score_nom_6 = score_nom_temp;
+		
+		score_nom_temp = score_nom_7;
+		score_nom_7 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	
+	}elseif(g_score > score_top_6)
+	{	
+		score_temp_buff = score_top_6;
+		score_top_6 = g_score;
+		
+		score_temp = score_top_7;
+		score_top_7 = score_temp_buff;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+
+		score_nom_temp_buff = score_nom_6;
+		score_nom_6 = nom_joueur;
+		
+		score_nom_temp = score_nom_7;
+		score_nom_7 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	}elseif(g_score > score_top_7)
+	{	
+		score_temp = score_top_7;
+		score_top_7 = g_score;
+		
+		score_temp_buff = score_top_8;
+		score_top_8 = score_temp;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+
+		score_nom_temp = score_nom_7;
+		score_nom_7 = nom_joueur;
+		
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = score_nom_temp;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	}elseif(g_score > score_top_8)
+	{	
+		score_temp_buff = score_top_8;
+		score_top_8 = g_score;
+		
+		score_temp = score_top_9;
+		score_top_9 = score_temp_buff;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+
+		score_nom_temp_buff = score_nom_8;
+		score_nom_8 = nom_joueur;
+		
+		score_nom_temp = score_nom_9;
+		score_nom_9 = score_nom_temp_buff;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	}elseif(g_score > score_top_9)
+	{	
+		score_temp = score_top_9;
+		score_top_9 = g_score;
+		
+		score_temp_buff = score_top_10;
+		score_top_10 = score_temp;
+
+		score_nom_temp = score_nom_9;
+		score_nom_9 = nom_joueur;
+		
+		score_nom_temp_buff = score_nom_10;
+		score_nom_10 = score_nom_temp;
+	}elseif(g_score > score_top_10)
+	{	
+		score_top_10 = g_score;		
+		score_nom_10 = nom_joueur;
+	};
+
+	OverlayElement_GetByName("Score_top_1")->SetCaption(itoa(score_top_1));
+	OverlayElement_GetByName("Nom_1")->SetCaption(score_nom_1);
+	OverlayElement_GetByName("Score_top_2")->SetCaption(itoa(score_top_2));
+	OverlayElement_GetByName("Nom_2")->SetCaption(score_nom_2);
+	OverlayElement_GetByName("Score_top_3")->SetCaption(itoa(score_top_3));
+	OverlayElement_GetByName("Nom_3")->SetCaption(score_nom_3);
+	OverlayElement_GetByName("Score_top_4")->SetCaption(itoa(score_top_4));
+	OverlayElement_GetByName("Nom_4")->SetCaption(score_nom_4);
+	OverlayElement_GetByName("Score_top_5")->SetCaption(itoa(score_top_5));
+	OverlayElement_GetByName("Nom_5")->SetCaption(score_nom_5);
+	OverlayElement_GetByName("Score_top_6")->SetCaption(itoa(score_top_6));
+	OverlayElement_GetByName("Nom_6")->SetCaption(score_nom_6);
+	OverlayElement_GetByName("Score_top_7")->SetCaption(itoa(score_top_7));
+	OverlayElement_GetByName("Nom_7")->SetCaption(score_nom_7);
+	OverlayElement_GetByName("Score_top_8")->SetCaption(itoa(score_top_8));
+	OverlayElement_GetByName("Nom_8")->SetCaption(score_nom_8);
+	OverlayElement_GetByName("Score_top_9")->SetCaption(itoa(score_top_9));
+	OverlayElement_GetByName("Nom_9")->SetCaption(score_nom_9);
+	OverlayElement_GetByName("Score_top_10")->SetCaption(itoa(score_top_10));
+	OverlayElement_GetByName("Nom_10")->SetCaption(score_nom_10);
+	
+	Overlay_Show("HighScores");
+	Echo(nom_joueur);
+	Echo(itoa(g_score));
+
+};
+
+void affiche_score()
+{
+	current_timer = 0.0;
+	//nice shoot
+	if(nice_shot)
+	{
+		current_timer = 1.0;
+	
+		timer("END_SHOOT_SCORE_NICESHOOT",TIMERTYPE_ONCE, current_timer)
+		{
+			OverlayElement_GetByName("score")->SetCaption( itoa(bonusNS));
+			OverlayElement_GetByName("score_menu")->SetMaterial("score_menu_super"));
+			current_timer = current_timer + 1.0;
+		}
+	};	
+	//bonus temps
+	timer("END_SHOOT_SCORE_TEMPS",TIMERTYPE_ONCE, current_timer + 1.0)
+	{
+		OverlayElement_GetByName("score")->SetCaption( rtoa(floor(timerscore)));
+		OverlayElement_GetByName("score_menu")->SetMaterial("score_menu_time"));
+	};
+	if(bonus_lvl > 0)
+	{
+		current_timer = current_timer + 1.0;
+		//bonus level
+		timer("END_SHOOT_SCORE_LVL",TIMERTYPE_ONCE, current_timer + 1.0)
+		{
+			OverlayElement_GetByName("score")->SetCaption( itoa(bonus_lvl));
+			OverlayElement_GetByName("score_menu")->SetMaterial("score_menu_bonus"));
+		};
+	};	
+	//score 
+	timer("END_SHOOT_SCORE_ACTUEL",TIMERTYPE_ONCE, current_timer + 2.0)
+	{
+		OverlayElement_GetByName("score")->SetCaption( itoa(bonusNS + rtoi(timerscore) + bonus_lvl + (100 * (g_niveau - 1))));
+		OverlayElement_GetByName("score_menu")->SetMaterial("score_menu_points"));
+		bonus_lvl = 0;
+	};
+	//score final
+	timer("END_SHOOT_SCORE_FINAL",TIMERTYPE_ONCE, current_timer + 3.0)
+	{
+		OverlayElement_GetByName("score")->SetCaption( itoa(g_score));
+		OverlayElement_GetByName("score_menu")->SetMaterial("score_menu_score"));
+		bonus_lvl = 0;
+	};
+	
+};
+	
+timer("Camera_Rotation_Stade",TIMERTYPE_PERMANENT,0.0)
+{
+	current_camera_yaw = current_camera_yaw + GENERAL_ELAPSED_TIME*15.0 ;
+	if( current_camera_yaw > 180.0 )
+	{
+		current_camera_yaw = current_camera_yaw - 360.0;
+	};
+	RootCamera->GetParent()->Yaw(GENERAL_ELAPSED_TIME*15.0);
+};
+
+
+ // Animation drapeaux + foule
+
+AnimationGroup_GetByName("Drapeaux")->StartAnimation("drapeau_stade");
+
+timer("drapeaux",TIMERTYPE_REPEAT,3.20)
+{
+	AnimationGroup_GetByName("Drapeaux")->StartAnimation("drapeau_stade");
+
+};
+
+AnimationGroup_GetByName("drapeaux_exterieurs_stade")->StartAnimation("drapeau_exterieur");
+
+timer("drapeaux_exterieurs_stade",TIMERTYPE_REPEAT,3.20)
+{
+	AnimationGroup_GetByName("drapeaux_exterieurs_stade")->StartAnimation("drapeau_exterieur");
+
+};
+
+
+timer("foule1",TIMERTYPE_REPEAT,1.5)
+{
+	foule1_numMat++;
+	if(foule1_numMat == 1)
+	{
+	Object_GetByName("complexe_stade_public_01")->SetMaterial("complexe_stade_public");
+	Object_GetByName("complexe_stade_public_02")->SetMaterial("complexe_stade_public_02");
+	}
+	elseif(foule1_numMat == 2)
+	{
+		Object_GetByName("complexe_stade_public_01")->SetMaterial("complexe_stade_public_02");
+		Object_GetByName("complexe_stade_public_02")->SetMaterial("complexe_stade_public");
+		foule1_numMat=0;
+	}
+};
+
+timer("foule2",TIMERTYPE_REPEAT,1.5)
+{
+	foule2_numMat++;
+	if(foule2_numMat == 1)
+	{
+	Object_GetByName("complexe_stade_public_03")->SetMaterial("complexe_stade_public");
+	Object_GetByName("complexe_stade_public_04")->SetMaterial("complexe_stade_public_02");
+	}
+	elseif(foule2_numMat == 2)
+	{
+		Object_GetByName("complexe_stade_public_03")->SetMaterial("complexe_stade_public_02");
+		Object_GetByName("complexe_stade_public_04")->SetMaterial("complexe_stade_public");
+		foule2_numMat=0;
+	}
+};
+Timer_Shift("foule2",0.5);
+
+
+timer("foule3",TIMERTYPE_REPEAT,1.5)
+{
+	foule3_numMat++;
+	if(foule3_numMat == 1)
+	{
+	Object_GetByName("complexe_stade_public_05")->SetMaterial("complexe_stade_public");
+	Object_GetByName("complexe_stade_public_06")->SetMaterial("complexe_stade_public_02");
+	}
+	elseif(foule3_numMat == 2)
+	{
+		Object_GetByName("complexe_stade_public_05")->SetMaterial("complexe_stade_public_02");
+		Object_GetByName("complexe_stade_public_06")->SetMaterial("complexe_stade_public");
+		foule3_numMat=0;
+	}
+};
+Timer_Shift("foule3",1.0);
+
+Object_GetByName("ballon_rugby")->GetParent()->Reset();
+Object_GetByName("ballon_rugby")->GetParent()->SetPosition(SetVector3(0.0,40.0,-29.2984));
+ballon->GetPhysicsObject()->ReassertPosition();
+	
+// touche M
+BindKey(77,BINDKEY_DOWN)
+{
+	num_lives++;
+	Volume_Son = Volume_Son * (-1);
+	if(Volume_Son == (-1))
+	{
+		Sound_Stop_Global("rugby_Foule_continue");
+		Sound_Stop_Global("rugby_musique_menu");
+	}
+	else
+	{
+		Sound_Play_Global("rugby_Foule_continue");
+		
+		if(wind_power == 0.0)
+		{
+			Sound_Play_Global("rugby_musique_menu");
+		};
+	};
+};
+
+// touche H
+BindKey(72,BINDKEY_DOWN)
+{
+	if(!IsHelp)
+	{
+		IsHelp =  true;
+		Overlay_Hide("Title");
+		Overlay_Show("Rules");
+		rules_pages = 1;
+		OverlayElement_GetByName("Rules")->SetMaterial("help1");
+	}
+	else
+	{
+		IsHelp = false;
+		Overlay_Hide("Rules");
+		if(!started)
+		{
+			Overlay_Show("Title");
+		};
+	};
+};
+
+vector3 l_tmpPos;
+
+void PlaceBallon()
+{
+	timer("sifflet_1",TIMERTYPE_ONCE,3.0)
+	{
+		if(Volume_Son == 1)
+		{
+			Sound_Play_Global("rugby_Sifflet_1");
+		};
+	};
+	if( g_niveau == 4 )
+	{
+		Object_GetByName("morpion")->Show();
+		Rand_Morp = rtoi(rand(1.0,24.0));
+		
+		if(Rand_Morp == 1)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Show();
+			Object_GetByName("croix_3")->Show();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 1;
+		};
+		if(Rand_Morp == 2)
+		{
+			Object_GetByName("croix_1")->Show();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Show();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 2;
+		};
+		if(Rand_Morp == 3)
+		{
+			Object_GetByName("croix_1")->Show();
+			Object_GetByName("croix_2")->Show();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 3;
+		};
+		if(Rand_Morp == 4)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Show();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 4;
+		};
+		if(Rand_Morp == 5)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Show();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Show();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 5;
+		};
+		if(Rand_Morp == 6)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Show();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 6;
+		};		
+		if(Rand_Morp == 7)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Show();
+			Object_GetByName("croix_9")->Show();
+			morpions_bonus = 7;
+		};	
+		if(Rand_Morp == 8)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Show();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Show();
+			morpions_bonus = 8;
+		};	
+		if(Rand_Morp == 9)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Show();
+			Object_GetByName("croix_8")->Show();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 9;
+		};
+		if(Rand_Morp == 10)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Show();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Show();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 1;
+		};
+		if(Rand_Morp == 11)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Show();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 2;
+		};
+		if(Rand_Morp == 12)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Show();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Show();
+			morpions_bonus = 3;
+		};
+		if(Rand_Morp == 13)
+		{
+			Object_GetByName("croix_1")->Show();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Show();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 4;
+		};
+		if(Rand_Morp == 14)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Show();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Show();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 5;
+		};
+		if(Rand_Morp == 15)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Show();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Show();
+			morpions_bonus = 6;
+		};		
+		if(Rand_Morp == 16)
+		{
+			Object_GetByName("croix_1")->Show();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Show();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 7;
+		};	
+		if(Rand_Morp == 17)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Show();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 8;
+		};	
+		if(Rand_Morp == 18)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Show();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Show();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 9;
+		};		
+		if(Rand_Morp == 19)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Show();
+			morpions_bonus = 1;
+		};	
+		if(Rand_Morp == 20)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Show();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 3;
+		};	
+		if(Rand_Morp == 21)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Show();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 7;
+		};	
+		if(Rand_Morp == 22)
+		{
+			Object_GetByName("croix_1")->Show();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Show();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 9;
+		};	
+		if(Rand_Morp == 23)
+		{
+			Object_GetByName("croix_1")->Show();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Show();
+			morpions_bonus = 5;
+		};	
+		if(Rand_Morp == 24)
+		{
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Show();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Show();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 5;
+		};	
+	}
+	else
+	{
+			Object_GetByName("morpion")->Hide();
+			Object_GetByName("croix_1")->Hide();
+			Object_GetByName("croix_2")->Hide();
+			Object_GetByName("croix_3")->Hide();
+			Object_GetByName("croix_4")->Hide();
+			Object_GetByName("croix_5")->Hide();
+			Object_GetByName("croix_6")->Hide();
+			Object_GetByName("croix_7")->Hide();
+			Object_GetByName("croix_8")->Hide();
+			Object_GetByName("croix_9")->Hide();
+			morpions_bonus = 10;
+	};
+
+	if( g_niveau == 8 )
+	{
+		timer("But_Translation",TIMERTYPE_PERMANENT,0.0)
+		{	
+			
+			if(Pas_X > 1000.0)
+			{
+				Signe_X = 1.0;
+			};
+			if(Pas_X < -1000.0)
+			{
+				Signe_X = (-1.0);
+			};	
+			
+			Pas_X = Signe_X * 5.0 + Pas_X ;
+
+			position = SetVector3( Pas_X , 0.0 , 4965.0 );
+		
+			Object_GetByName("but_stade")->GetParent()->SetPosition(position);		
+
+			Object_GetByName("coll_but")->GetParent()->SetPosition(position);
+			PhysicsObject_GetByName("coll_but")->ReassertPosition();
+			
+			Object_GetByName("coll_miss_but1")->GetParent()->SetPosition(position);
+			PhysicsObject_GetByName("coll_miss_but1")->ReassertPosition();
+			
+			Object_GetByName("coll_miss_but2")->GetParent()->SetPosition(position);
+			PhysicsObject_GetByName("coll_miss_but2")->ReassertPosition();
+			
+			Object_GetByName("coll_miss_but3")->GetParent()->SetPosition(position);
+			PhysicsObject_GetByName("coll_miss_but3")->ReassertPosition();
+			
+		};
+	};
+
+	if( g_zone_index == 0 )
+	{
+		position = SetVector3( rand(-720.0 , 720.0)  , 20.0 , rand( -2720.0 , -1320.0 ) );
+	}
+	elseif( g_zone_index == 1 )
+	{
+		position = SetVector3( rand(-1260.0 , 1260.0)  , 20.0 , rand( -1220.0 , -850.0 ) );
+	}
+	elseif( g_zone_index == 2 )
+	{
+		posx = rand( 1.0 , 2.0 );
+		if( posx < 1.5 )
+		{
+			position = SetVector3( rand(-1800.0 , -200.0)  , 20.0 , rand( -800.0 , -300.0 ) );
+		}
+		else
+		{
+			position = SetVector3( rand(1800.0 , 200.0)  , 20.0 , rand( -800.0 , -300.0 ) );
+		};
+	}
+	elseif( g_zone_index == 3 )
+	{
+		posx = rand( 1.0 , 2.0 );
+		if( posx < 1.5 )
+		{
+			position = SetVector3( rand(-2720.0 , -400.0)  , 20.0 , rand( -200.0 , 500.0 ) );
+		}
+		else
+		{
+			position = SetVector3( rand(2720.0 , 400.0)  , 20.0 , rand( -200.0 , 500.0 ) );
+		};
+	}
+	elseif( g_zone_index == 4 )
+	{
+		posx = rand( 1.0 , 2.0 );
+		if( posx < 1.5 )
+		{
+			position = SetVector3( rand(-2875.0 , -600.0)  , 20.0 , rand( 600.0 , 1100.0 ) );
+		}
+		else
+		{
+			position = SetVector3( rand(2875.0 , 600.0)  , 20.0 , rand( 600.0 , 1100.0 ) );
+		};
+	}
+	else
+	{
+		posx = rand( 1.0 , 2.0 );
+		if( posx < 1.5 )
+		{
+			position = SetVector3( rand(-2875.0 , -800.0)  , 20.0 , rand( 1200.0 , 1400.0 ) );
+		}
+		else
+		{
+			position = SetVector3( rand(2875.0 , 800.0)  , 20.0 , rand( 1200.0 , 1400.0 ) );
+		};
+	};
+
+	Object_GetByName("ballon_rugby")->GetParent()->SetPosition(position + SetVector3(0.0, 20.0, 0.0));
+	Object_GetByName("tee_plastique")->GetParent()->SetPosition(position);
+	SceneNode_GetByName("player_node")->SetPosition(position + SetVector3(-10.0, -20.0, 0.0) ));
+	ballon->GetPhysicsObject()->ReassertPosition();
+	SceneNode_GetByName("Camera2")->SetPosition(position);
+
+	timer("Niv_hide",TIMERTYPE_ONCE,2.0)
+	{
+		Overlay_Show("Niv");
+	};
+	timer("Niv_hide2",TIMERTYPE_ONCE,3.0)
+	{
+		SceneNode_GetByName("player_node")->SetVisible(false);
+		Overlay_Hide("Niv");
+		Object_GetByName("rosace")->Show();
+		Object_GetByName("graduation")->Show();
+		Object_GetByName("fleche")->Show();
+		Overlay_Show("wind_text");
+		Tir_But_OK = true;
+		SceneNode_GetByName("Camera2")->SetPosition(position);
+	};
+	
+	
+	end = V3_GetRotationTo ( SetVector3( 0.0,0.0,1.0 ) , ( Object_GetByName("ballon_rugby")->GetParent()->GetAbsolutePosition() ) - ( SceneNode_GetByName("but_stade_1")->GetAbsolutePosition() ) ) ;
+	wind_angle = rand( 1.0 , 2.0 );
+		
+	wind_angle = rand( 1.0 , 2.0);
+	
+	if (wind_angle < 1.5)
+	{
+		wind_angle = rand( 120.0, 30.0);
+	}
+	else
+	{
+		wind_angle = rand(-120.0,-30.0);
+	};
+
+	Object_GetByName("rosace")->GetParent()->Reset();
+	Object_GetByName("rosace")->GetParent()->RotateLocal(SetVector3(0.0,1.0,0.0),wind_angle);
+	
+	wind_power = 0.0;
+	if( g_niveau < 5 )
+	{
+		wind_power = rand( 50.0 * itor(g_niveau - 1) , 75.0 * itor(g_niveau ) );
+	}
+	elseif( g_niveau < 11 )
+	{
+		wind_power = rand( 60.0 * itor(g_niveau - 1) , 75.0 * itor(g_niveau ) );
+	}
+	else
+	{
+		wind_power = 700.0 + rand( 0.0 , 400.0 );
+	};
+	if(wind_power < 0.0)
+	{
+		wind_power = 0.0;
+	};
+	
+	Object_GetByName("ballon_rugby")->GetParent()->SetOrientation(end);
+	SceneNode_GetByName("player_node")->SetOrientation(end));
+	SceneNode_GetByName("player_node")->Yaw(180.0);
+	Object_GetByName("tee_plastique")->GetParent()->SetOrientation(end);
+	Object_GetByName("ballon_rugby")->GetParent()->Pitch(90.0);
+	ballon->GetPhysicsObject()->ReassertPosition();
+	LaunchPlayerAnim();
+		
+	if( wind_power < 400.0 )
+	{
+		OverlayElement_GetByName("wind_text")->SetTextColour(SetColourRGB(0.0,1.0,0.0));
+	}
+	elseif(wind_power < 800.0)
+	{
+		OverlayElement_GetByName("wind_text")->SetTextColour(SetColourRGB(1.0,0.6,0.0));
+	}
+	else
+	{
+		OverlayElement_GetByName("wind_text")->SetTextColour(SetColourRGB(1.0,0.0,0.0));
+	};
+	
+	OverlayElement_GetByName("wind_text")->SetCaption("Vent : "+rtoa((floor(wind_power / 10.0))/10.0)+" m/s");	
+
+	wind_orientation = SetQuaternion(SetVector3(0.0,-1.0,0.0),wind_angle);
+	SceneNode_GetByName("drapeau_stade_1")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_2")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_3")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_4")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_5")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_6")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_7")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_8")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_9")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_10")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_11")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_11_1")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_12")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_13")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_stade_13_1")->SetOrientation(wind_orientation);
+	
+	SceneNode_GetByName("drapeau_exterieur_stade_01")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_02")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_03")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_04")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_05")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_06")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_07")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_08")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_09")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_10")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_11")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_12")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_13")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_14")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_15")->SetOrientation(wind_orientation);
+	SceneNode_GetByName("drapeau_exterieur_stade_16")->SetOrientation(wind_orientation);
+	
+	Object_GetByName("fleche")->GetParent()->Reset();
+	Object_GetByName("fleche")->GetParent()->SetScale(SetVector3(1.0, 1.0, 1.0));
+	Object_GetByName("fleche")->GetParent()->SetOrientation(end);
+	
+	position = (RootCamera->GetParent()->GetParent()->GetAbsolutePosition()) - (Object_GetByName("ballon_rugby")->GetParent()->GetAbsolutePosition());
+
+	RootCamera->GetParent()->SetParent(SceneNode_GetByName("CamBallon"));
+	SceneNode_GetByName("CamBallon")->Pitch(-40.0);
+	start = RootCamera->GetParent()->GetOrientation();
+	
+	timer("Camera_transition",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		RootCamera->GetParent()->SetOrientation( Quat_Slerp(start,end,CURRENTTIMER_TIME_ELAPSED) );
+		RootCamera->SetPosition( V3_CubicInterpolation(SetVector3(0.0,3.0,6000.0) , SetVector3(0.0,100.0,750.0) , CURRENTTIMER_TIME_LEFT ) );
+	};
+	timer("Camera_transition_end",TIMERTYPE_ONCE,1.0)
+	{
+		directing_ballon = true;
+		RootCamera->SetPosition( SetVector3(0.0,100.0,750.0));
+	};
+	
+	flech_pitch = 82.0 - MOUSE_POSITION_Y*90.0;
+	fleche_yaw = 90.0 - MOUSE_POSITION_X*180.0;
+	
+	if( flech_pitch < 0.0 )
+	{
+		flech_pitch = 0.0;
+	};
+	if( flech_pitch > 50.0 ) 
+	{
+		flech_pitch = 50.0;
+	};
+	
+	Object_GetByName("fleche")->GetParent()->Pitch(flech_pitch);
+	Object_GetByName("fleche")->GetParent()->Yaw(fleche_yaw);
+	
+	timer("Ballon_directing",TIMERTYPE_PERMANENT,0.0)
+	{
+		flech_pitch = flech_pitch + MOUSE_DIFFERENCE_Y*90.0;
+
+		if( flech_pitch > 0.0 && flech_pitch < 50.0 )
+		{
+			Object_GetByName("fleche")->GetParent()->Pitch(MOUSE_DIFFERENCE_Y*90.0);
+		}
+		else
+		{
+			flech_pitch = flech_pitch - MOUSE_DIFFERENCE_Y*90.0;
+		};
+		
+		fleche_yaw = fleche_yaw + MOUSE_DIFFERENCE_X*180.0;
+
+		if( fleche_yaw > (-80.0) && fleche_yaw < 80.0 )
+		{
+			Object_GetByName("fleche")->GetParent()->Yaw(MOUSE_DIFFERENCE_X*180.0);
+		}
+		else
+		{
+			fleche_yaw = fleche_yaw - MOUSE_DIFFERENCE_X*180.0;
+		};
+				
+	};
+	
+	if( g_niveau > 10)
+	{
+		BALLONX = (SceneNode_GetByName("ballon_rugby")->GetPosition())[0];
+		if(BALLONX < 0.0)
+		{
+			if(wind_angle < 0.0)
+			{
+				Object_GetByName("Cercle_droit")->Hide();
+				Object_GetByName("Cercle_gauche")->Show();
+				CercleDroiteHit = (-1);
+			}
+			else
+			{
+				Object_GetByName("Cercle_gauche")->Hide();
+				Object_GetByName("Cercle_droit")->Show();
+				CercleDroiteHit = 1;
+			};
+		}
+		else
+		{
+			if(wind_angle < 0.0)
+			{
+				Object_GetByName("Cercle_droit")->Hide();
+				Object_GetByName("Cercle_gauche")->Show();
+				CercleDroiteHit = (-1);
+			}
+			else
+			{
+				Object_GetByName("Cercle_gauche")->Hide();
+				Object_GetByName("Cercle_droit")->Show();
+				CercleDroiteHit = 1;	
+			};
+		};
+	};	
+	
+	if( g_niveau > 11)
+	{
+		Object_GetByName("Cercle_but")->Show();
+	};
+};
+
+void BlockCam()
+{
+	l_oldPos = RootCamera->GetParent()->GetAbsolutePosition() + RootCamera->GetPosition();
+	timer("BlockCam",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		RootCamera->SetPosition( (RootCamera->GetPosition()) + SetVector3( 0.0 , 0.0 , GENERAL_ELAPSED_TIME * 1000.0 )  );
+		RootCamera->GetParent()->SetOrientation( V3_GetRotationTo ( SetVector3( 0.0,0.0,1.0 ) , l_oldPos - ( SceneNode_GetByName("ballon_rugby")->GetAbsolutePosition() ) ) );
+
+	};
+};
+
+void BlockCamLeft()
+{
+	l_oldPos = RootCamera->GetParent()->GetAbsolutePosition() + RootCamera->GetPosition();
+	timer("BlockCam",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		RootCamera->SetPosition( (RootCamera->GetPosition()) + SetVector3( 0.0 , 0.0 , GENERAL_ELAPSED_TIME * 1000.0 )  );
+		RootCamera->GetParent()->SetOrientation( V3_GetRotationTo ( SetVector3( 0.0,0.0,1.0 ) , l_oldPos - ( SceneNode_GetByName("ballon_rugby")->GetAbsolutePosition() ) ) );
+
+	};
+};
+
+void BlockCamRight()
+{
+	timer("BlockCam",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		RootCamera->SetPosition( (RootCamera->GetPosition()) + SetVector3( 0.0 , 0.0 , GENERAL_ELAPSED_TIME * 1000.0 )  );
+		RootCamera->GetParent()->SetOrientation( V3_GetRotationTo ( SetVector3( 0.0,0.0,1.0 ) , l_oldPos - ( SceneNode_GetByName("ballon_rugby")->GetAbsolutePosition() ) ) );
+	};
+};
+
+Overlay_SetAction("Rules_button")
+{
+	Overlay_Hide("Title");
+	Overlay_Show("Rules");
+};
+
+Overlay_SetAction("Rules/Cross_button")
+{
+	rules_pages = 1;
+	IsHelp = false;
+	OverlayElement_GetByName("Rules")->SetMaterial("help1");
+	Overlay_Hide("Rules");
+	if(!started)
+	{
+		Overlay_Show("Title");
+		Overlay_Show("score_menu");
+	};
+};
+
+Overlay_SetAction("Start_button")
+{
+/*
+	Url_Begin = Special_StringFromUrl("./process/start.aspx",HTTP_METHOD_POST);
+	Url_Begin = substr(Url_Begin ,1 ,strlen(Url_Begin));
+	
+	UrlTemp = Url_Begin;
+	
+	if(strlen(Url_Begin)< 100)
+	{
+		while(Url_Begin != "End=1&")
+		{
+			UrlTemp = strSplitOne( Url_Begin , "&" );
+			
+			ValeurTemp = UrlTemp;
+			
+			NomUrlTemp = strSplitOne( ValeurTemp , "=" ); 
+			
+			if(NomUrlTemp == "End" && UrlTemp == "1")
+			{
+				TraitementUrl_OK = true;
+			}
+			elseif(NomUrlTemp == "State" )
+			{
+				Url_State = ValeurTemp;
+			}
+			elseif(NomUrlTemp == "PlayId")
+			{
+				PlayeId = ValeurTemp;
+			}
+			elseif(NomUrlTemp == "Err" )
+			{
+				Overlay_Show("ERREUR_COM");
+				URL_Err = true;
+			};
+		};
+	}
+	else
+	{
+		Overlay_Show("ERREUR_COM");
+		URL_Err = true;
+	};
+*/
+
+	Sound_Stop_Global("rugby_musique_menu");
+	started = true;
+	Overlay_Hide("Start_button");
+	Overlay_Hide("Rules_button");
+	Overlay_Hide("Title");
+	Overlay_Hide("Rules");
+	Overlay_Show("Lives");
+	Timer_Kill("Camera_Rotation_Stade");
+	Overlay_Show("score_menu");
+	
+	
+	timer("Camera_transition",TIMERTYPE_CONTINUOUS,1.0)
+	{
+		RootCamera->GetParent()->Yaw( current_camera_yaw * GENERAL_ELAPSED_TIME * ( -1.0 ) );
+		RootCamera->GetParent()->Pitch( GENERAL_ELAPSED_TIME * (10.0) );
+	};
+	timer("ballon_timer",TIMERTYPE_ONCE,1.0)
+	{
+	
+		current_camera_yaw = 180.0;
+		RootCamera->GetParent()->Yaw( current_camera_yaw * ( -1.0 ) );
+		RootCamera->GetParent()->Pitch((-30.0) );
+		PlaceBallon();
+	};
+};
+
+void Reset()
+{
+	Timer_Kill("Ballon_Effect");
+	Timer_Kill("Jauge_Up");
+	Timer_Kill("Fleche_Courbure");
+	Timer_Kill("Ballon_directing");
+	Timer_Kill("rotation_ballon");
+	Timer_Kill("rotation_ballon_2");
+	Timer_Kill("Windandeffect");
+	Timer_Kill("camera_followup");
+	Timer_Kill("time_score");
+	Timer_Kill("But_Translation");
+	Timer_Kill("BlockCam");
+	
+	Object_GetByName("Cercle_gauche")->Hide();
+	Object_GetByName("Cercle_droit")->Hide();
+	Object_GetByName("Cercle_but")->Hide();
+	
+	
+	position = SetVector3( 0.0 , 0.0 , 5045.0 );
+	
+	Simulation_SetGravity( SetVector3( 0.0, 0.0, 0.0));
+	ballon->GetPhysicsObject()->SetSpeed( SetVector3( 0.0, 0.0, 0.0));
+	ballon->GetPhysicsObject()->SetForce( SetVector3( 0.0, 0.0, 0.0));
+
+	
+	Object_GetByName("but_stade")->GetParent()->SetPosition(position);		
+
+	Object_GetByName("ballon_rugby")->GetParent()->Reset();
+	Object_GetByName("ballon_rugby")->GetParent()->SetPosition(SetVector3(-0.0241938,20.0,-29.2984));
+	Object_GetByName("ballon_rugby")->GetParent()->Pitch(100.0);
+	RootCamera->GetParent()->Reset();
+
+	ballon->GetPhysicsObject()->ReassertPosition();
+	ballon->GetPhysicsObject()->SetSpeed( SetVector3(0.0,0.0,0.0));
+	ballon->GetPhysicsObject()->SetAngularSpeed( SetVector3(0.0,0.0,0.0));
+
+	RootCamera->SetPosition(SetVector3(0.0,3.0,6000.0));
+	RootCamera->GetParent()->Pitch(-40.0);
+	RootCamera->GetParent()->SetParent(SceneNode_GetByName("root node"));
+
+	AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("droite_gauche")->SetTime(0.5);
+	AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("courbe")->SetTime(0.0);
+	AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("long")->SetTime(0.0);
+	
+	IsCollBut = false;
+	can_shoot = true;
+	
+	Overlay_Hide("Title");
+
+	if(!goallllll)
+	{	
+		g_niveau -- ;
+		num_lives--;
+		//Overlay_Show("Failed");
+		timer("result_autoFail",TIMERTYPE_ONCE,1.0)
+		{
+			Overlay_Hide("Failed");
+		};
+		if(num_lives == 2)
+		{
+			OverlayElement_GetByName("Life1")->SetMaterial("LifeOff");
+		}
+		elseif(num_lives == 1)
+		{
+			OverlayElement_GetByName("Life2")->SetMaterial("LifeOff");
+		}
+		elseif(num_lives == 0)
+		{
+/*		
+			UrlTemp = "_";
+			Url_Fin = "./process/end.aspx?PlayId=" + (PlayeId) + "&score=" + itoa(g_score * 450) + "&State=ok&End=1&";
+			Url_Fin = Special_StringFromUrl(Url_Fin,HTTP_METHOD_POST);
+			Echo(Url_Fin);
+			Url_Fin = substr(Url_Fin ,1 ,strlen(Url_Fin));
+			
+			UrlTemp = Url_Fin;
+			if(strlen(Url_Fin)< 100)
+			{
+				while(Url_Fin != "End=1&")
+				{
+					UrlTemp = strSplitOne( Url_Fin , "&" );
+					
+					NomUrlTemp = strSplitOne( UrlTemp , "=" ); 
+					
+					if(NomUrlTemp == "End" && UrlTemp == "1")
+					{
+						TraitementUrl_OK = true;
+					}
+					elseif(NomUrlTemp == "Err" )
+					{
+						Overlay_Show("ERREUR_COM");
+						URL_Err = true;
+					};
+					
+				};
+			}
+			else
+			{
+				Overlay_Show("ERREUR_COM");
+				URL_Err = true;
+			};
+
+*/		
+			FINALLY_ASPX = true;
+
+			can_shoot = false;
+			OverlayElement_GetByName("Life3")->SetMaterial("LifeOff");
+			
+			timer("Timer_GameOver",TIMERTYPE_ONCE,2.0)
+			{
+				Overlay_Show("GameOver");
+				timer("Timer_GameOver_Hide",TIMERTYPE_ONCE,2.0)
+					{
+						Overlay_Hide("GameOver");
+						Overlay_Hide("Lives");
+						cal_highscore();
+					};			
+			};
+			if(Volume_Son == 1)
+			{
+				Sound_Play_Global("rugby_Sifflet_3");
+				Sound_Play_Global("rugby_Foule");
+			};
+		};
+	};
+	else
+	{
+		
+		if(g_niveau >12 )
+		{
+			
+			Overlay_Show("GameOver");
+			timer("result",TIMERTYPE_ONCE,1.0)
+			{
+				Overlay_Hide("GameOver");
+			};
+		};
+	
+	};
+	goallllll = false;
+
+	if(num_lives>0)
+	{
+		g_niveau ++ ;
+		OverlayElement_GetByName("Niv")->SetMaterial("niv"+itoa(g_niveau));
+		if( g_niveau > 8 )
+		{
+			g_zone_index = 5;
+		}
+		elseif( g_niveau > 6 )
+		{
+			g_zone_index = 4;
+		}
+		elseif( g_niveau > 4 )
+		{
+			g_zone_index = 3;
+		}
+		elseif( g_niveau > 3 )
+		{
+			g_zone_index = 2;
+		}
+		elseif( g_niveau > 1 )
+		{
+			g_zone_index = 1;
+		}
+		else
+		{
+			g_zone_index = 0;
+		};
+/*
+			//level start anti cheat
+			Url_Fin = "./process/level_start.aspx?PlayId=" + (PlayeId) + "&num_lives=" + itoa(num_lives * 1000) + "&g_niveau=" + itoa(g_niveau) + "&State=ok&End=1&";
+			Url_Fin = Special_StringFromUrl(Url_Fin,HTTP_METHOD_POST);
+			Echo(Url_Fin);
+			
+			
+			UrlTemp = Url_Fin;
+			
+			Url_Fin = substr(Url_Fin ,1 ,strlen(Url_Fin));
+			
+			if(strlen(Url_Fin)< 100)
+			{	
+				while(Url_Fin != "End=1&")
+				{
+					UrlTemp = strSplitOne( Url_Fin , "&" );
+					
+					NomUrlTemp = strSplitOne( UrlTemp , "=" ); 
+					
+					if(NomUrlTemp == "End" && UrlTemp == "1")
+					{
+						TraitementUrl_OK = true;
+					}
+					elseif(NomUrlTemp == "Err" )
+					{
+						Overlay_Show("ERREUR_COM");
+						
+						URL_Err = true;
+					};
+				};
+			}
+			else
+			{
+				URL_Err = true;	
+				Overlay_Show("GameOver");
+			};
+*/	
+		PlaceBallon();
+	};
+/*
+	if(FINALLY_ASPX == false)
+	{
+//level end anti cheat
+		Url_Fin = "./process/level_end.aspx?PlayId=" + (PlayeId) + "&PositionX=" + rtoa((SceneNode_GetByName("ballon_rugby")->GetPosition()[0]) * 500.0) + "&timerscore=" + rtoa(floor(timerscore) * 400.0) + "&bonus8=" + itoa(bonus8 * 300) + "&bonus4=" + itoa(bonus4 * 200) + "&bonusNS=" + itoa(bonusNS * 100) + "&g_niveau=" + itoa(g_niveau) +	"&State=ok&End=1&";
+		Url_Fin = Special_StringFromUrl(Url_Fin,HTTP_METHOD_POST);
+		Echo(Url_Fin);
+		Url_Fin = substr(Url_Fin ,1 ,strlen(Url_Fin));
+		
+		UrlTemp = Url_Fin;
+		if(strlen(Url_Fin)< 100)
+		{	
+			while(Url_Fin != "End=1&")
+			{
+				UrlTemp = strSplitOne( Url_Fin , "&" );
+				
+				NomUrlTemp = strSplitOne( UrlTemp , "=" ); 
+				
+				if(NomUrlTemp == "End" && UrlTemp == "1")
+				{
+					TraitementUrl_OK = true;
+				}
+				elseif(NomUrlTemp == "Err" )
+				{
+					Overlay_Show("GameOver");
+					
+					URL_Err = true;
+				};
+			};
+		}
+		else
+		{
+			URL_Err = true;	
+			Overlay_Show("GameOver");
+		};
+	};
+*/
+};
+
+void Restart()
+{
+	g_niveau = 1;
+	num_lives = 3;
+	g_score = 0;
+	Reset();
+	goallllll = false;
+	num_lives = 3;
+	OverlayElement_GetByName("score")->SetCaption("0");
+	OverlayElement_GetByName("Life1")->SetMaterial("LifeOn");
+	OverlayElement_GetByName("Life2")->SetMaterial("LifeOn");
+	OverlayElement_GetByName("Life3")->SetMaterial("LifeOn");
+	Overlay_Hide("GameOver");
+	Overlay_Show("Lives");
+	Overlay_Hide("Failed");
+	restart = false;
+};
+
+void Shoot()
+{
+	POSITIONBALLON = false;
+	power_ballon = false;
+	Timer_Kill("Jauge_Up");
+	Object_GetByName("fleche")->Hide();
+	Overlay_Hide("Jauge_Group");
+	goallllll = false;
+	
+	g_bonusOK = false;
+	
+	Timer_Kill( "anim_player");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "win");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "win");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "loose");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "loose");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+	AnimationGroup_GetByName( "anim_player")->StopAnimation( "stand");
+	AnimationGroup_GetByName( "anim_player")->StartAnimation( "tir");
+
+	SceneNode_GetByName("player_node")->SetVisible(true);
+	
+	timer( "PlayerEndAnim", TIMERTYPE_ONCE, 0.9)
+	{
+		timer( "PlayerPauseAnim", TIMERTYPE_ONCE, 1.45)
+		{
+				AnimationGroup_GetByName( "anim_player")->PauseAnimation( "tir");
+		};
+		if( ( powaaaa > 0.83) && (powaaaa <= 0.87 ) )
+		{
+			if(Volume_Son == 1)
+			{
+				Sound_Play_Global("rugby_Nice_Shoot");
+			};
+			Overlay_Show("NiceShot");
+			timer("niceshot",TIMERTYPE_ONCE,0.8)
+			{
+				Overlay_Hide("NiceShot");
+			};
+			nice_shot = true;
+		}
+		else
+		{
+			nice_shot = false;
+		};
+		
+		object ballon;
+		ballon = Object_GetByName("ballon_rugby");
+		
+		if( powaaaa > 0.85 )
+		{
+			nice_shot = false;
+			ballon->GetPhysicsObject()->SetSpeed( SetVector3( rand( -750.0 ,750.0 ) * ( 4.0 * powaaaa - 3.0 ),rand( -750.0 , 750.0 ) * ( ( 1.0 - powaaaa ) / 0.15 ),((-3500.0) * powaaaa)) * (SceneNode_GetByName("fleche")->GetOrientation()) );
+		}
+		elseif(powaaaa > 0.83)
+		{
+			powaaaa = 1.0;
+			ballon->GetPhysicsObject()->SetSpeed( SetVector3( 0.0 ,0.0,((-3500.0) * powaaaa)) * (SceneNode_GetByName("fleche")->GetOrientation()) );
+		}
+		else
+		{
+			ballon->GetPhysicsObject()->SetSpeed( SetVector3( 0.0 ,0.0,((-3500.0) * powaaaa)) * (SceneNode_GetByName("fleche")->GetOrientation()) );
+		};
+		
+		ballon->GetPhysicsObject()->AddTorque(SetVector3(-5000.0*powaaaa,0.0,0.0));
+		
+		Simulation_SetGravity(SetVector3(0.0,-980.0,0.0));
+		
+		timer("Windandeffect",TIMERTYPE_PERMANENT,0.0)
+		{
+			ballon->GetPhysicsObject()->AddForce( 10.0 * wind * (1.0 - (wind->NormalisedCopy()->Dot( ballon->GetPhysicsObject()->GetSpeed()->NormalisedCopy() ) ) ) );
+			ballon->GetPhysicsObject()->AddForce( 15.0*((ballon->GetPhysicsObject()->GetSpeed()->Length()) / 2000.0 )* SetVector3((-1200.0)*(courbure-0.5) * powaaaa ,0.0,0.0) * (SceneNode_GetByName("fleche")->GetOrientation() ) );
+		};
+		if(Volume_Son == 1)
+		{
+			Sound_Play_Global("rugby_Shoot");
+		};
+			
+		Object_GetByName("rosace")->Hide();
+		Object_GetByName("graduation")->Hide();
+		Overlay_Hide("wind_text");
+		
+		wind = SetVector3(0.0,0.0,-1.0) * SetQuaternion(SetVector3(0.0,1.0,0.0),wind_angle);
+		wind = wind * wind_power;
+		rotation = 200.0;
+		
+		change_rot = true;
+		timer("ballon_rotation_timein",TIMERTYPE_ONCE,1.0)
+		{
+			timer("rotation_ballon_2",TIMERTYPE_REPEAT,0.1)
+			{
+				rotation = rotation*0.90;
+				
+				if(((( SceneNode_GetByName("ballon_rugby")->GetPosition())[1] ) < 90.0 ) && change_rot )
+				{
+					rotation = rotation * (-5.0);
+					change_rot = false;
+				};
+			};
+		};
+
+		timer("rotation_ballon",TIMERTYPE_PERMANENT,0.0)
+		{
+			SceneNode_GetByName("ballon_rugby")->Yaw( rotation * GENERAL_ELAPSED_TIME * courbure * powaaaa * 5.0 );
+			SceneNode_GetByName("ballon_rugby")->Rotate(SetVector3( 1.0 , 0.0 , 0.0 ),rotation * GENERAL_ELAPSED_TIME * (0.5 + powaaaa) * 5.0);
+		};
+		can_shoot = false;		
+	};
+};
+
+void Mouse_LButtonDown()
+{
+	if(URL_Err == false)
+	{
+		if(Tir_But_OK == true)
+		{
+
+			timerscore = 0.0;
+			timer("time_score",TIMERTYPE_PERMANENT,0.0)
+			{
+				timerscore = (CURRENTTIMER_TIME_ELAPSED * 10.0)* itor(g_niveau);
+			};
+				
+			if( directing_ballon )
+			{
+				directing_ballon = false;
+				Timer_Kill("Ballon_directing");
+
+				courbure = 0.5;
+				
+				timer("Ballon_Effect",TIMERTYPE_PERMANENT,0.0)
+				{
+					courbure = courbure - MOUSE_DIFFERENCE_X * 2.0;
+					if( courbure < 0.0 )
+					{
+						courbure = 0.0;
+					}
+					elseif( courbure > 1.0 )
+					{
+						courbure = 1.0;
+					};
+					AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("droite_gauche")->SetTime(courbure);
+				};
+				
+				effect_ballon = true;
+			}
+
+			elseif(power_ballon)
+			{
+				if(can_shoot)
+				{
+					Shoot();
+					Tir_But_OK = false;
+				};
+			};
+		};
+	}
+	else
+	{
+//		Overlay_Show("ERREUR_COM");
+	};
+};
+
+void Mouse_LButtonUp()
+{
+	if(URL_Err == false)
+	{
+		if(Tir_But_OK == true)
+		{
+
+			if(effect_ballon)
+			{
+				effect_ballon = false;
+				Timer_Kill("Ballon_Effect");
+				
+				power_ballon = true;
+				
+				Overlay_Show("Jauge_Group");
+				
+				timer("Jauge_Up",TIMERTYPE_CONTINUOUS,1.0)
+				{
+					powaaaa = CURRENTTIMER_TIME_ELAPSED / 1.0;
+					AnimationGroup_GetByName("Fleche_Ballon")->GetObject("fleche")->GetAnimation("courbe")->SetTime(powaaaa*0.3);
+					Object_GetByName("fleche")->GetParent()->SetScale(SetVector3(1.0 + 2.0*powaaaa, 1.0 + 2.0*powaaaa, 1.0 + 2.0*powaaaa ) );
+					
+					
+					OverlayElement_GetByName("Jauge")->SetHeight( (CURRENTTIMER_TIME_LEFT / 1.0 ) *    (GENERAL_SCREEN_HEIGHT /3.95)  );
+
+				};
+				timer("Jauge_Up_Finish",TIMERTYPE_ONCE,1.1)
+				{
+					if(can_shoot)
+					{
+						
+						/*
+						if(Volume_Son == 1)
+						{
+							Sound_Play_Global("rugby_funball");
+						};
+						*/
+						Shoot();
+						Tir_But_OK = false;
+					};
+				};
+			};
+		};
+	}
+	else
+	{
+//		Overlay_Show("ERREUR_COM");
+	};
+};
+	
+timer("goal_collide",TIMERTYPE_PERMANENT,0.0)
+{
+
+	if(POSITIONBALLON == false)
+	{
+		BALLONZ = (SceneNode_GetByName("ballon_rugby")->GetPosition())[2];
+	};
+	
+	if( (g_niveau == 8) && (POSITIONBALLON == false))
+	{
+		MAXBALLONX = Pas_X + 290.0;
+		MINBALLONX = Pas_X + (-290.0);
+	}else
+	{
+		MAXBALLONX = 280.0;
+		MINBALLONX = (-280.0);
+	};	
+	
+	if((BALLONZ < (-4965.0)) && (POSITIONBALLON == false) )
+	{
+		POSITIONBALLON = true;
+		
+		BALLONX = (SceneNode_GetByName("ballon_rugby")->GetPosition())[0];
+		BALLONY = (SceneNode_GetByName("ballon_rugby")->GetPosition())[1];
+
+		if((BALLONX < MAXBALLONX && BALLONX > MINBALLONX) && (BALLONY >  310.0 ))
+		{		
+		
+		if(IsCollBut == false)
+		{
+			IsCollBut = true;
+		
+			if(!Timer_Exists("result"))
+			{	
+				if(Volume_Son == 1)
+				{				
+					Sound_Play_Global("rugby_Goal");
+				};
+				BlockCam();
+
+				if( g_niveau == 4 )
+				{
+					if((BALLONX < -100.0) && (BALLONY > 1100.0) && (BALLONY < 1470.0))
+					{
+						Object_GetByName("croix_9")->Show();
+						morpions_goal = 9;
+					};
+					if((BALLONX > -100.0) && (BALLONX < 100.0) && (BALLONY > 1100.0) && (BALLONY < 1470.0))
+					{
+						Object_GetByName("croix_8")->Show();
+						morpions_goal = 8;
+					};
+					if((BALLONX > 100.0) && (BALLONY > 1100.0) && (BALLONY < 1470.0))
+					{
+						Object_GetByName("croix_7")->Show();
+						morpions_goal = 7;
+					};
+					if((BALLONX < -100.0) && (BALLONY > 700.0) && (BALLONY < 1100.0))
+					{
+						Object_GetByName("croix_6")->Show();
+						morpions_goal = 6;
+					};
+					if((BALLONX > -100.0) && (BALLONX < 100.0) && (BALLONY > 700.0) && (BALLONY < 1100.0))
+					{
+						Object_GetByName("croix_5")->Show();
+						morpions_goal = 5;
+					};
+					if((BALLONX > 100.0) && (BALLONY > 700.0) && (BALLONY < 1100.0))
+					{
+						Object_GetByName("croix_4")->Show();
+						morpions_goal = 4;
+					};		
+					if((BALLONX < -100.0) && (BALLONY < 700.0))
+					{
+						Object_GetByName("croix_3")->Show();
+						morpions_goal = 3;
+					};
+					if((BALLONX > -100.0) && (BALLONX < 100.0) && (BALLONY < 700.0))
+					{
+						Object_GetByName("croix_2")->Show();
+						morpions_goal = 2;
+					};
+					if((BALLONX > 100.0) && (BALLONY < 700.0))
+					{
+						Object_GetByName("croix_1")->Show();
+						morpions_goal = 1;
+					};
+				};
+
+				g_score = g_score + 100 * g_niveau;
+				
+				temp_bonus = 0;
+				if( g_niveau == 11 )
+				{
+					if(g_bonusOK == true)
+					{
+						temp_bonus = 1000;
+						g_bonusOK = false;
+						
+						bonus_lvl = 1000;
+					};
+				};
+				if( g_niveau == 12 )
+				{	
+					temp_bonus = 0;
+					if(g_bonusOK == true)
+					{
+						temp_bonus = 2000;
+					};
+					if(g_bonushardOK == true)
+					{
+						temp_bonus = temp_bonus + 2000;
+						g_bonushardOK = false;
+						
+						bonus_lvl = 2000;
+					};
+					g_bonusOK = false;
+					g_bonushardOK = false;
+				};
+				g_score = g_score + temp_bonus;
+				if(nice_shot)
+				{
+					bonusNS = 50 * g_niveau;
+					
+					if(g_niveau == 11 )
+					{
+						bonusNS =  bonusNS + 450;
+
+					}elseif(g_niveau == 12 )
+					{
+						bonusNS =  bonusNS + 450;
+					};
+					g_score = g_score + bonusNS;
+				};
+			
+				bonus4 = 0;
+				if( g_niveau == 4 )
+				{
+					if(morpions_goal == morpions_bonus)
+					{
+						bonus4 = 500;
+						if(Volume_Son == 1)
+						{
+							Sound_Play_Global("rugby_morpion_ok");
+						};
+						morpions_bonus = 10;
+						bonus_lvl = 500;
+					}
+					else
+					{
+						if(Volume_Son == 1)
+						{
+							Sound_Play_Global("rugby_morpion_miss");
+						};
+					};
+					g_score = g_score + bonus4;
+				};
+							
+				bonus8 = 0;
+				
+				if( g_niveau == 8 )
+				{
+					bonus8 = rtoi(abs(BALLONX));
+					g_score =  g_score + bonus8;
+					
+					bonus_lvl = rtoi(abs(BALLONX));;
+				};
+				
+				Timer_Kill("time_score");
+				Timer_max = 100.0 * itor(g_niveau);
+				
+				if(timerscore > Timer_max)
+				{
+					timerscore = 0.0;
+					Timer_max = 0.0;
+				};
+
+				timerscore = Timer_max - timerscore;
+				g_score = g_score + rtoi(timerscore);
+				
+				Overlay_Show("Goal");
+				timer("result",TIMERTYPE_ONCE,1.0)
+				{
+					goallllll = true;
+					Reset();
+					
+				};
+				timer("result2",TIMERTYPE_ONCE,3.0)
+				{
+					Overlay_Hide("Goal");
+				};
+			};
+			goallllll = true;
+			affiche_score();
+		};
+		
+		BALLONX = 0.0;
+		BALLONY = 0.0;
+		}else
+		{	
+			if(Volume_Son == 1)
+			{
+				Sound_Play_Global("rugby_Miss");
+			};			
+			if(IsCollBut == false)
+			{
+				IsCollBut = true;
+				if(!Timer_Exists("result"))
+				{
+					Overlay_Show("Failed");
+					
+					if(BALLONX > 0.0)
+					{
+						BlockCamRight();
+					}else
+					{
+						BlockCamLeft();
+					};
+					
+
+					
+					timer("result",TIMERTYPE_ONCE,1.0)
+					{
+						Reset();
+					};
+				};
+			};
+		};
+
+	};
+	if(((((SceneNode_GetByName("ballon_rugby")->GetPosition())[0]) > 3500.0) || (((SceneNode_GetByName("ballon_rugby")->GetPosition())[0]) < (-3500.0))) && (POSITIONBALLON == false) )
+	{
+		POSITIONBALLON = true;
+		if(IsCollBut == false)
+		{
+			if(Volume_Son == 1)
+			{
+				Sound_Play_Global("rugby_Miss");
+			};
+			Overlay_Show("Failed");
+			timer("result",TIMERTYPE_ONCE,1.5)
+			{
+				Reset();
+
+				ballon->GetPhysicsObject()->SetSpeed( SetVector3( 0.0, 0.0, 0.0));
+
+			};
+		};
+	};
+
+};	
+	
+timer("END_SHOOT",TIMERTYPE_PERMANENT,0.0)
+{
+	if(!can_shoot)
+	{
+			if(V3_GetLength( ballon->GetPhysicsObject()->GetSpeed()) < 200.0)
+			{
+				if(!Timer_Exists("result"))
+				{
+					
+					if(Volume_Son == 1)
+					{
+						Sound_Play_Global("rugby_Miss");
+					};
+					Overlay_Show("Failed");
+					
+					BlockCam();
+					timer("result",TIMERTYPE_ONCE,1.0)
+					{
+						Reset();
+					};
+				};
+			};
+			if(ballon->GetPhysicsObject()->CollisionCheck(PhysicsObject_GetByName("Cercle_Coll_droit"),true))
+			{
+				if(CercleDroiteHit == 1)
+				{
+					g_bonusOK = true;
+				};
+			};			
+			if(ballon->GetPhysicsObject()->CollisionCheck(PhysicsObject_GetByName("Cercle_Coll_gauche"),true))
+			{
+				if(CercleDroiteHit == (-1))
+				{
+					g_bonusOK = true;
+				};
+			};
+			if(ballon->GetPhysicsObject()->CollisionCheck(PhysicsObject_GetByName("Cercle_Coll_but"),true))
+			{
+				if(CercleDroiteHit == (-1))
+				{
+					g_bonushardOK = true;
+				};
+			};
+	};
+};
+
+Overlay_SetAction("Rules")
+{
+	if(rules_pages == 1)
+	{
+		OverlayElement_GetByName("Rules")->SetMaterial("help2");
+		rules_pages = rules_pages + 1;
+	}elseif(rules_pages == 2)
+	{
+		OverlayElement_GetByName("Rules")->SetMaterial("help3");
+		rules_pages = rules_pages + 1;
+	}elseif(rules_pages == 3)
+	{
+		Overlay_Hide("Rules");
+		rules_pages = 1;
+		IsHelp = false;
+		OverlayElement_GetByName("Rules")->SetMaterial("help1");
+		if(!started)
+		{
+			Overlay_Show("Title");
+		};
+	};
+};
+real blop_angle;
+
+timer("change_wind",TIMERTYPE_REPEAT,0.1)
+{
+	blop_angle = wind_angle + rand(-3.0 , 3.0 );
+	Object_GetByName("rosace")->GetParent()->Reset();
+	Object_GetByName("rosace")->GetParent()->SetScale(SetVector3( (wind_power + 1000.0)/2000.0, (wind_power + 1000.0)/2000.0, (wind_power + 1000.0)/2000.0 ) );
+	Object_GetByName("rosace")->GetParent()->RotateLocal(SetVector3(0.0,1.0,0.0),blop_angle);
+	CURRENTTIMER_SELF->SetBaseTime(rand(0.1,0.4));
+};
+ 
+BindKey(KEYCODE_U,BINDKEY_DOWN)
+{
+Echo("bah, u, quoi");
+Echo("bah, u, quoi" +  vtoa(ballon->GetPhysicsObject()->GetSpeed()));
+	//Object_GetByName("ballon_rugby")->GetParent()->SetScale(5.0);
+	
+	Echo("speed ballon " +  rtoa(V3_GetLength( ballon->GetPhysicsObject()->GetSpeed())));
+
+	ballon->GetPhysicsObject()->SetSpeed( SetVector3( 0.0, 0.0, 0.0));
+
+};
+
+BindKey(KEYCODE_H,BINDKEY_DOWN)
+{
+Echo("bah, u, quoi");
+Echo("bah, u, quoi" +  vtoa(ballon->GetPhysicsObject()->GetSpeed()));
+	//Object_GetByName("ballon_rugby")->GetParent()->SetScale(5.0);
+	
+	Echo("speed ballon " +  rtoa(V3_GetLength( ballon->GetPhysicsObject()->GetSpeed())));
+
+	ballon->GetPhysicsObject()->SetSpeed( SetVector3( 0.0, 0.0, 0.0));
+	
+	
+	Overlay_Show("HighScores");
+
+};
+
+Overlay_SetAction("Recommencer")
+{	
+	restart = true;
+	Restart();
+	if(!started)
+	{
+		Overlay_Show("Title");
+	};
+	Overlay_Hide("HighScores");
+};
+
+
+
+
+
+

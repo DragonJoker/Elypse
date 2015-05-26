@@ -1,0 +1,61 @@
+project Miniline
+{
+	resolution		640 480
+	colour			0 0 0
+	show_debug		true
+	show_fps		true
+	startup_script	init.emscript
+	scene Miniline
+	{
+		scene_files
+		{
+			Miniline/common.emscene
+		}
+		load_script_files
+		{
+			Miniline/common.emscript
+			Miniline/network.emscript
+		}
+		data_files_3d
+		{
+			Miniline/data-common
+		}
+	}
+	scene Chat
+	{
+		scene_files
+		{
+			Chat/chat.emscene
+		}
+		load_script_files
+		{
+			Chat/chat.emscript
+			Chat/chat_menu.emscript
+			Chat/chat_kb.emscript
+			Chat/chat_network.emscript
+		}
+		data_files_3d
+		{
+			Chat/data-chat
+		}
+		dependencies
+		{
+			Miniline
+		}
+	}
+	scene Paradiz
+	{
+		scene_files
+		{
+			Paradiz/paradiz.emscene
+		}
+		load_script_files
+		{
+			Paradiz/paradiz.emscript
+		}
+		dependencies
+		{
+			Chat
+		}
+	}
+}

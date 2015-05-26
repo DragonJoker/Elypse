@@ -1,0 +1,2149 @@
+real min( real a, real b)
+{
+	if (a < b)
+	{
+		return( a);
+	}
+	else
+	{
+		return( b);
+	};
+};
+
+real max( real c, real d)
+{
+	if (c > d)
+	{
+		return( c);
+	}
+	else
+	{
+		return( d);
+	};
+};
+
+void HideTitle()
+{
+	if (l_titleShown)
+	{
+		Overlay_Hide( "Jetski/Title");
+	};
+};
+
+void ShowTitle()
+{
+	if (l_titleShown)
+	{
+		Overlay_Show( "Jetski/Title");
+	};
+};
+
+void ClearRace()
+{
+	l_waveBalisePulse->clear();
+	l_validatedGoldRing->clear();
+	l_validatedTurboRing->clear();
+
+	for (i = 0 ; i < l_maxBalise ; i ++)
+	{
+		Object_Destroy( Object_GetByName( "BaliseL" + itoa( i)));
+		SceneNode_Destroy( "BaliseNodeL" + itoa( i));
+
+		Object_Destroy( Object_GetByName( "BaliseR" + itoa( i)));
+		SceneNode_Destroy( "BaliseNodeR" + itoa( i));
+	};
+
+	for (i = 0 ; i < l_maxGoldRing ; i ++)
+	{
+		Object_Destroy( Object_GetByName( "GoldRing" + itoa( i)));
+		SceneNode_Destroy( "GoldRingNode" + itoa( i));
+	};
+
+	for (i = 0 ; i < l_maxTurboRing ; i ++)
+	{
+		Object_Destroy( Object_GetByName( "TurboRing" + itoa( i)));
+		SceneNode_Destroy( "TurboRingNode" + itoa( i));
+	};
+
+	for (i = 0 ; i < l_maxRock ; i ++)
+	{
+		Object_Destroy( Object_GetByName( "Rock" + itoa( i)));
+		SceneNode_Destroy( "RockNode" + itoa( i));
+	};
+
+	for (i = 0 ; i < l_maxRamps ; i ++)
+	{
+		Object_Destroy( Object_GetByName( "Ramp" + itoa( i)));
+		SceneNode_Destroy( "RampNode" + itoa( i));
+	};
+
+	l_maxBalise = 0;
+	l_maxGoldRing = 0;
+	l_maxTurboRing = 0;
+	l_maxRock = 0;
+	l_maxRamps = 0;
+
+	l_nbRing = 0;
+	l_indexNearestBalise = 0;
+	l_previousNearestBalise = 0;
+	l_indexRockTaken = -1;
+	l_indexRampTaken = -1;
+};
+
+real BezierApproximatedLength( vector3 p_startPoint, vector3 p_controlPoint, vector3 p_goalPoint)
+{
+	l_bezierLength = 0.0;
+	l_previousPoint = p_startPoint;
+
+	for (j = 0.0 ; j <= 1.0 ; j += 0.04)
+	{
+		l_currentPoint = V3_BezierInterpolation( p_startPoint, p_controlPoint, p_goalPoint, j);
+		l_bezierLength += (l_previousPoint - l_currentPoint)->Length();
+		l_previousPoint = l_currentPoint;
+	};
+
+	return( l_bezierLength);
+};
+
+void SetRock( vector3 p_rockPosition)
+{
+	l_tempNode = SceneNode_Create( "RockNode" + itoa( l_maxRock));
+
+	l_tempNode->SetParent( l_rootNode);
+	l_tempNode->SetPosition( p_rockPosition);
+	l_tempNode->SetScale( SetVector3( 0.7, 0.7, 0.7));
+
+	Object_Create( "Rock" + itoa( l_maxRock), "caisse.mesh")->SetParent( l_tempNode);
+
+	l_tempNode->SetVisible( false);
+
+	l_maxRock ++;
+};
+
+void SetBalise( vector3 p_position, vector3 p_tangente)
+{
+	l_tempNode = SceneNode_Create( "BaliseNodeL" + itoa( l_maxBalise));
+	l_tempNode->SetParent( l_rootNode);
+	l_tempNode->SetPosition( p_position + 400.0 * p_tangente);
+	l_tempNode->SetScale( SetVector3( 0.5, 0.5, 0.5));
+	Object_Create( "BaliseL" + itoa( l_maxBalise), "bouee.mesh")->SetParent( l_tempNode);
+	l_tempNode->SetVisible( false);
+
+	l_tempNode = SceneNode_Create( "BaliseNodeR" + itoa( l_maxBalise));
+	l_tempNode->SetParent( l_rootNode);
+	l_tempNode->SetPosition( p_position - 400.0 * p_tangente);
+	l_tempNode->SetScale( SetVector3( 0.5, 0.5, 0.5));
+	Object_Create( "BaliseR" + itoa( l_maxBalise), "bouee.mesh")->SetParent( l_tempNode);
+	l_tempNode->SetVisible( false);
+
+	l_waveBalisePulse += itoc( rtoi( rand( 1.0, 5.9)));
+	l_waveBalisePulse += itoc( rtoi( rand( 1.0, 5.9)));
+
+	l_maxBalise ++;
+};
+
+void SetTurboRing( vector3 p_position1, vector3 p_tangente1)
+{
+	l_tempNode = SceneNode_Create( "TurboRingNode" + itoa( l_maxTurboRing));
+
+	l_tempNode->SetParent( l_rootNode);
+	l_tempNode->SetPosition( p_position1);
+	l_tempNode->SetOrientation( V3_GetRotationTo( UNIT_X, p_tangente1));
+	l_tempNode->SetScale( SetVector3( 0.5, 0.5, 0.5));
+
+	Object_Create( "TurboRing" + itoa( l_maxTurboRing), "ring.mesh")->SetParent( l_tempNode);
+
+	l_tempNode->SetVisible( false);
+
+	l_validatedTurboRing += "f";
+	l_maxTurboRing ++;
+
+	l_rockPoint = p_position1;
+	l_rockPoint = l_rockPoint + (UNIT_Y * SetQuaternion( p_tangente1, 90.0)) * (500.0 + rand( 0.0, 500.0)));
+	l_rockPoint = l_rockPoint + (p_tangente1 * rand( 150.0, 300.0));
+
+	SetRock( l_rockPoint);
+
+	l_rockPoint = p_position1;
+	l_rockPoint = l_rockPoint + (UNIT_Y * SetQuaternion( p_tangente1, 90.0)) * (500.0 + rand( 0.0, 500.0)));
+	l_rockPoint = l_rockPoint - (p_tangente1 * rand( 150.0, 300.0));
+
+	SetRock( l_rockPoint);
+};
+
+void SetGoldRing( vector3 p_position2, vector3 p_tangente2)
+{
+	l_tempNode = SceneNode_Create( "GoldRingNode" + itoa( l_maxGoldRing));
+
+	l_tempNode->SetParent( l_rootNode);
+	l_tempNode->SetPosition( p_position2);
+	l_tempNode->SetOrientation( V3_GetRotationTo( UNIT_X, p_tangente2));
+	l_tempNode->SetScale( SetVector3( 0.5, 0.5, 0.5));
+
+	Object_Create( "GoldRing" + itoa( l_maxGoldRing), "ring.mesh")->SetParent( l_tempNode);
+
+	l_tempNode->SetVisible( false);
+
+	l_validatedGoldRing += "f";
+	l_maxGoldRing ++;
+};
+
+void SetRamp( vector3 sr_position, vector3 sr_tangente)
+{
+	l_tempNode = SceneNode_Create( "RampNode" + itoa( l_maxRamps));
+
+	l_tempNode->SetParent( l_rootNode);
+	l_tempNode->SetPosition( sr_position);
+	l_tempNode->SetOrientation( V3_GetRotationTo( UNIT_X, sr_tangente));
+	l_tempNode->SetScale( SetVector3( 0.5, 0.5, 0.5));
+
+	Object_Create( "Ramp" + itoa( l_maxRamps), "tremplin.mesh")->SetParent( l_tempNode);
+
+	l_tempNode->SetVisible( false);
+
+	l_maxRamps++;
+};
+
+void TraceTurn( vector3 p_startPt, vector3 p_controlPt, vector3 p_goalPt)
+{
+	l_bezierLength = BezierApproximatedLength( p_startPt, p_controlPt, p_goalPt);
+	l_bezierIntervalle = 1000.0 / l_bezierLength;
+
+	l_bezierTangente = (p_controlPt - p_startPt) * SetQuaternion( UNIT_Y, 90.0);
+	l_bezierTangente->Normalise();
+
+	SetBalise( p_startPt, l_bezierTangente);
+
+	for (j = l_bezierIntervalle ; j < 1.0 ; j += l_bezierIntervalle)
+	{
+		l_wayPoint = V3_BezierInterpolation( p_startPt, p_controlPt, p_goalPt, j);
+		l_bezierTangente = (V3_BezierInterpolation( p_startPt, p_controlPt, p_goalPt, j + l_bezierIntervalle) - V3_BezierInterpolation( p_startPt, p_controlPt, p_goalPt, j - l_bezierIntervalle)) * SetQuaternion( UNIT_Y, 90.0);
+		l_bezierTangente->Normalise();
+
+		SetBalise( l_wayPoint, l_bezierTangente);
+
+		if ((j >= 0.5 - (l_bezierIntervalle / 2.0) && j <= 0.5 + (l_bezierIntervalle / 2.0) && l_bezierLength > 10000.0) || j == l_bezierIntervalle)
+		{
+			SetGoldRing( l_wayPoint, l_bezierTangente);
+		};
+	};
+
+	if (l_bezierLength > 10000.0)
+	{
+		l_wayPoint = V3_BezierInterpolation( p_startPt, p_controlPt, p_goalPt, 0.25);
+		l_bezierTangente = (V3_BezierInterpolation( p_startPt, p_controlPt, p_goalPt, 0.25 + l_bezierIntervalle) - V3_BezierInterpolation( p_startPt, p_controlPt, p_goalPt, 0.25 - l_bezierIntervalle)) * SetQuaternion( UNIT_Y, 90.0);
+		l_bezierTangente->Normalise();
+
+		SetTurboRing( l_wayPoint, l_bezierTangente);
+	};
+};
+
+void TraceLine( vector3 p_startLine, vector3 p_goalLine)
+{
+	l_controlPoint = p_goalLine - p_startLine;
+	l_bezierTangente = l_controlPoint * SetQuaternion( UNIT_Y, 90.0);
+	l_bezierTangente->Normalise();
+	l_bezierLength = l_controlPoint->Length();
+
+	if (l_maxBalise > 0)
+	{
+		SetGoldRing( p_startLine, l_bezierTangente);
+	};
+
+	SetBalise( p_startLine, l_bezierTangente);
+
+	imax = rtoi( l_bezierLength / 2000.0);
+
+	for (i = 0 ; i <= imax  ; i ++)
+	{
+		l_wayPoint = (l_controlPoint->NormalisedCopy() * 2000.0 * itor( i)) + p_startLine;
+
+		SetBalise( l_wayPoint, l_bezierTangente);
+	};
+
+	l_wayPoint = (l_controlPoint->NormalisedCopy() * l_bezierLength * 0.1) + p_startLine;
+	SetTurboRing( l_wayPoint, l_bezierTangente);
+
+	if (l_bezierLength >= 10000.0)
+	{
+		l_wayPoint = (l_controlPoint->NormalisedCopy() * l_bezierLength * 0.6) + p_startLine;
+		SetTurboRing( l_wayPoint, l_bezierTangente);
+	};
+
+	if (l_bezierLength >= 7000.0)
+	{
+		l_wayPoint = (l_controlPoint->NormalisedCopy() * l_bezierLength * 0.4) + p_startLine;
+		SetRamp( l_wayPoint, l_bezierTangente);
+	};
+};
+
+void SetupRace()
+{
+	if (l_startNode == NULL && l_goalNode == NULL)
+	{
+		l_startNode = SceneNode_Create( "StartNode");
+		l_goalNode = SceneNode_Create( "GoalNode");
+
+		l_startNode->SetParent( l_rootNode);
+		l_goalNode->SetParent( l_rootNode);
+
+		l_startPoint = SetVector3( -2000.0, -5.0, 0.0);
+		l_goalPoint = SetVector3( -2000.0, -5.0, -6000.0);
+
+		l_startNode->SetPosition( l_startPoint);
+		l_goalNode->SetPosition( l_goalPoint);
+
+		Object_Create( "Start", "depart.mesh")->SetParent( l_startNode);
+		Object_Create( "Goal", "depart.mesh")->SetParent( l_goalNode);
+
+		l_startNode->RotateLocal( SetVector3( 0.0, 1.0, 0.0), 180.0);
+	}
+	else
+	{
+		ClearRace();
+	};
+
+	l_startNode->Hide();
+	l_goalNode->Hide();
+
+	l_waveBalisePulse += itoc( rtoi( rand( 1.0, 5.9)));
+	l_waveBalisePulse += itoc( rtoi( rand( 1.0, 5.9)));
+
+	l_beginPoint = l_startPoint;
+	l_endPoint = SetVector3( -2000.0, -5.0, 10000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 1
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( -2000.0, -5.0, 12000.0);
+	l_endPoint = SetVector3( 0.0, -5.0, 15000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 1
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 2000.0, -5.0, 18000.0);
+	l_endPoint = SetVector3( 2000.0, -5.0, 20000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 2
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 2000.0, -5.0, 30000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 2
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 2000.0, -5.0, 34000.0);
+	l_endPoint = SetVector3( 5000.0, -5.0, 34000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 3
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 8500.0, -5.0, 34000.0);
+	l_endPoint = SetVector3( 8000.0, -5.0, 30000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 4
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 6000.0, -5.0, 10000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 3
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 5500.0, -5.0, 5500.0);
+	l_endPoint = SetVector3( 10000.0, -5.0, 4000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 5
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 13500.0, -5.0, 3000.0);
+	l_endPoint = SetVector3( 15000.0, -5.0, 10000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 6
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 18000.0, -5.0, 30000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 4
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 18500.0, -5.0, 34500.0);
+	l_endPoint = SetVector3( 22000.0, -5.0, 34500.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 7
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 24000.0, -5.0, 34500.0);
+	l_endPoint = SetVector3( 25500.0, -5.0, 33000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 8
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 26500.0, -5.0, 31500.0);
+	l_endPoint = SetVector3( 26500.0, -5.0, 29000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 9
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 26500.0, -5.0, 26500.0);
+	l_endPoint = SetVector3( 25000.0, -5.0, 24500.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 10
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 24000.0, -5.0, 23500.0);
+	l_endPoint = SetVector3( 24000.0, -5.0, 22500.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 11
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 24000.0, -5.0, 20000.0);
+	l_endPoint = SetVector3( 26000.0, -5.0, 20000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 12
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 35000.0, -5.0, 20000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 5
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 38000.0, -5.0, 20000.0);
+	l_endPoint = SetVector3( 38000.0, -5.0, 18000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 13
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 38000.0, -5.0, 16500.0);
+	l_endPoint = SetVector3( 34000.0, -5.0, 13000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 14
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 26500.0, -5.0, 7500.0);
+	l_endPoint = SetVector3( 24000.0, -5.0, 2500.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 15
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 21000.0, -5.0, -3500.0);
+	l_endPoint = SetVector3( 23500.0, -5.0, -5000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 16
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 25000.0, -5.0, -6000.0);
+	l_endPoint = SetVector3( 27000.0, -5.0, -6000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 17
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 32500.0, -5.0, -6000.0);
+	l_endPoint = SetVector3( 37000.0, -5.0, -9500.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 18
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 44000.0, -5.0, -14500.0);
+	l_endPoint = SetVector3( 44000.0, -5.0, -19000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 19
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 44000.0, -5.0, -26000.0);
+	l_endPoint = SetVector3( 38000.0, -5.0, -26000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 20
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 34000.0, -5.0, -26000.0);
+	l_endPoint = SetVector3( 33500.0, -5.0, -24000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 21
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 27000.0, -5.0, -14000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 6
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 25000.0, -5.0, -10500.0);
+	l_endPoint = SetVector3( 21500.0, -5.0, -13500.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 22
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 19000.0, -5.0, -15500.0);
+	l_endPoint = SetVector3( 19000.0, -5.0, -18000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 23
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 19000.0, -5.0, -20500.0);
+	l_endPoint = SetVector3( 21500.0, -5.0, -23000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 24
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 25500.0, -5.0, -27500.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 7
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 27500.0, -5.0, -30000.0);
+	l_endPoint = SetVector3( 27500.0, -5.0, -32000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 25
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 27500.0, -5.0, -35500.0);
+	l_endPoint = SetVector3( 25000.0, -5.0, -37000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 26
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 18000.0, -5.0, -39500.0);
+	l_endPoint = SetVector3( 16500.0, -5.0, -36000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 27
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 14500.0, -5.0, -33000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 8
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 13500.0, -5.0, -31000.0);
+	l_endPoint = SetVector3( 11500.0, -5.0, -33000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 28
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 8000.0, -5.0, -37500.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 9
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 5000.0, -5.0, -41500.0);
+	l_endPoint = SetVector3( 3500.0, -5.0, -39000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 29
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 2000.0, -5.0, -37000.0);
+	l_endPoint = SetVector3( 2000.0, -5.0, -30000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 30
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = SetVector3( 2000.0, -5.0, -20000.0);
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 10
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( 2000.0, -5.0, -18000.0);
+	l_endPoint = SetVector3( 0.0, -5.0, -15000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 31
+
+	l_beginPoint = l_endPoint;
+	l_ctrlPoint = SetVector3( -2000.0, -5.0, -12000.0);
+	l_endPoint = SetVector3( -2000.0, -5.0, -10000.0);
+
+	TraceTurn( l_beginPoint, l_ctrlPoint, l_endPoint);		// Turn 32
+
+	l_beginPoint = l_endPoint;
+	l_endPoint = l_goalPoint;
+
+	TraceLine( l_beginPoint, l_endPoint);				// Line 11
+
+	OverlayElement_GetByName( "Jetski/TopLeft/Position")->SetCaption( "Position : " + itoa( l_position));
+	l_ringInGame->SetCaption( "Anneaux : 0");
+
+	l_chronoInGame->SetCaption( "Chrono : 0'00''00'''");
+	l_scoreInGame->SetCaption( "Score : " + itoa( g_score));
+	l_speedInGame->SetCaption( "Vitesse : 0 km/h");
+
+	l_barreInGame->SetPosition( SetVector3( 55.0, 222.0, 0.0));
+	l_barreInGame->SetSize( 19.0, 1.0);
+
+	l_barreTurboInGame->SetPosition( SetVector3( 55.0, 85.0, 0.0));
+	l_barreTurboInGame->SetSize( 19.0, 0.0);
+};
+
+void ResetTurn()
+{
+	Timer_Kill( "Breaking");
+	Timer_Kill( "RightTurn");
+	Timer_Kill( "RightUnTurn");
+	Timer_Kill( "LeftTurn");
+	Timer_Kill( "LeftUnTurn");
+
+	l_currentTimeTurn = 0.0;
+
+	l_hommeAnimationGroup->SetTimeAnimation( "gauche", l_currentTimeTurn);
+	l_jetskiAnimationGroup->SetTimeAnimation( "gauche", l_currentTimeTurn);
+	l_hommeAnimationGroup->SetTimeAnimation( "droite", l_currentTimeTurn);
+	l_jetskiAnimationGroup->SetTimeAnimation( "droite", l_currentTimeTurn);
+
+	l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), l_virageAngle * l_previousTimeTurn / l_animationTimeTurn);
+	l_previousTimeTurn = 0.0;
+};
+
+void Clignotement()
+{
+	timer( "Clignotement", TIMERTYPE_REPEAT, 0.2)
+	{
+		if (l_displayJetSki)
+		{
+			Object_GetByName( "Jetski/" + jetski_charName)->Show();
+			Object_GetByName( jetski_charName + "_Body")->Show();
+			Object_GetByName( jetski_charName + "_LEye")->Show();
+			Object_GetByName( jetski_charName + "_REye")->Show();
+			Object_GetByName( jetski_charName + "_Hair")->Show();
+			if (Object_GetByName( jetski_charName + "_Beard") != NULL)
+			{
+				Object_GetByName( jetski_charName + "_Beard")->Show();
+			};
+			if (Object_GetByName( jetski_charName + "_Brow") != NULL)
+			{
+				Object_GetByName( jetski_charName + "_Brow")->Show();
+			};
+			if (Object_GetByName( jetski_charName + "_Dress") != NULL)
+			{
+				Object_GetByName( jetski_charName + "_Dress")->Show();
+			};
+		}
+		else
+		{
+			Object_GetByName( "Jetski/" + jetski_charName)->Hide();
+			Object_GetByName( jetski_charName + "_Body")->Hide();
+			Object_GetByName( jetski_charName + "_LEye")->Hide();
+			Object_GetByName( jetski_charName + "_REye")->Hide();
+			Object_GetByName( jetski_charName + "_Hair")->Hide();
+			if (Object_GetByName( jetski_charName + "_Beard") != NULL)
+			{
+				Object_GetByName( jetski_charName + "_Beard")->Hide();
+			};
+			if (Object_GetByName( jetski_charName + "_Brow") != NULL)
+			{
+				Object_GetByName( jetski_charName + "_Brow")->Hide();
+			};
+			if (Object_GetByName( jetski_charName + "_Dress") != NULL)
+			{
+				Object_GetByName( jetski_charName + "_Dress")->Hide();
+			};
+		};
+
+		l_displayJetSki = ! l_displayJetSki;
+	};
+
+	timer( "ClignotEnd", TIMERTYPE_ONCE, 2.0)
+	{
+		Timer_Kill( "Clignotement");
+
+		Object_GetByName( "Jetski/" + jetski_charName)->Show();
+		Object_GetByName( jetski_charName + "_Body")->Show();
+		Object_GetByName( jetski_charName + "_LEye")->Show();
+		Object_GetByName( jetski_charName + "_REye")->Show();
+		Object_GetByName( jetski_charName + "_Hair")->Show();
+		if (Object_GetByName( jetski_charName + "_Beard") != NULL)
+		{
+			Object_GetByName( jetski_charName + "_Beard")->Show();
+		};
+		if (Object_GetByName( jetski_charName + "_Brow") != NULL)
+		{
+			Object_GetByName( jetski_charName + "_Brow")->Show();
+		};
+		if (Object_GetByName( jetski_charName + "_Dress") != NULL)
+		{
+			Object_GetByName( jetski_charName + "_Dress")->Show();
+		};
+	};
+};
+
+void ObjectClignotement( object p_toClignot)
+{
+	Timer_Kill( "ObjectClignotement");
+	l_displayRing = false;
+
+	timer( "ObjectClignotement", TIMERTYPE_REPEAT, 0.1)
+	{
+		if (l_displayRing)
+		{
+			p_toClignot->Show();
+		}
+		else
+		{
+			p_toClignot->Hide();
+		};
+
+		l_displayRing = ! l_displayRing;
+	};
+
+	timer( "ObjectClignotEnd", TIMERTYPE_ONCE, 2.0)
+	{
+		Timer_Kill( "ObjectClignotement");
+
+		p_toClignot->Hide();
+	};
+};
+
+void EndGame()
+{
+	Timer_Kill( "Accelerating");
+	Timer_Kill( "ChangeTurboColour");
+	Overlay_Hide( "Jetski/TopLeft");
+	Overlay_Hide( "Jetski/TopRight");
+
+	ResetTurn();
+
+	l_inGame = false;
+	l_finished = true;
+	l_position = 1;
+	l_saveScore = 0;
+
+	Overlay_Hide( "Jetski/BottomRight");
+};
+
+void StopGame()
+{
+	Network_ClientSendMessage( "GameClient", pack_int( msGame) + pack_int( gmEndGame) + pack_int( g_score));
+
+	EndGame();
+
+	bool sg_distantFinished = true;
+	for (i = 0 ; i < l_distantFinished->Size() && sg_distantFinished ; i++)
+	{
+		if( l_distantFinished[i] )
+		{
+			sg_distantFinished = true;
+		}
+		else
+		{
+			sg_distantFinished = false;
+		}
+	};
+
+	if (sg_distantFinished)
+	{
+		bool sg_win;
+		sg_win = true;
+		for (i = 0 ; i < l_distantScore->Size() ; i++)
+		{
+			sg_win = sg_win && ((l_distantScore[i]) < g_score);
+		};
+		if (sg_win)
+		{
+			OverlayElement_GetByName( "Jetski/Result")->SetMaterial( "Gagne");
+		}
+		else
+		{
+			OverlayElement_GetByName( "Jetski/Result")->SetMaterial( "Perdu");
+		};
+		Overlay_Show( "Jetski/Result");
+		Overlay_Hide( "Jetski/WaitingOpponent");
+		Overlay_Show( "Jetski/Menu");
+		g_score = 0;
+	}
+	else
+	{
+		OverlayElement_GetByName( "Jetski/WaitingOpponent/Text")->SetCaption( "En attente de" + endl + "vos adversaires");
+		Overlay_Show( "Jetski/WaitingOpponent");
+	};
+};
+
+void StartExclusiveAnimation( string sea_pAnimName, bool sea_fall)
+{
+	l_hommeAnimationGroup->StopAnimation( "droite");
+	l_jetskiAnimationGroup->StopAnimation( "droite");
+	l_hommeAnimationGroup->StopAnimation( "gauche");
+	l_jetskiAnimationGroup->StopAnimation( "gauche");
+	l_hommeAnimationGroup->StopAnimation( "run");
+	l_jetskiAnimationGroup->StopAnimation( "run");
+	l_hommeAnimationGroup->StartAnimation( sea_pAnimName);
+	l_jetskiAnimationGroup->StartAnimation( sea_pAnimName);
+	
+	timer( "EndExclusiveAnim", TIMERTYPE_ONCE, l_hommeAnimationGroup->GetObject( jetski_charName + "_Body")->GetAnimation( sea_pAnimName)->GetLength())
+	{
+		l_hommeAnimationGroup->StartAnimation( "droite");
+		l_jetskiAnimationGroup->StartAnimation( "droite");
+		l_hommeAnimationGroup->StartAnimation( "gauche");
+		l_jetskiAnimationGroup->StartAnimation( "gauche");
+		l_hommeAnimationGroup->PauseAnimation( "droite");
+		l_jetskiAnimationGroup->PauseAnimation( "droite");
+		l_hommeAnimationGroup->PauseAnimation( "gauche");
+		l_jetskiAnimationGroup->PauseAnimation( "gauche");
+		l_hommeAnimationGroup->StartAnimation( "run");
+		l_jetskiAnimationGroup->StartAnimation( "run");
+
+		if (sea_fall)
+		{
+			Timer_Kill( "Accelerating");
+			Object_GetByName( "Rock" + itoa( l_indexRockTaken))->Hide();
+			l_inRock = false;
+			l_isFalling = false;
+			l_frottement = l_frottement / 2.0;
+			l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+			l_previousVelocity = l_currentVelocity;
+			Clignotement();
+		};
+	};
+};
+};
+
+void CheckRocks()
+{
+	for (i = 0 ; i < l_maxRock ; i ++)
+	{
+		if (l_indexRockTaken == i)
+		{
+			continue();
+		};
+
+		l_tempNode = SceneNode_GetByName( "RockNode" + itoa( i));
+		l_tmpNearestBalise = (l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length();
+
+		if (l_tmpNearestBalise < l_rockRadius && Object_GetByName( "Rock" + itoa( i))->IsVisible())
+		{
+			l_inRock = true;
+
+			Sound_Play_Global( "Ouch");
+			g_score -= 50;
+
+			l_previousVelocity = (-2.0) * l_currentVelocity;
+			l_currentVelocity = SetVector3( (-2.0) * l_currentVelocity[0], 0.0, (-2.0) * l_currentVelocity[2]);
+			l_frottement = l_frottement * 2.0;
+			l_indexRockTaken = i;
+
+			ResetTurn();
+
+			Network_ClientSendMessage( "GameClient", pack_int( msGame) + pack_int( gmFall));
+			l_isFalling = true;
+
+			StartExclusiveAnimation( "crash", true);
+		}
+		else
+		{
+			l_tempNode->SetVisible( l_tmpNearestBalise < l_distView);
+		};
+	};
+};
+
+void CheckRamps()
+{
+	for (i = 0 ; i < l_maxRamps ; i ++)
+	{
+		if (l_indexRampTaken == i)
+		{
+			continue();
+		};
+//		Echo( "Ramp - " + itoa( l_indexRampTaken) + " - " + itoa( i));
+
+		l_tempNode = SceneNode_GetByName( "RampNode" + itoa( i));
+		l_tmpNearestBalise = (l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length();
+
+		if (l_tmpNearestBalise < l_rockRadius)
+		{
+			l_indexRampTaken = i;
+			Echo( "RampTaken - " + itoa( l_indexRampTaken));
+
+			if (l_spaceHit)
+			{
+				l_animName = "looping";
+				g_score += 300;
+				Network_ClientSendMessage( "GameClient", pack_int( msGame) + pack_int( gmLooping));
+			}
+			else
+			{
+				l_animName = "jump";
+				g_score += 100;
+				Network_ClientSendMessage( "GameClient", pack_int( msGame) + pack_int( gmJump));
+			};
+			StartExclusiveAnimation( l_animName, false);
+		}
+		else
+		{
+			l_tempNode->SetVisible( l_tmpNearestBalise < l_distView);
+		};
+	};
+};
+
+void CheckGoldRings()
+{
+	for (i = 0 ; i < l_maxGoldRing ; i ++)
+	{
+		l_tempNode = SceneNode_GetByName( "GoldRingNode" + itoa( i));
+
+		if (strGetChar( l_validatedGoldRing, i) != 't')
+		{
+			l_tmpNearestBalise = (l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length();
+
+			if (l_tmpNearestBalise < l_ringRadius)
+			{
+				Sound_Play_Global( "Ring");
+
+				l_nbRing ++;
+				g_score += 100;
+				strSetChar( l_validatedGoldRing, i, 't');
+				l_tempNode->SetVisible( false);
+
+				l_ring = Object_GetByName( "GoldRing" + itoa( i));
+				ObjectClignotement( l_ring);
+			}
+			else
+			{
+				l_tempNode->SetVisible( l_tmpNearestBalise < l_distView);
+			};
+		}
+		else
+		{
+			l_tempNode->SetVisible( false);
+		};
+	};
+};
+
+void CheckTurboRings()
+{
+	for (i = 0 ; i < l_maxTurboRing ; i ++)
+	{
+		l_tempNode = SceneNode_GetByName( "TurboRingNode" + itoa( i));
+
+		if (strGetChar( l_validatedTurboRing, i) != 't')
+		{
+			l_tmpNearestBalise = (l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length();
+
+			if (l_tmpNearestBalise < l_ringRadius)
+			{
+				Sound_Play_Global( "TurboRing");
+//				PostEffect_Enable( "MotionBlur", true);
+
+				l_nbRing ++;
+				g_score += 50;
+				strSetChar( l_validatedTurboRing, i, 't');
+				l_tempNode->SetVisible( false);
+
+				l_ring = Object_GetByName( "TurboRing" + itoa( i));
+				ObjectClignotement( l_ring);
+
+				if ( ! Timer_Exists( "Turbo"))
+				{
+					l_acceleration = 2.0 * l_acceleration;
+				};
+
+				l_turboColour = SetColourRGB( 1.0, 0.0, 0.0);
+				OverlayElement_GetByName( "Jetski/Result")->SetMaterial( "Turbo");
+				Overlay_Show( "Jetski/Result");
+
+				Timer_Kill( "ChangeTurboColour");
+
+				timer( "ChangeTurboColour", TIMERTYPE_REPEAT, 0.1)
+				{
+					if (CURRENTTIMER_NUMEXECS <= 15)
+					{
+						l_turboColour = SetColourRGB( 1.0, CURRENTTIMER_NUMEXECS / 15.0, 0.0);
+					}
+					else
+					{
+						l_turboColour = SetColourRGB( 1.0 - (CURRENTTIMER_NUMEXECS - 15.0) / 15.0, 1.0, 0.0);
+					};
+
+				};
+
+				Timer_Kill( "Turbo");
+
+				timer( "Turbo", TIMERTYPE_ONCE, 3.0)
+				{
+					l_acceleration = l_acceleration / 10.0;
+					l_frottement = l_frottement * 2.0;
+					Timer_Kill( "ChangeTurboColour");
+//					PostEffect_Enable( "MotionBlur", false);
+					Overlay_Hide( "Jetski/Result");
+
+					timer( "TurboEnd", TIMERTYPE_PERMANENT, 0.0)
+					{
+						if (l_currentVelocity->Length() * 3.8 < (l_speedMax - 3.0))
+						{
+							l_acceleration = l_acceleration * 5.0;
+							l_frottement = l_frottement / 2.0;
+							Timer_Kill( "TurboEnd");
+						};
+					};
+				};
+			}
+			else
+			{
+				l_tempNode->SetVisible( l_tmpNearestBalise < l_distView);
+			};
+		}
+		else
+		{
+			l_tempNode->SetVisible( false);
+		};
+	};
+};
+
+void InitialiseRace()
+{
+	Timer_Kill( "Accelerating");
+	Timer_Kill( "ChangeTurboColour");
+
+	ResetTurn();
+
+	SetupRace();
+
+	l_finished = false;
+	l_horsJeu = false;
+	l_inRock = false;
+	l_inGame = false;
+	l_indexRockTaken = -1;
+	l_indexRampTaken = -1;
+	l_speedMax = 130.0;
+	l_previousTurboPosY = 0;
+	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+	l_previousVelocity = l_currentVelocity;
+
+	l_jetSkiNode->SetPosition( l_startPoint + SetVector3( l_offsetX, 0.0, l_offsetZ));
+	l_jetSkiNode->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), 0.0));
+	for (i = 0 ; i < l_distantJetSkiNode->Size() ; i++)
+	{
+		(l_distantJetSkiNode[i])->SetPosition( l_startPoint + SetVector3( (l_distantOffsetX[i]), 0.0, (l_distantOffsetZ[i])));
+		(l_distantJetSkiNode[i])->SetOrientation( SetQuaternion( SetVector3( 0.0, 1.0, 0.0), 0.0));
+	};
+	l_percent = 0.0;
+	for (i = 0 ; i < l_distantPercent->Size() ; i++)
+	{
+		l_distantPercent[i] = 0.0;
+	};
+
+	Timer_Kill( "CameraWait");
+	int l_nbExecs;
+	l_nbExecs = 180 - rtoi( l_currentCameraYaw);
+	if (l_nbExecs < 0)
+	{
+		l_nbExecs += 360;
+	};
+	l_rootCamera->GetParent()->Reset();
+	l_rootCamera->GetParent()->Yaw( l_currentCameraYaw);
+	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (1000.0 / V3_GetLength( l_rootCamera->GetPosition())));
+
+	timer( "CameraStarting", TIMERTYPE_REPEAT, 0.01)
+	{
+		l_rootCamera->GetParent()->Yaw( 1.0);
+		if (CURRENTTIMER_NUMEXECS == l_nbExecs)
+		{
+			Timer_Kill( "CameraStarting");
+		};
+	};
+
+	Overlay_Show( "Jetski/TopLeft");
+	Overlay_Show( "Jetski/TopRight");
+	Overlay_Show( "Jetski/BottomRight");
+	Overlay_Hide( "Jetski/Result");
+	Overlay_Hide( "Jetski/Title");
+	l_titleShown = false;
+
+	l_start->SetCaption( "Pret ?");
+	l_start->SetTextColour( SetColourRGB( 1.0, 0.0, 0.0));
+
+	Overlay_Show( "Jetski/Start");
+
+	l_startNode->Show();
+	l_goalNode->Show();
+
+	for (i = 0 ; i <= l_nbBaliseToDisplay ; i ++)
+	{
+		SceneNode_GetByName( "BaliseNodeL" + itoa( i))->SetVisible( true);
+		SceneNode_GetByName( "BaliseNodeR" + itoa( i))->SetVisible( true);
+	};
+
+	for (i = 0 ; i < l_maxTurboRing ; i ++)
+	{
+		l_tempNode = SceneNode_GetByName( "TurboRingNode" + itoa( i));
+
+		if ((l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length() < l_distView)
+		{
+			l_tempNode->SetVisible( true);
+		};
+	};
+
+	for (i = 0 ; i < l_maxGoldRing ; i ++)
+	{
+		l_tempNode = SceneNode_GetByName( "GoldRingNode" + itoa( i));
+
+		if ((l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length() < l_distView)
+		{
+			l_tempNode->SetVisible( true);
+		};
+	};
+
+	for (i = 0 ; i < l_maxRock ; i ++)
+	{
+		l_tempNode = SceneNode_GetByName( "RockNode" + itoa( i));
+
+		if ((l_tempNode->GetPosition() - l_jetSkiNode->GetPosition())->Length() < l_distView)
+		{
+			l_tempNode->SetVisible( true);
+		};
+	};
+
+	Timer_Kill( "Pret-3");
+	Timer_Kill( "Pret-2");
+	Timer_Kill( "Pret-1");
+	Timer_Kill( "Pret-go");
+	Timer_Kill( "Pret-vanish");
+	Timer_Kill( "Friction");
+	Timer_Kill( "Gaming");
+};
+
+void BeginGame()
+{
+	l_firstPlay = false;
+	InitialiseRace();
+
+	timer( "Pret-3", TIMERTYPE_ONCE, 1.0)
+	{
+		l_start->SetCaption( "3");
+	};
+
+	timer( "Pret-2", TIMERTYPE_ONCE, 2.0)
+	{
+		l_start->SetTextColour( SetColourRGB( 1.0, 0.5, 0.0));
+		l_start->SetCaption( "2");
+	};
+
+	timer( "Pret-1", TIMERTYPE_ONCE, 3.0)
+	{
+		l_start->SetTextColour( SetColourRGB( 1.0, 1.0, 0.0));
+		l_start->SetCaption( "1");
+	};
+
+	timer( "Pret-go", TIMERTYPE_ONCE, 4.0)
+	{
+		l_start->SetTextColour( SetColourRGB( 0.0, 1.0, 0.0));
+		l_start->SetCaption( "GO");
+	};
+
+	timer( "Pret-vanish", TIMERTYPE_ONCE, 5.0)
+	{
+		Overlay_Hide( "Jetski/Start");
+		l_beginTime = l_elapsedTime;
+		l_inGame = true;
+
+		OverlayElement_GetByName( "Jetski/OpponentName0")->Show();
+		OverlayElement_GetByName( "Jetski/OpponentName1")->Show();
+		OverlayElement_GetByName( "Jetski/OpponentName2")->Show();
+
+		timer( "Friction", TIMERTYPE_REPEAT, 0.1)
+		{
+			l_previousVelocity = l_currentVelocity;
+
+			if (l_currentVelocity->Length() > 0.0)
+			{
+				l_currentVelocity = l_currentVelocity * (1.0 - l_frottement);
+
+				if ((l_currentVelocity[0]) <= 0.1)
+				{
+					l_currentVelocity = SetVector3( 0.0, 0.0, (l_currentVelocity[2]));
+				};
+
+				if ((l_currentVelocity[2]) <= 0.1)
+				{
+					l_currentVelocity = SetVector3( (l_currentVelocity[0]), 0.0, 0.0);
+				};
+			};
+		};
+
+		timer( "Gaming", TIMERTYPE_PERMANENT, 0.0)
+		{
+			if (l_currentVelocity->Length() > 0.0)
+			{
+				l_jetSkiNode->TranslateLocal( SetVector3( 100.0 * (l_currentVelocity[0]) * GENERAL_ELAPSED_TIME, 0.0, 100.0 * (l_currentVelocity[2]) * GENERAL_ELAPSED_TIME));
+				l_jetSkiNode->Rotate( SetVector3( 0.0, 1.0, 0.0), l_currentTimeTurn * l_angleMax * GENERAL_ELAPSED_TIME / l_animationTimeTurn);
+			};
+
+			l_updateTime += GENERAL_ELAPSED_TIME;
+
+			if (l_updateTime >= 0.25)
+			{
+				l_updateTime = 0.0;
+				Network_ClientSendMessage( "GameClient", pack_int( msGame) + pack_int( gmUpdate) + pack_vector3( l_jetSkiNode->GetPosition()) + pack_quaternion( l_jetSkiNode->GetOrientation()) + pack_real( l_percent) + pack_int( g_score));
+			};
+
+			for (i = 0 ; i < l_nameOv->Size() ; i++)
+			{
+				(l_nameOv[i])->Show();
+				l_posTmp = (l_distantJetSkiNode[i])->GetPosition();
+				l_posTmp = SetVector3( (l_posTmp[0]), (l_posTmp[1]), (l_posTmp[2]));
+				l_posTmp = V3_ProjectOnScreen( l_posTmp);
+				l_posTmp = SetVector3( (l_posTmp[0]) - (GetLineWidth( (l_distantCharName[i]), "Minigame", 24.0) / 2.0), (l_posTmp[1]) - 100.0, 0.0);
+				(l_nameOv[i])->SetPosition( l_posTmp);
+			};
+
+			if (l_inGame)
+			{
+				CheckRocks();
+				CheckGoldRings();
+				CheckTurboRings();
+				CheckRamps();
+
+				l_indexEnd = l_indexNearestBalise + itor( l_nbBaliseToDisplay);
+				l_indexBegin = l_indexNearestBalise - itor( l_nbBaliseToDisplay);
+				l_indexBegin = max( 0.0, l_indexBegin);
+				l_previousNearestBalise = l_indexNearestBalise;
+
+				l_tempNode = SceneNode_GetByName( "BaliseNodeL" + itoa( l_indexNearestBalise));
+				l_tempNode2 = SceneNode_GetByName( "BaliseNodeR" + itoa( l_indexNearestBalise));
+
+				l_baliseCenter = (l_tempNode->GetPosition() + l_tempNode2->GetPosition()) / 2.0;
+				l_nearestBalise = (l_jetSkiNode->GetPosition() - l_baliseCenter)->Length();
+
+				l_tempNode->SetVisible( true);
+				l_tempNode2->SetVisible( true);
+
+				for (i = rtoi( l_indexBegin) ; i <= rtoi( l_indexEnd) && i < l_maxBalise ; i ++)
+				{
+					l_tempNode = SceneNode_GetByName( "BaliseNodeL" + itoa( i));
+					l_tempNode2 = SceneNode_GetByName( "BaliseNodeR" + itoa( i));
+
+					l_baliseCenter = (l_tempNode->GetPosition() + l_tempNode2->GetPosition()) / 2.0;
+					l_tmpNearestBalise = (l_jetSkiNode->GetPosition() - l_baliseCenter)->Length();
+					l_tmpNearestBalise = min( l_nearestBalise, l_tmpNearestBalise);
+
+					if (l_tmpNearestBalise < l_nearestBalise)
+					{
+						l_nearestBalise = l_tmpNearestBalise;
+						l_indexNearestBalise = i;
+						l_percent = itor( i) / itor( l_maxBalise);
+					};
+				};
+
+				l_diffIndex = l_indexNearestBalise - l_previousNearestBalise;
+
+				if (l_diffIndex > 0)
+				{
+					for (i = 0 ; i <= rtoi( abs( itor( l_diffIndex))) ; i ++)
+					{
+						if ((l_previousNearestBalise - l_nbBaliseToDisplay + i) >= 0)
+						{
+							SceneNode_GetByName( "BaliseNodeL" + itoa( l_previousNearestBalise - l_nbBaliseToDisplay + i))->SetVisible( false);
+							SceneNode_GetByName( "BaliseNodeR" + itoa( l_previousNearestBalise - l_nbBaliseToDisplay + i))->SetVisible( false);
+						};
+
+						if ((l_previousNearestBalise + l_nbBaliseToDisplay + i) < l_maxBalise)
+						{
+							SceneNode_GetByName( "BaliseNodeL" + itoa( l_previousNearestBalise + l_nbBaliseToDisplay + i))->SetVisible( true);
+							SceneNode_GetByName( "BaliseNodeR" + itoa( l_previousNearestBalise + l_nbBaliseToDisplay + i))->SetVisible( true);
+						};
+					};
+				}
+				else
+				{
+					for (i = 0 ; i <= rtoi( abs( itor( l_diffIndex))) ; i ++)
+					{
+						if ((l_previousNearestBalise - l_nbBaliseToDisplay - i) >= 0)
+						{
+							SceneNode_GetByName( "BaliseNodeL" + itoa( l_previousNearestBalise - l_nbBaliseToDisplay - i))->SetVisible( true);
+							SceneNode_GetByName( "BaliseNodeR" + itoa( l_previousNearestBalise - l_nbBaliseToDisplay - i))->SetVisible( true);
+						};
+
+						if ((l_previousNearestBalise + l_nbBaliseToDisplay - i) < l_maxBalise)
+						{
+							SceneNode_GetByName( "BaliseNodeL" + itoa( l_previousNearestBalise + l_nbBaliseToDisplay - i))->SetVisible( false);
+							SceneNode_GetByName( "BaliseNodeR" + itoa( l_previousNearestBalise + l_nbBaliseToDisplay - i))->SetVisible( false);
+						};
+					};
+				};
+
+				if ( ! l_horsJeu && l_nearestBalise > l_baliseRadius && l_nearestBalise < 2 * l_baliseRadius)
+				{
+					l_horsJeu = true;
+					l_acceleration = l_acceleration / 2.0;
+							
+					Timer_Kill( "ChangeTurboColour");
+
+					OverlayElement_GetByName( "Jetski/Result")->SetMaterial( "HorsPiste");
+					Overlay_Show( "Jetski/Result");
+
+					timer( "HorsJeu", TIMERTYPE_ONCE, 2.0)
+					{
+						l_horsJeu = false;
+						l_acceleration = l_acceleration * 2.0;
+						Overlay_Hide( "Jetski/Result");
+					};
+				}
+				elseif (l_nearestBalise >= 2 * l_baliseRadius)
+				{
+					Sound_Play( "Error", l_jetSkiNode->GetName());
+
+					l_horsJeu = false;
+					l_displayJetSki = false;
+
+					l_jetSkiNode->SetPosition( (SceneNode_GetByName( "BaliseNodeL" + itoa( l_indexNearestBalise))->GetPosition() + SceneNode_GetByName( "BaliseNodeR" + itoa( l_indexNearestBalise))->GetPosition()) / 2.0);
+					l_jetSkiNode->SetYPosition( -12.25);
+
+					l_jetOrientation = SceneNode_GetByName( "BaliseNodeR" + itoa( l_indexNearestBalise))->GetPosition() - SceneNode_GetByName( "BaliseNodeL" + itoa( l_indexNearestBalise))->GetPosition();
+					l_jetOrientation = SetVector3( l_jetOrientation[0], 0.0, l_jetOrientation[2]);
+
+					l_jetSkiNode->SetOrientation( V3_GetRotationTo( UNIT_Z, l_jetOrientation));
+					l_jetSkiNode->Yaw( 90.0);
+
+					l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+					l_previousVelocity = l_currentVelocity;
+
+					Overlay_Hide( "Jetski/Result");
+
+					Clignotement();
+				};
+			};
+
+			l_rootCamera->GetParent()->Pitch( -l_currentPitch);
+			l_rootCamera->GetParent()->Yaw( 180.0);
+			l_rootCamera->GetParent()->SetOrientation( Quat_Slerp( l_jetSkiNode->GetOrientation(), l_rootCamera->GetParent()->GetOrientation(), 0.25));
+			l_rootCamera->GetParent()->Yaw( 180.0);
+			l_rootCamera->GetParent()->Pitch( l_currentPitch);
+
+			if (l_inGame)
+			{
+				l_runTime = l_elapsedTime - l_beginTime;
+			}
+			else
+			{
+				l_runTime = l_runTimeSave;
+			};
+
+			l_nbMinute = rtoi( l_runTime) / 60;
+			l_runTime = l_runTime - itor( l_nbMinute * 60);
+			l_nbSeconde = rtoi( l_runTime);
+			l_runTime = l_runTime - itor( l_nbSeconde);
+			l_nbCentieme = rtoi( l_runTime * 100.0);
+			l_speedKMH = itor( rtoi( l_currentVelocity->Length() * 360.0)) / 100.0;
+
+			l_scoreInGame->SetCaption( "Score : " + itoa( g_score));
+			l_ringInGame->SetCaption( "Anneaux : " + itoa( l_nbRing));
+			l_speedInGame->SetCaption( "Vitesse : " + rtoa( l_speedKMH) + " km/h");
+			l_chronoInGame->SetCaption( "Chrono : " + itoa( l_nbMinute) + "'" + itoa( l_nbSeconde) + "''" + itoa( l_nbCentieme) + "'''");
+			OverlayElement_GetByName( "Jetski/TopLeft/Position")->SetCaption( "Position : " + itoa( l_position));
+
+			if (l_speedKMH < l_speedMax)
+			{
+				l_nbMinute = rtoi( 138.0 * l_speedKMH / l_speedMax);
+
+				if (l_nbMinute <= 0)
+				{
+					l_nbMinute = 1;
+				}
+				elseif (l_nbMinute > 138)
+				{
+					l_nbMinute = 138;
+				};
+
+				l_barreInGame->SetHeight( itor( l_nbMinute));
+				l_barreTurboInGame->SetHeight( itor( 0));
+				l_barreInGame->Translate( 0.0, itor( l_previousTurboPosY - l_nbMinute));
+				l_previousTurboPosY = l_nbMinute;
+			}
+			else
+			{
+				l_nbSeconde = rtoi( 138.0 * l_speedMax / (1.5 * l_speedKMH));
+
+				l_barreInGame->SetHeight( itor( l_nbSeconde));
+				l_barreTurboInGame->SetHeight( itor( 138 - l_nbSeconde));
+				l_barreInGame->Translate( 0.0, itor( l_previousTurboPosY - l_nbSeconde));
+				l_previousTurboPosY = l_nbSeconde;
+			};
+
+			if (l_inGame)
+			{
+				l_runTime = l_elapsedTime - l_beginTime;
+				l_runTimeSave = l_runTime;
+
+				if ((l_goalPoint - l_jetSkiNode->GetPosition())->Length() < l_ringRadius)
+				{
+					if (l_position == 1)
+					{
+						g_score += 500;
+					}
+					elseif (l_position == 2)
+					{
+						g_score += 350;
+					}
+					elseif (l_position == 3)
+					{
+						g_score += 200;
+					};
+					StopGame();
+				};
+			};
+		};
+	};
+};
+
+void LoadPlayer( string lp_charName, bool lp_creator, overlay lp_nameOV, int lp_place)
+{
+	scene_node lp_jetskiNode;
+	scene_node lp_jetskiPersoNode;
+	scene_node lp_waveNode;
+
+	real lp_offsetX;
+	real lp_offsetZ;
+
+	object lp_homme;
+	object lp_guidon;
+	object lp_jetski;
+
+	animation_group lp_hommeAnimGroup;
+	animation_group lp_jetskiAnimGroup;
+
+	if (SceneNode_Exists( "JetSkiNode/" + lp_charName))
+	{
+		lp_jetskiNode = SceneNode_GetByName( "JetSkiNode/" + lp_charName);
+	}
+	else
+	{
+		lp_jetskiNode = SceneNode_Create( "JetSkiNode/" + lp_charName);
+	};
+	lp_jetskiNode->SetPosition( SetVector3( 100.0, 0.0, -50000.0));
+	lp_jetskiNode->SetScale( SetVector3( 0.5, 0.5, 0.5));
+
+	if (SceneNode_Exists( "JetSkiWaveNode/" + lp_charName))
+	{
+		lp_waveNode = SceneNode_GetByName( "JetSkiWaveNode/" + lp_charName);
+	}
+	else
+	{
+		lp_waveNode = SceneNode_Create( "JetSkiWaveNode/" + lp_charName);
+	};
+	lp_waveNode->SetInheritOrientation( true);
+	lp_waveNode->SetInheritScale( true);
+	lp_waveNode->SetParent( lp_jetskiNode);
+
+	if (SceneNode_Exists( "JetSkiNode/Perso/" + lp_charName))
+	{
+		lp_jetskiPersoNode = SceneNode_GetByName( "JetSkiNode/Perso/" + lp_charName);
+	}
+	else
+	{
+		lp_jetskiPersoNode = SceneNode_Create( "JetSkiNode/Perso/" + lp_charName);
+	};
+	lp_jetskiPersoNode->SetInheritOrientation( true);
+	lp_jetskiPersoNode->SetInheritScale( true);
+	lp_jetskiPersoNode->SetParent( lp_waveNode);
+	lp_jetskiPersoNode->SetPosition( SetVector3( -30.0, -30.0, 0.0));
+
+	if (lp_creator)
+	{
+		lp_offsetX = -150.0;
+	}
+	else
+	{
+		lp_offsetX = (lp_place * 100.0) - 150.0;
+	};
+
+	lp_jetskiNode->SetPosition( lp_jetskiNode->GetPosition() + SetVector3( lp_offsetX, 0.0, 0.0));
+
+	if (lp_charName == jetski_charName)
+	{
+		l_jetSkiNode = lp_jetskiNode;
+		l_offsetX = lp_offsetX;
+		l_offsetZ = lp_offsetZ;
+		l_waveNode = lp_waveNode;
+		SceneNode_GetByName( "JetSkiSkyNode")->SetParent( l_jetSkiNode);
+		SceneNode_GetByName( "CameraNode")->SetParent( l_jetSkiNode);
+		l_currentCameraYaw = 0.0;
+
+		timer( "CameraWait", TIMERTYPE_PERMANENT, 0.0)
+		{
+			l_rootCamera->GetParent()->Yaw( 0.5);
+			l_currentCameraYaw += 0.5;
+			if (l_currentCameraYaw >= 360.0)
+			{
+				l_currentCameraYaw = l_currentCameraYaw - 360.0;
+			};
+		};
+	}
+	else
+	{
+		l_distantJetSkiNode->Add( lp_jetskiNode);
+		l_distantWaveNode->Add( lp_waveNode);
+		l_distantOffsetX->Add( lp_offsetX);
+		l_distantOffsetZ->Add( lp_offsetZ);
+	};
+
+	if (AnimationGroup_Exists( "Homme/" + lp_charName))
+	{
+		lp_hommeAnimGroup = AnimationGroup_GetByName( "Homme/" + lp_charName);
+	}
+	else
+	{
+		lp_hommeAnimGroup = AnimationGroup_Create( "Homme/" + lp_charName);
+	};
+
+	if (AnimationGroup_Exists( "JetSki_Animation/" + lp_charName))
+	{
+		lp_jetskiAnimGroup = AnimationGroup_GetByName( "JetSki_Animation/" + lp_charName);
+	}
+	else
+	{
+		lp_jetskiAnimGroup = AnimationGroup_Create( "JetSki_Animation/" + lp_charName);
+	};
+
+	jetski_currentCharNode = lp_jetskiPersoNode;
+	jetski_currentCharName = lp_charName;
+	jetski_persoAnims = lp_hommeAnimGroup;
+
+	lp_jetski = Object_GetByName( "Jetski/" + lp_charName);
+	if (lp_jetski == NULL)
+	{
+		lp_jetski = Object_Create( "Jetski/" + lp_charName, "jetski.mesh");
+	};
+
+	Echo( "LoadPlayer - num : " + itoa( l_nbPlayers) + " - " + jetski_currentCharName + " on node : " + jetski_currentCharNode->GetName());
+
+	BuildCharacter();
+
+	lp_jetski->SetParent( lp_waveNode);
+	lp_jetskiAnimGroup->AddObject( lp_jetski);
+
+	lp_jetskiAnimGroup->ChainAnimation( "jump", "run");
+	lp_jetskiAnimGroup->ChainAnimation( "crash", "run");
+	lp_jetskiAnimGroup->ChainAnimation( "looping", "run");
+
+	lp_jetskiAnimGroup->GetObject( "Jetski/" + lp_charName)->GetAnimation( "run")->SetLooped( true);
+
+	g_animName = "run";
+	lp_hommeAnimGroup->StartAnimation( g_animName);
+	lp_jetskiAnimGroup->StartAnimation( g_animName);
+
+	lp_hommeAnimGroup->StartAnimation( "gauche");
+	lp_jetskiAnimGroup->StartAnimation( "gauche");
+	lp_hommeAnimGroup->StartAnimation( "droite");
+	lp_jetskiAnimGroup->StartAnimation( "droite");
+	lp_hommeAnimGroup->PauseAnimation( "gauche");
+	lp_jetskiAnimGroup->PauseAnimation( "gauche");
+	lp_hommeAnimGroup->PauseAnimation( "droite");
+	lp_jetskiAnimGroup->PauseAnimation( "droite");
+
+
+	if (lp_charName == jetski_charName)
+	{
+		l_hommeAnimationGroup = lp_hommeAnimGroup;
+		l_jetskiAnimationGroup = lp_jetskiAnimGroup;
+		l_animationTimeTurn = l_hommeAnimationGroup->GetObject( lp_charName + "_Body")->GetAnimation( "gauche")->GetLength();
+
+		timer( "Waving", TIMERTYPE_PERMANENT, 0.0)
+		{
+			l_elapsedTime += GENERAL_ELAPSED_TIME;
+
+			if (l_currentVelocity->Length() > l_speedMax)
+			{
+				l_speedMax = l_currentVelocity->Length();
+			};
+
+			l_lastXAngleRotate = l_oscillationXAngle * sin( l_angleXPulse * l_elapsedTime * 360.0 / (2 * 3.14159)) - l_speedAngle * l_currentVelocity->Length() / l_speedMax;
+
+			l_waveNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), -l_lastXAngleRotate);
+			l_waveNode->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_lastXAngleRotate);
+			l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), -l_lastZAngleRotate);
+			l_waveNode->RotateLocal( SetVector3( 0.0, 0.0, 1.0), l_lastZAngleRotate);
+			l_waveNode->SetYPosition( l_waveAmplitude * cos( l_wavePulse * l_elapsedTime * 360.0 / (2 * 3.14159)) + l_speedUp * l_currentVelocity->Length() / l_speedMax);
+
+			if (l_distantWaveNode->Size() > 0)
+			{
+				for (i = 0 ; i < l_distantWaveNode->Size() ; i++)
+				{
+					(l_distantWaveNode[i])->RotateLocal( SetVector3( 1.0, 0.0, 0.0), -l_lastXAngleRotate);
+					(l_distantWaveNode[i])->RotateLocal( SetVector3( 1.0, 0.0, 0.0), l_lastXAngleRotate);
+					(l_distantWaveNode[i])->RotateLocal( SetVector3( 0.0, 0.0, 1.0), -l_lastZAngleRotate);
+					(l_distantWaveNode[i])->RotateLocal( SetVector3( 0.0, 0.0, 1.0), l_lastZAngleRotate);
+					(l_distantWaveNode[i])->SetYPosition( l_waveAmplitude * cos( l_wavePulse * l_elapsedTime * 360.0 / (2 * 3.14159)) + l_speedUp * l_currentVelocity->Length() / l_speedMax);
+				};
+			};
+
+			l_lastZAngleRotate = l_oscillationZAngle * sin( l_angleZPulse * l_elapsedTime * 360.0 / (2 * 3.14159));
+
+			l_waveBalise = itor( ctoi( strGetChar( l_waveBalisePulse, 0)));
+			l_startNode->SetYPosition( l_waveAmplitude * cos( l_waveBalise * l_elapsedTime * 360.0 / (2 * 3.14159)) - 5.0);
+			l_waveBalise = itor( ctoi( strGetChar( l_waveBalisePulse, 1)));
+			l_goalNode->SetYPosition( l_waveAmplitude * cos( l_waveBalise * l_elapsedTime * 360.0 / (2 * 3.14159)) - 5.0);
+
+			for ( i = 0 ; i < l_maxBalise ; i ++)
+			{
+				l_waveBalise = itor( ctoi( strGetChar( l_waveBalisePulse, 2 * i + 2)));
+				SceneNode_GetByName( "BaliseNodeL" + itoa( i))->SetYPosition( l_waveAmplitude * cos( l_waveBalise * l_elapsedTime * 360.0 / (2 * 3.14159)) - 20.0);
+	
+				l_waveBalise = itor( ctoi( strGetChar( l_waveBalisePulse, (2 * i) + 3)));
+				SceneNode_GetByName( "BaliseNodeR" + itoa( i))->SetYPosition( l_waveAmplitude * cos( l_waveBalise * l_elapsedTime * 360.0 / (2 * 3.14159)) - 20.0);
+			};
+
+			for (i = 0 ; i < l_maxGoldRing ; i ++)
+			{
+				l_waveBalise = itor( ctoi( strGetChar( l_waveBalisePulse, 2 * i)));
+				SceneNode_GetByName( "GoldRingNode" + itoa( i))->SetYPosition( l_waveAmplitude * cos( l_waveBalise * l_elapsedTime * 360.0 / (2 * 3.14159)) - 20.0);
+			};
+
+			for (i = 0 ; i < l_maxTurboRing ; i ++)
+			{
+				l_waveBalise = itor( ctoi( strGetChar( l_waveBalisePulse, 2 * i)));
+				SceneNode_GetByName( "TurboRingNode" + itoa( i))->SetYPosition( l_waveAmplitude * cos( l_waveBalise * l_elapsedTime * 360.0 / (2 * 3.14159)) - 20.0);
+			};
+		};
+	};
+};
+
+void InitialiseManMeshes()
+{
+	g_manBodyNames = "Normal|end";
+	g_manBodyMeshes = "corps.mesh|end";
+	g_manMaxBodies = 1;
+
+	g_manHairsNames = "Normale|";
+	g_manHairsMeshes = "coiffe_coupe.mesh|";
+	g_manHairsNames += "Punk|";
+	g_manHairsMeshes += "coiffe_punk.mesh|";
+	g_manHairsNames += "Queue de cheval|";
+	g_manHairsMeshes += "coiffe_queuedechev.mesh|";
+	g_manHairsNames += "Mage|";
+	g_manHairsMeshes += "coiffe_mage.mesh|";
+	g_manHairsNames += "Casque Joe|";
+	g_manHairsMeshes += "coiffe_joe.mesh|";
+	g_manHairsNames += "Ecouteurs|";
+	g_manHairsMeshes += "coiffe_musique.mesh|";
+	g_manHairsNames += "Casque Romain|";
+	g_manHairsMeshes += "coiffe_romain.mesh|";
+	g_manHairsNames += "Casque Viking|";
+	g_manHairsMeshes += "coiffe_viking.mesh|";
+	g_manHairsNames += "Cowboy|";
+	g_manHairsMeshes += "coiffe_cowboy.mesh|";
+	g_manHairsNames += "Haut de forme|";
+	g_manHairsMeshes += "coiffe_hauteforme.mesh|";
+	g_manHairsNames += "Alien|";
+	g_manHairsMeshes += "coiffe_alien.mesh|";
+	g_manHairsNames += "Aluk|";
+	g_manHairsMeshes += "coiffe_aluc.mesh|";
+	g_manHairsNames += "Angelique|";
+	g_manHairsMeshes += "coiffe_ange.mesh|";
+	g_manHairsNames += "Batboy|";
+	g_manHairsMeshes += "coiffe_batman.mesh|";
+	g_manHairsNames += "Demoniaque|";
+	g_manHairsMeshes += "coiffe_demon.mesh|";
+	g_manHairsNames += "Drake|";
+	g_manHairsMeshes += "coiffe_drake.mesh|";
+	g_manHairsNames += "Elfique|";
+	g_manHairsMeshes += "coiffe_elfe.mesh|";
+	g_manHairsNames += "Loup-garou|";
+	g_manHairsMeshes += "coiffe_garou.mesh|";
+	g_manHairsNames += "Goku|";
+	g_manHairsMeshes += "coiffe_goku.mesh|";
+	g_manHairsNames += "Halloween|";
+	g_manHairsMeshes += "coiffe_haloween.mesh|";
+	g_manHairsNames += "Lunk|";
+	g_manHairsMeshes += "coiffe_lunk.mesh|";
+	g_manHairsNames += "Robot|";
+	g_manHairsMeshes += "coiffe_robot.mesh|";
+	g_manHairsNames += "Terminator|";
+	g_manHairsMeshes += "coiffe_termina.mesh|";
+	g_manHairsNames += "Ent|";
+	g_manHairsMeshes += "coiffe_trent.mesh|";
+	g_manHairsNames += "Vampire|";
+	g_manHairsMeshes += "coiffe_vampire.mesh|";
+	g_manHairsNames += "Ninja|";
+	g_manHairsMeshes += "coiffe_ninja.mesh|";
+	g_manHairsNames += "Casquette endroit|";
+	g_manHairsMeshes += "coiffe_casquettef.mesh|";
+	g_manHairsNames += "Casquette envers|";
+	g_manHairsMeshes += "coiffe_casquetteb.mesh|";
+	g_manHairsNames += "end";
+	g_manHairsMeshes += "end";
+	g_manMaxHairs = 28;
+
+	g_manHairsColoursNames = "Blond|";
+	g_manHairsMaterials = "corpsminiboy/cheveux-blond|";
+	g_manHairsColoursNames += "Noir|";
+	g_manHairsMaterials += "corpsminiboy/cheveux|";
+	g_manHairsColoursNames += "Chatain|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-chatain|";
+	g_manHairsColoursNames += "Roux|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-roux|";
+	g_manHairsColoursNames += "Gris|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-gris|";
+	g_manHairsColoursNames += "Blanc|";
+	g_manHairsMaterials += "corpsminiboy/cheveux-blanc|";
+	g_manHairsColoursNames += "end";
+	g_manHairsMaterials += "end";
+	g_manMaxHairsMaterials = 6;
+
+	g_manDressesNames = "Torse nu|";
+	g_manDressesMeshes = "none|";
+	g_manDressesNames += "Cache poussiere|";
+	g_manDressesMeshes += "tenue_cachepouss.mesh|";
+	g_manDressesNames += "Blouson|";
+	g_manDressesMeshes += "tenue_blouzon.mesh|";
+	g_manDressesNames += "Plastron romain|";
+	g_manDressesMeshes += "tenue_romain.mesh|";
+	g_manDressesNames += "Plastron viking|";
+	g_manDressesMeshes += "tenue_viking.mesh|";
+	g_manDressesNames += "Robe mage|";
+	g_manDressesMeshes += "tenue_mage.mesh|";
+	g_manDressesNames += "Indy|";
+	g_manDressesMeshes += "tenue_indiana.mesh|";
+	g_manDressesNames += "Alien|";
+	g_manDressesMeshes += "tenue_alien.mesh|";
+	g_manDressesNames += "Aluk|";
+	g_manDressesMeshes += "tenue_aluc.mesh|";
+	g_manDressesNames += "Angelique|";
+	g_manDressesMeshes += "tenue_ange.mesh|";
+	g_manDressesNames += "Batboy|";
+	g_manDressesMeshes += "tenue_batman.mesh|";
+	g_manDressesNames += "Demoniaque|";
+	g_manDressesMeshes += "tenue_demon.mesh|";
+	g_manDressesNames += "Drake|";
+	g_manDressesMeshes += "tenue_drake.mesh|";
+	g_manDressesNames += "Loup-garou|";
+	g_manDressesMeshes += "tenue_garou.mesh|";
+	g_manDressesNames += "Lunk|";
+	g_manDressesMeshes += "tenue_lunk.mesh|";
+	g_manDressesNames += "Robot|";
+	g_manDressesMeshes += "tenue_robot.mesh|";
+	g_manDressesNames += "Ent|";
+	g_manDressesMeshes += "tenue_trent.mesh|";
+	g_manDressesNames += "Vampire|";
+	g_manDressesMeshes += "tenue_vampire.mesh|";
+	g_manDressesNames += "Ninja|";
+	g_manDressesMeshes += "tenue_ninja.mesh|";
+	g_manDressesNames += "Goku|";
+	g_manDressesMeshes += "tenue_goku.mesh|";
+	g_manDressesNames += "end";
+	g_manDressesMeshes += "end";
+	g_manMaxDresses = 20;
+
+	g_manSkinsNames = "Blanc|";
+	g_manSkinsMaterials = "corpsminiboy/peau|";
+	g_manSkinsNames += "Mat|";
+	g_manSkinsMaterials += "corpsminiboy/peau-mat|";
+	g_manSkinsNames += "Noir|";
+	g_manSkinsMaterials += "corpsminiboy/peau-noir|";
+	g_manSkinsNames += "Jaune|";
+	g_manSkinsMaterials += "corpsminiboy/peau-jaune|";
+	g_manSkinsNames += "Demon|";
+	g_manSkinsMaterials += "corpsminiboy/peau-demon|";
+	g_manSkinsNames += "Alien|";
+	g_manSkinsMaterials += "corpsminiboy/peau-alien|";
+	g_manSkinsNames += "Drake|";
+	g_manSkinsMaterials += "corpsminiboy/peau-drake|";
+	g_manSkinsNames += "Loup Garou|";
+	g_manSkinsMaterials += "corpsminiboy/peau-garou|";
+	g_manSkinsNames += "Robot|";
+	g_manSkinsMaterials += "corpsminiboy/peau-robot|";
+	g_manSkinsNames += "Ent|";
+	g_manSkinsMaterials += "corpsminiboy/peau-trent|";
+	g_manSkinsNames += "Vampire|";
+	g_manSkinsMaterials += "corpsminiboy/peau-vampire|";
+	g_manSkinsNames += "end";
+	g_manSkinsMaterials += "end";
+	g_manMaxSkins = 11;
+
+	g_manBeardsNames = "Aucune|";
+	g_manBeardsMeshes = "none|";
+	g_manBeardsNames += "Barbe|";
+	g_manBeardsMeshes += "poils_barbe.mesh|";
+	g_manBeardsNames += "Barbe longue|";
+	g_manBeardsMeshes += "poils_barbelongue.mesh|";
+	g_manBeardsNames += "Barbiche|";
+	g_manBeardsMeshes += "poils_barbiche.mesh|";
+	g_manBeardsNames += "Bouc|";
+	g_manBeardsMeshes += "poils_bouc.mesh|";
+	g_manBeardsNames += "Moustache|";
+	g_manBeardsMeshes += "poils_moustache.mesh|";
+	g_manBeardsNames += "Pattes|";
+	g_manBeardsMeshes += "poils_pattes.mesh|";
+	g_manBeardsNames += "end";
+	g_manBeardsMeshes += "end";
+	g_manMaxBeards = 7;
+
+	g_manBrowsNames = "Aucun|";
+	g_manBrowsMeshes = "none|";
+	g_manBrowsNames += "Sourcils|";
+	g_manBrowsMeshes += "sourcils.mesh|";
+	g_manBrowsNames += "end";
+	g_manBrowsMeshes += "end";
+	g_manMaxBrows = 2;
+
+	g_manEyesColoursNames = "Noirs|";
+	g_manEyesMaterials = "corpsminiboy/iris|";
+	g_manEyesColoursNames += "Bleus|";
+	g_manEyesMaterials += "corpsminiboy/iris-bleu|";
+	g_manEyesColoursNames += "Verts|";
+	g_manEyesMaterials += "corpsminiboy/iris-vert|";
+	g_manEyesColoursNames += "Marrons|";
+	g_manEyesMaterials += "corpsminiboy/iris-marron|";
+	g_manEyesColoursNames += "Rouges|";
+	g_manEyesMaterials += "corpsminiboy/iris-rouge|";
+	g_manEyesColoursNames += "Jaunes|";
+	g_manEyesMaterials += "corpsminiboy/iris-jaune|";
+	g_manEyesColoursNames += "end";
+	g_manEyesMaterials += "end";
+	g_manMaxEyesMaterials = 6;
+};
+
+void InitialiseWomanMeshes()
+{
+	g_womanBodyNames = "Normal|end";
+	g_womanBodyMeshes = "corpsgirl.mesh|end";
+	g_womanMaxBodies = 1;
+
+	g_womanHairsNames = "Couettes|";
+	g_womanHairsMeshes = "coiffe_couettesgirl.mesh|";
+	g_womanHairsNames += "Detaches|";
+	g_womanHairsMeshes += "coiffe_detachegirl.mesh|";
+	g_womanHairsNames += "Queue de cheval|";
+	g_womanHairsMeshes += "coiffe_queuedechevgirl.mesh|";
+	g_womanHairsNames += "Chouquette|";
+	g_womanHairsMeshes += "coiffe_chouquettegirl.mesh|";
+	g_womanHairsNames += "Mage|";
+	g_womanHairsMeshes += "coiffe_magegirl.mesh|";
+	g_womanHairsNames += "Ecouteurs|";
+	g_womanHairsMeshes += "coiffe_casquemusiquegirl.mesh|";
+	g_womanHairsNames += "Cowgirl|";
+	g_womanHairsMeshes += "coiffe_cowgirl.mesh|";
+	g_womanHairsNames += "Catgirl|";
+	g_womanHairsMeshes += "coiffe_catwomangirl.mesh|";
+	g_womanHairsNames += "Ange|";
+	g_womanHairsMeshes += "coiffe_angegirl.mesh|";
+	g_womanHairsNames += "Demone|";
+	g_womanHairsMeshes += "coiffe_demonegirl.mesh|";
+	g_womanHairsNames += "Haut de forme|";
+	g_womanHairsMeshes += "coiffe_hauteformegirl.mesh|";
+	g_womanHairsNames += "Meche|";
+	g_womanHairsMeshes += "coiffe_mechegirl.mesh|";
+	g_womanHairsNames += "Robot|";
+	g_womanHairsMeshes += "coiffe_robotgirl.mesh|";
+	g_womanHairsNames += "Ent|";
+	g_womanHairsMeshes += "coiffe_trentgirl.mesh|";
+	g_womanHairsNames += "Tresse afro|";
+	g_womanHairsMeshes += "coiffe_tresseafrogirl.mesh|";
+	g_womanHairsNames += "Halloween|";
+	g_womanHairsMeshes += "coiffe_haloweengirl.mesh|";
+	g_womanHairsNames += "Vampire|";
+	g_womanHairsMeshes += "coiffe_vampiregirl.mesh|";
+	g_womanHairsNames += "end";
+	g_womanHairsMeshes += "end";
+	g_womanMaxHairs = 17;
+
+	g_womanHairsColoursNames = "Noirs|";
+	g_womanHairsMaterials = "corpsminigirl/cheveux|";
+	g_womanHairsColoursNames += "Chatains|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-chatain|";
+	g_womanHairsColoursNames += "Blonds|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-blond|";
+	g_womanHairsColoursNames += "Roux|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-roux|";
+	g_womanHairsColoursNames += "Gris|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-gris|";
+	g_womanHairsColoursNames += "Blancs|";
+	g_womanHairsMaterials += "corpsminigirl/cheveux-blanc|";
+	g_womanHairsColoursNames += "end";
+	g_womanHairsMaterials += "end";
+	g_womanMaxHairsMaterials = 6;
+
+	g_womanDressesNames = "Sportive|";
+	g_womanDressesMeshes = "none|";
+	g_womanDressesNames += "Cowboy|";
+	g_womanDressesMeshes += "tenue_cowgirl.mesh|";
+	g_womanDressesNames += "Robe mage|";
+	g_womanDressesMeshes += "tenue_magegirl.mesh|";
+	g_womanDressesNames += "Catgirl|";
+	g_womanDressesMeshes += "tenue_catwomangirl.mesh|";
+	g_womanDressesNames += "Ange|";
+	g_womanDressesMeshes += "tenue_angegirl.mesh|";
+	g_womanDressesNames += "Demone|";
+	g_womanDressesMeshes += "tenue_demonegirl.mesh|";
+	g_womanDressesNames += "Jupe|";
+	g_womanDressesMeshes += "tenue_jupegirl.mesh|";
+	g_womanDressesNames += "Robe echancree|";
+	g_womanDressesMeshes += "tenue_robechancregirl.mesh|";
+	g_womanDressesNames += "Robe chinoise|";
+	g_womanDressesMeshes += "tenue_robechinegirl.mesh|";
+	g_womanDressesNames += "Robe medievale|";
+	g_womanDressesMeshes += "tenue_robemedgirl.mesh|";
+	g_womanDressesNames += "Robot|";
+	g_womanDressesMeshes += "tenue_robotgirl.mesh|";
+	g_womanDressesNames += "Shorty|";
+	g_womanDressesMeshes += "tenue_shortigirl.mesh|";
+	g_womanDressesNames += "Ent|";
+	g_womanDressesMeshes += "tenue_trentgirl.mesh|";
+	g_womanDressesNames += "Vampire|";
+	g_womanDressesMeshes += "tenue_vampiregirl.mesh|";
+	g_womanDressesNames += "end";
+	g_womanDressesMeshes += "end";
+	g_womanMaxDresses = 14;
+
+	g_womanSkinsNames = "Blanc|";
+	g_womanSkinsMaterials = "corpsminigirl/peau|";
+	g_womanSkinsNames += "Mat|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-mat|";
+	g_womanSkinsNames += "Noir|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-noir|";
+	g_womanSkinsNames += "Jaune|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-jaune|";
+	g_womanSkinsNames += "Demon|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-demon|";
+	g_womanSkinsNames += "Ent|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-trent|";
+	g_womanSkinsNames += "Vampire|";
+	g_womanSkinsMaterials += "corpsminigirl/peau-vampire|";
+	g_womanSkinsNames += "end";
+	g_womanSkinsMaterials += "end";
+	g_womanMaxSkins = 7;
+
+	g_womanBrowsNames = "Aucun|";
+	g_womanBrowsMeshes = "none|";
+	g_womanBrowsNames += "Sourcils|";
+	g_womanBrowsMeshes += "sourcilsgirl.mesh|";
+	g_womanBrowsNames += "end";
+	g_womanBrowsMeshes += "end";
+	g_womanMaxBrows = 2;
+
+	g_womanEyesColoursNames = "Noirs|";
+	g_womanEyesMaterials = "corpsminigirl/iris|";
+	g_womanEyesColoursNames += "Bleus|";
+	g_womanEyesMaterials += "corpsminigirl/iris-bleu|";
+	g_womanEyesColoursNames += "Verts|";
+	g_womanEyesMaterials += "corpsminigirl/iris-vert|";
+	g_womanEyesColoursNames += "Marrons|";
+	g_womanEyesMaterials += "corpsminigirl/iris-marron|";
+	g_womanEyesColoursNames += "Rouges|";
+	g_womanEyesMaterials += "corpsminigirl/iris-rouge|";
+	g_womanEyesColoursNames += "Jaunes|";
+	g_womanEyesMaterials += "corpsminigirl/iris-jaune|";
+	g_womanEyesColoursNames += "end";
+	g_womanEyesMaterials += "end";
+	g_womanMaxEyesMaterials = 6;
+
+	g_womanEyeLashesColoursNames = "Aucun|";
+	g_womanEyeLashesMaterials = "yeuxcorpsgirl.jpg|";
+	g_womanEyeLashesColoursNames += "Noir|";
+	g_womanEyeLashesMaterials += "yeuxnoirs.jpg|";
+	g_womanEyeLashesColoursNames += "Bleu|";
+	g_womanEyeLashesMaterials += "yeuxbleus.jpg|";
+	g_womanEyeLashesColoursNames += "Rose|";
+	g_womanEyeLashesMaterials += "yeuxroses.jpg|";
+	g_womanEyeLashesColoursNames += "end";
+	g_womanEyeLashesMaterials += "end";
+	g_womanMaxEyeLashesMaterials = 4;
+
+	g_womanLipsticksColoursNames = "Aucun|";
+	g_womanLipsticksMaterials = "transparent.jpg|";
+	g_womanLipsticksColoursNames += "Noir|";
+	g_womanLipsticksMaterials += "levrenoire.jpg|";
+	g_womanLipsticksColoursNames += "Bleu|";
+	g_womanLipsticksMaterials += "levrebleu.jpg|";
+	g_womanLipsticksColoursNames += "Rose|";
+	g_womanLipsticksMaterials += "levrerose.jpg|";
+	g_womanLipsticksColoursNames += "end";
+	g_womanLipsticksMaterials += "end";
+	g_womanMaxLipsticksMaterials = 4;
+};
+
+void ShowConnected()
+{
+	Overlay_Hide( "Jetski/WaitingOpponent");
+	Network_ClientSendMessage( "GameClient", pack_int( msGameInfo) + pack_int( l_gameName->length()) + l_gameName);
+	Overlay_Show( "Jetski/Menu");
+};
+
+void Initialise()
+{
+	Scene_Load( "Perso");
+
+	l_finished = false;
+	l_sound = false;
+	l_music = false;
+	l_inGame = false;
+	l_turnLeft = false;
+	l_turnRight = false;
+	l_horsJeu = false;
+	l_paused = false;
+	l_isFalling = false;
+	l_displayJetSki = false;
+	l_displayRing = false;
+	l_isEditingName = false;
+	l_firstPlay = true;
+	l_titleShown = true;
+	l_accelerating = false;
+	l_spaceHit = false;
+
+	for (i = 0 ; i < l_distantFinished->Size() ; i++)
+	{
+		l_distantFinished[i] = false;
+	};
+
+	for (i = 0 ; i < l_distantScore->Size() ; i++)
+	{
+		l_distantScore[i] = 0;
+	};
+
+	mrConnectOK = 0;
+	mrConnectFail = 1;
+	mrAvatar = 4;
+	mrJoinGameOK = 29;
+	mrCreateGameOK = 30;
+	mrGameDontExist = 31;
+	mrGameAlreadyCreated = 32;
+	mrGameStart = 33;
+	mrRefreshGamesList = 34;
+	mrJoinGameFail = 35;
+	mrGame = 36;
+	mrEndGame = 37;
+	mrJoinGame = 38;
+	mrQuitGame = 39;
+	mrGameInfo = 42;
+
+	msConnect = 0;
+	msRefreshGamesList = 23;
+	msJoinGame = 24;
+	msCreateGame = 25;
+	msGame = 26;
+	msQuitGame = 27;
+	msGameInfo = 30;
+	msGameStart = 31;
+
+	gmGameStart = 0;
+	gmUpdate = 1;
+	gmEndGame = 2;
+	gmFall = 3;
+	gmJump = 4;
+	gmLooping = 5;
+
+	l_clicked = false;
+
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_currentPitch = -20.0;
+	l_previousPitch = -20.0;
+	l_currentVelocity = SetVector3( 0.0, 0.0, 0.0);
+	l_previousVelocity = SetVector3( 0.0, 0.0, 0.0);
+	l_virageAngle = 7.0;
+	l_speedAngle = 30.0;
+	l_lastXAngleRotate = 0.0;
+	l_lastZAngleRotate = 0.0;
+	l_speedUp = 18.0;
+	l_acceleration = 10.0;
+	l_frottement = 0.025;
+	l_speedMax = 130.0;
+	l_currentTimeTurn = 0.0;
+	l_previousTimeTurn = 0.0;
+	l_angleMax = 80.0;
+	l_ringRadius = 175.0;
+	l_baliseRadius = 1100.0;
+	l_rockRadius = 164.0;
+	g_score = 0;
+	l_saveScore = 0;
+	l_nbRing = 0;
+	l_nbMinute = 0;
+	l_nbSeconde = 0;
+	l_nbCentieme = 0;
+	l_maxBalise = 0;
+	l_maxGoldRing = 0;
+	l_maxTurboRing = 0;
+	l_maxRock = 0;
+	l_maxRamps = 0;
+	l_indexNearestBalise = 0;
+	l_previousNearestBalise = 0;
+	l_nbBaliseToDisplay = 20;
+	l_position = 1;
+	l_indexRampTaken = -1;
+
+	l_distView = 20000.0;
+	l_previousTurboPosY = 0;
+	l_runTime = 0.0;
+	l_elapsedTime = 0.0;
+	l_waveAmplitude = 2.5;
+	l_wavePulse = 3.0;
+	l_oscillationXAngle = 1.5;
+	l_angleXPulse = 1.0;
+	l_oscillationZAngle = 2.0;
+	l_angleZPulse = 1.5;
+
+	l_ticMusic = OverlayElement_GetByName( "Jetski/Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Jetski/Options/TicSound");
+	l_start = OverlayElement_GetByName( "Jetski/Start/Display");
+	l_scoreInGame = OverlayElement_GetByName( "Jetski/TopLeft/Score");
+	l_ringInGame = OverlayElement_GetByName( "Jetski/TopLeft/Ring");
+	l_speedInGame = OverlayElement_GetByName( "Jetski/TopRight/Speed");
+	l_chronoInGame = OverlayElement_GetByName( "Jetski/TopRight/Chrono");
+	l_barreInGame = OverlayElement_GetByName( "Jetski/BottomRight/Barre");
+	l_barreTurboInGame = OverlayElement_GetByName( "Jetski/BottomRight/BarreTurbo");
+
+	l_startNode = NULL;
+	l_goalNode = NULL;
+
+	l_rootNode = SceneNode_GetByName( "root node");
+	l_rootCamera = Camera_GetByName( "RootCamera");
+
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Jetski/Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+	l_relativeTicWidth = l_ticMusic->GetWidth() / GENERAL_SCREEN_WIDTH;
+
+//	l_rootCamera->GetParent()->Yaw( 180.0);
+//	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+//	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (1000.0 / V3_GetLength( l_rootCamera->GetPosition())));
+
+	l_rootCamera->GetParent()->Yaw( 90.0);
+	l_rootCamera->GetParent()->Pitch( l_currentPitch);
+	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * (1000.0 / V3_GetLength( l_rootCamera->GetPosition())));
+
+	PostEffect_Enable( "MotionBlur", false);
+
+	OverlayElement_GetByName( "Jetski/Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Jetski/Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Jetski/Menu/Continuer")->Hide();
+	Overlay_Hide( "Jetski/Commandes");
+	Overlay_Hide( "Jetski/Options");
+	Overlay_Hide( "Jetski/Regles");
+	Overlay_Hide( "Jetski/Start");
+	Overlay_Hide( "Jetski/TopLeft");
+	Overlay_Hide( "Jetski/TopRight");
+	Overlay_Hide( "Jetski/Result");
+	Overlay_Hide( "Jetski/BottomRight");
+	Overlay_Hide( "Jetski/Menu");
+//	Overlay_Hide( "Jetski/WaitingOpponent");
+	Overlay_Hide( "Jetski/AvailableGames");
+
+	SetupRace();
+
+	Sound_Play_Global( "Sea");
+
+	Sound_Play_Global( "Musique");
+
+	OverlayElement_GetByName( "Jetski/Options/MusicOnOff")->Hide();
+	OverlayElement_GetByName( "Jetski/Options/SoundOnOff")->Hide();
+
+	OverlayElement_GetByName( "Jetski/OpponentName0")->Hide();
+	OverlayElement_GetByName( "Jetski/OpponentName1")->Hide();
+	OverlayElement_GetByName( "Jetski/OpponentName2")->Hide();
+
+	jetski_charName = "Coin";//l_login;
+	jetski_pass = "Glop";//l_pass;
+
+	InitialiseManMeshes();
+	InitialiseWomanMeshes();
+
+	l_nbPlayers = 1;
+
+	l_gameName = "JetTonSki";
+
+	if( l_bUseNetwork )
+	{
+		Network_CreateClient( "GameClient");
+		Network_ConnectClient( "GameClient", g_serverAddr, g_serverPort);
+		timer( "WaitConnect", TIMERTYPE_ONCE, 1.0)
+		{
+			Network_ClientSendMessage( "GameClient", pack_int( msConnect) + pack_int( jetski_charName->length()) + jetski_charName + pack_int( jetski_pass->length()) + jetski_pass);
+		};
+	}
+	else
+	{
+		ShowConnected();
+	}
+};

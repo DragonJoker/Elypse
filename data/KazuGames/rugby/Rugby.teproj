@@ -1,0 +1,27 @@
+project Rugby
+{
+	resolution	640 480
+	colour		0 0 0
+	show_debug	true
+	show_fps	true
+	scene Rugby
+	{
+		scene_files
+		{
+			stade-HUD.emscene
+			stade.emscene
+		}
+		load_script_files
+		{
+			stade.emscript
+		}
+		data_files_3d
+		{
+			data-stade
+		}
+		data_files_other
+		{
+			Sons
+		}
+	}
+}

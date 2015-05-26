@@ -1,0 +1,82 @@
+ambient_light 0.4 0.4 0.4 1
+background_colour 1.0 1.0 1.0 1
+
+mirror TestMirror
+{
+	position 0 0 0
+	direction 0 1 0
+	resolution 1024
+	auto_updates false false
+	material plane_bottes 0.9
+}
+
+scene_node CameraNode
+{
+	orientation -0.561857 -0.813505 -0.150085 36.3557
+}
+
+scene_node Main
+{
+	position 0 0 0
+}
+
+object bottes
+{
+	mesh bottes.mesh
+	attach_to Main
+}
+
+object boucle1
+{
+	mesh boucle_01.mesh
+	attach_to Main
+}
+object boucle2
+{
+	mesh boucle_02.mesh
+	attach_to Main
+}
+object boucle3
+{
+	mesh boucle_03.mesh
+	attach_to Main
+}
+object boucle4
+{
+	mesh boucle_04.mesh
+	attach_to Main
+}
+
+object boucle5
+{
+	mesh boucle_05.mesh
+	attach_to Main
+}
+
+object plane
+{
+	mesh plane_bottes.mesh
+	attach_to root node
+}
+
+light light_01
+{
+	type directional
+	direction -0.7 -0.5 -0.7
+	diffuse 1.0 1.0 1.0 
+	specular 1.0 1.0 1.0
+}
+
+light light_04
+{
+	type directional
+	direction 0.7 -0.5 0.7
+	diffuse 1.0 1.0 1.0 
+	specular 1.0 1.0 1.0
+}
+
+camera RootCamera
+{
+	position 0 0 300.0
+	attach_to CameraNode
+}

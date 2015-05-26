@@ -1,0 +1,17 @@
+Bottes
+Resolution
+640 480
+Colour
+0 0 0
+AntiAliasing4x
+ShowDebug
+ShowFPS
+Scene
+Bottes
+SceneFiles
+demo-botte-hud.emscene
+demo-botte.emscene
+LoadScriptFiles
+demo-botte.emscript
+DataFiles
+Demo-Botte

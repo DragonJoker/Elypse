@@ -1,0 +1,311 @@
+scene_node g_cubeNode;
+
+real g_accelX;
+real g_accelY;
+real g_accelRotX;
+real g_accelRotY;
+real g_maxAccelX;
+real g_maxAccelY;
+real g_maxAccelRotX;
+real g_maxAccelRotY;
+
+real g_speedX;
+real g_speedY;
+
+real g_tempX;
+real g_tempY;
+real g_tempRotX;
+real g_tempRotY;
+
+real g_rotationX;
+real g_rotationY;
+real g_rotationZ;
+
+real g_rotation;
+
+bool g_accelXNeg;
+bool g_accelYNeg;
+bool g_accelRotXNeg;
+bool g_accelRotYNeg;
+bool IsInObject;
+bool IsClik;
+bool g_playingVideo;
+
+object g_entity;
+
+BindKey( KEYCODE_C, BINDKEY_DOWN)
+{
+	Sound_Play_Global( "Coin");
+};
+
+BindKey( KEYCODE_V, BINDKEY_DOWN)
+{
+	g_playingVideo = ( ! g_playingVideo);
+	if (g_playingVideo)
+	{
+		Video_Play( "Canard");
+		timer( "Coin", TIMERTYPE_ONCE, 1.0)
+		{
+			Object_GetByName( "Bg_Header")->SetMaterial( "Canard");
+		};
+	}
+	else
+	{
+		Object_GetByName( "Bg_Header")->SetMaterial( "carre/fondcarre");
+		Video_Stop( "Canard");
+	};
+};
+
+SetMouseLDownScript()
+{
+	g_entity = MousePickupObject( MOUSE_POSITION_X, MOUSE_POSITION_Y, false);
+
+	if (g_entity != NULL && g_entity->GetName() == "Cube")
+	{
+		Echo( "Clicked cube");
+		IsInObject = true;
+	};
+
+	timer( "MouseCubeAccel" , TIMERTYPE_PERMANENT , 0.0)
+	{
+		g_maxAccelX = g_maxAccelX * ( 1.0 - 5.0 * GENERAL_ELAPSED_TIME);
+		g_maxAccelY = g_maxAccelY * ( 1.0 - 5.0 * GENERAL_ELAPSED_TIME);
+
+		g_accelX = -MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH;
+		if (g_accelX > g_maxAccelX)
+		{
+			g_maxAccelX = g_accelX;
+			g_accelXNeg = false;
+		};
+		
+		if (g_accelX < (-1.0) * g_maxAccelX)
+		{
+			g_maxAccelX = (-1.0)*g_accelX;
+			g_accelXNeg = true;
+		};	
+		
+		g_accelY = -MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT;
+		if (g_accelY > g_maxAccelY)
+		{
+			g_maxAccelY = g_accelY;
+			g_accelYNeg = false;
+		};
+		if (g_accelY < (-1.0) * g_maxAccelY)
+		{
+			g_maxAccelY = (-1.0)*g_accelY;
+			g_accelYNeg = true;
+		};
+
+		g_maxAccelRotX = g_maxAccelRotX * (1.0 - 5.0 * GENERAL_ELAPSED_TIME);
+		g_maxAccelRotY = g_maxAccelRotY * (1.0 - 5.0 * GENERAL_ELAPSED_TIME);
+
+		g_accelRotX = MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH;
+		if (g_accelRotX > g_maxAccelRotX)
+		{
+			g_maxAccelRotX = g_accelRotX;
+			g_accelRotXNeg = true;
+		};
+
+		if (g_accelRotX < (-1.0) * g_maxAccelRotX)
+		{
+			g_maxAccelRotX = (-1.0)*g_accelRotX;
+			g_accelRotXNeg = false;
+		};	
+
+		g_accelRotY = MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT;
+		if (g_accelRotY > g_maxAccelRotY)
+		{
+			g_maxAccelRotY = g_accelRotY;
+			g_accelRotYNeg = false;
+		};
+
+		if (g_accelRotY < (-1.0) * g_maxAccelRotY)
+		{
+			g_maxAccelRotY = (-1.0)*g_accelRotY;
+			g_accelRotYNeg = true;
+		};
+	};
+};
+
+SetMouseLUpScript()
+{
+	Timer_Kill( "MouseCubeAccel" );
+
+	g_tempX = (-25.0) * g_maxAccelX;
+	g_tempY = (-25.0) * g_maxAccelY;
+
+	if (g_accelXNeg)
+	{
+		g_tempX = (-1.0) * g_tempX;
+	};
+	if (g_accelYNeg)
+	{
+		g_tempY = (-1.0) * g_tempY;
+	};
+
+	g_tempRotX = (-25.0) * g_maxAccelRotX;
+	g_tempRotY = (-25.0) * g_maxAccelRotY;
+
+	if (g_accelRotXNeg)
+	{
+		g_tempRotX = (-1.0) * g_tempRotX;
+	};
+
+	if (g_accelRotYNeg)
+	{
+		g_tempRotY = (-1.0) * g_tempRotY;
+	};
+
+	if (IsInObject)
+	{	
+		g_speedX = g_speedX + g_tempX;
+		g_speedY = g_speedY + g_tempY;
+
+		g_rotationX = g_rotationX + 500.0 * g_tempRotX;
+		g_rotationY = g_rotationY + 500.0 * g_tempRotY;
+		IsInObject = false;
+	};
+
+	IsClik = true;
+};
+
+SetMouseRDownScript()
+{
+	g_entity = MousePickupObject( MOUSE_POSITION_X, MOUSE_POSITION_Y, false);
+
+	if (g_entity != NULL && g_entity->GetName() == "Cube")
+	{	
+		IsInObject = true;
+	};
+
+	timer( "MouseCubeRot" , TIMERTYPE_PERMANENT , 0.0)
+	{
+		g_maxAccelRotX = g_maxAccelRotX * (1.0 - 5.0 * GENERAL_ELAPSED_TIME);
+		g_maxAccelRotY = g_maxAccelRotY * (1.0 - 5.0 * GENERAL_ELAPSED_TIME);
+
+		g_accelRotX = MOUSE_DIFFERENCE_X / GENERAL_SCREEN_WIDTH;
+		if (g_accelRotX > g_maxAccelRotX)
+		{
+			g_maxAccelRotX = g_accelRotX;
+			g_accelRotXNeg = true;
+		};
+
+		if (g_accelRotX < (-1.0) * g_maxAccelRotX)
+		{
+			g_maxAccelRotX = (-1.0)*g_accelRotX;
+			g_accelRotXNeg = false;
+		};	
+
+		g_accelRotY = MOUSE_DIFFERENCE_Y / GENERAL_SCREEN_HEIGHT;
+		if (g_accelRotY > g_maxAccelRotY)
+		{
+			g_maxAccelRotY = g_accelRotY;
+			g_accelRotYNeg = false;
+		};
+
+		if (g_accelRotY < (-1.0)*g_maxAccelRotY)
+		{
+			g_maxAccelRotY = (-1.0)*g_accelRotY;
+			g_accelRotYNeg = true;
+		};
+	};
+};
+
+SetMouseRUpScript()
+{
+	Timer_Kill( "MouseCubeRot");
+
+	g_tempRotX = (-25.0) * g_maxAccelRotX;
+	g_tempRotY = (-25.0) * g_maxAccelRotY;
+	
+	if (g_accelRotXNeg)
+	{
+		g_tempRotX = (-1.0) * g_tempRotX;
+	};
+
+	if (g_accelRotYNeg)
+	{
+		g_tempRotY = (-1.0) * g_tempRotY;
+	};
+
+	if (IsInObject)
+	{
+		g_rotationX = g_rotationX + 500.0 * g_tempRotX;
+		g_rotationY = g_rotationY + 500.0 * g_tempRotY;
+		IsInObject = false;
+	};
+
+	IsClik = true;
+};
+
+void InitialiseBanner()
+{
+	Video_Mute( true);
+	Video_SetVolume( -10000);
+
+	g_tempX = 0.0;
+	g_tempY = 0.0;
+	
+	IsInObject = false;
+	IsClik = false;
+	
+	g_speedX = 0.0;
+	g_speedY = 0.0;
+	
+	g_rotationX = 300.0;
+	g_rotationY = 0.0;
+	
+	g_rotation = 360.0;
+
+	g_playingVideo = false;
+	
+	g_cubeNode = SceneNode_GetByName( "Cube");
+
+	timer( "MoveCube" , TIMERTYPE_PERMANENT , 0.0)
+	{
+		if ((V3_ProjectOnScreen( g_cubeNode->GetPosition ())[0]) > GENERAL_SCREEN_WIDTH && g_speedX > 0.0)
+		{
+			g_speedX = g_speedX * (-1.0);
+			g_rotationX = g_rotationX * (-1.0);
+			Sound_Play_Global( "Coin");
+		};
+
+		if ((V3_ProjectOnScreen( g_cubeNode->GetPosition ())[0]) < 0.0 && g_speedX < 0.0)
+		{
+			g_speedX = g_speedX * (-1.0);
+			g_rotationX = g_rotationX * (-1.0);
+			Sound_Play_Global( "Coin");
+		};
+
+		if ((V3_ProjectOnScreen(g_cubeNode->GetPosition ())[1]) > GENERAL_SCREEN_HEIGHT && g_speedY > 0.0)
+		{
+			g_speedY = g_speedY * (-1.0);
+			g_rotationY = g_rotationY * (-1.0);
+			Sound_Play_Global( "Coin");
+		};
+
+		if ((V3_ProjectOnScreen(g_cubeNode->GetPosition ())[1]) < 0.0 && g_speedY < 0.0 )
+		{
+			g_speedY = g_speedY * (-1.0);
+			g_rotationY = g_rotationY * (-1.0);
+			Sound_Play_Global( "Coin");
+		};
+
+		g_speedX = g_speedX * (1.0 - GENERAL_ELAPSED_TIME);
+		g_speedY = g_speedY * (1.0 - GENERAL_ELAPSED_TIME);
+
+		if (IsClik)
+		{
+			g_rotationX = g_rotationX * (1.0 - GENERAL_ELAPSED_TIME * 1.5);
+			g_rotationY = g_rotationY * (1.0 - GENERAL_ELAPSED_TIME * 1.5);
+		};
+
+		g_cubeNode->Translate( SetVector3( g_speedX * GENERAL_ELAPSED_TIME * GENERAL_SCREEN_WIDTH * 0.5 , 0.0 , g_speedY * GENERAL_ELAPSED_TIME * GENERAL_SCREEN_HEIGHT * 0.5));
+
+		g_cubeNode->Rotate( SetVector3( 1.0 , 0.0 , 0.0 ) , g_rotationY * GENERAL_ELAPSED_TIME);
+		g_cubeNode->Rotate( SetVector3( 0.0 , 0.0 , 1.0 ) , g_rotationX * GENERAL_ELAPSED_TIME);
+	
+	};
+};
+
+InitialiseBanner();

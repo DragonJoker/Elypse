@@ -1,0 +1,578 @@
+overlay Jetski/Menu
+{
+	class PanelZone
+	material BaseMenu
+	position 0.00% 0.0%
+	size 30.00% 100%
+
+	element Jetski/Menu/Creer
+	{
+		class PanelZone
+		position 3.00% 5%
+		size 60.54% 10%
+		material Creer
+		mouse_over_material CreerMO
+	}
+
+	element Jetski/Menu/Rejoindre
+	{
+		class PanelZone
+		position 3.00% 25%
+		size 60.54% 10%
+		material Rejoindre
+		mouse_over_material RejoindreMO
+	}
+
+	element Jetski/Menu/Continuer
+	{
+		class PanelZone
+		position 3.00% 15%
+		size 60.54% 10%
+		material Continuer
+		mouse_over_material ContinuerMO
+	}
+
+	element Jetski/Menu/Recommencer
+	{
+		class PanelZone
+		position 3.00% 15%
+		size 60.54% 10%
+		material Recommencer
+		mouse_over_material RecommencerMO
+	}
+
+	element Jetski/Menu/Jouer
+	{
+		class PanelZone
+		position 3.00% 15%
+		size 60.54% 10%
+		material Commencer
+		mouse_over_material CommencerMO
+	}
+
+	element Jetski/Menu/Commandes
+	{
+		class PanelZone
+		position 3.00% 45%
+		size 60.54% 10%
+		material Commandes
+		mouse_over_material CommandesMO
+	}
+
+	element Jetski/Menu/Options
+	{
+		class PanelZone
+		position 3.00% 85%
+		size 60.54% 10%
+		material Options
+		mouse_over_material OptionsMO
+	}
+
+	element Jetski/Menu/Regles
+	{
+		class PanelZone
+		position 3.00% 65%
+		size 60.54% 10%
+		material Regles
+		mouse_over_material ReglesMO
+	}
+}
+
+overlay Jetski/Commandes
+{
+	class MinigameFrame
+	position -25% -35%
+	size 50% 70%
+	align center center
+	border_size 32.0 32.0 32.0 32.0
+
+	element Jetski/Commandes/Retour
+	{
+		class PanelZone
+		position 25% 85%
+		size 50.00% 15.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Jetski/Commandes/Text
+	{
+		class MinigameText
+		position 10% 20%
+		size 80% 65%
+		font_size 24.00
+		text Les commandes utilisees sont les touches directionnelles du clavier.|Fleche haut pour accelerer, fleche bas pour freiner.|Fleche droite et gauche pour tourner, respectivement a droite et a gauche.
+	}
+
+	element Jetski/Commandes/Title
+	{
+		class MinigameText
+		position 0.00% 5.00%
+		size 100% 10%
+		font_size 40
+		text Commandes
+		text_align center
+	}
+}
+
+overlay Jetski/Regles
+{
+	class MinigameFrame
+	position 25% 15%
+	size 50% 70%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Jetski/Regles/Retour
+	{
+		class PanelZone
+		position 25% 85%
+		size 50.00% 15.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Jetski/Regles/Text1
+	{
+		class MinigameText
+		position 10% 20%
+		size 80% 65%
+		font_size 24.00
+		text Le conducteur du Jet-ski doit terminer le parcours le plus vite possible tout en ayant accumule le maximum d'anneaux d'or. Les anneaux d'or donnent des points. Les anneaux rouges accelerent l'engin durant 3 secondes.
+	}
+
+	element Jetski/Regles/Title
+	{
+		class MinigameText
+		position 0.00% 5.00%
+		size 100% 10%
+		font_size 40.00
+		text Regles
+		text_align center
+	}
+}
+
+overlay Jetski/Options
+{
+	class MinigameFrame
+	position 25.00% 25%
+	size 50.00% 50%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Jetski/Options/Title
+	{
+		class MinigameText
+		position 40.00% 5%
+		size 70% 25%
+		font_size 40.0
+		text Options
+	}
+
+	element Jetski/Options/Music
+	{
+		class MinigameText
+		position 20.00% 25.00%
+		size 0.12% 1.14%
+		font_size 24.00
+		text Musique
+	}
+
+	element Jetski/Options/MusicOnOff
+	{
+		class PanelZone
+		position 20.00% 40.00%
+		size 25% 25%
+		material On
+	}
+
+	element Jetski/Options/RegletteMusic
+	{
+		class PanelZone
+		position 25.00% 35.00%
+		size 60% 15%
+		material Reglette
+
+		element Jetski/Options/Music/TicContainer
+		{
+			class PanelZone
+			position 7% 0%
+			size 85% 100%
+			material Base/Invisible
+
+			element Jetski/Options/TicMusic
+			{
+				class PanelZone
+				position 80.00% 0.00%
+				size 20.00% 100.00%
+				material Tic
+			}
+		}
+	}
+
+	element Jetski/Options/Sound
+	{
+		class MinigameText
+		position 20.00% 50%
+		size 0.12% 1.14%
+		font_size 24.00
+		text Sons
+	}
+
+	element Jetski/Options/SoundOnOff
+	{
+		class PanelZone
+		position 20.00% 65%
+		size 25% 25%
+		material On
+	}
+
+	element Jetski/Options/RegletteSound
+	{
+		class PanelZone
+		position 25.00% 60%
+		size 60% 15%
+		material Reglette
+
+		element Jetski/Options/Sound/TicContainer
+		{
+			class PanelZone
+			position 7% 0%
+			size 85% 100%
+			material Base/Invisible
+
+			element Jetski/Options/TicSound
+			{
+				class PanelZone
+				position 80.00% 0.00%
+				size 20.00% 100.00%
+				material Tic
+			}
+		}
+	}
+
+	element Jetski/Options/Retour
+	{
+		class PanelZone
+		position 25.00% 75.00%
+		size 50.00% 20.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+}
+
+overlay Jetski/Start
+{
+	class PanelZone
+	align center center
+	size 256 32
+	position -128 -25%-16
+	material Base/Invisible
+
+	element Jetski/Start/Display
+	{
+		class MinigameText
+		size 100% 100%
+		font_size 32
+		text_align center
+		text_colour 1.0 1.0 1.0
+		text Pret ?
+	}
+}
+
+overlay Jetski/Title
+{
+	class PanelZone
+	position 25% 15%
+	size 50% 70%
+	material Titre
+}
+
+overlay Jetski/TopLeft
+{
+	class PanelZone
+	position 0% 0%
+	size 40% 50%
+	material HautGauche
+
+	element Jetski/TopLeft/Position
+	{
+		class MinigameText
+		position 10% 10%
+		size 80% 10%
+		font_size 24.0
+		text Position : 1er
+	}
+
+	element Jetski/TopLeft/Score
+	{
+		class MinigameText
+		position 10% 20%
+		size 80% 10%
+		font_size 24.0
+		text Score : 0
+	}
+
+	element Jetski/TopLeft/Ring
+	{
+		class MinigameText
+		position 10% 30%
+		size 80% 10%
+		font_size 24.0
+		text Anneaux : 0 / 0
+	}
+}
+
+overlay Jetski/TopRight
+{
+	class PanelZone
+	position 60% 0%
+	size 40% 50%
+	material HautDroite
+
+	element Jetski/TopRight/Speed
+	{
+		class MinigameText
+		position 30% 10%
+		size 70% 10%
+		font_size 24.0
+		text Vitesse : 0 km/h
+	}
+
+	element Jetski/TopRight/Chrono
+	{
+		class MinigameText
+		position 40% 20%
+		size 60% 10%
+		font_size 24.0
+		text Chrono : 0'00''00
+	}
+}
+
+overlay Jetski/BottomRight
+{
+	class PanelZone
+	size 128 256
+	align bottom right
+	position -128 -256
+	material Moteur
+
+	element Jetski/BottomRight/Barre
+	{
+		class PanelZone
+		size 19 1
+		position 55 222
+		material BarreVerte
+	}
+
+	element Jetski/BottomRight/BarreTurbo
+	{
+		class PanelZone
+		size 19 0
+		position 55 85
+		material BarreRouge
+	}
+}
+
+overlay Jetski/Result
+{
+	class PanelZone
+	position 25% 37.5%
+	size 50% 25%
+	material Gagne
+}
+
+overlay Jetski/AvailableGames
+{
+	class MinigameFrame
+	position 25% 0%
+	size 50% 100%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Jetski/AvailableGames/Title
+	{
+		class MinigameText
+		position 0% 2%
+		size 100% 10%
+		font_size 32.0
+		text Choix de partie
+		text_align center
+	}
+
+	element Jetski/AvailableGames/ButtonJoin
+	{
+		class PanelZone
+		position 15% 90%
+		size 30% 10%
+		material Rejoindre
+		mouse_over_material RejoindreMO
+	}
+
+	element Jetski/AvailableGames/Retour
+	{
+		class PanelZone
+		position 55% 90%
+		size 30% 10%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Jetski/AvailableGames/Separators
+	{
+		class NoBorderMenu
+		position 10% 10%
+		size 80% 80%
+		border_size 32.0 32.0 32.0 32.0
+	
+		element Jetski/AvailableGames/TitleName
+		{
+			class PanelZone
+			position 0% 0%
+			size 60% 7%
+			material Base/Invisible
+
+			element Jetski/AvailableGames/TitleName/Text
+			{
+				class MinigameText
+				font_size 24.0
+				position 50% 30%
+				text Createurs
+				text_align center
+			}
+		}
+
+		element Jetski/AvailableGames/TitleNbPlayers
+		{
+			class PanelZone
+			position 63% 0%
+			size 37% 7%
+			material Base/Invisible
+
+			element Jetski/AvailableGames/TitleNbPlayers/Text
+			{
+				class MinigameText
+				font_size 24.0
+				position 50% 30%
+				text Nb. Joueurs
+				text_align center
+			}
+		}
+
+		element Jetski/AvailableGames/VerticUp
+		{
+			class PanelZone
+			position 60% 0%
+			size 4% 9%
+			material VerticSeparator
+		}
+
+		element Jetski/AvailableGames/VerticDown
+		{
+			class PanelZone
+			position 60% 10%
+			size 4% 90%
+			material VerticSeparator
+		}
+
+		element Jetski/AvailableGames/Horizontal
+		{
+			class PanelZone
+			position 0% 8%
+			size 99.9% 3%
+			material HorizSeparator
+		}
+
+		element Jetski/AvailableGames/List
+		{
+			class PanelZone
+			position 5% 12%
+			size 90% 88%
+			material Base/Invisible
+		}
+
+		element Jetski/AvailableGames/Started
+		{
+			class MinigameText
+			position 15% 95%
+			size 90% 8%
+			font_size 22.0
+			text Parties en cours
+		}
+
+		element Jetski/AvailableGames/StartedNb
+		{
+			class MinigameText
+			position 65% 95%
+			size 90% 8%
+			font_size 22.0
+		}
+	}
+}
+
+overlay Jetski/WaitingOpponent
+{
+	class MinigameFrame
+	position 35% 80%
+	size 30% 20%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Jetski/WaitingOpponent/Text
+	{
+		class MinigameText
+		position -25% 30%
+		size 150% 80%
+		font_size 24.0
+		text ... Connexion ...
+		text_align center
+		
+	}
+}
+
+overlay Jetski/OpponentName0
+{
+	class PanelZone
+	position 0 0
+	size 50% 10%
+	material Base/Invisible
+
+	element Jetski/OpponentName0/Text
+	{
+		class MinigameText
+		position 0 0
+		size 100% 100%
+		font_size 24.0
+		text_colour 1.0 0.0 0.0 1.0
+	}
+}
+
+overlay Jetski/OpponentName1
+{
+	class PanelZone
+	position 0 0
+	size 50% 10%
+	material Base/Invisible
+
+	element Jetski/OpponentName1/Text
+	{
+		class MinigameText
+		position 0 0
+		size 100% 100%
+		font_size 24.0
+		text_colour 1.0 0.0 0.0 1.0
+	}
+}
+
+overlay Jetski/OpponentName2
+{
+	class PanelZone
+	position 0 0
+	size 50% 10%
+	material Base/Invisible
+
+	element Jetski/OpponentName2/Text
+	{
+		class MinigameText
+		position 0 0
+		size 100% 100%
+		font_size 24.0
+		text_colour 1.0 0.0 0.0 1.0
+	}
+}

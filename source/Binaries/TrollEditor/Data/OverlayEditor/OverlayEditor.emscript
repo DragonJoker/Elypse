@@ -1,0 +1,93 @@
+overlay editor_currentOverlay;
+
+bool editor_resizeOverlay;
+bool editor_moveOverlay;
+bool editor_resizing;
+bool editor_moving;
+bool editor_mouseDown;
+
+real editor_currentWidth;
+real editor_currentHeight;
+real editor_overlayWidth;
+real editor_currentWidth;
+real editor_contextLeft;
+real editor_contextTop;
+
+void InitialiseOverlayEditor()
+{
+	SceneNode_GetByName( "root node")->SetVisible( false);
+	editor_mouseDown = false;
+	editor_resizeOverlay = false;
+	editor_moveOverlay = false;
+	editor_resizing = false;
+	editor_moving = false;
+};
+
+void ResizeOverlay()
+{
+	timer( "ResizeOverlay", TIMERTYPE_PERMANENT, 0.0)
+	{
+		if (editor_mouseDown && editor_resizeOverlay && editor_currentOverlay != NULL)
+		{
+			editor_currentWidth = editor_currentWidth + MOUSE_DIFFERENCE_X;
+			editor_currentHeight = editor_currentHeight + MOUSE_DIFFERENCE_Y;
+			if (editor_currentHeight < 5.0)
+			{
+				editor_currentHeight = 5.0;
+			};
+			if (editor_currentWidth < 5.0)
+			{
+				editor_currentWidth = 5.0;
+			};
+			editor_currentOverlay->SetHeight( editor_currentHeight);
+			editor_currentOverlay->SetWidth( editor_currentWidth);
+		};
+	};
+};
+
+void MoveOverlay()
+{
+	timer( "MoveOverlay", TIMERTYPE_PERMANENT, 0.0)
+	{
+		if (editor_mouseDown && editor_moveOverlay && editor_currentOverlay != NULL)
+		{
+			editor_currentOverlay->Translate( MOUSE_DIFFERENCE_X, MOUSE_DIFFERENCE_Y);
+		};
+	};
+};
+
+void Mouse_LButtonDown()
+{
+	Timer_Kill( "ResizeOverlay");
+	Timer_Kill( "MoveOverlay");
+	editor_mouseDown = true;
+	if (editor_resizeOverlay)
+	{
+		ResizeOverlay();
+		editor_resizing = true;
+	}
+	elseif (editor_moveOverlay)
+	{
+		MoveOverlay();
+		editor_moving = true;
+	};
+};
+
+void Mouse_LButtonUp()
+{
+	if (editor_resizing)
+	{
+		editor_resizeOverlay = false;
+		editor_resizing = false;
+	};
+	if (editor_moving)
+	{
+		editor_moveOverlay = false;
+		editor_moving = false;
+	};
+	editor_mouseDown = false;
+	Timer_Kill( "ResizeOverlay");
+	Timer_Kill( "MoveOverlay");
+};
+
+InitialiseOverlayEditor();

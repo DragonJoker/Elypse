@@ -1,0 +1,188 @@
+ambient_light 0.1 0.1 0.1
+
+scene_node Piece_A
+{
+	position -17.5 0.1 7.5
+}
+scene_node Piece_B
+{
+	position -7.5 0.1 7.5
+}
+scene_node Piece_C
+{
+	position 2.5 0.1 7.5
+}
+scene_node Piece_D
+{
+	position 12.5 0.1 7.5
+}
+scene_node Piece_E
+{
+	position 22.5 0.1 7.5
+}
+scene_node Piece_F
+{
+	position -22.5 0.1 12.5
+}
+scene_node Piece_G
+{
+	position -12.5 0.1 12.5
+}
+scene_node Piece_H
+{
+	position -2.5 0.1 12.5
+}
+scene_node Piece_I
+{
+	position 7.5 0.1 12.5
+}
+scene_node Piece_J
+{
+	position 17.5 0.1 12.5
+}
+scene_node Piece_K
+{
+	position -17.5 0.1 17.5
+}
+scene_node Piece_L
+{
+	position -7.5 0.1 17.5
+}
+scene_node Piece_M
+{
+	position 2.5 0.1 17.5
+}
+scene_node Piece_N
+{
+	position 12.5 0.1 17.5
+}
+scene_node Piece_O
+{
+	position 22.5 0.1 17.5
+}
+scene_node Piece_P
+{
+	position -22.5 0.1 22.5
+}
+scene_node Piece_a
+{
+	position -17.5 0.1 -22.5
+}
+scene_node Piece_b
+{
+	position -7.5 0.1 -22.5
+}
+scene_node Piece_c
+{
+	position 2.5 0.1 -22.5
+}
+scene_node Piece_d
+{
+	position 12.5 0.1 -22.5
+}
+scene_node Piece_e
+{
+	position 22.5 0.1 -22.5
+}
+scene_node Piece_f
+{
+	position -22.5 0.1 -17.5
+}
+scene_node Piece_g
+{
+	position -12.5 0.1 -17.5
+}
+scene_node Piece_h
+{
+	position -2.5 0.1 -17.5
+}
+scene_node Piece_i
+{
+	position 7.5 0.1 -17.5
+}
+scene_node Piece_j
+{
+	position 17.5 0.1 -17.5
+}
+scene_node Piece_k
+{
+	position -17.5 0.1 -12.5
+}
+scene_node Piece_l
+{
+	position -7.5 0.1 -12.5
+}
+scene_node Piece_m
+{
+	position 2.5 0.1 -12.5
+}
+scene_node Piece_n
+{
+	position 12.5 0.1 -12.5
+}
+scene_node Piece_o
+{
+	position 22.5 0.1 -12.5
+}
+scene_node Piece_p
+{
+	position -22.5 0.1 -7.5
+}
+
+scene_node CameraNode
+
+scene_node echiquier
+{
+ 	position 0 0 0
+	orientation 0 -1 0 180
+}
+
+object echiquier
+{
+	mesh echiquier.mesh
+	attach_to echiquier
+}
+
+object skydome
+{
+	mesh dome_echec.mesh
+}
+
+//Lights
+
+scene_node fx_selected
+{
+	position 0 1.0 0
+}
+
+object fx_selected
+{
+	mesh fx_selection.mesh
+	attach_to fx_selected
+}
+
+light light_01
+{
+	type directional
+	direction -0.497468 -0.710669 -0.497468
+	diffuse 1 1 1
+	specular 0.5 0.5 0.5
+}
+
+light light_02
+{
+	type directional
+	direction 0.497468 -0.710669 0.497468
+	diffuse 1 1 1
+	specular 0.5 0.5 0.5
+}
+
+
+//Cameras
+
+camera RootCamera
+{
+	position 0.0 0.0 60.0
+	attach_to CameraNode
+}
+

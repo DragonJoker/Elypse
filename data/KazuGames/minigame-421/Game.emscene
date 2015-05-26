@@ -1,0 +1,219 @@
+// SOUNDS
+
+sound Dice1
+{
+	url ./Sons/Roll.mp3
+	type sfx
+	global false
+}
+
+sound Dice2
+{
+	url ./Sons/Roll.mp3
+	type sfx
+	global false
+}
+
+sound Dice3
+{
+	url ./Sons/Roll.mp3
+	type sfx
+	global false
+}
+
+sound Ambiance
+{
+	url ./Sons/Ambiance.mp3
+	type music
+	global true
+	attenuation 0.0
+	looped true
+}
+
+// SCENE NODES
+
+scene_node CameraNode
+{
+	position 0.00 250.00 200.00
+	orientation 1.0 0.0 0.0 -45.0
+}
+
+scene_node Decor
+{
+}
+
+scene_node Dice1
+{
+	use_sound Dice1
+	position 0.0 10.0 0.0
+}
+
+scene_node Dice2
+{
+	use_sound Dice2
+	position 0.0 10.0 0.0
+}
+
+scene_node Dice3
+{
+	use_sound Dice3
+	position 0.0 10.0 0.0
+}
+
+scene_node Godet
+{
+}
+
+scene_node SkyNode
+{
+	position 0.0 -31000.0 0.0
+}
+
+// PHYSICS
+
+physics_simulation Main
+{
+	gravity 0.0 -80.0 0.0
+	steptime 0.01
+	steptime_limit 0.05
+	timescale 2.0
+	default_damping 0.05 0.9
+	default_auto_disable 0.5 0.1 0.1
+	cfm 0.01
+	erp 0.99
+}
+
+physics Dice
+{
+	bouncyness 0.2
+	friction 1.0
+}
+
+physics Sol
+{
+	bouncyness 0.5
+	friction 1.0
+}
+
+// OBJECTS
+
+object Skydome
+{
+	mesh 421decor.mesh
+	attach_to SkyNode
+	use_physics Sol
+	{
+		bounding_box 0.0 2000.0 100.0
+		{
+			translate -100.0 0.0 0.0
+		}
+		bounding_box 0.0 2000.0 100.0
+		{
+			translate 100.0 0.0 0.0
+		}
+		bounding_box 100.0 2000.0 0.0
+		{
+			translate 0.0 0.0 -100.0
+		}
+		bounding_box 100.0 2000.0 0.0
+		{
+			translate 0.0 0.0 100.0
+		}
+		static
+		ignore_gravity
+	}
+}
+
+object Table
+{
+	mesh table_421.mesh
+	attach_to Decor
+	use_physics Sol
+	{
+		bounding_box 2000.0 10.0 2000.0
+		{
+			translate 0.0 -5.0 0.0
+		}
+		static
+		ignore_gravity
+	}
+}
+
+object Dice1
+{
+	mesh de_421.mesh
+	attach_to Dice1
+	use_physics Dice
+	{
+		bounding_box 10.0 10.0 10.0
+	}
+}
+
+object Dice2
+{
+	mesh de_421.mesh
+	attach_to Dice2
+	use_physics Dice
+	{
+		bounding_box 10.0 10.0 10.0
+	}
+}
+
+object Dice3
+{
+	mesh de_421.mesh
+	attach_to Dice3
+	use_physics Dice
+	{
+		bounding_box 10.0 10.0 10.0
+	}
+}
+
+object Godet
+{
+	mesh gobelet_421.mesh
+	attach_to Godet
+}
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction -0.50 -0.71 -0.50
+	diffuse 0.90 0.90 0.90 1.00
+	specular 0.70 0.70 0.70 1.00
+}
+
+light light_02
+{
+	type directional
+	direction 0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_03
+{
+	type directional
+	direction 0.50 -0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_04
+{
+	type directional
+	direction -0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+
+// CAMERAS
+
+camera RootCamera
+{
+	attach_to CameraNode
+}
+

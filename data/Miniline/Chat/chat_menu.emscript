@@ -1,0 +1,393 @@
+Overlay_SetAction( "Chat/Messages/Scrollbar/Elevator")
+{
+	ScrollbarElevator( chat_messagesScrollbar);
+}
+
+Overlay_SetAction( "Chat/FriendsPanel/Scrollbar/Elevator")
+{
+	ScrollbarElevator( chat_friendsScrollbar);
+}
+
+Overlay_SetAction( "Chat/IgnoredPanel/Scrollbar/Elevator")
+{
+	ScrollbarElevator( chat_ignoredScrollbar);
+}
+
+Overlay_SetAction( "Chat/Toolbar/Command")
+{
+	if (OverlayElement_GetByName( "Chat/Toolbar/Command")->GetMaterialName()->find( "Shrink") != npos)
+	{
+		ShrinkChatField();
+		OverlayElement_GetByName( "Chat/Toolbar/Command")->SetMaterial( "Chat/Expand");
+		OverlayElement_GetByName( "Chat/Toolbar/Command")->SetMouseOverMaterial( "Chat/ExpandMO");
+	}
+	else
+	{
+		ExpandChatField();
+		OverlayElement_GetByName( "Chat/Toolbar/Command")->SetMaterial( "Chat/Shrink");
+		OverlayElement_GetByName( "Chat/Toolbar/Command")->SetMouseOverMaterial( "Chat/ShrinkMO");
+	}
+}
+
+Overlay_SetAction( "Chat/Toolbar/Emotes")
+{
+	ToggleEmoteMenu();
+}
+
+Overlay_SetAction( "Chat/Toolbar/Rooms")
+{
+	ToggleRoomsMenu();
+}
+
+Overlay_SetAction( "Chat/Toolbar/Friends")
+{
+	ToggleFriendsMenu();
+}
+
+Overlay_SetAction( "Chat/Toolbar/Menu")
+{
+	ToggleMenu();
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Oui")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "oui", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 3) + "oui");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " acquiesce");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Non")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "non", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 3) + "non");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " refuse");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Coucou")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "coucou", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 6) + "coucou");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " fait coucou");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Rire")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "rire", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 4) + "rire");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " rit");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Pleurer")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "pleure", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 6) + "pleure");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " pleure");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Bisou")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "bisou", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 5) + "bisou");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " fait un bisou");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Etonnement")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "etonnement", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 10) + "etonnement");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " s'etonne");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/EmotesMenu/Colere")
+{
+	if ( ! g_mainChar.Sitting)
+	{
+		StartAnimation( "colere", g_mainChar.Character.Name);
+		Network_ClientSendMessage( "ChatClient", pack_int( msEmote) + pack_int( 6) + "colere");
+		SendMessage( "/emote " + g_mainChar.Character.Name + " est colerique");
+		ToggleEmoteMenu();
+	}
+}
+
+Overlay_SetAction( "Chat/Field")
+{
+	if ( ! g_mainChar.Talking)
+	{
+		g_mainChar.Talking = true;
+		BeginTalking();
+	}
+}
+
+Overlay_SetAction( "Chat/Field/Text")
+{
+	if ( ! g_mainChar.Talking)
+	{
+		g_mainChar.Talking = true;
+		BeginTalking();
+	}
+}
+
+Overlay_SetAction( "Chat/FriendsIgnoredList/FriendsTab")
+{
+	OverlayElement_GetByName( "Chat/FriendsIgnoredList/FriendsTab")->SetMaterial( "Chat/FriendsTabSel");
+	OverlayElement_GetByName( "Chat/FriendsIgnoredList/IgnoredTab")->SetMaterial( "Chat/IgnoredTabMat");
+	OverlayElement_GetByName( "Chat/FriendsPanel")->SetVisible( true);
+	OverlayElement_GetByName( "Chat/IgnoredPanel")->SetVisible( false);
+	Network_ClientSendMessage( "ChatClient", pack_int( msUpdateFriendsList));
+}
+
+Overlay_SetAction( "Chat/FriendsIgnoredList/IgnoredTab")
+{
+	OverlayElement_GetByName( "Chat/FriendsIgnoredList/IgnoredTab")->SetMaterial( "Chat/IgnoredTabSel");
+	OverlayElement_GetByName( "Chat/FriendsIgnoredList/FriendsTab")->SetMaterial( "Chat/FriendsTabMat");
+	OverlayElement_GetByName( "Chat/FriendsPanel")->SetVisible( false);
+	OverlayElement_GetByName( "Chat/IgnoredPanel")->SetVisible( true);
+	Network_ClientSendMessage( "ChatClient", pack_int( msUpdateIgnoredList));
+}
+
+void ShowAddFriend()
+{
+	chat_typeIgnoredName = false;
+	chat_typeFriendName = true;
+	chat_typedFriendName->clear();
+	chat_displayedFriendName->clear();
+	Overlay_Hide( "Chat/NewIgnored");
+	Overlay_Show( "Chat/NewFriend");
+
+	chat_displayedFriendName = chat_typedFriendName + "|";
+	chat_currentFriendNameIndex = chat_typedFriendName->length();
+	ChatAdjustTextToField( chat_displayedFriendName, chat_currentFriendNameIndex, chat_friendNameField, 16.0);
+}
+
+Overlay_SetAction( "Chat/FriendsPanel/ButtonAdd")
+{
+	ShowAddFriend();
+}
+
+Overlay_SetAction( "Chat/FriendsPanel/ButtonRemove")
+{
+	if ( ! chat_selectedFriend->empty())
+	{
+		RemoveFriend();
+	}
+}
+
+void ShowAddIgnored()
+{
+	chat_typeFriendName = false;
+	chat_typeIgnoredName = true;
+	chat_typedIgnoredName->clear();
+	chat_displayedIgnoredName->clear();
+	Overlay_Hide( "Chat/NewFriend");
+	Overlay_Show( "Chat/NewIgnored");
+
+	chat_displayedIgnoredName = chat_typedIgnoredName + "|";
+	chat_currentIgnoredNameIndex = chat_typedIgnoredName->length();
+	ChatAdjustTextToField( chat_displayedIgnoredName, chat_currentIgnoredNameIndex, chat_ignoredNameField, 16.0);
+}
+
+Overlay_SetAction( "Chat/IgnoredPanel/ButtonAdd")
+{
+	ShowAddIgnored();
+}
+
+Overlay_SetAction( "Chat/IgnoredPanel/ButtonRemove")
+{
+	if ( ! chat_selectedIgnored->empty())
+	{
+		RemoveIgnored();
+	}
+}
+
+Overlay_SetAction( "Chat/NewFriend/ButtonOK")
+{
+//	Echo( "New friend : " + chat_typedFriendName);
+	Network_ClientSendMessage( "ChatClient", pack_int( msNewFriend) + pack_int( chat_typedFriendName->length()) + chat_typedFriendName);
+	Overlay_Hide( "Chat/NewFriend");
+	chat_typeFriendName = false;
+}
+
+Overlay_SetAction( "Chat/NewIgnored/ButtonOK")
+{
+//	Echo( "New ignored : " + chat_typedIgnoredName);
+	Network_ClientSendMessage( "ChatClient", pack_int( msNewIgnored) + pack_int( chat_typedIgnoredName->length()) + chat_typedIgnoredName);
+	Overlay_Hide( "Chat/NewIgnored");
+	chat_typeIgnoredName = false;
+}
+
+Overlay_SetAction( "Chat/NewFriend/ButtonCancel")
+{
+	Overlay_Hide( "Chat/NewFriend");
+	chat_typeFriendName = false;
+}
+
+Overlay_SetAction( "Chat/NewIgnored/ButtonCancel")
+{
+	Overlay_Hide( "Chat/NewIgnored");
+	chat_typeIgnoredName = false;
+}
+
+Overlay_SetAction( "Chat/Menu/Options")
+{
+	Overlay_Hide( "Chat/Menu");
+	Overlay_Show( "Chat/Options");
+}
+
+Overlay_SetAction( "Chat/Menu/Commands")
+{
+	Overlay_Hide( "Chat/Menu");
+	Overlay_Show( "Chat/Commands");
+}
+
+Overlay_SetAction( "Chat/Options/Back")
+{
+	WriteConfigFile();
+	Overlay_Hide( "Chat/Options");
+	Overlay_Show( "Chat/Menu");
+}
+
+Overlay_SetAction( "Chat/Commands/Back")
+{
+	Overlay_Hide( "Chat/Commands");
+	Overlay_Show( "Chat/Menu");
+}
+
+Overlay_SetAction( "Chat/Menu/Disconnect")
+{
+	chat_showMenu = false;
+	Network_CloseClient( "ChatClient");
+	Timer_KillAll();
+	AnimationGroup_DestroyAll();
+	Simulation_ClearObjects( "Main");
+	ClearScene();
+	ClearOverlays();
+	Scene_Unload( g_currentZone);
+	g_rootCamera = NULL;
+	Scene_Unload( "Common");
+	Scene_Unload( "Chat");
+	Scene_Load( "Common");
+}
+
+Overlay_SetAction( "Chat/Options/MusicOnOff")
+{
+	l_musicMuted = ( ! l_musicMuted);
+	Sound_MuteMusic( l_musicMuted);
+
+	if ( ! l_musicMuted)
+	{
+		OverlayElement_GetByName( "Chat/Options/MusicOnOff")->SetMaterial( "Chat/On");
+	}
+	else
+	{
+		OverlayElement_GetByName( "Chat/Options/MusicOnOff")->SetMaterial( "Chat/Off");
+	}
+}
+
+Overlay_SetAction( "Chat/Options/SoundOnOff")
+{
+	l_soundMuted = ( ! l_soundMuted);
+	Sound_MuteSFX( l_soundMuted);
+
+	if ( ! l_soundMuted)
+	{
+		OverlayElement_GetByName( "Chat/Options/SoundOnOff")->SetMaterial( "Chat/On");
+	}
+	else
+	{
+		OverlayElement_GetByName( "Chat/Options/SoundOnOff")->SetMaterial( "Chat/Off");
+	}
+}
+
+void TimerMusic()
+{
+	timer( "MusicChangeVolume", TIMERTYPE_PERMANENT, 0.0)
+	{
+		l_ticPos = MOUSE_POSITION_X - l_ticMusic->GetAbsoluteLeft();
+		UpdateMusicTick();
+	}
+}
+
+void TimerSound()
+{
+	timer( "SoundChangeVolume", TIMERTYPE_PERMANENT, 0.0)
+	{
+		l_ticPos = MOUSE_POSITION_X - l_ticSound->GetAbsoluteLeft();
+		UpdateSoundTick();
+	}
+}
+
+Overlay_SetAction( "Chat/Options/RegletteMusic")
+{
+	TimerMusic();
+}
+
+Overlay_SetAction( "Chat/Options/TicMusic")
+{
+	TimerMusic();
+}
+
+Overlay_SetAction( "Chat/Options/RegletteSound")
+{
+	TimerSound();
+}
+
+Overlay_SetAction( "Chat/Options/TicSound")
+{
+	TimerSound();
+}
+
+Overlay_SetAction( "Chat/Options/InvertHorizTick")
+{
+	if (OverlayElement_GetByName( "Chat/Options/InvertHorizTick")->GetMaterialName() == "Chat/On")
+	{
+		OverlayElement_GetByName( "Chat/Options/InvertHorizTick")->SetMaterial( "Chat/Off");
+		g_xMouseModifier = -1.0;
+	}
+	else
+	{
+		OverlayElement_GetByName( "Chat/Options/InvertHorizTick")->SetMaterial( "Chat/On");
+		g_xMouseModifier = 1.0;
+	}
+}
+
+Overlay_SetAction( "Chat/Options/InvertVerticTick")
+{
+	if (OverlayElement_GetByName( "Chat/Options/InvertVerticTick")->GetMaterialName() == "Chat/On")
+	{
+		OverlayElement_GetByName( "Chat/Options/InvertVerticTick")->SetMaterial( "Chat/Off");
+		g_yMouseModifier = 1.0;
+	}
+	else
+	{
+		OverlayElement_GetByName( "Chat/Options/InvertVerticTick")->SetMaterial( "Chat/On");
+		g_yMouseModifier = -1.0;
+	}
+}
