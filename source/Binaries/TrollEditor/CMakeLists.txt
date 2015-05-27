@@ -1,6 +1,6 @@
-option( BUILD_TROLL_EDITOR "Build TrollEditor" TRUE )
-
 project( TrollEditor )
+
+option( BUILD_${PROJECT_NAME} "Build ${PROJECT_NAME}" TRUE )
 
 set( TE_VERSION_MAJOR	0 )
 set( TE_VERSION_MINOR	9 )
@@ -18,6 +18,43 @@ if ( NOT WIN32 )
 else ()
 	set( GTK_FOUND TRUE )
 endif ( NOT WIN32 )
+
+function( copy_target_files _TARGET _DESTINATION )# ARGN: The files
+	if ( NOT "${_DESTINATION}" STREQUAL "" )
+		set( _DESTINATION ${_DESTINATION}/ )
+		add_custom_command(
+			TARGET ${_TARGET}
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECTS_BINARIES_OUTPUT_DIR}/$<CONFIG>/bin/${_DESTINATION}
+		)
+	endif ()
+	foreach ( _FILE ${ARGN} )
+		get_filename_component( _FILE_NAME ${_FILE} NAME )
+		add_custom_command(
+			TARGET ${_TARGET}
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_FILE} ${PROJECTS_BINARIES_OUTPUT_DIR}/$<CONFIG>/bin/${_DESTINATION}${_FILE_NAME}
+		)
+	endforeach ()
+endfunction()
+
+function( copy_target_directory _TARGET _SOURCE ) #ARGV2: _DESTINATION
+	set( _DESTINATION "${ARGV2}" )
+	message( STATUS "_DESTINATION ${_DESTINATION}" )
+	if ( NOT _DESTINATION STREQUAL "" )
+		set( _DESTINATION ${_DESTINATION}/ )
+		add_custom_command(
+			TARGET ${_TARGET}
+			POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E make_directory ${PROJECTS_BINARIES_OUTPUT_DIR}/$<CONFIG>/bin/${_DESTINATION}
+		)
+	endif ()
+	add_custom_command(
+		TARGET ${_TARGET}
+		POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_directory ${_SOURCE} ${PROJECTS_BINARIES_OUTPUT_DIR}/$<CONFIG>/bin/${_DESTINATION}${_FILE_NAME}
+	)
+endfunction()
 
 if ( wxWidgets_FOUND AND GTK_FOUND )
 	string( COMPARE EQUAL "${wxWidgets_USE_DEBUG}" "ON" IsWxDebug)
@@ -71,40 +108,24 @@ if ( wxWidgets_FOUND AND GTK_FOUND )
 	endif ()
 	
 	add_target(
-		TrollEditor
+		${PROJECT_NAME}
 		bin
 		"GeneralLib;ElypseCore"
 		"GeneralLib;ElypseCore;${wxWidgetsLibraries};${BoostLibraries};${ZZipLibraries};${OgreLibraries};${OdeLibraries};${GstLibraries};${GTK2_LIBRARIES};${XmlLibraries};${GtkmmLibraries}"
 		"PrecompiledHeader.h"
 		"PrecompiledHeader.cpp"
 		"${wxWidgets_CFLAGS}"
-		"${wxWidgets_CXXFLAGS}"	""
+		"${wxWidgets_CXXFLAGS}"
 	)
 	
-	set_property( TARGET TrollEditor PROPERTY FOLDER "Binaries" )
+	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Binaries" )
 	set( Build "yes (version ${TE_VERSION_MAJOR}.${TE_VERSION_MINOR}.${TE_VERSION_BUILD})" PARENT_SCOPE )
-	add_target_astyle( TrollEditor ".h;.hpp;.inl;.cpp" )
+	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
-	file( GLOB_RECURSE Parser_languages 	${CMAKE_CURRENT_SOURCE_DIR}/Data/*.lang )
-	file( GLOB_RECURSE OvEditor_files 		${CMAKE_CURRENT_SOURCE_DIR}/Data/OverlayEditor/*.* )
-	file( GLOB_RECURSE ScEditor_files 		${CMAKE_CURRENT_SOURCE_DIR}/Data/SceneEditor/*.* )
-	
-	file( COPY ${Parser_languages} DESTINATION ${PROJECTS_BINARIES_OUTPUT_PATH}/Debug/bin )
-	file( MAKE_DIRECTORY "${PROJECTS_BINARIES_OUTPUT_PATH}/Debug/bin/SceneEditor" )
-	file( MAKE_DIRECTORY "${PROJECTS_BINARIES_OUTPUT_PATH}/Debug/bin/OverlayEditor" )
-	file( COPY ${ScEditor_files} DESTINATION ${PROJECTS_BINARIES_OUTPUT_PATH}/Debug/bin/SceneEditor )
-	file( COPY ${OvEditor_files} DESTINATION ${PROJECTS_BINARIES_OUTPUT_PATH}/Debug/bin/OverlayEditor )
-
-	file( COPY ${Parser_languages} DESTINATION ${PROJECTS_BINARIES_OUTPUT_PATH}/Release/bin )
-	file( MAKE_DIRECTORY "${PROJECTS_BINARIES_OUTPUT_PATH}/Release/bin/SceneEditor" )
-	file( MAKE_DIRECTORY "${PROJECTS_BINARIES_OUTPUT_PATH}/Release/bin/OverlayEditor" )
-	file( COPY ${ScEditor_files} DESTINATION ${PROJECTS_BINARIES_OUTPUT_PATH}/Release/bin/SceneEditor )
-	file( COPY ${OvEditor_files} DESTINATION ${PROJECTS_BINARIES_OUTPUT_PATH}/Release/bin/OverlayEditor )
-
-	install(
-		TARGETS	TrollEditor
-		RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-	)
+	file( GLOB_RECURSE Parser_languages ${CMAKE_CURRENT_SOURCE_DIR}/Data/*.lang )
+	copy_target_files( ${PROJECT_NAME} "" ${Parser_languages} )
+	copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/OverlayEditor OverlayEditor )
+	copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/SceneEditor SceneEditor )
 else()
 	if ( NOT wxWidgets_FOUND )
 		set( Build "No (missing wxWidgets library" )

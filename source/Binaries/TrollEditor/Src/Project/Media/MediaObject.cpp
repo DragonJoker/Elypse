@@ -1,14 +1,12 @@
-//***********************************************************************************************************
 #include "PrecompiledHeader.h"
 
 #include "Project/Media/MediaObject.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::Media;
 using namespace Troll::GUI;
-//***********************************************************************************************************
-extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
+
 
 MediaObject :: MediaObject( const wxString & p_name, const wxString & p_fileName, MediaObjectType p_type )
 	:	TrollObject( p_name, p_fileName, ttMediaObject ),
@@ -42,10 +40,10 @@ MediaObject :: MediaObject( const wxString & p_name, const wxString & p_fileName
 //	std::cout << l_msg << "\n";
 }
 
-//***********************************************************************************************************
+
 
 MediaObject :: ~MediaObject()
 {
 }
 
-//***********************************************************************************************************
+

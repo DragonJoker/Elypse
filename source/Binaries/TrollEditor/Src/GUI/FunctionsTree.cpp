@@ -1,4 +1,4 @@
-//*****************************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/FunctionsTree.h"
@@ -38,14 +38,14 @@
 #include <General/STLMacros.h>
 #include <wx/dnd.h>
 */
-//*****************************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
 using namespace Troll::Objects3D;
 using namespace Troll::Objects2D;
 using namespace Troll::Media;
-//*****************************************************************************************************************
+
 BEGIN_EVENT_TABLE( FunctionsTree, wxTreeCtrl )
 	EVT_TREE_ITEM_ACTIVATED(	TreeFunctions_Ctrl,	FunctionsTree::_onItemActivated )
 	EVT_TREE_ITEM_RIGHT_CLICK(	TreeFunctions_Ctrl,	FunctionsTree::_onItemRClick )
@@ -53,10 +53,10 @@ BEGIN_EVENT_TABLE( FunctionsTree, wxTreeCtrl )
 	EVT_TREE_END_DRAG(	TreeFunctions_Ctrl,	FunctionsTree::_onDragEnd )
 	EVT_TREE_ITEM_GETTOOLTIP(	TreeFunctions_Ctrl, FunctionsTree::_onShowToolTip )
 END_EVENT_TABLE()
-//*****************************************************************************************************************
+
 extern MainFrame	* g_mainFrame;
 //DECLARE_APP( TEApplication);
-//*****************************************************************************************************************
+
 
 FunctionsTree :: FunctionsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
 	:	wxTreeCtrl( parent, TreeFunctions_Ctrl, pos, size, style | wxTR_HIDE_ROOT )
@@ -64,14 +64,14 @@ FunctionsTree :: FunctionsTree( wxWindow * parent, const wxPoint & pos, const wx
 	CreateImageList();
 }
 
-//*****************************************************************************************************************
+
 
 FunctionsTree :: ~FunctionsTree()
 {
 	Cleanup();
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: Cleanup()
 {
@@ -82,7 +82,7 @@ void FunctionsTree :: Cleanup()
 	m_constants.clear();
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreateImageList( int p_size )
 {
@@ -128,7 +128,7 @@ void FunctionsTree :: CreateImageList( int p_size )
 	AssignImageList( l_images );
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreateTitreFunction( const wxString & p_idCat )
 {
@@ -139,7 +139,7 @@ void FunctionsTree :: CreateTitreFunction( const wxString & p_idCat )
 	m_functionsGroups.push_back( p_idCat );
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreateTitreConstant( const wxString & p_idCat )
 {
@@ -149,7 +149,7 @@ void FunctionsTree :: CreateTitreConstant( const wxString & p_idCat )
 	m_constantsGroups.push_back( p_idCat );
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreaFunc( const wxString & p_idfunc, VariableBaseType p_returnValue,
 								std::vector <VariableBaseType> p_params )
@@ -167,7 +167,7 @@ void FunctionsTree :: CreaFunc( const wxString & p_idfunc, VariableBaseType p_re
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: ClassFunc( const wxString & p_idfunc, VariableBaseType p_returnValue,
 								 std::vector <VariableBaseType> p_params )
@@ -185,7 +185,7 @@ void FunctionsTree :: ClassFunc( const wxString & p_idfunc, VariableBaseType p_r
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreateConstant( const wxString & p_id, VariableBaseType p_type )
 {
@@ -201,7 +201,7 @@ void FunctionsTree :: CreateConstant( const wxString & p_id, VariableBaseType p_
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: AddFunctionsToTree()
 {
@@ -223,7 +223,7 @@ void FunctionsTree :: AddFunctionsToTree()
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreateFunctionsTree()
 {
@@ -243,7 +243,7 @@ void FunctionsTree :: CreateFunctionsTree()
 	_buildFunctionsList( m_classFunctions, FunctionsTreeIcon_ClassFunction, FunctionsTreeIcon_ClassFunction + 1 );
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: CreateConstantsTree()
 {
@@ -288,7 +288,7 @@ void FunctionsTree :: CreateConstantsTree()
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _buildFunctionsList( const StrPairArrayStrMap & p_list, int p_image, int p_imageSel )
 {
@@ -319,7 +319,7 @@ void FunctionsTree :: _buildFunctionsList( const StrPairArrayStrMap & p_list, in
 	}
 }
 
-//*****************************************************************************************************************
+
 
 wxString FunctionsTree :: _buildFunctionHelper( const wxString & p_function, VariableBaseType p_returnValue,
 		std::vector <VariableBaseType> p_params )
@@ -343,7 +343,7 @@ wxString FunctionsTree :: _buildFunctionHelper( const wxString & p_function, Var
 	return l_data;
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_event )
 {
@@ -362,7 +362,7 @@ void FunctionsTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_ev
 	g_mainFrame->LogDebugMessage( wxString( p_name ) + wxT( "(" ) + l_text + wxT( ")" ) );
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _onItemActivated( wxTreeEvent & p_event )
 {
@@ -412,7 +412,7 @@ void FunctionsTree :: _onItemActivated( wxTreeEvent & p_event )
 //TODO	g_mainFrame->m_editText->WriteText( l_itemdesc + l_ajout + wxT( "\r\n"));
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _onItemRClick( wxTreeEvent & p_event )
 {
@@ -420,7 +420,7 @@ void FunctionsTree :: _onItemRClick( wxTreeEvent & p_event )
 	SelectItem( m_selectedItem );
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _onDragBegin( wxTreeEvent & p_event )
 {
@@ -432,13 +432,13 @@ void FunctionsTree :: _onDragBegin( wxTreeEvent & p_event )
 	*/
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _onDragEnd( wxTreeEvent & p_event )
 {
 }
 
-//*****************************************************************************************************************
+
 
 void FunctionsTree :: _onShowToolTip( wxTreeEvent & p_event )
 {
@@ -451,5 +451,3 @@ void FunctionsTree :: _onShowToolTip( wxTreeEvent & p_event )
 		p_event.SetToolTip( l_it->second );
 	}
 }
-
-//*****************************************************************************************************************

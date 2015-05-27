@@ -1,15 +1,15 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TextLinesCtrl.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( TextLinesCtrl, wxPanel )
 	EVT_LEFT_DCLICK(	TextLinesCtrl::_onDoubleClick )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 TextLinesCtrl :: TextLinesCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos,
 								const wxSize & size, long style )
@@ -21,7 +21,7 @@ TextLinesCtrl :: TextLinesCtrl( wxWindow * parent, wxWindowID id, const wxPoint 
 	m_lines->SetFont( wxFont( 10, wxFONTFAMILY_SCRIPT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxT( "Lucida Console" ) ) );
 }
 
-//***********************************************************************************************************
+
 
 void TextLinesCtrl :: AddLines( unsigned int p_nbLines )
 {
@@ -40,7 +40,7 @@ void TextLinesCtrl :: AddLines( unsigned int p_nbLines )
 	m_lines->SetSize( GetClientSize() );
 }
 
-//***********************************************************************************************************
+
 
 void TextLinesCtrl :: RemoveLine()
 {
@@ -53,7 +53,7 @@ void TextLinesCtrl :: RemoveLine()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextLinesCtrl :: GoToLine( int p_line )
 {
@@ -63,11 +63,11 @@ void TextLinesCtrl :: GoToLine( int p_line )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextLinesCtrl :: _onDoubleClick( wxMouseEvent & p_event )
 {
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+

@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/Sequence.h"
@@ -16,10 +16,10 @@
 #include <wx/txtstrm.h>
 #include <OgreString.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollSequence :: TrollSequence( const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttSequence ),
@@ -31,7 +31,7 @@ TrollSequence :: TrollSequence( const wxString & p_name, const wxString & p_file
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollSequence :: ~TrollSequence()
 {
@@ -42,7 +42,7 @@ TrollSequence :: ~TrollSequence()
 	m_continuousEvents.clear();
 }
 
-//***********************************************************************************************************
+
 
 TrollPonctualEvent * TrollSequence :: AddPonctualEvent( BasePonctualEvent * p_event, const wxString & p_targetTypeName,
 		const wxString & p_targetName, float p_fireTime,
@@ -69,7 +69,7 @@ TrollPonctualEvent * TrollSequence :: AddPonctualEvent( BasePonctualEvent * p_ev
 	return l_event;
 }
 
-//***********************************************************************************************************
+
 
 TrollPonctualEvent * TrollSequence :: AddPonctualEvent( TrollPonctualEvent * p_event )
 {
@@ -87,7 +87,7 @@ TrollPonctualEvent * TrollSequence :: AddPonctualEvent( TrollPonctualEvent * p_e
 	return p_event;
 }
 
-//***********************************************************************************************************
+
 
 TrollContinuousEvent * TrollSequence :: AddContinuousEvent( TrollContinuousEvent * p_event )
 {
@@ -105,7 +105,7 @@ TrollContinuousEvent * TrollSequence :: AddContinuousEvent( TrollContinuousEvent
 	return p_event;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: RemovePonctualEvent( TrollPonctualEvent * p_event )
 {
@@ -129,7 +129,7 @@ void TrollSequence :: RemovePonctualEvent( TrollPonctualEvent * p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: RemoveContinuousEvent( TrollContinuousEvent * p_event )
 {
@@ -153,7 +153,7 @@ void TrollSequence :: RemoveContinuousEvent( TrollContinuousEvent * p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollSequence :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -169,7 +169,7 @@ int TrollSequence :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: Write( wxTextOutputStream * p_stream )
 {
@@ -193,7 +193,7 @@ void TrollSequence :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: ChangeContinuousEventTime( TrollContinuousEvent * p_event )
 {
@@ -223,7 +223,7 @@ void TrollSequence :: ChangeContinuousEventTime( TrollContinuousEvent * p_event 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: ChangePonctualEventTime( TrollPonctualEvent * p_event )
 {
@@ -253,7 +253,7 @@ void TrollSequence :: ChangePonctualEventTime( TrollPonctualEvent * p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: _computeTimes()
 {
@@ -279,7 +279,7 @@ void TrollSequence :: _computeTimes()
 	m_duration = m_end - m_begin;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: UpdatePonctualEvent( TrollPonctualEvent * p_event )
 {
@@ -307,7 +307,7 @@ void TrollSequence :: UpdatePonctualEvent( TrollPonctualEvent * p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: Update( Real p_time )
 {
@@ -324,7 +324,7 @@ void TrollSequence :: Update( Real p_time )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: _rollback( Real p_time )
 {
@@ -374,7 +374,7 @@ void TrollSequence :: _rollback( Real p_time )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSequence :: _update( Real p_time )
 {
@@ -411,4 +411,4 @@ void TrollSequence :: _update( Real p_time )
 	}
 }
 
-//***********************************************************************************************************
+

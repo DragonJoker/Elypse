@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/LogCtrl.h"
@@ -6,16 +6,16 @@
 #include "GUI/TextPanel.h"
 #include "GUI/TextCtrl.h"
 #include "Project/Scene.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( LogCtrl, wxTextCtrl )
 	EVT_LEFT_DCLICK(	LogCtrl::_onDoubleClick )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 LogCtrl :: LogCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
 					const wxPoint & pos, const wxSize & size, long style )
@@ -23,7 +23,7 @@ LogCtrl :: LogCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
 {
 }
 
-//***********************************************************************************************************
+
 
 void LogCtrl :: _onDoubleClick( wxMouseEvent & p_event )
 {
@@ -61,4 +61,4 @@ void LogCtrl :: _onDoubleClick( wxMouseEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+

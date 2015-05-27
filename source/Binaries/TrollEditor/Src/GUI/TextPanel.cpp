@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TextPanel.h"
@@ -6,16 +6,16 @@
 #include "GUI/MainFrame.h"
 #include "Project/Scene.h"
 #include "Project/Project.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( TextPanel, wxScrolledWindow )
 	EVT_SIZE(	TextPanel::_onResize )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TextPanel :: TextPanel( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size,
 						long style, TrollFile * p_file, bool p_showLines )
@@ -71,21 +71,21 @@ TextPanel :: TextPanel( wxWindow * parent, wxWindowID id, const wxPoint & pos, c
 	UpdateSize();
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: WriteText( const wxString & p_text )
 {
 	m_text->WriteText( p_text );
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: SaveFile( const wxString & p_path )
 {
 	m_text->SaveFile( p_path );
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: UpdateSize()
 {
@@ -105,7 +105,7 @@ void TextPanel :: UpdateSize()
 	*/
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: UpdateScrollBars()
 {
@@ -126,14 +126,14 @@ void TextPanel :: UpdateScrollBars()
 //	std::cout << "TextPanel :: UpdateSize - Range : " << GetScrollRange( wxVERTICAL) << "\n";
 }
 
-//***********************************************************************************************************
+
 
 bool TextPanel :: IsModified()
 {
 	return m_text->IsModified();
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: GoToLine( int p_line )
 {
@@ -142,7 +142,7 @@ void TextPanel :: GoToLine( int p_line )
 	m_text->GoToLine( p_line );
 }
 
-//***********************************************************************************************************
+
 
 bool TextPanel :: Search( const wxString & p_search )
 {
@@ -150,7 +150,7 @@ bool TextPanel :: Search( const wxString & p_search )
 	m_search = p_search;
 	m_currentSearchPosition = 0;
 	int l_searchIndex = l_txt.Find( m_search );
-	General::Utils::vector::deleteAll( m_searchPositions );
+	m_searchPositions.clear();
 
 	if ( l_searchIndex != wxNOT_FOUND )
 	{
@@ -170,7 +170,7 @@ bool TextPanel :: Search( const wxString & p_search )
 		}
 
 		l_currentPosition += l_currentLine - 1;
-		m_searchPositions.push_back( new SearchInfo( l_currentLine, l_currentPosition, l_searchIndex ) );
+		m_searchPositions.push_back( SearchInfo { l_currentLine, l_currentPosition, l_searchIndex } );
 //		std::cout << "TextPanel :: Search - Index : " << m_searchIndex << " - Line : " << l_currentLine << " - Cursor : " << l_currentPosition << " To : " << l_currentPosition + p_search.size() << "\n";
 		m_text->SetSelection( l_currentPosition, l_currentPosition + p_search.size() );
 		m_text->SetFocus();
@@ -181,28 +181,28 @@ bool TextPanel :: Search( const wxString & p_search )
 	return false;
 }
 
-//***********************************************************************************************************
+
 
 bool TextPanel :: SearchNext()
 {
-	if ( m_searchPositions.size() > 0 )
+	if ( !m_searchPositions.empty() )
 	{
-		SearchInfo * l_info = m_searchPositions[m_currentSearchPosition];
+		SearchInfo & l_info = m_searchPositions[m_currentSearchPosition];
 		wxString l_txt = m_text->GetValue();
-		l_txt = l_txt.Mid( l_info->m_index + m_search.size() );
+		l_txt = l_txt.Mid( l_info.m_index + m_search.size() );
 		int l_index = l_txt.Find( m_search );
 		l_txt = m_text->GetValue();
 
 		if ( l_index != wxNOT_FOUND )
 		{
-			//		std::cout << "TextPanel :: Search - " << l_index << "\n";
-			int l_currentLine = l_info->m_line;
-			long l_currentPosition = l_info->m_position - l_currentLine + 1;
-			int l_searchIndex = l_info->m_index + m_search.size() + l_index;
+			//std::cout << "TextPanel :: Search - " << l_index << "\n";
+			int l_currentLine = l_info.m_line;
+			long l_currentPosition = l_info.m_position - l_currentLine + 1;
+			int l_searchIndex = l_info.m_index + m_search.size() + l_index;
 
 			while ( l_currentPosition < l_searchIndex )
 			{
-				//			std::cout << "TextPanel :: Search - " << (int)l_txt.at( l_currentPosition) << "{" << l_txt.at( l_currentPosition) << "}\n";
+				//std::cout << "TextPanel :: Search - " << (int)l_txt.at( l_currentPosition) << "{" << l_txt.at( l_currentPosition) << "}\n";
 				if ( l_txt.at( l_currentPosition ) == '\n' )
 				{
 					l_currentLine++;
@@ -213,8 +213,8 @@ bool TextPanel :: SearchNext()
 
 			l_currentPosition += l_currentLine - 1;
 			m_currentSearchPosition = m_searchPositions.size();
-			m_searchPositions.push_back( new SearchInfo( l_currentLine, l_currentPosition, l_searchIndex ) );
-			//		std::cout << "TextPanel :: Search - Index : " << m_searchIndex << " - Line : " << l_currentLine << " - Cursor : " << l_currentPosition << " To : " << l_currentPosition + p_search.size() << "\n";
+			m_searchPositions.push_back( SearchInfo { l_currentLine, l_currentPosition, l_searchIndex } );
+			//std::cout << "TextPanel :: Search - Index : " << m_searchIndex << " - Line : " << l_currentLine << " - Cursor : " << l_currentPosition << " To : " << l_currentPosition + p_search.size() << "\n";
 			m_text->SetSelection( l_currentPosition, l_currentPosition + m_search.size() );
 			m_text->SetFocus();
 			ScrollLines( l_currentLine - GetScrollPos( wxVERTICAL ) - 10 );
@@ -225,39 +225,38 @@ bool TextPanel :: SearchNext()
 	return false;
 }
 
-//***********************************************************************************************************
+
 
 bool TextPanel :: SearchPrevious()
 {
-	if ( m_searchPositions.size() > 0 && m_currentSearchPosition > 0 )
+	if ( !m_searchPositions.empty() && m_currentSearchPosition > 0 )
 	{
-		delete m_searchPositions[m_currentSearchPosition];
-		General::Utils::vector::eraseValue( m_searchPositions, m_searchPositions[m_currentSearchPosition] );
+		m_searchPositions.erase( m_searchPositions.begin() + m_currentSearchPosition );
 		m_currentSearchPosition--;
-		SearchInfo * l_info = m_searchPositions[m_currentSearchPosition];
-		m_text->SetSelection( l_info->m_position, l_info->m_position + m_search.size() );
+		SearchInfo & l_info = m_searchPositions[m_currentSearchPosition];
+		m_text->SetSelection( l_info.m_position, l_info.m_position + m_search.size() );
 		m_text->SetFocus();
-		ScrollLines( l_info->m_line - GetScrollPos( wxVERTICAL ) - 10 );
+		ScrollLines( l_info.m_line - GetScrollPos( wxVERTICAL ) - 10 );
 		return true;
 	}
 
 	return false;
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: Replace( const wxString & p_replacement )
 {
-	if ( m_searchPositions.size() == 0 )
+	if ( m_searchPositions.empty() )
 	{
 		return;
 	}
 
-	SearchInfo * l_info = m_searchPositions[m_currentSearchPosition];
-	m_text->Replace( l_info->m_position, l_info->m_position + m_search.size(), p_replacement );
+	SearchInfo & l_info = m_searchPositions[m_currentSearchPosition];
+	m_text->Replace( l_info.m_position, l_info.m_position + m_search.size(), p_replacement );
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: _onResize( wxSizeEvent & p_event )
 {
@@ -266,11 +265,11 @@ void TextPanel :: _onResize( wxSizeEvent & p_event )
 				   GetScrollPos( wxHORIZONTAL ), GetScrollPos( wxVERTICAL ) );
 }
 
-//***********************************************************************************************************
+
 
 void TextPanel :: _onSetFocus( wxFocusEvent & p_event )
 {
 	m_text->SetFocus();
 }
 
-//***********************************************************************************************************
+

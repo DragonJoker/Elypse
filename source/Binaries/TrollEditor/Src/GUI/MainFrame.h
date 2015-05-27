@@ -1,28 +1,25 @@
-//***********************************************************************************************************
 #ifndef ___Troll_MainFrame___
 #define ___Troll_MainFrame___
-//***********************************************************************************************************
+
 #include <wx/srchctrl.h>
 #include <wx/txtstrm.h>
 #include <wx/wfstream.h>
 #include <wx/notebook.h>
-#include <Singleton.h>
+#include <wx/splitter.h>
+#include <wx/textctrl.h>
 
 #include <map>
 #include <string>
 
-#include "Popup.h"
-#include "NewListbox.h"
-
-#include "wx/splitter.h"
-
-#include <wx/textctrl.h>
-#include "../Project/DataWriter.h"
-#include "../Project/Temporal/Module_Temporal.h"
+#include <Singleton.h>
 #include <Module_Script.h>
 
-#include "../Script/TrollScriptCompiler.h"
-//***********************************************************************************************************
+#include "Popup.h"
+#include "NewListbox.h"
+#include "Project/DataWriter.h"
+#include "Project/Temporal/Module_Temporal.h"
+#include "Script/TrollScriptCompiler.h"
+
 class wxScrolledWindow;
 
 namespace Troll
@@ -396,8 +393,10 @@ namespace Troll
 		public:
 			DECLARE_EVENT_TABLE()
 		};
+
+		extern MainFrame * g_mainFrame;
 	}
 }
-//***********************************************************************************************************
+
 #endif
-//***********************************************************************************************************
+

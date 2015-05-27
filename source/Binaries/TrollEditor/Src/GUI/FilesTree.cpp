@@ -1,4 +1,4 @@
-﻿//*****************************************************************************************************************
+﻿
 #include "PrecompiledHeader.h"
 
 #include "GUI/FilesTree.h"
@@ -26,10 +26,10 @@
 #include <General/STLMacros.h>
 #include <wx/dnd.h>
 */
-//*****************************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//*****************************************************************************************************************
+
 BEGIN_EVENT_TABLE( FilesTree, wxTreeCtrl )
 	EVT_TREE_ITEM_MENU(	TreeFichier_Ctrl,	FilesTree::_onFichierRClick )
 	EVT_TREE_END_LABEL_EDIT(	TreeFichier_Ctrl,	FilesTree::_onEndLabelEdit )
@@ -37,11 +37,11 @@ BEGIN_EVENT_TABLE( FilesTree, wxTreeCtrl )
 	EVT_TREE_ITEM_ACTIVATED(	TreeFichier_Ctrl,	FilesTree::_onFileActivated )
 	EVT_TREE_SEL_CHANGED(	TreeFichier_Ctrl,	FilesTree::_onItemClic )
 END_EVENT_TABLE()
-//*****************************************************************************************************************
+
 extern MainFrame	* g_mainFrame;
 
 //DECLARE_APP( TEApplication);
-//*****************************************************************************************************************
+
 
 FilesTree :: FilesTree( wxWindow * parent, const wxPoint & pos,
 						const wxSize & size, long style )
@@ -51,21 +51,21 @@ FilesTree :: FilesTree( wxWindow * parent, const wxPoint & pos,
 	m_selectedScene = NULL;
 }
 
-//*****************************************************************************************************************
+
 
 FilesTree :: ~FilesTree()
 {
 	Cleanup();
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: Cleanup()
 {
 	m_scenes.clear();
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: CreateImageList( int p_size )
 {
@@ -111,7 +111,7 @@ void FilesTree :: CreateImageList( int p_size )
 	AssignImageList( l_images );
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: InitProjet( const wxString & p_projectName )
 {
@@ -126,7 +126,7 @@ void FilesTree :: InitProjet( const wxString & p_projectName )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId FilesTree :: AddSceneToProject( TrollScene * p_scene )
 {
@@ -159,7 +159,7 @@ wxTreeItemId FilesTree :: AddSceneToProject( TrollScene * p_scene )
 	return l_id;
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId FilesTree :: AddFolderToScene( const wxString & p_sceneName, const wxString & p_folderName )
 {
@@ -206,7 +206,7 @@ wxTreeItemId FilesTree :: AddFolderToScene( const wxString & p_sceneName, const 
 	return l_id;
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId FilesTree :: AddFileToFolder( const wxTreeItemId & p_item, const wxString & p_idFile,
 		TETreeItemType p_type, bool p_exists )
@@ -242,7 +242,7 @@ wxTreeItemId FilesTree :: AddFileToFolder( const wxTreeItemId & p_item, const wx
 	return l_id;
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId FilesTree :: AddExistingFileToProjet( const wxTreeItemId & p_itemParent, TETreeItemType p_type,
 		const wxString p_idFile )
@@ -256,7 +256,7 @@ wxTreeItemId FilesTree :: AddExistingFileToProjet( const wxTreeItemId & p_itemPa
 	return l_id;
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_event )
 {
@@ -275,7 +275,7 @@ void FilesTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_event 
 	g_mainFrame->LogDebugMessage( wxString( p_name ) + wxT( "(" ) + l_text + wxT( ")" ) );
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: ShowContextMenuFichier( const wxPoint & p_pos, TETreeItemData * p_item )
 {
@@ -346,7 +346,7 @@ void FilesTree :: ShowContextMenuFichier( const wxPoint & p_pos, TETreeItemData 
 	PopupMenu( & l_menu, p_pos.x, p_pos.y );
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId FilesTree :: GetFolderId( const wxString & p_name )
 {
@@ -358,7 +358,7 @@ wxTreeItemId FilesTree :: GetFolderId( const wxString & p_name )
 	return 0;
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId FilesTree :: GetItemByName( const wxString & p_name )
 {
@@ -373,7 +373,7 @@ wxTreeItemId FilesTree :: GetItemByName( const wxString & p_name )
 	return l_it->second;
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: _onFichierRClick( wxTreeEvent & p_event )
 {
@@ -384,7 +384,7 @@ void FilesTree :: _onFichierRClick( wxTreeEvent & p_event )
 	ShowContextMenuFichier( l_point, l_item );
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: _onBeginLabelEdit( wxTreeEvent & p_event )
 {
@@ -430,7 +430,7 @@ void FilesTree :: _onBeginLabelEdit( wxTreeEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: _onEndLabelEdit( wxTreeEvent & p_event )
 {
@@ -486,7 +486,7 @@ void FilesTree :: _onEndLabelEdit( wxTreeEvent & p_event )
 	SelectItem( m_selectedItem );
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: _onFileActivated( wxTreeEvent & p_event )
 {
@@ -521,7 +521,7 @@ void FilesTree :: _onFileActivated( wxTreeEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void FilesTree :: _onItemClic( wxTreeEvent & p_event )
 {
@@ -537,5 +537,3 @@ void FilesTree :: _onItemClic( wxTreeEvent & p_event )
 		}
 	}
 }
-
-//*****************************************************************************************************************

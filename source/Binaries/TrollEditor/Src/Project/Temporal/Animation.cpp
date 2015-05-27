@@ -1,14 +1,14 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/Animation.h"
 /*
 #include <Animation/Animation.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Temporal;
 using namespace EMuse::Animation;
-//***********************************************************************************************************
+
 
 TrollAnimation :: TrollAnimation( const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttAnimation ),
@@ -18,20 +18,20 @@ TrollAnimation :: TrollAnimation( const wxString & p_name, const wxString & p_fi
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimation :: ~TrollAnimation()
 {
 }
 
-//***********************************************************************************************************
+
 
 int TrollAnimation :: BuildPanel( wxWindow * p_parent, int p_width )
 {
 	return 0;
 }
 
-//***********************************************************************************************************
+
 
 void TrollAnimation :: SetMuseAnimation( EMAnimation * p_animation )
 {
@@ -41,7 +41,7 @@ void TrollAnimation :: SetMuseAnimation( EMAnimation * p_animation )
 	m_timeout = p_animation->GetTimeOut();
 }
 
-//***********************************************************************************************************
+
 
 void TrollAnimation :: Write( wxTextOutputStream * p_stream )
 {
@@ -70,4 +70,4 @@ void TrollAnimation :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\t\t}\n" ) );
 }
 
-//***********************************************************************************************************
+

@@ -1,2 +1,45 @@
-add_subdirectory( GeneralLib )
-add_subdirectory( ElypseCore )
+find_package( ZLIB 1.2.7 )
+find_package( LibZip )
+
+if( ZLIB_FOUND )
+	message( STATUS "+ Found Zlib (version ${ZLIB_VERSION_STRING})" )
+endif()
+
+if( LIBZIP_FOUND )
+	message( STATUS "+ Found libzip" )
+endif()
+
+#Zlib Libs
+set( ZlibLibraries "")
+foreach(Lib ${ZLIB_LIBRARIES})
+	if (ZlibLibraries)
+		set(ZlibLibraries "${ZlibLibraries}|${Lib}")
+	else()
+		set(ZlibLibraries "${Lib}")
+	endif()
+endforeach()
+
+#libzip Libs
+set( LibZipLibraries "")
+foreach(Lib ${LIBZIP_LIBRARY})
+	if (LibZipLibraries)
+		set(LibZipLibraries "${LibZipLibraries}|${Lib}")
+	else()
+		set(LibZipLibraries "${Lib}")
+	endif()
+endforeach()
+
+include_directories( ${ZLIB_INCLUDE_DIRS} )
+include_directories( ${LIBZIP_INCLUDE_DIRS} )
+
+if( ZLIB_FOUND AND LIBZIP_FOUND )
+	add_subdirectory( GeneralLib )
+	add_subdirectory( ElypseCore )
+else ()
+	if ( NOT ZLIB_FOUND )
+		message( SEND_ERROR "Missing ZLib library" )
+	endif ()
+	if ( NOT LIBZIP_FOUND )
+		message( SEND_ERROR "Missing libzip library" )
+	endif ()
+endif ()

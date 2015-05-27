@@ -6,50 +6,52 @@
 #include <map>
 
 #include "Config.h"
-/*
-#if GENLIB_WINDOWS
-#	if defined(_MT) || defined(__MT__)
-#		pragma comment( lib, "zziplib_mt.lib")
-#	else
-#		pragma comment( lib, "zziplib_md.lib")
-#	endif
-#	pragma comment( lib, "zlib.lib")
-#endif
-*/
-#include <zzip/zzip.h>
+#include "Exception.h"
+
+#include <zip.h>
 
 namespace General
 {
 	namespace Files
 	{
-		template <typename T>
+		template< typename CharType >
 		class ZipFileBase;
 
-		template <typename T>
+		template< typename CharType >
 		class ZipDirectoryBase;
 
-		template <typename T>
+		template< typename CharType >
 		class ZipArchiveBase;
 
-		typedef ZipFileBase <std::string> ZipFile;
-		typedef ZipDirectoryBase <std::string> ZipDirectory;
-		typedef ZipArchiveBase <std::string> ZipArchive;
+		typedef ZipFileBase< char > ZipFile;
+		typedef ZipDirectoryBase< char > ZipDirectory;
+		typedef ZipArchiveBase< char > ZipArchive;
 
 #if GENLIB_WINDOWS
 
-		typedef ZipFileBase <std::wstring> ZipWFile;
-		typedef ZipDirectoryBase <std::wstring> ZipWDirectory;
-		typedef ZipArchiveBase <std::wstring> ZipWArchive;
+		typedef ZipFileBase< wchar_t > ZipWFile;
+		typedef ZipDirectoryBase< wchar_t > ZipWDirectory;
+		typedef ZipArchiveBase< wchar_t > ZipWArchive;
 
 #endif
 
-		typedef std::vector	<ZipFile *>			ZipFileArray;
-		typedef std::vector	<ZipDirectory *>	ZipDirectoryArray;
+		typedef std::vector< ZipFile * >ZipFileArray;
+		typedef std::vector< ZipDirectory * >ZipDirectoryArray;
 
-		typedef std::map	<std::string, ZipFile *>		ZipFileMap;
-		typedef std::map	<std::string, ZipDirectory *>	ZipDirectoryMap;
+		typedef std::map< std::string, ZipFile * > ZipFileMap;
+		typedef std::map< std::string, ZipDirectory * > ZipDirectoryMap;
 
-		typedef std::vector	<std::string>		StringArray;
+		typedef std::vector< std::string > StringArray;
+
+		namespace Zip
+		{
+			static std::string GetErrorDesc( int p_errorCode )
+			{
+				char l_buffer[1024] = { 0 };
+				zip_error_to_str( l_buffer, 1024, errno, p_errorCode );
+				return "(code " + std::to_string( p_errorCode ) + ") " + std::string( l_buffer );
+			}
+		}
 	}
 }
 

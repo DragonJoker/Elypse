@@ -1,27 +1,26 @@
-//***********************************************************************************************************
 #include "PrecompiledHeader.h"
 #include "GUI/AboutFrame.h"
 #include "GUI/MainFrame.h"
 #include "xpm/BMPKeumar.xpm"
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum aboutFrameID
 {
 	afBack,
 	afKeumar,
 	afShowKeumar
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( AboutFrame, wxFrame )
 	EVT_BUTTON(	afBack,				AboutFrame::_onBack )
 	EVT_BUTTON(	afKeumar,			AboutFrame::_onCloseKeumar )
 	EVT_BUTTON(	afShowKeumar,		AboutFrame::_onShowKeumar )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 AboutFrame :: AboutFrame( wxWindow * parent )
 	:	wxFrame( parent, wxID_ANY, _( "About Troll Editor" ), wxDefaultPosition, wxSize( 240, 155 ),
@@ -47,14 +46,14 @@ AboutFrame :: AboutFrame( wxWindow * parent )
 	m_word.clear();
 }
 
-//***********************************************************************************************************
+
 
 void AboutFrame :: _onBack( wxCommandEvent & p_event )
 {
 	Destroy();
 }
 
-//***********************************************************************************************************
+
 
 void AboutFrame :: _onCloseKeumar( wxCommandEvent & p_event )
 {
@@ -64,7 +63,7 @@ void AboutFrame :: _onCloseKeumar( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void AboutFrame :: _onShowKeumar( wxCommandEvent & p_event )
 {
@@ -74,4 +73,4 @@ void AboutFrame :: _onShowKeumar( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

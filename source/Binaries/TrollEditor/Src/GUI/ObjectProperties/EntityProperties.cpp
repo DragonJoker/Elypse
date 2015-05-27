@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/EntityProperties.h"
 
@@ -8,10 +8,10 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Objects3D;
-//***********************************************************************************************************
+
 enum EntityPropsIDs
 {
 	entityName,
@@ -19,16 +19,16 @@ enum EntityPropsIDs
 	entityMesh,
 	entityMeshSubMats,
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( EntityProperties, wxPanel )
 	EVT_TEXT_ENTER(	entityName,			EntityProperties::_onEditName )
 	EVT_COMBOBOX(	entityParent,		EntityProperties::_onSelectParent )
 	EVT_COMBOBOX(	entityMesh,			EntityProperties::_onSelectMesh )
 	EVT_LIST_END_LABEL_EDIT(	entityMeshSubMats,	EntityProperties::_onEndEditLabel )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 EntityProperties :: EntityProperties( TrollEntity * p_entity, wxWindow * parent, const wxPoint & pos,
 									  const wxSize & size, long style )
@@ -64,13 +64,13 @@ EntityProperties :: EntityProperties( TrollEntity * p_entity, wxWindow * parent,
 	}
 }
 
-//***********************************************************************************************************
+
 
 EntityProperties :: ~EntityProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void EntityProperties :: UpdateProperties()
 {
@@ -116,7 +116,7 @@ void EntityProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void EntityProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -126,7 +126,7 @@ void EntityProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void EntityProperties :: _onSelectParent( wxCommandEvent & p_event )
 {
@@ -137,7 +137,7 @@ void EntityProperties :: _onSelectParent( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void EntityProperties :: _onSelectMesh( wxCommandEvent & p_event )
 {
@@ -148,7 +148,7 @@ void EntityProperties :: _onSelectMesh( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void EntityProperties :: _onEndEditLabel( wxListEvent & p_event )
 {
@@ -166,4 +166,4 @@ void EntityProperties :: _onEndEditLabel( wxListEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

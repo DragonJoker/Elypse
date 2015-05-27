@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/AnimationGroup.h"
@@ -7,23 +7,23 @@
 #include <General/STLMacros.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Temporal;
-//***********************************************************************************************************
+
 
 TrollAnimationGroup :: TrollAnimationGroup( const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttAnimationGroup )
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimationGroup :: ~TrollAnimationGroup()
 {
 	General::Utils::map::deleteAll( m_objects );
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimatedObject * TrollAnimationGroup :: CreateAnimatedObject( TrollObject * p_object, const wxString & p_fileName )
 {
@@ -39,21 +39,21 @@ TrollAnimatedObject * TrollAnimationGroup :: CreateAnimatedObject( TrollObject *
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 int TrollAnimationGroup :: BuildPanel( wxWindow * p_parent, int p_width )
 {
 	return 0;
 }
 
-//***********************************************************************************************************
+
 
 void TrollAnimationGroup :: AddChainedAnimations( const wxString & p_anim1, const wxString & p_anim2 )
 {
 	m_chainedAnimations.insert( StrStrMap::value_type( p_anim1, p_anim2 ) );
 }
 
-//***********************************************************************************************************
+
 
 void TrollAnimationGroup :: Write( wxTextOutputStream * p_stream )
 {
@@ -74,4 +74,4 @@ void TrollAnimationGroup :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

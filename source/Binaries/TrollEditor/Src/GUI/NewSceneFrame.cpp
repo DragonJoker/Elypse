@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/NewSceneFrame.h"
@@ -6,17 +6,17 @@
 #include "Project/Project.h"
 #include "GUI/MainFrame.h"
 #include "GUI/FilesTree.h"
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( NewSceneFrame, wxDialog )
 	EVT_BUTTON(	ID_okBtn,		NewSceneFrame::_onOK )
 	EVT_BUTTON(	ID_clBtn,		NewSceneFrame::_onCancel )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 NewSceneFrame :: NewSceneFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
 	:	wxDialog( p_parent, -1, title, pos, wxSize( 200, 90 ) )
@@ -29,20 +29,20 @@ NewSceneFrame :: NewSceneFrame( wxWindow * p_parent, const wxString & title, con
 	m_cancelBtn = new wxButton( this, ID_clBtn, wxT( "Annuler" ), l_position += wxPoint( 90, 0 ), wxSize( 70, 20 ) );
 }
 
-//***********************************************************************************************************
+
 
 NewSceneFrame :: ~NewSceneFrame()
 {
 }
 
-//***********************************************************************************************************
+
 
 wxString NewSceneFrame :: GetSceneName()
 {
 	return wxEmptyString;
 }
 
-//***********************************************************************************************************
+
 
 void NewSceneFrame :: _onOK( wxCommandEvent & p_event )
 {
@@ -80,11 +80,11 @@ void NewSceneFrame :: _onOK( wxCommandEvent & p_event )
 	Destroy();
 }
 
-//***********************************************************************************************************
+
 
 void NewSceneFrame :: _onCancel( wxCommandEvent & p_event )
 {
 	Destroy();
 }
 
-//***********************************************************************************************************
+

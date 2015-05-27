@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/ObjectProperties/ContinuousEventProperties.h"
@@ -13,10 +13,10 @@
 #include <Gui/EMOverlayGroup.h>
 #include <OgreOverlayManager.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
-//***********************************************************************************************************
+
 enum EventPropsIDs
 {
 	eventActionName,
@@ -25,9 +25,9 @@ enum EventPropsIDs
 	eventInterpolation,
 	eventKeys
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( ContinuousEventProperties, wxPanel )
 	EVT_COMBOBOX(	eventActionName,			ContinuousEventProperties::_onSelectAction )
 	EVT_COMBOBOX(	eventTargetType,			ContinuousEventProperties::_onSelectTargetType )
@@ -35,7 +35,7 @@ BEGIN_EVENT_TABLE( ContinuousEventProperties, wxPanel )
 	EVT_TEXT_ENTER(	eventInterpolation,			ContinuousEventProperties::_onSelectInterpolation )
 	EVT_COMBOBOX(	eventKeys,					ContinuousEventProperties::_onSelectKey )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 ContinuousEventProperties :: ContinuousEventProperties( TrollContinuousEvent * p_event, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
@@ -52,7 +52,7 @@ ContinuousEventProperties :: ContinuousEventProperties( TrollContinuousEvent * p
 	UpdateProperties();
 }
 
-//***********************************************************************************************************
+
 
 ContinuousEventProperties :: ~ContinuousEventProperties()
 {
@@ -65,7 +65,7 @@ ContinuousEventProperties :: ~ContinuousEventProperties()
 	*/
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: UpdateProperties()
 {
@@ -98,7 +98,7 @@ void ContinuousEventProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 wxArrayString ContinuousEventProperties :: _getTargetTypes( const wxString & p_action )
 {
@@ -128,7 +128,7 @@ wxArrayString ContinuousEventProperties :: _getTargetTypes( const wxString & p_a
 	return l_result;
 }
 
-//***********************************************************************************************************
+
 
 wxString ContinuousEventProperties :: _buildTargetChoice( const wxPoint & p_position, const wxString & p_targetType )
 {
@@ -217,7 +217,7 @@ wxString ContinuousEventProperties :: _buildTargetChoice( const wxPoint & p_posi
 	}
 }
 
-//***********************************************************************************************************
+
 
 wxString ContinuousEventProperties :: _buildInterpolationChoice( const wxPoint & p_position )
 {
@@ -256,7 +256,7 @@ wxString ContinuousEventProperties :: _buildInterpolationChoice( const wxPoint &
 	return l_interpolations[0];
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: _buildKeyFramesList( const wxPoint & p_position )
 {
@@ -273,7 +273,7 @@ void ContinuousEventProperties :: _buildKeyFramesList( const wxPoint & p_positio
 	m_keys = BuildComboBox( this, p_position, eventKeys, wxT( "KeyFrames" ), l_list, l_selected );
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: _onSelectAction( wxCommandEvent & p_event )
 {
@@ -290,7 +290,7 @@ void ContinuousEventProperties :: _onSelectAction( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: _onSelectTargetType( wxCommandEvent & p_event )
 {
@@ -301,7 +301,7 @@ void ContinuousEventProperties :: _onSelectTargetType( wxCommandEvent & p_event 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: _onEditTarget( wxCommandEvent & p_event )
 {
@@ -318,7 +318,7 @@ void ContinuousEventProperties :: _onEditTarget( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: _onSelectInterpolation( wxCommandEvent & p_event )
 {
@@ -328,7 +328,7 @@ void ContinuousEventProperties :: _onSelectInterpolation( wxCommandEvent & p_eve
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventProperties :: _onSelectKey( wxCommandEvent & p_event )
 {
@@ -364,4 +364,4 @@ void ContinuousEventProperties :: _onSelectKey( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

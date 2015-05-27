@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/CameraProperties.h"
 
@@ -7,10 +7,10 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Objects3D;
-//***********************************************************************************************************
+
 enum CameraPropsIDs
 {
 	cameraName,
@@ -27,10 +27,10 @@ enum CameraPropsIDs
 	cameraPolygonMode,
 	cameraYFOV
 };
-//***********************************************************************************************************
+
 const long c_defaultTextEditStyle = wxBORDER_SIMPLE | wxTE_PROCESS_ENTER;
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( CameraProperties, wxPanel )
 	EVT_TEXT_ENTER(	cameraName,				CameraProperties::_onEditName )
 	EVT_COMBOBOX(	cameraParent,			CameraProperties::_onSelectParent )
@@ -46,7 +46,7 @@ BEGIN_EVENT_TABLE( CameraProperties, wxPanel )
 	EVT_COMBOBOX(	cameraPolygonMode,		CameraProperties::_onSelectPolygonMode )
 	EVT_TEXT_ENTER(	cameraYFOV,				CameraProperties::_onEditYFOV )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 CameraProperties :: CameraProperties( TrollCamera * p_camera, wxWindow * parent, const wxPoint & pos,
 									  const wxSize & size, long style )
@@ -81,13 +81,13 @@ CameraProperties :: CameraProperties( TrollCamera * p_camera, wxWindow * parent,
 	m_yFOV = BuildTextCtrl( this, l_position += wxPoint( 0, 20 ), cameraYFOV, wxT( "X Position" ), m_camera->GetYFOV() );
 }
 
-//***********************************************************************************************************
+
 
 CameraProperties :: ~CameraProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: UpdateProperties()
 {
@@ -145,7 +145,7 @@ void CameraProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -155,7 +155,7 @@ void CameraProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onSelectParent( wxCommandEvent & p_event )
 {
@@ -166,7 +166,7 @@ void CameraProperties :: _onSelectParent( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditXPos( wxCommandEvent & p_event )
 {
@@ -184,7 +184,7 @@ void CameraProperties :: _onEditXPos( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditYPos( wxCommandEvent & p_event )
 {
@@ -202,7 +202,7 @@ void CameraProperties :: _onEditYPos( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditZPos( wxCommandEvent & p_event )
 {
@@ -220,7 +220,7 @@ void CameraProperties :: _onEditZPos( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditXDir( wxCommandEvent & p_event )
 {
@@ -238,7 +238,7 @@ void CameraProperties :: _onEditXDir( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditYDir( wxCommandEvent & p_event )
 {
@@ -256,7 +256,7 @@ void CameraProperties :: _onEditYDir( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditZDir( wxCommandEvent & p_event )
 {
@@ -274,7 +274,7 @@ void CameraProperties :: _onEditZDir( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditRoll( wxCommandEvent & p_event )
 {
@@ -293,7 +293,7 @@ void CameraProperties :: _onEditRoll( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditPitch( wxCommandEvent & p_event )
 {
@@ -312,7 +312,7 @@ void CameraProperties :: _onEditPitch( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditYaw( wxCommandEvent & p_event )
 {
@@ -331,7 +331,7 @@ void CameraProperties :: _onEditYaw( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onSelectPolygonMode( wxCommandEvent & p_event )
 {
@@ -341,7 +341,7 @@ void CameraProperties :: _onSelectPolygonMode( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void CameraProperties :: _onEditYFOV( wxCommandEvent & p_event )
 {
@@ -357,4 +357,4 @@ void CameraProperties :: _onEditYFOV( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

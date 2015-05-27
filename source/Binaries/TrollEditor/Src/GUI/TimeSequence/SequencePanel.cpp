@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/SequencePanel.h"
@@ -15,26 +15,26 @@
 #include <Sequences/BaseEvent.h>
 #include <Main/Context.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum SequencePanelIDs
 {
 	addPonctualEvent,
 	addContinuousEvent
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( SequencePanel, wxPanel )
 	EVT_LEFT_UP(	SequencePanel::_onLeftMouseUp )
 	EVT_RIGHT_UP(	SequencePanel::_onRightMouseUp )
 	EVT_MENU( addPonctualEvent,		SequencePanel::_onAddPonctualEvent )
 	EVT_MENU( addContinuousEvent,	SequencePanel::_onAddContinuousEvent )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 SequencePanel :: SequencePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 								const wxSize & p_size )
@@ -59,13 +59,13 @@ SequencePanel :: SequencePanel( wxWindow * p_parent, wxWindowID p_id, const wxPo
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
 }
 
-//***********************************************************************************************************
+
 
 SequencePanel :: ~SequencePanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollSequence * SequencePanel :: SetSequence( TrollSequence * p_sequence )
 {
@@ -73,7 +73,7 @@ TrollSequence * SequencePanel :: SetSequence( TrollSequence * p_sequence )
 	{
 		m_sequence = p_sequence;
 		wxSize l_size;
-		l_size.x = p_sequence->GetTotalLength() * 100;
+		l_size.x = int( p_sequence->GetTotalLength() * 100 );
 		m_sequencePanel->SetSequence( p_sequence );
 		m_sequencePanel->SetSize( l_size.x, 20 );
 		m_sequencePanel->Show();
@@ -104,7 +104,7 @@ TrollSequence * SequencePanel :: SetSequence( TrollSequence * p_sequence )
 	return p_sequence;
 }
 
-//***********************************************************************************************************
+
 
 void SequencePanel :: AddPonctualEvent( TrollPonctualEvent * p_event, Real p_time )
 {
@@ -127,7 +127,7 @@ void SequencePanel :: AddPonctualEvent( TrollPonctualEvent * p_event, Real p_tim
 	l_eventPanel->SetTop( l_top );
 }
 
-//***********************************************************************************************************
+
 
 void SequencePanel :: AddContinuousEvent( TrollContinuousEvent * p_event )
 {
@@ -150,7 +150,7 @@ void SequencePanel :: AddContinuousEvent( TrollContinuousEvent * p_event )
 	l_eventPanel->SetTop( l_top );
 }
 
-//***********************************************************************************************************
+
 
 void SequencePanel :: _addPonctualEvent( TrollPonctualEvent * p_event, Real p_time )
 {
@@ -165,7 +165,7 @@ void SequencePanel :: _addPonctualEvent( TrollPonctualEvent * p_event, Real p_ti
 	l_eventPanel->SetTop( _getTopForPonctualEvent( p_event ) );
 }
 
-//***********************************************************************************************************
+
 
 void SequencePanel :: _addContinuousEvent( TrollContinuousEvent * p_event )
 {
@@ -180,7 +180,7 @@ void SequencePanel :: _addContinuousEvent( TrollContinuousEvent * p_event )
 	l_eventPanel->SetTop( _getTopForContinuousEvent( p_event ) );
 }
 
-//*****************************************************************************************************************
+
 
 void SequencePanel :: RemovePonctualEvent( Temporal::TrollPonctualEvent * p_event )
 {
@@ -189,7 +189,7 @@ void SequencePanel :: RemovePonctualEvent( Temporal::TrollPonctualEvent * p_even
 	m_ponctualEvents.push_back( l_eventPanel );
 }
 
-//*****************************************************************************************************************
+
 
 void SequencePanel :: RemoveContinuousEvent( Temporal::TrollContinuousEvent * p_event )
 {
@@ -198,21 +198,21 @@ void SequencePanel :: RemoveContinuousEvent( Temporal::TrollContinuousEvent * p_
 	m_continuousEvents.push_back( l_eventPanel );
 }
 
-//*****************************************************************************************************************
+
 
 int SequencePanel :: _getTopForContinuousEvent( Temporal::TrollContinuousEvent * p_event )
 {
-	return _getTop( p_event->GetStartTime() * 100, p_event->GetLength() * 100 );
+	return _getTop( int( p_event->GetStartTime() * 100 ), int( p_event->GetLength() * 100 ) );
 }
 
-//*****************************************************************************************************************
+
 
 int SequencePanel :: _getTopForPonctualEvent( Temporal::TrollPonctualEvent * p_event )
 {
-	return _getTop( p_event->GetFireTime() * 100, 20 );
+	return _getTop( int( p_event->GetFireTime() * 100 ), 20 );
 }
 
-//*****************************************************************************************************************
+
 
 int SequencePanel :: _getTop( int p_left, int p_width )
 {
@@ -274,7 +274,7 @@ int SequencePanel :: _getTop( int p_left, int p_width )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void SequencePanel :: _showContextMenu( const wxPoint & p_pos )
 {
@@ -296,32 +296,32 @@ void SequencePanel :: _showContextMenu( const wxPoint & p_pos )
 	PopupMenu( & l_menu, p_pos.x, p_pos.y );
 }
 
-//*****************************************************************************************************************
+
 
 void SequencePanel :: _onAddPonctualEvent( wxCommandEvent & p_event )
 {
-	g_mainFrame->AddPonctualEvent( m_sequencePanel->GetSequence(), m_currentLeft / 100.0 );
+	g_mainFrame->AddPonctualEvent( m_sequencePanel->GetSequence(), m_currentLeft / 100.0f );
 }
 
-//*****************************************************************************************************************
+
 
 void SequencePanel :: _onAddContinuousEvent( wxCommandEvent & p_event )
 {
 	std::cout << "SequencePanel :: _onAddContinuousEvent - " << m_currentLeft << " - " << m_currentLeft / 100.0 << "\n";
-	g_mainFrame->AddContinuousEvent( m_sequencePanel->GetSequence(), m_currentLeft / 100.0 );
+	g_mainFrame->AddContinuousEvent( m_sequencePanel->GetSequence(), m_currentLeft / 100.0f );
 }
 
-//***********************************************************************************************************
+
 
 void SequencePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 {
 }
 
-//***********************************************************************************************************
+
 
 void SequencePanel :: _onRightMouseUp( wxMouseEvent & p_event )
 {
 	_showContextMenu( p_event.GetPosition() );
 }
 
-//***********************************************************************************************************
+

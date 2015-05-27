@@ -1,11 +1,11 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/AnimatedObject.h"
 #include "Project/Temporal/Animation.h"
-//***********************************************************************************************************
+
 using namespace Troll::Temporal;
-//***********************************************************************************************************
+
 
 TrollAnimatedObject :: TrollAnimatedObject( TrollObject * p_object, TrollAnimationGroup * p_group, const wxString & p_fileName )
 	:	TemporalObject( p_object->GetName(), p_fileName, ttAnimatedObject ),
@@ -14,27 +14,27 @@ TrollAnimatedObject :: TrollAnimatedObject( TrollObject * p_object, TrollAnimati
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimatedObject :: ~TrollAnimatedObject()
 {
 }
 
-//***********************************************************************************************************
+
 
 int TrollAnimatedObject :: BuildPanel( wxWindow * p_parent, int p_width )
 {
 	return 0;
 }
 
-//***********************************************************************************************************
+
 
 void TrollAnimatedObject :: AddAnimation( TrollAnimation * p_anim )
 {
 	m_animations.insert( std::make_pair( p_anim->GetName(), p_anim ) );
 }
 
-//***********************************************************************************************************
+
 
 void TrollAnimatedObject :: Write( wxTextOutputStream * p_stream )
 {
@@ -51,4 +51,4 @@ void TrollAnimatedObject :: Write( wxTextOutputStream * p_stream )
 	}
 }
 
-//***********************************************************************************************************
+

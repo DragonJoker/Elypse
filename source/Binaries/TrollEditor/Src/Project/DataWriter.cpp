@@ -15,11 +15,11 @@
 #include "GUI/MainFrame.h"
 
 #include <wx/dir.h>
-//********************************************************************************************************************
+
 using namespace Troll::GUI;
-//********************************************************************************************************************
-extern MainFrame * g_mainFrame;
-//********************************************************************************************************************
+using namespace EMuse::Download;
+
+
 
 DataWriter :: DataWriter( wxTextCtrl * p_log )
 	:	m_log( p_log ),
@@ -28,7 +28,7 @@ DataWriter :: DataWriter( wxTextCtrl * p_log )
 {
 }
 
-//********************************************************************************************************************
+
 
 DataWriter :: ~DataWriter()
 {
@@ -42,7 +42,7 @@ DataWriter :: ~DataWriter()
 	delete m_md5;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: AddFolder( const wxString & p_folder, DataBlockType p_eType )
 {
@@ -75,7 +75,7 @@ bool DataWriter :: AddFolder( const wxString & p_folder, DataBlockType p_eType )
 	}
 }
 
-//********************************************************************************************************************
+
 
 void DataWriter :: ListFiles( const wxString & p_folder )
 {
@@ -109,7 +109,7 @@ void DataWriter :: ListFiles( const wxString & p_folder )
 	}
 }
 
-//********************************************************************************************************************
+
 
 bool DecompressFile( const wxString & p_zipFileName, const wxString & p_fileName, int p_size )
 {
@@ -153,27 +153,27 @@ bool DecompressFile( const wxString & p_zipFileName, const wxString & p_fileName
 			switch ( l_nbBytesRead )
 			{
 			case Z_ERRNO:
-				std::cout << "Can't deflate file [" + p_fileName + "] due to error " + std::to_string( errno ) << std::endl;
+				std::cout << "Can't inflate file [" + p_fileName + "] due to error " + std::to_string( errno ) << std::endl;
 				break;
 
 			case Z_STREAM_END:
-				std::cout << "Can't deflate file [" + p_fileName + "] due to Z_STREAM_END error" << std::endl;
+				std::cout << "Can't inflate file [" + p_fileName + "] due to Z_STREAM_END error" << std::endl;
 				break;
 
 			case Z_DATA_ERROR:
-				std::cout << "Can't deflate file [" + p_fileName + "] due to Z_DATA_ERROR error" << std::endl;
+				std::cout << "Can't inflate file [" + p_fileName + "] due to Z_DATA_ERROR error" << std::endl;
 				break;
 
 			case Z_STREAM_ERROR:
-				std::cout << "Can't deflate file [" + p_fileName + "] due to Z_STREAM_ERROR error" << std::endl;
+				std::cout << "Can't inflate file [" + p_fileName + "] due to Z_STREAM_ERROR error" << std::endl;
 				break;
 
 			case Z_NEED_DICT:
-				std::cout << "Can't deflate file [" + p_fileName + "] due to Z_NEED_DICT error" << std::endl;
+				std::cout << "Can't inflate file [" + p_fileName + "] due to Z_NEED_DICT error" << std::endl;
 				break;
 
 			case Z_MEM_ERROR:
-				std::cout << "Can't deflate file [" + p_fileName + "] due to Z_MEM_ERROR error" << std::endl;
+				std::cout << "Can't inflate file [" + p_fileName + "] due to Z_MEM_ERROR error" << std::endl;
 				break;
 			}
 		}
@@ -185,7 +185,7 @@ bool DecompressFile( const wxString & p_zipFileName, const wxString & p_fileName
 	return l_return;
 }
 
-//********************************************************************************************************************
+
 
 int DataWriter :: CompressFile( const wxString & p_infilename, const wxString & p_outfilename )
 {
@@ -231,7 +231,7 @@ int DataWriter :: CompressFile( const wxString & p_infilename, const wxString & 
 	return l_totalWritten;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: CompressFolder( const wxString & p_outFolder, const wxString & p_outPath, DataBlockType p_eType )
 {
@@ -264,7 +264,7 @@ bool DataWriter :: CompressFolder( const wxString & p_outFolder, const wxString 
 	return true;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: AddFile( const wxString & p_fileurl, DataBlockType p_eType )
 {
@@ -328,7 +328,7 @@ bool DataWriter :: AddFile( const wxString & p_fileurl, DataBlockType p_eType )
 	return true;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: DelFile( const wxString & p_file )
 {
@@ -350,7 +350,7 @@ bool DataWriter :: DelFile( const wxString & p_file )
 	return false;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: DownFile( const wxString & p_file )
 {
@@ -372,7 +372,7 @@ bool DataWriter :: DownFile( const wxString & p_file )
 	return false;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: UpFile( const wxString & p_file )
 {
@@ -394,7 +394,7 @@ bool DataWriter :: UpFile( const wxString & p_file )
 	return false;
 }
 
-//********************************************************************************************************************
+
 
 bool DataWriter :: Write( const wxString & p_filename )
 {
@@ -449,7 +449,7 @@ bool DataWriter :: Write( const wxString & p_filename )
 	return true;
 }
 
-//********************************************************************************************************************
+
 
 void DataWriter :: WriteZipFile( ZipBlockList p_list, FILE * p_file )
 {
@@ -485,7 +485,7 @@ void DataWriter :: WriteZipFile( ZipBlockList p_list, FILE * p_file )
 	}
 }
 
-//********************************************************************************************************************
+
 
 void DataWriter :: WriteHeader( unsigned long long & l_nbBytes )
 {
@@ -538,7 +538,7 @@ void DataWriter :: WriteHeader( unsigned long long & l_nbBytes )
 	}
 }
 
-//********************************************************************************************************************
+
 
 void DataWriter :: WriteZipHeader( ZipBlockList p_list, FILE * p_file )
 {
@@ -573,7 +573,7 @@ void DataWriter :: WriteZipHeader( ZipBlockList p_list, FILE * p_file )
 	}
 }
 
-//********************************************************************************************************************
+
 
 int DataWriter :: GetType( const wxString & p_filename )
 {
@@ -622,7 +622,7 @@ int DataWriter :: GetType( const wxString & p_filename )
 	}
 }
 
-//********************************************************************************************************************
+
 
 wxString DataWriter :: GetName( const wxString & p_fileurl )
 {
@@ -634,7 +634,7 @@ wxString DataWriter :: GetName( const wxString & p_fileurl )
 	return l_fileName;
 }
 
-//********************************************************************************************************************
+
 
 wxString DataWriter :: GetNameWithoutExtension( const wxString & p_fileurl )
 {
@@ -650,7 +650,7 @@ wxString DataWriter :: GetNameWithoutExtension( const wxString & p_fileurl )
 	return l_res;
 }
 
-//********************************************************************************************************************
+
 
 wxString DataWriter :: GetExtension( const wxString & p_fileurl )
 {
@@ -665,7 +665,7 @@ wxString DataWriter :: GetExtension( const wxString & p_fileurl )
 	return l_res;
 }
 
-//********************************************************************************************************************
+
 
 wxString DataWriter :: GetParentFolder( const wxString & p_folder )
 {
@@ -696,7 +696,7 @@ wxString DataWriter :: GetParentFolder( const wxString & p_folder )
 	return wxEmptyString;
 }
 
-//********************************************************************************************************************
+
 
 void DataWriter :: UpdateFileList( wxTextCtrl * p_listbox )
 {
@@ -706,4 +706,4 @@ void DataWriter :: UpdateFileList( wxTextCtrl * p_listbox )
 	}
 }
 
-//********************************************************************************************************************
+

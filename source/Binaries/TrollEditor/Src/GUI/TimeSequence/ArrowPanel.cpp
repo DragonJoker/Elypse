@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/ArrowPanel.h"
@@ -7,10 +7,10 @@
 /*
 #include <Sequences/BaseEvent.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( ArrowPanel, wxPanel )
 	EVT_PAINT(	ArrowPanel::_onPaint )
 	EVT_LEFT_DOWN(	ArrowPanel::_onMouseLeftDown )
@@ -19,9 +19,9 @@ BEGIN_EVENT_TABLE( ArrowPanel, wxPanel )
 	EVT_LEAVE_WINDOW(	ArrowPanel::_onMouseLeave )
 	EVT_KILL_FOCUS(	ArrowPanel::_onKillFocus )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 ArrowPanel :: ArrowPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 						  const wxSize & p_size )
@@ -32,13 +32,13 @@ ArrowPanel :: ArrowPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & 
 	SetBackgroundColour( wxColour( 0, 255, 0 ) );
 }
 
-//***********************************************************************************************************
+
 
 ArrowPanel :: ~ArrowPanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 void ArrowPanel :: _onPaint( wxPaintEvent & p_event )
 {
@@ -58,7 +58,7 @@ void ArrowPanel :: _onPaint( wxPaintEvent & p_event )
 	l_dc.DrawLine( l_size.x / 2 + 5, l_size.y - 5, l_size.x / 2, l_size.y );
 }
 
-//***********************************************************************************************************
+
 
 void ArrowPanel :: _onMouseLeftDown( wxMouseEvent & p_event )
 {
@@ -66,7 +66,7 @@ void ArrowPanel :: _onMouseLeftDown( wxMouseEvent & p_event )
 //	m_boundPanel->SetMouseLeftDown( true);
 }
 
-//***********************************************************************************************************
+
 
 void ArrowPanel :: _onMouseLeftUp( wxMouseEvent & p_event )
 {
@@ -74,7 +74,7 @@ void ArrowPanel :: _onMouseLeftUp( wxMouseEvent & p_event )
 //	m_boundPanel->SetMouseLeftDown( false);
 }
 
-//***********************************************************************************************************
+
 
 void ArrowPanel :: _onMouseMove( wxMouseEvent & p_event )
 {
@@ -90,7 +90,7 @@ void ArrowPanel :: _onMouseMove( wxMouseEvent & p_event )
 	*/
 }
 
-//***********************************************************************************************************
+
 
 void ArrowPanel :: _onMouseLeave( wxMouseEvent & p_event )
 {
@@ -98,7 +98,7 @@ void ArrowPanel :: _onMouseLeave( wxMouseEvent & p_event )
 //	m_boundPanel->SetMouseLeftDown( false);
 }
 
-//***********************************************************************************************************
+
 
 void ArrowPanel :: _onKillFocus( wxFocusEvent & p_event )
 {
@@ -106,4 +106,4 @@ void ArrowPanel :: _onKillFocus( wxFocusEvent & p_event )
 //	m_boundPanel->SetMouseLeftDown( false);
 }
 
-//***********************************************************************************************************
+

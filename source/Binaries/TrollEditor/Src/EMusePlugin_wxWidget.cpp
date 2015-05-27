@@ -18,6 +18,8 @@
 #include "PrecompiledHeader.h"
 #include "EMusePlugin_wxWidget.h"
 
+using namespace EMuse::TEWidget;
+
 EMusePlugin_wxWidget::EMusePlugin_wxWidget()
 	:	m_handle( 0 ),
 		m_protectedMode( false )

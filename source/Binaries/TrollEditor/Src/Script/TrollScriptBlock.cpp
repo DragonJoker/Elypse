@@ -12,8 +12,6 @@
 #include <VariableType.h>
 using namespace Troll::GUI;
 
-extern MainFrame * g_mainFrame;
-
 #define COMPILE_ERROR( p_desc )	m_trollCompiler->_error();															\
 								g_mainFrame->LogOutMessage( "Compiler Error : ["									\
 										+ String(m_trollCompiler->_getScriptFileName())								\

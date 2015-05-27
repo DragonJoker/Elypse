@@ -9,83 +9,121 @@ namespace General
 {
 	namespace Files
 	{
-		template <typename T>
+		template< typename CharType >
 		class ZipFileImpl
 		{
 		protected:
-			T m_name;
-			T m_fullname;
+			typedef std::basic_string< CharType > StringType;
+			StringType m_name;
+			StringType m_fullname;
+			ZipDirectoryBase< CharType > * m_directory;
 
-			ZipDirectoryBase <T> * m_directory;
-
-			unsigned int m_uncompressedSize;
-			unsigned int m_compressedSize;
+			uint64_t m_uncompressedSize;
+			uint64_t m_compressedSize;
 
 		public:
-			ZipFileImpl( const T & p_name, const T & p_fullname, ZipDirectoryBase <T> * p_directory )
-				:	m_name( p_name ),
-					m_fullname( p_fullname ),
-					m_directory( p_directory ),
-					m_uncompressedSize( 0 ),
-					m_compressedSize( 0 )
+			ZipFileImpl( const StringType & p_name, const StringType & p_fullname, ZipDirectoryBase< CharType > * p_directory )
+				:	m_name( p_name )
+				,	m_fullname( p_fullname )
+				,	m_directory( p_directory )
+				,	m_uncompressedSize( 0 )
+				,	m_compressedSize( 0 )
 			{}
-			void SetSize( unsigned int p_compSize, unsigned int p_uncompSize )
+			void SetSize( uint64_t p_compSize, uint64_t p_uncompSize )
 			{
 				m_uncompressedSize = p_uncompSize;
 				m_compressedSize = p_compSize;
 			}
 
 		public:
-			inline const T & GetName()const
+			inline const StringType & GetName()const
 			{
 				return m_name;
 			}
-			inline const T & GetFullName()const
+			inline const StringType & GetFullName()const
 			{
 				return m_fullname;
 			}
-			inline unsigned int GetCompressedSize()const
+			inline uint64_t GetCompressedSize()const
 			{
 				return m_compressedSize;
 			}
-			inline unsigned int GetUncompressedSize()const
+			inline uint64_t GetUncompressedSize()const
 			{
 				return m_uncompressedSize;
 			}
 		};
 
-		template <typename T>
+
+		template< typename CharType >
 		class d_dll ZipFileBase
+			: public ZipFileImpl< CharType >
 		{
-		};
+		protected:
+			typedef ZipFileImpl< CharType >::StringType StringType;
+			uint64_t m_index;
 
-		template <>
-		class d_dll ZipFileBase <std::string> : public ZipFileImpl <std::string>
-		{
 		public:
-			ZipFileBase( const std::string & p_name, const std::string & p_fullname, ZipDirectoryBase <std::string> * p_directory )
-				: ZipFileImpl <std::string> ( p_name, p_fullname, p_directory )
+			ZipFileBase( uint64_t p_index, const StringType & p_name, const StringType & p_fullname, ZipDirectoryBase< CharType > * p_directory )
+				:	ZipFileImpl< CharType > ( p_name, p_fullname, p_directory )
+				,	m_index( p_index )
 			{
 			}
 		public:
-			bool Extract( const std::string & p_newPath, ZipArchiveBase <std::string> * p_archive );
-		};
-
-#if GENLIB_WINDOWS
-
-		template <>
-		class d_dll ZipFileBase <std::wstring> : public ZipFileImpl <std::wstring>
-		{
-		public:
-			ZipFileBase( const std::wstring & p_name, const std::wstring & p_fullname, ZipDirectoryBase <std::wstring> * p_directory )
-				: ZipFileImpl <std::wstring> ( p_name, p_fullname, p_directory )
+			bool Extract( const StringType & p_newPath, ZipArchiveBase< CharType > * p_archive )
 			{
-			}
-		public:
-			bool Extract( const std::wstring & p_newPath, ZipArchiveBase <std::wstring> * p_archive );
-		};
+				static const unsigned int c_bufferSize = 2048;
+				//Search for the file at given index
+				struct zip_stat l_stat = { 0 };
+				zip * l_zip = p_archive->GetArchive();
+				zip_file * l_zipfile = zip_fopen_index( l_zip, this->m_index, ZIP_FL_UNCHANGED );
 
-#endif
+				if ( !l_zipfile )
+				{
+					int l_zep, l_sep;
+					zip_error_get( l_zip, &l_zep, &l_sep );
+					std::string l_error = Zip::GetErrorDesc( l_zep ) + " - " + Zip::GetErrorDesc( l_sep );
+					GENLIB_EXCEPTION( "Couldn't retrieve file from ZIP archive : " + l_error );
+				}
+
+				//Alloc memory for its uncompressed contents
+				std::vector< char > l_contents( c_bufferSize );
+				zip_uint64_t l_read = 0;
+				std::ofstream l_outFile;
+				l_outFile.open( ( p_newPath + this->m_fullname ).c_str(), std::ios::out | std::ios::binary );
+
+				if ( !l_outFile.is_open() )
+				{
+					GENLIB_EXCEPTION( "Couldn't open file on disk" );
+				}
+				else
+				{
+					while ( l_read < this->GetUncompressedSize() )
+					{
+						zip_uint64_t l_tmp = zip_fread( l_zipfile, l_contents.data(), std::min( zip_uint64_t( c_bufferSize ), this->GetUncompressedSize() ) );
+
+						if ( l_tmp >= 0 )
+						{
+							l_outFile.write( l_contents.data(), l_tmp );
+							l_read += l_tmp;
+						}
+						else
+						{
+							int l_zep, l_sep;
+							zip_error_get( l_zip, &l_zep, &l_sep );
+							std::string l_error = Zip::GetErrorDesc( l_zep ) + " - " + Zip::GetErrorDesc( l_sep );
+							zip_fclose( l_zipfile );
+							GENLIB_EXCEPTION( "Couldn't read ZIP archive file " + Utils::string_cast< char >( this->m_name ) + " : " + l_error );
+						}
+					}
+
+					l_outFile.close();
+				}
+
+				zip_fclose( l_zipfile );
+				return true;
+			}
+		};
 
 	}
 }

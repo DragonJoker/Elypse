@@ -39,8 +39,8 @@ namespace Troll
 #endif
 
 			Main::TrollInstance * m_emuse;
-			EMusePlugin_wxWidget * m_plugin;
-			TrollSceneFileParser * m_parser;
+			EMuse::TEWidget::EMusePlugin_wxWidget * m_plugin;
+			Troll::Scene::TrollSceneFileParser * m_parser;
 			NewOverlayFrame * m_newOverlayFrame;
 
 			Real m_width;

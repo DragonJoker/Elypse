@@ -1,4 +1,4 @@
-﻿//***********************************************************************************************************
+﻿
 #include "PrecompiledHeader.h"
 
 #include "Project/Project.h"
@@ -11,12 +11,10 @@
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
-extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 Project :: Project()
 	:	m_shadows( false ),
@@ -33,7 +31,7 @@ Project :: Project()
 	m_bgString = m_bgColour->GetAsString();
 }
 
-//***********************************************************************************************************
+
 
 Project :: Project( const wxString & p_projectName, const wxString & p_mainSceneName,
 					const wxString & p_path, BackgroundType p_backgroundType,
@@ -62,7 +60,7 @@ Project :: Project( const wxString & p_projectName, const wxString & p_mainScene
 	}
 }
 
-//***********************************************************************************************************
+
 
 Project :: ~Project()
 {
@@ -81,7 +79,7 @@ Project :: ~Project()
 	delete m_bgColour;
 }
 
-//***********************************************************************************************************
+
 
 void Project :: FlushObjects()
 {
@@ -93,7 +91,7 @@ void Project :: FlushObjects()
 	General::Utils::map::cycle( m_scenes, & TrollScene::FlushObjects );
 }
 
-//***********************************************************************************************************
+
 
 TrollScene * Project :: GetScene( const wxString & p_sceneName )
 {
@@ -115,7 +113,7 @@ TrollScene * Project :: GetScene( const wxString & p_sceneName )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollScene * Project :: GetScene( const wxTreeItemId & p_item )
 {
@@ -143,7 +141,7 @@ TrollScene * Project :: GetScene( const wxTreeItemId & p_item )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 void Project :: RemoveScene( const wxString & p_sceneName )
 {
@@ -167,7 +165,7 @@ void Project :: RemoveScene( const wxString & p_sceneName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void Project :: RemoveScene( TrollScene * p_scene )
 {
@@ -191,7 +189,7 @@ void Project :: RemoveScene( TrollScene * p_scene )
 	}
 }
 
-//***********************************************************************************************************
+
 
 TrollScene * Project :: CreateScene( wxString const & p_strName )
 {
@@ -223,7 +221,7 @@ void Project :: AddScene( TrollScene * p_scene )
 	m_scenes.insert( SceneMap::value_type( p_scene->GetName(), p_scene ) );
 }
 
-//***********************************************************************************************************
+
 
 void Project :: Save( wxTextOutputStream * p_stream )
 {
@@ -293,7 +291,7 @@ void Project :: Save( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n" ) );
 }
 
-//***********************************************************************************************************
+
 
 void Project :: Load( const wxString & p_path, FilesTree * p_tree )
 {
@@ -545,7 +543,7 @@ void Project :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream,
 	}
 }
 
-//***********************************************************************************************************
+
 
 void Project :: Write()
 {
@@ -562,7 +560,7 @@ void Project :: Write()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void Project :: SetBackgroundImage( const wxString & p_imgPath )
 {
@@ -571,7 +569,7 @@ void Project :: SetBackgroundImage( const wxString & p_imgPath )
 	m_modified = true;
 }
 
-//***********************************************************************************************************
+
 
 void Project :: SetBackgroundColour( const wxString & p_colour )
 {
@@ -580,7 +578,7 @@ void Project :: SetBackgroundColour( const wxString & p_colour )
 	m_modified = true;
 }
 
-//***********************************************************************************************************
+
 
 bool Project :: FindFileInScenes( const wxString & p_fileName, TrollFile *& p_file, TrollScene *& p_scene )
 {
@@ -611,7 +609,7 @@ bool Project :: FindFileInScenes( const wxString & p_fileName, TrollFile *& p_fi
 	return p_file != NULL;
 }
 
-//***********************************************************************************************************
+
 
 void Project :: _fillSceneDependencies( TrollScene * p_scene )
 {
@@ -637,7 +635,7 @@ void Project :: _fillSceneDependencies( TrollScene * p_scene )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void Project :: _buildColour( const wxString & p_infos )
 {
@@ -653,4 +651,4 @@ void Project :: _buildColour( const wxString & p_infos )
 	m_bgColour->Set( l_cred, l_cgreen, l_cblue );
 }
 
-//***********************************************************************************************************
+

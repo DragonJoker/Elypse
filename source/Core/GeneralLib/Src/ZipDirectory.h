@@ -11,32 +11,33 @@ namespace General
 {
 	namespace Files
 	{
-		template <typename T>
+		template< typename CharType >
 		class ZipDirectoryBase
 		{
 		private:
-			typedef std::map	<T, ZipDirectoryBase <T> *>	ZipDirectoryMapType;
-			typedef std::map	<T, ZipFileBase <T> *>	ZipFileMapType;
+			typedef std::basic_string< CharType > StringType;
+			typedef std::map< StringType, ZipDirectoryBase< CharType > * > ZipDirectoryMapType;
+			typedef std::map< StringType, ZipFileBase< CharType > * > ZipFileMapType;
 
 		private:
-			T m_name;
-			T m_fullpath;
+			StringType m_name;
+			StringType m_fullpath;
 			ZipDirectoryMapType m_subDirectories;
 			ZipFileMapType m_files;
-			ZipDirectoryBase <T> * m_parent;
-			unsigned int m_uncompressedSize;
-			unsigned int m_compressedSize;
+			ZipDirectoryBase< CharType > * m_parent;
+			uint64_t m_uncompressedSize;
+			uint64_t m_compressedSize;
 
 		public:
-			ZipDirectoryBase( const T & p_name, ZipDirectoryBase <T> * p_parent )
-				:	m_name( p_name ),
-					m_parent( p_parent ),
-					m_uncompressedSize( 0 ),
-					m_compressedSize( 0 )
+			ZipDirectoryBase( const StringType & p_name, ZipDirectoryBase< CharType > * p_parent )
+				:	m_name( p_name )
+				,	m_parent( p_parent )
+				,	m_uncompressedSize( 0 )
+				,	m_compressedSize( 0 )
 			{
 				if ( m_parent )
 				{
-					m_fullpath = m_parent->GetPath() + m_name + General::Utils::ConvertTo <T> ::From( "/" );
+					m_fullpath = m_parent->GetPath() + m_name + CharType( '/' );
 				}
 			}
 
@@ -47,32 +48,24 @@ namespace General
 			}
 
 		public:
-			bool Extract( const T & p_newPath, ZipArchiveBase <T> * p_archive )
+			bool Extract( const StringType & p_newPath, ZipArchiveBase< CharType > * p_archive )
 			{
-				if ( ! DirectoryExists( p_newPath + m_fullpath ) )
+				if ( !DirectoryExists( p_newPath + m_fullpath ) )
 				{
 					DirectoryCreate( p_newPath + m_fullpath );
 				}
 
+				for ( auto & l_dir : m_subDirectories )
 				{
-					typename ZipDirectoryMapType::iterator i = m_subDirectories.begin();
-					const typename ZipDirectoryMapType::iterator & iend = m_subDirectories.end();
-
-					for ( ; i != iend ; ++ i )
+					if ( !l_dir.second->Extract( p_newPath, p_archive ) )
 					{
-						if ( ! i->second->Extract( p_newPath, p_archive ) )
-						{
-							return false;
-						}
+						return false;
 					}
 				}
 
-				typename ZipFileMapType::iterator i = m_files.begin();
-				const typename ZipFileMapType::iterator & iend = m_files.end();
-
-				for ( ; i != iend ; ++ i )
+				for ( auto & l_file : m_files )
 				{
-					if ( ! i->second->Extract( p_newPath, p_archive ) )
+					if ( !l_file.second->Extract( p_newPath, p_archive ) )
 					{
 						return false;
 					}
@@ -81,53 +74,50 @@ namespace General
 				return true;
 			}
 
-			ZipFileBase <T> * AddFile( const T & p_filename, const T & p_fullpath )
+			ZipFileBase< CharType > * AddFile( uint64_t p_index, const StringType & p_filename, const StringType & p_fullpath )
 			{
-				const typename ZipFileMapType::iterator & ifind = m_files.find( p_filename );
+				auto const & ifind = m_files.find( p_filename );
 
 				if ( ifind != m_files.end() )
 				{
 					return ifind->second;
 				}
 
-				ZipFileBase <T> * l_file = new ZipFileBase <T> ( p_filename, p_fullpath, this );
-				m_files.insert( typename ZipFileMapType::value_type( p_filename, l_file ) );
+				ZipFileBase< CharType > * l_file = new ZipFileBase< CharType > ( p_index, p_filename, p_fullpath, this );
+				m_files.insert( std::make_pair( p_filename, l_file ) );
 				return l_file;
 			}
 
-			ZipDirectoryBase <T> * AddDirectory( const T & p_name )
+			ZipDirectoryBase< CharType > * AddDirectory( const StringType & p_name )
 			{
-				const typename ZipDirectoryMapType::iterator & ifind = m_subDirectories.find( p_name );
+				auto const & ifind = m_subDirectories.find( p_name );
 
 				if ( ifind != m_subDirectories.end() )
 				{
 					return ifind->second;
 				}
 
-				ZipDirectoryBase <T> * l_directory = new ZipDirectoryBase <T> ( p_name, this );
-				m_subDirectories.insert( typename ZipDirectoryMapType::value_type( p_name, l_directory ) );
+				ZipDirectoryBase< CharType > * l_directory = new ZipDirectoryBase< CharType > ( p_name, this );
+				m_subDirectories.insert( std::make_pair( p_name, l_directory ) );
 				return l_directory;
 			}
 
-			ZipFileArray RecurseFindFile( const T & p_name, const T & p_currentDir = T() )
+			ZipFileArray RecurseFindFile( const StringType & p_name, const StringType & p_currentDir = StringType() )
 			{
-				T l_currentDir = p_currentDir + "/" + m_name;
+				StringType l_currentDir = p_currentDir + CharType( '/' ) + m_name;
 				ZipFileArray l_array;
+
+				for ( auto & l_dir : m_subDirectories )
 				{
-					typename ZipDirectoryMapType::iterator i = m_subDirectories.begin();
-					const typename ZipDirectoryMapType::iterator & iend = m_subDirectories.end();
+					const ZipFileArray & l_tempArray = l_dir->RecurseFindFile( p_name, l_currentDir );
 
-					for ( ; i != iend ; ++ i )
+					if ( !l_tempArray.empty() )
 					{
-						const ZipFileArray & l_tempArray = i->second->RecurseFindFile( p_name, l_currentDir );
-
-						if ( ! l_tempArray.empty() )
-						{
-							l_array.insert( l_array.end(), l_tempArray.begin(), l_tempArray.end() );
-						}
+						l_array.insert( l_array.end(), l_tempArray.begin(), l_tempArray.end() );
 					}
 				}
-				const typename ZipFileMapType :: iterator & ifind = m_files.find( p_name );
+
+				auto const & ifind = m_files.find( p_name );
 
 				if ( ifind != m_files.end() )
 				{
@@ -141,41 +131,35 @@ namespace General
 			{
 				m_uncompressedSize = 0;
 				m_compressedSize = 0;
-				{
-					typename ZipDirectoryMapType::iterator i = m_subDirectories.begin();
-					const typename ZipDirectoryMapType::iterator & iend = m_subDirectories.end();
 
-					for ( ; i != iend ; ++ i )
-					{
-						i->second->CheckDirectorySize();
-						m_uncompressedSize += i->second->GetUncompressedSize();
-						m_compressedSize += i->second->GetCompressedSize();
-					}
+				for ( auto & l_dir : m_subDirectories )
+				{
+					l_dir.second->CheckDirectorySize();
+					m_uncompressedSize += l_dir.second->GetUncompressedSize();
+					m_compressedSize += l_dir.second->GetCompressedSize();
 				}
-				typename ZipFileMapType::iterator i = m_files.begin();
-				const typename ZipFileMapType::iterator & iend = m_files.end();
 
-				for ( ; i != iend ; ++ i )
+				for ( auto & l_file : m_files )
 				{
-					m_uncompressedSize += i->second->GetUncompressedSize();
-					m_compressedSize += i->second->GetCompressedSize();
+					m_uncompressedSize += l_file.second->GetUncompressedSize();
+					m_compressedSize += l_file.second->GetCompressedSize();
 				}
 			}
 
 		public:
-			inline const T & GetName()const
+			inline const StringType & GetName()const
 			{
 				return m_name;
 			}
-			inline unsigned int GetCompressedSize()const
+			inline uint64_t GetCompressedSize()const
 			{
 				return m_compressedSize;
 			}
-			inline unsigned int GetUncompressedSize()const
+			inline uint64_t GetUncompressedSize()const
 			{
 				return m_uncompressedSize;
 			}
-			inline const T & GetPath()const
+			inline const StringType & GetPath()const
 			{
 				return m_fullpath;
 			}

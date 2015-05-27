@@ -1,4 +1,3 @@
-//********************************************************************************************************************
 #include "PrecompiledHeader.h"
 
 #include "Main/TrollInstance.h"
@@ -7,26 +6,12 @@
 #include "Project/Scene.h"
 #include "Project/3D/SceneNode.h"
 #include "GUI/MainFrame.h"
-/*
-#include <Main/EMuseController.h>
-#include <Main/EMusePlugin.h>
-#include <Main/Context.h>
-#include <Download/MuseDownloader.h>
-#include <Download/DownloadManager.h>
-#include <EMuseLogs.h>
 
-#include <OgreLog.h>
-#include <OgreStringConverter.h>
-
-#include <General/Utils.h>
-*/
-//********************************************************************************************************************
 using namespace Troll::Main;
 using namespace Troll::GUI;
 using namespace Troll::Objects3D;
-//********************************************************************************************************************
-extern MainFrame * g_mainFrame;
-//********************************************************************************************************************
+
+
 
 TrollInstance :: TrollInstance( const String & p_installPath , EMusePlugin * p_plugin )
 	:	EMuseInstance( p_installPath, p_plugin ),
@@ -36,13 +21,13 @@ TrollInstance :: TrollInstance( const String & p_installPath , EMusePlugin * p_p
 	m_name.clear();
 }
 
-//********************************************************************************************************************
+
 
 TrollInstance :: ~TrollInstance()
 {
 }
 
-//********************************************************************************************************************
+
 
 void TrollInstance :: CreateScene()
 {
@@ -93,4 +78,4 @@ void TrollInstance :: CreateScene()
 	EMUSE_MESSAGE_DEBUG( "TrollInstance :: CreateScene : the end" );
 }
 
-//********************************************************************************************************************
+

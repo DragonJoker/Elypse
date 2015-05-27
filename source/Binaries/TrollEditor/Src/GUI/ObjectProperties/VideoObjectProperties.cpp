@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/VideoObjectProperties.h"
 
@@ -6,21 +6,21 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Media;
-//***********************************************************************************************************
+
 enum VideoObjectPropsIDs
 {
 	videoAttenuation,
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( VideoObjectProperties, wxPanel )
 	EVT_TEXT_ENTER(	videoAttenuation,		VideoObjectProperties::_onEditAttenuation )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 VideoObjectProperties :: VideoObjectProperties( TrollVideoObject * p_videoObject, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
@@ -31,13 +31,13 @@ VideoObjectProperties :: VideoObjectProperties( TrollVideoObject * p_videoObject
 	m_attenuation = BuildTextCtrl( this, l_position, videoAttenuation, wxT( "Attenuation" ), m_videoObject->GetAttenuation() );
 }
 
-//***********************************************************************************************************
+
 
 VideoObjectProperties :: ~VideoObjectProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void VideoObjectProperties :: UpdateProperties()
 {
@@ -45,7 +45,7 @@ void VideoObjectProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void VideoObjectProperties :: _onEditAttenuation( wxCommandEvent & p_event )
 {
@@ -68,4 +68,4 @@ void VideoObjectProperties :: _onEditAttenuation( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

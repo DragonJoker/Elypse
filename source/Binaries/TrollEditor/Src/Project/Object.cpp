@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Object.h"
@@ -6,12 +6,12 @@
 /*
 #include <wx/log.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TrollObject :: TrollObject( const wxString & p_name, const wxString & p_fileName, ObjectType p_type )
 	:	TEDisplayable(),
@@ -23,4 +23,4 @@ TrollObject :: TrollObject( const wxString & p_name, const wxString & p_fileName
 {
 }
 
-//***********************************************************************************************************
+

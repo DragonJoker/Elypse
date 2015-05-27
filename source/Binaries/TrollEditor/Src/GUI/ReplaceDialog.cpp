@@ -1,11 +1,11 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ReplaceDialog.h"
 
 #include "GUI/TextPanel.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum ReplaceDialogIDs
 {
 	rdTextToReplace,
@@ -14,13 +14,13 @@ enum ReplaceDialogIDs
 	rdReplace,
 	rdReplaceAll
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( ReplaceDialog, wxFrame )
 	EVT_BUTTON( rdFind,			ReplaceDialog::_onFind )
 	EVT_BUTTON( rdReplace,		ReplaceDialog::_onReplace )
 	EVT_BUTTON( rdReplaceAll,	ReplaceDialog::_onReplaceAll )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 ReplaceDialog :: ReplaceDialog( wxWindow * p_parent, TextPanel * p_textPanel )
 	:	wxFrame( p_parent, wxID_ANY, wxT( "Remplacer..." ), wxPoint( 100, 100 ), wxSize( 200, 160 ),
@@ -40,7 +40,7 @@ ReplaceDialog :: ReplaceDialog( wxWindow * p_parent, TextPanel * p_textPanel )
 	m_replaceAll = new wxButton( l_panel, rdReplaceAll, wxT( "Remplacer Tous" ), l_position += wxPoint( 0, 25 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
 }
 
-//***********************************************************************************************************
+
 
 void ReplaceDialog :: _onFind( wxCommandEvent & p_event )
 {
@@ -63,7 +63,7 @@ void ReplaceDialog :: _onFind( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ReplaceDialog :: _onReplace( wxCommandEvent & p_event )
 {
@@ -85,7 +85,7 @@ void ReplaceDialog :: _onReplace( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ReplaceDialog :: _onReplaceAll( wxCommandEvent & p_event )
 {
@@ -109,4 +109,4 @@ void ReplaceDialog :: _onReplaceAll( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

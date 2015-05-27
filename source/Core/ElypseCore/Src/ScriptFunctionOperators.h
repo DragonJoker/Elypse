@@ -14,59 +14,52 @@ namespace EMuse
 		template<typename T, typename U>
 		void d_fast_call Ope_SubEqual( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( T ) a -= b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) -= *std::get< 1 >( ret ) );
 		}
 
 		template<typename T, typename U>
 		void d_fast_call Ope_MulEqual( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( T ) a *= b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) *= *std::get< 1 >( ret ) );
 		}
 
 		template<typename T, typename U>
 		void d_fast_call Ope_AddEqual( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( T ) a += b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) += *std::get< 1 >( ret ) );
 		}
 
 		template<typename T, typename U>
 		void d_fast_call Ope_DivEqual( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( T ) a /= b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) /= *std::get< 1 >( ret ) );
 		}
-
-		template<typename R, typename T, typename U>
-		void d_fast_call Ope_Add( ScriptNode * caller )
-		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( R ) a + b;
-		}
-
 
 		template<typename T>
 		void d_fast_call Ope_Set( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
+			GetAndExecParams< T, T >( caller ); // Necessary call, to evaluate caller->m_childs[0] and caller->m_childs[1]
 			caller->m_childs[0]->CopyValue_Deep( caller->m_childs[1] );
 			caller->CopyValue_Ref( caller->m_childs[0]->m_value );
-			//RETURN_AS( T) a;
 		}
 
 		template<typename T>
 		void d_fast_call Ope_Assign( ScriptNode * caller )
 		{
-			_times( 2 )
+			if ( caller->m_childs[0]->HasFunction() )
 			{
-				if ( caller->m_childs[i]->HasFunction() )
-				{
-					caller->m_childs[i]->Execute();
-				}
+				caller->m_childs[0]->Execute();
 			}
-//		GET_AND_EXEC_TWO_PARAM( T, a, T, b);
+
+			if ( caller->m_childs[1]->HasFunction() )
+			{
+				caller->m_childs[1]->Execute();
+			}
+
 			caller->m_childs[0]->CopyValue_Ref( caller->m_childs[1]->m_value );
 			caller->CopyValue_Ref( caller->m_childs[0]->m_value );
 		}
@@ -75,82 +68,89 @@ namespace EMuse
 		template<typename T>
 		void d_fast_call Ope_SetNull( ScriptNode * caller )
 		{
-			GET_AND_EXEC_PARAM( T, a, 0 );
-			RETURN_AS( T ) a = NULL;
+			std::tuple< T * > ret = GetAndExecParams< T >( caller );
+			ReturnAs< T >( caller, T( NULL ) );
 		}
 
 		template<typename T>
 		void d_fast_call Ope_Compare( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
-			RETURN_AS( bool ) a == b;
+			std::tuple< T *, T * > ret = GetAndExecParams< T, T >( caller );
+			ReturnAs< bool >( caller, *std::get< 0 >( ret ) == *std::get< 1 >( ret ) );
 		}
 
 		template<typename T>
 		void d_fast_call Ope_CompareNull( ScriptNode * caller )
 		{
-			GET_AND_EXEC_PARAM( T, a, 0 );
-			RETURN_AS( bool ) a == NULL;
+			std::tuple< T * > ret = GetAndExecParams< T >( caller );
+			ReturnAs< bool >( caller, *std::get< 0 >( ret ) == T( NULL ) );
 		}
 
 		template<typename T>
 		void d_fast_call Ope_IsDiff( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
-			RETURN_AS( bool ) a != b;
+			std::tuple< T *, T * > ret = GetAndExecParams< T, T >( caller );
+			ReturnAs< bool >( caller, *std::get< 0 >( ret ) != *std::get< 1 >( ret ) );
 		}
 		template<typename T>
 		void d_fast_call Ope_IsDiffNull( ScriptNode * caller )
 		{
-			GET_AND_EXEC_PARAM( T, a, 0 );
-			RETURN_AS( bool ) a != NULL;
+			std::tuple< T * > ret = GetAndExecParams< T >( caller );
+			ReturnAs< bool >( caller, *std::get< 0 >( ret ) != T( NULL ) );
+		}
+
+		template<typename R, typename T, typename U>
+		void d_fast_call Ope_Add( ScriptNode * caller )
+		{
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< R >( caller, *std::get< 0 >( ret ) + *std::get< 1 >( ret ) );
 		}
 
 		template<typename T>
 		void d_fast_call Ope_Add( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
-			RETURN_AS( T ) a + b;
+			std::tuple< T *, T * > ret = GetAndExecParams< T, T >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) + *std::get< 1 >( ret ) );
 		}
-
 
 		template<typename R, typename T, typename U>
 		void d_fast_call Ope_Mul( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( R ) a * b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< R >( caller, *std::get< 0 >( ret ) ** std::get< 1 >( ret ) );
 		}
+
 		template<typename T>
 		void d_fast_call Ope_Mul( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
-			RETURN_AS( T ) a * b;
+			std::tuple< T *, T * > ret = GetAndExecParams< T, T >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) ** std::get< 1 >( ret ) );
 		}
 
 		template<typename R, typename T, typename U>
 		void d_fast_call Ope_Div( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( R ) a / b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< R >( caller, *std::get< 0 >( ret ) / *std::get< 1 >( ret ) );
 		}
 		template<typename T>
 		void d_fast_call Ope_Div( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
-			RETURN_AS( T ) a / b;
+			std::tuple< T *, T * > ret = GetAndExecParams< T, T >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) / *std::get< 1 >( ret ) );
 		}
 
 		template<typename R, typename T, typename U>
 		void d_fast_call Ope_Sub( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, U, b );
-			RETURN_AS( R ) a - b;
+			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
+			ReturnAs< R >( caller, *std::get< 0 >( ret ) - *std::get< 1 >( ret ) );
 		}
 		template<typename T>
 		void d_fast_call Ope_Sub( ScriptNode * caller )
 		{
-			GET_AND_EXEC_TWO_PARAM( T, a, T, b );
-			RETURN_AS( T ) a - b;
+			std::tuple< T *, T * > ret = GetAndExecParams< T, T >( caller );
+			ReturnAs< T >( caller, *std::get< 0 >( ret ) - *std::get< 1 >( ret ) );
 		}
 
 	}

@@ -1,4 +1,4 @@
-//*****************************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/ObjectsTree.h"
@@ -34,21 +34,21 @@
 #include <General/STLMacros.h>
 #include <wx/dnd.h>
 */
-//*****************************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
 using namespace Troll::Objects3D;
 using namespace Troll::Objects2D;
 using namespace Troll::Media;
-//*****************************************************************************************************************
+
 BEGIN_EVENT_TABLE( ObjectsTree, wxTreeCtrl )
 	EVT_TREE_SEL_CHANGED(	TreeObjects_Ctrl,	ObjectsTree::_onObjectLClic )
 	EVT_TREE_ITEM_MENU(	TreeObjects_Ctrl,	ObjectsTree::_onObjectRClic )
 END_EVENT_TABLE()
-//*****************************************************************************************************************
+
 extern MainFrame	* g_mainFrame;
-//*****************************************************************************************************************
+
 
 ObjectsTree :: ObjectsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
 	:	wxTreeCtrl( parent, TreeObjects_Ctrl, pos, size, style )
@@ -56,14 +56,14 @@ ObjectsTree :: ObjectsTree( wxWindow * parent, const wxPoint & pos, const wxSize
 	CreateImageList();
 }
 
-//*****************************************************************************************************************
+
 
 ObjectsTree :: ~ObjectsTree()
 {
 	Cleanup();
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: Cleanup()
 {
@@ -71,7 +71,7 @@ void ObjectsTree :: Cleanup()
 	General::Utils::map::deleteAll( m_sceneNodes );
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: CreateImageList( int p_size )
 {
@@ -117,7 +117,7 @@ void ObjectsTree :: CreateImageList( int p_size )
 	AssignImageList( l_images );
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: _logEvent( const wxChar * name, const wxTreeEvent & p_event )
 {
@@ -136,7 +136,7 @@ void ObjectsTree :: _logEvent( const wxChar * name, const wxTreeEvent & p_event 
 	g_mainFrame->LogDebugMessage( wxString( name ) + wxT( "(" ) + wxString( text.c_str() ) + wxT( ")" ) );
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: ShowContextMenuObject( const wxPoint & pos, wxTreeItemId p_item )
 {
@@ -150,7 +150,7 @@ void ObjectsTree :: ShowContextMenuObject( const wxPoint & pos, wxTreeItemId p_i
 	PopupMenu( & menu, pos.x, pos.y );
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: InitObjectList()
 {
@@ -241,7 +241,7 @@ void ObjectsTree :: InitObjectList()
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_parentName )
 {
@@ -308,7 +308,7 @@ void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_pa
 	}
 }
 
-//*****************************************************************************************************************
+
 
 TrollOverlay * ObjectsTree :: AddOverlay( TrollOverlay * p_overlay, const wxString & p_parentName )
 {
@@ -367,7 +367,7 @@ TrollOverlay * ObjectsTree :: AddOverlay( TrollOverlay * p_overlay, const wxStri
 	return NULL;
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: AddSceneObject( TrollObject * p_object )
 {
@@ -393,7 +393,7 @@ void ObjectsTree :: AddSceneObject( TrollObject * p_object )
 	Update();
 }
 
-//*****************************************************************************************************************
+
 
 wxTreeItemId ObjectsTree :: GetFolderId( const wxString & p_name )
 {
@@ -405,7 +405,7 @@ wxTreeItemId ObjectsTree :: GetFolderId( const wxString & p_name )
 	return 0;
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 {
@@ -529,7 +529,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: _onObjectRClic( wxTreeEvent & p_event )
 {
@@ -543,7 +543,7 @@ void ObjectsTree :: _onObjectRClic( wxTreeEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: _add3DObject( Troll3DObject * p_object )
 {
@@ -591,7 +591,7 @@ void ObjectsTree :: _add3DObject( Troll3DObject * p_object )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: _addTemporalObject( TemporalObject * p_object )
 {
@@ -657,7 +657,7 @@ void ObjectsTree :: _addTemporalObject( TemporalObject * p_object )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ObjectsTree :: _addMediaObject( MediaObject * p_object )
 {
@@ -785,5 +785,3 @@ void ObjectsTree :: _addMediaObject( MediaObject * p_object )
 		}
 	}
 }
-
-//*****************************************************************************************************************

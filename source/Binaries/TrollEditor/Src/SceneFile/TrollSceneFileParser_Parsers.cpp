@@ -43,11 +43,6 @@ using namespace Troll::Objects3D;
 using namespace Troll::Temporal;
 using namespace Troll::Media;
 
-extern MainFrame * g_mainFrame;
-extern TrollSceneFileParser * g_fileParser;
-extern wxString g_fileName;
-
-extern bool g_addingSection;
 wxFile * g_unusedLines = NULL;
 
 TrollObject * g_currentObject = NULL;

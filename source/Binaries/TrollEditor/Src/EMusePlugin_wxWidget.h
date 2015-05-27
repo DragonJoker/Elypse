@@ -72,6 +72,4 @@ namespace EMuse
 	}
 }
 
-using namespace EMuse::TEWidget;
-
 #endif

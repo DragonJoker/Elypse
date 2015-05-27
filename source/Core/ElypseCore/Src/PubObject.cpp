@@ -37,18 +37,18 @@ PubObject :: ~PubObject()
 
 void PubObject :: SetLinkUrl( const String & p_url )
 {
-	m_linkURL = string::replace( p_url, " ", m_timestamp );
+	m_linkURL = string::replace( p_url, " ", m_timestamp.c_str() );
 }
 
 void PubObject :: SetUrl( const String & p_url )
 {
-	m_imageURL = string::replace( p_url, " ", m_timestamp );
+	m_imageURL = string::replace( p_url, " ", m_timestamp.c_str() );
 	_retrieveUrl();
 }
 
 void PubObject :: SetImageUrl( const String & p_url )
 {
-	m_imageURL = string::replace( p_url, " ", m_timestamp );
+	m_imageURL = string::replace( p_url, " ", m_timestamp.c_str() );
 }
 
 void PubObject :: RemoveInstance( PubInstance * p_instance )

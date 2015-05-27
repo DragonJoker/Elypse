@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Media/SoundObject.h"
@@ -9,10 +9,10 @@
 #include <SoundInstance.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Media;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollSoundObject :: TrollSoundObject( const wxString & p_name, const wxString & p_fileName )
 	:	MediaObject( p_name, p_fileName, ttSoundObject ),
@@ -20,13 +20,13 @@ TrollSoundObject :: TrollSoundObject( const wxString & p_name, const wxString & 
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollSoundObject :: ~TrollSoundObject()
 {
 }
 
-//***********************************************************************************************************
+
 
 int TrollSoundObject :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -43,14 +43,14 @@ int TrollSoundObject :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: SetMuseInstance( EMuse::Media::SoundInstance * p_instance )
 {
 	m_museInstance = p_instance;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: SetAttenuation( float p_att )
 {
@@ -58,7 +58,7 @@ void TrollSoundObject :: SetAttenuation( float p_att )
 	m_museInstance->SetVolumePercent( p_att );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: SetLooped( bool p_looped )
 {
@@ -66,7 +66,7 @@ void TrollSoundObject :: SetLooped( bool p_looped )
 	m_museInstance->SetLooped( p_looped );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: SetTimer( float p_time )
 {
@@ -74,7 +74,7 @@ void TrollSoundObject :: SetTimer( float p_time )
 	m_museInstance->SetTimerTime( p_time );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: SetFadeIn( float p_time )
 {
@@ -82,7 +82,7 @@ void TrollSoundObject :: SetFadeIn( float p_time )
 	m_museInstance->SetFadeIn( p_time );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: SetFadeOut( float p_time )
 {
@@ -90,7 +90,7 @@ void TrollSoundObject :: SetFadeOut( float p_time )
 	m_museInstance->SetFadeOut( p_time );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSoundObject :: Write( wxTextOutputStream * p_stream )
 {
@@ -129,4 +129,4 @@ void TrollSoundObject :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\t}\n" ) );
 }
 
-//***********************************************************************************************************
+

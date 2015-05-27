@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/LinePanel.h"
@@ -8,17 +8,17 @@
 /*
 #include <Main/Context.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum LinePanelIDs
 {
 	addPonctualEvent,
 	addContinuousEvent
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( LinePanel, wxPanel )
 	EVT_LEFT_UP(	LinePanel::_onLeftMouseUp )
 	EVT_RIGHT_UP(	LinePanel::_onRightMouseUp )
@@ -27,9 +27,9 @@ BEGIN_EVENT_TABLE( LinePanel, wxPanel )
 	EVT_MENU( addPonctualEvent,		LinePanel::_onAddPonctualEvent )
 	EVT_MENU( addContinuousEvent,	LinePanel::_onAddContinuousEvent )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 LinePanel :: LinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 						const wxSize & p_size )
@@ -40,21 +40,21 @@ LinePanel :: LinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_
 	SetBackgroundColour( wxColour( 0, 255, 255 ) );
 }
 
-//***********************************************************************************************************
+
 
 LinePanel :: ~LinePanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 void LinePanel :: Replace()
 {
-	SetSize( m_sequence->GetTotalLength() * 100, 20 );
+	SetSize( int( m_sequence->GetTotalLength() * 100 ), 20 );
 	g_mainFrame->m_timelineEditor->UpdateSequence( m_sequence );
 }
 
-//***********************************************************************************************************
+
 
 void LinePanel :: SetSequence( TrollSequence * p_sequence )
 {
@@ -62,7 +62,7 @@ void LinePanel :: SetSequence( TrollSequence * p_sequence )
 	p_sequence->SetPanel( this );
 }
 
-//*****************************************************************************************************************
+
 
 void LinePanel :: _showContextMenu( const wxPoint & p_pos )
 {
@@ -84,35 +84,35 @@ void LinePanel :: _showContextMenu( const wxPoint & p_pos )
 	PopupMenu( & l_menu, p_pos.x, p_pos.y );
 }
 
-//*****************************************************************************************************************
+
 
 void LinePanel :: _onAddPonctualEvent( wxCommandEvent & p_event )
 {
-	g_mainFrame->AddPonctualEvent( m_sequence, m_currentLeft / 100.0 );
+	g_mainFrame->AddPonctualEvent( m_sequence, m_currentLeft / 100.0f );
 }
 
-//*****************************************************************************************************************
+
 
 void LinePanel :: _onAddContinuousEvent( wxCommandEvent & p_event )
 {
-	g_mainFrame->AddContinuousEvent( m_sequence, m_currentLeft / 100.0 );
+	g_mainFrame->AddContinuousEvent( m_sequence, m_currentLeft / 100.0f );
 }
 
-//***********************************************************************************************************
+
 
 void LinePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 {
 	g_mainFrame->ShowObjectInfos( m_sequence );
 }
 
-//***********************************************************************************************************
+
 
 void LinePanel :: _onRightMouseUp( wxMouseEvent & p_event )
 {
 	_showContextMenu( p_event.GetPosition() );
 }
 
-//***********************************************************************************************************
+
 
 void LinePanel :: _onMouseEnter( wxMouseEvent & p_event )
 {
@@ -126,7 +126,7 @@ void LinePanel :: _onMouseEnter( wxMouseEvent & p_event )
 	l_dc.DrawRectangle( 0, 0, GetClientSize().x, GetClientSize().y );
 }
 
-//***********************************************************************************************************
+
 
 void LinePanel :: _onMouseLeave( wxMouseEvent & p_event )
 {
@@ -140,4 +140,4 @@ void LinePanel :: _onMouseLeave( wxMouseEvent & p_event )
 	l_dc.DrawRectangle( 0, 0, GetClientSize().x, GetClientSize().y );
 }
 
-//***********************************************************************************************************
+

@@ -71,7 +71,6 @@
 #define d_coucou std::cout << "Coucou ~ " << __FILE__ << " :: " << __FUNCTION__ << " @ line " << __LINE__ << std::endl
 #define d_debug_catch( p_code) try { p_code; } catch (...) { std::cout << "Caught exception thrown from code : " << (#p_code) << ", file : " << __FILE__ << ", line " << __LINE__ << std::endl; }
 
-#define _times( X) for (unsigned int i = 0 ; i < X ; i ++)
 #define _forui( X, Y) for (unsigned int X = 0 ; X < Y ; X ++)
 
 #if GENLIB_WINDOWS

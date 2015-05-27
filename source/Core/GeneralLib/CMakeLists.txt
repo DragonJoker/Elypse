@@ -30,3 +30,13 @@ install(
 	FILES ${GeneralLibHeaders}
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/GeneralLib
 )
+
+install_dll( GeneralLib ${ZLIB_LIBRARY} Debug )
+install_dll( GeneralLib ${ZLIB_LIBRARY} Release )
+install_dll( GeneralLib ${LIBZIP_LIBRARY} Debug )
+install_dll( GeneralLib ${LIBZIP_LIBRARY} Release )
+
+copy_dll( GeneralLib ${ZLIB_LIBRARY} Debug )
+copy_dll( GeneralLib ${ZLIB_LIBRARY} Release )
+copy_dll( GeneralLib ${LIBZIP_LIBRARY} Debug )
+copy_dll( GeneralLib ${LIBZIP_LIBRARY} Release )

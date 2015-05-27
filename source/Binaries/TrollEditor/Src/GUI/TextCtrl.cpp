@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TextCtrl.h"
@@ -7,10 +7,10 @@
 #include "GUI/MainFrame.h"
 #include "Project/Scene.h"
 #include "Project/Project.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( TextCtrl, wxTextCtrl )
 	EVT_KEY_UP(	TextCtrl::_onKeyUp )
 	EVT_KEY_DOWN(	TextCtrl::_onKeyDown )
@@ -25,9 +25,9 @@ BEGIN_EVENT_TABLE( TextCtrl, wxTextCtrl )
 	EVT_SCROLLWIN_THUMBTRACK(	TextCtrl::_onScrollThumbTrack )
 	EVT_SCROLLWIN_THUMBRELEASE(	TextCtrl::_onScrollThumbRelease )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TextCtrl :: TextCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
 					  const wxPoint & pos, const wxSize & size, long style,
@@ -45,7 +45,7 @@ TextCtrl :: TextCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
 	m_panel = reinterpret_cast <TextPanel *>( GetParent()->GetParent() );
 }
 
-//***********************************************************************************************************
+
 
 TextCtrl :: ~TextCtrl()
 {
@@ -61,7 +61,7 @@ TextCtrl :: ~TextCtrl()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: AutoWord()
 {
@@ -113,7 +113,7 @@ void TextCtrl :: AutoWord()
 	*/
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onMouseWheel( wxMouseEvent & p_event )
 {
@@ -131,7 +131,7 @@ void TextCtrl :: _onMouseWheel( wxMouseEvent & p_event )
 	m_scrollByWheel = false;
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: SaveFile( const wxString & p_path, int p_fileType )
 {
@@ -142,7 +142,7 @@ void TextCtrl :: SaveFile( const wxString & p_path, int p_fileType )
 	wxTextCtrl::SaveFile( p_path, p_fileType );
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: GoToLine( int p_line )
 {
@@ -175,7 +175,7 @@ void TextCtrl :: GoToLine( int p_line )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: CompleteCode( int p_keyCode )
 {
@@ -284,7 +284,7 @@ void TextCtrl :: CompleteCode( int p_keyCode )
 	*/
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onKeyDown( wxKeyEvent & p_event )
 {
@@ -425,7 +425,7 @@ void TextCtrl :: _onKeyDown( wxKeyEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onKeyUp( wxKeyEvent & p_event )
 {
@@ -460,7 +460,7 @@ void TextCtrl :: _onKeyUp( wxKeyEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollToTop( wxScrollWinEvent & p_event )
 {
@@ -477,7 +477,7 @@ void TextCtrl :: _onScrollToTop( wxScrollWinEvent & p_event )
 	m_precPosition = 0;
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollToBottom( wxScrollWinEvent & p_event )
 {
@@ -494,7 +494,7 @@ void TextCtrl :: _onScrollToBottom( wxScrollWinEvent & p_event )
 	m_precPosition = GetScrollRange( wxVERTICAL );
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollLineUp( wxScrollWinEvent & p_event )
 {
@@ -510,7 +510,7 @@ void TextCtrl :: _onScrollLineUp( wxScrollWinEvent & p_event )
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollLineDown( wxScrollWinEvent & p_event )
 {
@@ -526,7 +526,7 @@ void TextCtrl :: _onScrollLineDown( wxScrollWinEvent & p_event )
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollPageUp( wxScrollWinEvent & p_event )
 {
@@ -542,7 +542,7 @@ void TextCtrl :: _onScrollPageUp( wxScrollWinEvent & p_event )
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollPageDown( wxScrollWinEvent & p_event )
 {
@@ -558,7 +558,7 @@ void TextCtrl :: _onScrollPageDown( wxScrollWinEvent & p_event )
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollThumbTrack( wxScrollWinEvent & p_event )
 {
@@ -590,7 +590,7 @@ void TextCtrl :: _onScrollThumbTrack( wxScrollWinEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TextCtrl :: _onScrollThumbRelease( wxScrollWinEvent & p_event )
 {
@@ -602,4 +602,4 @@ void TextCtrl :: _onScrollThumbRelease( wxScrollWinEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

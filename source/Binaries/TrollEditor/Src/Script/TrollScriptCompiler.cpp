@@ -15,8 +15,6 @@
 */
 using namespace Troll::GUI;
 
-extern MainFrame	* g_mainFrame;
-
 TrollScriptCompiler :: TrollScriptCompiler( const String & p_path, bool p_initTree )
 	:	m_textCtrl( NULL ),
 		m_currentCharIndex( 0 ),

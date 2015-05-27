@@ -25,9 +25,10 @@ namespace Troll
 				return m_fileName;
 			}
 		};
+
+		extern TrollSceneFileParser * g_fileParser;
+		extern wxString g_fileName;
 	}
 }
-
-using namespace Troll::Scene;
 
 #endif

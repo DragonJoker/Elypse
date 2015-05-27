@@ -3297,10 +3297,11 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Str_Split )
 	GET_AND_EXEC_THREE_PARAM( String, l_string, String, l_splitString, NodeValueBaseArray, p_arr );
 	General::Utils::vector::deleteAll( p_arr );
 	const StringVector & l_stringArray = StringUtil::split( l_string , l_splitString , 0 );
-	_times( l_stringArray.size() )
+
+	for ( auto & l_str : l_stringArray )
 	{
 		NodeValue<String> * l_string = new NodeValue<String>();
-		l_string->m_value = l_stringArray[i];
+		l_string->m_value = l_str;
 		p_arr.push_back( l_string );
 	}
 }

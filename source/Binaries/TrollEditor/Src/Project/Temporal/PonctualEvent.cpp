@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/PonctualEvent.h"
@@ -12,10 +12,10 @@
 #include <Main/Context.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollPonctualEvent :: TrollPonctualEvent( TrollSequence * p_sequence, BasePonctualEvent * p_event,
 		const wxString & p_targetTypeName, const wxString & p_targetName,
@@ -32,13 +32,13 @@ TrollPonctualEvent :: TrollPonctualEvent( TrollSequence * p_sequence, BasePonctu
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollPonctualEvent :: ~TrollPonctualEvent()
 {
 }
 
-//***********************************************************************************************************
+
 
 int TrollPonctualEvent :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -54,7 +54,7 @@ int TrollPonctualEvent :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollPonctualEvent :: SetFireTime( float p_time )
 {
@@ -63,7 +63,7 @@ void TrollPonctualEvent :: SetFireTime( float p_time )
 	m_sequence->ChangePonctualEventTime( this );
 }
 
-//***********************************************************************************************************
+
 
 void TrollPonctualEvent :: SetActionName( const wxString & p_name )
 {
@@ -74,7 +74,7 @@ void TrollPonctualEvent :: SetActionName( const wxString & p_name )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollPonctualEvent :: SetTarget( const wxString & p_type, const wxString & p_target )
 {
@@ -119,14 +119,14 @@ void TrollPonctualEvent :: SetTarget( const wxString & p_type, const wxString & 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollPonctualEvent :: SetActionArgs( const wxString & p_args )
 {
 	m_actionArguments = p_args;
 }
 
-//***********************************************************************************************************
+
 
 void TrollPonctualEvent :: Write( wxTextOutputStream * p_stream )
 {
@@ -136,4 +136,4 @@ void TrollPonctualEvent :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\tevent " ) + l_tmp + wxT( " " ) + m_name + ( m_actionArguments.empty() ? wxT( "" ) : wxT( " " ) + m_actionArguments ) + wxT( "\n" ) );
 }
 
-//***********************************************************************************************************
+

@@ -61,9 +61,9 @@ ScriptBlock :: ~ScriptBlock()
 
 void ScriptBlock :: Clear() d_no_throw
 {
-	_times( static_cast <unsigned int>( m_childs.size() ) )
+	for ( auto & l_child : m_childs )
 	{
-		m_compiler->_releaseBlock( m_childs[i] );
+		m_compiler->_releaseBlock( l_child );
 	}
 
 	m_childs.clear();
@@ -169,9 +169,9 @@ bool ScriptBlock :: _preCompiledCurrent( ScriptBlockArray & p_childs, ScriptNode
 	}
 	else
 	{
-		_times( p_childs.size() )
+		for ( auto & l_child : p_childs )
 		{
-			m_compiler->_releaseBlock( p_childs[i] );
+			m_compiler->_releaseBlock( l_child );
 		}
 	}
 
@@ -267,9 +267,10 @@ bool ScriptBlock :: _parseInitial()
 		m_compiledScript = m_compiler->CreateScriptNode();
 		m_compiledScript->SetType( VariableTypeManager::Get( EMVT_CODE ) );
 		m_compiledScript->SetFunction( Gen_MultiLineFunction );
-		_times( imax )
+
+		for ( auto & l_node : l_nodeArray )
 		{
-			m_compiledScript->AddChild( l_nodeArray[i] );
+			m_compiledScript->AddChild( l_node );
 		}
 	}
 	else

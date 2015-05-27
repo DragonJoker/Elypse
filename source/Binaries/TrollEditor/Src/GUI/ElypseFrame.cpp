@@ -19,11 +19,11 @@
 #include <GUI/EMOverlay.h>
 #include <GUI/EMOverlayGroup.h>
 */
-//*****************************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Main;
 using namespace Troll::GUI;
-//*****************************************************************************************************************
+
 BEGIN_EVENT_TABLE( ElypseFrame, wxFrame )
 	EVT_SET_FOCUS(	ElypseFrame::OnSetFocus )
 	EVT_KILL_FOCUS(	ElypseFrame::OnKillFocus )
@@ -48,7 +48,7 @@ BEGIN_EVENT_TABLE( ElypseFrame, wxFrame )
 	EVT_ENTER_WINDOW(	ElypseFrame::_onMouseEnter )
 	EVT_LEAVE_WINDOW(	ElypseFrame::_onMouseLeave )
 END_EVENT_TABLE()
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: OnSetFocus( wxFocusEvent & p_event )
 {
@@ -58,7 +58,7 @@ void ElypseFrame :: OnSetFocus( wxFocusEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: OnKillFocus( wxFocusEvent & p_event )
 {
@@ -68,7 +68,7 @@ void ElypseFrame :: OnKillFocus( wxFocusEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: OnShow( wxShowEvent & p_event )
 {
@@ -78,7 +78,7 @@ void ElypseFrame :: OnShow( wxShowEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: OnActivate( wxActivateEvent & p_event )
 {
@@ -88,7 +88,7 @@ void ElypseFrame :: OnActivate( wxActivateEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onIconise( wxIconizeEvent & p_event )
 {
@@ -98,7 +98,7 @@ void ElypseFrame :: _onIconise( wxIconizeEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseLeftDown( wxMouseEvent & p_event )
 {
@@ -108,7 +108,7 @@ void ElypseFrame :: _onMouseLeftDown( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseLeftUp( wxMouseEvent & p_event )
 {
@@ -118,7 +118,7 @@ void ElypseFrame :: _onMouseLeftUp( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseMiddleDown( wxMouseEvent & p_event )
 {
@@ -128,7 +128,7 @@ void ElypseFrame :: _onMouseMiddleDown( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseMiddleUp( wxMouseEvent & p_event )
 {
@@ -138,7 +138,7 @@ void ElypseFrame :: _onMouseMiddleUp( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseRightDown( wxMouseEvent & p_event )
 {
@@ -148,7 +148,7 @@ void ElypseFrame :: _onMouseRightDown( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseRightUp( wxMouseEvent & p_event )
 {
@@ -158,7 +158,7 @@ void ElypseFrame :: _onMouseRightUp( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseWheel( wxMouseEvent & p_event )
 {
@@ -168,7 +168,7 @@ void ElypseFrame :: _onMouseWheel( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseMove( wxMouseEvent & p_event )
 {
@@ -178,7 +178,7 @@ void ElypseFrame :: _onMouseMove( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseEnter( wxMouseEvent & p_event )
 {
@@ -188,7 +188,7 @@ void ElypseFrame :: _onMouseEnter( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onMouseLeave( wxMouseEvent & p_event )
 {
@@ -198,7 +198,7 @@ void ElypseFrame :: _onMouseLeave( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onKeyDown( wxKeyEvent & p_event )
 {
@@ -208,7 +208,7 @@ void ElypseFrame :: _onKeyDown( wxKeyEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onKeyUp( wxKeyEvent & p_event )
 {
@@ -218,7 +218,7 @@ void ElypseFrame :: _onKeyUp( wxKeyEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseFrame :: _onChar( wxKeyEvent & p_event )
 {
@@ -228,4 +228,4 @@ void ElypseFrame :: _onChar( wxKeyEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

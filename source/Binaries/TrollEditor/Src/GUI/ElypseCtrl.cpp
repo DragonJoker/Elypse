@@ -1,4 +1,3 @@
-//*****************************************************************************************************************
 #include "PrecompiledHeader.h"
 
 #include "GUI/ElypseCtrl.h"
@@ -35,16 +34,17 @@
 #		endif
 #	endif //__WXGTK__
 #endif //OGRE_PLATFORM_LINUX
-//*****************************************************************************************************************
+
 const long ID_RENDERTIMER = wxNewId();
-//*****************************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Main;
 using namespace Troll::GUI;
 using namespace Troll::Objects2D;
-//*****************************************************************************************************************
+using namespace EMuse::TEWidget;
+
 extern MainFrame * g_mainFrame;
-//*****************************************************************************************************************
+
 enum ElypseCtrlIDs
 {
 	tpIdDestroy,
@@ -53,7 +53,7 @@ enum ElypseCtrlIDs
 	tpIdNew,
 	tpIdDelete
 };
-//*****************************************************************************************************************
+
 BEGIN_EVENT_TABLE( ElypseCtrl, wxControl )
 	EVT_SET_FOCUS(	ElypseCtrl::OnSetFocus )
 	EVT_KILL_FOCUS(	ElypseCtrl::OnKillFocus )
@@ -89,7 +89,7 @@ BEGIN_EVENT_TABLE( ElypseCtrl, wxControl )
 	EVT_MENU(	tpIdNew,		ElypseCtrl::_onNew )
 	EVT_MENU(	tpIdDelete,		ElypseCtrl::_onDelete )
 END_EVENT_TABLE()
-//*****************************************************************************************************************
+
 
 String GetKeyFromReg( const char * p_registerName , const char * p_keyName )
 {
@@ -116,7 +116,7 @@ String GetKeyFromReg( const char * p_registerName , const char * p_keyName )
 	return l_returnValue;
 }
 
-//*****************************************************************************************************************
+
 
 ElypseCtrl :: ElypseCtrl(	wxWindow * p_parent, Troll::Project * p_project,
 							MainFrame * p_mainFrame, bool p_edit )
@@ -151,7 +151,7 @@ ElypseCtrl :: ElypseCtrl(	wxWindow * p_parent, Troll::Project * p_project,
 	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: ElypseCtrl - End" ) );
 }
 
-//*****************************************************************************************************************
+
 
 ElypseCtrl :: ~ElypseCtrl()
 {
@@ -165,7 +165,7 @@ ElypseCtrl :: ~ElypseCtrl()
 #endif
 }
 
-//*****************************************************************************************************************
+
 
 const String ElypseCtrl :: GetWHandle()
 {
@@ -189,7 +189,7 @@ const String ElypseCtrl :: GetWHandle()
 #endif
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: Init()
 {
@@ -250,7 +250,7 @@ void ElypseCtrl :: Init()
 	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - End" ) );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _setCustomFocus( bool p_hasFocus )
 {
@@ -278,7 +278,7 @@ void ElypseCtrl :: _setCustomFocus( bool p_hasFocus )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnSetFocus( wxFocusEvent & p_event )
 {
@@ -288,7 +288,7 @@ void ElypseCtrl :: OnSetFocus( wxFocusEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnKillFocus( wxFocusEvent & )
 {
@@ -298,7 +298,7 @@ void ElypseCtrl :: OnKillFocus( wxFocusEvent & )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnShow( wxShowEvent & p_event )
 {
@@ -310,7 +310,7 @@ void ElypseCtrl :: OnShow( wxShowEvent & p_event )
 	_setCustomFocus( p_event.IsShown() );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnActivate( wxActivateEvent & p_event )
 {
@@ -322,7 +322,7 @@ void ElypseCtrl :: OnActivate( wxActivateEvent & p_event )
 	_setCustomFocus( p_event.GetActive() );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnIconise( wxIconizeEvent & p_event )
 {
@@ -334,7 +334,7 @@ void ElypseCtrl :: OnIconise( wxIconizeEvent & p_event )
 	_setCustomFocus( false );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnMouseMove( wxMouseEvent & p_event )
 {
@@ -355,7 +355,7 @@ void ElypseCtrl :: OnMouseMove( wxMouseEvent & p_event )
 	m_emuse->GetFL()->MouseMove( Real( l_point.x ), Real( l_point.y ) );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnMouseWheel( wxMouseEvent & p_event )
 {
@@ -378,7 +378,7 @@ void ElypseCtrl :: OnMouseWheel( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnButtonMiddleDown( wxMouseEvent & p_event )
 {
@@ -416,7 +416,7 @@ void ElypseCtrl :: OnButtonMiddleDown( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnButtonMiddleUp( wxMouseEvent & p_event )
 {
@@ -442,7 +442,7 @@ void ElypseCtrl :: OnButtonMiddleUp( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnButtonLeftDown( wxMouseEvent & p_event )
 {
@@ -556,7 +556,7 @@ void ElypseCtrl :: OnButtonLeftDown( wxMouseEvent & p_event )
 	*/
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnButtonLeftUp( wxMouseEvent & p_event )
 {
@@ -582,7 +582,7 @@ void ElypseCtrl :: OnButtonLeftUp( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnButtonRightDown( wxMouseEvent & p_event )
 {
@@ -620,7 +620,7 @@ void ElypseCtrl :: OnButtonRightDown( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnButtonRightUp( wxMouseEvent & p_event )
 {
@@ -653,7 +653,7 @@ void ElypseCtrl :: OnButtonRightUp( wxMouseEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnMouseEnter( wxMouseEvent & p_event )
 {
@@ -665,7 +665,7 @@ void ElypseCtrl :: OnMouseEnter( wxMouseEvent & p_event )
 	_setCustomFocus( true );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnMouseLeave( wxMouseEvent & p_event )
 {
@@ -677,7 +677,7 @@ void ElypseCtrl :: OnMouseLeave( wxMouseEvent & p_event )
 	_setCustomFocus( false );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnKeyUp( wxKeyEvent & p_event )
 {
@@ -692,7 +692,7 @@ void ElypseCtrl :: OnKeyUp( wxKeyEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnKeyDown( wxKeyEvent & p_event )
 {
@@ -747,7 +747,7 @@ void ElypseCtrl :: OnKeyDown( wxKeyEvent & p_event )
 	m_emuse->GetFL()->KeyDown( p_event.GetRawKeyCode() );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: OnChar( wxKeyEvent & p_event )
 {
@@ -759,7 +759,7 @@ void ElypseCtrl :: OnChar( wxKeyEvent & p_event )
 	m_emuse->GetFL()->OnChar( p_event.GetRawKeyCode() );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: SetCtrlFocus()
 {
@@ -769,7 +769,7 @@ void ElypseCtrl :: SetCtrlFocus()
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: KillCtrlFocus()
 {
@@ -779,7 +779,7 @@ void ElypseCtrl :: KillCtrlFocus()
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _onClose( wxCloseEvent & p_event )
 {
@@ -814,7 +814,7 @@ void ElypseCtrl :: _onClose( wxCloseEvent & p_event )
 	m_plugin = NULL;
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _onResize( wxCommandEvent & p_event )
 {
@@ -837,7 +837,7 @@ void ElypseCtrl :: _onResize( wxCommandEvent & p_event )
 	ScriptEngine::GetContext()->scriptEngine->GetVariable( "editor_resizeOverlay" )->set<bool>( true );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _onReplace( wxCommandEvent & p_event )
 {
@@ -849,7 +849,7 @@ void ElypseCtrl :: _onReplace( wxCommandEvent & p_event )
 	ScriptEngine::GetContext()->scriptEngine->GetVariable( "editor_moveOverlay" )->set<bool>( true );
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _onNew( wxCommandEvent & p_event )
 {
@@ -880,7 +880,7 @@ void ElypseCtrl :: _onNew( wxCommandEvent & p_event )
 	l_dialog->Destroy();
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _onDelete( wxCommandEvent & p_event )
 {
@@ -903,7 +903,7 @@ void ElypseCtrl :: _onDelete( wxCommandEvent & p_event )
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _initialise()
 {
@@ -1052,7 +1052,7 @@ void ElypseCtrl :: _initialise()
 	}
 }
 
-//*****************************************************************************************************************
+
 
 void ElypseCtrl :: _showContextMenu( const wxPoint & p_position )
 {
@@ -1087,4 +1087,4 @@ void ElypseCtrl :: _showContextMenu( const wxPoint & p_position )
 	PopupMenu( & l_menu, p_position.x, p_position.y );
 }
 
-//*****************************************************************************************************************
+

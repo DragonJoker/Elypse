@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/SoundProperties.h"
 
@@ -10,10 +10,10 @@
 /*
 #include <General/File.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Media;
-//***********************************************************************************************************
+
 enum SoundPropsIDs
 {
 	soundName,
@@ -25,9 +25,9 @@ enum SoundPropsIDs
 	soundFadeIn,
 	soundFadeOut
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( SoundProperties, wxPanel )
 	EVT_TEXT_ENTER(	soundName,				SoundProperties::_onEditName )
 	EVT_BUTTON(	soundUrl,				SoundProperties::_onEditUrl )
@@ -38,7 +38,7 @@ BEGIN_EVENT_TABLE( SoundProperties, wxPanel )
 	EVT_TEXT_ENTER(	soundFadeIn,			SoundProperties::_onEditFadeIn )
 	EVT_TEXT_ENTER(	soundFadeOut,			SoundProperties::_onEditFadeOut )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 SoundProperties :: SoundProperties( TrollSound * p_sound, wxWindow * parent, const wxPoint & pos,
 									const wxSize & size, long style )
@@ -68,13 +68,13 @@ SoundProperties :: SoundProperties( TrollSound * p_sound, wxWindow * parent, con
 	m_fadeOutTime = BuildTextCtrl( this, l_position += wxPoint( 0, 20 ), soundFadeOut, wxT( "Fade Out Time" ), m_sound->GetGlobal()->m_fadeOutTime );
 }
 
-//***********************************************************************************************************
+
 
 SoundProperties :: ~SoundProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: UpdateProperties()
 {
@@ -82,7 +82,7 @@ void SoundProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -92,7 +92,7 @@ void SoundProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onEditUrl( wxCommandEvent & p_event )
 {
@@ -129,7 +129,7 @@ void SoundProperties :: _onEditUrl( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onSelectSoundType( wxCommandEvent & p_event )
 {
@@ -140,7 +140,7 @@ void SoundProperties :: _onSelectSoundType( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onEditAttenuation( wxCommandEvent & p_event )
 {
@@ -163,7 +163,7 @@ void SoundProperties :: _onEditAttenuation( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onSelectLooped( wxCommandEvent & p_event )
 {
@@ -174,7 +174,7 @@ void SoundProperties :: _onSelectLooped( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onEditTimer( wxCommandEvent & p_event )
 {
@@ -190,7 +190,7 @@ void SoundProperties :: _onEditTimer( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onEditFadeIn( wxCommandEvent & p_event )
 {
@@ -206,7 +206,7 @@ void SoundProperties :: _onEditFadeIn( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SoundProperties :: _onEditFadeOut( wxCommandEvent & p_event )
 {
@@ -222,4 +222,4 @@ void SoundProperties :: _onEditFadeOut( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

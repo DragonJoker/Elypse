@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/VideoProperties.h"
 
@@ -6,10 +6,10 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Media;
-//***********************************************************************************************************
+
 enum VideoPropsIDs
 {
 	videoName,
@@ -17,16 +17,16 @@ enum VideoPropsIDs
 	videoLooped,
 	videoEnabled
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( VideoProperties, wxPanel )
 	EVT_TEXT_ENTER(	videoName,				VideoProperties::_onEditName )
 	EVT_BUTTON(	videoUrl,				VideoProperties::_onEditUrl )
 	EVT_COMBOBOX(	videoLooped,			VideoProperties::_onSelectLooped )
 	EVT_COMBOBOX(	videoEnabled,			VideoProperties::_onSelectEnabled )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 VideoProperties :: VideoProperties( TrollVideo * p_video, wxWindow * parent, const wxPoint & pos,
 									const wxSize & size, long style )
@@ -43,13 +43,13 @@ VideoProperties :: VideoProperties( TrollVideo * p_video, wxWindow * parent, con
 	m_enabled = BuildComboBox( this, l_position += wxPoint( 0, 20 ), videoEnabled, wxT( "Enabled" ), l_looped, ( m_video->IsEnabled() ? wxT( "Oui" ) : wxT( "Non" ) ) );
 }
 
-//***********************************************************************************************************
+
 
 VideoProperties :: ~VideoProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void VideoProperties :: UpdateProperties()
 {
@@ -57,7 +57,7 @@ void VideoProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void VideoProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -67,7 +67,7 @@ void VideoProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void VideoProperties :: _onEditUrl( wxCommandEvent & p_event )
 {
@@ -84,7 +84,7 @@ void VideoProperties :: _onEditUrl( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void VideoProperties :: _onSelectLooped( wxCommandEvent & p_event )
 {
@@ -95,7 +95,7 @@ void VideoProperties :: _onSelectLooped( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void VideoProperties :: _onSelectEnabled( wxCommandEvent & p_event )
 {
@@ -106,4 +106,4 @@ void VideoProperties :: _onSelectEnabled( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

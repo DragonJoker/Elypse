@@ -1,17 +1,17 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/Module_GUI.h"
 #include "Project/Object.h"
 
-//***********************************************************************************************************
+
 
 wxString Troll::GUI :: make_wxString( String const & p_value )
 {
 	return wxString( p_value.c_str(), wxMBConvLibc() );
 }
 
-//***********************************************************************************************************
+
 
 float Troll::GUI :: GetReal( const wxString & p_value, float & p_res )
 {
@@ -29,7 +29,7 @@ float Troll::GUI :: GetReal( const wxString & p_value, float & p_res )
 	return false;
 }
 
-//***********************************************************************************************************
+
 
 int Troll::GUI :: GetInt( const wxString & p_value, int & p_res )
 {
@@ -46,21 +46,21 @@ int Troll::GUI :: GetInt( const wxString & p_value, int & p_res )
 }
 
 
-//***********************************************************************************************************
+
 
 float Troll::GUI :: GetReal( const String & p_value, float & p_res )
 {
 	return GetReal( wxString( p_value.c_str(), wxMBConvLibc() ), p_res );
 }
 
-//***********************************************************************************************************
+
 
 int Troll::GUI :: GetInt( const String & p_value, int & p_res )
 {
 	return GetInt( wxString( p_value.c_str(), wxMBConvLibc() ), p_res );
 }
 
-//***********************************************************************************************************
+
 
 wxPanel * Troll::GUI :: BuildPanel( wxWindow * p_parent, const wxPoint & p_position, const wxSize & p_size,
 									int p_id, const wxColour & p_colour, long p_style )
@@ -70,7 +70,7 @@ wxPanel * Troll::GUI :: BuildPanel( wxWindow * p_parent, const wxPoint & p_posit
 	return l_result;
 }
 
-//***********************************************************************************************************
+
 
 wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const wxString & p_caption, const wxString & p_value )
@@ -81,7 +81,7 @@ wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p
 						   wxBORDER_SIMPLE | wxTE_PROCESS_ENTER );
 }
 
-//***********************************************************************************************************
+
 
 wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const wxString & p_caption, float p_value )
@@ -91,7 +91,7 @@ wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p
 	return BuildTextCtrl( p_parent, p_position, p_id, p_caption, l_tmp );
 }
 
-//***********************************************************************************************************
+
 
 wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const wxString & p_caption, int p_value )
@@ -101,7 +101,7 @@ wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p
 	return BuildTextCtrl( p_parent, p_position, p_id, p_caption, l_tmp );
 }
 
-//***********************************************************************************************************
+
 
 wxComboBox * Troll::GUI :: BuildComboBox( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const wxString & p_caption, const wxArrayString & p_values,
@@ -112,7 +112,7 @@ wxComboBox * Troll::GUI :: BuildComboBox( wxWindow * p_parent, const wxPoint & p
 	return new wxComboBox( p_parent, p_id, p_value, p_position, wxSize( l_size.x - p_position.x, 20 ), p_values, wxBORDER_SIMPLE | wxCB_READONLY );
 }
 
-//***********************************************************************************************************
+
 
 wxListCtrl * Troll::GUI :: BuildListBox( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const wxArrayString & p_captions, const wxArrayString & p_values )
@@ -131,7 +131,7 @@ wxListCtrl * Troll::GUI :: BuildListBox( wxWindow * p_parent, const wxPoint & p_
 	return l_values;
 }
 
-//***********************************************************************************************************
+
 
 wxButton * Troll::GUI :: BuildButton( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 									  const wxString & p_caption, const wxString & p_value )
@@ -143,7 +143,7 @@ wxButton * Troll::GUI :: BuildButton( wxWindow * p_parent, const wxPoint & p_pos
 	return l_button;
 }
 
-//***********************************************************************************************************
+
 
 wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const String & p_caption, const String & p_value )
@@ -151,7 +151,7 @@ wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p
 	return BuildTextCtrl( p_parent, p_position, p_id, make_wxString( p_caption ), make_wxString( p_value ) );
 }
 
-//***********************************************************************************************************
+
 
 wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const String & p_caption, float p_value )
@@ -159,7 +159,7 @@ wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p
 	return BuildTextCtrl( p_parent, p_position, p_id, make_wxString( p_caption ), p_value );
 }
 
-//***********************************************************************************************************
+
 
 wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 		const String & p_caption, int p_value )
@@ -167,7 +167,7 @@ wxTextCtrl * Troll::GUI :: BuildTextCtrl( wxWindow * p_parent, const wxPoint & p
 	return BuildTextCtrl( p_parent, p_position, p_id, make_wxString( p_caption ), p_value );
 }
 
-//***********************************************************************************************************
+
 
 wxButton * Troll::GUI :: BuildButton( wxWindow * p_parent, const wxPoint & p_position, int p_id,
 									  const String & p_caption, const String & p_value )
@@ -175,7 +175,7 @@ wxButton * Troll::GUI :: BuildButton( wxWindow * p_parent, const wxPoint & p_pos
 	return BuildButton( p_parent, p_position, p_id, make_wxString( p_caption ), make_wxString( p_value ) );
 }
 
-//*****************************************************************************************************************
+
 
 wxArrayString Troll::GUI :: Split( const wxString & p_toSplit, const wxString & p_delims, unsigned int p_maxSplits )
 {
@@ -218,7 +218,7 @@ wxArrayString Troll::GUI :: Split( const wxString & p_toSplit, const wxString & 
 	return l_toReturn;
 }
 
-//*****************************************************************************************************************
+
 
 Troll::GUI::RecursiveTreeItemObject * Troll::GUI::RecursiveTreeItemObject :: RecursiveIsIn( const wxString & p_name )
 {
@@ -245,7 +245,7 @@ Troll::GUI::RecursiveTreeItemObject * Troll::GUI::RecursiveTreeItemObject :: Rec
 	return l_item;
 }
 
-//*****************************************************************************************************************
+
 
 Troll::GUI::RecursiveTreeItemObject * Troll::GUI::RecursiveTreeItemObject :: RecursiveIsIn( wxTreeItemIdValue p_index )
 {
@@ -279,11 +279,11 @@ Troll::GUI::RecursiveTreeItemObject * Troll::GUI::RecursiveTreeItemObject :: Rec
 	return l_item;
 }
 
-//***********************************************************************************************************
+
 
 Troll::GUI::RecursiveTreeItemObject :: ~RecursiveTreeItemObject()
 {
 	General::Utils::map::deleteAll( Childs );
 }
 
-//***********************************************************************************************************
+

@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/ContinuousEvent.h"
@@ -10,10 +10,10 @@
 #include <Sequences/Sequence.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 int TrollKeyFrame :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -30,7 +30,7 @@ int TrollKeyFrame :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollKeyFrame :: SetFireTime( float p_time, bool p_updateEvent )
 {
@@ -42,7 +42,7 @@ void TrollKeyFrame :: SetFireTime( float p_time, bool p_updateEvent )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollKeyFrame :: Write( wxTextOutputStream * p_stream )
 {
@@ -51,7 +51,7 @@ void TrollKeyFrame :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\t\tkey " ) + l_tmp + wxT( " " ) + m_action + wxT( "\n" ) );
 }
 
-//***********************************************************************************************************
+
 
 TrollContinuousEvent :: TrollContinuousEvent( TrollSequence * p_sequence, BaseContinuousEvent * p_event,
 		const wxString & p_name, const wxString & p_fileName )
@@ -63,14 +63,14 @@ TrollContinuousEvent :: TrollContinuousEvent( TrollSequence * p_sequence, BaseCo
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollContinuousEvent :: ~TrollContinuousEvent()
 {
 	General::Utils::map::deleteAll( m_keyFrames );
 }
 
-//***********************************************************************************************************
+
 
 TrollKeyFrame * TrollContinuousEvent :: AddKeyFrame( float p_time, const wxString & p_action )
 {
@@ -115,7 +115,7 @@ TrollKeyFrame * TrollContinuousEvent :: AddKeyFrame( float p_time, const wxStrin
 	return m_keyFrames.find( p_time )->second;
 }
 
-//***********************************************************************************************************
+
 
 void TrollContinuousEvent :: GetKeyFrames( wxArrayString & p_list )
 {
@@ -130,7 +130,7 @@ void TrollContinuousEvent :: GetKeyFrames( wxArrayString & p_list )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollContinuousEvent :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -146,7 +146,7 @@ int TrollContinuousEvent :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollContinuousEvent :: UpdateKeyFrame( TrollKeyFrame * p_keyFrame )
 {
@@ -175,7 +175,7 @@ void TrollContinuousEvent :: UpdateKeyFrame( TrollKeyFrame * p_keyFrame )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollContinuousEvent :: UpdateTime( float p_newStartTime )
 {
@@ -204,7 +204,7 @@ void TrollContinuousEvent :: UpdateTime( float p_newStartTime )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollContinuousEvent :: _computeTimes()
 {
@@ -232,7 +232,7 @@ void TrollContinuousEvent :: _computeTimes()
 	m_duration = m_endTime - m_startTime;
 }
 
-//***********************************************************************************************************
+
 
 void TrollContinuousEvent :: Write( wxTextOutputStream * p_stream )
 {
@@ -255,4 +255,4 @@ void TrollContinuousEvent :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\t}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

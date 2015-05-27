@@ -52,6 +52,8 @@
 #include "Module_Script.h"
 #include "Module_Main.h"
 
+#include <tuple>
+
 namespace EMuse
 {
 	namespace Script
@@ -63,11 +65,40 @@ namespace EMuse
 #define VERBOSE_STARTFUNC( func) //EMUSE_LOG_MESSAGE_RELEASE( String( "ScriptFunctionStarted : ") + String( func))
 
 #define RETURN_AS(p_type) caller->get<p_type>() =
+		template< typename T, typename U >
+		void ReturnAs( ScriptNode * caller, U const & p_value )
+		{
+			caller->get< T >() = p_value;
+		}
 
 #define SCRIPT_ERROR(p_error) ScriptEngine::ScriptError( caller, p_error)
 
 #define GET_AND_EXEC_PARAM(p_type,p_variable,p_index) \
 		p_type & p_variable = caller->getAndExecChild<p_type>(p_index);
+
+		namespace
+		{
+			template< size_t N, typename Tuple, typename ... T > void GetAndExecParamsHelper( ScriptNode * caller, T & ... p_variables );
+
+			template< size_t N, typename Tuple > void GetAndExecParamsHelper( ScriptNode * caller, Tuple & p_tuple )
+			{
+			}
+
+			template< size_t N, typename Tuple, typename T, typename ... U > void GetAndExecParamsHelper( ScriptNode * caller, Tuple & p_tuple )
+			{
+				std::get< N >( p_tuple ) = &caller->getAndExecChild< T >( N );
+				GetAndExecParamsHelper < N + 1, Tuple, U... > ( caller, p_tuple );
+			}
+		}
+
+		template< typename T, typename ... U >
+		std::tuple< T *, U * ... > GetAndExecParams( ScriptNode * caller )
+		{
+			std::tuple< T *, U * ... > l_values;
+			std::get< 0 >( l_values ) = &caller->getAndExecChild< T >( 0 );
+			GetAndExecParamsHelper< 1, std::tuple< T *, U * ... >, U... >( caller, l_values );
+			return l_values;
+		}
 
 #define GET_AND_EXEC_TWO_PARAM(p_type1,p_variable1,p_type2,p_variable2) \
 		p_type1 & p_variable1 = caller->getAndExecChild<p_type1>(0);		\

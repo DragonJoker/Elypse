@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/ObjectProperties/OverlayProperties.h"
@@ -12,12 +12,12 @@
 #include <Main/Context.h>
 #include <VideoManager.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Objects2D;
 using namespace Troll::Media;
 using namespace EMuse::Media;
-//***********************************************************************************************************
+
 enum OverlayPropsIDs
 {
 	overlayName,
@@ -47,7 +47,7 @@ enum OverlayPropsIDs
 	overlayBorderRight,
 	overlayVideo
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( OverlayProperties, wxPanel )
 //	EVT_TEXT_ENTER(	overlayName,					OverlayProperties::_onEditName)
 	EVT_TEXT_ENTER(	overlayBaseMaterialName,		OverlayProperties::_onEditBaseMaterialName )
@@ -78,9 +78,9 @@ BEGIN_EVENT_TABLE( OverlayProperties, wxPanel )
 	EVT_COMBOBOX(	overlayVisibility,				OverlayProperties::_onSelectVisibility )
 	EVT_COMBOBOX(	overlayVideo,					OverlayProperties::_onSelectVideo )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 OverlayProperties :: OverlayProperties( TrollOverlay * p_overlay, wxWindow * parent, const wxPoint & pos,
 										const wxSize & size, long style )
@@ -131,13 +131,13 @@ OverlayProperties :: OverlayProperties( TrollOverlay * p_overlay, wxWindow * par
 	m_video = BuildComboBox( this, l_position += wxPoint( 0, 20 ), overlayVideo, wxT( "Vidéo" ), l_videos, l_videoName );
 }
 
-//***********************************************************************************************************
+
 
 OverlayProperties :: ~OverlayProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: UpdateProperties()
 {
@@ -179,7 +179,7 @@ void OverlayProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _buildTextProperties( wxPoint & p_position )
 {
@@ -212,7 +212,7 @@ void OverlayProperties :: _buildTextProperties( wxPoint & p_position )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _buildBorderProperties( wxPoint & p_position )
 {
@@ -228,7 +228,7 @@ void OverlayProperties :: _buildBorderProperties( wxPoint & p_position )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _getVideosNames( wxArrayString & p_names )
 {
@@ -241,7 +241,7 @@ void OverlayProperties :: _getVideosNames( wxArrayString & p_names )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _updateTextProperties()
 {
@@ -285,7 +285,7 @@ void OverlayProperties :: _updateTextProperties()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _updateBorderProperties()
 {
@@ -310,7 +310,7 @@ void OverlayProperties :: _updateBorderProperties()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -321,7 +321,7 @@ void OverlayProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditBaseMaterialName( wxCommandEvent & p_event )
 {
@@ -331,7 +331,7 @@ void OverlayProperties :: _onEditBaseMaterialName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditMouseOverMaterialName( wxCommandEvent & p_event )
 {
@@ -341,7 +341,7 @@ void OverlayProperties :: _onEditMouseOverMaterialName( wxCommandEvent & p_event
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditClickedMaterialName( wxCommandEvent & p_event )
 {
@@ -351,7 +351,7 @@ void OverlayProperties :: _onEditClickedMaterialName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onSelectVerticalAlign( wxCommandEvent & p_event )
 {
@@ -378,7 +378,7 @@ void OverlayProperties :: _onSelectVerticalAlign( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onSelectHorizontalAlign( wxCommandEvent & p_event )
 {
@@ -405,7 +405,7 @@ void OverlayProperties :: _onSelectHorizontalAlign( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditTop( wxCommandEvent & p_event )
 {
@@ -421,7 +421,7 @@ void OverlayProperties :: _onEditTop( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditLeft( wxCommandEvent & p_event )
 {
@@ -437,7 +437,7 @@ void OverlayProperties :: _onEditLeft( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditWidth( wxCommandEvent & p_event )
 {
@@ -453,7 +453,7 @@ void OverlayProperties :: _onEditWidth( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditHeight( wxCommandEvent & p_event )
 {
@@ -469,7 +469,7 @@ void OverlayProperties :: _onEditHeight( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onSelectVisibility( wxCommandEvent & p_event )
 {
@@ -488,7 +488,7 @@ void OverlayProperties :: _onSelectVisibility( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onSelectVideo( wxCommandEvent & p_event )
 {
@@ -508,7 +508,7 @@ void OverlayProperties :: _onSelectVideo( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditBorderMaterial( wxCommandEvent & p_event )
 {
@@ -519,7 +519,7 @@ void OverlayProperties :: _onEditBorderMaterial( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditBorderTop( wxCommandEvent & p_event )
 {
@@ -535,7 +535,7 @@ void OverlayProperties :: _onEditBorderTop( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditBorderBottom( wxCommandEvent & p_event )
 {
@@ -551,7 +551,7 @@ void OverlayProperties :: _onEditBorderBottom( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditBorderLeft( wxCommandEvent & p_event )
 {
@@ -567,7 +567,7 @@ void OverlayProperties :: _onEditBorderLeft( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditBorderRight( wxCommandEvent & p_event )
 {
@@ -583,7 +583,7 @@ void OverlayProperties :: _onEditBorderRight( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditCaption( wxCommandEvent & p_event )
 {
@@ -594,7 +594,7 @@ void OverlayProperties :: _onEditCaption( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditFontName( wxCommandEvent & p_event )
 {
@@ -605,7 +605,7 @@ void OverlayProperties :: _onEditFontName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditFontSize( wxCommandEvent & p_event )
 {
@@ -621,7 +621,7 @@ void OverlayProperties :: _onEditFontSize( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditTextRedValue( wxCommandEvent & p_event )
 {
@@ -639,7 +639,7 @@ void OverlayProperties :: _onEditTextRedValue( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditTextGreenValue( wxCommandEvent & p_event )
 {
@@ -657,7 +657,7 @@ void OverlayProperties :: _onEditTextGreenValue( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditTextBlueValue( wxCommandEvent & p_event )
 {
@@ -675,7 +675,7 @@ void OverlayProperties :: _onEditTextBlueValue( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onEditTextAlphaValue( wxCommandEvent & p_event )
 {
@@ -693,7 +693,7 @@ void OverlayProperties :: _onEditTextAlphaValue( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onSelectTextVerticalAlign( wxCommandEvent & p_event )
 {
@@ -716,7 +716,7 @@ void OverlayProperties :: _onSelectTextVerticalAlign( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void OverlayProperties :: _onSelectTextHorizontalAlign( wxCommandEvent & p_event )
 {
@@ -739,4 +739,4 @@ void OverlayProperties :: _onSelectTextHorizontalAlign( wxCommandEvent & p_event
 	}
 }
 
-//***********************************************************************************************************
+

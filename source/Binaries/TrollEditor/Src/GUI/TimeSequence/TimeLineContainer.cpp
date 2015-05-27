@@ -1,19 +1,19 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/TimeLineContainer.h"
 #include "GUI/TimeSequence/TimePanel.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( TimeLineContainer, wxScrolledWindow )
 	EVT_SCROLLWIN( TimeLineContainer::_onScroll )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 TimeLineContainer :: TimeLineContainer( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 										const wxSize & p_size )
@@ -22,13 +22,13 @@ TimeLineContainer :: TimeLineContainer( wxWindow * p_parent, wxWindowID p_id, co
 {
 }
 
-//***********************************************************************************************************
+
 
 TimeLineContainer :: ~TimeLineContainer()
 {
 }
 
-//***********************************************************************************************************
+
 
 void TimeLineContainer :: _onScroll( wxScrollWinEvent & p_event )
 {
@@ -44,4 +44,4 @@ void TimeLineContainer :: _onScroll( wxScrollWinEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

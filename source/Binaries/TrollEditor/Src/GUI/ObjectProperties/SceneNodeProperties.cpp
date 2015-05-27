@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/SceneNodeProperties.h"
 
@@ -6,10 +6,10 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Objects3D;
-//***********************************************************************************************************
+
 enum SceneNodePropsIDs
 {
 	sceneNodeName,
@@ -24,10 +24,10 @@ enum SceneNodePropsIDs
 	sceneNodePitch,
 	sceneNodeYaw
 };
-//***********************************************************************************************************
+
 const long c_defaultTextEditStyle = wxBORDER_SIMPLE | wxTE_PROCESS_ENTER;
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( SceneNodeProperties, wxPanel )
 	EVT_TEXT_ENTER(	sceneNodeName,				SceneNodeProperties::_onEditName )
 	EVT_COMBOBOX(	sceneNodeParent,			SceneNodeProperties::_onSelectParent )
@@ -41,7 +41,7 @@ BEGIN_EVENT_TABLE( SceneNodeProperties, wxPanel )
 	EVT_TEXT_ENTER(	sceneNodePitch,				SceneNodeProperties::_onEditPitch )
 	EVT_TEXT_ENTER(	sceneNodeYaw,				SceneNodeProperties::_onEditYaw )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 SceneNodeProperties :: SceneNodeProperties( TrollSceneNode * p_sceneNode, wxWindow * parent, const wxPoint & pos,
 		const wxSize & size, long style )
@@ -69,13 +69,13 @@ SceneNodeProperties :: SceneNodeProperties( TrollSceneNode * p_sceneNode, wxWind
 	m_yaw = BuildTextCtrl( this, l_position += wxPoint( 0, 20 ), sceneNodeYaw, wxT( "Yaw" ), l_orientation.getYaw().valueDegrees() );
 }
 
-//***********************************************************************************************************
+
 
 SceneNodeProperties :: ~SceneNodeProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: UpdateProperties()
 {
@@ -123,7 +123,7 @@ void SceneNodeProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -133,7 +133,7 @@ void SceneNodeProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onSelectParent( wxCommandEvent & p_event )
 {
@@ -144,7 +144,7 @@ void SceneNodeProperties :: _onSelectParent( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditXPos( wxCommandEvent & p_event )
 {
@@ -162,7 +162,7 @@ void SceneNodeProperties :: _onEditXPos( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditYPos( wxCommandEvent & p_event )
 {
@@ -180,7 +180,7 @@ void SceneNodeProperties :: _onEditYPos( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditZPos( wxCommandEvent & p_event )
 {
@@ -198,7 +198,7 @@ void SceneNodeProperties :: _onEditZPos( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditXScale( wxCommandEvent & p_event )
 {
@@ -216,7 +216,7 @@ void SceneNodeProperties :: _onEditXScale( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditYScale( wxCommandEvent & p_event )
 {
@@ -234,7 +234,7 @@ void SceneNodeProperties :: _onEditYScale( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditZScale( wxCommandEvent & p_event )
 {
@@ -252,7 +252,7 @@ void SceneNodeProperties :: _onEditZScale( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditRoll( wxCommandEvent & p_event )
 {
@@ -271,7 +271,7 @@ void SceneNodeProperties :: _onEditRoll( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditPitch( wxCommandEvent & p_event )
 {
@@ -290,7 +290,7 @@ void SceneNodeProperties :: _onEditPitch( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneNodeProperties :: _onEditYaw( wxCommandEvent & p_event )
 {
@@ -309,4 +309,4 @@ void SceneNodeProperties :: _onEditYaw( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

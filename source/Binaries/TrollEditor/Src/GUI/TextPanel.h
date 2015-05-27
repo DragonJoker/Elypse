@@ -1,11 +1,11 @@
-//***********************************************************************************************************
+
 #ifndef ___Troll_TextPanel___
 #define ___Troll_TextPanel___
-//***********************************************************************************************************
+
 #include <wx/scrolwin.h>
 #include "Module_GUI.h"
 #include  "../Project/Module_Project.h"
-//***********************************************************************************************************
+
 namespace Troll
 {
 	namespace GUI
@@ -15,18 +15,6 @@ namespace Troll
 			int m_line;
 			int m_position;
 			int m_index;
-
-			SearchInfo()
-				:	m_line( 0 ),
-					m_position( 0 ),
-					m_index( 0 )
-			{}
-
-			SearchInfo( int p_line, int p_position, int p_index )
-				:	m_line( p_line ),
-					m_position( p_position ),
-					m_index( p_index )
-			{}
 		};
 
 		class TextPanel : public wxScrolledWindow
@@ -39,7 +27,7 @@ namespace Troll
 			TrollFile * m_file;
 
 			wxString m_search;
-			std::vector <SearchInfo *> m_searchPositions;
+			std::vector <SearchInfo > m_searchPositions;
 			size_t m_currentSearchPosition;
 
 		public:
@@ -76,6 +64,6 @@ namespace Troll
 		};
 	}
 }
-//***********************************************************************************************************
+
 #endif
-//***********************************************************************************************************
+

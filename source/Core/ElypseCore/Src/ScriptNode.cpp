@@ -154,9 +154,10 @@ namespace EMuse
 		{
 			vector::deleteAll( m_value );
 			NodeValue<NodeValueBaseArray> * l_value = static_cast<NodeValue<NodeValueBaseArray>*>( p_origin );
-			_times( l_value->m_value.size() )
+
+			for ( auto & l_val : l_value->m_value )
 			{
-				m_value.push_back( l_value->m_value[i]->clone() );
+				m_value.push_back( l_val->clone() );
 			}
 		}
 

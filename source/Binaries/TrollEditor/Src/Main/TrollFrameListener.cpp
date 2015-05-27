@@ -1,4 +1,3 @@
-//********************************************************************************************************************
 #include "PrecompiledHeader.h"
 
 #include "Main/TrollFrameListener.h"
@@ -20,10 +19,10 @@
 #include <EMuseLogs.h>
 #include <ScriptTimerManager.h>
 */
-//********************************************************************************************************************
+
 using namespace Troll::Main;
 using namespace Troll::Script;
-//********************************************************************************************************************
+
 
 TrollFrameListener :: TrollFrameListener( TrollInstance * p_ogre, RenderWindow * p_window,
 		const String & p_baseURL, const String & p_installDir,
@@ -34,7 +33,7 @@ TrollFrameListener :: TrollFrameListener( TrollInstance * p_ogre, RenderWindow *
 	EMUSE_LOG_MESSAGE_RELEASE( "TrollFrameListener : created" );
 }
 
-//********************************************************************************************************************
+
 
 TrollFrameListener :: TrollFrameListener( TrollInstance * p_instance, TrollFrameListener * p_ofl,
 		RenderWindow * p_window, const String & p_appStringIndex )
@@ -43,23 +42,23 @@ TrollFrameListener :: TrollFrameListener( TrollInstance * p_instance, TrollFrame
 	EMUSE_LOG_MESSAGE_RELEASE( "TrollFrameListener : finished creation" );
 }
 
-//********************************************************************************************************************
+
 
 TrollFrameListener :: ~TrollFrameListener()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "GenderzFramelistener : Destroyed" );
 }
 
-//********************************************************************************************************************
+
 
 void TrollFrameListener :: _setupInterfaces()
 {
 	m_gui = new EMGui( m_appIndexStr, m_camera->getViewport()->getActualWidth() / static_cast<Real>( m_camera->getViewport()->getActualHeight() ) );
-	m_parser = new TrollSceneFileParser( m_appIndexStr, m_installDir + "rsc/" + m_filename + "/" );
+	m_parser = new Troll::Scene::TrollSceneFileParser( m_appIndexStr, m_installDir + "rsc/" + m_filename + "/" );
 	m_physics = new PhysicsEngine;
 }
 
-//********************************************************************************************************************
+
 
 void TrollFrameListener :: _setupScript()
 {
@@ -99,7 +98,7 @@ void TrollFrameListener :: _setupScript()
 	m_scriptEngine->GetVariable( "GENERAL_SCREEN_HEIGHT" )->set( static_cast <Real>( m_window->getHeight() ) );
 }
 
-//********************************************************************************************************************
+
 
 void TrollFrameListener :: Initialise()
 {
@@ -111,7 +110,7 @@ void TrollFrameListener :: Initialise()
 	_setupBinds();
 }
 
-//********************************************************************************************************************
+
 
 bool TrollFrameListener :: frameStarted( Real p_timeSinceLastFrame )
 {
@@ -201,4 +200,4 @@ bool TrollFrameListener :: frameStarted( Real p_timeSinceLastFrame )
 	return true;
 }
 
-//********************************************************************************************************************
+

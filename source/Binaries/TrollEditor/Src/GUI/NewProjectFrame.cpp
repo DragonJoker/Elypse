@@ -1,4 +1,4 @@
-﻿//***********************************************************************************************************
+﻿
 #include "PrecompiledHeader.h"
 
 #include "GUI/NewProjectFrame.h"
@@ -7,10 +7,10 @@
 /*
 #include <wx/colordlg.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum NewProjectFrameIDs
 {
 	ID_pfBtn,
@@ -31,7 +31,7 @@ enum NewProjectFrameIDs
 	ID_pwTxt,
 	ID_phTxt
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( NewProjectFrame, wxDialog )
 	EVT_COMBOBOX(	ID_bgRBox,		NewProjectFrame::_onSelectBackgroundType )
 	EVT_BUTTON(	ID_bgBtn,		NewProjectFrame::_onSelectBackgroundButton )
@@ -41,9 +41,9 @@ BEGIN_EVENT_TABLE( NewProjectFrame, wxDialog )
 	EVT_BUTTON(	ID_clBtn,		NewProjectFrame::_onCancel )
 	EVT_BUTTON(	ID_pfBtn,		NewProjectFrame::_onBrowse )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 NewProjectFrame :: NewProjectFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
 	:	wxDialog( p_parent, -1, title, pos, wxSize( 220, 300 )	)
@@ -90,13 +90,13 @@ NewProjectFrame :: NewProjectFrame( wxWindow * p_parent, const wxString & title,
 	m_cancelBtn = new wxButton( this, ID_clBtn, wxT( "Annuler" ), l_position += wxPoint( 90, 0 ), wxSize( 70, 20 ) );
 }
 
-//***********************************************************************************************************
+
 
 NewProjectFrame :: ~NewProjectFrame()
 {
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onSelectBackgroundType( wxCommandEvent & p_event )
 {
@@ -112,7 +112,7 @@ void NewProjectFrame :: _onSelectBackgroundType( wxCommandEvent & p_event )
 	m_bgSelect->SetLabel( m_bgRBox->GetValue() );
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onSelectBackgroundButton( wxCommandEvent & p_event )
 {
@@ -138,14 +138,14 @@ void NewProjectFrame :: _onSelectBackgroundButton( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onShadowsChange( wxCommandEvent & p_event )
 {
 	m_shadows = m_shCkb->IsChecked();
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onAntiAliasingChange( wxCommandEvent & p_event )
 {
@@ -163,7 +163,7 @@ void NewProjectFrame :: _onAntiAliasingChange( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onOK( wxCommandEvent & p_event )
 {
@@ -231,14 +231,14 @@ void NewProjectFrame :: _onOK( wxCommandEvent & p_event )
 	Hide();
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onCancel( wxCommandEvent & p_event )
 {
 	Destroy();
 }
 
-//***********************************************************************************************************
+
 
 void NewProjectFrame :: _onBrowse( wxCommandEvent & p_event )
 {
@@ -252,4 +252,4 @@ void NewProjectFrame :: _onBrowse( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

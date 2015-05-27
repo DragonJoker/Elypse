@@ -42,32 +42,39 @@ void Structure :: AddFunction( UserFunction * p_function )
 String Structure :: GetDesc() const
 {
 	String l_desc = "struct " + m_name + "\n{\n";
-	_times( m_members.size() )
+
+	for ( auto & l_member : m_members )
 	{
-		l_desc += m_members[i]->GetType()->GetDesc() + " " + m_members[i]->GetName() + "\n";
+		l_desc += l_member->GetType()->GetDesc() + " " + l_member->GetName() + "\n";
 	}
+
 	l_desc += "}\n";
 	return l_desc;
 }
 
 unsigned int Structure :: FindMember( const String & p_name )const
 {
-	_times( m_members.size() )
+	unsigned int i = 0;
+
+	for ( auto & l_member : m_members )
 	{
-		if ( m_members[i]->GetName() == p_name )
+		if ( l_member->GetName() == p_name )
 		{
 			return i;
 		}
+
+		i++;
 	}
+
 	return String::npos;
 }
 
 StructInstance :: StructInstance( VariableType * p_def )
 	:	m_definition( p_def )
 {
-	_times( m_definition->m_subTypes.size() )
+	for ( auto & l_type : m_definition->m_subTypes )
 	{
-		m_members.push_back( ScriptNode::CreateNodeValue( m_definition->m_subTypes[i] ) );
+		m_members.push_back( ScriptNode::CreateNodeValue( l_type ) );
 	}
 }
 
@@ -80,8 +87,9 @@ void StructInstance :: Copy( StructInstance * p_origin )
 {
 	m_definition = p_origin->m_definition;
 	General::Utils::vector::deleteAll( m_members );
-	_times( p_origin->m_members.size() )
+
+	for ( auto & l_member : p_origin->m_members )
 	{
-		m_members.push_back( p_origin->m_members[i]->clone() );
+		m_members.push_back( l_member->clone() );
 	}
 }

@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/TimeLinePanel.h"
@@ -14,16 +14,16 @@
 #include <Sequences/BaseEvent.h>
 #include <Main/Context.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( TimeLinePanel, wxPanel )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 TimeLinePanel :: TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 								const wxSize & p_size )
@@ -46,13 +46,13 @@ TimeLinePanel :: TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPo
 	SetBackgroundColour( wxColour( 255, 255, 255 ) );
 }
 
-//***********************************************************************************************************
+
 
 TimeLinePanel :: ~TimeLinePanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 void TimeLinePanel :: UpdateSequence( TrollSequence * p_sequence )
 {
@@ -60,8 +60,8 @@ void TimeLinePanel :: UpdateSequence( TrollSequence * p_sequence )
 
 	if ( l_it != m_alreadyAddedSequences.end() )
 	{
-		wxPoint l_position( p_sequence->GetStartTime() * 100, p_sequence->GetLinePanel()->GetPosition().y );
-		wxSize l_size( p_sequence->GetTotalLength() * 100, 80 );
+		wxPoint l_position( int( p_sequence->GetStartTime() * 100 ), p_sequence->GetLinePanel()->GetPosition().y );
+		wxSize l_size( int( p_sequence->GetTotalLength() * 100 ), 80 );
 		l_it = m_alreadyAddedSequences.begin();
 		m_totalWidth = 0;
 
@@ -76,11 +76,11 @@ void TimeLinePanel :: UpdateSequence( TrollSequence * p_sequence )
 		int l_verticalScroll = g_mainFrame->m_timeLineContainer->GetScrollPos( wxVERTICAL );
 //		std::cout << "TimeLinePanel :: UpdateSequence - " << l_verticalScroll << "\n";
 		g_mainFrame->m_timeLineContainer->SetScrollbars( 20, 20, ( m_totalWidth + 20 ) / 20, m_totalHeight / 20, 0, 0 );
-		g_mainFrame->m_timeLineContainer->Scroll( ( l_first >= 0.1 ? l_first * 5 + 1 : l_first * 5 ), l_verticalScroll );
+		g_mainFrame->m_timeLineContainer->Scroll( int( l_first >= 0.1 ? l_first * 5 + 1 : l_first * 5 ), l_verticalScroll );
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TimeLinePanel :: UpdateSequences( float p_time )
 {
@@ -92,7 +92,7 @@ void TimeLinePanel :: UpdateSequences( float p_time )
 	}
 }
 
-//***********************************************************************************************************
+
 
 LinePanel * TimeLinePanel :: GetSequencePanel( const wxString & p_name )
 {
@@ -106,7 +106,7 @@ LinePanel * TimeLinePanel :: GetSequencePanel( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollSequence * TimeLinePanel :: AddSequence( TrollSequence * p_sequence )
 {
@@ -144,4 +144,4 @@ TrollSequence * TimeLinePanel :: AddSequence( TrollSequence * p_sequence )
 	return m_alreadyAddedSequences.find( p_sequence->TrollObject::GetName() )->second;
 }
 
-//***********************************************************************************************************
+

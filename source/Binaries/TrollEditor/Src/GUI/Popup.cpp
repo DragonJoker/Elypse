@@ -1,15 +1,15 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/Popup.h"
 #include "GUI/MainFrame.h"
 
 #include "xpm/troll_editor.xpm"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 enum
 {
 	Minimal_Quit = wxID_EXIT,
@@ -21,7 +21,7 @@ enum
 	Minimal_PopupButton,
 	Minimal_PopupSpinctrl
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( SimpleTransientPopup, wxPopupTransientWindow )
 	EVT_MOUSE_EVENTS(	SimpleTransientPopup::_onMouse )
 	EVT_SIZE(	SimpleTransientPopup::_onSize )
@@ -30,7 +30,7 @@ BEGIN_EVENT_TABLE( SimpleTransientPopup, wxPopupTransientWindow )
 	EVT_BUTTON(	Minimal_PopupButton,	SimpleTransientPopup::_onButton )
 	EVT_SPINCTRL(	Minimal_PopupSpinctrl,	SimpleTransientPopup::_onSpinCtrl )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 SimpleTransientPopup :: SimpleTransientPopup( wxWindow * p_parent )
 	:	wxPopupTransientWindow( p_parent )
@@ -63,13 +63,13 @@ SimpleTransientPopup :: SimpleTransientPopup( wxWindow * p_parent )
 	topSizer->Fit( this );
 }
 
-//***********************************************************************************************************
+
 
 SimpleTransientPopup :: ~SimpleTransientPopup()
 {
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: Popup( wxWindow * p_focus )
 {
@@ -77,7 +77,7 @@ void SimpleTransientPopup :: Popup( wxWindow * p_focus )
 	wxPopupTransientWindow::Popup( p_focus ? p_focus : m_panel );
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: OnDismiss()
 {
@@ -85,7 +85,7 @@ void SimpleTransientPopup :: OnDismiss()
 	wxPopupTransientWindow::OnDismiss();
 }
 
-//***********************************************************************************************************
+
 
 bool SimpleTransientPopup :: ProcessLeftDown( wxMouseEvent & p_event )
 {
@@ -93,7 +93,7 @@ bool SimpleTransientPopup :: ProcessLeftDown( wxMouseEvent & p_event )
 	return wxPopupTransientWindow::ProcessLeftDown( p_event );
 }
 
-//***********************************************************************************************************
+
 
 bool SimpleTransientPopup :: Show( bool show )
 {
@@ -101,7 +101,7 @@ bool SimpleTransientPopup :: Show( bool show )
 	return wxPopupTransientWindow::Show( show );
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: _onSize( wxSizeEvent & p_event )
 {
@@ -109,7 +109,7 @@ void SimpleTransientPopup :: _onSize( wxSizeEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: _onSetFocus( wxFocusEvent & p_event )
 {
@@ -117,7 +117,7 @@ void SimpleTransientPopup :: _onSetFocus( wxFocusEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: _onKillFocus( wxFocusEvent & p_event )
 {
@@ -125,7 +125,7 @@ void SimpleTransientPopup :: _onKillFocus( wxFocusEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: _onMouse( wxMouseEvent & p_event )
 {
@@ -149,7 +149,7 @@ void SimpleTransientPopup :: _onMouse( wxMouseEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: _onButton( wxCommandEvent & p_event )
 {
@@ -168,7 +168,7 @@ void SimpleTransientPopup :: _onButton( wxCommandEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+
 
 void SimpleTransientPopup :: _onSpinCtrl( wxSpinEvent & p_event )
 {
@@ -176,4 +176,4 @@ void SimpleTransientPopup :: _onSpinCtrl( wxSpinEvent & p_event )
 	p_event.Skip();
 }
 
-//***********************************************************************************************************
+

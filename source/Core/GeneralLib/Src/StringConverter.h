@@ -184,6 +184,33 @@ namespace General
 			return l_buffer;
 		}
 
+
+		template< typename OutCharType, typename InCharType > struct StringCastHelper;
+
+		template< typename InCharType >
+		struct StringCastHelper< char, InCharType >
+		{
+			static inline std::string Cast( const std::basic_string< InCharType > & p_val )
+			{
+				return ToString( p_val );
+			}
+		};
+
+		template< typename InCharType >
+		struct StringCastHelper< wchar_t, InCharType >
+		{
+			static inline std::wstring Cast( const std::basic_string< InCharType > & p_val )
+			{
+				return ToWString( p_val );
+			}
+		};
+
+		template< typename OutCharType, typename InCharType >
+		inline std::basic_string< OutCharType > string_cast( const std::basic_string< InCharType > & p_val )
+		{
+			return StringCastHelper< OutCharType, InCharType >::Cast( p_val );
+		}
+
 		float parseFloat( const std::string & val );
 		int parseInt( const std::string & val );
 		unsigned int parseUnsignedInt( const std::string & val );

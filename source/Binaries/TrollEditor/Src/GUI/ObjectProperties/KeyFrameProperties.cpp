@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/KeyFrameProperties.h"
 
@@ -7,10 +7,10 @@
 /*
 #include <OgreString.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
-//***********************************************************************************************************
+
 enum KeyPropsIDs
 {
 	keyTime,
@@ -19,9 +19,9 @@ enum KeyPropsIDs
 	keyV3Y,
 	keyV3Z
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( KeyFrameProperties, wxPanel )
 	EVT_TEXT_ENTER(	keyTime,	KeyFrameProperties::_onEditFireTime )
 	EVT_TEXT_ENTER(	keyReal,	KeyFrameProperties::_onEditReal )
@@ -29,7 +29,7 @@ BEGIN_EVENT_TABLE( KeyFrameProperties, wxPanel )
 	EVT_TEXT_ENTER(	keyV3Y,		KeyFrameProperties::_onEditV3Y )
 	EVT_TEXT_ENTER(	keyV3Z,		KeyFrameProperties::_onEditV3Z )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 KeyFrameProperties :: KeyFrameProperties( TrollKeyFrame * p_keyFrame, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
@@ -44,13 +44,13 @@ KeyFrameProperties :: KeyFrameProperties( TrollKeyFrame * p_keyFrame, wxWindow *
 	UpdateProperties();
 }
 
-//***********************************************************************************************************
+
 
 KeyFrameProperties :: ~KeyFrameProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: UpdateProperties()
 {
@@ -70,7 +70,7 @@ void KeyFrameProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: _buildArguments( const wxPoint & p_position )
 {
@@ -139,7 +139,7 @@ void KeyFrameProperties :: _buildArguments( const wxPoint & p_position )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: _onEditFireTime( wxCommandEvent & p_event )
 {
@@ -152,7 +152,7 @@ void KeyFrameProperties :: _onEditFireTime( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: _onEditReal( wxCommandEvent & p_event )
 {
@@ -174,7 +174,7 @@ void KeyFrameProperties :: _onEditReal( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: _onEditV3X( wxCommandEvent & p_event )
 {
@@ -198,7 +198,7 @@ void KeyFrameProperties :: _onEditV3X( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: _onEditV3Y( wxCommandEvent & p_event )
 {
@@ -222,7 +222,7 @@ void KeyFrameProperties :: _onEditV3Y( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void KeyFrameProperties :: _onEditV3Z( wxCommandEvent & p_event )
 {
@@ -246,4 +246,4 @@ void KeyFrameProperties :: _onEditV3Z( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

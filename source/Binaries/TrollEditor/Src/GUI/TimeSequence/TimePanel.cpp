@@ -1,20 +1,20 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/TimePanel.h"
 #include "GUI/TimeSequence/TimeLinePanel.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 enum TimePanelIDs
 {
 	tick
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( TimeTick, wxPanel )
 	EVT_LEFT_DOWN(	TimeTick::_onLeftMouseDown )
 	EVT_LEFT_UP(	TimeTick::_onLeftMouseUp )
@@ -26,7 +26,7 @@ BEGIN_EVENT_TABLE( TimePanel, wxPanel )
 	EVT_LEFT_UP(	TimePanel::_onLeftMouseUp )
 	EVT_MOTION(	TimePanel::_onMouseMove )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 TimeTick :: TimeTick( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
 	:	wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_NONE )
@@ -35,21 +35,21 @@ TimeTick :: TimeTick( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_po
 	SetBackgroundColour( wxColour( 0, 0, 0 ) );
 }
 
-//***********************************************************************************************************
+
 
 void TimeTick :: _onLeftMouseDown( wxMouseEvent & p_event )
 {
 	m_panel->SetLeftDown( true );
 }
 
-//***********************************************************************************************************
+
 
 void TimeTick :: _onLeftMouseUp( wxMouseEvent & p_event )
 {
 	m_panel->SetLeftDown( false );
 }
 
-//***********************************************************************************************************
+
 
 TimePanel :: TimePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 						const wxSize & p_size )
@@ -62,20 +62,20 @@ TimePanel :: TimePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_
 	SetBackgroundColour( wxColour( 255, 255, 220 ) );
 }
 
-//***********************************************************************************************************
+
 
 TimePanel :: ~TimePanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 void TimePanel :: IncrementTickPosition( int p_left )
 {
 	UpdateTick( m_tick->GetPosition().x + p_left );
 }
 
-//***********************************************************************************************************
+
 
 void TimePanel :: UpdateTick( int p_left, bool p_updateSequence )
 {
@@ -83,20 +83,20 @@ void TimePanel :: UpdateTick( int p_left, bool p_updateSequence )
 
 	if ( p_updateSequence )
 	{
-		float l_tmpTime = m_first + ( m_tick->GetPosition().x / 100.0 );
+		float l_tmpTime = m_first + ( m_tick->GetPosition().x / 100.0f );
 		g_mainFrame->m_timelineEditor->UpdateSequences( l_tmpTime - m_currentTime );
 		m_currentTime = l_tmpTime;
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TimePanel :: _onLeftMouseDown( wxMouseEvent & p_event )
 {
 	m_leftDown = true;
 }
 
-//***********************************************************************************************************
+
 
 void TimePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 {
@@ -104,7 +104,7 @@ void TimePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 	UpdateTick( p_event.GetX(), true );
 }
 
-//***********************************************************************************************************
+
 
 void TimePanel :: _onMouseMove( wxMouseEvent & p_event )
 {
@@ -115,7 +115,7 @@ void TimePanel :: _onMouseMove( wxMouseEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TimePanel :: _onPaint( wxPaintEvent & p_event )
 {
@@ -132,7 +132,7 @@ void TimePanel :: _onPaint( wxPaintEvent & p_event )
 	l_dc.DrawRectangle( 0, 0, l_size.x, l_size.y );
 	l_pen = *wxBLACK_PEN;
 	l_dc.SetPen( l_pen );
-	int l_current = m_first * 1000.0 + 50.0;
+	int l_current = int( m_first * 1000.0 + 50.0 );
 	l_current /= 100;
 	wxString l_tmp;
 
@@ -154,4 +154,4 @@ void TimePanel :: _onPaint( wxPaintEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

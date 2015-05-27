@@ -5,10 +5,11 @@
 
 VariableTypeManager :: VariableTypeManager()
 {
-	_times( EMVT_NUM_TYPES )
+	for ( uint32_t i = 0; i < EMVT_NUM_TYPES; ++i )
 	{
 		_add( static_cast<VariableBaseType>( i ) );
 	}
+
 	_populateBaseTypeNames();
 }
 
@@ -101,10 +102,12 @@ String VariableType:: GetDesc()
 	if ( ! m_subTypes.empty() )
 	{
 		l_desc += " <";
-		_times( m_subTypes.size() )
+
+		for ( auto & l_type : m_subTypes )
 		{
-			l_desc += m_subTypes[i]->GetDesc() + ",";
+			l_desc += l_type->GetDesc() + ",";
 		}
+
 		l_desc.erase( l_desc.end() - 1 );
 		l_desc += ">";
 	}

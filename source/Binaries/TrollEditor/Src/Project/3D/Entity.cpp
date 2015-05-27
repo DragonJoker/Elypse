@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/3D/Entity.h"
@@ -11,12 +11,12 @@
 #include <OgreEntity.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Objects3D;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TrollEntity :: TrollEntity( const wxString & p_name, const wxString & p_fileName )
 	:	Troll3DObject( p_name, p_fileName, ttEntity ),
@@ -26,13 +26,13 @@ TrollEntity :: TrollEntity( const wxString & p_name, const wxString & p_fileName
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollEntity :: ~TrollEntity()
 {
 }
 
-//***********************************************************************************************************
+
 
 void TrollEntity :: AttachTo( TrollSceneNode * p_node )
 {
@@ -50,7 +50,7 @@ void TrollEntity :: AttachTo( TrollSceneNode * p_node )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollEntity :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -67,14 +67,14 @@ int TrollEntity :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollEntity :: SetOgreEntity( Ogre::Entity * p_entity )
 {
 	m_ogreEntity = p_entity;
 }
 
-//***********************************************************************************************************
+
 
 void TrollEntity :: SetMaterial( const wxString & p_name, bool p_updateOgre )
 {
@@ -90,7 +90,7 @@ void TrollEntity :: SetMaterial( const wxString & p_name, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollEntity :: SetMesh( TrollMesh * p_mesh )
 {
@@ -98,7 +98,7 @@ void TrollEntity :: SetMesh( TrollMesh * p_mesh )
 //	m_ogreEntity->setMesh( p_mesh->GetName().char_str().data());
 }
 
-//***********************************************************************************************************
+
 
 void TrollEntity :: Write( wxTextOutputStream * p_stream )
 {
@@ -123,4 +123,4 @@ void TrollEntity :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

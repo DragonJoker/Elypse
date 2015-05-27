@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/ObjectProperties/PonctualEventProperties.h"
@@ -12,10 +12,10 @@
 #include <Main/Context.h>
 #include <OgreOverlayManager.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
-//***********************************************************************************************************
+
 enum EventPropsIDs
 {
 	eventActionName,
@@ -27,9 +27,9 @@ enum EventPropsIDs
 	eventParamY,
 	eventParamZ
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( PonctualEventProperties, wxPanel )
 	EVT_COMBOBOX(	eventActionName,			PonctualEventProperties::_onSelectAction )
 	EVT_COMBOBOX(	eventTargetType,			PonctualEventProperties::_onSelectTargetType )
@@ -40,7 +40,7 @@ BEGIN_EVENT_TABLE( PonctualEventProperties, wxPanel )
 	EVT_TEXT_ENTER(	eventParamY,				PonctualEventProperties::_onEditYParam )
 	EVT_TEXT_ENTER(	eventParamZ,				PonctualEventProperties::_onEditZParam )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 PonctualEventProperties :: PonctualEventProperties( TrollPonctualEvent * p_event, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
@@ -58,13 +58,13 @@ PonctualEventProperties :: PonctualEventProperties( TrollPonctualEvent * p_event
 	UpdateProperties();
 }
 
-//***********************************************************************************************************
+
 
 PonctualEventProperties :: ~PonctualEventProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: UpdateProperties()
 {
@@ -96,7 +96,7 @@ void PonctualEventProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 wxArrayString PonctualEventProperties :: _getTargetTypes( const wxString & p_action )
 {
@@ -126,7 +126,7 @@ wxArrayString PonctualEventProperties :: _getTargetTypes( const wxString & p_act
 	return l_result;
 }
 
-//***********************************************************************************************************
+
 
 wxString PonctualEventProperties :: _buildTargetChoice( const wxPoint & p_position, const wxString & p_targetType )
 {
@@ -190,7 +190,7 @@ wxString PonctualEventProperties :: _buildTargetChoice( const wxPoint & p_positi
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _buildActionArguments( wxPoint & p_position, const wxString & p_action )
 {
@@ -231,7 +231,7 @@ void PonctualEventProperties :: _buildActionArguments( wxPoint & p_position, con
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onSelectAction( wxCommandEvent & p_event )
 {
@@ -250,7 +250,7 @@ void PonctualEventProperties :: _onSelectAction( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onSelectTargetType( wxCommandEvent & p_event )
 {
@@ -265,7 +265,7 @@ void PonctualEventProperties :: _onSelectTargetType( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onEditTarget( wxCommandEvent & p_event )
 {
@@ -286,7 +286,7 @@ void PonctualEventProperties :: _onEditTarget( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onEditTime( wxCommandEvent & p_event )
 {
@@ -305,7 +305,7 @@ void PonctualEventProperties :: _onEditTime( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onEditXParam( wxCommandEvent & p_event )
 {
@@ -325,7 +325,7 @@ void PonctualEventProperties :: _onEditXParam( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onEditYParam( wxCommandEvent & p_event )
 {
@@ -345,7 +345,7 @@ void PonctualEventProperties :: _onEditYParam( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventProperties :: _onEditZParam( wxCommandEvent & p_event )
 {
@@ -365,4 +365,4 @@ void PonctualEventProperties :: _onEditZParam( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

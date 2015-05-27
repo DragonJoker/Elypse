@@ -159,6 +159,4 @@ namespace EMuse
 	}
 }
 
-using namespace EMuse::Script;
-
 #endif

@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Media/Video.h"
@@ -8,10 +8,10 @@
 #include <VideoObject.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Media;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollVideo :: TrollVideo( const wxString & p_name, const wxString & p_fileName )
 	:	MediaObject( p_name, p_fileName, ttVideo ),
@@ -21,14 +21,14 @@ TrollVideo :: TrollVideo( const wxString & p_name, const wxString & p_fileName )
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollVideo :: ~TrollVideo()
 {
 	General::Utils::map::deleteAll( m_objects );
 }
 
-//***********************************************************************************************************
+
 
 TrollVideoObject * TrollVideo :: AddObject( TrollObject * p_object )
 {
@@ -51,7 +51,7 @@ TrollVideoObject * TrollVideo :: AddObject( TrollObject * p_object )
 	return l_result;
 }
 
-//***********************************************************************************************************
+
 
 int TrollVideo :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -68,7 +68,7 @@ int TrollVideo :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollVideo :: SetMuseVideo( VideoObject * p_museVideo )
 {
@@ -78,7 +78,7 @@ void TrollVideo :: SetMuseVideo( VideoObject * p_museVideo )
 	m_enabled = m_museVideo->IsAutoInitialised();
 }
 
-//***********************************************************************************************************
+
 
 void TrollVideo :: SetUrl( const wxString & p_url )
 {
@@ -86,7 +86,7 @@ void TrollVideo :: SetUrl( const wxString & p_url )
 	m_museVideo->SetUrl( p_url.char_str().data() );
 }
 
-//***********************************************************************************************************
+
 
 void TrollVideo :: SetLooped( bool p_looped )
 {
@@ -94,7 +94,7 @@ void TrollVideo :: SetLooped( bool p_looped )
 	m_museVideo->SetLooped( p_looped );
 }
 
-//***********************************************************************************************************
+
 
 void TrollVideo :: SetEnabled( bool p_enabled )
 {
@@ -102,7 +102,7 @@ void TrollVideo :: SetEnabled( bool p_enabled )
 	m_museVideo->SetAutoInitialise( p_enabled );
 }
 
-//***********************************************************************************************************
+
 
 void TrollVideo :: Write( wxTextOutputStream * p_stream )
 {
@@ -112,4 +112,4 @@ void TrollVideo :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\tenabled " ) + ( m_enabled ? wxString( wxT( "true" ) ) : wxString( wxT( "false" ) ) ) + wxT( "\n}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

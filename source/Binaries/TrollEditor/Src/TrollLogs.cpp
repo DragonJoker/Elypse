@@ -8,8 +8,6 @@
 using namespace Troll;
 using namespace Troll::GUI;
 
-extern MainFrame * g_mainFrame;
-
 #ifndef ELYPSE_STATIC_LIB
 //String EMPTY_STRING = String();
 #endif

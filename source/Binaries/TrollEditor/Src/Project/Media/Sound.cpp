@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Media/Sound.h"
@@ -13,13 +13,11 @@
 #include <SoundInstance.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Media;
 using namespace Troll::Objects3D;
 using namespace Troll::GUI;
-//***********************************************************************************************************
-extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TrollSound :: TrollSound( const wxString & p_name, const wxString & p_fileName )
 	:	MediaObject( p_name, p_fileName, ttSound ),
@@ -30,7 +28,7 @@ TrollSound :: TrollSound( const wxString & p_name, const wxString & p_fileName )
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollSound :: ~TrollSound()
 {
@@ -40,7 +38,7 @@ TrollSound :: ~TrollSound()
 	m_objects.clear();
 }
 
-//***********************************************************************************************************
+
 
 TrollSoundObject * TrollSound :: AddObject( TrollSceneNode * p_node )
 {
@@ -63,7 +61,7 @@ TrollSoundObject * TrollSound :: AddObject( TrollSceneNode * p_node )
 	return l_result;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetMuseSound( EMuse::Media::SoundObject * p_sound )
 {
@@ -76,7 +74,7 @@ void TrollSound :: SetMuseSound( EMuse::Media::SoundObject * p_sound )
 	{
 		m_globalInstance = new SoundInstance();
 		EMuse::Media::SoundInstance * l_global = m_museSound->GetGlobal();
-		m_globalInstance->m_attenuation = 1.0 - l_global->GetVolumePercent();
+		m_globalInstance->m_attenuation = 1.0f - l_global->GetVolumePercent();
 		m_globalInstance->m_fadeInTime = l_global->GetFadeIn();
 		m_globalInstance->m_fadeOutTime = l_global->GetFadeOut();
 		m_globalInstance->m_looped = l_global->IsLooped();
@@ -84,7 +82,7 @@ void TrollSound :: SetMuseSound( EMuse::Media::SoundObject * p_sound )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollSound :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -101,7 +99,7 @@ int TrollSound :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetUrl( const wxString & p_filePath )
 {
@@ -114,7 +112,7 @@ void TrollSound :: SetUrl( const wxString & p_filePath )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetSoundType( TrollSoundType p_type )
 {
@@ -122,7 +120,7 @@ void TrollSound :: SetSoundType( TrollSoundType p_type )
 	m_museSound->SetSoundType( static_cast <SoundType>( p_type ) );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetLocal()
 {
@@ -131,7 +129,7 @@ void TrollSound :: SetLocal()
 	m_museSound->SetLocal( g_mainFrame->GetCurrentProject()->GetMainScene()->GetName().char_str().data() );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetGlobalAttenuation( float p_att )
 {
@@ -139,7 +137,7 @@ void TrollSound :: SetGlobalAttenuation( float p_att )
 	m_museSound->GetGlobal()->SetVolumePercent( p_att );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetGlobalLooped( bool p_looped )
 {
@@ -147,7 +145,7 @@ void TrollSound :: SetGlobalLooped( bool p_looped )
 	m_museSound->GetGlobal()->SetLooped( p_looped );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetGlobalTimer( float p_time )
 {
@@ -155,7 +153,7 @@ void TrollSound :: SetGlobalTimer( float p_time )
 	m_museSound->GetGlobal()->SetTimerTime( p_time );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetGlobalFadeIn( float p_time )
 {
@@ -163,7 +161,7 @@ void TrollSound :: SetGlobalFadeIn( float p_time )
 	m_museSound->GetGlobal()->SetFadeIn( p_time );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: SetGlobalFadeOut( float p_time )
 {
@@ -171,7 +169,7 @@ void TrollSound :: SetGlobalFadeOut( float p_time )
 	m_museSound->GetGlobal()->SetFadeOut( p_time );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSound :: Write( wxTextOutputStream * p_stream )
 {
@@ -217,4 +215,4 @@ void TrollSound :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

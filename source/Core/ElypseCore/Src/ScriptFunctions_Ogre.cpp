@@ -467,7 +467,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( ScN_GetByName )
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( ScN_Exists )
 {
-	VERBOSE_STARTFUNC( "SceneNode_GetByName" );
+	VERBOSE_STARTFUNC( "ScN_Exists" );
 	GET_AND_EXEC_PARAM( String, l_name, 0 );
 	RETURN_AS( bool ) ScriptEngine::GetContext()->sceneManager->hasSceneNode( l_name );
 }

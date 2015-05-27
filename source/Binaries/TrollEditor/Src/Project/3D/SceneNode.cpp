@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/3D/SceneNode.h"
@@ -9,10 +9,10 @@
 #include <wx/listctrl.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Objects3D;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollSceneNode :: TrollSceneNode( const wxString & p_name, const wxString & p_fileName, const Vector3 & p_position,
 								  const Quaternion & p_orientation, const Vector3 & p_scale )
@@ -27,7 +27,7 @@ TrollSceneNode :: TrollSceneNode( const wxString & p_name, const wxString & p_fi
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollSceneNode :: ~TrollSceneNode()
 {
@@ -56,7 +56,7 @@ TrollSceneNode :: ~TrollSceneNode()
 	*/
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: AttachTo( TrollSceneNode * p_node )
 {
@@ -74,7 +74,7 @@ void TrollSceneNode :: AttachTo( TrollSceneNode * p_node )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollSceneNode :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -90,7 +90,7 @@ int TrollSceneNode :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_returnSize.y;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollSceneNode :: AddObject( Troll3DObject * p_object )
 {
@@ -105,7 +105,7 @@ bool TrollSceneNode :: AddObject( Troll3DObject * p_object )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollSceneNode :: AddChild( TrollSceneNode * p_node )
 {
@@ -120,7 +120,7 @@ bool TrollSceneNode :: AddChild( TrollSceneNode * p_node )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: SetOgreNode( Ogre::SceneNode * p_node )
 {
@@ -132,7 +132,7 @@ void TrollSceneNode :: SetOgreNode( Ogre::SceneNode * p_node )
 	m_inheritScale = m_ogreNode->getInheritScale();
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: SetPosition( const Vector3 & p_position, bool p_updateOgre )
 {
@@ -148,7 +148,7 @@ void TrollSceneNode :: SetPosition( const Vector3 & p_position, bool p_updateOgr
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: SetOrientation( const Quaternion & p_orientation, bool p_updateOgre )
 {
@@ -164,7 +164,7 @@ void TrollSceneNode :: SetOrientation( const Quaternion & p_orientation, bool p_
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: SetScale( const Vector3 & p_scale, bool p_updateOgre )
 {
@@ -180,7 +180,7 @@ void TrollSceneNode :: SetScale( const Vector3 & p_scale, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: RemoveObject( const wxString & p_name )
 {
@@ -194,7 +194,7 @@ void TrollSceneNode :: RemoveObject( const wxString & p_name )
 	m_objects.erase( l_it );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: RemoveChild( const wxString & p_name )
 {
@@ -208,7 +208,7 @@ void TrollSceneNode :: RemoveChild( const wxString & p_name )
 	m_childs.erase( l_it );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneNode :: Write( wxTextOutputStream * p_stream )
 {
@@ -272,4 +272,4 @@ void TrollSceneNode :: Write( wxTextOutputStream * p_stream )
 	General::Utils::map::cycle( m_childs, & TrollSceneNode::Write, p_stream );
 }
 
-//***********************************************************************************************************
+

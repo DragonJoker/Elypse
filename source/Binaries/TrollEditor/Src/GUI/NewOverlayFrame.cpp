@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/NewOverlayFrame.h"
@@ -21,26 +21,26 @@
 
 #include <wx/combobox.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Objects2D;
 using namespace Ogre;
-//***********************************************************************************************************
+
 enum NowOverlayFrameIDs
 {
 	noIdTemplate,
 	noIdOK,
 	noIdCancel
 };
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( NewOverlayFrame, wxFrame )
 	EVT_COMBOBOX(	noIdTemplate,			NewOverlayFrame::_onSelectTemplate )
 	EVT_BUTTON(	noIdOK,					NewOverlayFrame::_onOK )
 	EVT_BUTTON(	noIdCancel,				NewOverlayFrame::_onCancel )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 NewOverlayFrame :: NewOverlayFrame( const wxPoint & p_position, EMOverlay * p_parentOverlay,
 									const wxString & p_name )
@@ -87,7 +87,7 @@ NewOverlayFrame :: NewOverlayFrame( const wxPoint & p_position, EMOverlay * p_pa
 	m_propertiesPanel = new wxPanel( this, wxID_ANY, wxPoint( 5, 35 ), wxSize( l_size.x - 10, l_size.y - 80 ) );
 }
 
-//***********************************************************************************************************
+
 
 void NewOverlayFrame :: _getOverlayTemplates( wxArrayString & p_array )
 {
@@ -100,7 +100,7 @@ void NewOverlayFrame :: _getOverlayTemplates( wxArrayString & p_array )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void NewOverlayFrame :: _onSelectTemplate( wxCommandEvent & p_event )
 {
@@ -147,7 +147,7 @@ void NewOverlayFrame :: _onSelectTemplate( wxCommandEvent & p_event )
 	m_overlay->BuildPanel( m_propertiesPanel, m_propertiesPanel->GetClientSize().x );
 }
 
-//***********************************************************************************************************
+
 
 void NewOverlayFrame :: _onOK( wxCommandEvent & p_event )
 {
@@ -162,7 +162,7 @@ void NewOverlayFrame :: _onOK( wxCommandEvent & p_event )
 	g_mainFrame->GetElypseCtrl()->SetNewOverlayFrame( NULL );
 }
 
-//***********************************************************************************************************
+
 
 void NewOverlayFrame :: _onCancel( wxCommandEvent & p_event )
 {
@@ -186,4 +186,4 @@ void NewOverlayFrame :: _onCancel( wxCommandEvent & p_event )
 	g_mainFrame->GetElypseCtrl()->SetNewOverlayFrame( NULL );
 }
 
-//***********************************************************************************************************
+

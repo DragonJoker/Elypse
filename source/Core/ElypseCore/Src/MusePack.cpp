@@ -590,7 +590,7 @@ bool MusePack :: DecompressFile( const String & p_zipFileName, const String & p_
 	bool l_return = true;
 	gzFile l_infile = gzopen( p_zipFileName.c_str(), "r" );
 
-	if ( !l_infile )
+	if ( l_infile == Z_NULL )
 	{
 		l_return = false;
 	}

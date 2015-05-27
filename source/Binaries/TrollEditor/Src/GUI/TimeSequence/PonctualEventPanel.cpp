@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/MainFrame.h"
@@ -9,16 +9,16 @@
 /*
 #include <Sequences/BaseEvent.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum PonctualEventPanelIDs
 {
 	deleteEvent
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( PonctualEventPanel, wxPanel )
 	EVT_LEFT_DOWN(	PonctualEventPanel::_onLeftMouseDown )
 	EVT_LEFT_UP(	PonctualEventPanel::_onLeftMouseUp )
@@ -29,9 +29,9 @@ BEGIN_EVENT_TABLE( PonctualEventPanel, wxPanel )
 	EVT_KILL_FOCUS(	PonctualEventPanel::_onKillFocus )
 	EVT_MENU( deleteEvent,	PonctualEventPanel::_onDeleteEvent )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 PonctualEventPanel :: PonctualEventPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 		const wxSize & p_size )
@@ -46,13 +46,13 @@ PonctualEventPanel :: PonctualEventPanel( wxWindow * p_parent, wxWindowID p_id, 
 	SetBackgroundColour( wxColour( 255, 127, 0 ) );
 }
 
-//***********************************************************************************************************
+
 
 PonctualEventPanel :: ~PonctualEventPanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: SetPonctualEvent( TrollPonctualEvent * p_event, Real p_time )
 {
@@ -67,7 +67,7 @@ void PonctualEventPanel :: SetPonctualEvent( TrollPonctualEvent * p_event, Real 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: Replace( bool p_init )
 {
@@ -79,30 +79,30 @@ void PonctualEventPanel :: Replace( bool p_init )
 	{
 		GetParent()->RemoveChild( m_arrow );
 		delete m_arrow;
-		m_arrow = new ArrowPanel( GetParent(), wxID_ANY, wxPoint( m_time * 100 - 6, 20 ), wxSize( 12, m_top - 20 ) );
+		m_arrow = new ArrowPanel( GetParent(), wxID_ANY, wxPoint( int( m_time * 100 - 6 ), 20 ), wxSize( 12, m_top - 20 ) );
 	}
 	else
 	{
-		m_arrow->SetSize( m_time * 100 - 6, 20, 12, m_top - 20 );
+		m_arrow->SetSize( int( m_time * 100 - 6 ), 20, 12, m_top - 20 );
 	}
 
-	SetSize( m_time * 100, m_top, 20, 20 );
+	SetSize( int( m_time * 100 ), m_top, 20, 20 );
 	m_arrow->Show();
 	Show();
 }
 
-//*****************************************************************************************************************
+
 
 void PonctualEventPanel :: SetTop( int p_top )
 {
 	m_top = p_top;
-	m_arrow->SetSize( m_time * 100 - 6, 20, 12, m_top - 20 );
-	SetSize( m_time * 100, m_top, 20, 20 );
+	m_arrow->SetSize( int( m_time * 100 - 6 ), 20, 12, m_top - 20 );
+	SetSize( int( m_time * 100 ), m_top, 20, 20 );
 	m_arrow->Show();
 	Show();
 }
 
-//*****************************************************************************************************************
+
 
 void PonctualEventPanel :: _showContextMenu( const wxPoint & p_pos )
 {
@@ -111,7 +111,7 @@ void PonctualEventPanel :: _showContextMenu( const wxPoint & p_pos )
 	PopupMenu( & l_menu, p_pos.x, p_pos.y );
 }
 
-//*****************************************************************************************************************
+
 
 void PonctualEventPanel :: _onDeleteEvent( wxCommandEvent & p_event )
 {
@@ -121,14 +121,14 @@ void PonctualEventPanel :: _onDeleteEvent( wxCommandEvent & p_event )
 	m_arrow->Hide();
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onLeftMouseDown( wxMouseEvent & p_event )
 {
 	m_mouseLeftDown = true;
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _release( bool p_timeChanged )
 {
@@ -154,12 +154,12 @@ void PonctualEventPanel :: _release( bool p_timeChanged )
 
 	if ( p_timeChanged )
 	{
-		m_event->SetFireTime( GetPosition().x / 100.0 );
+		m_event->SetFireTime( GetPosition().x / 100.0f );
 		m_event->GetSequence()->ChangePonctualEventTime( m_event );
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 {
@@ -167,14 +167,14 @@ void PonctualEventPanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 	g_mainFrame->ShowObjectInfos( m_event );
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onRightMouseUp( wxMouseEvent & p_event )
 {
 	_showContextMenu( p_event.GetPosition() );
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onMouseEnter( wxMouseEvent & p_event )
 {
@@ -188,7 +188,7 @@ void PonctualEventPanel :: _onMouseEnter( wxMouseEvent & p_event )
 	l_dc.DrawRectangle( 0, 0, GetClientSize().x, GetClientSize().y );
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onMouseMove( wxMouseEvent & p_event )
 {
@@ -200,7 +200,7 @@ void PonctualEventPanel :: _onMouseMove( wxMouseEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onMouseLeave( wxMouseEvent & p_event )
 {
@@ -215,11 +215,11 @@ void PonctualEventPanel :: _onMouseLeave( wxMouseEvent & p_event )
 	_release( false );
 }
 
-//***********************************************************************************************************
+
 
 void PonctualEventPanel :: _onKillFocus( wxFocusEvent & p_event )
 {
 	_release( false );
 }
 
-//***********************************************************************************************************
+

@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/TimeSequence/ContinuousEventPanel.h"
@@ -9,17 +9,17 @@
 /*
 #include <Sequences/BaseEvent.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Temporal;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum ContinuousEventPanelIDs
 {
 	newFrame,
 	deleteEvent
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( ContinuousEventPanel, wxPanel )
 	EVT_LEFT_DOWN(	ContinuousEventPanel::_onLeftMouseDown )
 	EVT_LEFT_UP(	ContinuousEventPanel::_onLeftMouseUp )
@@ -31,9 +31,9 @@ BEGIN_EVENT_TABLE( ContinuousEventPanel, wxPanel )
 	EVT_MENU( newFrame,		ContinuousEventPanel::_onNewFrame )
 	EVT_MENU( deleteEvent,	ContinuousEventPanel::_onDeleteEvent )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 ContinuousEventPanel :: ContinuousEventPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
 		const wxSize & p_size )
@@ -49,13 +49,13 @@ ContinuousEventPanel :: ContinuousEventPanel( wxWindow * p_parent, wxWindowID p_
 	SetBackgroundColour( wxColour( 0, 255, 0 ) );
 }
 
-//***********************************************************************************************************
+
 
 ContinuousEventPanel :: ~ContinuousEventPanel()
 {
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: SetContinuousEvent( TrollContinuousEvent * p_event )
 {
@@ -69,7 +69,7 @@ void ContinuousEventPanel :: SetContinuousEvent( TrollContinuousEvent * p_event 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: Replace( bool p_init )
 {
@@ -82,39 +82,39 @@ void ContinuousEventPanel :: Replace( bool p_init )
 		{
 			GetParent()->RemoveChild( m_arrow );
 			delete m_arrow;
-			m_arrow = new ArrowPanel( GetParent(), wxID_ANY, wxPoint( m_event->GetStartTime() * 100 - 6, 20 ), wxSize( 12, m_top - 20 ) );
+			m_arrow = new ArrowPanel( GetParent(), wxID_ANY, wxPoint( int( m_event->GetStartTime() * 100 - 6 ), 20 ), wxSize( 12, m_top - 20 ) );
 		}
 		else
 		{
-			m_arrow->SetSize( m_event->GetStartTime() * 100 - 6, 20, 12, m_top - 20 );
+			m_arrow->SetSize( int( m_event->GetStartTime() * 100 - 6 ), 20, 12, m_top - 20 );
 		}
 
 		std::cout << "ContinuousEventPanel :: Replace - " << m_event->GetStartTime() << "\n";
-		SetSize( m_event->GetStartTime() * 100, m_top, ( m_event->GetLength() > 0.0 ? m_event->GetLength() * 100 : 10 ), 20 );
+		SetSize( int( m_event->GetStartTime() * 100 ), m_top, int( m_event->GetLength() > 0.0 ? m_event->GetLength() * 100 : 10 ), 20 );
 		m_arrow->Show();
 		Show();
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: SetTop( int p_top )
 {
 	m_top = p_top;
-	m_arrow->SetSize( m_event->GetStartTime() * 100 - 6, 20, 12, m_top - 20 );
-	SetSize( m_event->GetStartTime() * 100, m_top, ( m_event->GetLength() > 0.0 ? m_event->GetLength() * 100 : 10 ), 20 );
+	m_arrow->SetSize( int( m_event->GetStartTime() * 100 - 6 ), 20, 12, m_top - 20 );
+	SetSize( int( m_event->GetStartTime() * 100 ), m_top, int( m_event->GetLength() > 0.0 ? m_event->GetLength() * 100 : 10 ), 20 );
 	m_arrow->Show();
 	Show();
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onLeftMouseDown( wxMouseEvent & p_event )
 {
 	m_mouseLeftDown = true;
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 {
@@ -122,14 +122,14 @@ void ContinuousEventPanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 	g_mainFrame->ShowObjectInfos( m_event );
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onRightMouseUp( wxMouseEvent & p_event )
 {
 	_showContextMenu( p_event.GetPosition() );
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onMouseEnter( wxMouseEvent & p_event )
 {
@@ -143,7 +143,7 @@ void ContinuousEventPanel :: _onMouseEnter( wxMouseEvent & p_event )
 	l_dc.DrawRectangle( 0, 0, GetClientSize().x, GetClientSize().y );
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onMouseMove( wxMouseEvent & p_event )
 {
@@ -155,7 +155,7 @@ void ContinuousEventPanel :: _onMouseMove( wxMouseEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onMouseLeave( wxMouseEvent & p_event )
 {
@@ -170,21 +170,21 @@ void ContinuousEventPanel :: _onMouseLeave( wxMouseEvent & p_event )
 	_release( false );
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _onKillFocus( wxFocusEvent & p_event )
 {
 	_release( false );
 }
 
-//*****************************************************************************************************************
+
 
 void ContinuousEventPanel :: _onNewFrame( wxCommandEvent & p_event )
 {
 	g_mainFrame->CreateNewContinuousEventFrame( m_event );
 }
 
-//*****************************************************************************************************************
+
 
 void ContinuousEventPanel :: _onDeleteEvent( wxCommandEvent & p_event )
 {
@@ -194,7 +194,7 @@ void ContinuousEventPanel :: _onDeleteEvent( wxCommandEvent & p_event )
 	m_arrow->Hide();
 }
 
-//*****************************************************************************************************************
+
 
 void ContinuousEventPanel :: _showContextMenu( const wxPoint & p_pos )
 {
@@ -205,7 +205,7 @@ void ContinuousEventPanel :: _showContextMenu( const wxPoint & p_pos )
 	PopupMenu( & l_menu, p_pos.x, p_pos.y );
 }
 
-//***********************************************************************************************************
+
 
 void ContinuousEventPanel :: _release( bool p_timeChanged )
 {
@@ -231,9 +231,9 @@ void ContinuousEventPanel :: _release( bool p_timeChanged )
 
 	if ( p_timeChanged )
 	{
-		m_event->UpdateTime( GetPosition().x / 100.0 );
+		m_event->UpdateTime( GetPosition().x / 100.0f );
 		m_event->GetSequence()->ChangeContinuousEventTime( m_event );
 	}
 }
 
-//***********************************************************************************************************
+

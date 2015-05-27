@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/3D/Light.h"
@@ -9,10 +9,10 @@
 #include <wx/listctrl.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Objects3D;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollLight :: TrollLight( const wxString & p_name, const wxString & p_fileName )
 	:	Troll3DObject( p_name, p_fileName, ttLight ),
@@ -23,13 +23,13 @@ TrollLight :: TrollLight( const wxString & p_name, const wxString & p_fileName )
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollLight :: ~TrollLight()
 {
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: AttachTo( TrollSceneNode * p_node )
 {
@@ -47,7 +47,7 @@ void TrollLight :: AttachTo( TrollSceneNode * p_node )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollLight :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -64,7 +64,7 @@ int TrollLight :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetOgreLight( Ogre::Light * p_light )
 {
@@ -82,7 +82,7 @@ void TrollLight :: SetOgreLight( Ogre::Light * p_light )
 	m_spotLightRange.z = m_ogreLight->getSpotlightFalloff();
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetLightType( TrollLightType p_lt, bool p_updateOgre )
 {
@@ -98,7 +98,7 @@ void TrollLight :: SetLightType( TrollLightType p_lt, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetDirection( const Vector3 & p_dir, bool p_updateOgre )
 {
@@ -114,7 +114,7 @@ void TrollLight :: SetDirection( const Vector3 & p_dir, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetPosition( const Vector3 & p_pos, bool p_updateOgre )
 {
@@ -130,7 +130,7 @@ void TrollLight :: SetPosition( const Vector3 & p_pos, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetDiffuse( const ColourValue & p_l, bool p_updateOgre )
 {
@@ -146,7 +146,7 @@ void TrollLight :: SetDiffuse( const ColourValue & p_l, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetSpecular( const ColourValue & p_l, bool p_updateOgre )
 {
@@ -162,7 +162,7 @@ void TrollLight :: SetSpecular( const ColourValue & p_l, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetAttenuation( const Vector4 & p_att, bool p_updateOgre )
 {
@@ -178,7 +178,7 @@ void TrollLight :: SetAttenuation( const Vector4 & p_att, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: SetSpotLightRange( const Vector3 & p_splr, bool p_updateOgre )
 {
@@ -194,7 +194,7 @@ void TrollLight :: SetSpotLightRange( const Vector3 & p_splr, bool p_updateOgre 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollLight :: Write( wxTextOutputStream * p_stream )
 {
@@ -254,4 +254,4 @@ void TrollLight :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

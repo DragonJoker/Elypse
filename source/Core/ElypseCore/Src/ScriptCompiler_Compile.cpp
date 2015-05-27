@@ -158,13 +158,10 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileSentence( ScriptBlockArray
 				if ( l_typeList & BT_PARENTHESIS )
 				{
 					bool l_equals = false;
-					_times( p_childs.size() )
+
+					for ( size_t i = 0; i < p_childs.size() && !l_equals; ++i )
 					{
-						if ( p_childs[i]->m_contents == "=" )
-						{
-							l_equals = true;
-							break;
-						}
+						l_equals = p_childs[i]->m_contents == "=";
 					}
 
 					if ( l_equals )
@@ -480,10 +477,10 @@ ScriptBlock * EMuse::Script::ScriptCompiler :: _getHighestOperator( ScriptBlockA
 void EMuse::Script::ScriptCompiler :: _compileFuncParamsWithinParenthesis( const ScriptBlockArray & p_blockArray, ScriptNodeArray & p_compiledNodes )
 {
 	ScriptBlockArray l_currentArray;
-	_times( p_blockArray.size() )
-	{
-		ScriptBlock * l_block = p_blockArray[i];
+	size_t i = 0;
 
+	for ( auto & l_block : p_blockArray )
+	{
 		if ( l_block->m_type == BT_SEPARATOR || i == ( p_blockArray.size() - 1 ) )
 		{
 			if ( i == ( p_blockArray.size() - 1 ) )
@@ -503,6 +500,8 @@ void EMuse::Script::ScriptCompiler :: _compileFuncParamsWithinParenthesis( const
 		{
 			l_currentArray.push_back( l_block );
 		}
+
+		++i;
 	}
 }
 
@@ -537,7 +536,8 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileFuncParams( ScriptBlockArr
 	}
 
 	unsigned int imax = static_cast <unsigned int>( p_blockArray.size() );
-	_times( p_blockArray.size() )
+
+	for ( size_t i = 0; i < p_blockArray.size(); ++i )
 	{
 		ScriptBlock * l_block = p_blockArray[i];
 
@@ -987,13 +987,15 @@ VariableType * EMuse::Script::ScriptCompiler :: _getVariableType( ScriptBlockArr
 	}
 
 	ScriptBlockArray l_array;
-	_times( p_blockArray.size() )
+
+	for ( auto & l_block : p_blockArray )
 	{
-		if ( p_blockArray[i]->m_type == BT_VARIABLE_TYPE )
+		if ( l_block->m_type == BT_VARIABLE_TYPE )
 		{
-			l_array.push_back( p_blockArray[i] );
+			l_array.push_back( l_block );
 		}
 	}
+
 	unsigned int l_index = 0;
 	return _getVariableTypeRecus( l_array, l_index );
 }
@@ -1114,10 +1116,9 @@ void EMuse::Script::ScriptCompiler :: _compileStructDeclatation( ScriptBlockArra
 //	std::cout << "Struct named : " << l_name << std::endl;
 	ScriptBlock * l_block = p_blockArray[2];
 	ScriptBlockArray l_array;
-	_times( l_block->m_childs.size() )
-	{
-		ScriptBlock * l_child = l_block->m_childs[i];
 
+	for ( auto & l_child : l_block->m_childs )
+	{
 		if ( l_child->m_type == BT_SEPARATOR )
 		{
 			_addStructMember( l_struct, l_array );
@@ -1334,9 +1335,12 @@ void EMuse::Script::ScriptCompiler :: _declareStruct( ScriptBlockArray & p_block
 void EMuse::Script::ScriptCompiler :: _printBlockArray( const String & p_where, const ScriptBlockArray & p_childs )
 {
 	std::cout << p_where << " : " << p_childs.size() << "\n{" << std::endl;
-	_times( p_childs.size() )
+	size_t i = 0;
+
+	for ( auto & l_child : p_childs )
 	{
-		std::cout << "\tcontains : " << i << " - " << p_childs[i]->m_contents << " @ " << p_childs[i]->m_type << std::endl;
+		std::cout << "\tcontains : " << i++ << " - " << l_child->m_contents << " @ " << l_child->m_type << std::endl;
 	}
+
 	std::cout << "}" << std::endl;
 }

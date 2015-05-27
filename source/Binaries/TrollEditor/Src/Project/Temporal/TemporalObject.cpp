@@ -1,15 +1,13 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/Temporal/TemporalObject.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
-//***********************************************************************************************************
-extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TemporalObject :: TemporalObject( const wxString & p_name, const wxString & p_fileName, TemporalObjectType p_type )
 	:	TrollObject( p_name, p_fileName, ttTemporalObject ),
@@ -34,10 +32,10 @@ TemporalObject :: TemporalObject( const wxString & p_name, const wxString & p_fi
 	g_mainFrame->LogDebugMessage( l_msg );
 }
 
-//***********************************************************************************************************
+
 
 TemporalObject :: ~TemporalObject()
 {
 }
 
-//***********************************************************************************************************
+

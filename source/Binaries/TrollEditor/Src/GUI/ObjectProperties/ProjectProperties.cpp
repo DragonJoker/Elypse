@@ -1,14 +1,14 @@
-﻿//***********************************************************************************************************
+﻿
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/ProjectProperties.h"
 #include "Project/Project.h"
 /*
 #include <wx/checkbox.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 enum projectPropertiesID
 {
 	ppProjectName,
@@ -21,7 +21,7 @@ enum projectPropertiesID
 	ppStartupScript,
 	ppBack
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( ProjectProperties, wxFrame )
 	EVT_COMBOBOX(	ppBackgroundType,	ProjectProperties::_onSelectBackgroundType )
 	EVT_BUTTON(	ppBackground,		ProjectProperties::_onBackground )
@@ -32,7 +32,7 @@ BEGIN_EVENT_TABLE( ProjectProperties, wxFrame )
 	EVT_TEXT_ENTER(	ppStartupScript,	ProjectProperties::_onStartupScriptChange )
 	EVT_BUTTON(	ppBack,				ProjectProperties::_onBack )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 ProjectProperties :: ProjectProperties( Project * p_project, wxWindow * parent, const wxPoint & pos )
 	:	wxFrame( parent, wxID_ANY, wxT( "Propriétés du projet" ), pos, wxSize( 200, 230 ),
@@ -100,13 +100,13 @@ ProjectProperties :: ProjectProperties( Project * p_project, wxWindow * parent, 
 	m_back = new wxButton( l_panel, ppBack, wxT( "Retour" ), wxPoint( ( l_size.x / 2 ) - 35, l_size.y - 25 ), wxSize( 70, 20 ) );
 }
 
-//***********************************************************************************************************
+
 
 ProjectProperties :: ~ProjectProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onSelectBackgroundType( wxCommandEvent & p_event )
 {
@@ -122,7 +122,7 @@ void ProjectProperties :: _onSelectBackgroundType( wxCommandEvent & p_event )
 	m_background->SetLabel( m_backgroundType->GetValue() );
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onBackground( wxCommandEvent & p_event )
 {
@@ -148,14 +148,14 @@ void ProjectProperties :: _onBackground( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onShadowsChange( wxCommandEvent & p_event )
 {
 	m_project->SetShadows( m_shadows->IsChecked() );
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onSelectFSAA( wxCommandEvent & p_event )
 {
@@ -173,32 +173,32 @@ void ProjectProperties :: _onSelectFSAA( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onShowConsoleChange( wxCommandEvent & p_event )
 {
 	m_project->SetShowDebug( p_event.IsChecked() );
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onShowFPSChange( wxCommandEvent & p_event )
 {
 	m_project->SetShowFPS( p_event.IsChecked() );
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onStartupScriptChange( wxCommandEvent & p_event )
 {
 	m_project->SetStartupScript( m_startupScript->GetValue() );
 }
 
-//***********************************************************************************************************
+
 
 void ProjectProperties :: _onBack( wxCommandEvent & p_event )
 {
 	Destroy();
 }
 
-//***********************************************************************************************************
+

@@ -1,4 +1,4 @@
-﻿//***********************************************************************************************************
+﻿
 #include "PrecompiledHeader.h"
 
 #include "Project/Scene.h"
@@ -22,7 +22,7 @@
 #include <General/STLMacros.h>
 #include <General/File.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
 using namespace Troll::Temporal;
@@ -30,9 +30,7 @@ using namespace Troll::Media;
 using namespace Troll::Objects3D;
 using namespace Troll::Objects2D;
 using namespace General::Utils;
-//***********************************************************************************************************
-extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TrollSceneFile :: TrollSceneFile()
 	:	m_forceShadows( false ),
@@ -41,7 +39,7 @@ TrollSceneFile :: TrollSceneFile()
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollSceneFile :: ~TrollSceneFile()
 {
@@ -58,63 +56,63 @@ TrollSceneFile :: ~TrollSceneFile()
 	General::Utils::map::deleteAll( m_sequences );
 }
 
-//***********************************************************************************************************
+
 
 TrollOverlay * TrollSceneFile :: GetOverlay( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_allOverlays, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollSceneNode * TrollSceneFile :: GetSceneNode( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_allSceneNodes, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollLight * TrollSceneFile :: GetLight( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_lights, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollCamera * TrollSceneFile :: GetCamera( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_cameras, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimationGroup * TrollSceneFile :: GetAnimationGroup( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_animationGroups, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollSound * TrollSceneFile :: GetSound( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_sounds, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollVideo * TrollSceneFile :: GetVideo( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_videos, p_name );
 }
 
-//***********************************************************************************************************
+
 
 TrollSequence * TrollSceneFile :: GetSequence( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_sequences, p_name );
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneFile :: _writeUnusedFilePieces( wxTextOutputStream * p_textStream )
 {
@@ -156,7 +154,7 @@ void TrollSceneFile :: _writeUnusedFilePieces( wxTextOutputStream * p_textStream
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollSceneFile :: Write( const wxString & p_path )
 {
@@ -253,7 +251,7 @@ void TrollSceneFile :: Write( const wxString & p_path )
 	l_output.Close();
 }
 
-//***********************************************************************************************************
+
 
 TrollScene :: TrollScene( Project * p_project, const wxString & p_name, bool p_main )
 	:	m_minVerticCamAngle( 0 ),
@@ -279,7 +277,7 @@ TrollScene :: TrollScene( Project * p_project, const wxString & p_name, bool p_m
 	}
 }
 
-//***********************************************************************************************************
+
 
 TrollScene :: ~TrollScene()
 {
@@ -287,7 +285,7 @@ TrollScene :: ~TrollScene()
 	FlushObjects();
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: FlushFiles()
 {
@@ -299,7 +297,7 @@ void TrollScene :: FlushFiles()
 	General::Utils::vector::deleteAll( m_dataFolders );
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: FlushObjects()
 {
@@ -309,7 +307,7 @@ void TrollScene :: FlushObjects()
 	delete m_museFile;
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: SetCurrentSceneFile( const wxString & p_sceneFileName )
 {
@@ -327,7 +325,7 @@ void TrollScene :: SetCurrentSceneFile( const wxString & p_sceneFileName )
 	m_sceneConfigFiles.insert( SceneFileStrMap::value_type( p_sceneFileName, m_currentSceneFile ) );
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddSceneFile( TrollFile * p_file )
 {
@@ -349,7 +347,7 @@ bool TrollScene :: AddSceneFile( TrollFile * p_file )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddSceneFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
 								 const wxTreeItemId & p_item, bool p_saved, bool p_showError )
@@ -388,7 +386,7 @@ bool TrollScene :: AddSceneFile( const wxString & p_pathName, const wxTreeItemId
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddLoadScriptFile( TrollFile * p_file )
 {
@@ -410,7 +408,7 @@ bool TrollScene :: AddLoadScriptFile( TrollFile * p_file )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddLoadScriptFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
 									  const wxTreeItemId & p_item, bool p_saved, bool p_showError )
@@ -448,7 +446,7 @@ bool TrollScene :: AddLoadScriptFile( const wxString & p_pathName, const wxTreeI
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddUnloadScriptFile( TrollFile * p_file )
 {
@@ -470,7 +468,7 @@ bool TrollScene :: AddUnloadScriptFile( TrollFile * p_file )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddUnloadScriptFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
 										const wxTreeItemId & p_item, bool p_saved, bool p_showError )
@@ -507,7 +505,7 @@ bool TrollScene :: AddUnloadScriptFile( const wxString & p_pathName, const wxTre
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddDataFile( TrollFile * p_file )
 {
@@ -529,7 +527,7 @@ bool TrollScene :: AddDataFile( TrollFile * p_file )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddDataFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
 								const wxTreeItemId & p_item, bool p_saved, bool p_showError )
@@ -566,7 +564,7 @@ bool TrollScene :: AddDataFile( const wxString & p_pathName, const wxTreeItemId 
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddDataFolder( TrollFile * p_file )
 {
@@ -588,7 +586,7 @@ bool TrollScene :: AddDataFolder( TrollFile * p_file )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddDataFolder( const wxString & p_pathName, const wxTreeItemId & p_folder,
 								  const wxTreeItemId & p_item, bool p_saved, bool p_showError )
@@ -625,7 +623,7 @@ bool TrollScene :: AddDataFolder( const wxString & p_pathName, const wxTreeItemI
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddMuseFile( TrollFile * p_file )
 {
@@ -647,7 +645,7 @@ bool TrollScene :: AddMuseFile( TrollFile * p_file )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddFile( const wxTreeItemId & p_folder, const wxTreeItemId & p_item,
 							const wxString & p_pathName, bool p_saved, bool p_showError )
@@ -685,7 +683,7 @@ bool TrollScene :: AddFile( const wxTreeItemId & p_folder, const wxTreeItemId & 
 	return false;
 }
 
-//***********************************************************************************************************
+
 
 TrollEntity * TrollScene :: AddEntity( const wxString & p_name, const wxString & p_fileName )
 {
@@ -704,7 +702,7 @@ TrollEntity * TrollScene :: AddEntity( const wxString & p_name, const wxString &
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollOverlay * TrollScene :: AddOverlay( const wxString & p_name, const wxString & p_parentName,
 		const wxString & p_fileName )
@@ -737,7 +735,7 @@ TrollOverlay * TrollScene :: AddOverlay( const wxString & p_name, const wxString
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: AddOverlay( TrollOverlay * p_overlay )
 {
@@ -764,7 +762,7 @@ bool TrollScene :: AddOverlay( TrollOverlay * p_overlay )
 	return true;
 }
 
-//***********************************************************************************************************
+
 
 TrollSceneNode * TrollScene :: AddSceneNode( const wxString & p_name, const wxString & p_fileName )
 {
@@ -785,7 +783,7 @@ TrollSceneNode * TrollScene :: AddSceneNode( const wxString & p_name, const wxSt
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: AttachNode( TrollSceneNode * p_node, TrollSceneNode * p_parent )
 {
@@ -799,7 +797,7 @@ void TrollScene :: AttachNode( TrollSceneNode * p_node, TrollSceneNode * p_paren
 	}
 }
 
-//***********************************************************************************************************
+
 
 TrollLight * TrollScene :: AddLight( const wxString & p_name, const wxString & p_fileName )
 {
@@ -818,7 +816,7 @@ TrollLight * TrollScene :: AddLight( const wxString & p_name, const wxString & p
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollCamera * TrollScene :: AddCamera( const wxString & p_name, const wxString & p_fileName )
 {
@@ -837,7 +835,7 @@ TrollCamera * TrollScene :: AddCamera( const wxString & p_name, const wxString &
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollMesh * TrollScene :: AddMesh( const wxString & p_name )
 {
@@ -851,7 +849,7 @@ TrollMesh * TrollScene :: AddMesh( const wxString & p_name )
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimationGroup * TrollScene :: AddAnimationGroup( const wxString & p_name, const wxString & p_fileName )
 {
@@ -870,7 +868,7 @@ TrollAnimationGroup * TrollScene :: AddAnimationGroup( const wxString & p_name, 
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollSound * TrollScene :: AddSound( const wxString & p_name, const wxString & p_fileName )
 {
@@ -890,7 +888,7 @@ TrollSound * TrollScene :: AddSound( const wxString & p_name, const wxString & p
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollVideo * TrollScene :: AddVideo( const wxString & p_name, const wxString & p_fileName )
 {
@@ -909,7 +907,7 @@ TrollVideo * TrollScene :: AddVideo( const wxString & p_name, const wxString & p
 	return l_object;
 }
 
-//***********************************************************************************************************
+
 
 TrollSequence * TrollScene :: AddSequence( TrollSequence * p_sequence, const wxString & p_fileName )
 {
@@ -927,7 +925,7 @@ TrollSequence * TrollScene :: AddSequence( TrollSequence * p_sequence, const wxS
 	return p_sequence;
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveSceneFile( const wxString & p_pathName )
 {
@@ -946,7 +944,7 @@ void TrollScene :: RemoveSceneFile( const wxString & p_pathName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveLoadScriptFile( const wxString & p_pathName )
 {
@@ -963,7 +961,7 @@ void TrollScene :: RemoveLoadScriptFile( const wxString & p_pathName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveUnloadScriptFile( const wxString & p_pathName )
 {
@@ -980,7 +978,7 @@ void TrollScene :: RemoveUnloadScriptFile( const wxString & p_pathName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveDataFile( const wxString & p_pathName )
 {
@@ -997,7 +995,7 @@ void TrollScene :: RemoveDataFile( const wxString & p_pathName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveDataFolder( const wxString & p_pathName )
 {
@@ -1014,7 +1012,7 @@ void TrollScene :: RemoveDataFolder( const wxString & p_pathName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveFile( const wxTreeItemId & p_item )
 {
@@ -1057,7 +1055,7 @@ void TrollScene :: RemoveFile( const wxTreeItemId & p_item )
 	}
 }
 
-//***********************************************************************************************************
+
 
 bool TrollScene :: HasItem( const wxTreeItemId & p_item )
 {
@@ -1134,7 +1132,7 @@ bool TrollScene :: HasItem( const wxTreeItemId & p_item )
 	return false;
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: Save( wxTextOutputStream * p_stream )
 {
@@ -1327,7 +1325,7 @@ void TrollScene :: AddDependency( wxString const & p_strName )
 	m_neededScenes.push_back( p_strName );
 }
 
-//***********************************************************************************************************
+
 
 wxString TrollScene :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, FilesTree * p_tree )
 {
@@ -1433,7 +1431,7 @@ wxString TrollScene :: Load( wxFileInputStream * p_input, wxTextInputStream * p_
 	return l_line;
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: Write( const wxString & p_path )
 {
@@ -1446,7 +1444,7 @@ void TrollScene :: Write( const wxString & p_path )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & p_new )
 {
@@ -1501,7 +1499,7 @@ void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & 
 	}
 }
 
-//***********************************************************************************************************
+
 
 FileType TrollScene :: GetType( const wxTreeItemId & p_folderId )
 {
@@ -1528,7 +1526,7 @@ FileType TrollScene :: GetType( const wxTreeItemId & p_folderId )
 	return dataFile;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetFile( const wxTreeItemId & p_itemId )
 {
@@ -1575,7 +1573,7 @@ TrollFile * TrollScene :: GetFile( const wxTreeItemId & p_itemId )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetFileByName( const wxString & p_itemName )
 {
@@ -1622,7 +1620,7 @@ TrollFile * TrollScene :: GetFileByName( const wxString & p_itemName )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetSceneFile( unsigned int p_index )
 {
@@ -1634,7 +1632,7 @@ TrollFile * TrollScene :: GetSceneFile( unsigned int p_index )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetLoadScriptFile( unsigned int p_index )
 {
@@ -1646,7 +1644,7 @@ TrollFile * TrollScene :: GetLoadScriptFile( unsigned int p_index )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetUnloadScriptFile( unsigned int p_index )
 {
@@ -1658,7 +1656,7 @@ TrollFile * TrollScene :: GetUnloadScriptFile( unsigned int p_index )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetDataFile( unsigned int p_index )
 {
@@ -1670,7 +1668,7 @@ TrollFile * TrollScene :: GetDataFile( unsigned int p_index )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollFile * TrollScene :: GetDataFolder( unsigned int p_index )
 {
@@ -1682,7 +1680,7 @@ TrollFile * TrollScene :: GetDataFolder( unsigned int p_index )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollEntity * TrollScene :: GetEntity( const wxString & p_name )
 {
@@ -1702,7 +1700,7 @@ TrollEntity * TrollScene :: GetEntity( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollMesh * TrollScene :: GetMesh( const wxString & p_name )
 {
@@ -1716,7 +1714,7 @@ TrollMesh * TrollScene :: GetMesh( const wxString & p_name )
 	return l_it->second;
 }
 
-//***********************************************************************************************************
+
 
 TrollOverlay * TrollScene :: GetOverlay( const wxString & p_name )
 {
@@ -1736,7 +1734,7 @@ TrollOverlay * TrollScene :: GetOverlay( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollSceneNode * TrollScene :: GetSceneNode( const wxString & p_name )
 {
@@ -1756,7 +1754,7 @@ TrollSceneNode * TrollScene :: GetSceneNode( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollLight * TrollScene :: GetLight( const wxString & p_name )
 {
@@ -1776,7 +1774,7 @@ TrollLight * TrollScene :: GetLight( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollCamera * TrollScene :: GetCamera( const wxString & p_name )
 {
@@ -1796,7 +1794,7 @@ TrollCamera * TrollScene :: GetCamera( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollAnimationGroup * TrollScene :: GetAnimationGroup( const wxString & p_name )
 {
@@ -1816,7 +1814,7 @@ TrollAnimationGroup * TrollScene :: GetAnimationGroup( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollSound * TrollScene :: GetSound( const wxString & p_name )
 {
@@ -1836,7 +1834,7 @@ TrollSound * TrollScene :: GetSound( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollVideo * TrollScene :: GetVideo( const wxString & p_name )
 {
@@ -1856,7 +1854,7 @@ TrollVideo * TrollScene :: GetVideo( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 TrollSequence * TrollScene :: GetSequence( const wxString & p_name )
 {
@@ -1876,7 +1874,7 @@ TrollSequence * TrollScene :: GetSequence( const wxString & p_name )
 	return NULL;
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: GetNodesNames( wxArrayString & p_list, const wxString & p_name )
 {
@@ -1901,7 +1899,7 @@ void TrollScene :: GetNodesNames( wxArrayString & p_list, const wxString & p_nam
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: GetOverlaysNames( wxArrayString & p_list )
 {
@@ -1923,7 +1921,7 @@ void TrollScene :: GetOverlaysNames( wxArrayString & p_list )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: GetMeshesNames( wxArrayString & p_list )
 {
@@ -1935,7 +1933,7 @@ void TrollScene :: GetMeshesNames( wxArrayString & p_list )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: GetSequencesNames( wxArrayString & p_list )
 {
@@ -1953,7 +1951,7 @@ void TrollScene :: GetSequencesNames( wxArrayString & p_list )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: AddDependency( TrollScene * p_scene )
 {
@@ -1978,7 +1976,7 @@ void TrollScene :: AddDependency( TrollScene * p_scene )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: RemoveDependency( TrollScene * p_scene )
 {
@@ -1999,7 +1997,7 @@ void TrollScene :: RemoveDependency( TrollScene * p_scene )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollScene :: _removeSceneThatNeedMe( TrollScene * p_scene )
 {
@@ -2011,4 +2009,4 @@ void TrollScene :: _removeSceneThatNeedMe( TrollScene * p_scene )
 	}
 }
 
-//***********************************************************************************************************
+

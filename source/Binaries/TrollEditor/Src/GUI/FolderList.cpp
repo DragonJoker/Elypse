@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/FolderList.h"
@@ -6,11 +6,11 @@
 #include <boost/filesystem.hpp>
 #include <General/File.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
 using namespace boost::filesystem;
-//***********************************************************************************************************
+
 enum FolderListIDs
 {
 	Liste,
@@ -18,14 +18,14 @@ enum FolderListIDs
 	Supprimer,
 	Ajouter,
 };
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( FolderList, wxFrame )
 	EVT_BUTTON(	Quitter,	FolderList::_onQuit )
 	EVT_BUTTON(	Ajouter,	FolderList::_onAddFile )
 	EVT_BUTTON(	Supprimer,	FolderList::_onDelFile )
 	EVT_KEY_UP(	FolderList::_onKeyUp )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 FolderList :: FolderList( const wxString & p_folder, wxWindow * p_parent, const wxPoint & p_position )
 	:	wxFrame( p_parent, wxID_ANY, wxT( "Liste" ), p_position, wxSize( 200, 350 ), wxFRAME_TOOL_WINDOW | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT ),
@@ -48,20 +48,20 @@ FolderList :: FolderList( const wxString & p_folder, wxWindow * p_parent, const 
 	_listFolder();
 }
 
-//***********************************************************************************************************
+
 
 FolderList :: ~FolderList()
 {
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: RemoveFile( const wxString & p_file )
 {
 	FileDelete( ( m_folder + wxT( "/" ) + p_file ).char_str().data() );
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: AddFile( const wxString & p_file )
 {
@@ -79,7 +79,7 @@ void FolderList :: AddFile( const wxString & p_file )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: _listFolder()
 {
@@ -121,14 +121,14 @@ void FolderList :: _listFolder()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: _onQuit( wxCommandEvent & p_event )
 {
 	Close();
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: _onAddFile( wxCommandEvent & p_event )
 {
@@ -147,7 +147,7 @@ void FolderList :: _onAddFile( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: _onDelFile( wxCommandEvent & p_event )
 {
@@ -170,7 +170,7 @@ void FolderList :: _onDelFile( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void FolderList :: _onKeyUp( wxKeyEvent & p_event )
 {
@@ -180,4 +180,4 @@ void FolderList :: _onKeyUp( wxKeyEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

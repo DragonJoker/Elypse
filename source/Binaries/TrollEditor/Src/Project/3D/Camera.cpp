@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/3D/Camera.h"
@@ -8,10 +8,10 @@
 #include <OgreCamera.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll::Objects3D;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 
 TrollCamera :: TrollCamera( const wxString & p_name, const wxString & p_fileName )
 	:	Troll3DObject( p_name, p_fileName, ttCamera ),
@@ -24,13 +24,13 @@ TrollCamera :: TrollCamera( const wxString & p_name, const wxString & p_fileName
 {
 }
 
-//***********************************************************************************************************
+
 
 TrollCamera :: ~TrollCamera()
 {
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: AttachTo( TrollSceneNode * p_node )
 {
@@ -48,7 +48,7 @@ void TrollCamera :: AttachTo( TrollSceneNode * p_node )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollCamera :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -64,7 +64,7 @@ int TrollCamera :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_returnSize.y;
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: SetOgreCamera( Ogre::Camera * p_camera )
 {
@@ -75,7 +75,7 @@ void TrollCamera :: SetOgreCamera( Ogre::Camera * p_camera )
 	m_yFOV = m_ogreCamera->getFOVy().valueDegrees();
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: SetPosition( const Ogre::Vector3 & p_pos, bool p_updateOgre )
 {
@@ -91,7 +91,7 @@ void TrollCamera :: SetPosition( const Ogre::Vector3 & p_pos, bool p_updateOgre 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: SetDirection( const Ogre::Vector3 & p_dir, bool p_updateOgre )
 {
@@ -107,14 +107,14 @@ void TrollCamera :: SetDirection( const Ogre::Vector3 & p_dir, bool p_updateOgre
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: SetOrientation( const Ogre::Quaternion & p_orientation, bool p_updateOgre )
 {
 	m_orientation = p_orientation;
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: SetPolygonMode( TrollCameraPolygonMode p_cpm, bool p_updateOgre )
 {
@@ -130,7 +130,7 @@ void TrollCamera :: SetPolygonMode( TrollCameraPolygonMode p_cpm, bool p_updateO
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: SetYFOV( float p_fov, bool p_updateOgre )
 {
@@ -146,7 +146,7 @@ void TrollCamera :: SetYFOV( float p_fov, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollCamera :: Write( wxTextOutputStream * p_stream )
 {
@@ -201,4 +201,4 @@ void TrollCamera :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

@@ -10,14 +10,16 @@
 
 #include "EMuse.h"
 #include <queue>
+#include <cstdint>
 
 namespace EMuse
 {
 	namespace Script
 	{
-#define NUM_KEYS 255
+		static const uint32_t NUM_KEYS = 255u;
 
 		enum VariableBaseType
+		: uint32_t
 		{
 			EMVT_NULL,
 			EMVT_INT,

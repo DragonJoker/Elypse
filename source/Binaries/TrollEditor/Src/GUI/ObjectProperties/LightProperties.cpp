@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 #include "GUI/ObjectProperties/LightProperties.h"
 
@@ -7,10 +7,10 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 #include "GUI/MainFrame.h"
-//***********************************************************************************************************
+
 using namespace Troll::GUI;
 using namespace Troll::Objects3D;
-//***********************************************************************************************************
+
 enum LightPropsIDs
 {
 	lightName,
@@ -34,10 +34,10 @@ enum LightPropsIDs
 	lightSpotlightOuterAngle,
 	lightSpotlightFalloff
 };
-//***********************************************************************************************************
+
 const long c_defaultTextEditStyle = wxBORDER_SIMPLE | wxTE_PROCESS_ENTER;
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( LightProperties, wxPanel )
 	EVT_TEXT_ENTER(	lightName,					LightProperties::_onEditName )
 	EVT_COMBOBOX(	lightParent,				LightProperties::_onSelectParent )
@@ -58,7 +58,7 @@ BEGIN_EVENT_TABLE( LightProperties, wxPanel )
 	EVT_TEXT_ENTER(	lightSpotlightOuterAngle,	LightProperties::_onEditSpotlightOuterAngle )
 	EVT_TEXT_ENTER(	lightSpotlightFalloff,		LightProperties::_onEditSpotlightFalloff )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 LightProperties :: LightProperties( TrollLight * p_light, wxWindow * parent, const wxPoint & pos,
 									const wxSize & size, long style )
@@ -103,13 +103,13 @@ LightProperties :: LightProperties( TrollLight * p_light, wxWindow * parent, con
 	m_spotlightFalloff = BuildTextCtrl( this, l_position += wxPoint( 0, 20 ), lightSpotlightFalloff, wxT( "Spotlight Falloff" ), l_spotlightRange.z );
 }
 
-//***********************************************************************************************************
+
 
 LightProperties :: ~LightProperties()
 {
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: UpdateProperties()
 {
@@ -192,7 +192,7 @@ void LightProperties :: UpdateProperties()
 	m_updatingProperties = false;
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditName( wxCommandEvent & p_event )
 {
@@ -202,7 +202,7 @@ void LightProperties :: _onEditName( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onSelectParent( wxCommandEvent & p_event )
 {
@@ -213,7 +213,7 @@ void LightProperties :: _onSelectParent( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditXDir( wxCommandEvent & p_event )
 {
@@ -231,7 +231,7 @@ void LightProperties :: _onEditXDir( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditYDir( wxCommandEvent & p_event )
 {
@@ -249,7 +249,7 @@ void LightProperties :: _onEditYDir( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditZDir( wxCommandEvent & p_event )
 {
@@ -267,7 +267,7 @@ void LightProperties :: _onEditZDir( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditRedDiffuse( wxCommandEvent & p_event )
 {
@@ -292,7 +292,7 @@ void LightProperties :: _onEditRedDiffuse( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditGreenDiffuse( wxCommandEvent & p_event )
 {
@@ -317,7 +317,7 @@ void LightProperties :: _onEditGreenDiffuse( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditBlueDiffuse( wxCommandEvent & p_event )
 {
@@ -342,7 +342,7 @@ void LightProperties :: _onEditBlueDiffuse( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditAlphaDiffuse( wxCommandEvent & p_event )
 {
@@ -367,7 +367,7 @@ void LightProperties :: _onEditAlphaDiffuse( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditRedSpecular( wxCommandEvent & p_event )
 {
@@ -392,7 +392,7 @@ void LightProperties :: _onEditRedSpecular( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditGreenSpecular( wxCommandEvent & p_event )
 {
@@ -417,7 +417,7 @@ void LightProperties :: _onEditGreenSpecular( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditBlueSpecular( wxCommandEvent & p_event )
 {
@@ -442,7 +442,7 @@ void LightProperties :: _onEditBlueSpecular( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditAlphaSpecular( wxCommandEvent & p_event )
 {
@@ -467,7 +467,7 @@ void LightProperties :: _onEditAlphaSpecular( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditAttenuationRange( wxCommandEvent & p_event )
 {
@@ -485,7 +485,7 @@ void LightProperties :: _onEditAttenuationRange( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditAttenuationConstant( wxCommandEvent & p_event )
 {
@@ -503,7 +503,7 @@ void LightProperties :: _onEditAttenuationConstant( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditAttenuationLinear( wxCommandEvent & p_event )
 {
@@ -521,7 +521,7 @@ void LightProperties :: _onEditAttenuationLinear( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditAttenuationQuadric( wxCommandEvent & p_event )
 {
@@ -539,7 +539,7 @@ void LightProperties :: _onEditAttenuationQuadric( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditSpotlightInnerAngle( wxCommandEvent & p_event )
 {
@@ -557,7 +557,7 @@ void LightProperties :: _onEditSpotlightInnerAngle( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditSpotlightOuterAngle( wxCommandEvent & p_event )
 {
@@ -575,7 +575,7 @@ void LightProperties :: _onEditSpotlightOuterAngle( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void LightProperties :: _onEditSpotlightFalloff( wxCommandEvent & p_event )
 {
@@ -593,4 +593,4 @@ void LightProperties :: _onEditSpotlightFalloff( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+

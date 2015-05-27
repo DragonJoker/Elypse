@@ -1,22 +1,22 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "GUI/SceneDependenciesFrame.h"
 #include "GUI/MainFrame.h"
 #include "Project/Project.h"
 #include "Project/Scene.h"
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::GUI;
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 BEGIN_EVENT_TABLE( SceneDependenciesFrame, wxFrame )
 	EVT_CLOSE(	SceneDependenciesFrame::_onClose )
 	EVT_CHECKLISTBOX(	sdfSceneDependencies,	SceneDependenciesFrame::_onCheckScene )
 	EVT_COMBOBOX(	sdfSceneSelector,		SceneDependenciesFrame::_onSelectScene )
 	EVT_BUTTON(	sdfOkBtn,				SceneDependenciesFrame::_onOK )
 END_EVENT_TABLE()
-//***********************************************************************************************************
+
 
 SceneDependenciesFrame :: SceneDependenciesFrame( wxWindow * p_parent, TrollScene * p_scene,
 		const wxString & title, const wxPoint & pos )
@@ -33,7 +33,7 @@ SceneDependenciesFrame :: SceneDependenciesFrame( wxWindow * p_parent, TrollScen
 	m_okBtn = new wxButton( this, sdfOkBtn, wxT( "Fermer" ), wxPoint( 65, GetClientSize().y - 35 ), wxSize( 70, 25 ) );
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: SetScene( TrollScene * p_scene )
 {
@@ -41,7 +41,7 @@ void SceneDependenciesFrame :: SetScene( TrollScene * p_scene )
 	_initialise();
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: _initialise()
 {
@@ -86,14 +86,14 @@ void SceneDependenciesFrame :: _initialise()
 	_populateSceneDependencies();
 }
 
-//***********************************************************************************************************
+
 
 SceneDependenciesFrame :: ~SceneDependenciesFrame()
 {
 	m_scenes.clear();
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: _populateSceneDependencies()
 {
@@ -138,14 +138,14 @@ void SceneDependenciesFrame :: _populateSceneDependencies()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: _onClose( wxCloseEvent & p_event )
 {
 	Hide();
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: _onCheckScene( wxCommandEvent & p_event )
 {
@@ -172,7 +172,7 @@ void SceneDependenciesFrame :: _onCheckScene( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: _onSelectScene( wxCommandEvent & p_event )
 {
@@ -185,11 +185,11 @@ void SceneDependenciesFrame :: _onSelectScene( wxCommandEvent & p_event )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void SceneDependenciesFrame :: _onOK( wxCommandEvent & p_event )
 {
 	Hide();
 }
 
-//***********************************************************************************************************
+

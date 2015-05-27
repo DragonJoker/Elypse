@@ -1,4 +1,4 @@
-//***********************************************************************************************************
+
 #include "PrecompiledHeader.h"
 
 #include "Project/2D/Overlay.h"
@@ -12,13 +12,13 @@
 #include <General/STLMacros.h>
 #include <wx/txtstrm.h>
 */
-//***********************************************************************************************************
+
 using namespace Troll;
 using namespace Troll::Objects2D;
 using namespace Troll::GUI;
-//***********************************************************************************************************
+
 extern MainFrame * g_mainFrame;
-//***********************************************************************************************************
+
 
 TrollOverlay :: TrollOverlay( const wxString & p_name, TrollOverlay * p_parent, const wxString & p_fileName )
 	:	TrollObject( p_name, p_fileName, ttOverlay ),
@@ -43,7 +43,7 @@ TrollOverlay :: TrollOverlay( const wxString & p_name, TrollOverlay * p_parent, 
 	}
 }
 
-//***********************************************************************************************************
+
 
 TrollOverlay :: ~TrollOverlay()
 {
@@ -62,7 +62,7 @@ TrollOverlay :: ~TrollOverlay()
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: Reinitialise( const wxString & p_templateName )
 {
@@ -83,7 +83,7 @@ void TrollOverlay :: Reinitialise( const wxString & p_templateName )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: AddChild( TrollOverlay * p_child, bool p_updateElypse )
 {
@@ -94,7 +94,7 @@ void TrollOverlay :: AddChild( TrollOverlay * p_child, bool p_updateElypse )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: RemoveChild( const wxString & p_name )
 {
@@ -107,7 +107,7 @@ void TrollOverlay :: RemoveChild( const wxString & p_name )
 	}
 }
 
-//***********************************************************************************************************
+
 
 int TrollOverlay :: BuildPanel( wxWindow * p_parent, int p_width )
 {
@@ -125,7 +125,7 @@ int TrollOverlay :: BuildPanel( wxWindow * p_parent, int p_width )
 	return l_height;
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetMuseOverlay( EMuse::Gui::EMOverlay * p_museOverlay )
 {
@@ -170,14 +170,14 @@ void TrollOverlay :: SetMuseOverlay( EMuse::Gui::EMOverlay * p_museOverlay )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetOverlayClass( const wxString & p_className )
 {
 	m_className = p_className;
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBaseMaterial( const wxString & p_matName, bool p_updateOgre )
 {
@@ -193,7 +193,7 @@ void TrollOverlay :: SetBaseMaterial( const wxString & p_matName, bool p_updateO
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetMouseOverMaterial( const wxString & p_matName, bool p_updateOgre )
 {
@@ -209,7 +209,7 @@ void TrollOverlay :: SetMouseOverMaterial( const wxString & p_matName, bool p_up
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetClickedMaterial( const wxString & p_matName, bool p_updateOgre )
 {
@@ -225,7 +225,7 @@ void TrollOverlay :: SetClickedMaterial( const wxString & p_matName, bool p_upda
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetTop( float p_top, bool p_updateOgre )
 {
@@ -241,7 +241,7 @@ void TrollOverlay :: SetTop( float p_top, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetLeft( float p_left, bool p_updateOgre )
 {
@@ -257,7 +257,7 @@ void TrollOverlay :: SetLeft( float p_left, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetWidth( float p_width, bool p_updateOgre )
 {
@@ -273,7 +273,7 @@ void TrollOverlay :: SetWidth( float p_width, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetHeight( float p_height, bool p_updateOgre )
 {
@@ -289,7 +289,7 @@ void TrollOverlay :: SetHeight( float p_height, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetVerticalAlign( TEVerticAlign p_align, bool p_updateOgre )
 {
@@ -305,7 +305,7 @@ void TrollOverlay :: SetVerticalAlign( TEVerticAlign p_align, bool p_updateOgre 
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetHorizontalAlign( TEHorizAlign p_align, bool p_updateOgre )
 {
@@ -321,7 +321,7 @@ void TrollOverlay :: SetHorizontalAlign( TEHorizAlign p_align, bool p_updateOgre
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetCaption( const wxString & p_caption, bool p_updateOgre )
 {
@@ -342,7 +342,7 @@ void TrollOverlay :: SetCaption( const wxString & p_caption, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetTextColour( const Ogre::ColourValue & p_colour, bool p_updateOgre )
 {
@@ -363,7 +363,7 @@ void TrollOverlay :: SetTextColour( const Ogre::ColourValue & p_colour, bool p_u
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetFontName( const wxString & p_fontName, bool p_updateOgre )
 {
@@ -384,7 +384,7 @@ void TrollOverlay :: SetFontName( const wxString & p_fontName, bool p_updateOgre
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetFontSize( float p_height, bool p_updateOgre )
 {
@@ -405,7 +405,7 @@ void TrollOverlay :: SetFontSize( float p_height, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetTextHorizontalAlign( TEHorizAlign p_align, bool p_updateOgre )
 {
@@ -426,7 +426,7 @@ void TrollOverlay :: SetTextHorizontalAlign( TEHorizAlign p_align, bool p_update
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetTextVerticalAlign( TEVerticAlign p_align, bool p_updateOgre )
 {
@@ -447,7 +447,7 @@ void TrollOverlay :: SetTextVerticalAlign( TEVerticAlign p_align, bool p_updateO
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetVisible( bool p_visible )
 {
@@ -461,7 +461,7 @@ void TrollOverlay :: SetVisible( bool p_visible )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBorderMaterial( const wxString & p_name, bool p_updateOgre )
 {
@@ -486,7 +486,7 @@ void TrollOverlay :: SetBorderMaterial( const wxString & p_name, bool p_updateOg
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBorderSize( float p_top, float p_bottom, float p_left, float p_right, bool p_updateOgre )
 {
@@ -510,7 +510,7 @@ void TrollOverlay :: SetBorderSize( float p_top, float p_bottom, float p_left, f
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBorderTop( float p_top, bool p_updateOgre )
 {
@@ -534,7 +534,7 @@ void TrollOverlay :: SetBorderTop( float p_top, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBorderBottom( float p_bottom, bool p_updateOgre )
 {
@@ -558,7 +558,7 @@ void TrollOverlay :: SetBorderBottom( float p_bottom, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBorderLeft( float p_left, bool p_updateOgre )
 {
@@ -582,7 +582,7 @@ void TrollOverlay :: SetBorderLeft( float p_left, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: SetBorderRight( float p_right, bool p_updateOgre )
 {
@@ -606,7 +606,7 @@ void TrollOverlay :: SetBorderRight( float p_right, bool p_updateOgre )
 	}
 }
 
-//***********************************************************************************************************
+
 
 void TrollOverlay :: Write( wxTextOutputStream * p_stream )
 {
@@ -683,8 +683,8 @@ void TrollOverlay :: Write( wxTextOutputStream * p_stream )
 
 	if ( m_borderInfos != NULL )
 	{
-		float l_screenWidth = ScriptEngine::GetContext()->mainViewport->getActualWidth();
-		float l_screenHeight = ScriptEngine::GetContext()->mainViewport->getActualHeight();
+		float l_screenWidth = float( ScriptEngine::GetContext()->mainViewport->getActualWidth() );
+		float l_screenHeight = float( ScriptEngine::GetContext()->mainViewport->getActualHeight() );
 		p_stream->WriteString( l_baseTabs + wxT( "\tborder_material " ) + m_borderInfos->m_material + wxT( "\n" ) );
 		l_tmp.Printf( wxT( "%.2f %.2f %.2f %.2f" ), m_borderInfos->m_left * l_screenWidth, m_borderInfos->m_right * l_screenWidth,
 					  m_borderInfos->m_top * l_screenHeight, m_borderInfos->m_bottom * l_screenHeight );
@@ -735,4 +735,4 @@ void TrollOverlay :: Write( wxTextOutputStream * p_stream )
 	p_stream->WriteString( l_baseTabs + wxT( "}\n\n" ) );
 }
 
-//***********************************************************************************************************
+

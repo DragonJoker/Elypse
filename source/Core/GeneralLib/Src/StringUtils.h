@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <vector>
 
+#include "StringConverter.h"
+
 namespace General
 {
 	namespace Utils
@@ -12,9 +14,10 @@ namespace General
 		class string
 		{
 		public:
-			static inline void trim( std::string & str, bool left = true, bool right = true )
+			template< typename CharType >
+			static inline void trim( std::basic_string< CharType > & str, bool left = true, bool right = true )
 			{
-				static const std::string delims = " \t\r";
+				static const std::basic_string< CharType > delims = string_cast< CharType >( " \t\r" );
 
 				if ( right )
 				{
@@ -27,9 +30,10 @@ namespace General
 				}
 			}
 
-			static inline std::vector<std::string> split( const std::string & str, const std::string & delims = "\t\n ", unsigned int maxSplits = 10 )
+			template< typename CharType >
+			static inline std::vector<std::basic_string< CharType > > split( const std::string & str, const std::basic_string< CharType > & delims = string_cast< CharType >( "\t\n " ), unsigned int maxSplits = 10 )
 			{
-				std::vector<std::string> ret;
+				std::vector< std::basic_string< CharType > > ret;
 				ret.reserve( maxSplits ? maxSplits + 1 : 10 );
 				unsigned int numSplits = 0;
 				size_t start, pos;
@@ -43,7 +47,7 @@ namespace General
 					{
 						start = pos + 1;
 					}
-					else if ( pos == std::string::npos || ( maxSplits && numSplits == maxSplits ) )
+					else if ( pos == std::basic_string< CharType >::npos || ( maxSplits && numSplits == maxSplits ) )
 					{
 						ret.push_back( str.substr( start ) );
 						break;
@@ -57,7 +61,7 @@ namespace General
 					start = str.find_first_not_of( delims, start );
 					++ numSplits;
 				}
-				while ( pos != std::string::npos );
+				while ( pos != std::basic_string< CharType >::npos );
 
 				return ret;
 			}
@@ -80,15 +84,15 @@ namespace General
 					toupper );
 			}
 
-
-			static inline std::string replace( const std::string & p_target, const std::string & p_find, const std::string & p_replaced )
+			template< typename CharType >
+			static inline std::basic_string< CharType > replace( const std::basic_string< CharType > & p_target, const std::basic_string< CharType > & p_find, const std::basic_string< CharType > & p_replaced )
 			{
-				std::string l_return;
-				std::string l_temp;
+				std::basic_string< CharType > l_return;
+				std::basic_string< CharType > l_temp;
 				size_t l_currentPos = 0;
 				size_t l_pos;
 
-				while ( ( l_pos = p_target.find( p_find, l_currentPos ) ) != std::string::npos )
+				while ( ( l_pos = p_target.find( p_find, l_currentPos ) ) != std::basic_string< CharType >::npos )
 				{
 					l_return.append( p_target.substr( l_currentPos, l_pos - l_currentPos ) );
 					l_return.append( p_replaced );
@@ -103,7 +107,8 @@ namespace General
 				return l_return;
 			}
 
-			static inline bool startsWith( const std::string & str, const std::string & pattern, bool lowerCase = true )
+			template< typename CharType >
+			static inline bool startsWith( const std::basic_string< CharType > & str, const std::basic_string< CharType > & pattern, bool lowerCase = true )
 			{
 				size_t thisLen = str.length();
 				size_t patternLen = pattern.length();
@@ -113,7 +118,7 @@ namespace General
 					return false;
 				}
 
-				std::string startOfThis = str.substr( 0, patternLen );
+				std::basic_string< CharType > startOfThis = str.substr( 0, patternLen );
 
 				if ( lowerCase )
 				{
@@ -123,7 +128,8 @@ namespace General
 				return ( startOfThis == pattern );
 			}
 
-			static inline bool endsWith( const std::string & str, const std::string & pattern, bool lowerCase = true )
+			template< typename CharType >
+			static inline bool endsWith( const std::basic_string< CharType > & str, const std::basic_string< CharType > & pattern, bool lowerCase = true )
 			{
 				size_t thisLen = str.length();
 				size_t patternLen = pattern.length();
@@ -133,7 +139,7 @@ namespace General
 					return false;
 				}
 
-				std::string endOfThis = str.substr( thisLen - patternLen, patternLen );
+				std::basic_string< CharType > endOfThis = str.substr( thisLen - patternLen, patternLen );
 
 				if ( lowerCase )
 				{
@@ -143,6 +149,23 @@ namespace General
 				return ( endOfThis == pattern );
 			}
 
+			template< typename CharType >
+			static inline bool startsWith( const std::basic_string< CharType > & str, const CharType * pattern, bool lowerCase = true )
+			{
+				return startsWith( str, std::basic_string< CharType >( pattern ), lowerCase );
+			}
+
+			template< typename CharType >
+			static inline bool endsWith( const std::basic_string< CharType > & str, const CharType * pattern, bool lowerCase = true )
+			{
+				return endsWith( str, std::basic_string< CharType >( pattern ), lowerCase );
+			}
+
+			template< typename CharType >
+			static inline std::basic_string< CharType > replace( const std::basic_string< CharType > & p_target, const CharType * p_find, const CharType * p_replaced )
+			{
+				return replace( p_target, std::basic_string< CharType >( p_find ), std::basic_string< CharType >( p_replaced ) );
+			}
 		};
 	}
 }

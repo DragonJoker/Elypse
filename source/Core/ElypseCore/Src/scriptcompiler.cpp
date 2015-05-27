@@ -47,17 +47,20 @@ EMuse::Script::ScriptCompiler :: ScriptCompiler( const Path & p_path )
 	m_nodePool.Allocate( 200 );
 	m_blockPool.Allocate( 16 );
 	GENLIB_SET_SINGLETON();
-	_times( 4 )
-	{
-		m_keyboardBinds[i] = new ScriptNode * [NUM_KEYS];
-	}
-	_times( NUM_KEYS )
+
+	m_keyboardBinds[0] = new ScriptNode * [NUM_KEYS];
+	m_keyboardBinds[1] = new ScriptNode * [NUM_KEYS];
+	m_keyboardBinds[2] = new ScriptNode * [NUM_KEYS];
+	m_keyboardBinds[3] = new ScriptNode * [NUM_KEYS];
+
+	for ( unsigned int i = 0; i < NUM_KEYS; ++i )
 	{
 		m_keyboardBinds[0][i] = NULL;
 		m_keyboardBinds[1][i] = NULL;
 		m_keyboardBinds[2][i] = NULL;
 		m_keyboardBinds[3][i] = NULL;
 	}
+
 	m_buffer = new char[1024];
 	m_currentBufferIndex = 0;
 	m_currentMaxIndex = 0;
@@ -69,19 +72,32 @@ EMuse::Script::ScriptCompiler :: ~ScriptCompiler()
 
 	for ( unsigned int j = 0 ; j < NUM_KEYS ; j ++ )
 	{
-		_times( 4 )
+		if ( m_keyboardBinds[0][j] )
 		{
-			if ( m_keyboardBinds[i][j] != NULL )
-			{
-				m_keyboardBinds[i][j]->Delete();
-			}
+			m_keyboardBinds[0][j]->Delete();
+		}
+
+		if ( m_keyboardBinds[1][j] )
+		{
+			m_keyboardBinds[1][j]->Delete();
+		}
+
+		if ( m_keyboardBinds[2][j] )
+		{
+			m_keyboardBinds[2][j]->Delete();
+		}
+
+		if ( m_keyboardBinds[2][j] )
+		{
+			m_keyboardBinds[3][j]->Delete();
 		}
 	}
 
-	_times( 4 )
-	{
-		delete [] m_keyboardBinds[i];
-	}
+	delete [] m_keyboardBinds[0];
+	delete [] m_keyboardBinds[1];
+	delete [] m_keyboardBinds[2];
+	delete [] m_keyboardBinds[3];
+
 	General::Utils::map::cycle( m_constants, & ScriptNode::Delete );
 	m_constants.clear();
 	General::Utils::map::cycle( m_userVariables, & ScriptNode::Delete );
