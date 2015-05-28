@@ -1,0 +1,321 @@
+material Custo/LeftArrow
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture left.png
+			}
+		}
+	}
+}
+material Custo/RightArrow
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture right.png
+			}
+		}
+	}
+}
+
+material Custo/LeftArrowMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture leftmo.png
+			}
+		}
+	}
+}
+material Custo/RightArrowMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture rightmo.png
+			}
+		}
+	}
+}
+
+material Custo/Frame
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture frame.png
+			}
+		}
+	}
+}
+
+material Custo/Body
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture body.png
+			}
+		}
+	}
+}
+
+material Custo/Hair
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture hair.png
+			}
+		}
+	}
+}
+
+material Custo/Dress
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture dress.png
+			}
+		}
+	}
+}
+
+material Custo/BodyMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture bodymo.png
+			}
+		}
+	}
+}
+
+material Custo/HairMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture hairmo.png
+			}
+		}
+	}
+}
+
+material Custo/DressMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture dressmo.png
+			}
+		}
+	}
+}
+
+material Custo/BodySel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture bodysel.png
+			}
+		}
+	}
+}
+
+material Custo/HairSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture hairsel.png
+			}
+		}
+	}
+}
+
+material Custo/DressSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture dresssel.png
+			}
+		}
+	}
+}
+
+material Custo/Container
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture container.png
+			}
+		}
+	}
+}
+
+material Custo/Corner
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture corner.png
+			}
+		}
+	}
+}
+
+material Chat/Disconnect
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture disconnect.png
+			}
+		}
+	}
+}
+
+material Chat/DisconnectMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture disconnectmo.png
+			}
+		}
+	}
+}

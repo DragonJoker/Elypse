@@ -2,7 +2,7 @@ background_colour 1.000000 1.000000 1.000000 1.000000
 
 scene Bottes
 {
-	muse_file demo-botte.muse
+	muse_file Bottes.muse
 	data_file Demo-Botte.zip
 	scene_file demo-botte-hud.emscene
 	scene_file demo-botte.emscene

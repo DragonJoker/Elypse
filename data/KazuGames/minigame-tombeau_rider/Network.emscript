@@ -215,6 +215,11 @@ string rider_pass;
 
 string g_animName;
 
+string l_login;
+string l_pass;
+string g_serverAddr;
+int g_serverPort;
+
 void BuildSectionAnimations( animation_group ba_persoAnims, animated_object ba_object)
 {
 	Echo( "BuildSectionAnimations - Begin");
@@ -737,7 +742,7 @@ void _processAvatarMessage( string pam_message)
 	};
 };
 
-SetNetworkScript()
+void SetNetworkScript_Old()
 {
 	Echo( "Received message");
 	if (NETWORK_CURRENT_MESSAGE == "disconnected")
@@ -775,6 +780,24 @@ SetNetworkScript()
 			};
 		};
 	};
+};
+
+SetNetworkScript()
+{
+
+	Overlay_Hide( "Rider/Connexion");
+	Overlay_Show( "Menu");
+	string rider_sns_message;
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	rider_sns_message += pack_int( 0 );
+	_processAvatarMessage( rider_sns_message);
 };
 
 void InitialiseManMeshes()

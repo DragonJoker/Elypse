@@ -1,0 +1,107 @@
+
+material limboofthedeadbarre/Default
+{
+	technique
+	{
+		pass
+		{
+		}
+
+	}
+
+}
+
+material limboofthedeadbarre/barre
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.321569 0.321569 0.321569 1
+			diffuse 0.968628 0.956863 0.741176 1
+			specular 0.486 0.486 0.486 1 18
+		}
+
+	}
+
+}
+
+material limboofthedeadbarre/bouche
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material limboofthedeadbarre/chaussure
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0.027451 0 1
+			diffuse 0 0.027451 0 1
+			specular 0.657 0.657 0.657 1 33
+		}
+
+	}
+
+}
+
+material limboofthedeadbarre/pantalon
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0.0588235 0.00392157 1
+			diffuse 0 0.0588235 0.00392157 1
+			specular 0.243 0.243 0.243 1 10
+		}
+
+	}
+
+}
+
+material limboofthedeadbarre/peau
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture corpszombi.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material limboofthedeadbarre/tshirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0.27 0.27 0.27 1 18
+		}
+
+	}
+
+}

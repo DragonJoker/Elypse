@@ -1,0 +1,155 @@
+material echec/ciel
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			emissive 1.0 1.0 1.0 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture cielechec.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material echec/blanc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.898039 0.898039 0.898039 1
+			diffuse 0.898039 0.898039 0.898039 1
+			specular 0.783 0.783 0.783 1 12
+		}
+	}
+}
+
+material echec/blanc_ech
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0.18 0.18 0.18 1 40
+
+			texture_unit
+			{
+				texture nuagecutout.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material echec/bleu_trans
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0.737255 1 1
+			diffuse 0 0.737255 1 1
+			specular 2.52 2.52 2.52 1 17
+		}
+	}
+}
+
+material echec/bord
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.321569 0.321569 0.321569 1
+			diffuse 0.321569 0.321569 0.321569 1
+			specular 0 0 0 1 1
+
+			texture_unit
+			{
+				texture tronc.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material echec/jaune_bri
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.988235 1 0 1
+			diffuse 0.988235 1 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material echec/noir
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0313726 0.0313726 0.0313726 1
+			diffuse 0.0313726 0.0313726 0.0313726 1
+			specular 0.792 0.792 0.792 1 16
+		}
+	}
+}
+
+material echec/noir_ech
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0.18 0.18 0.18 1 40
+
+			texture_unit
+			{
+				texture marbredemon.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material echec/rougedem
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.811765 0 0 1
+			diffuse 0.811765 0 0 1
+			specular 1.08 1.08 1.08 1 24
+		}
+	}
+}

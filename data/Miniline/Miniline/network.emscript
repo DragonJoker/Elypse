@@ -9,7 +9,7 @@ void ShowMessageBox( string smb_title, string smb_caption)
 	Overlay_Show( "Connexion/MessageBox");
 }
 
-SetNetworkScript()
+void SetNetworkScript_Old()
 {
 	if (NETWORK_CURRENT_MESSAGE == "disconnected")
 	{
@@ -31,6 +31,14 @@ SetNetworkScript()
 			ShowMessageBox( "CONNEXION ERROR", "Mauvais login ou mot de passe");
 		}
 	}
+}
+
+SetNetworkScript()
+{
+	Overlay_Hide( "Connexion/Background");
+	Overlay_Hide( "Connexion/Connexion");
+	Scene_Load( "Perso");
+	Scene_Load( "Custo");
 }
 
 void InitialiseNetwork()

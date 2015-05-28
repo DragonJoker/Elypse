@@ -1,0 +1,175 @@
+
+material sarcoperso/14 - Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture sarcophage.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material sarcoperso/19 - Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.2 0.145098 0.145098 1
+			diffuse 0.2 0.145098 0.145098 1
+			specular 0.207 0.207 0.207 1 10
+		}
+
+	}
+
+}
+
+material sarcoperso/20 - Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.835294 0.835294 0.72549 1
+			diffuse 0.835294 0.835294 0.72549 1
+			specular 0.234 0.234 0.234 1 10
+		}
+
+	}
+
+}
+
+material sarcoperso/Material #65
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material sarcoperso/bouche
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material sarcoperso/chaussure
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.054902 0.054902 0.054902 1
+			diffuse 0.054902 0.054902 0.054902 1
+			specular 0.657 0.657 0.657 1 33
+		}
+
+	}
+
+}
+
+material sarcoperso/iris
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.152941 0 0 1
+			diffuse 0.152941 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material sarcoperso/oeil
+{
+	technique
+	{
+		pass
+		{
+			specular 0.666 0.666 0.666 1 46
+		}
+
+	}
+
+}
+
+material sarcoperso/pantalon
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0705882 0 0 1
+			diffuse 0.0705882 0 0 1
+			specular 0.243 0.243 0.243 1 10
+		}
+
+	}
+
+}
+
+material sarcoperso/peau
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture corps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material sarcoperso/tshirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0.27 0.27 0.27 1 18
+		}
+
+	}
+
+}

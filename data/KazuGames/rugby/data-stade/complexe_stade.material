@@ -1,0 +1,313 @@
+
+material complexe_stade/beton
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture beton_stade.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/grille_haut
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.513 0.513 0.513 1 10
+			scene_blend alpha_blend
+			alpha_rejection greater 128
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture armature.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/escaliers
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0392157 0.0392157 0.0392157 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture escalier.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/sol
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.784314 0.784314 0.784314 1
+			specular 0 0 0 1 10
+			emissive 0.156863 0.156863 0.156863 1
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture herbe.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/noir_infini
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material complexe_stade/gradins_1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.18 0.18 0.18 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture gradins_01.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/vitres
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.252 0.252 0.252 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture vitre.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/barriere
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			specular 0.261 0.261 0.261 1 10
+			alpha_rejection greater 128
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture barriere.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/carrelage
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0.00784314 0.00784314 1
+			specular 0.144 0.144 0.144 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture carrelage.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/porte_fenetre
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.18 0.18 0.18 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture porte_fenetre.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/herbe_ext
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.162 0.162 0.162 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture ext_herbe.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/sable
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.153 0.153 0.153 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture sable_stade.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/gradins_2
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture gradins_02.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/pub_stade_01
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture pub_stade_02.jpg
+			}
+		}
+
+	}
+
+}
+
+material complexe_stade/pub_stade_02
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture_alias textureUnit_0
+				texture pub_stade_03.jpg
+			}
+		}
+
+	}
+
+}

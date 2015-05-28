@@ -1,0 +1,390 @@
+material Life
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture vie.png
+			}
+		}
+	}
+}
+
+material MenuInGame
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture menu.png
+			}
+		}
+	}
+}
+
+material Commencer
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture commencer.png
+			}
+		}
+	}
+}
+
+material Recommencer
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture recommencer.png
+			}
+		}
+	}
+}
+
+material Continuer
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture continuer.png
+			}
+		}
+	}
+}
+
+material Commandes
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture commandes.png
+			}
+		}
+	}
+}
+
+material Chrono
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture chrono.png
+			}
+		}
+	}
+}
+
+material Go
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture go.png
+			}
+		}
+	}
+}
+
+material Tombeau/1
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture 1.png
+			}
+		}
+	}
+}
+
+material Tombeau/2
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture 2.png
+			}
+		}
+	}
+}
+
+material Tombeau/3
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture 3.png
+			}
+		}
+	}
+}
+
+material Options
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture options.png
+			}
+		}
+	}
+}
+
+material Rate
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture rate.png
+			}
+		}
+	}
+}
+
+material Regles
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture regles.png
+			}
+		}
+	}
+}
+
+material Score
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture score.png
+			}
+		}
+	}
+}
+
+
+material Scores
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture Scores.png
+			}
+		}
+	}
+}
+
+material On
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				texture on.png
+			}
+		}
+	}
+}
+
+material Off
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				texture off.png
+			}
+		}
+	}
+}
+
+material Reglette
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				texture reglette.jpg
+			}
+		}
+	}
+}
+
+material Tic
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture curseur.jpg
+			}
+		}
+	}
+}
+
+material Titre
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture Tombeaurider.png
+			}
+		}
+	}
+}

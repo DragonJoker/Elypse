@@ -1,0 +1,895 @@
+// OVERLAYS
+
+overlay Custo/MessageBox
+{
+	class ChatPanel
+	position 35% 70%
+	size 30% 20%
+	border_size 32.0 32.0 32.0 32.0
+	z_index 499
+
+	element Custo/MessageBox/Title
+	{
+		class PanelZone
+		position 10% 10%
+		size 80% 20%
+		material Base/Invisible
+
+		element Custo/MessageBox/Title/Text
+		{
+			class ChatText
+			font_size 30
+			position 0% 10%
+			size 100% 80%
+			text TITLE
+			text_align center
+		}
+	}
+
+	element Custo/MessageBox/Caption
+	{
+		class PanelZone
+		position 10% 30%
+		size 80% 40%
+		material Base/Invisible
+
+		element Custo/MessageBox/Caption/Text
+		{
+			class ChatText
+			font_size 20
+			position 0% 10%
+			size 100% 80%
+			text CAPTION
+			text_align center
+		}
+	}
+
+	element Custo/MessageBox/ButtonOK
+	{
+		class BorderPanelZone
+		position 25% 70%
+		size 50% 25%
+		material Chat/Validate
+		mouse_over_material Chat/ValidateMO
+	}
+}
+
+overlay Custo/BodyTab
+{
+	class PanelZone
+	position 1% 0%
+	size 13% 4.5%
+	material Custo/BodySel
+	mouse_over_material Custo/BodyMO
+}
+
+overlay Custo/HairTab
+{
+	class PanelZone
+	position 13% 0%
+	size 13% 4.5%
+	material Custo/Hair
+	mouse_over_material Custo/HairMO
+}
+
+overlay Custo/DressesTab
+{
+	class PanelZone
+	position 25% 0%
+	size 13% 4.5%
+	material Custo/Dress
+	mouse_over_material Custo/DressMO
+}
+
+overlay Custo/Corner
+{
+	class PanelZone
+	position 80% 73.33%
+	size 20% 26.66%
+	material Custo/Corner
+}
+
+overlay Custo
+{
+	class PanelZone
+	position -0.5% 4%
+	size 40% 97%
+	material Custo/Container
+	z_index 104
+
+	element Custo/BodyPanel
+	{
+		class PanelZone
+		position 2% 5%
+		size 66% 84%
+		material Base/Invisible
+
+		element Custo/Sex
+		{
+			class PanelZone
+			position 0% 5%
+			size 100% 10%
+			material Base/Invisible
+	
+			element Custo/Sex/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 50%
+				text Sexe
+				text_align center
+			}
+	
+			element Custo/Sex/Edit
+			{
+				class PanelZone
+				position 0.5% 50%
+				size 99% 49%
+				material Base/Invisible
+	
+				element Custo/Sex/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Sex/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Sex/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Homme
+					}
+				}
+	
+				element Custo/Sex/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+
+		element Custo/Skin
+		{
+			class PanelZone
+			position 0% 20%
+			size 100% 10%
+			material Base/Invisible
+	
+			element Custo/Skin/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 50%
+				text Peau
+				text_align center
+			}
+	
+			element Custo/Skin/Edit
+			{
+				class PanelZone
+				position 0.5% 50%
+				size 99% 49%
+				material Base/Invisible
+	
+				element Custo/Skin/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Skin/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Skin/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Blanc
+					}
+				}
+	
+				element Custo/Skin/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+
+
+		element Custo/Eye
+		{
+			class PanelZone
+			position 0% 35%
+			size 100% 10%
+			material Base/Invisible
+	
+			element Custo/Eye/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 50%
+				text Yeux
+				text_align center
+			}
+	
+			element Custo/Eye/Edit
+			{
+				class PanelZone
+				position 0.5% 50%
+				size 99% 49%
+				material Base/Invisible
+	
+				element Custo/Eye/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Eye/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Eye/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Rouge
+					}
+				}
+	
+				element Custo/Eye/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+
+		element Custo/EyeLash
+		{
+			class PanelZone
+			position 0% 50%
+			size 100% 10%
+			material Base/Invisible
+	
+			element Custo/EyeLash/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 50%
+				text Mascara
+				text_align center
+			}
+	
+			element Custo/EyeLash/Edit
+			{
+				class PanelZone
+				position 0.5% 50%
+				size 99% 49%
+				material Base/Invisible
+	
+				element Custo/EyeLash/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/EyeLash/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/EyeLash/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Aucun
+					}
+				}
+	
+				element Custo/EyeLash/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+
+		element Custo/Lipstick
+		{
+			class PanelZone
+			position 0% 65%
+			size 100% 10%
+			material Base/Invisible
+	
+			element Custo/Lipstick/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 50%
+				text Rouge a levres
+				text_align center
+			}
+	
+			element Custo/Lipstick/Edit
+			{
+				class PanelZone
+				position 0.5% 50%
+				size 99% 49%
+				material Base/Invisible
+	
+				element Custo/Lipstick/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Lipstick/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Lipstick/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Aucun
+					}
+				}
+	
+				element Custo/Lipstick/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+	}
+
+	element Custo/HairPanel
+	{
+		class PanelZone
+		position 2% 5%
+		size 66% 84%
+		material Base/Invisible
+
+		element Custo/Hair
+		{
+			class PanelZone
+			position 0% 5%
+			size 100% 20%
+			material Base/Invisible
+	
+			element Custo/Hair/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 25%
+				text Coiffe
+				text_align center
+			}
+	
+			element Custo/Hair/Edit
+			{
+				class PanelZone
+				position 0.5% 25%
+				size 99% 24.5%
+				material Base/Invisible
+	
+				element Custo/Hair/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Hair/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Hair/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Normale
+					}
+				}
+	
+				element Custo/Hair/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+	
+			element Custo/HairColour/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 50%
+				size 100% 50%
+				text Couleur
+				text_align center
+			}
+	
+			element Custo/HairColour/Edit
+			{
+				class PanelZone
+				position 0.5% 75%
+				size 99% 24.5%
+				material Base/Invisible
+	
+				element Custo/HairColour/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/HairColour/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/HairColour/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Normale
+					}
+				}
+	
+				element Custo/HairColour/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+
+		element Custo/Brow
+		{
+			class PanelZone
+			position 0% 30%
+			size 100% 20%
+			material Base/Invisible
+	
+			element Custo/Brow/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 25%
+				text Sourcils
+				text_align center
+			}
+	
+			element Custo/Brow/Edit
+			{
+				class PanelZone
+				position 0.5% 25%
+				size 99% 24.5%
+				material Base/Invisible
+	
+				element Custo/Brow/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Brow/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Brow/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Aucun
+					}
+				}
+	
+				element Custo/Brow/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+	
+			element Custo/BrowColour/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 50%
+				size 100% 50%
+				text Couleur
+				text_align center
+			}
+	
+			element Custo/BrowColour/Edit
+			{
+				class PanelZone
+				position 0.5% 75%
+				size 99% 24.5%
+				material Base/Invisible
+	
+				element Custo/BrowColour/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/BrowColour/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/BrowColour/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Normale
+					}
+				}
+	
+				element Custo/BrowColour/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+
+		element Custo/Beards
+		{
+			class PanelZone
+			position 0% 55%
+			size 100% 20%
+			material Base/Invisible
+	
+			element Custo/Beards/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 25%
+				text Barbe
+				text_align center
+			}
+	
+			element Custo/Beards/Edit
+			{
+				class PanelZone
+				position 0.5% 25%
+				size 99% 24.5%
+				material Base/Invisible
+	
+				element Custo/Beards/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Beards/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Beards/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Aucune
+					}
+				}
+	
+				element Custo/Beards/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+	
+			element Custo/BeardsColour/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 50%
+				size 100% 50%
+				text Couleur
+				text_align center
+			}
+	
+			element Custo/BeardsColour/Edit
+			{
+				class PanelZone
+				position 0.5% 75%
+				size 99% 24.5%
+				material Base/Invisible
+	
+				element Custo/BeardsColour/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/BeardsColour/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/BeardsColour/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Normale
+					}
+				}
+	
+				element Custo/BeardsColour/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+	}
+
+	element Custo/DressPanel
+	{
+		class PanelZone
+		position 2% 5%
+		size 66% 84%
+		material Base/Invisible
+
+		element Custo/Dresses
+		{
+			class PanelZone
+			position 0% 5%
+			size 100% 10%
+			material Base/Invisible
+	
+			element Custo/Dresses/Title
+			{
+				class ChatText
+				font_size 32.0
+				position 0% 0%
+				size 100% 50%
+				text Tenue
+				text_align center
+			}
+	
+			element Custo/Dresses/Edit
+			{
+				class PanelZone
+				position 0.5% 50%
+				size 99% 49%
+				material Base/Invisible
+	
+				element Custo/Dresses/Edit/LeftArrow
+				{
+					class PanelZone
+					position 0% 0%
+					size 15% 100%
+					material Custo/LeftArrow
+					mouse_over_material Custo/LeftArrowMO
+				}
+	
+				element Custo/Dresses/Edit/Caption
+				{
+					class PanelZone
+					position 15% 0%
+					size 70% 100%
+					material Custo/Frame
+	
+					element Custo/Dresses/Edit/Text
+					{
+						class ChatText
+						font_size 20.0
+						position 10% 20%
+						size 80% 100%
+						text Blouson
+					}
+				}
+	
+				element Custo/Dresses/Edit/RightArrow
+				{
+					class PanelZone
+					position 85% 0%
+					size 15% 100%
+					material Custo/RightArrow
+					mouse_over_material Custo/RightArrowMO
+				}
+			}
+		}
+	}
+
+	element Custo/Submit
+	{
+		class PanelZone
+		position 4% 90%
+		size 30% 7%
+		material Chat/Validate
+		mouse_over_material Chat/ValidateMO
+	}
+
+	element Custo/Disconnect
+	{
+		class PanelZone
+		position 36% 90%
+		size 30% 7%
+		material Chat/Disconnect
+		mouse_over_material Chat/DisconnectMO
+	}
+}
+
+// SCENE_NODES
+
+scene_node PersoNode
+{
+	position 100.0 0.0 0.0
+}
+
+scene_node DecorNode
+{
+	position 100.0 190.0 0.0
+}
+
+scene_node CameraNode
+{
+	parent PersoNode
+	position 0.0 250.0 0.0
+}
+
+// OBJECTS
+
+object Fond
+{
+	mesh local.mesh
+	attach_to DecorNode
+}
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction 0.0 -1.0 -1.0
+	diffuse 0.90 0.90 0.90 1.00
+	specular 0.70 0.70 0.70 1.00
+}
+
+
+// CAMERA
+
+camera RootCamera
+{
+	attach_to CameraNode
+	position 0.0 0.0 600.0
+}

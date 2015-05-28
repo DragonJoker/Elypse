@@ -1,0 +1,29 @@
+project LimboOfTheDead
+{
+	resolution		640 480
+	colour			0 0 0
+	scene LimboOfTheDead
+	{
+		scene_files
+		{
+			limbo-hud.emscene
+			limbo.emscene
+		}
+		load_script_files
+		{
+			network.emscript
+			scores.emscript
+			limbo.emscript
+			limbo-hud.emscript
+		}
+		data_files_3d
+		{
+			PersoLimbo
+			Interface
+		}
+		data_files_other
+		{
+			Sons
+		}
+	}
+}

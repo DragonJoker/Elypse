@@ -1,0 +1,18 @@
+material Titre
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture titre.png
+			}
+		}
+	}
+}

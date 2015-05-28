@@ -1,0 +1,48 @@
+
+material graduation_rose/blanc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+			emissive 1 1 1 1
+		}
+
+	}
+
+}
+
+material graduation_rose/rouge
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+			emissive 0.647059 0 0 1
+		}
+
+	}
+
+}
+
+material graduation_rose/rouge_ombre
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+			emissive 0.388235 0 0 1
+		}
+
+	}
+
+}

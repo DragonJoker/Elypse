@@ -1,0 +1,135 @@
+
+material momieperso/Bandes
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0.26 0.26 0.26 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture bandecorps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material momieperso/bandages
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture bandes.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material momieperso/bouche
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material momieperso/chaussure
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0.73 0.73 0.73 1 33
+
+			texture_unit
+			{
+				texture bandecorps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material momieperso/pantalon
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0705882 0 0 1
+			diffuse 0.0705882 0 0 1
+			specular 0.243 0.243 0.243 1 10
+		}
+
+	}
+
+}
+
+material momieperso/peau
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture corpsmomie.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material momieperso/tshirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0.27 0.27 0.27 1 18
+		}
+
+	}
+
+}

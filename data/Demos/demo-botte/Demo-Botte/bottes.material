@@ -1,0 +1,298 @@
+
+material bottes/cuir
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.4 0.4 0.4 1
+			diffuse 0.25 0.25 0.25 1
+			specular 0.15 0.15 0.15 1 20
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture cuir_01.jpg
+			}
+		}
+	}
+}
+
+material bottes/cuir_02
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 1
+			diffuse 0.9 0.9 0.9 1
+			specular 0.05 0.05 0.05 1 20
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture cuir_02.jpg
+			}
+		}
+	}
+}
+
+material bottes/cuir_03
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 1
+			diffuse 0.9 0.9 0.9 1
+			specular 0.05 0.05 0.05 1 20
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture cuir_03.jpg
+			}
+		}
+	}
+}
+
+material bottes/cuir_04
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.4 0.4 0.4 1
+			diffuse 0.5 0.5 0.5 1
+			specular 0.15 0.15 0.15 1 20
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture cuir_04.jpg
+			}
+		}
+	}
+}
+
+material bottes/cuir_05
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.4 0.4 0.4 1
+			diffuse 0.5 0.5 0.5 1
+			specular 0.15 0.15 0.15 1 20
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture cuir_05.jpg
+			}
+		}
+	}
+}
+
+material bottes/ceinture
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture ceinture_01.jpg
+			}
+		}
+	}
+}
+
+material bottes/ceinture_02
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture ceinture_02.jpg
+			}
+		}
+	}
+}
+
+material bottes/ceinture_03
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture ceinture_03.jpg
+			}
+		}
+	}
+}
+
+material bottes/ceinture_04
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture ceinture_04.jpg
+			}
+		}
+	}
+}
+
+material bottes/ceinture_05
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture ceinture_05.jpg
+			}
+		}
+	}
+}
+
+material bottes/noir_mat
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.05 0.05 0.05 1
+			diffuse 0 0 0 1
+			specular 0.0392157 0.0392157 0.0392157 1 10
+			cull_hardware none
+			cull_software none
+		}
+	}
+}
+
+material bottes/metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.196078 0.196078 0.196078 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture metal_01.jpg
+			}
+		}
+	}
+}
+
+material bottes/fermeture
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.196078 0.196078 0.196078 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture feclair.jpg
+			}
+		}
+	}
+}
+
+material bottes/boucles
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.196078 0.196078 0.196078 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				filtering anisotropic
+				max_anisotropy 8
+				texture metal_01.jpg
+			}
+		}
+
+	}
+
+}

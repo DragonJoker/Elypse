@@ -1,5 +1,6 @@
 string g_name;
 
+string c_highscorePage;
 int g_score;
 
 bool g_enterName = false;

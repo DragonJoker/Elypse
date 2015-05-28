@@ -1,0 +1,21 @@
+
+material tee_plastique
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 1 1 1 1
+			specular 0.153 0.153 0.153 1 10
+
+			texture_unit
+			{
+				texture_alias 0
+				texture tee.jpg
+			}
+		}
+
+	}
+
+}

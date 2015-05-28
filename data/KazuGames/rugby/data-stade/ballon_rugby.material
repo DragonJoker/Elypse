@@ -1,0 +1,33 @@
+
+material coll_ph_ballon_rugby_mesh_material
+{
+	technique
+	{
+		pass
+		{
+			specular 1 1 1 1 20
+		}
+
+	}
+
+}
+
+material ballon_rugby
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.0784314 0.0784314 0.0784314 1 10
+
+			texture_unit
+			{
+				texture_alias 0
+				texture ballon.jpg
+			}
+		}
+
+	}
+
+}

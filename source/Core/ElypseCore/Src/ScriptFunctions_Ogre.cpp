@@ -172,11 +172,15 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_Hide )
 	}
 
 	l_entity->setVisible( false );
-	PhysicsObject * l_object = Ogre::any_cast< PhysicsObject * > ( l_entity->getUserObjectBindings().getUserAny() );
 
-	if ( l_object )
+	if ( !l_entity->getUserObjectBindings().getUserAny().isEmpty() )
 	{
-		l_object->SetEnabled( false );
+		PhysicsObject * l_object = Ogre::any_cast< PhysicsObject * > ( l_entity->getUserObjectBindings().getUserAny() );
+
+		if ( l_object )
+		{
+			l_object->SetEnabled( false );
+		}
 	}
 }
 

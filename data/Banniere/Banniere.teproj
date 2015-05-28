@@ -1,17 +1,25 @@
-Banniere
-Resolution
-640 480
-Colour
-0 0 0
-ShowDebug
-ShowFPS
-Scene
-Banniere
-SceneFiles
-demo-ban.emscene
-LoadScriptFiles
-demo-ban.emscript
-DataFiles
-data-ban
-DataFolders
-Sons
+project Banniere
+{
+	resolution		640 480
+	colour			0 0 0
+	show_debug		true
+	scene Banniere
+	{
+		scene_files
+		{
+			demo-ban.emscene
+		}
+		load_script_files
+		{
+			demo-ban.emscript
+		}
+		data_files_3d
+		{
+			data-ban
+		}
+		data_files_other
+		{
+			Sons
+		}
+	}
+}

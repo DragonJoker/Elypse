@@ -96,6 +96,26 @@ overlay l_ticSound;
 
 camera l_rootCamera;
 
+string l_infos;
+bool g_free;
+bool g_priced;
+bool g_abonne;
+bool g_freeLimited;
+bool c_modeInstant;
+bool c_modeConcours;
+bool g_clearToGo;
+
+void CheckClearToGo()
+{
+	g_free = true;
+	g_freeLimited = false;
+	g_priced = false;
+	g_abonne = false;
+	c_modeInstant = false;
+	c_modeConcours = false;
+	g_clearToGo = true;
+};
+
 void PlaceCamera()
 {
 	timer( "PlaceCamera", TIMERTYPE_REPEAT, 0.0)

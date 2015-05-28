@@ -1,0 +1,83 @@
+material destrubatte/ciel
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			emissive 1.0 1.0 1.0 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture cielurbain.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale 1 0.5
+			}
+		}
+	}
+}
+
+material Batte/OK
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.235294 1.0 0.235294 1
+			diffuse 0.235294 0.235294 0.235294 1
+			specular 1.467 1.467 1.467 1 21
+		}
+	}
+}
+
+material Batte/NotOK
+{
+	technique
+	{
+		pass
+		{
+			ambient 1.0 0.235294 0.235294 1
+			diffuse 0.235294 0.235294 0.235294 1
+			specular 1.467 1.467 1.467 1 21
+		}
+	}
+}
+
+material destrubatte/metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.235294 0.235294 0.235294 1
+			diffuse 0.235294 0.235294 0.235294 1
+			specular 1.467 1.467 1.467 1 21
+		}
+	}
+}
+
+material destrubatte/sol
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588 0.588 0.588 1
+			diffuse 0.588 0.588 0.588 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture ciment.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale 0.025 0.025
+			}
+		}
+	}
+}

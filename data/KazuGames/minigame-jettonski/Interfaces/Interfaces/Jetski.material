@@ -1,0 +1,124 @@
+material Moteur
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture moteur.png
+			}
+		}
+	}
+}
+
+material Anneaux
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture anneaux.png
+			}
+		}
+	}
+}
+
+material BarreRouge
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture barre_rouge.jpg
+			}
+		}
+	}
+}
+
+material BarreVerte
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture barre_verte.jpg
+			}
+		}
+	}
+}
+
+material Titre
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture titre.png
+			}
+		}
+	}
+}
+
+material Turbo
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture turbo.png
+			}
+		}
+	}
+}
+
+material HorsPiste
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture horspiste.png
+			}
+		}
+	}
+}

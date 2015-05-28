@@ -1,0 +1,214 @@
+string l_selectedRoom;
+overlay l_selectedPanel;
+bool l_clicked;
+int rs_roomsCount;
+
+void EnterRoom( string er_roomName)
+{
+	if ( ! g_inGame)
+	{
+		g_minPitch = -80.0;
+		g_maxPitch = 80.0;
+		rs_showRoomsList = false;
+		ClearOverlays();
+		Scene_Load( er_roomName);
+		Network_ClientSendMessage( "ChatClient", pack_int( msJoin) + pack_int( er_roomName->length()) + er_roomName);
+		Overlay_Hide( "Chat/MessageBox");
+	}
+	else
+	{
+		rs_showRoomsList = false;
+		ChangeZone( er_roomName);
+	};
+	Overlay_Hide( "RoomsList");
+	Overlay_Hide( "RoomSelection/Background");
+};
+
+void ClickRoom()
+{
+	string cr_roomName;
+	overlay cr_panel;
+	cr_panel = OverlayElement_MousePickup( MOUSE_POSITION_X, MOUSE_POSITION_Y);
+	if (cr_panel->GetName()->find( "/Name") != npos || cr_panel->GetName()->find( "/Count") != npos)
+	{
+		cr_panel = cr_panel->GetParent();
+	};
+	cr_roomName = cr_panel->GetName();
+	strSplitOne( cr_roomName, "/");
+	strSplitOne( cr_roomName, "/");
+	Echo( "ClickRoom - Panel : " + cr_panel->GetName() + " - Room : " + cr_roomName);
+
+	if (l_clicked && cr_roomName == l_selectedRoom)
+	{
+		cr_panel->SetMaterial( "Base/Invisible");
+		cr_panel->SetBorderMaterial( "Base/Invisible");
+		EnterRoom( l_selectedRoom);
+	}
+	else
+	{
+		if (l_selectedPanel != NULL)
+		{
+			l_selectedPanel->SetMaterial( "Base/Invisible");
+			l_selectedPanel->SetBorderMaterial( "Base/Invisible");
+		};
+		cr_panel->SetMaterial( "Base/LowAlphaBlack");
+		cr_panel->SetBorderMaterial( "Base/Black");
+		l_selectedPanel = cr_panel;
+		l_selectedRoom = cr_roomName;
+		l_clicked = true;
+		timer( "RSDoubleClick", TIMERTYPE_ONCE, 0.5)
+		{
+			l_clicked = false;
+		};
+	};
+};
+
+void AddRoom( string ar_name, string ar_sceneName, int ar_nbPeople)
+{
+	Echo( "AddRoom : " + ar_name + " - " + ar_sceneName + " - " + itoa( ar_nbPeople));
+	overlay ar_container;
+	overlay ar_nameOV;
+	overlay ar_nbPeopleOV;
+	string ar_baseName;
+	ar_baseName = "RoomsList/List/" + ar_sceneName;
+
+	if ( ! OverlayElement_Exists( ar_baseName))
+	{
+		ar_container = OverlayElement_Create( ar_baseName, "BorderPanelZone", "RoomsList/List");
+	}
+	else
+	{
+		ar_container = OverlayElement_GetByName( ar_baseName);
+	};
+	ar_container->SetMaterial( "Base/Invisible");
+	ar_container->SetBorderMaterial( "Base/Invisible");
+	ar_container->SetMouseOverMaterial( "Base/LowAlphaBlack");
+	ar_container->SetTBBorderSize( 1.0 / GENERAL_SCREEN_HEIGHT, 1.0 / GENERAL_SCREEN_HEIGHT);
+	ar_container->SetLRBorderSize( 1.0 / GENERAL_SCREEN_WIDTH, 1.0 / GENERAL_SCREEN_WIDTH);
+	ar_container->SetPosition( SetVector3( 0.0, 1.0 + (rs_roomsCount * 20), 0.0));
+	ar_container->SetSize( OverlayElement_GetByName( "RoomsList/List")->GetWidth(), 20.0);
+
+	if ( ! OverlayElement_Exists( ar_baseName + "/Name"))
+	{
+		ar_nameOV = OverlayElement_Create( ar_baseName + "/Name", "ChatText", ar_baseName);
+	}
+	else
+	{
+		ar_nameOV = OverlayElement_GetByName( ar_baseName + "/Name");
+	};
+	ar_nameOV->SetFontSize( 22.0);
+	ar_nameOV->SetPosition( SetVector3( 5.0, 2.0, 0.0));
+	ar_nameOV->SetSize( OverlayElement_GetByName( "RoomsList/List")->GetWidth() * 75.0 / 100.0, 20.0);
+	ar_nameOV->SetCaption( ar_sceneName);
+
+	if ( ! OverlayElement_Exists( ar_baseName + "/Count"))
+	{
+		ar_nbPeopleOV = OverlayElement_Create( ar_baseName + "/Count", "ChatText", ar_baseName);
+	}
+	else
+	{
+		ar_nbPeopleOV = OverlayElement_GetByName( ar_baseName + "/Count");
+	};
+	ar_nbPeopleOV->SetFontSize( 22.0);
+	ar_nbPeopleOV->SetPosition( SetVector3( 5.0 + OverlayElement_GetByName( "RoomsList/List")->GetWidth() * 75.0 / 100.0, 2.0, 0.0));
+	ar_nbPeopleOV->SetSize( OverlayElement_GetByName( "RoomsList/List")->GetWidth() * 25.0 / 100.0, 20.0);
+	ar_nbPeopleOV->SetCaption( itoa( ar_nbPeople));
+
+	Overlay_SetAction( ar_baseName)
+	{
+		ClickRoom();
+	};
+
+	Overlay_SetAction( ar_baseName + "/Name")
+	{
+		ClickRoom();
+	};
+
+	Overlay_SetAction( ar_baseName + "/Count")
+	{
+		ClickRoom();
+	};
+
+	rs_roomsCount++;
+};
+
+void LoadRooms( string lr_pMessage)
+{
+	rs_roomsCount = 0;
+	int lr_roomsCount;
+	lr_roomsCount = unpack_int( substr( lr_pMessage, 0, 4));
+	int lr_strLength;
+	string lr_name;
+	string lr_sceneName;
+	int lr_nbPeople;
+	int lr_msgIndex;
+	lr_msgIndex = 4;
+	for (i = 0 ; i < lr_roomsCount ; i++)
+	{
+		lr_strLength = unpack_int( substr( lr_pMessage, lr_msgIndex, 4));
+		lr_msgIndex = lr_msgIndex + 4;
+		lr_name = substr( lr_pMessage, lr_msgIndex, lr_strLength);
+		lr_msgIndex = lr_msgIndex + lr_strLength;
+		lr_strLength = unpack_int( substr( lr_pMessage, lr_msgIndex, 4));
+		lr_msgIndex = lr_msgIndex + 4;
+		lr_sceneName = substr( lr_pMessage, lr_msgIndex, lr_strLength);
+		lr_msgIndex = lr_msgIndex + lr_strLength;
+		lr_nbPeople = unpack_int( substr( lr_pMessage, lr_msgIndex, 4));
+		lr_msgIndex = lr_msgIndex + 4;
+		AddRoom( lr_name, lr_sceneName, lr_nbPeople);
+	};
+};
+
+void UpdateRoomsList()
+{
+	Network_ClientSendMessage( "ChatClient", pack_int( msUpdateRooms));
+};
+
+Overlay_SetAction( "Rooms/MessageBox/ButtonOK")
+{
+	Overlay_Hide( "Rooms/MessageBox");
+};
+
+SetNetworkScript()
+{
+	if (NETWORK_CURRENT_MESSAGE == "disconnected")
+	{
+		OverlayElement_GetByName( "Rooms/MessageBox/Title/Text")->SetCaption( "CONNEXION ERROR");
+		OverlayElement_GetByName( "Rooms/MessageBox/Caption/Text")->SetCaption( "Vous avez ete deconnecte du serveur");
+		Overlay_Show( "Rooms/MessageBox");
+	}
+	else
+	{
+		int rs_sns_header;
+		rs_sns_header = unpack_int( substr( NETWORK_CURRENT_MESSAGE, 0, 4));
+	
+		string rs_sns_message;
+		rs_sns_message = substr( NETWORK_CURRENT_MESSAGE, 4, npos);
+	
+		if (rs_sns_header == mrRooms)
+		{
+			Echo( "Received rooms");
+			LoadRooms( rs_sns_message);
+		};
+	};
+};
+
+Overlay_SetAction( "RoomsList/Submit")
+{
+	if ( ! l_selectedRoom->empty())
+	{
+		EnterRoom( l_selectedRoom);
+	};
+};
+
+void InitialiseRoomSelection()
+{
+	l_clicked = false;
+	l_selectedPanel = NULL;
+	l_selectedRoom->clear();
+	Overlay_Show( "RoomsList");
+	Overlay_Hide( "Rooms/MessageBox");
+	rs_showRoomsList = true;
+};
+
+InitialiseRoomSelection();

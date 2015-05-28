@@ -1,0 +1,108 @@
+material enfer/enfer_dome
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture cielenfer.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+		pass
+		{
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture nuagesenfer.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scroll_anim 0.02 0.0
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_lave
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.9 0.9 0.9 1
+			diffuse 0.9 0.9 0.9 1
+			specular 0.959412 0.955294 1.05 1 40
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture lava.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				wave_xform scroll_x sine 1.0 1.0 0.5 0.003
+				wave_xform scroll_y sine 0.5 0.003 1.0 1.0
+			}
+		}
+	}
+}
+
+material enfer/enfer_sangfontaine
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0 0 1
+			diffuse 1 0 0 1
+			specular 0.468 0.468 0.468 1 40
+
+			texture_unit
+			{
+				texture eau.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scroll_anim 0 0.5
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_sangfontaine02
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0 0 1
+			diffuse 1 0 0 1
+			specular 0.468 0.468 0.468 1 40
+
+			texture_unit
+			{
+				texture eau.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				wave_xform scroll_x sine 0.0 0.2 0.0 0.05
+			}
+		}
+
+	}
+
+}

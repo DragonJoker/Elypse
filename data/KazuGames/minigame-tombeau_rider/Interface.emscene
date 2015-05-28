@@ -1,545 +1,656 @@
-
 // OVERLAYS
-
-overlay Title
-{
-	class PanelZone
-	position -35% -55%
-	size 70% 110%
-	align center center
-	material Titre
-}
 
 overlay Commandes
 {
-	class MinigameFrame
-	position -25% -25%
-	size 50% 50%
+	class BorderPanelZone
+	position -13.68% -20.51%
+	size 27.35% 36.47%
 	align center center
-	border_size 32.0 32.0 32.0 32.0
-
+	material Base/LowAlphaBlack
+	border_material Base/Black
+	border_size 1.00 1.00 1.00 1.00
 	element Commandes/Retour
 	{
-		class PanelZone
-		position 25% 75%
-		size 50.00% 20.00%
-		material Retour
-		mouse_over_material RetourMO
+		class TextZone
+		position -23.50% -10.00%
+		size 47.00% 10.00%
+		align bottom center
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Retour
 	}
 
 	element Commandes/Text
 	{
-		class MinigameText
-		position 10% 25%
-		size 80% 50%
-		font_size 24.00
-		text Fleches droite et gauche pour se deplacer, respectivement a droite et a gauche.
+		class TextZone
+		position 7.81% 15.63%
+		size 84.37% 90.00%
+		font_name Egyptian
+		font_size 12.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Les commandes utilisees sont les touches directionnelles du clavier. Fleche bas pour freiner. Fleches droite et gauche pour se deplacer, respectivement a droite et a gauche.
 	}
 
 	element Commandes/Title
 	{
-		class MinigameText
-		position 0.00% 5.00%
-		size 100% 10%
-		font_size 40
+		class TextZone
+		position 2.00% 0.00%
+		size 0.39% 0.39%
+		font_name Egyptian
+		font_size 20.00
+		text_colour 1.00 1.00 1.00 1.00
 		text Commandes
-		text_align center
 	}
+
 }
 
 overlay Menu
 {
-	class PanelZone
-	material BaseMenu
-	position 0.00% 0.0%
-	size 30.00% 100%
-
+	class BorderPanelZone
+	position 0.00% -38.46%
+	size 30.00% 38.46%
+	align bottom left
+	material Base/Invisible
+	border_material Base/Invisible
+	border_size 1.00 1.00 1.00 1.00
 	element Menu/Commandes
 	{
 		class PanelZone
-		position 3.00% 25%
-		size 60.54% 10%
+		position 5.00% 33.33%
+		size 60.54% 18.52%
 		material Commandes
-		mouse_over_material CommandesMO
 	}
 
 	element Menu/Continuer
 	{
 		class PanelZone
-		position 3.00% 5%
-		size 60.54% 10%
+		position 5.00% 18.52%
+		size 60.54% 18.52%
 		material Continuer
-		mouse_over_material ContinuerMO
-	}
-
-	element Menu/Recommencer
-	{
-		class PanelZone
-		position 3.00% 5%
-		size 60.54% 10%
-		material Recommencer
-		mouse_over_material RecommencerMO
-	}
-
-	element Menu/Recommencer/Cout
-	{
-		class MinigameText
-		position 6% 15%
-		size 100% 10%
-		font_size 20.0
-		text coin
 	}
 
 	element Menu/Jouer
 	{
 		class PanelZone
-		position 3.00% 5%
-		size 60.54% 10%
+		position 5.00% 18.52%
+		size 60.54% 18.52%
 		material Commencer
-		mouse_over_material CommencerMO
 	}
 
 	element Menu/Options
 	{
 		class PanelZone
-		position 3.00% 85%
-		size 60.54% 10%
+		position 5.00% 77.78%
+		size 60.54% 18.52%
 		material Options
-		mouse_over_material OptionsMO
+	}
+
+	element Menu/Recommencer
+	{
+		class PanelZone
+		position 5.00% 3.70%
+		size 60.54% 18.52%
+		material Recommencer
 	}
 
 	element Menu/Regles
 	{
 		class PanelZone
-		position 3.00% 45%
-		size 60.54% 10%
+		position 5.00% 48.15%
+		size 60.54% 18.52%
 		material Regles
-		mouse_over_material ReglesMO
 	}
 
 	element Menu/Scores
 	{
 		class PanelZone
-		position 3.00% 65%
-		size 60.54% 10%
+		position 5.00% 62.96%
+		size 60.54% 18.52%
 		material Scores
-		mouse_over_material ScoresMO
 	}
+
 }
 
 overlay MenuInGame
 {
 	class PanelZone
-	position 0.00% -10.00%
-	size 15.00% 10.00%
+	position 0.00% -20.00%
+	size 20.00% 20.00%
 	align bottom left
 	material MenuInGame
-	mouse_over_material MenuInGameMO
 }
 
 overlay Options
 {
-	class MinigameFrame
-	position 25.00% 25%
-	size 50.00% 50%
-	border_size 32.0 32.0 32.0 32.0
-
-	element Options/Title
-	{
-		class MinigameText
-		position 40.00% 5%
-		size 70% 25%
-		font_size 40.0
-		text Options
-	}
-
+	class BorderPanelZone
+	position 5.00% 43.75%
+	size 90.00% 12.50%
+	material Base/LowAlphaBlack
+	border_material Base/Black
+	border_size 1.00 1.00 1.00 1.00
 	element Options/Music
 	{
-		class MinigameText
+		class TextZone
 		position 20.00% 25.00%
 		size 0.12% 1.14%
-		font_size 24.00
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
 		text Musique
 	}
 
 	element Options/MusicOnOff
 	{
 		class PanelZone
-		position 20.00% 40.00%
-		size 25% 25%
+		position 15.00% 25.00%
+		size 1.90% 18.23%
 		material On
 	}
 
 	element Options/RegletteMusic
 	{
 		class PanelZone
-		position 25.00% 35.00%
-		size 60% 15%
+		position 40.00% 25.00%
+		size 11.87% 18.23%
 		material Reglette
-
-		element Options/Music/TicContainer
+		element Options/TicMusic
 		{
 			class PanelZone
-			position 7% 0%
-			size 85% 100%
-			material Base/Invisible
-
-			element Options/TicMusic
-			{
-				class PanelZone
-				position 80.00% 0.00%
-				size 20.00% 100.00%
-				material Tic
-			}
+			position 95.00% 0.00%
+			size 8.00% 100.00%
+			material Tic
 		}
+
+	}
+
+	element Options/RegletteSound
+	{
+		class PanelZone
+		position 40.00% 52.50%
+		size 11.87% 18.23%
+		material Reglette
+		element Options/TicSound
+		{
+			class PanelZone
+			position 95.00% 0.00%
+			size 8.00% 100.00%
+			material Tic
+		}
+
+	}
+
+	element Options/Retour
+	{
+		class TextZone
+		position 85.00% 40.00%
+		size 15.00% 20.00%
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Retour
 	}
 
 	element Options/Sound
 	{
-		class MinigameText
-		position 20.00% 50%
+		class TextZone
+		position 20.00% 52.50%
 		size 0.12% 1.14%
-		font_size 24.00
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
 		text Sons
 	}
 
 	element Options/SoundOnOff
 	{
 		class PanelZone
-		position 20.00% 65%
-		size 25% 25%
+		position 15.00% 52.50%
+		size 1.90% 18.23%
 		material On
 	}
 
-	element Options/RegletteSound
-	{
-		class PanelZone
-		position 25.00% 60%
-		size 60% 15%
-		material Reglette
-
-		element Options/Sound/TicContainer
-		{
-			class PanelZone
-			position 7% 0%
-			size 85% 100%
-			material Base/Invisible
-
-			element Options/TicSound
-			{
-				class PanelZone
-				position 80.00% 0.00%
-				size 20.00% 100.00%
-				material Tic
-			}
-		}
-	}
-
-	element Options/Retour
-	{
-		class PanelZone
-		position 25.00% 75.00%
-		size 50.00% 20.00%
-		material Retour
-		mouse_over_material RetourMO
-	}
 }
 
 overlay Regles
 {
-	class MinigameFrame
-	position 25% 25%
-	size 50% 50%
-	border_size 32.0 32.0 32.0 32.0
-
+	class BorderPanelZone
+	position -13.68% -20.51%
+	size 27.35% 36.47%
+	align center center
+	material Base/LowAlphaBlack
+	border_material Base/Black
+	border_size 1.00 1.00 1.00 1.00
 	element Regles/Retour
 	{
-		class PanelZone
-		position 25% 75%
-		size 50.00% 20.00%
-		material Retour
-		mouse_over_material RetourMO
+		class TextZone
+		position -23.50% -10.00%
+		size 47.00% 10.00%
+		align bottom center
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Retour
 	}
 
-	element Regles/Text1
+	element Regles/Text
 	{
-		class MinigameText
-		position 10% 25%
-		size 80% 50%
-		font_size 24.00
+		class TextZone
+		position 7.81% 15.63%
+		size 84.37% 90.00%
+		font_name Egyptian
+		font_size 12.00
+		text_colour 1.00 1.00 1.00 1.00
 		text Eviter les momies durant la descente et amasser le plus possible de statuettes.
 	}
 
 	element Regles/Title
 	{
-		class MinigameText
-		position 0.00% 5.00%
-		size 100% 10%
-		font_size 40.00
+		class TextZone
+		position 20.00% 0.00%
+		size 0.39% 0.39%
+		font_name Egyptian
+		font_size 24.00
+		text_colour 1.00 1.00 1.00 1.00
 		text Regles
-		text_align center
-	}
-}
-
-overlay Scores
-{
-	class MinigameFrame
-	position 25.00% 25.00%
-	size 50.00% 50.00%
-	border_size 32.0 32.0 32.0 32.0
-
-	element Scores/Retour
-	{
-		class PanelZone
-		position 25% 75%
-		size 50.00% 20.00%
-		material Retour
-		mouse_over_material RetourMO
 	}
 
-	element Scores/Title
-	{
-		class MinigameText
-		position 0% 5%
-		size 100% 10%
-		font_size 40.00
-		text Scores
-		text_align center
-	}
-
-	element Scores/Separators
-	{
-		class NoBorderMenu
-		position 10% 17%
-		size 80% 58%
-		border_size 32.0 32.0 32.0 32.0
-	
-		element Scores/TitleName
-		{
-			class PanelZone
-			position 0% 0%
-			size 70% 7%
-			material Base/Invisible
-
-			element Scores/TitleName/Text
-			{
-				class MinigameText
-				font_size 24.0
-				position 50% 30%
-				text Noms
-				text_align center
-			}
-		}
-
-		element Scores/TitleScore
-		{
-			class PanelZone
-			position 75% 0%
-			size 20% 5%
-			material Base/Invisible
-
-			element Scores/TitleScore/Text
-			{
-				class MinigameText
-				font_size 24.0
-				position 50% 30%
-				text Scores
-				text_align center
-			}
-		}
-
-		element Scores/VerticUp
-		{
-			class PanelZone
-			position 70% 0%
-			size 4% 18%
-			material VerticSeparator
-		}
-
-		element Scores/VerticDown
-		{
-			class PanelZone
-			position 70% 22%
-			size 4% 78%
-			material VerticSeparator
-		}
-
-		element Scores/Horizontal
-		{
-			class PanelZone
-			position 0% 17%
-			size 99.9% 6%
-			material HorizSeparator
-		}
-
-		element Scores/Names
-		{
-			class TextZone
-			position 10% 25%
-			font_size 16.0
-			text_colour 0.0 0.0 0.0 1.0
-		}
-
-		element Scores/Scores
-		{
-			class TextZone
-			position 75% 25%
-			font_size 16.0
-			text_colour 0.0 0.0 0.0 1.0
-		}
-	}
-}
-
-overlay Start
-{
-	class MinigameText
-	position 40.00% 0.00%
-	size 100.00% 100.00%
-	font_size 100.00
-	text Level 1
-	text_colour 1.0 1.0 1.0 1.0
-	text_align center
-}
-
-overlay End
-{
-	class PanelZone
-	position 25% 37.5%
-	size 50% 25%
-	material Gagne
-}
-
-overlay FinMiniGame
-{
-	class MinigameText
-	position 0% 45%
-	size 100% 10%
-	font_size 40.0
-	text_colour 0.0 0.0 1.0 1.0
-	text 0
 }
 
 overlay Score
 {
 	class PanelZone
-	size 40.00% 50.00%
-	material HautGauche
-
-	element Score/Title
-	{
-		class MinigameText
-		position 10% 10%
-		size 10% 10%
-		font_size 24.0
-		text Score :
-	}
-
+	size 20.00% 20.00%
+	material Score
 	element Score/Text
 	{
-		class MinigameText
-		position 30.00% 10.00%
-		size 70% 10%
-		font_size 24.00
+		class TextZone
+		position 70.00% 15.00%
+		size 0.53% 0.71%
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
 		text 0
 	}
 
 	element Life1
 	{
 		class PanelZone
-		size 10% 20%
-		position 10% 20%
+		size 20% 40%
+		position 0% 40%
 		material Life
 	}
 
 	element Life2
 	{
 		class PanelZone
-		size 10% 20%
-		position 20% 20%
+		size 20% 40%
+		position 20% 40%
 		material Life
 	}
 
 	element Life3
 	{
 		class PanelZone
-		size 10% 20%
-		position 30% 20%
+		size 20% 40%
+		position 40% 40%
 		material Life
 	}
 
 	element Life4
 	{
 		class PanelZone
-		size 10% 20%
-		position 40% 20%
+		size 20% 40%
+		position 60% 40%
 		material Life
 	}
 
 	element Life5
 	{
 		class PanelZone
-		size 10% 20%
-		position 50% 20%
+		size 20% 40%
+		position 80% 40%
 		material Life
 	}
+}
+
+overlay Scores
+{
+	class BorderPanelZone
+	position -25.00% -25.00%
+	size 50.00% 50.00%
+	align center center
+	material Base/LowAlphaBlack
+	border_material Base/Black
+	border_size 1.00 1.00 1.00 1.00
+	element Scores/Retour
+	{
+		class TextZone
+		position 37.50% 90.00%
+		size 25.00% 10.00%
+		font_name Egyptian
+		font_size 16.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Retour
+	}
+
+	element Scores/Title
+	{
+		class TextZone
+		position 35.00% 0.00%
+		size 0.21% 0.28%
+		font_name Egyptian
+		font_size 24.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Scores
+	}
+
+}
+
+overlay Start
+{
+	class PanelZone
+	position -13.68% -25.00%
+	size 30% 4.56%
+	align center center
+	material Base/Invisible
+	element Start/Number
+	{
+		class TextZone
+		position 40.00% 0.00%
+		size 100.00% 100.00%
+		font_name Egyptian
+		font_size 32.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Scrogn eugneu
+	}
+
+	element Start/Text
+	{
+		class TextZone
+		size 100.00% 100.00%
+		font_name Egyptian
+		font_size 32.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Level 1
+	}
+
+}
+
+overlay Title
+{
+	class PanelZone
+	position -13.68% -18.23%
+	size 27.35% 36.47%
+	align center center
+	material Titre
 }
 
 overlay TopRight
 {
 	class PanelZone
-	position 60% 0%
-	size 40% 50%
-	material HautDroite
+	position -20.00% 0.00%
+	size 20.00% 20.00%
+	align top right
+	material Chrono
+	element TopRight/Chrono
+	{
+		class TextZone
+		position -30.00% -15.00%
+		size 130.00% 30.00%
+		align center left
+		font_name Egyptian
+		font_size 12.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Chrono : 0m00s00
+	}
 
 	element TopRight/TotalTime
 	{
-		class MinigameText
-		position 20% 10%
-		size 50% 10%
-		font_size 24
-		text Temps imparti :
+		class TextZone
+		position -30.00% 5.00%
+		size 130.00% 30.00%
+		font_name Egyptian
+		font_size 12.00
+		text_colour 1.00 1.00 1.00 1.00
+		text Tempsimparti:
 	}
 
 	element TopRight/TotalTime/Var
 	{
-		class MinigameText
-		position 70% 10%
-		size 20% 10%
-		font_size 24
+		class TextZone
+		position -30.00% 12.83%
+		size 130.00% 30.00%
+		font_name Egyptian
+		font_size 12.00
+		text_colour 1.00 1.00 1.00 1.00
 		text 0m12s0
 	}
 
-	element TopRight/Chrono
-	{
-		class MinigameText
-		position 50% 20%
-		size 10% 10%
-		font_size 24.00
-		text Chrono :
-	}
-
-	element TopRight/Chrono/Var
-	{
-		class MinigameText
-		position 70% 20%
-		size 30% 10%
-		font_size 24
-		text 0m00s00
-	}
 }
 
-overlay Rider/Connexion 
+
+// SOUNDS
+
+sound Ouch
 {
-	class MinigameFrame
-	position 30% 70%
-	size 40% 20%
-	border_size 32.0 32.0 32.0 32.0
-	element Rider/Connexion/Text
+	url 		./Sons/Chute.mp3
+	type 		sfx
+	global 	false
+}
+
+sound Statue
+{
+	url 		./Sons/ring.mp3
+	type 		sfx
+	global 	true
+}
+
+
+// SCENE NODES
+
+scene_node PersoNode
+{
+	position 40.00 16439.00 1935.00
+	use_sound Ouch
+}
+
+scene_node CameraNode
+{
+	parent PersoNode
+}
+
+scene_node PyramideNode
+{
+	position 0.00 -1000.00 0.00
+	scale 1.50 1.50 1.50
+}
+
+scene_node SkyNode
+{
+	position 0.00 35000.00 0.00
+}
+
+scene_node ZombiesNode
+{
+}
+
+
+// OBJECTS
+
+object Chapeau
+{
+	mesh indiana.mesh
+	attach_to PersoNode
+}
+
+object Chemise
+{
+	mesh chemise.mesh
+	attach_to PersoNode
+}
+
+object Corps
+{
+	mesh corps.mesh
+	attach_to PersoNode
+}
+
+object CouvercleSarcophage
+{
+	mesh couverclesarcophage.mesh
+	attach_to PersoNode
+}
+
+object OeilDroit
+{
+	mesh oeild.mesh
+	attach_to PersoNode
+}
+
+object OeilGauche
+{
+	mesh oeilg.mesh
+	attach_to PersoNode
+}
+
+object Pyramide1
+{
+	mesh pyramide1.mesh
+	attach_to PyramideNode
+}
+
+object Pyramide2
+{
+	mesh pyramide2.mesh
+	attach_to PyramideNode
+}
+
+object Pyramide3
+{
+	mesh pyramide3.mesh
+	attach_to PyramideNode
+}
+
+object Sarcophage
+{
+	mesh sarcophage.mesh
+	attach_to PersoNode
+}
+
+object SkyDome
+{
+	mesh pyramidedome.mesh
+	attach_to SkyNode
+}
+
+object Sol
+{
+	mesh pyramidesol.mesh
+}
+
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction -0.50 -0.71 -0.50
+	diffuse 0.90 0.90 0.90 1.00
+	specular 0.70 0.70 0.70 1.00
+}
+
+light light_02
+{
+	type directional
+	direction 0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_03
+{
+	type directional
+	direction 0.50 -0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_04
+{
+	type directional
+	direction -0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+
+// CAMERAS
+
+camera RootCamera
+{
+	position 0.00 0.00 15000.00
+	attach_to CameraNode
+}
+
+
+// ANIMATION GROUPS
+
+animation_group Perso
+{
+	add_object Chapeau
 	{
-		class MinigameText
-		position 30% 35%
-		size 80% 20%
-		font_size 24.00
-		text ... Connexion ...
+		animation stand
+		{
+			looped true
+		}
 	}
+	add_object Chemise
+	{
+		animation stand
+		{
+			looped true
+		}
+	}
+	add_object Corps
+	{
+		animation stand
+		{
+			looped true
+		}
+	}
+	add_object CouvercleSarcophage
+	{
+		animation stand
+		{
+			looped true
+		}
+	}
+	add_object OeilDroit
+	{
+		animation stand
+		{
+			looped true
+		}
+	}
+	add_object OeilGauche
+	{
+		animation stand
+		{
+			looped true
+		}
+	}
+	add_object Sarcophage
+	{
+		animation stand
+		{
+			looped true
+		}
+	}
+
+	chain_animations ouverture stand
+}
+
+animation_group Zombies
+{
 }

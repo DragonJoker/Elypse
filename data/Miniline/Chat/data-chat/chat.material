@@ -1,0 +1,891 @@
+material Bulle/Noir
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture bulle-noir.png
+			}
+		}
+	}
+}
+
+material Bulle/Blanc
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture bulle-blanc.png
+			}
+		}
+	}
+}
+
+material FlecheBulle
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fleche_bulle.png
+			}
+		}
+	}
+}
+
+material Chat/Shrink
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleft.png
+				rotate 180.0
+			}
+		}
+	}
+}
+
+material Chat/Expand
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleft.png
+			}
+		}
+	}
+}
+
+material Chat/UpArrow
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleft.png
+				rotate -90.0
+			}
+		}
+	}
+}
+
+material Chat/DownArrow
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleft.png
+				rotate 90.0
+			}
+		}
+	}
+}
+
+material Chat/Rooms
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture rooms.png
+			}
+		}
+	}
+}
+
+material Chat/Emotes
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture emotes.png
+			}
+		}
+	}
+}
+
+material Chat/Friends
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture friends.png
+			}
+		}
+	}
+}
+
+material Chat/BtnMenu
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture btnmenu.png
+			}
+		}
+	}
+}
+
+material Chat/RoomsMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture roomsMO.png
+			}
+		}
+	}
+}
+
+material Chat/EmotesMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture emotesMO.png
+			}
+		}
+	}
+}
+
+material Chat/BtnMenuMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture menuMO.png
+			}
+		}
+	}
+}
+
+material Chat/FriendsMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture friendsMO.png
+			}
+		}
+	}
+}
+
+material Chat/ShrinkMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleftMO.png
+				rotate 180.0
+			}
+		}
+	}
+}
+
+material Chat/ExpandMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleftMO.png
+			}
+		}
+	}
+}
+
+material Chat/UpArrowMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleftMO.png
+				rotate -90.0
+			}
+		}
+	}
+}
+
+material Chat/DownArrowMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldleftMO.png
+				rotate 90.0
+			}
+		}
+	}
+}
+
+material Chat/RoomsSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture roomssel.png
+			}
+		}
+	}
+}
+
+material Chat/EmotesSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture emotessel.png
+			}
+		}
+	}
+}
+
+material Chat/BtnMenuSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture menusel.png
+			}
+		}
+	}
+}
+
+material Chat/FriendsSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture friendssel.png
+			}
+		}
+	}
+}
+
+material Chat/FieldCorner
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture fieldcorner.png
+			}
+		}
+	}
+}
+
+material Chat/Cancel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture cancel.png
+			}
+		}
+	}
+}
+
+material Chat/CancelMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture cancelmo.png
+			}
+		}
+	}
+}
+
+material Chat/Add
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture add.png
+			}
+		}
+	}
+}
+
+material Chat/AddMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture addmo.png
+			}
+		}
+	}
+}
+
+
+material Chat/Back
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture back.png
+			}
+		}
+	}
+}
+
+material Chat/BackMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture backmo.png
+			}
+		}
+	}
+}
+
+
+material Chat/Commands
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture commands.png
+			}
+		}
+	}
+}
+
+material Chat/CommandsMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture commandsmo.png
+			}
+		}
+	}
+}
+
+material Chat/Delete
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture delete.png
+			}
+		}
+	}
+}
+
+material Chat/DeleteMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture deletemo.png
+			}
+		}
+	}
+}
+
+material Chat/Options
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture options.png
+			}
+		}
+	}
+}
+
+material Chat/OptionsMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture optionsmo.png
+			}
+		}
+	}
+}
+
+material Chat/FriendsTabMat
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture friendstab.png
+			}
+		}
+	}
+}
+
+material Chat/FriendsTabMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture friendstabmo.png
+			}
+		}
+	}
+}
+
+material Chat/FriendsTabSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture friendstabsel.png
+			}
+		}
+	}
+}
+
+material Chat/IgnoredTabMat
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture ignoredtab.png
+			}
+		}
+	}
+}
+
+material Chat/IgnoredTabMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture ignoredtabmo.png
+			}
+		}
+	}
+}
+
+material Chat/IgnoredTabSel
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture ignoredtabsel.png
+			}
+		}
+	}
+}
+
+material Chat/Scrollbar
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture scrollbar.png
+			}
+		}
+	}
+}
+
+material Chat/Elevator
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				texture elevator.png
+			}
+		}
+	}
+}
+
+material Chat/ElevatorCenter
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.34765625 0.37890625 1.0
+			}
+		}
+	}
+}
+
+material Chat/On
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+
+			texture_unit
+			{
+				texture on.jpg
+			}
+		}
+	}
+}
+
+material Chat/Off
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+
+			texture_unit
+			{
+				texture off.jpg
+			}
+		}
+	}
+}
+
+material Chat/Reglette
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture reglette.png
+			}
+		}
+	}
+}
+
+material Chat/Tic
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture curseur.png
+			}
+		}
+	}
+}

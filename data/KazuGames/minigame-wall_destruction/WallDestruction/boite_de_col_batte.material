@@ -1,0 +1,10 @@
+
+material boite_de_col_batte/Default
+{
+	technique
+	{
+		pass
+		{
+		}
+	}
+}

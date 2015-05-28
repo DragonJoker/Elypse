@@ -1,0 +1,386 @@
+material corpsminiboy/peau-blanc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-mat
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corps3.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-noir
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corps2.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-jaune
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corps4.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-alien
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpsalien.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-trent
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpstrent.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-drake
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpsdrak.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-garou
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpsloups.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-robot
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpsrobot.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-vampire
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpsvamp.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/peau-demon
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture corpsdemon.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material corpsminiboy/cheveux-blond
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0 1
+			diffuse 1 0.909804 0 1
+			specular 0.801 0.801 0.801 1 56
+			cull_hardware none
+			cull_software none
+		}
+	}
+}
+
+material corpsminiboy/cheveux-chatain
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.4 0.2 0 1
+			specular 0.801 0.801 0.801 1 56
+			cull_hardware none
+			cull_software none
+		}
+	}
+}
+
+material corpsminiboy/cheveux-roux
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 1.0 0.3 0 1
+			specular 0.801 0.801 0.801 1 56
+			cull_hardware none
+			cull_software none
+		}
+	}
+}
+
+material corpsminiboy/cheveux-gris
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 1
+			diffuse 0.5 0.5 0.5 1
+			specular 0.801 0.801 0.801 1 56
+			cull_hardware none
+			cull_software none
+		}
+	}
+}
+
+material corpsminiboy/cheveux-blanc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.5 0.5 0.5 1
+			diffuse 1.0 1.0 1.0 1
+			specular 0.801 0.801 0.801 1 56
+			cull_hardware none
+			cull_software none
+		}
+	}
+}
+
+material corpsminiboy/iris-bleu
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.5 0.5 1 1
+			specular 1.0 1.0 1.0 1 128
+			emissive 0 0 0.2 1
+		}
+	}
+}
+
+material corpsminiboy/iris-vert
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.3 1 0.3 1
+			specular 1.0 1.0 1.0 1 128
+			emissive 0 0.2 0 1
+		}
+	}
+}
+
+material corpsminiboy/iris-marron
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0.4 0.2 0 1
+			specular 1.0 1.0 1.0 1 128
+			emissive 0.1 0.05 0 1
+		}
+	}
+}
+
+material corpsminiboy/iris-rouge
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 1.0 0.0 0.0 1
+			specular 1.0 1.0 1.0 1 128
+			emissive 0.5 0 0 1
+		}
+	}
+}
+
+material corpsminiboy/iris-jaune
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 1.0 1.0 0.0 1
+			specular 1.0 1.0 1.0 1 128
+			emissive 0.5 0.5 0 1
+		}
+	}
+}

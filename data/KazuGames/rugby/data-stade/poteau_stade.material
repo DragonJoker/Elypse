@@ -1,0 +1,44 @@
+
+material poteau_stade/bache
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 1 1 1 1
+			specular 0.234 0.234 0.234 1 19
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture_alias 0
+				texture bache.jpg
+			}
+		}
+
+	}
+
+}
+
+material poteau_stade/metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 1 1 1 1
+			specular 0.234 0.234 0.234 1 8
+
+			texture_unit
+			{
+				texture_alias 0
+				texture blanc_noir.jpg
+			}
+		}
+
+	}
+
+}

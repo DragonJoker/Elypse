@@ -1,0 +1,38 @@
+
+material cable_alim/plastique
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			specular 0.423 0.423 0.423 1 10
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture_alias 0
+				texture noir_alpha.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material cable_alim/metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.976471 0.858824 0.317647 1
+			diffuse 0.976471 0.858824 0.317647 1
+			specular 0.387 0.387 0.387 1 27
+		}
+
+	}
+
+}

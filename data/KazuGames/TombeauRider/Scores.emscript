@@ -1,0 +1,40 @@
+string l_namesAndScores;
+string l_names;
+string l_scores;
+
+int l_index;
+int g_score;
+
+string c_highscorePage = "http://kazugame.fordev-studio.com/score.php";
+//Sinon ce fichier fait planter Troll (commentaire useless, spécial dédicace au blond).
+
+void UpdateScore()
+{
+	OverlayElement_GetByName("Score/Text")->SetCaption( itoa( g_score));
+};
+
+void _retrieveHighScores()
+{
+	Echo( "_retrieveHighScores");
+
+	l_namesAndScores = StringFromUrl( c_highscorePage + "?name=TombeauRider", EMPTY_STRING);
+
+	l_index = strFind( l_namesAndScores, "<br>");
+
+	l_names = substr( l_namesAndScores, 0, l_index);
+	l_scores = substr( l_namesAndScores, l_index + 4, strlen( l_namesAndScores));
+
+	l_names = l_names->replace( "|", endl);
+	l_scores = str_replace( l_scores, "|", endl);
+
+	OverlayElement_GetByName( "Zcore/Names")->SetCaption( l_names);
+	OverlayElement_GetByName( "Zcore/Scores")->SetCaption( l_scores);
+
+};
+
+void _submitHighscore()
+{
+	Echo( "_submitHighscore");
+	l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=TombeauRider");
+};
+

@@ -1,0 +1,1231 @@
+string custo_selectedMesh;
+string custo_selectedMaterial;
+string custo_selectedName;
+string custo_tmpMeshes;
+string custo_tmpMaterials;
+string custo_tmpNames;
+
+string custo_currentBodyMesh;
+string custo_currentHairMesh;
+string custo_currentHairColour;
+string custo_currentDressMesh;
+string custo_currentSkinMaterial;
+string custo_currentEyeColour;
+string custo_currentBrowMesh;
+string custo_currentBrowColour;
+string custo_currentBeardMesh;
+string custo_currentBeardColour;
+string custo_currentEyeLashColour;
+string custo_currentLipstickColour;
+
+string custo_currentBodyName;
+string custo_currentHairName;
+string custo_currentHairColourName;
+string custo_currentDressName;
+string custo_currentSkinName;
+string custo_currentEyeColourName;
+string custo_currentBeardName;
+string custo_currentBeardColourName;
+string custo_currentBrowName;
+string custo_currentBrowColourName;
+string custo_currentEyeLashColourName;
+string custo_currentLipstickColourName;
+
+int custo_sex;
+int custo_currentBody;
+int custo_currentHair;
+int custo_currentHairMaterial;
+int custo_currentDress;
+int custo_currentSkin;
+int custo_currentEyeMaterial;
+int custo_currentBrow;
+int custo_currentBrowMaterial;
+int custo_currentBeard;
+int custo_currentBeardMaterial;
+int custo_currentEyeLashMaterial;
+int custo_currentLipstickMaterial;
+
+object custo_body;
+object custo_lEye;
+object custo_rEye;
+object custo_hair;
+object custo_beard;
+object custo_brow;
+object custo_dress;
+
+scene_node custo_playerNode;
+
+bool custo_mouseLeftDown;
+
+animation_group custo_persoAnims;
+animated_object custo_bodyAnims;
+animated_object custo_lEyeAnims;
+animated_object custo_rEyeAnims;
+animated_object custo_hairAnims;
+animated_object custo_beardAnims;
+animated_object custo_browAnims;
+animated_object custo_dressAnims;
+
+camera custo_rootCamera;
+
+void BuildManBody()
+{
+//	Echo( "BuildManBody");
+	LoadManBody( custo_currentBody);
+	custo_body = g_currentChar.BodyObject;
+	custo_lEye = g_currentChar.LEyeObject;
+	custo_rEye = g_currentChar.REyeObject;
+}
+
+void BuildManHair()
+{
+//	Echo( "BuildManHair");
+	LoadManHair( custo_currentHair);
+	OverlayElement_GetByName( "Custo/Hair/Edit/Text")->SetCaption( g_currentChar.HairName);
+	custo_hair = g_currentChar.HairObject;
+}
+
+void BuildManHairColour()
+{
+//	Echo( "BuildManHairColour");
+	LoadManHairColour( custo_currentHairMaterial);
+	OverlayElement_GetByName( "Custo/HairColour/Edit/Text")->SetCaption( g_currentChar.HairColourName);
+}
+
+void BuildManDress()
+{
+//	Echo( "BuildManDress");
+	LoadManDress( custo_currentDress);
+	OverlayElement_GetByName( "Custo/Dresses/Edit/Text")->SetCaption( g_currentChar.DressName);
+	custo_dress = g_currentChar.DressObject;
+}
+
+void BuildManSkin()
+{
+//	Echo( "BuildManSkin");
+	LoadManSkin( custo_currentSkin);
+	OverlayElement_GetByName( "Custo/Skin/Edit/Text")->SetCaption( g_currentChar.SkinName);
+}
+
+void BuildManEyeColour()
+{
+//	Echo( "BuildManEyeColour");
+	LoadManEyeColour( custo_currentEyeMaterial);
+	OverlayElement_GetByName( "Custo/Eye/Edit/Text")->SetCaption( g_currentChar.EyeColourName);
+}
+
+void BuildManBrow()
+{
+//	Echo( "BuildManBrow");
+	LoadManBrow( custo_currentBrow);
+//	Echo( "BuildManBrow - Name : " + g_currentCharBrowName);
+	OverlayElement_GetByName( "Custo/Brow/Edit/Text")->SetCaption( g_currentChar.BrowName);
+	custo_brow = g_currentChar.BrowObject;
+}
+
+void BuildManBrowColour()
+{
+//	Echo( "BuildManBrowColour");
+	LoadManBrowColour( custo_currentBrowMaterial);
+	OverlayElement_GetByName( "Custo/BrowColour/Edit/Text")->SetCaption( g_currentChar.BrowColourName);
+}
+
+void BuildManBeard()
+{
+//	Echo( "BuildManBeard");
+	LoadManBeard( custo_currentBeard);
+	OverlayElement_GetByName( "Custo/Beards/Edit/Text")->SetCaption( g_currentChar.BeardName);
+	custo_beard = g_currentChar.BeardObject;
+}
+
+void BuildManBeardColour()
+{
+//	Echo( "BuildManBeardColour");
+	LoadManBeardColour( custo_currentBeardMaterial);
+	OverlayElement_GetByName( "Custo/BeardsColour/Edit/Text")->SetCaption( g_currentChar.BeardColourName);
+}
+
+void BuildWomanBody()
+{
+//	Echo( "BuildWomanBody");
+	LoadWomanBody( custo_currentBody);
+	custo_body = g_currentChar.BodyObject;
+	custo_lEye = g_currentChar.LEyeObject;
+	custo_rEye = g_currentChar.REyeObject;
+}
+
+void BuildWomanHair()
+{
+//	Echo( "BuildWomanHair");
+	LoadWomanHair( custo_currentHair);
+	OverlayElement_GetByName( "Custo/Hair/Edit/Text")->SetCaption( g_currentChar.HairName);
+	custo_hair = g_currentChar.HairObject;
+}
+
+void BuildWomanHairColour()
+{
+//	Echo( "BuildManHairColour");
+	LoadWomanHairColour( custo_currentHairMaterial);
+	OverlayElement_GetByName( "Custo/HairColour/Edit/Text")->SetCaption( g_currentChar.HairColourName);
+}
+
+void BuildWomanDress()
+{
+//	Echo( "BuildWomanDress");
+	LoadWomanDress( custo_currentDress);
+	OverlayElement_GetByName( "Custo/Dresses/Edit/Text")->SetCaption( g_currentChar.DressName);
+	custo_dress = g_currentChar.DressObject;
+}
+
+void BuildWomanSkin()
+{
+//	Echo( "BuildWomanSkin");
+	LoadWomanSkin( custo_currentSkin);
+	LoadWomanEyeLash( custo_currentEyeLashMaterial);
+	LoadWomanLipstick( custo_currentLipstickMaterial);
+	OverlayElement_GetByName( "Custo/Skin/Edit/Text")->SetCaption( g_currentChar.SkinName);
+}
+
+void BuildWomanEyeColour()
+{
+//	Echo( "BuildWomanEyeColour");
+	LoadWomanEyeColour( custo_currentEyeMaterial);
+	OverlayElement_GetByName( "Custo/Eye/Edit/Text")->SetCaption( g_currentChar.EyeColourName);
+}
+
+void BuildWomanBrow()
+{
+//	Echo( "BuildWomanBrow");
+	LoadWomanBrow( custo_currentBrow);
+//	Echo( "BuildWomanBrow - Name : " + g_currentCharBrowName);
+	OverlayElement_GetByName( "Custo/Brow/Edit/Text")->SetCaption( g_currentChar.BrowName);
+	custo_brow = g_currentChar.BrowObject;
+}
+
+void BuildWomanBrowColour()
+{
+//	Echo( "BuildWomanBrowColour");
+	LoadWomanBrowColour( custo_currentBrowMaterial);
+	OverlayElement_GetByName( "Custo/BrowColour/Edit/Text")->SetCaption( g_currentChar.BrowColourName);
+}
+
+void BuildWomanEyeLash()
+{
+//	Echo( "BuildWomanEyeLashColour");
+	LoadWomanEyeLash( custo_currentEyeLashMaterial);
+	OverlayElement_GetByName( "Custo/EyeLash/Edit/Text")->SetCaption( g_currentChar.EyeLashColourName);
+}
+
+void BuildWomanLipstick()
+{
+//	Echo( "BuildWomanLipstickColour");
+	LoadWomanLipstick( custo_currentLipstickMaterial);
+	OverlayElement_GetByName( "Custo/Lipstick/Edit/Text")->SetCaption( g_currentChar.LipstickColourName);
+}
+
+void BuildCharacter()
+{
+	LoadCharacter();
+
+	custo_body = g_currentChar.BodyObject;
+	custo_lEye = g_currentChar.LEyeObject;
+	custo_rEye = g_currentChar.REyeObject;
+	custo_hair = g_currentChar.HairObject;
+	custo_dress = g_currentChar.DressObject;
+	custo_brow = g_currentChar.BrowObject;
+	if (custo_sex == 0)
+	{
+		custo_beard = g_currentChar.BeardObject;
+		OverlayElement_GetByName( "Custo/Sex/Edit/Text")->SetCaption( "Homme");
+		OverlayElement_GetByName( "Custo/Beards/Edit/Text")->SetCaption( g_currentChar.BeardName);
+		OverlayElement_GetByName( "Custo/BeardsColour/Edit/Text")->SetCaption( g_currentChar.BeardColourName);
+		OverlayElement_GetByName( "Custo/EyeLash")->Hide();
+		OverlayElement_GetByName( "Custo/Lipstick")->Hide();
+	}
+	else
+	{
+		OverlayElement_GetByName( "Custo/Sex/Edit/Text")->SetCaption( "Femme");
+		OverlayElement_GetByName( "Custo/EyeLash/Edit/Text")->SetCaption( g_currentChar.EyeLashColourName);
+		OverlayElement_GetByName( "Custo/Lipstick/Edit/Text")->SetCaption( g_currentChar.LipstickColourName);
+		OverlayElement_GetByName( "Custo/EyeLash")->Show();
+		OverlayElement_GetByName( "Custo/Lipstick")->Show();
+	}
+
+	OverlayElement_GetByName( "Custo/Hair/Edit/Text")->SetCaption( g_currentChar.HairName);
+	OverlayElement_GetByName( "Custo/HairColour/Edit/Text")->SetCaption( g_currentChar.HairColourName);
+	OverlayElement_GetByName( "Custo/Dresses/Edit/Text")->SetCaption( g_currentChar.DressName);
+	OverlayElement_GetByName( "Custo/Skin/Edit/Text")->SetCaption( g_currentChar.SkinName);
+	OverlayElement_GetByName( "Custo/Eye/Edit/Text")->SetCaption( g_currentChar.EyeColourName);
+	OverlayElement_GetByName( "Custo/Brow/Edit/Text")->SetCaption( g_currentChar.BrowName);
+	OverlayElement_GetByName( "Custo/BrowColour/Edit/Text")->SetCaption( g_currentChar.BrowColourName);
+}
+
+void ChangeSex()
+{
+	custo_currentBody = 0;
+	custo_currentHair = 0;
+	custo_currentHairMaterial = 0;
+	custo_currentDress = 0;
+	custo_currentSkin = 0;
+	custo_currentEyeMaterial = 0;
+	custo_currentBrow = 0;
+	custo_currentBrowMaterial = 0;
+	custo_currentBeard = 0;
+	custo_currentBeardMaterial = 0;
+	custo_currentEyeLashMaterial = 0;
+	custo_currentLipstickMaterial = 0;
+
+	g_currentChar.Body = custo_currentBody;
+	g_currentChar.Hair = custo_currentHair;
+	g_currentChar.HairMaterial = custo_currentHairMaterial;
+	g_currentChar.Dress = custo_currentDress;
+	g_currentChar.Skin = custo_currentSkin;
+	g_currentChar.EyeMaterial = custo_currentEyeMaterial;
+	g_currentChar.Brow = custo_currentBrow;
+	g_currentChar.BrowMaterial = custo_currentBrowMaterial;
+	g_currentChar.Special01 = 0;
+	g_currentChar.Special02 = 0;
+
+	custo_persoAnims->StopAllAnimations();
+	custo_persoAnims->RemoveObject( custo_body->GetName());
+	custo_persoAnims->RemoveObject( custo_lEye->GetName());
+	custo_persoAnims->RemoveObject( custo_rEye->GetName());
+	custo_persoAnims->RemoveObject( custo_hair->GetName());
+
+	if (custo_beard != NULL)
+	{
+//		Echo( "Removing beard");
+		custo_persoAnims->RemoveObject( custo_beard->GetName());
+		Object_Destroy( custo_beard);
+		custo_beard = NULL;
+	}
+
+	if (custo_brow != NULL)
+	{
+//		Echo( "Removing brow");
+		custo_persoAnims->RemoveObject( custo_brow->GetName());
+		Object_Destroy( custo_brow);
+		custo_brow = NULL;
+	}
+
+	if (custo_dress != NULL)
+	{
+//		Echo( "Removing dress");
+		custo_persoAnims->RemoveObject( custo_dress->GetName());
+		Object_Destroy( custo_dress);
+		custo_dress = NULL;
+	}
+
+	Object_Destroy( custo_body);
+	Object_Destroy( custo_lEye);
+	Object_Destroy( custo_rEye);
+	Object_Destroy( custo_hair);
+
+	if (custo_sex == 1)
+	{
+		custo_sex = 0;
+		OverlayElement_GetByName( "Custo/Sex/Edit/Text")->SetCaption( "Homme");
+	}
+	else
+	{
+		custo_sex = 1;
+		OverlayElement_GetByName( "Custo/Sex/Edit/Text")->SetCaption( "Femme");
+	}
+	g_currentChar.Sex = custo_sex;
+	BuildCharacter();
+}
+
+Overlay_SetAction( "Custo/Sex/Edit/LeftArrow")
+{
+	ChangeSex();
+}
+
+Overlay_SetAction( "Custo/Sex/Edit/RightArrow")
+{
+	ChangeSex();
+}
+
+void ChangeManEyeColour( int cmec_direction)
+{
+	if (custo_currentEyeMaterial == 0 && cmec_direction < 0)
+	{
+		custo_currentEyeMaterial = g_manEyesMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentEyeMaterial == g_manEyesMaterials.Meshes->Size() - 1 && cmec_direction > 0)
+	{
+		custo_currentEyeMaterial = 0;
+	}
+	else
+	{
+		custo_currentEyeMaterial = custo_currentEyeMaterial + cmec_direction;
+	}
+	BuildManEyeColour();
+}
+
+void ChangeWomanEyeColour( int cwec_direction)
+{
+	if (custo_currentEyeMaterial == 0 && cwec_direction < 0)
+	{
+		custo_currentEyeMaterial = g_womanEyesMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentEyeMaterial == g_womanEyesMaterials.Meshes->Size() - 1 && cwec_direction > 0)
+	{
+		custo_currentEyeMaterial = 0;
+	}
+	else
+	{
+		custo_currentEyeMaterial = custo_currentEyeMaterial + cwec_direction;
+	}
+	BuildWomanEyeColour();
+}
+
+void ChangeEyeColour( int cec_Direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManEyeColour( cec_Direction);
+	}
+	else
+	{
+		ChangeWomanEyeColour( cec_Direction);
+	}
+}
+
+Overlay_SetAction( "Custo/Eye/Edit/LeftArrow")
+{
+	ChangeEyeColour( -1);
+}
+
+Overlay_SetAction( "Custo/Eye/Edit/RightArrow")
+{
+	ChangeEyeColour( 1);
+}
+
+void ChangeManHairColour( int cmrc_direction)
+{
+	if (custo_currentHairMaterial == 0 && cmrc_direction < 0)
+	{
+		custo_currentHairMaterial = g_manHairsMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentHairMaterial == g_manHairsMaterials.Meshes->Size() - 1 && cmrc_direction > 0)
+	{
+		custo_currentHairMaterial = 0;
+	}
+	else
+	{
+		custo_currentHairMaterial = custo_currentHairMaterial + cmrc_direction;
+	}
+	BuildManHairColour();
+}
+
+void ChangeWomanHairColour( int cwrc_direction)
+{
+	if (custo_currentHairMaterial == 0 && cwrc_direction < 0)
+	{
+		custo_currentHairMaterial = g_womanHairsMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentHairMaterial == g_womanHairsMaterials.Meshes->Size() - 1 && cwrc_direction > 0)
+	{
+		custo_currentHairMaterial = 0;
+	}
+	else
+	{
+		custo_currentHairMaterial = custo_currentHairMaterial + cwrc_direction;
+	}
+	BuildWomanHairColour();
+}
+
+void ChangeHairColour( int crc_Direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManHairColour( crc_Direction);
+	}
+	else
+	{
+		ChangeWomanHairColour( crc_Direction);
+	}
+}
+
+Overlay_SetAction( "Custo/HairColour/Edit/LeftArrow")
+{
+	ChangeHairColour( -1);
+}
+
+Overlay_SetAction( "Custo/HairColour/Edit/RightArrow")
+{
+	ChangeHairColour( 1);
+}
+
+void ChangeManHair( int cmr_direction)
+{
+	if (custo_hair != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_hair->GetName());
+		Object_Destroy( custo_hair);
+	}
+	if (custo_currentHair == 0 && cmr_direction < 0)
+	{
+		custo_currentHair = g_manHairs.Meshes->Size() - 1;
+	}
+	elseif (custo_currentHair == g_manHairs.Meshes->Size() - 1 && cmr_direction > 0)
+	{
+		custo_currentHair = 0;
+	}
+	else
+	{
+		custo_currentHair = custo_currentHair + cmr_direction;
+	}
+	BuildManHair();
+}
+
+void ChangeWomanHair( int cwr_direction)
+{
+	if (custo_hair != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_hair->GetName());
+		Object_Destroy( custo_hair);
+	}
+	if (custo_currentHair == 0 && cwr_direction < 0)
+	{
+		custo_currentHair = g_womanHairs.Meshes->Size() - 1;
+	}
+	elseif (custo_currentHair == g_womanHairs.Meshes->Size() - 1 && cwr_direction > 0)
+	{
+		custo_currentHair = 0;
+	}
+	else
+	{
+		custo_currentHair = custo_currentHair + cwr_direction;
+	}
+	BuildWomanHair();
+}
+
+void ChangeHair( int cr_Direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManHair( cr_Direction);
+	}
+	else
+	{
+		ChangeWomanHair( cr_Direction);
+	}
+	ChangeHairColour( 0);
+}
+
+Overlay_SetAction( "Custo/Hair/Edit/LeftArrow")
+{
+	ChangeHair( -1);
+}
+
+Overlay_SetAction( "Custo/Hair/Edit/RightArrow")
+{
+	ChangeHair( 1);
+}
+
+void ChangeManBeardColour( int cmbdc_direction)
+{
+	if (custo_currentBeardMaterial == 0 && cmbdc_direction < 0)
+	{
+		custo_currentBeardMaterial = g_manHairsMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentBeardMaterial == g_manHairsMaterials.Meshes->Size() - 1 && cmbdc_direction > 0)
+	{
+		custo_currentBeardMaterial = 0;
+	}
+	else
+	{
+		custo_currentBeardMaterial = custo_currentBeardMaterial + cmbdc_direction;
+	}
+	BuildManBeardColour();
+}
+
+Overlay_SetAction( "Custo/BeardsColour/Edit/LeftArrow")
+{
+	ChangeManBeardColour( -1);
+}
+
+Overlay_SetAction( "Custo/BeardsColour/Edit/RightArrow")
+{
+	ChangeManBeardColour( 1);
+}
+
+void ChangeManBeard( int cmbd_direction)
+{
+//	Echo( "ChangeManBeard - Index before : " + itoa( custo_currentBeard) + "/" + itoa( custo_manMaxBeards));
+	if (custo_beard != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_beard->GetName());
+		Object_Destroy( custo_beard);
+	}
+	if (custo_currentBeard == 0 && cmbd_direction < 0)
+	{
+		custo_currentBeard = g_manBeards.Meshes->Size() - 1;
+	}
+	elseif (custo_currentBeard >= g_manBeards.Meshes->Size() - 1 && cmbd_direction > 0)
+	{
+		custo_currentBeard = 0;
+	}
+	else
+	{
+		custo_currentBeard = custo_currentBeard + cmbd_direction;
+	}
+//	Echo( "ChangeManBeard - Index after : " + itoa( custo_currentBeard) + "/" + itoa( custo_manMaxBeards));
+	BuildManBeard();
+}
+
+Overlay_SetAction( "Custo/Beards/Edit/LeftArrow")
+{
+	ChangeManBeard( -1);
+}
+
+Overlay_SetAction( "Custo/Beards/Edit/RightArrow")
+{
+	ChangeManBeard( 1);
+}
+
+void ChangeManBrowColour( int cmbwc_direction)
+{
+	if (custo_currentBrowMaterial == 0 && cmbwc_direction < 0)
+	{
+		custo_currentBrowMaterial = g_manHairsMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentBrowMaterial == g_manHairsMaterials.Meshes->Size() - 1 && cmbwc_direction > 0)
+	{
+		custo_currentBrowMaterial = 0;
+	}
+	else
+	{
+		custo_currentBrowMaterial = custo_currentBrowMaterial + cmbwc_direction;
+	}
+	BuildManBrowColour();
+}
+
+void ChangeWomanBrowColour( int cwbwc_direction)
+{
+	if (custo_currentBrowMaterial == 0 && cwbwc_direction < 0)
+	{
+		custo_currentBrowMaterial = g_womanHairsMaterials.Meshes->Size() - 1;
+	}
+	elseif (custo_currentBrowMaterial == g_womanHairsMaterials.Meshes->Size() - 1 && cwbwc_direction > 0)
+	{
+		custo_currentBrowMaterial = 0;
+	}
+	else
+	{
+		custo_currentBrowMaterial = custo_currentBrowMaterial + cwbwc_direction;
+	}
+	BuildWomanBrowColour();
+}
+
+void ChangeBrowColour( int cbwc_Direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManBrowColour( cbwc_Direction);
+	}
+	else
+	{
+		ChangeWomanBrowColour( cbwc_Direction);
+	}
+}
+
+Overlay_SetAction( "Custo/BrowColour/Edit/LeftArrow")
+{
+	ChangeManBrowColour( -1);
+}
+
+Overlay_SetAction( "Custo/BrowColour/Edit/RightArrow")
+{
+	ChangeManBrowColour( 1);
+}
+
+void ChangeManBrow( int cmbw_direction)
+{
+	if (custo_brow != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_brow->GetName());
+		Object_Destroy( custo_brow);
+	}
+	if (custo_currentBrow == 0 && cmbw_direction < 0)
+	{
+		custo_currentBrow = g_manBrows.Meshes->Size() - 1;
+	}
+	elseif (custo_currentBrow == g_manBrows.Meshes->Size() - 1 && cmbw_direction > 0)
+	{
+		custo_currentBrow = 0;
+	}
+	else
+	{
+		custo_currentBrow = custo_currentBrow + cmbw_direction;
+	}
+	BuildManBrow();
+}
+
+void ChangeWomanBrow( int cwbw_direction)
+{
+	if (custo_brow != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_brow->GetName());
+		Object_Destroy( custo_brow);
+	}
+	if (custo_currentBrow == 0 && cwbw_direction < 0)
+	{
+		custo_currentBrow = g_womanBrows.Meshes->Size() - 1;
+	}
+	elseif (custo_currentBrow == g_womanBrows.Meshes->Size() - 1 && cwbw_direction > 0)
+	{
+		custo_currentBrow = 0;
+	}
+	else
+	{
+		custo_currentBrow = custo_currentBrow + cwbw_direction;
+	}
+	BuildWomanBrow();
+}
+
+void ChangeBrow( int cbw_direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManBrow( cbw_direction);
+	}
+	else
+	{
+		ChangeWomanBrow( cbw_direction);
+	}
+	ChangeBrowColour( 0);
+}
+
+Overlay_SetAction( "Custo/Brow/Edit/LeftArrow")
+{
+	ChangeBrow( -1);
+}
+
+Overlay_SetAction( "Custo/Brow/Edit/RightArrow")
+{
+	ChangeBrow( 1);
+}
+
+void ChangeManDress( int cmd_direction)
+{
+	if (custo_dress != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_dress->GetName());
+		Object_Destroy( custo_dress);
+	}
+	if (custo_currentDress == 0 && cmd_direction < 0)
+	{
+		custo_currentDress = g_manDresses.Meshes->Size() - 1;
+	}
+	elseif (custo_currentDress == g_manDresses.Meshes->Size() - 1 && cmd_direction > 0)
+	{
+		custo_currentDress = 0;
+	}
+	else
+	{
+		custo_currentDress = custo_currentDress + cmd_direction;
+	}
+	BuildManDress();
+}
+
+void ChangeWomanDress( int cwd_direction)
+{
+	if (custo_dress != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_dress->GetName());
+		Object_Destroy( custo_dress);
+	}
+	if (custo_currentDress == 0 && cwd_direction < 0)
+	{
+		custo_currentDress = g_womanDresses.Meshes->Size() - 1;
+	}
+	elseif (custo_currentDress == g_womanDresses.Meshes->Size() - 1 && cwd_direction > 0)
+	{
+		custo_currentDress = 0;
+	}
+	else
+	{
+		custo_currentDress = custo_currentDress + cwd_direction;
+	}
+	BuildWomanDress();
+}
+
+void ChangeDress( int cd_direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManDress( cd_direction);
+	}
+	else
+	{
+		ChangeWomanDress( cd_direction);
+	}
+}
+
+Overlay_SetAction( "Custo/Dresses/Edit/LeftArrow")
+{
+	ChangeDress( -1);
+}
+
+Overlay_SetAction( "Custo/Dresses/Edit/RightArrow")
+{
+	ChangeDress( 1);
+}
+
+void ChangeManSkin( int cms_direction)
+{
+	if (custo_currentSkin == 0 && cms_direction < 0)
+	{
+		custo_currentSkin = g_manSkins.Meshes->Size() - 1;
+	}
+	elseif (custo_currentSkin == g_manSkins.Meshes->Size() - 1 && cms_direction > 0)
+	{
+		custo_currentSkin = 0;
+	}
+	else
+	{
+		custo_currentSkin = custo_currentSkin + cms_direction;
+	}
+	BuildManSkin();
+}
+
+void ChangeWomanSkin( int cws_direction)
+{
+	if (custo_currentSkin == 0 && cws_direction < 0)
+	{
+		custo_currentSkin = g_womanSkins.Meshes->Size() - 1;
+	}
+	elseif (custo_currentSkin == g_womanSkins.Meshes->Size() - 1 && cws_direction > 0)
+	{
+		custo_currentSkin = 0;
+	}
+	else
+	{
+		custo_currentSkin = custo_currentSkin + cws_direction;
+	}
+	BuildWomanSkin();
+}
+
+void ChangeSkin( int cs_direction)
+{
+	if (custo_sex == 0)
+	{
+		ChangeManSkin( cs_direction);
+	}
+	else
+	{
+		ChangeWomanSkin( cs_direction);
+	}
+}
+
+Overlay_SetAction( "Custo/Skin/Edit/LeftArrow")
+{
+	ChangeSkin( -1);
+}
+
+Overlay_SetAction( "Custo/Skin/Edit/RightArrow")
+{
+	ChangeSkin( 1);
+}
+
+void ChangeWomanEyeLash( int cwel_direction)
+{
+	if (custo_currentEyeLashMaterial == 0 && cwel_direction < 0)
+	{
+		custo_currentEyeLashMaterial = g_womanEyeLashes.Meshes->Size() - 1;
+	}
+	elseif (custo_currentEyeLashMaterial == g_womanEyeLashes.Meshes->Size() - 1 && cwel_direction > 0)
+	{
+		custo_currentEyeLashMaterial = 0;
+	}
+	else
+	{
+		custo_currentEyeLashMaterial = custo_currentEyeLashMaterial + cwel_direction;
+	}
+	BuildWomanEyeLash();
+}
+
+Overlay_SetAction( "Custo/EyeLash/Edit/LeftArrow")
+{
+	ChangeWomanEyeLash( -1);
+}
+
+Overlay_SetAction( "Custo/EyeLash/Edit/RightArrow")
+{
+	ChangeWomanEyeLash( 1);
+}
+
+void ChangeWomanLipstick( int cwls_direction)
+{
+	if (custo_currentLipstickMaterial == 0 && cwls_direction < 0)
+	{
+		custo_currentLipstickMaterial = g_womanLipsticks.Meshes->Size() - 1;
+	}
+	elseif (custo_currentLipstickMaterial == g_womanLipsticks.Meshes->Size() - 1 && cwls_direction > 0)
+	{
+		custo_currentLipstickMaterial = 0;
+	}
+	else
+	{
+		custo_currentLipstickMaterial = custo_currentLipstickMaterial + cwls_direction;
+	}
+	BuildWomanLipstick();
+}
+
+Overlay_SetAction( "Custo/Lipstick/Edit/LeftArrow")
+{
+	ChangeWomanLipstick( -1);
+}
+
+Overlay_SetAction( "Custo/Lipstick/Edit/RightArrow")
+{
+	ChangeWomanLipstick( 1);
+}
+
+void SubmitAvatar()
+{
+	Timer_Kill( "CustoLeftDown");
+
+	g_mainChar.Character.Sex = custo_sex;
+	g_mainChar.Character.Body = custo_currentBody;
+	g_mainChar.Character.Hair = custo_currentHair;
+	g_mainChar.Character.HairMaterial = custo_currentHairMaterial;
+	g_mainChar.Character.Dress = custo_currentDress;
+	g_mainChar.Character.Skin = custo_currentSkin;
+	g_mainChar.Character.EyeMaterial = custo_currentEyeMaterial;
+	g_mainChar.Character.Brow = custo_currentBrow;
+	g_mainChar.Character.BrowMaterial = custo_currentBrowMaterial;
+	if (custo_sex == 0)
+	{
+		g_mainChar.Character.Special01 = custo_currentBeard;
+		g_mainChar.Character.Special02 = custo_currentBeardMaterial;
+	}
+	else
+	{
+		g_mainChar.Character.Special01 = custo_currentEyeLashMaterial;
+		g_mainChar.Character.Special02 = custo_currentLipstickMaterial;
+	}
+
+	custo_persoAnims->RemoveObject( custo_body->GetName());
+	custo_persoAnims->RemoveObject( custo_lEye->GetName());
+	custo_persoAnims->RemoveObject( custo_rEye->GetName());
+	custo_persoAnims->RemoveObject( custo_hair->GetName());
+	if (custo_beard != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_beard->GetName());
+	}
+	if (custo_brow != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_brow->GetName());
+	}
+	if (custo_dress != NULL)
+	{
+		custo_persoAnims->RemoveObject( custo_dress->GetName());
+	}
+
+	ClearScene();
+
+	string sa_avatarInfos;
+	sa_avatarInfos = pack_int( msAvatar);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Sex);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Body);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Skin);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Hair);
+	sa_avatarInfos += pack_int( g_mainChar.Character.HairMaterial);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Dress);
+	sa_avatarInfos += pack_int( g_mainChar.Character.EyeMaterial);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Brow);
+	sa_avatarInfos += pack_int( g_mainChar.Character.BrowMaterial);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Special01);
+	sa_avatarInfos += pack_int( g_mainChar.Character.Special02);
+
+	Scene_Unload( "Custo");
+	Scene_Load( "RoomSelection");
+//	Echo( "Submit avatar");
+	Network_ClientSendMessage( "ChatClient", sa_avatarInfos);
+}
+
+Overlay_SetAction( "Custo/Submit")
+{
+	SubmitAvatar();
+}
+
+SetMouseLDownScript()
+{
+	g_mouseLeftDown = true;
+}
+
+SetMouseLUpScript()
+{
+	g_mouseLeftDown = false;
+}
+
+void _processAvatarMessage( string pam_message)
+{
+	custo_sex = unpack_int( substr( pam_message, 0, 4));
+	custo_currentBody = unpack_int( substr( pam_message, 4, 4));
+	custo_currentSkin = unpack_int( substr( pam_message, 8, 4));
+	custo_currentHair = unpack_int( substr( pam_message, 12, 4));
+	custo_currentHairMaterial = unpack_int( substr( pam_message, 16, 4));
+	custo_currentDress = unpack_int( substr( pam_message, 20, 4));
+	custo_currentEyeMaterial = unpack_int( substr( pam_message, 24, 4));
+	custo_currentBrow = unpack_int( substr( pam_message, 28, 4));
+	custo_currentBrowMaterial = unpack_int( substr( pam_message, 32, 4));
+
+	g_currentChar.Name = g_mainChar.Character.Name;
+	g_currentChar.Sex = custo_sex;
+	g_currentChar.Node = custo_playerNode;
+	g_currentChar.Anims = custo_persoAnims;
+	g_currentChar.Body = custo_currentBody;
+	g_currentChar.Hair = custo_currentHair;
+	g_currentChar.HairMaterial = custo_currentHairMaterial;
+	g_currentChar.Dress = custo_currentDress;
+	g_currentChar.Skin = custo_currentSkin;
+	g_currentChar.EyeMaterial = custo_currentEyeMaterial;
+	g_currentChar.Brow = custo_currentBrow;
+	g_currentChar.BrowMaterial = custo_currentBrowMaterial;
+
+	if (custo_sex == 0)
+	{
+		custo_currentBeard = unpack_int( substr( pam_message, 36, 4));
+		custo_currentBeardMaterial = unpack_int( substr( pam_message, 40, 4));
+
+		g_currentChar.Special01 = custo_currentBeard;
+		g_currentChar.Special02 = custo_currentBeardMaterial;
+
+		GetMeshAndName( custo_currentBody, g_manBodies);
+		custo_currentBodyMesh = common_selectedMesh;
+		custo_currentBodyName = common_selectedName;
+
+		GetMeshAndName( custo_currentHair, g_manHairs);
+		custo_currentHairMesh = common_selectedMesh;
+		custo_currentHairName = common_selectedName;
+
+		GetMaterialAndName( custo_currentHairMaterial, g_manHairsMaterials);
+		custo_currentHairColour = common_selectedMaterial;
+		custo_currentHairColourName = common_selectedName;
+
+		GetMeshAndName( custo_currentDress, g_manDresses);
+		custo_currentDressMesh = common_selectedMesh;
+		custo_currentDressName = common_selectedName;
+
+		GetMaterialAndName( custo_currentSkin, g_manSkins);
+		custo_currentSkinMaterial = common_selectedMaterial;
+		custo_currentSkinName = common_selectedName;
+
+		GetMaterialAndName( custo_currentEyeMaterial, g_manEyesMaterials);
+		custo_currentEyeColour = common_selectedMaterial;
+		custo_currentEyeColourName = common_selectedName;
+
+		GetMeshAndName( custo_currentBrow, g_manBrows);
+		custo_currentBrowMesh = common_selectedMesh;
+		custo_currentBrowName = common_selectedName;
+
+		GetMaterialAndName( custo_currentBrowMaterial, g_manHairsMaterials);
+		custo_currentBrowColour = common_selectedMaterial;
+		custo_currentBrowColourName = common_selectedName;
+//		Echo( "Brow Colour - " + itoa( custo_currentBrowMaterial) + " - " + custo_currentBrowColour + " - " + custo_currentBrowColourName);
+
+		GetMeshAndName( custo_currentBeard, g_manBeards);
+		custo_currentBeardMesh = common_selectedMesh;
+		custo_currentBeardName = common_selectedName;
+
+		GetMaterialAndName( custo_currentBeardMaterial, g_manHairsMaterials);
+		custo_currentBeardColour = common_selectedMaterial;
+		custo_currentBeardColourName = common_selectedName;
+//		Echo( "Beard Colour - " + itoa( custo_currentBeardMaterial) + " - " + custo_currentBeardColour + " - " + custo_currentBeardColourName);
+	}
+	else
+	{
+		custo_currentEyeLashMaterial = unpack_int( substr( pam_message, 36, 4));
+		custo_currentLipstickMaterial = unpack_int( substr( pam_message, 40, 4));
+
+		g_currentChar.Special01 = custo_currentEyeLashMaterial;
+		g_currentChar.Special02 = custo_currentLipstickMaterial;
+
+		GetMeshAndName( custo_currentBody, g_womanBodies);
+		custo_currentBodyMesh = common_selectedMesh;
+		custo_currentBodyName = common_selectedName;
+	
+		GetMeshAndName( custo_currentHair, g_womanHairs);
+		custo_currentHairMesh = common_selectedMesh;
+		custo_currentHairName = common_selectedName;
+	
+		GetMaterialAndName( custo_currentHairMaterial, g_womanHairsMaterials);
+		custo_currentHairColour = common_selectedMaterial;
+		custo_currentHairColourName = common_selectedName;
+	
+		GetMeshAndName( custo_currentDress, g_womanDresses);
+		custo_currentDressMesh = common_selectedMesh;
+		custo_currentDressName = common_selectedName;
+	
+		GetMaterialAndName( custo_currentSkin, g_womanSkins);
+		custo_currentSkinMaterial = common_selectedMaterial;
+		custo_currentSkinName = common_selectedName;
+
+		GetMaterialAndName( custo_currentEyeMaterial, g_womanEyesMaterials);
+		custo_currentEyeColour = common_selectedMaterial;
+		custo_currentEyeColourName = common_selectedName;
+
+		GetMeshAndName( custo_currentBrow, g_womanBrows);
+		custo_currentBrowMesh = common_selectedMesh;
+		custo_currentBrowName = common_selectedName;
+
+		GetMaterialAndName( custo_currentBrowMaterial, g_womanHairsMaterials);
+		custo_currentBrowColour = common_selectedMaterial;
+		custo_currentBrowColourName = common_selectedName;
+
+		GetMaterialAndName( custo_currentEyeLashMaterial, g_womanEyeLashes);
+		custo_currentEyeLashColour = common_selectedMaterial;
+		custo_currentEyeLashColourName = common_selectedName;
+
+		GetMaterialAndName( custo_currentLipstickMaterial, g_womanLipsticks);
+		custo_currentLipstickColour = common_selectedMaterial;
+		custo_currentLipstickColourName = common_selectedName;
+	}
+
+	BuildCharacter();
+
+	g_mainChar.Character.Anims = g_currentChar.Anims;
+	custo_persoAnims = g_mainChar.Character.Anims;
+
+	InitialiseCamera();
+	
+}
+
+SetNetworkScript()
+{
+	if (NETWORK_CURRENT_MESSAGE == "disconnected")
+	{
+		OverlayElement_GetByName( "Custo/MessageBox/Title/Text")->SetCaption( "CONNEXION ERROR");
+		OverlayElement_GetByName( "Custo/MessageBox/Caption/Text")->SetCaption( "Vous avez ete deconnecte du serveur");
+		Overlay_Show( "Custo/MessageBox");
+	}
+	else
+	{
+		int custo_sns_header;
+		custo_sns_header = unpack_int( substr( NETWORK_CURRENT_MESSAGE, 0, 4));
+
+		string custo_sns_message;
+		custo_sns_message = substr( NETWORK_CURRENT_MESSAGE, 4, npos);
+		if (custo_sns_header == mrAvatar)
+		{
+			Echo( g_mainChar.Character.Name + " Received avatar message");
+			_processAvatarMessage( custo_sns_message);
+			if (g_mainChar.Character.Name == "anonymous")
+			{
+				OverlayElement_GetByName( "Custo/HairPanel")->Hide();
+				OverlayElement_GetByName( "Custo/DressPanel")->Hide();
+				OverlayElement_GetByName( "Custo/BodyPanel")->Hide();
+				Overlay_Hide( "Custo/BodyTab");
+				Overlay_Hide( "Custo/HairTab");
+				Overlay_Hide( "Custo/DressesTab");
+			}
+		}
+		elseif (custo_sns_header == mrKickUser)
+		{
+			Network_CloseClient( "ChatClient");
+			OverlayElement_GetByName( "Custo/MessageBox/Title/Text")->SetCaption( "CONNEXION ERROR");
+			OverlayElement_GetByName( "Custo/MessageBox/Caption/Text")->SetCaption( "Vous vous etes connecte a partir d'un autre pc");
+			Overlay_Show( "Custo/MessageBox");
+		}
+		elseif (custo_sns_header == mrRooms)
+		{
+			Echo( "Received rooms");
+		}
+	}
+}
+
+Overlay_SetAction( "Custo/BodyTab")
+{
+	OverlayElement_GetByName( "Custo/BodyTab")->SetMaterial( "Custo/BodySel");
+	OverlayElement_GetByName( "Custo/HairTab")->SetMaterial( "Custo/Hair");
+	OverlayElement_GetByName( "Custo/DressesTab")->SetMaterial( "Custo/Dress");
+	OverlayElement_GetByName( "Custo/HairPanel")->Hide();
+	OverlayElement_GetByName( "Custo/DressPanel")->Hide();
+	OverlayElement_GetByName( "Custo/BodyPanel")->Show();
+
+	if (custo_sex == 1)
+	{
+		OverlayElement_GetByName( "Custo/EyeLash")->Show();
+		OverlayElement_GetByName( "Custo/Lipstick")->Show();
+	}
+	else
+	{
+		OverlayElement_GetByName( "Custo/EyeLash")->Hide();
+		OverlayElement_GetByName( "Custo/Lipstick")->Hide();
+	}
+}
+
+Overlay_SetAction( "Custo/HairTab")
+{
+	OverlayElement_GetByName( "Custo/HairTab")->SetMaterial( "Custo/HairSel");
+	OverlayElement_GetByName( "Custo/BodyTab")->SetMaterial( "Custo/Body");
+	OverlayElement_GetByName( "Custo/DressesTab")->SetMaterial( "Custo/Dress");
+	OverlayElement_GetByName( "Custo/BodyPanel")->Hide();
+	OverlayElement_GetByName( "Custo/DressPanel")->Hide();
+	OverlayElement_GetByName( "Custo/HairPanel")->Show();
+
+	if (custo_sex == 0)
+	{
+		OverlayElement_GetByName( "Custo/Beards")->Show();
+	}
+	else
+	{
+		OverlayElement_GetByName( "Custo/Beards")->Hide();
+	}
+
+}
+
+Overlay_SetAction( "Custo/DressesTab")
+{
+	OverlayElement_GetByName( "Custo/DressesTab")->SetMaterial( "Custo/DressSel");
+	OverlayElement_GetByName( "Custo/HairTab")->SetMaterial( "Custo/Hair");
+	OverlayElement_GetByName( "Custo/BodyTab")->SetMaterial( "Custo/Body");
+	OverlayElement_GetByName( "Custo/HairPanel")->Hide();
+	OverlayElement_GetByName( "Custo/BodyPanel")->Hide();
+	OverlayElement_GetByName( "Custo/DressPanel")->Show();
+}
+
+Overlay_SetAction( "Custo/MessageBox")
+{
+	Overlay_Hide( "Custo/MessageBox");
+}
+
+Overlay_SetAction( "Custo/Disconnect")
+{
+	Network_CloseClient( "ChatClient");
+	Timer_KillAll();
+	AnimationGroup_DestroyAll();
+	Simulation_Destroy( "Main");
+	ClearScene();
+	ClearOverlays();
+	g_rootCamera = NULL;
+	Scene_Unload( "Common");
+	Scene_Unload( "Custo");
+	Scene_Load( "Common");
+}
+
+void InitialiseCusto()
+{
+	custo_rootCamera = Camera_GetByName( "RootCamera");
+
+	custo_mouseLeftDown = false;
+
+	Echo( "Retrieve Node");
+	custo_playerNode = SceneNode_GetByName( "PersoNode");
+	Echo( "Retrieve Node coin");
+
+	OverlayElement_GetByName( "Custo/HairPanel")->Hide();
+	OverlayElement_GetByName( "Custo/DressPanel")->Hide();
+	Overlay_Hide( "Custo/MessageBox");
+
+	g_currentZoom = 600.0;
+
+	g_minPitch = -45.0;
+	g_maxPitch = 30.0;
+}
+
+InitialiseCusto();

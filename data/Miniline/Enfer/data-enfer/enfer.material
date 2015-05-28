@@ -1,0 +1,312 @@
+
+material enfer/Default
+{
+	technique
+	{
+		pass
+		{
+		}
+
+	}
+
+}
+
+material enfer/betonbanctable
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture ciment.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material enfer/cimentg
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture ciment.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_cimentkiosque
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture ciment.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_lumierelampadaireenfer
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0.0470588 0 1
+			diffuse 1 0.0470588 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material enfer/enfer_marbreclairfontaine
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture marbrecutout2.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale -0.5 -0.5
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_metallampadaireenfer
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.317647 0.317647 0.317647 1
+			specular 1.008 1.008 1.008 1 15
+		}
+
+	}
+
+}
+
+material enfer/enfer_osfontaine
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588 0.588 0.588 1
+			diffuse 0.588 0.588 0.588 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture muros.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale 0.625 0.416667
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_oskiosque
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture muros.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_sol
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture terrecalcine.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale 0.1 0.1
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_toitrougekiosque
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588 0.588 0.588 1
+			diffuse 0.588 0.588 0.588 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture toitmetalrougecutout.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale 0.1 1
+			}
+		}
+
+	}
+
+}
+
+material enfer/enfer_yeuxfontaine
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0.917647 0 1
+			diffuse 1 0.917647 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material enfer/marbreg
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture marbrecutout.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material enfer/noircrane
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material enfer/os
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 1 0.980392 0.866667 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material enfer/tronc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture tronccalcine.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				scale 1 0.5
+			}
+		}
+
+	}
+
+}

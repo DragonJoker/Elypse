@@ -1,0 +1,15 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene TombeauRider
+{
+	muse_file TombeauRider.muse
+	data_file Game.zip
+	data_file Interface.zip
+	scene_file Interface.emscene
+	scene_file Game.emscene
+	load_script_file Scores.emscript
+	load_script_file Game.emscript
+	load_script_file Interface.emscript
+}
+
+start_scene TombeauRider

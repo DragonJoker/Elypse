@@ -1,13 +1,13 @@
 background_colour 1.000000 1.000000 1.000000 1.000000
 
-scene demo-9box
+scene 9Box
 {
 	muse_file 9Box.muse
-	data_file data-9box.zip.zip
-	data_file data-9box-hud.zip.zip
-	scene_file 9box.emscene
+	data_file data-9box-hud.zip
+	data_file data-9box.zip
 	scene_file 9box-hud.emscene
+	scene_file 9box.emscene
 	load_script_file 9box.emscript
 }
 
-start_scene demo-9box
+start_scene 9Box

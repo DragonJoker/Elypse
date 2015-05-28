@@ -31,7 +31,24 @@ real l_soundVol;
 real l_ticPos;
 real c_relativeRegletteWidth;
 overlay l_ticMusic;
-overlay l_ticSound;
+overlay l_ticSound
+
+bool g_clearToGo;
+bool g_free;
+bool g_freeLimited;
+bool g_priced;
+bool g_abonne;
+string l_infos;
+bool g_fucked;
+
+void CheckClearToGo()
+{
+	g_free = true;
+	g_fucked = true;
+	g_freeLimited = false;
+	g_priced = false;
+	g_abonne = false;
+};
 
 void ZombiesPlayAnimation( int p_level)
 {
@@ -46,7 +63,7 @@ void ZombiesPlayAnimation( int p_level)
 void EndGame()
 {
 	CheckClearToGo();
-	if (g_clearToGo)
+	if (true)
 	{
 		OverlayElement_GetByName( "Ready/Text")->SetCaption( "Ready ?");
 		Overlay_Hide( "Perdu");

@@ -1,4 +1,9 @@
+bool g_fucked;
 
+void KazuPlayGame()
+{
+	g_fucked = true;
+};
 
 Overlay_SetAction( "Menu/Jouer")
 {

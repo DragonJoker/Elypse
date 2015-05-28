@@ -1,0 +1,195 @@
+material InterfaceLimbo/Title
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture titre.png
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Fleche_UP
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture fleche.png
+				rotate 90
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Fleche_RIGHT
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+			texture_unit
+			{
+				texture fleche.png
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Fleche_LEFT
+{
+	technique
+	{
+		pass
+		{
+			lightning off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture fleche.png
+				rotate 180
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Fleche_DOWN
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture fleche.png
+				rotate -90
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Cote
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+		
+			texture_unit
+			{
+				texture cote_bas_droite.png
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Tambour_Rouge
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture yeux_rouges.png
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Tambour_Vert
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture yeux_verts.png
+			}
+		}
+	}
+}
+
+
+material InterfaceLimbo/Jauge
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			alpha_rejection greater 128
+		
+			texture_unit
+			{
+				texture jauge.png
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Jauge_Ext
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+		
+			texture_unit
+			{
+				texture jauge.png
+			}
+		}
+	}
+}
+
+material InterfaceLimbo/Jauge_Int
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+		
+			texture_unit
+			{
+				texture barre.jpg
+			}
+		}
+	}
+}
+
+
+

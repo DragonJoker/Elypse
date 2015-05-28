@@ -1,0 +1,72 @@
+material Chat/MenuCenter
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture menu_center.png
+			}
+		}
+	}
+}
+
+material Chat/Menu
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture menu.png
+			}
+		}
+	}
+}
+
+
+material Chat/Validate
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture validate.png
+			}
+		}
+	}
+}
+
+material Chat/ValidateMO
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture validatemo.png
+			}
+		}
+	}
+}

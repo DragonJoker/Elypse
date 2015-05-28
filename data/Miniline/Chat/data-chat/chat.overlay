@@ -1,0 +1,116 @@
+template element Panel(Chat/Bulle/Blanc)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 256
+	height 256
+	material Bulle/Blanc
+}
+
+template element Panel(Chat/Bulle/Noir)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 256
+	height 256
+	material Bulle/Noir
+}
+
+template element Panel(Chat/FlecheBulle)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 64
+	height 32
+	material FlecheBulle
+}
+
+template element TextArea(ChatMessagesListText)
+{
+	metrics_mode pixels
+	font_name ComicBold
+	char_height 16
+	colour_top 1 1 1 1
+	colour_bottom 1 1 1 1
+}
+
+template element TextArea(ChatBulleText)
+{
+	metrics_mode pixels
+	font_name ComicBold
+	char_height 16
+	colour_top 1 1 1 1
+	colour_bottom 1 1 1 1
+}
+
+template element TextArea(ChatNameText)
+{
+	metrics_mode pixels
+	font_name ComicBold
+	char_height 16
+	colour_top 1 0 0 1
+	colour_bottom 1 0 0 1
+}
+
+template element BorderPanel(ChatMessagesField)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 256
+	height 256
+	border_size 8 8 8 8
+	material Chat/MenuCenter
+	border_material Chat/Menu
+   	border_topleft_uv    	0.00 0.00 0.25 0.25
+	border_top_uv        	0.25 0.00 0.75 0.25
+	border_topright_uv   	0.50 0.00 0.65 0.25
+	border_left_uv        	0.00 0.25 0.25 0.75
+	border_right_uv       	0.50 0.25 0.65 0.75
+	border_bottomleft_uv  	0.00 0.75 0.25 1.00
+   	border_bottom_uv      	0.25 0.75 0.75 1.00
+	border_bottomright_uv 	0.50 0.75 0.65 1.00
+}
+
+template element BorderPanel(ChatScrollbar)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 256
+	height 256
+	border_size 8 8 8 8
+	material Base/Invisible
+	border_material Chat/Scrollbar
+   	border_topleft_uv    	0.00 0.00 0.25 0.25
+	border_top_uv        	0.25 0.00 0.75 0.25
+	border_topright_uv   	0.75 0.00 1.00 0.25
+	border_left_uv        	0.00 0.25 0.25 0.75
+	border_right_uv       	0.75 0.25 1.00 0.75
+	border_bottomleft_uv  	0.00 0.75 0.25 1.00
+   	border_bottom_uv      	0.25 0.75 0.75 1.00
+	border_bottomright_uv 	0.75 0.75 1.00 1.00
+}
+
+template element BorderPanel(ChatElevator)
+{
+	metrics_mode pixels
+	left 0
+	top 2
+	width 256
+	height 256
+	border_size 8 8 8 8
+	material Chat/ElevatorCenter
+	border_material Chat/Elevator
+   	border_topleft_uv    	0.00 0.00 0.25 0.25
+	border_top_uv        	0.25 0.00 0.75 0.25
+	border_topright_uv   	0.75 0.00 1.00 0.25
+	border_left_uv        	0.00 0.25 0.25 0.75
+	border_right_uv       	0.75 0.25 1.00 0.75
+	border_bottomleft_uv  	0.00 0.75 0.25 1.00
+   	border_bottom_uv      	0.25 0.75 0.75 1.00
+	border_bottomright_uv 	0.75 0.75 1.00 1.00
+}

@@ -1,0 +1,72 @@
+
+material loge_stade/metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			specular 0.216 0.216 0.216 1 10
+			cull_hardware none
+			cull_software none
+
+			texture_unit
+			{
+				texture_alias 0
+				texture metal.jpg
+			}
+		}
+
+	}
+
+}
+
+material loge_stade/verre
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.882353 0.882353 0.882353 1 10
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture_alias 0
+				texture barriere_verre.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material loge_stade/banc
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0.882353 0.882353 0.882353 1 10
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit
+			{
+				texture_alias 0
+				texture banc.png
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}

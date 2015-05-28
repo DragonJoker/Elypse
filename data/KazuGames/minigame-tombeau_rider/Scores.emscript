@@ -5,6 +5,8 @@ string l_scores;
 int l_index;
 int g_score;
 
+string c_highscorePage = "http://kazugame.fordev-studio.com/score.php";
+
 void UpdateScore()
 {
 	OverlayElement_GetByName("Score/Text")->SetCaption( itoa( g_score));

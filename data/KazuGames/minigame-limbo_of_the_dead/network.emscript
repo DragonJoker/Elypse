@@ -215,6 +215,11 @@ string limbo_pass;
 
 string g_animName;
 
+string l_login;
+string l_pass;
+string g_serverAddr;
+int g_serverPort;
+
 void BuildSectionAnimations( animation_group ba_persoAnims, animated_object ba_object)
 {
 	Echo( "BuildSectionAnimations - Begin");
@@ -747,7 +752,7 @@ void _processAvatarMessage( string pam_message)
 	};
 };
 
-SetNetworkScript()
+void SetNetworkScript_Old()
 {
 	if (NETWORK_CURRENT_MESSAGE == "disconnected")
 	{
@@ -784,6 +789,23 @@ SetNetworkScript()
 			};
 		};
 	};
+};
+
+SetNetworkScript()
+{
+	Overlay_Hide( "Connexion");
+	Overlay_Show( "Menu");	
+	string limbo_sns_message;
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	limbo_sns_message += pack_int( 0 );
+	_processAvatarMessage( limbo_sns_message);
 };
 
 void InitialiseNetwork()

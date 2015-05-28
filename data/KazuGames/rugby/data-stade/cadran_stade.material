@@ -1,0 +1,63 @@
+
+material cadran_stade/horloge_stade
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0 0 0 1 10
+			emissive 0.392157 0.392157 0.392157 1
+
+			texture_unit
+			{
+				texture_alias 0
+				texture horloge_stade.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material cadran_stade/noir_stade_screen
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.156863 0.156863 0.156863 1
+			diffuse 0.156863 0.156863 0.156863 1
+			specular 0 0 0 1 58
+		}
+
+	}
+
+}
+
+material cadran_stade/score_stade
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0 0 0 1 10
+			emissive 0.392157 0.392157 0.392157 1
+
+			texture_unit
+			{
+				texture_alias 0
+				texture score_rugby.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}

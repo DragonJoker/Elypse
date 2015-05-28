@@ -21,6 +21,52 @@ project Miniline
 			Miniline/data-common
 		}
 	}
+	scene Perso
+	{
+		data_files_3d
+		{
+			Perso/data-perso
+		}
+	}
+	scene Custo
+	{
+		scene_files
+		{
+			Custo/custo.emscene
+		}
+		load_script_files
+		{
+			Custo/custo.emscript
+		}
+		unload_script_files
+		{
+			Custo/custo-unload.emscript
+		}
+		data_files_3d
+		{
+			Custo/data-custo
+		}
+		dependencies
+		{
+			Miniline
+			Perso
+		}
+	}
+	scene RoomSelection
+	{
+		scene_files
+		{
+			RoomSelection/room-selection.emscene
+		}
+		load_script_files
+		{
+			RoomSelection/room-selection.emscript
+		}
+		dependencies
+		{
+			Miniline
+		}
+	}
 	scene Chat
 	{
 		scene_files
@@ -56,6 +102,7 @@ project Miniline
 		dependencies
 		{
 			Chat
+			Perso
 		}
 	}
 }

@@ -85,6 +85,12 @@ Overlay_SetAction( "Menu/Jouer")
 	OverlayElement_GetByName( "Menu/Jouer")->Hide();
 };
 
+void KazuPlayGame()
+{
+	l_infos = "ok";
+	g_fucked = true;
+}
+
 Overlay_SetAction( "Menu/Recommencer")
 {
 	KazuPlayGame();
