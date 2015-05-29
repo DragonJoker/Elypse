@@ -2,102 +2,106 @@ project Miniline
 {
 	resolution		640 480
 	colour			0 0 0
-	show_debug		true
-	show_fps		true
-	startup_script	init.emscript
-	scene Miniline
+	show_debug		false
+	show_fps		false
+	startup_script	string l_login;string l_pass;
+	scene Common
 	{
 		scene_files
 		{
-			Miniline/common.emscene
+			common.emscene
 		}
 		load_script_files
 		{
-			Miniline/common.emscript
-			Miniline/network.emscript
+			network.emscript
+			common.emscript
 		}
 		data_files_3d
 		{
-			Miniline/data-common
-		}
-	}
-	scene Perso
-	{
-		data_files_3d
-		{
-			Perso/data-perso
-		}
-	}
-	scene Custo
-	{
-		scene_files
-		{
-			Custo/custo.emscene
-		}
-		load_script_files
-		{
-			Custo/custo.emscript
-		}
-		unload_script_files
-		{
-			Custo/custo-unload.emscript
-		}
-		data_files_3d
-		{
-			Custo/data-custo
-		}
-		dependencies
-		{
-			Miniline
-			Perso
+			data-common
 		}
 	}
 	scene RoomSelection
 	{
 		scene_files
 		{
-			RoomSelection/room-selection.emscene
+			room-selection.emscene
 		}
 		load_script_files
 		{
-			RoomSelection/room-selection.emscript
+			room-selection.emscript
 		}
 		dependencies
 		{
-			Miniline
+			Common
 		}
 	}
 	scene Chat
 	{
 		scene_files
 		{
-			Chat/chat.emscene
+			chat.emscene
 		}
 		load_script_files
 		{
-			Chat/chat.emscript
-			Chat/chat_menu.emscript
-			Chat/chat_kb.emscript
-			Chat/chat_network.emscript
+			chat.emscript
+			chat_menu.emscript
+			chat_kb.emscript
+			chat_network.emscript
 		}
 		data_files_3d
 		{
-			Chat/data-chat
+			data-chat
 		}
 		dependencies
 		{
-			Miniline
+			RoomSelection
+		}
+	}
+	scene Perso
+	{
+		data_files_3d
+		{
+			data-perso
+		}
+	}
+	scene Custo
+	{
+		scene_files
+		{
+			custo.emscene
+		}
+		load_script_files
+		{
+			custo.emscript
+		}
+		unload_script_files
+		{
+			custo-unload.emscript
+		}
+		data_files_3d
+		{
+			data-custo
+		}
+		dependencies
+		{
+			Common
+			Perso
 		}
 	}
 	scene Paradiz
 	{
 		scene_files
 		{
-			Paradiz/paradiz.emscene
+			paradiz.emscene
 		}
 		load_script_files
 		{
-			Paradiz/paradiz.emscript
+			paradiz.emscript
+		}
+		data_files_3d
+		{
+			data-paradiz
 		}
 		dependencies
 		{

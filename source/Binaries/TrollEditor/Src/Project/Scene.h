@@ -53,8 +53,8 @@ namespace Troll
 			//TODOMIAOU ?
 			CfgFile->DownloadFinished();
 			std::size_t l_index = min( p_strFile.find_last_of( wxT( "\\" ) ), p_strFile.find_last_of( wxT( "/" ) ) );
-			FileName	= p_strFile.substr( l_index + 1 );
-			Folder		= p_strFile.substr( 0, l_index + 1 );
+			FileName = p_strFile.substr( l_index + 1 );
+			Folder = p_strFile.substr( 0, l_index ) + wxFileName::GetPathSeparator();
 		}
 
 		TrollFile()

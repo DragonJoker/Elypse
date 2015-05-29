@@ -68,6 +68,27 @@ namespace Troll
 {
 	namespace GUI
 	{
+		namespace
+		{
+			String DumpFile( String const & p_file )
+			{
+				String l_return;
+				std::ifstream l_file( p_file );
+
+				if ( l_file.is_open() )
+				{
+					String l_line;
+
+					while ( std::getline( l_file, l_line ) )
+					{
+						l_return += l_line + "\n";
+					}
+				}
+
+				return l_return;
+			}
+		}
+
 		MainFrame * g_mainFrame;
 
 		BEGIN_EVENT_TABLE( MainFrame, wxFrame )
@@ -408,7 +429,7 @@ namespace Troll
 							m_timeLineContainer->SetScrollbars( 20, 20, m_timelineEditor->GetSize().x / 20, m_timelineEditor->GetSize().y / 20, 0, 0 );
 						}
 
-						//				m_elypseContainer->SetSize( l_pos.x, l_pos.y, l_size.x, l_size.y);
+						//m_elypseContainer->SetSize( l_pos.x, l_pos.y, l_size.x, l_size.y);
 					}
 					else
 					{
@@ -976,9 +997,10 @@ namespace Troll
 
 				if ( l_fileName != wxT( "Edition de la Timeline" ) && l_fileName != wxT( "Edition de TrollScene" ) && l_fileName != wxT( "Edition des overlays" ) && l_fileName != wxT( "Test de TrollScene" ) )
 				{
-					TextPanel * l_editCtrl = static_cast <TextPanel *>( m_mainTabsContainer->GetPage( l_selectedPage )->GetChildren().GetFirst()->GetData() );
-					//			std::cout << "MainFrame :: _onSaveFile - Selected Page : " << l_selectedPage << " - " << l_fileName << "\n";
-					SaveFile( l_editCtrl->GetFile(), l_fileName );
+					m_editText->SaveFile();
+					//TextPanel * l_editCtrl = static_cast <TextPanel *>( m_mainTabsContainer->GetPage( l_selectedPage )->GetChildren().GetFirst()->GetData() );
+					////std::cout << "MainFrame :: _onSaveFile - Selected Page : " << l_selectedPage << " - " << l_fileName << "\n";
+					//SaveFile( l_editCtrl->GetFile(), l_fileName );
 				}
 			}
 		}
@@ -2182,13 +2204,13 @@ namespace Troll
 			wxTreeItemId l_itemId = m_filesList->GetSelected();
 			TrollFile * l_file = m_filesList->GetSelectedScene()->GetFile( l_itemId );
 
-			if ( l_file && l_file->Saved /*&& !l_file->Open*/ )
+			if ( l_file && l_file->Saved && !l_file->Open )
 			{
 				wxPanel * l_editTextContainer = new wxPanel( m_mainTabsContainer, wxID_ANY, wxPoint( 0, 0 ) );
 				m_mainTabsContainer->AddPage( l_editTextContainer, l_file->FileName, true );
 				l_editTextContainer->SetSize( 0, 22, m_mainTabsContainer->GetClientSize().x, m_mainTabsContainer->GetClientSize().y - 22 );
 				m_editText = new wxStcTextEditor( m_pStcContext, l_editTextContainer, wxID_ANY, wxPoint( 0, 0 ), l_editTextContainer->GetClientSize() );
-				wxString l_path = GetCurrentProject()->GetPath() + ( l_file->m_scene->IsMainScene() ? wxString() : wxString( l_file->m_scene->GetName() ) + wxFileName::GetPathSeparator() );
+				wxString l_path = GetCurrentProject()->GetPath() + ( l_file->m_scene->IsMainScene() ? wxString() : l_file->m_scene->GetName() + wxFileName::GetPathSeparator() );
 				m_editText->LoadFile( l_path + l_file->FileName );
 				l_file->Open = true;
 				l_file->EditPanel = m_editText;
@@ -2383,30 +2405,30 @@ namespace Troll
 				{
 					wxTreeItemId l_root = m_filesList->GetRootItem();
 					m_currentProject = new Project();
-					//			wxFileInputStream * l_input = new wxFileInputStream( p_fileName);
-					//			wxTextInputStream * l_textStream = new wxTextInputStream( * l_input);
-					//			m_currentProject->Load( l_input, l_textStream, l_path, m_filesList);
-					//			m_currentProject->SetProjectFileName( p_fileName);
-					//			m_currentProject->SetSaved( true);
-					//			delete l_textStream;
-					//			delete l_input;
+					//wxFileInputStream * l_input = new wxFileInputStream( p_fileName);
+					//wxTextInputStream * l_textStream = new wxTextInputStream( * l_input);
+					//m_currentProject->Load( l_input, l_textStream, l_path, m_filesList);
+					//m_currentProject->SetProjectFileName( p_fileName);
+					//m_currentProject->SetSaved( true);
+					//delete l_textStream;
+					//delete l_input;
 					m_currentProject->Load( p_fileName, m_filesList );
-					//			m_currentProject->SetProjectPath( l_path);
+					//m_currentProject->SetProjectPath( l_path);
 				}
 				else if ( p_fileName != m_currentProject->GetProjectFileName() )
 				{
 					wxTreeItemId l_root = m_filesList->GetRootItem();
 					delete m_currentProject;
 					m_currentProject = new Project();
-					//			wxFileInputStream * l_input = new wxFileInputStream( p_fileName);
-					//			wxTextInputStream * l_textStream = new wxTextInputStream( * l_input);
-					//			m_currentProject->Load(l_input, l_textStream, l_path, m_filesList);
-					//			m_currentProject->SetProjectFileName( p_fileName);
-					//			m_currentProject->SetSaved( true);
-					//			delete l_textStream;
-					//			delete l_input;
+					//wxFileInputStream * l_input = new wxFileInputStream( p_fileName);
+					//wxTextInputStream * l_textStream = new wxTextInputStream( * l_input);
+					//m_currentProject->Load(l_input, l_textStream, l_path, m_filesList);
+					//m_currentProject->SetProjectFileName( p_fileName);
+					//m_currentProject->SetSaved( true);
+					//delete l_textStream;
+					//delete l_input;
 					m_currentProject->Load( p_fileName, m_filesList );
-					//			m_currentProject->SetProjectPath( l_path);
+					//m_currentProject->SetProjectPath( l_path);
 				}
 				else
 				{
@@ -2697,10 +2719,11 @@ namespace Troll
 				for ( unsigned int j = 0 ; j < l_nbFiles ; j++ )
 				{
 					l_file = l_scene->GetLoadScriptFile( j );
-					l_scriptNode = p_compiler->CompileScriptFile( l_file->CfgFile );
-					l_compilationResult = wxString( l_file->CfgFile->GetName().c_str(), wxMBConvLibc() );
-					l_compilationResult << wxT( " compiled - " ) << p_compiler->GetNumWarnings() << wxT( " warnings - " ) << p_compiler->GetNumErrors() << wxT( " errors" );
-					LogOutMessage( l_compilationResult );
+					wxString l_fileName = ( l_file->m_scene->IsMainScene() ? wxString() : l_file->m_scene->GetName() + wxFileName::GetPathSeparator() ) + l_file->FileName;
+					wxString l_path = GetCurrentProject()->GetPath() + l_fileName;
+					LogOutMessage( wxString( wxT( "Compiling " ) ) << l_fileName );
+					l_scriptNode = p_compiler->CompileScript( DumpFile( l_path.char_str().data() ) );
+					LogOutMessage( l_fileName << wxString( wxT( " compiled - " ) ) << p_compiler->GetNumWarnings() << wxT( " warnings - " ) << p_compiler->GetNumErrors() << wxT( " errors" ) );
 					l_file->m_compiled = true;
 
 					if ( l_scriptNode != NULL )
@@ -2726,7 +2749,7 @@ namespace Troll
 			}
 
 			wxString l_wxPath = m_currentProject->GetPath() + ( p_file->m_scene->IsMainScene() ? wxString() : wxString( p_file->m_scene->GetName() ) + wxFileName::GetPathSeparator() );
-			p_file->EditPanel->SaveFile( l_wxPath + p_file->FileName );
+			p_file->EditPanel->SaveFile();
 
 			if ( ! p_file->Saved || ( p_file->EditPanel != NULL && p_file->EditPanel->IsModified() ) )
 			{
@@ -2769,11 +2792,12 @@ namespace Troll
 				{
 					l_textCtrl = m_editText;
 				}
-
-				l_scriptNode = l_compiler->CompileScriptFile( l_file->CfgFile );
-				l_compilationResult = wxString( l_file->CfgFile->GetName().c_str(), wxMBConvLibc() );
-				l_compilationResult << wxT( " compiled - " ) << l_compiler->GetNumWarnings() << wxT( " warnings - " ) << l_compiler->GetNumErrors() << wxT( " errors" );
-				LogOutMessage( l_compilationResult );
+				
+				wxString l_fileName = ( l_file->m_scene->IsMainScene() ? wxString() : l_file->m_scene->GetName() + wxFileName::GetPathSeparator() ) + l_file->FileName;
+				wxString l_path = GetCurrentProject()->GetPath() + l_fileName;
+				LogOutMessage( wxString( wxT( "Compiling " ) ) << l_fileName );
+				l_scriptNode = l_compiler->CompileScript( DumpFile( l_path.char_str().data() ) );
+				LogOutMessage( l_fileName << wxString( wxT( " compiled - " ) ) << l_compiler->GetNumWarnings() << wxT( " warnings - " ) << l_compiler->GetNumErrors() << wxT( " errors" ) );
 
 				if ( l_scriptNode != NULL )
 				{
@@ -2804,11 +2828,12 @@ namespace Troll
 					{
 						l_textCtrl = m_editText;
 					}
-
-					l_scriptNode = l_compiler->CompileScriptFile( l_file->CfgFile );
-					l_compilationResult = wxString( l_file->CfgFile->GetName().c_str(), wxMBConvLibc() );
-					l_compilationResult << wxT( " compiled - " ) << l_compiler->GetNumWarnings() << wxT( " warnings - " ) << l_compiler->GetNumErrors() << wxT( " errors" );
-					LogOutMessage( l_compilationResult );
+					
+					wxString l_fileName = ( l_file->m_scene->IsMainScene() ? wxString() : l_file->m_scene->GetName() + wxFileName::GetPathSeparator() ) + l_file->FileName;
+					wxString l_path = GetCurrentProject()->GetPath() + l_fileName;
+					LogOutMessage( wxString( wxT( "Compiling " ) ) << l_fileName );
+					l_scriptNode = l_compiler->CompileScript( DumpFile( l_path.char_str().data() ) );
+					LogOutMessage( l_fileName << wxString( wxT( " compiled - " ) ) << l_compiler->GetNumWarnings() << wxT( " warnings - " ) << l_compiler->GetNumErrors() << wxT( " errors" ) );
 
 					if ( l_scriptNode != NULL )
 					{

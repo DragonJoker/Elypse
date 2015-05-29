@@ -3,7 +3,7 @@ cmake_minimum_required( VERSION 2.8 )
 #	Initial configurations
 #--------------------------------------------------------------------------------------------------
 # Set project name, used in folders and in workspace creation
-set( ProjectName "ElypsePlayer" )
+set( MAIN_PROJECT_NAME "ElypsePlayer" )
 
 # Set project version numbers
 set( VERSION_MAJOR	0		)
@@ -27,7 +27,7 @@ set( CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Set only Debug and 
 enable_testing()
 
 # Declare the project
-project( ${ProjectName} )
+project( ${MAIN_PROJECT_NAME} )
 
 include( Project )
 include( CompilerVersion )
@@ -201,6 +201,7 @@ if( Boost_FOUND AND OGRE_FOUND AND ODE_FOUND AND ZLIB_FOUND AND ZZIP_FOUND AND C
 	add_subdirectory( Core )
 #	add_subdirectory( Plugins )
 	add_subdirectory( Binaries )
+	add_subdirectory( Tools )
 else()
 	if ( NOT Boost_FOUND )
 		MESSAGE( STATUS "Missing Library : Boost" )

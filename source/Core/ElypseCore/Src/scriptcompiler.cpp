@@ -42,7 +42,9 @@ EMuse::Script::ScriptCompiler :: ScriptCompiler( const Path & p_path )
 		m_path( p_path ),
 		m_currentFileStream( NULL ),
 		m_currentUserFunction( NULL ),
-		m_currentStructure( NULL )
+		m_currentStructure( NULL ),
+		m_numWarnings( 0 ),
+		m_numErrors( 0 )
 {
 	m_nodePool.Allocate( 200 );
 	m_blockPool.Allocate( 16 );
@@ -249,6 +251,8 @@ void EMuse::Script::ScriptCompiler :: _putBack( char p_char )
 ScriptNode * EMuse::Script::ScriptCompiler :: CompileScript( const String & p_script )
 {
 	m_currentScriptFile = NULL;
+	auto l_line = m_currentLine;
+	m_currentLine = 1;
 	ScriptBlock * l_initialBlock = new ScriptBlock;
 	l_initialBlock->_initialise( this, BT_INITIAL, 0, 0, NULL );
 	m_currentFileStream = NULL;
@@ -268,6 +272,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: CompileScript( const String & p_sc
 	m_currentFileStream = NULL;
 	ScriptNode * l_scriptNode = l_initialBlock->GetScriptNode();
 	delete l_initialBlock;
+	m_currentLine = l_line;
 	return l_scriptNode;
 }
 

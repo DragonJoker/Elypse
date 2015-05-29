@@ -1,4 +1,4 @@
-project( TrollEditor )
+project( MuseReader )
 
 option( BUILD_${PROJECT_NAME} "Build ${PROJECT_NAME}" TRUE )
 
@@ -7,11 +7,7 @@ set( ${PROJECT_NAME}_VERSION_MINOR	9 )
 set( ${PROJECT_NAME}_VERSION_BUILD	4 )
 
 set( wxWidgets_USE_STATIC OFF)
-if (WIN32)
-	find_package( wxWidgets REQUIRED stc scintilla core base aui)
-else ()
-	find_package( wxWidgets REQUIRED core base stc)
-endif()
+find_package( wxWidgets REQUIRED core base net )
 
 if ( NOT WIN32 )
 	find_package( GTK )
@@ -20,6 +16,15 @@ else ()
 endif ( NOT WIN32 )
 
 if ( wxWidgets_FOUND AND GTK_FOUND )
+	string( COMPARE EQUAL "${wxWidgets_USE_DEBUG}" "ON" IsWxDebug)
+	set( wxWidgets_CXXFLAGS "${wxWidgets_CXX_FLAGS} -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES")
+	if (NOT WIN32)
+		set( wxWidgets_CXXFLAGS "${wxWidgets_CXXFLAGS} -D__WXGTK__")
+	endif ()
+	if (IsWxDebug)
+		set( wxWidgets_CXXFLAGS "${wxWidgets_CXXFLAGS} -D__WXDEBUG__")
+	endif ()
+
 	include_directories( ${CMAKE_SOURCE_DIR}/Core/GeneralLib/Src )
 	include_directories( ${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src )
 	include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Src )
@@ -51,36 +56,20 @@ if ( wxWidgets_FOUND AND GTK_FOUND )
 		endif()
 	ENDFOREACH()
 	
-	#Few configuration for wxWidgets
-	string( COMPARE EQUAL "${wxWidgets_USE_DEBUG}" "ON" IsWxDebug )
-	set( wxWidgets_CXXFLAGS "${wxWidgets_CXX_FLAGS} -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES" )
-	if ( NOT WIN32 )
-		set( wxWidgets_CXXFLAGS "${wxWidgets_CXXFLAGS} -D__WXGTK__" )
-	endif ()
-	if ( IsWxDebug )
-		set( wxWidgets_CXXFLAGS "${wxWidgets_CXXFLAGS} -D__WXDEBUG__" )
-	endif ()
-	
 	add_target(
 		${PROJECT_NAME}
 		bin
 		"GeneralLib;ElypseCore"
 		"GeneralLib;ElypseCore;${wxWidgetsLibraries};${BoostLibraries};${ZZipLibraries};${OgreLibraries};${OdeLibraries};${GstLibraries};${GTK2_LIBRARIES};${XmlLibraries};${GtkmmLibraries}"
-		"PrecompiledHeader.h"
-		"PrecompiledHeader.cpp"
+		"stdafx.h"
+		"stdafx.cpp"
 		"${wxWidgets_CFLAGS}"
 		"${wxWidgets_CXXFLAGS}"
 	)
 	
-	add_subdirectory( Src )
-	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Binaries" )
-	set( Build "yes (version ${TE_VERSION_MAJOR}.${TE_VERSION_MINOR}.${TE_VERSION_BUILD})" PARENT_SCOPE )
+	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Tools" )
+	set( Build "yes (version ${MR_VERSION_MAJOR}.${MR_VERSION_MINOR}.${MR_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
-
-	file( GLOB_RECURSE Parser_languages ${CMAKE_CURRENT_SOURCE_DIR}/Data/*.lang )
-	copy_target_files( ${PROJECT_NAME} "" ${Parser_languages} )
-	copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/OverlayEditor OverlayEditor )
-	copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/SceneEditor SceneEditor )
 else()
 	if ( NOT wxWidgets_FOUND )
 		set( Build "No (missing wxWidgets library" )
