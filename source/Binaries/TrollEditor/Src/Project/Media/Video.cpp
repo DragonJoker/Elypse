@@ -13,7 +13,7 @@ using namespace Troll::Media;
 using namespace Troll::GUI;
 
 
-TrollVideo :: TrollVideo( const wxString & p_name, const wxString & p_fileName )
+TrollVideo::TrollVideo( const wxString & p_name, const wxString & p_fileName )
 	:	MediaObject( p_name, p_fileName, ttVideo ),
 		m_filePath( wxEmptyString ),
 		m_looped( false ),
@@ -23,14 +23,14 @@ TrollVideo :: TrollVideo( const wxString & p_name, const wxString & p_fileName )
 
 
 
-TrollVideo :: ~TrollVideo()
+TrollVideo::~TrollVideo()
 {
 	General::Utils::map::deleteAll( m_objects );
 }
 
 
 
-TrollVideoObject * TrollVideo :: AddObject( TrollObject * p_object )
+TrollVideoObject * TrollVideo::AddObject( TrollObject * p_object )
 {
 	if ( ! p_object )
 	{
@@ -53,7 +53,7 @@ TrollVideoObject * TrollVideo :: AddObject( TrollObject * p_object )
 
 
 
-int TrollVideo :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollVideo::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 80;
 	wxSize l_returnSize( p_width, l_height );
@@ -70,7 +70,7 @@ int TrollVideo :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollVideo :: SetMuseVideo( VideoObject * p_museVideo )
+void TrollVideo::SetMuseVideo( VideoObject * p_museVideo )
 {
 	m_museVideo = p_museVideo;
 	m_filePath = make_wxString( m_museVideo->GetMediaUrl() );
@@ -80,7 +80,7 @@ void TrollVideo :: SetMuseVideo( VideoObject * p_museVideo )
 
 
 
-void TrollVideo :: SetUrl( const wxString & p_url )
+void TrollVideo::SetUrl( const wxString & p_url )
 {
 	m_filePath = p_url;
 	m_museVideo->SetUrl( p_url.char_str().data() );
@@ -88,7 +88,7 @@ void TrollVideo :: SetUrl( const wxString & p_url )
 
 
 
-void TrollVideo :: SetLooped( bool p_looped )
+void TrollVideo::SetLooped( bool p_looped )
 {
 	m_looped = p_looped;
 	m_museVideo->SetLooped( p_looped );
@@ -96,7 +96,7 @@ void TrollVideo :: SetLooped( bool p_looped )
 
 
 
-void TrollVideo :: SetEnabled( bool p_enabled )
+void TrollVideo::SetEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
 	m_museVideo->SetAutoInitialise( p_enabled );
@@ -104,7 +104,7 @@ void TrollVideo :: SetEnabled( bool p_enabled )
 
 
 
-void TrollVideo :: Write( wxTextOutputStream * p_stream )
+void TrollVideo::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "video " ) + m_name + wxT( "\n{\n" ) );
 	p_stream->WriteString( wxT( "\turl " ) + m_filePath + wxT( "\n" ) );

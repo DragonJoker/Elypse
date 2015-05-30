@@ -1,0 +1,230 @@
+// SOUNDS
+
+sound Haunted
+{
+	url ./Sons/Haunted House.mp3
+	type music
+	global true
+	looped true
+}
+
+sound Ghost
+{
+	url ./Sons/Ghost.mp3
+	type sfx
+	global true
+}
+
+sound Coin
+{
+	url ./Sons/Coin.mp3
+	type sfx
+	global true
+}
+
+// SCENE NODES
+
+scene_node Box_1
+{
+	position -200.0 0.0 0.0
+}
+
+scene_node Box_2
+{
+	position 0.0 0.0 0.0
+}
+
+scene_node Box_3
+{
+	position 200.0 0.0 0.0
+}
+
+scene_node RevealedBox
+{
+}
+
+scene_node Decor
+{
+}
+
+scene_node CameraNode
+{
+}
+
+// OBJECTS
+
+object Box_1
+{
+	mesh boite.mesh
+	attach_to Box_1
+}
+
+object Box_2
+{
+	mesh boite.mesh
+	attach_to Box_2
+}
+
+object Box_3
+{
+	mesh boite.mesh
+	attach_to Box_3
+}
+
+object Piece
+{
+	mesh piece.mesh
+	attach_to Box_1
+}
+
+object Ghost_1
+{
+	mesh fantome.mesh
+	attach_to Box_2
+}
+
+object Ghost_2
+{
+	mesh fantome.mesh
+	attach_to Box_3
+}
+
+object Arbre1
+{
+	mesh decor_manoir_arbre01.mesh
+	attach_to Decor
+}
+
+object Arbre2
+{
+	mesh decor_manoir_arbre02.mesh
+	attach_to Decor
+}
+
+object Arbre3
+{
+	mesh decor_manoir_arbre03.mesh
+	attach_to Decor
+}
+
+object Dalle
+{
+	mesh decor_manoir_dalle.mesh
+	attach_to Decor
+}
+
+object Fenetre1
+{
+	mesh decor_manoir_fenetre01.mesh
+	attach_to Decor
+}
+
+object Fenetre2
+{
+	mesh decor_manoir_fenetre02.mesh
+	attach_to Decor
+}
+
+object Fenetre3
+{
+	mesh decor_manoir_fenetre03.mesh
+	attach_to Decor
+}
+
+object Fenetre4
+{
+	mesh decor_manoir_fenetre04.mesh
+	attach_to Decor
+}
+
+object Maison
+{
+	mesh decor_manoir_maison.mesh
+	attach_to Decor
+}
+
+object Tour1
+{
+	mesh decor_manoir_tour01.mesh
+	attach_to Decor
+}
+
+object Tour2
+{
+	mesh decor_manoir_tour02.mesh
+	attach_to Decor
+}
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction -0.497468 -0.710669 -0.497468
+	diffuse 0.6 0.6 0.6
+	specular 0.9 0.9 0.9
+}
+
+light light_02
+{
+	type directional
+	direction 0.497468 -0.710669 0.497468
+	diffuse 0.6 0.6 0.6
+	specular 0.8 0.8 0.8
+}
+
+light light_03
+{
+	type directional
+	direction 0.497468 -0.710669 -0.497468
+	diffuse 0.6 0.6 0.6
+	specular 0.8 0.8 0.8
+}
+
+light light_04
+{
+	type directional
+	direction -0.497468 -0.710669 0.497468
+	diffuse 0.6 0.6 0.6
+	specular 0.8 0.8 0.8
+}
+
+light light_05
+{
+	type directional
+	direction 0 1 0
+	diffuse 0.6 0.6 0.6
+	specular 0.8 0.8 0.8
+}
+
+// CAMERAS
+
+camera RootCamera
+{
+	position 0 150 900
+	attach_to CameraNode
+}
+
+sequence RevealPiece
+{
+	target function HidePieceBox
+	event 0.0 Function_Execute
+	target function ShowPieceBox
+	event 1.0 Function_Execute
+}
+
+sequence ShuffleBoxes
+{
+	target function SwitchBoxes
+	event 0.0 Function_Execute
+	event 1.0 Function_Execute
+	event 2.0 Function_Execute
+	event 3.0 Function_Execute
+	event 4.0 Function_Execute
+	event 4.5 Function_Execute
+	event 5.0 Function_Execute
+	event 5.5 Function_Execute
+	event 5.8 Function_Execute
+	event 6.1 Function_Execute
+	event 6.4 Function_Execute
+}

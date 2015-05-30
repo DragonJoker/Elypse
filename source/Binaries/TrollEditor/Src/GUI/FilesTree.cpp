@@ -43,8 +43,8 @@ extern MainFrame	* g_mainFrame;
 //DECLARE_APP( TEApplication);
 
 
-FilesTree :: FilesTree( wxWindow * parent, const wxPoint & pos,
-						const wxSize & size, long style )
+FilesTree::FilesTree( wxWindow * parent, const wxPoint & pos,
+					  const wxSize & size, long style )
 	:	wxTreeCtrl( parent, TreeFichier_Ctrl, pos, size, style )
 {
 	CreateImageList();
@@ -53,21 +53,21 @@ FilesTree :: FilesTree( wxWindow * parent, const wxPoint & pos,
 
 
 
-FilesTree :: ~FilesTree()
+FilesTree::~FilesTree()
 {
 	Cleanup();
 }
 
 
 
-void FilesTree :: Cleanup()
+void FilesTree::Cleanup()
 {
 	m_scenes.clear();
 }
 
 
 
-void FilesTree :: CreateImageList( int p_size )
+void FilesTree::CreateImageList( int p_size )
 {
 	if ( p_size == -1 )
 	{
@@ -113,9 +113,9 @@ void FilesTree :: CreateImageList( int p_size )
 
 
 
-void FilesTree :: InitProjet( const wxString & p_projectName )
+void FilesTree::InitProjet( const wxString & p_projectName )
 {
-//	g_mainFrame->LogDebugMessage( "TETreeCtrl :: InitProjet" + p_projectName);
+//	g_mainFrame->LogDebugMessage( "TETreeCtrl::InitProjet" + p_projectName);
 //    int l_image = wxGetApp().ShowImages() ? FilesTreeIcon_Folder : -1;
 	int l_image = FilesTreeIcon_Folder;
 	m_rootProjetId = AddRoot( p_projectName, l_image, l_image, new TETreeItemData( wxT( "root" ), TITProjectRoot ) );
@@ -128,7 +128,7 @@ void FilesTree :: InitProjet( const wxString & p_projectName )
 
 
 
-wxTreeItemId FilesTree :: AddSceneToProject( TrollScene * p_scene )
+wxTreeItemId FilesTree::AddSceneToProject( TrollScene * p_scene )
 {
 	TreeItemMap::iterator l_it = m_scenes.find( p_scene->GetName() );
 
@@ -161,7 +161,7 @@ wxTreeItemId FilesTree :: AddSceneToProject( TrollScene * p_scene )
 
 
 
-wxTreeItemId FilesTree :: AddFolderToScene( const wxString & p_sceneName, const wxString & p_folderName )
+wxTreeItemId FilesTree::AddFolderToScene( const wxString & p_sceneName, const wxString & p_folderName )
 {
 	TreeItemMap::iterator l_it = m_scenes.find( p_sceneName );
 
@@ -208,7 +208,7 @@ wxTreeItemId FilesTree :: AddFolderToScene( const wxString & p_sceneName, const 
 
 
 
-wxTreeItemId FilesTree :: AddFileToFolder( const wxTreeItemId & p_item, const wxString & p_idFile,
+wxTreeItemId FilesTree::AddFileToFolder( const wxTreeItemId & p_item, const wxString & p_idFile,
 		TETreeItemType p_type, bool p_exists )
 {
 	int l_image = FilesTreeIcon_File;
@@ -244,7 +244,7 @@ wxTreeItemId FilesTree :: AddFileToFolder( const wxTreeItemId & p_item, const wx
 
 
 
-wxTreeItemId FilesTree :: AddExistingFileToProjet( const wxTreeItemId & p_itemParent, TETreeItemType p_type,
+wxTreeItemId FilesTree::AddExistingFileToProjet( const wxTreeItemId & p_itemParent, TETreeItemType p_type,
 		const wxString p_idFile )
 {
 	int l_image = FilesTreeIcon_File;
@@ -258,7 +258,7 @@ wxTreeItemId FilesTree :: AddExistingFileToProjet( const wxTreeItemId & p_itemPa
 
 
 
-void FilesTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_event )
+void FilesTree::_logEvent( const wxChar * p_name, const wxTreeEvent & p_event )
 {
 	wxTreeItemId l_item = p_event.GetItem();
 	wxString l_text;
@@ -277,7 +277,7 @@ void FilesTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_event 
 
 
 
-void FilesTree :: ShowContextMenuFichier( const wxPoint & p_pos, TETreeItemData * p_item )
+void FilesTree::ShowContextMenuFichier( const wxPoint & p_pos, TETreeItemData * p_item )
 {
 	wxMenu l_menu;
 
@@ -348,7 +348,7 @@ void FilesTree :: ShowContextMenuFichier( const wxPoint & p_pos, TETreeItemData 
 
 
 
-wxTreeItemId FilesTree :: GetFolderId( const wxString & p_name )
+wxTreeItemId FilesTree::GetFolderId( const wxString & p_name )
 {
 	if ( m_folders.find( p_name ) != m_folders.end() )
 	{
@@ -360,7 +360,7 @@ wxTreeItemId FilesTree :: GetFolderId( const wxString & p_name )
 
 
 
-wxTreeItemId FilesTree :: GetItemByName( const wxString & p_name )
+wxTreeItemId FilesTree::GetItemByName( const wxString & p_name )
 {
 	MapTypeFile::iterator l_it = m_mapFile.find( p_name );
 
@@ -375,7 +375,7 @@ wxTreeItemId FilesTree :: GetItemByName( const wxString & p_name )
 
 
 
-void FilesTree :: _onFichierRClick( wxTreeEvent & p_event )
+void FilesTree::_onFichierRClick( wxTreeEvent & p_event )
 {
 	wxPoint l_point = p_event.GetPoint();
 	m_selectedItem = p_event.GetItem();
@@ -386,7 +386,7 @@ void FilesTree :: _onFichierRClick( wxTreeEvent & p_event )
 
 
 
-void FilesTree :: _onBeginLabelEdit( wxTreeEvent & p_event )
+void FilesTree::_onBeginLabelEdit( wxTreeEvent & p_event )
 {
 	m_selectedItem = p_event.GetItem();
 	SelectItem( m_selectedItem );
@@ -432,7 +432,7 @@ void FilesTree :: _onBeginLabelEdit( wxTreeEvent & p_event )
 
 
 
-void FilesTree :: _onEndLabelEdit( wxTreeEvent & p_event )
+void FilesTree::_onEndLabelEdit( wxTreeEvent & p_event )
 {
 	Project * l_project = g_mainFrame->GetCurrentProject();
 	TETreeItemData * l_item = reinterpret_cast <TETreeItemData *>( GetItemData( m_selectedItem ) );
@@ -488,7 +488,7 @@ void FilesTree :: _onEndLabelEdit( wxTreeEvent & p_event )
 
 
 
-void FilesTree :: _onFileActivated( wxTreeEvent & p_event )
+void FilesTree::_onFileActivated( wxTreeEvent & p_event )
 {
 	Project * l_project = g_mainFrame->GetCurrentProject();
 
@@ -523,7 +523,7 @@ void FilesTree :: _onFileActivated( wxTreeEvent & p_event )
 
 
 
-void FilesTree :: _onItemClic( wxTreeEvent & p_event )
+void FilesTree::_onItemClic( wxTreeEvent & p_event )
 {
 	m_selectedItem = p_event.GetItem();
 
@@ -533,7 +533,7 @@ void FilesTree :: _onItemClic( wxTreeEvent & p_event )
 
 		if ( m_selectedScene != NULL )
 		{
-			std::cout << "TETreeCtrl :: _onItemClic - TrollScene : " << m_selectedScene->GetName() << "\n";
+			std::cout << "TETreeCtrl::_onItemClic - TrollScene : " << m_selectedScene->GetName() << "\n";
 		}
 	}
 }

@@ -1,0 +1,17 @@
+material Titre
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture titreflipper.png
+			}
+		}
+	}
+}

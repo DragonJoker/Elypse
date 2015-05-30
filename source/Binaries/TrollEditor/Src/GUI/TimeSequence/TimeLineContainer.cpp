@@ -15,8 +15,8 @@ BEGIN_EVENT_TABLE( TimeLineContainer, wxScrolledWindow )
 END_EVENT_TABLE()
 
 
-TimeLineContainer :: TimeLineContainer( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
-										const wxSize & p_size )
+TimeLineContainer::TimeLineContainer( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
+									  const wxSize & p_size )
 	:	wxScrolledWindow( p_parent, p_id, p_position, p_size, wxBORDER_NONE ),
 		m_precPosition( 0 )
 {
@@ -24,13 +24,13 @@ TimeLineContainer :: TimeLineContainer( wxWindow * p_parent, wxWindowID p_id, co
 
 
 
-TimeLineContainer :: ~TimeLineContainer()
+TimeLineContainer::~TimeLineContainer()
 {
 }
 
 
 
-void TimeLineContainer :: _onScroll( wxScrollWinEvent & p_event )
+void TimeLineContainer::_onScroll( wxScrollWinEvent & p_event )
 {
 	wxScrolledWindow::HandleOnScroll( p_event );
 	int l_position = GetScrollPos( wxHORIZONTAL );

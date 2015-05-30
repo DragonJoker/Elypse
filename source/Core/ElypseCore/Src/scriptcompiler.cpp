@@ -37,7 +37,7 @@
 
 GENLIB_INIT_SINGLETON( EMuse::Script::ScriptCompiler );
 
-EMuse::Script::ScriptCompiler :: ScriptCompiler( const Path & p_path )
+EMuse::Script::ScriptCompiler::ScriptCompiler( const Path & p_path )
 	:	m_currentLine( 0 ),
 		m_path( p_path ),
 		m_currentFileStream( NULL ),
@@ -68,7 +68,7 @@ EMuse::Script::ScriptCompiler :: ScriptCompiler( const Path & p_path )
 	m_currentMaxIndex = 0;
 }
 
-EMuse::Script::ScriptCompiler :: ~ScriptCompiler()
+EMuse::Script::ScriptCompiler::~ScriptCompiler()
 {
 	delete [] m_buffer;
 
@@ -125,7 +125,7 @@ EMuse::Script::ScriptCompiler :: ~ScriptCompiler()
 	General::Utils::map::cycle( m_realFlyweight, &ScriptNode::Delete );
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: GetUsableFunctionNode( const String & p_functionName )const
+ScriptNode * EMuse::Script::ScriptCompiler::GetUsableFunctionNode( const String & p_functionName )const
 {
 	UserFunction * l_function = GetUserFunction( p_functionName );
 
@@ -153,19 +153,19 @@ ScriptNode * EMuse::Script::ScriptCompiler :: GetUsableFunctionNode( const Strin
 	return l_functionNode;
 }
 
-void EMuse::Script::ScriptCompiler :: Initialise()
+void EMuse::Script::ScriptCompiler::Initialise()
 {
 	_initialiseVariableMap();
 	_initialiseFunctionMap();
 	_initialiseOperatorMap();
 }
 
-void EMuse::Script::ScriptCompiler :: _log( const String & p_message )
+void EMuse::Script::ScriptCompiler::_log( const String & p_message )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( p_message );
 }
 
-const String & EMuse::Script::ScriptCompiler :: _getScriptFileName()const
+const String & EMuse::Script::ScriptCompiler::_getScriptFileName()const
 {
 	if ( m_currentScriptFile != NULL )
 	{
@@ -175,7 +175,7 @@ const String & EMuse::Script::ScriptCompiler :: _getScriptFileName()const
 	return EMPTY_STRING;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: GetProgramConstant( const String & p_variableName )const
+ScriptNode * EMuse::Script::ScriptCompiler::GetProgramConstant( const String & p_variableName )const
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_constants, p_variableName );
 
@@ -197,7 +197,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: GetProgramConstant( const String &
 	return General::Utils::map::findOrNull( m_userVariables, p_variableName );
 }
 
-char EMuse::Script::ScriptCompiler :: _getNextChar()
+char EMuse::Script::ScriptCompiler::_getNextChar()
 {
 	if ( m_currentFileStream != NULL )
 	{
@@ -219,7 +219,7 @@ char EMuse::Script::ScriptCompiler :: _getNextChar()
 	return ( ( * m_stringBuffer )[m_currentBufferIndex ++] );
 }
 
-bool EMuse::Script::ScriptCompiler :: _eof()
+bool EMuse::Script::ScriptCompiler::_eof()
 {
 	if ( m_currentFileStream != NULL )
 	{
@@ -229,14 +229,14 @@ bool EMuse::Script::ScriptCompiler :: _eof()
 	return m_stringBuffer->size() == m_currentBufferIndex;
 }
 
-void EMuse::Script::ScriptCompiler :: _readFile()
+void EMuse::Script::ScriptCompiler::_readFile()
 {
 	m_currentBufferIndex = 0;
 	m_currentFileStream->read( m_buffer, 1024 );
 	m_currentMaxIndex = uint32_t( m_currentFileStream->gcount() );
 }
 
-void EMuse::Script::ScriptCompiler :: _putBack( char p_char )
+void EMuse::Script::ScriptCompiler::_putBack( char p_char )
 {
 	if ( m_currentFileStream != NULL )
 	{
@@ -248,7 +248,7 @@ void EMuse::Script::ScriptCompiler :: _putBack( char p_char )
 	}
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: CompileScript( const String & p_script )
+ScriptNode * EMuse::Script::ScriptCompiler::CompileScript( const String & p_script )
 {
 	m_currentScriptFile = NULL;
 	auto l_line = m_currentLine;
@@ -276,7 +276,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: CompileScript( const String & p_sc
 	return l_scriptNode;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: CompileScriptFile( ConfigFile * p_scriptFile )
+ScriptNode * EMuse::Script::ScriptCompiler::CompileScriptFile( ConfigFile * p_scriptFile )
 {
 	m_currentScriptFile = p_scriptFile;
 	String line;
@@ -347,7 +347,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: CompileScriptFile( ConfigFile * p_
 	return l_scriptNode;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _createConstant( VariableBaseType p_type, const String & p_name )
+ScriptNode * EMuse::Script::ScriptCompiler::_createConstant( VariableBaseType p_type, const String & p_name )
 {
 	genlib_assert( ! General::Utils::map::has( m_constants, p_name ) );
 	ScriptNode * l_node = CreateScriptNode(); //new ScriptNode( NULL, 0);
@@ -357,20 +357,20 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _createConstant( VariableBaseType 
 	return l_node;
 }
 
-ScriptBlock * EMuse::Script::ScriptCompiler :: _getBlock()
+ScriptBlock * EMuse::Script::ScriptCompiler::_getBlock()
 {
 	ScriptBlock * l_block = m_blockPool.Get();
 	l_block->SetCompiler( this );
 	return l_block;
 }
 
-void EMuse::Script::ScriptCompiler :: _releaseBlock( ScriptBlock * p_block )
+void EMuse::Script::ScriptCompiler::_releaseBlock( ScriptBlock * p_block )
 {
 	p_block->Clear();
 	m_blockPool.Release( p_block );
 }
 
-void EMuse::Script::ScriptCompiler :: _leaveUserFunction()
+void EMuse::Script::ScriptCompiler::_leaveUserFunction()
 {
 //	m_withinUserFunction = false;
 	m_currentUserFunction = NULL;
@@ -380,7 +380,7 @@ void EMuse::Script::ScriptCompiler :: _leaveUserFunction()
 	*/
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _createUserVariable( const String & p_variableName, VariableType * p_variableType, bool p_functionParam )
+ScriptNode * EMuse::Script::ScriptCompiler::_createUserVariable( const String & p_variableName, VariableType * p_variableType, bool p_functionParam )
 {
 	if ( p_variableType == NULL )
 	{
@@ -420,7 +420,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _createUserVariable( const String 
 	return l_node;
 }
 
-UserFunction  * EMuse::Script::ScriptCompiler :: _createUserFunction( const String & p_functionName, VariableType * p_functionReturnType )
+UserFunction  * EMuse::Script::ScriptCompiler::_createUserFunction( const String & p_functionName, VariableType * p_functionReturnType )
 {
 	if ( p_functionReturnType == NULL )
 	{
@@ -450,7 +450,7 @@ UserFunction  * EMuse::Script::ScriptCompiler :: _createUserFunction( const Stri
 	return l_function;
 }
 
-void EMuse::Script::ScriptCompiler :: _creaFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
+void EMuse::Script::ScriptCompiler::_creaFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
 {
 	General::Utils::map::deleteValue( m_functions, p_functionName );
 	Function * l_scriptFunction = new Function( p_functionName );
@@ -470,7 +470,7 @@ void EMuse::Script::ScriptCompiler :: _creaFunc( const String & p_functionName, 
 	m_functions.insert( FunctionMap::value_type( p_functionName, l_scriptFunction ) );
 }
 
-void EMuse::Script::ScriptCompiler :: _classFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
+void EMuse::Script::ScriptCompiler::_classFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
 {
 	va_list l_vl;
 	va_start( l_vl, p_returnValue );
@@ -493,7 +493,7 @@ void EMuse::Script::ScriptCompiler :: _classFunc( const String & p_functionName,
 	m_classFunctions[l_param1].insert( FunctionMap::value_type( p_functionName, l_scriptFunction ) );
 }
 
-void EMuse::Script::ScriptCompiler :: _createOperator( const String & p_name, RawFunction * p_func, VariableBaseType p_returnType,
+void EMuse::Script::ScriptCompiler::_createOperator( const String & p_name, RawFunction * p_func, VariableBaseType p_returnType,
 		VariableBaseType p_left, VariableBaseType p_right )
 {
 	OperatorFunction * l_scriptFunction = new OperatorFunction( p_name );
@@ -525,7 +525,7 @@ void EMuse::Script::ScriptCompiler :: _createOperator( const String & p_name, Ra
 	m_operators.insert( OperatorFunctionMultiMap::value_type( p_name, l_scriptFunction ) );
 }
 
-void EMuse::Script::ScriptCompiler :: _initialiseOperatorMap()
+void EMuse::Script::ScriptCompiler::_initialiseOperatorMap()
 {
 	_createOperator( "+",	Ope_Add<Real, int, Real>, 				EMVT_REAL,			EMVT_INT,			EMVT_REAL	);
 	_createOperator( "+",	Ope_Add<Real, Real, int>, 				EMVT_REAL,			EMVT_REAL,			EMVT_INT	);
@@ -797,7 +797,7 @@ void EMuse::Script::ScriptCompiler :: _initialiseOperatorMap()
 	_createOperator( "[]",	Ve3_OperatorArray,						EMVT_REAL, 			EMVT_VECTOR3,		EMVT_INT	);
 }
 
-void EMuse::Script::ScriptCompiler :: _initialiseVariableMap()
+void EMuse::Script::ScriptCompiler::_initialiseVariableMap()
 {
 	_constantGroup(	"General" );
 	_createConstant(	EMVT_REAL,				"GENERAL_ELAPSED_TIME"	);
@@ -936,7 +936,7 @@ void EMuse::Script::ScriptCompiler :: _initialiseVariableMap()
 	}
 }
 
-void EMuse::Script::ScriptCompiler :: _initialiseFunctionMap()
+void EMuse::Script::ScriptCompiler::_initialiseFunctionMap()
 {
 	//Private function, for tests.
 //		_creaFunc(	"Miaou"							,Gen_Miaou,						EMVT_NULL,		EMVT_NULL,		EMVT_NULL,									EMVT_NULL);
@@ -1525,7 +1525,7 @@ void EMuse::Script::ScriptCompiler :: _initialiseFunctionMap()
 	_creaFunc( "Billboard_Destroy",				Bil_Destroy,					EMVT_NULL,		EMVT_STRING,												EMVT_NULL );
 }
 
-Function * EMuse::Script::ScriptCompiler :: _getClassFunction( VariableType * p_class, const String & p_functionName )const
+Function * EMuse::Script::ScriptCompiler::_getClassFunction( VariableType * p_class, const String & p_functionName )const
 {
 	VariableBaseType l_base = p_class->GetBase();
 	const ClassFunctionMap::const_iterator & l_classMapIter = m_classFunctions.find( l_base );
@@ -1538,7 +1538,7 @@ Function * EMuse::Script::ScriptCompiler :: _getClassFunction( VariableType * p_
 	return NULL;
 }
 
-unsigned int EMuse::Script::ScriptCompiler :: _getTypeList( ScriptBlockArray & p_childs ) const
+unsigned int EMuse::Script::ScriptCompiler::_getTypeList( ScriptBlockArray & p_childs ) const
 {
 	unsigned int l_typeList = 0;
 	unsigned int imax = static_cast <unsigned int>( p_childs.size() );
@@ -1551,7 +1551,7 @@ unsigned int EMuse::Script::ScriptCompiler :: _getTypeList( ScriptBlockArray & p
 	return l_typeList;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: CreateScriptNode()
+ScriptNode * EMuse::Script::ScriptCompiler::CreateScriptNode()
 {
 	ScriptNode * l_node = m_nodePool.Get();
 	l_node->_reinit();
@@ -1560,7 +1560,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: CreateScriptNode()
 	return l_node;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: CreateScriptNode( unsigned int p_lineNum )
+ScriptNode * EMuse::Script::ScriptCompiler::CreateScriptNode( unsigned int p_lineNum )
 {
 	ScriptNode * l_node = m_nodePool.Get();
 	l_node->_reinit();
@@ -1569,7 +1569,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: CreateScriptNode( unsigned int p_l
 	return l_node;
 }
 
-VariableType * EMuse::Script::ScriptCompiler :: FindType( const String & p_name )const
+VariableType * EMuse::Script::ScriptCompiler::FindType( const String & p_name )const
 {
 	VariableType * l_type = General::Utils::map::findOrNull( m_typedefs, p_name );
 
@@ -1581,7 +1581,7 @@ VariableType * EMuse::Script::ScriptCompiler :: FindType( const String & p_name 
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( char p_value )
+ScriptNode * EMuse::Script::ScriptCompiler::GetFlyweight( char p_value )
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_charFlyweight, p_value ); ;
 
@@ -1598,7 +1598,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( char p_value )
 	return l_node;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( const String & p_value )
+ScriptNode * EMuse::Script::ScriptCompiler::GetFlyweight( const String & p_value )
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_stringFlyweight, p_value ); ;
 
@@ -1615,7 +1615,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( const String & p_val
 	return l_node;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( int p_value )
+ScriptNode * EMuse::Script::ScriptCompiler::GetFlyweight( int p_value )
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_intFlyweight, p_value ); ;
 
@@ -1632,7 +1632,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( int p_value )
 	return l_node;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( Real p_value )
+ScriptNode * EMuse::Script::ScriptCompiler::GetFlyweight( Real p_value )
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_realFlyweight, p_value ); ;
 
@@ -1649,13 +1649,13 @@ ScriptNode * EMuse::Script::ScriptCompiler :: GetFlyweight( Real p_value )
 	return l_node;
 }
 
-void EMuse::Script::ScriptCompiler :: _releaseNode( ScriptNode * p_node )
+void EMuse::Script::ScriptCompiler::_releaseNode( ScriptNode * p_node )
 {
 	p_node->_delete();
 	m_nodePool.Release( p_node );
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _getUserVariable( const String & p_variableName )
+ScriptNode * EMuse::Script::ScriptCompiler::_getUserVariable( const String & p_variableName )
 {
 	if ( m_currentUserFunction != NULL )
 	{
@@ -1687,7 +1687,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _getUserVariable( const String & p
 	return General::Utils::map::findOrNull( m_userVariables, p_variableName );
 }
 
-UserFunction :: ~UserFunction()
+UserFunction::~UserFunction()
 {
 	General::Utils::map::cycle( m_localVars, &ScriptNode::Delete );
 	m_localVars.clear();
@@ -1703,13 +1703,13 @@ UserFunction :: ~UserFunction()
 	}
 }
 
-void EMuse::Script::ScriptCompiler :: ReleaseScriptNode( ScriptNode * p_node )
+void EMuse::Script::ScriptCompiler::ReleaseScriptNode( ScriptNode * p_node )
 {
 	sm_singleton->_releaseNode( p_node );
 }
 
 
-UserFunction * EMuse::Script::ScriptCompiler :: GetUserFunction( const String & p_functionName )const
+UserFunction * EMuse::Script::ScriptCompiler::GetUserFunction( const String & p_functionName )const
 {
 	if ( _isInStructDecla() )
 	{

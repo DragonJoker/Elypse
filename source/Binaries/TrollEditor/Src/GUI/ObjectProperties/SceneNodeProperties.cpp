@@ -43,7 +43,7 @@ BEGIN_EVENT_TABLE( SceneNodeProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-SceneNodeProperties :: SceneNodeProperties( TrollSceneNode * p_sceneNode, wxWindow * parent, const wxPoint & pos,
+SceneNodeProperties::SceneNodeProperties( TrollSceneNode * p_sceneNode, wxWindow * parent, const wxPoint & pos,
 		const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_sceneNode( p_sceneNode )
@@ -71,13 +71,13 @@ SceneNodeProperties :: SceneNodeProperties( TrollSceneNode * p_sceneNode, wxWind
 
 
 
-SceneNodeProperties :: ~SceneNodeProperties()
+SceneNodeProperties::~SceneNodeProperties()
 {
 }
 
 
 
-void SceneNodeProperties :: UpdateProperties()
+void SceneNodeProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	wxPoint l_position = wxPoint( GetClientSize().x / 2, 0 );
@@ -125,7 +125,7 @@ void SceneNodeProperties :: UpdateProperties()
 
 
 
-void SceneNodeProperties :: _onEditName( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -135,7 +135,7 @@ void SceneNodeProperties :: _onEditName( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onSelectParent( wxCommandEvent & p_event )
+void SceneNodeProperties::_onSelectParent( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -146,7 +146,7 @@ void SceneNodeProperties :: _onSelectParent( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditXPos( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditXPos( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -164,7 +164,7 @@ void SceneNodeProperties :: _onEditXPos( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditYPos( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditYPos( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -182,7 +182,7 @@ void SceneNodeProperties :: _onEditYPos( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditZPos( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditZPos( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -200,7 +200,7 @@ void SceneNodeProperties :: _onEditZPos( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditXScale( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditXScale( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -218,7 +218,7 @@ void SceneNodeProperties :: _onEditXScale( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditYScale( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditYScale( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -236,7 +236,7 @@ void SceneNodeProperties :: _onEditYScale( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditZScale( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditZScale( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -254,7 +254,7 @@ void SceneNodeProperties :: _onEditZScale( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditRoll( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditRoll( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -273,7 +273,7 @@ void SceneNodeProperties :: _onEditRoll( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditPitch( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditPitch( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -292,7 +292,7 @@ void SceneNodeProperties :: _onEditPitch( wxCommandEvent & p_event )
 
 
 
-void SceneNodeProperties :: _onEditYaw( wxCommandEvent & p_event )
+void SceneNodeProperties::_onEditYaw( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

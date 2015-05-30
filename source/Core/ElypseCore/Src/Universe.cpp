@@ -13,7 +13,7 @@
 
 #include "EMuseLogs.h"
 
-Universe :: Universe( const String & p_universeName, const String & p_instanceKey )
+Universe::Universe( const String & p_universeName, const String & p_instanceKey )
 	:	named( p_universeName ),
 		m_manager( NULL ),
 		m_renderTarget( NULL ),
@@ -27,7 +27,7 @@ Universe :: Universe( const String & p_universeName, const String & p_instanceKe
 	EMUSE_LOG_MESSAGE_RELEASE( "Universe create : " + m_name );
 }
 
-Universe :: ~Universe()
+Universe::~Universe()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "Universe delete : " + m_name );
 	General::Utils::map::deleteAll( m_zones );
@@ -36,7 +36,7 @@ Universe :: ~Universe()
 	Root::getSingletonPtr()->destroySceneManager( m_manager );
 }
 
-void Universe :: AddZone( Zone * p_zone )
+void Universe::AddZone( Zone * p_zone )
 {
 	genlib_assert( p_zone != NULL );
 
@@ -46,10 +46,10 @@ void Universe :: AddZone( Zone * p_zone )
 	}
 }
 
-void Universe :: SetRenderTarget( RenderTarget * p_rt )
+void Universe::SetRenderTarget( RenderTarget * p_rt )
 {
 	genlib_assert( p_rt != NULL );
-	EMUSE_MESSAGE_DEBUG( "Universe :: SetRenderTarget -> " + m_name + " // " + p_rt->getName() );
+	EMUSE_MESSAGE_DEBUG( "Universe::SetRenderTarget -> " + m_name + " // " + p_rt->getName() );
 	m_renderTarget = p_rt;
 	m_viewport = m_renderTarget->addViewport( m_camera );
 	genlib_assert( m_viewport != NULL );
@@ -58,7 +58,7 @@ void Universe :: SetRenderTarget( RenderTarget * p_rt )
 	m_renderTarget->update();
 }
 
-void Universe :: ClearScene() d_no_throw
+void Universe::ClearScene() d_no_throw
 {
 	m_manager->clearScene();
 }

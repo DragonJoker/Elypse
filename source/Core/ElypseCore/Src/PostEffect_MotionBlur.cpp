@@ -11,7 +11,7 @@ using namespace Ogre;
 
 bool PostEffect_MotionBlur::sm_initialised = false;
 
-PostEffect_MotionBlur :: PostEffect_MotionBlur( const String & p_name, Viewport * p_viewport )
+PostEffect_MotionBlur::PostEffect_MotionBlur( const String & p_name, Viewport * p_viewport )
 	:	PostEffect( p_name, p_viewport, -1, false )
 {
 	if ( ! PostEffect_MotionBlur::IsInitialised() )
@@ -23,11 +23,11 @@ PostEffect_MotionBlur :: PostEffect_MotionBlur( const String & p_name, Viewport 
 	SetEnabled( true );
 }
 
-PostEffect_MotionBlur :: ~PostEffect_MotionBlur()
+PostEffect_MotionBlur::~PostEffect_MotionBlur()
 {
 }
 
-void PostEffect_MotionBlur :: Initialise()
+void PostEffect_MotionBlur::Initialise()
 {
 	sm_initialised = true;
 	CompositorPtr comp3 = CompositorManager::getSingleton().create( "MotionBlur", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );

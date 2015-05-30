@@ -20,8 +20,8 @@ BEGIN_EVENT_TABLE( SequenceProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-SequenceProperties :: SequenceProperties( TrollSequence * p_sequence, wxWindow * parent, const wxPoint & pos,
-		const wxSize & size, long style )
+SequenceProperties::SequenceProperties( TrollSequence * p_sequence, wxWindow * parent, const wxPoint & pos,
+										const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_sequence( p_sequence )
 {
@@ -31,13 +31,13 @@ SequenceProperties :: SequenceProperties( TrollSequence * p_sequence, wxWindow *
 
 
 
-SequenceProperties :: ~SequenceProperties()
+SequenceProperties::~SequenceProperties()
 {
 }
 
 
 
-void SequenceProperties :: UpdateProperties()
+void SequenceProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	m_sequenceName->SetValue( m_sequence->TrollObject::GetName() );
@@ -46,7 +46,7 @@ void SequenceProperties :: UpdateProperties()
 
 
 
-void SequenceProperties :: _onEditName( wxCommandEvent & p_event )
+void SequenceProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

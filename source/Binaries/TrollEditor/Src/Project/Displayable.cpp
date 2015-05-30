@@ -10,14 +10,14 @@
 using namespace Troll;
 
 
-TEDisplayable :: TEDisplayable()
+TEDisplayable::TEDisplayable()
 	:	m_propertiesPanel( NULL )
 {
 }
 
 
 
-TEDisplayable :: ~TEDisplayable()
+TEDisplayable::~TEDisplayable()
 {
 	if ( m_propertiesPanel != NULL )
 	{
@@ -27,7 +27,7 @@ TEDisplayable :: ~TEDisplayable()
 
 
 
-void TEDisplayable :: ShowProperties()
+void TEDisplayable::ShowProperties()
 {
 	if ( m_propertiesPanel != NULL )
 	{
@@ -37,7 +37,7 @@ void TEDisplayable :: ShowProperties()
 
 
 
-void TEDisplayable :: HideProperties()
+void TEDisplayable::HideProperties()
 {
 	if ( m_propertiesPanel != NULL )
 	{

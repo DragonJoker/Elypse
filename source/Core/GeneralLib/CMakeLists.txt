@@ -1,42 +1,26 @@
 project( GeneralLib )
 
-set( GL_VERSION_MAJOR	0 )
-set( GL_VERSION_MINOR	9 )
-set( GL_VERSION_BUILD	4 )
+set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
+set( ${PROJECT_NAME}_VERSION_MINOR	9 )
+set( ${PROJECT_NAME}_VERSION_BUILD	4 )
 
 add_target(
-	GeneralLib
+	${PROJECT_NAME}
 	lib
 	""
 	"${BoostLibraries};${ZZipLibraries}"
 )
 
-set_property( TARGET GeneralLib PROPERTY FOLDER "Core" )
-set( Build "yes (version ${GL_VERSION_MAJOR}.${GL_VERSION_MINOR}.${GL_VERSION_BUILD})" PARENT_SCOPE )
-add_target_astyle( GeneralLib ".h;.hpp;.inl;.cpp" )
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
-install(
-	TARGETS	GeneralLib
-	ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-)
+install_dll( ${PROJECT_NAME} ${ZLIB_LIBRARY} Debug )
+install_dll( ${PROJECT_NAME} ${ZLIB_LIBRARY} Release )
+install_dll( ${PROJECT_NAME} ${LIBZIP_LIBRARY} Debug )
+install_dll( ${PROJECT_NAME} ${LIBZIP_LIBRARY} Release )
 
-file( GLOB_RECURSE GeneralLibHeaders
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*.inl
-)
-
-install(
-	FILES ${GeneralLibHeaders}
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/GeneralLib
-)
-
-install_dll( GeneralLib ${ZLIB_LIBRARY} Debug )
-install_dll( GeneralLib ${ZLIB_LIBRARY} Release )
-install_dll( GeneralLib ${LIBZIP_LIBRARY} Debug )
-install_dll( GeneralLib ${LIBZIP_LIBRARY} Release )
-
-copy_dll( GeneralLib ${ZLIB_LIBRARY} Debug )
-copy_dll( GeneralLib ${ZLIB_LIBRARY} Release )
-copy_dll( GeneralLib ${LIBZIP_LIBRARY} Debug )
-copy_dll( GeneralLib ${LIBZIP_LIBRARY} Release )
+copy_dll( ${PROJECT_NAME} ${ZLIB_LIBRARY} Debug )
+copy_dll( ${PROJECT_NAME} ${ZLIB_LIBRARY} Release )
+copy_dll( ${PROJECT_NAME} ${LIBZIP_LIBRARY} Debug )
+copy_dll( ${PROJECT_NAME} ${LIBZIP_LIBRARY} Release )

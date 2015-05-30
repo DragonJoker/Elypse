@@ -11,21 +11,21 @@
 using namespace Troll::Temporal;
 
 
-TrollAnimationGroup :: TrollAnimationGroup( const wxString & p_name, const wxString & p_fileName )
+TrollAnimationGroup::TrollAnimationGroup( const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttAnimationGroup )
 {
 }
 
 
 
-TrollAnimationGroup :: ~TrollAnimationGroup()
+TrollAnimationGroup::~TrollAnimationGroup()
 {
 	General::Utils::map::deleteAll( m_objects );
 }
 
 
 
-TrollAnimatedObject * TrollAnimationGroup :: CreateAnimatedObject( TrollObject * p_object, const wxString & p_fileName )
+TrollAnimatedObject * TrollAnimationGroup::CreateAnimatedObject( TrollObject * p_object, const wxString & p_fileName )
 {
 	TrollAnimatedObjectStrMap::iterator l_it = m_objects.find( p_object->GetName() );
 
@@ -41,21 +41,21 @@ TrollAnimatedObject * TrollAnimationGroup :: CreateAnimatedObject( TrollObject *
 
 
 
-int TrollAnimationGroup :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollAnimationGroup::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	return 0;
 }
 
 
 
-void TrollAnimationGroup :: AddChainedAnimations( const wxString & p_anim1, const wxString & p_anim2 )
+void TrollAnimationGroup::AddChainedAnimations( const wxString & p_anim1, const wxString & p_anim2 )
 {
 	m_chainedAnimations.insert( StrStrMap::value_type( p_anim1, p_anim2 ) );
 }
 
 
 
-void TrollAnimationGroup :: Write( wxTextOutputStream * p_stream )
+void TrollAnimationGroup::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "animation_group " ) + m_name + wxT( "\n{\n" ) );
 	General::Utils::map::cycle( m_objects, & TrollAnimatedObject::Write, p_stream );

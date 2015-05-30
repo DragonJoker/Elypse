@@ -60,8 +60,8 @@ BEGIN_EVENT_TABLE( LightProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-LightProperties :: LightProperties( TrollLight * p_light, wxWindow * parent, const wxPoint & pos,
-									const wxSize & size, long style )
+LightProperties::LightProperties( TrollLight * p_light, wxWindow * parent, const wxPoint & pos,
+								  const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_light( p_light )
 {
@@ -105,13 +105,13 @@ LightProperties :: LightProperties( TrollLight * p_light, wxWindow * parent, con
 
 
 
-LightProperties :: ~LightProperties()
+LightProperties::~LightProperties()
 {
 }
 
 
 
-void LightProperties :: UpdateProperties()
+void LightProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	wxPoint l_position = wxPoint( GetClientSize().x / 2, 0 );
@@ -194,7 +194,7 @@ void LightProperties :: UpdateProperties()
 
 
 
-void LightProperties :: _onEditName( wxCommandEvent & p_event )
+void LightProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -204,7 +204,7 @@ void LightProperties :: _onEditName( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onSelectParent( wxCommandEvent & p_event )
+void LightProperties::_onSelectParent( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -215,7 +215,7 @@ void LightProperties :: _onSelectParent( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditXDir( wxCommandEvent & p_event )
+void LightProperties::_onEditXDir( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -233,7 +233,7 @@ void LightProperties :: _onEditXDir( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditYDir( wxCommandEvent & p_event )
+void LightProperties::_onEditYDir( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -251,7 +251,7 @@ void LightProperties :: _onEditYDir( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditZDir( wxCommandEvent & p_event )
+void LightProperties::_onEditZDir( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -269,7 +269,7 @@ void LightProperties :: _onEditZDir( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditRedDiffuse( wxCommandEvent & p_event )
+void LightProperties::_onEditRedDiffuse( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -294,7 +294,7 @@ void LightProperties :: _onEditRedDiffuse( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditGreenDiffuse( wxCommandEvent & p_event )
+void LightProperties::_onEditGreenDiffuse( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -319,7 +319,7 @@ void LightProperties :: _onEditGreenDiffuse( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditBlueDiffuse( wxCommandEvent & p_event )
+void LightProperties::_onEditBlueDiffuse( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -344,7 +344,7 @@ void LightProperties :: _onEditBlueDiffuse( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditAlphaDiffuse( wxCommandEvent & p_event )
+void LightProperties::_onEditAlphaDiffuse( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -369,7 +369,7 @@ void LightProperties :: _onEditAlphaDiffuse( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditRedSpecular( wxCommandEvent & p_event )
+void LightProperties::_onEditRedSpecular( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -394,7 +394,7 @@ void LightProperties :: _onEditRedSpecular( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditGreenSpecular( wxCommandEvent & p_event )
+void LightProperties::_onEditGreenSpecular( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -419,7 +419,7 @@ void LightProperties :: _onEditGreenSpecular( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditBlueSpecular( wxCommandEvent & p_event )
+void LightProperties::_onEditBlueSpecular( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -444,7 +444,7 @@ void LightProperties :: _onEditBlueSpecular( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditAlphaSpecular( wxCommandEvent & p_event )
+void LightProperties::_onEditAlphaSpecular( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -469,7 +469,7 @@ void LightProperties :: _onEditAlphaSpecular( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditAttenuationRange( wxCommandEvent & p_event )
+void LightProperties::_onEditAttenuationRange( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -487,7 +487,7 @@ void LightProperties :: _onEditAttenuationRange( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditAttenuationConstant( wxCommandEvent & p_event )
+void LightProperties::_onEditAttenuationConstant( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -505,7 +505,7 @@ void LightProperties :: _onEditAttenuationConstant( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditAttenuationLinear( wxCommandEvent & p_event )
+void LightProperties::_onEditAttenuationLinear( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -523,7 +523,7 @@ void LightProperties :: _onEditAttenuationLinear( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditAttenuationQuadric( wxCommandEvent & p_event )
+void LightProperties::_onEditAttenuationQuadric( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -541,7 +541,7 @@ void LightProperties :: _onEditAttenuationQuadric( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditSpotlightInnerAngle( wxCommandEvent & p_event )
+void LightProperties::_onEditSpotlightInnerAngle( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -559,7 +559,7 @@ void LightProperties :: _onEditSpotlightInnerAngle( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditSpotlightOuterAngle( wxCommandEvent & p_event )
+void LightProperties::_onEditSpotlightOuterAngle( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -577,7 +577,7 @@ void LightProperties :: _onEditSpotlightOuterAngle( wxCommandEvent & p_event )
 
 
 
-void LightProperties :: _onEditSpotlightFalloff( wxCommandEvent & p_event )
+void LightProperties::_onEditSpotlightFalloff( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

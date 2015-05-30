@@ -122,14 +122,14 @@ bool LocalFunction( char * p_char1, char * p_char2, char * p_char3 )
 	return p_char;
 }
 
-ClassName :: ClassName()
+ClassName::ClassName()
 	:	m_name( "DefaultClassName" ),
 		m_int( 0 )
 {
 	Print( m_name, m_int, m_name.c_str() );
 }
 
-void ClassName :: Print( const String & p_string, int p_int, const char * p_charStar )
+void ClassName::Print( const String & p_string, int p_int, const char * p_charStar )
 {
 	if ( p_charStar == NULL )
 	{

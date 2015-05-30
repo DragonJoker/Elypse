@@ -31,8 +31,8 @@ BEGIN_EVENT_TABLE( KeyFrameProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-KeyFrameProperties :: KeyFrameProperties( TrollKeyFrame * p_keyFrame, wxWindow * parent,
-		const wxPoint & pos, const wxSize & size, long style )
+KeyFrameProperties::KeyFrameProperties( TrollKeyFrame * p_keyFrame, wxWindow * parent,
+										const wxPoint & pos, const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_key( p_keyFrame ),
 		m_fireTime( NULL ),
@@ -46,19 +46,19 @@ KeyFrameProperties :: KeyFrameProperties( TrollKeyFrame * p_keyFrame, wxWindow *
 
 
 
-KeyFrameProperties :: ~KeyFrameProperties()
+KeyFrameProperties::~KeyFrameProperties()
 {
 }
 
 
 
-void KeyFrameProperties :: UpdateProperties()
+void KeyFrameProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 
 	if ( ! DestroyChildren() )
 	{
-		std::cout << "KeyFrameProperties :: UpdateProperties - Can't destroy children\n";
+		std::cout << "KeyFrameProperties::UpdateProperties - Can't destroy children\n";
 		m_updatingProperties = false;
 		return;
 	}
@@ -72,7 +72,7 @@ void KeyFrameProperties :: UpdateProperties()
 
 
 
-void KeyFrameProperties :: _buildArguments( const wxPoint & p_position )
+void KeyFrameProperties::_buildArguments( const wxPoint & p_position )
 {
 	if ( m_key->GetArgsType() == ceReal )
 	{
@@ -90,7 +90,7 @@ void KeyFrameProperties :: _buildArguments( const wxPoint & p_position )
 
 		if ( l_split.size() > 2 )
 		{
-			std::cout << "KeyFrameProperties :: _buildArguments - " << l_split[0] << " - " << l_split[1] << "\n";
+			std::cout << "KeyFrameProperties::_buildArguments - " << l_split[0] << " - " << l_split[1] << "\n";
 
 			if ( GetReal( l_split[0], l_tmp.x ) && GetReal( l_split[1], l_tmp.y ) )
 			{
@@ -107,7 +107,7 @@ void KeyFrameProperties :: _buildArguments( const wxPoint & p_position )
 
 		if ( l_split.size() > 2 )
 		{
-			std::cout << "KeyFrameProperties :: _buildArguments - " << l_split[0] << " - " << l_split[1] << " - " << l_split[2] << "\n";
+			std::cout << "KeyFrameProperties::_buildArguments - " << l_split[0] << " - " << l_split[1] << " - " << l_split[2] << "\n";
 
 			if ( GetReal( l_split[0], l_tmp.x ) && GetReal( l_split[1], l_tmp.y ) && GetReal( l_split[2], l_tmp.z ) )
 			{
@@ -141,7 +141,7 @@ void KeyFrameProperties :: _buildArguments( const wxPoint & p_position )
 
 
 
-void KeyFrameProperties :: _onEditFireTime( wxCommandEvent & p_event )
+void KeyFrameProperties::_onEditFireTime( wxCommandEvent & p_event )
 {
 	wxString l_value = m_fireTime->GetValue();
 	float l_tmp;
@@ -154,7 +154,7 @@ void KeyFrameProperties :: _onEditFireTime( wxCommandEvent & p_event )
 
 
 
-void KeyFrameProperties :: _onEditReal( wxCommandEvent & p_event )
+void KeyFrameProperties::_onEditReal( wxCommandEvent & p_event )
 {
 	wxString l_value = m_real->GetValue();
 	float l_tmp;
@@ -176,7 +176,7 @@ void KeyFrameProperties :: _onEditReal( wxCommandEvent & p_event )
 
 
 
-void KeyFrameProperties :: _onEditV3X( wxCommandEvent & p_event )
+void KeyFrameProperties::_onEditV3X( wxCommandEvent & p_event )
 {
 	wxString l_value = m_v3X->GetValue();
 	float l_tmp;
@@ -200,7 +200,7 @@ void KeyFrameProperties :: _onEditV3X( wxCommandEvent & p_event )
 
 
 
-void KeyFrameProperties :: _onEditV3Y( wxCommandEvent & p_event )
+void KeyFrameProperties::_onEditV3Y( wxCommandEvent & p_event )
 {
 	wxString l_value = m_v3Y->GetValue();
 	float l_tmp;
@@ -224,7 +224,7 @@ void KeyFrameProperties :: _onEditV3Y( wxCommandEvent & p_event )
 
 
 
-void KeyFrameProperties :: _onEditV3Z( wxCommandEvent & p_event )
+void KeyFrameProperties::_onEditV3Z( wxCommandEvent & p_event )
 {
 	wxString l_value = m_v3Z->GetValue();
 	float l_tmp;

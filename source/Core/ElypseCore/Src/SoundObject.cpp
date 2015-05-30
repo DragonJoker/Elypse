@@ -13,7 +13,7 @@
 #include "Zone.h"
 #include "EMuseLogs.h"
 
-SoundObject :: SoundObject( const String & p_name )
+SoundObject::SoundObject( const String & p_name )
 	:	named( p_name ),
 		m_globalInstance( NULL ),
 		m_useCount( 0 ),
@@ -23,10 +23,10 @@ SoundObject :: SoundObject( const String & p_name )
 		m_global( true ),
 		m_volumePercent( MAXVOLUME )
 {
-	EMUSE_MESSAGE_DEBUG( "SoundObject :: SoundObject( " + m_name + ")" );
+	EMUSE_MESSAGE_DEBUG( "SoundObject::SoundObject( " + m_name + ")" );
 }
 
-SoundObject :: ~SoundObject()
+SoundObject::~SoundObject()
 {
 	General::Utils::map::deleteAll( m_instances );
 
@@ -38,17 +38,17 @@ SoundObject :: ~SoundObject()
 	CHECKFMODERROR( m_sound->release() );
 }
 
-void SoundObject :: AddToZone( Zone * p_zone )
+void SoundObject::AddToZone( Zone * p_zone )
 {
 //	p_zone->AddZoneObject( this);
 }
 
-void SoundObject :: RemoveFromZone( Zone * p_zone )
+void SoundObject::RemoveFromZone( Zone * p_zone )
 {
 	SoundManager::GetSingletonPtr()->RemoveSoundObject( m_name );
 }
 
-void SoundObject :: Mute( bool p_mute )
+void SoundObject::Mute( bool p_mute )
 {
 	if ( IsGlobal() )
 	{
@@ -60,12 +60,12 @@ void SoundObject :: Mute( bool p_mute )
 	}
 }
 
-void SoundObject :: SetSoundUrl( const String & p_soundURL )
+void SoundObject::SetSoundUrl( const String & p_soundURL )
 {
 	m_soundURL = p_soundURL;
 }
 
-void SoundObject :: Initialise()
+void SoundObject::Initialise()
 {
 	FMOD_MODE l_mode = FMOD_DEFAULT;
 
@@ -98,7 +98,7 @@ void SoundObject :: Initialise()
 	}
 }
 
-SoundInstance * SoundObject :: CreateInstance( SceneNode * p_node )
+SoundInstance * SoundObject::CreateInstance( SceneNode * p_node )
 {
 	if ( p_node == NULL )
 	{
@@ -129,13 +129,13 @@ SoundInstance * SoundObject :: CreateInstance( SceneNode * p_node )
 	return l_instance;
 }
 
-void SoundObject :: RemoveNode( const String & p_nodeName )
+void SoundObject::RemoveNode( const String & p_nodeName )
 {
 	General::Utils::map::deleteValue( m_instances, p_nodeName );
 	m_useCount --;
 }
 
-void SoundObject :: SetMaxVolume( Real p_volume )
+void SoundObject::SetMaxVolume( Real p_volume )
 {
 	m_maxVolume = p_volume;
 
@@ -149,7 +149,7 @@ void SoundObject :: SetMaxVolume( Real p_volume )
 	}
 }
 
-void SoundObject :: PlayAll()
+void SoundObject::PlayAll()
 {
 	if ( IsGlobal() )
 	{
@@ -161,7 +161,7 @@ void SoundObject :: PlayAll()
 	}
 }
 
-void SoundObject :: PauseAll()
+void SoundObject::PauseAll()
 {
 	if ( IsGlobal() )
 	{
@@ -173,7 +173,7 @@ void SoundObject :: PauseAll()
 	}
 }
 
-void SoundObject :: StopAll()
+void SoundObject::StopAll()
 {
 	if ( IsGlobal() )
 	{
@@ -185,7 +185,7 @@ void SoundObject :: StopAll()
 	}
 }
 
-void SoundObject :: Update3D( Real p_time )
+void SoundObject::Update3D( Real p_time )
 {
 	if ( IsGlobal() )
 	{
@@ -209,7 +209,7 @@ void SoundObject :: Update3D( Real p_time )
 	}
 }
 
-void SoundObject :: UpdateFade( Real p_time )
+void SoundObject::UpdateFade( Real p_time )
 {
 	if ( IsGlobal() )
 	{
@@ -234,7 +234,7 @@ void SoundObject :: UpdateFade( Real p_time )
 	}
 }
 
-void SoundObject :: SetLocal( const String & p_zone )
+void SoundObject::SetLocal( const String & p_zone )
 {
 	m_zone = p_zone;
 	m_global = false;

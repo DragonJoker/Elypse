@@ -13,23 +13,23 @@ using namespace Troll::Objects3D;
 
 
 
-TrollInstance :: TrollInstance( const String & p_installPath , EMusePlugin * p_plugin )
+TrollInstance::TrollInstance( const String & p_installPath , EMusePlugin * p_plugin )
 	:	EMuseInstance( p_installPath, p_plugin ),
 		m_sceneCreated( false )
 {
-	EMUSE_MESSAGE_DEBUG( "TrollInstance :: TrollInstance" );
+	EMUSE_MESSAGE_DEBUG( "TrollInstance::TrollInstance" );
 	m_name.clear();
 }
 
 
 
-TrollInstance :: ~TrollInstance()
+TrollInstance::~TrollInstance()
 {
 }
 
 
 
-void TrollInstance :: CreateScene()
+void TrollInstance::CreateScene()
 {
 	m_name.clear();
 	m_sceneCreated = false;
@@ -40,7 +40,7 @@ void TrollInstance :: CreateScene()
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "TrollInstance :: CreateScene : m_filepath : " + m_filePath );
+		EMUSE_MESSAGE_DEBUG( "TrollInstance::CreateScene : m_filepath : " + m_filePath );
 		EMuseController::GetSingletonPtr()->InitialiseRessources( "" );
 		m_downManager = EMuseController::GetSingletonPtr()->GetDownloadManager();
 		genlib_assert( m_downManager != NULL );
@@ -58,12 +58,12 @@ void TrollInstance :: CreateScene()
 			return;
 		}
 		*/
-		EMUSE_MESSAGE_DEBUG( "EMuseInstance :: CreateScene : wait for download initialised" );
+		EMUSE_MESSAGE_DEBUG( "EMuseInstance::CreateScene : wait for download initialised" );
 		m_frameListener = new TrollFrameListener( this, m_renderWindow, m_mainUrl, m_installationPath, m_appIndexStr );
 		m_frameListener->SetStartupScript( m_startupScript );
 		m_frameListener->PreInitialise();
 //		m_downManager->WaitForFile( "main.emcfg", true);
-		EMUSE_MESSAGE_DEBUG( "TrollInstance :: CreateScene : next is fl ctor" );
+		EMUSE_MESSAGE_DEBUG( "TrollInstance::CreateScene : next is fl ctor" );
 		m_frameListener->Initialise();
 	}
 
@@ -75,7 +75,7 @@ void TrollInstance :: CreateScene()
 	TrollSceneNode * l_rootNode = g_mainFrame->GetCurrentProject()->GetMainScene()->AddSceneNode( wxT( "root node" ), wxT( "" ) );
 	l_rootNode->SetOgreNode( m_frameListener->GetContext()->sceneManager->getRootSceneNode() );
 	m_sceneCreated = true;
-	EMUSE_MESSAGE_DEBUG( "TrollInstance :: CreateScene : the end" );
+	EMUSE_MESSAGE_DEBUG( "TrollInstance::CreateScene : the end" );
 }
 
 

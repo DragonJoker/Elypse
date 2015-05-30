@@ -8,7 +8,7 @@
 
 using namespace Ogre;
 
-PostEffect_GaussianBlur :: PostEffect_GaussianBlur( const String & p_name, Viewport * p_viewport )
+PostEffect_GaussianBlur::PostEffect_GaussianBlur( const String & p_name, Viewport * p_viewport )
 	:	PostEffect( p_name, p_viewport, -1 )
 {
 	m_listener = new GaussianListener;
@@ -16,20 +16,20 @@ PostEffect_GaussianBlur :: PostEffect_GaussianBlur( const String & p_name, Viewp
 	m_listener->notifyViewportSize( m_viewport->getActualWidth(), m_viewport->getActualHeight() );
 }
 
-PostEffect_GaussianBlur :: ~PostEffect_GaussianBlur()
+PostEffect_GaussianBlur::~PostEffect_GaussianBlur()
 {
 	delete m_listener;
 }
 
-GaussianListener :: GaussianListener()
+GaussianListener::GaussianListener()
 {
 }
 
-GaussianListener :: ~GaussianListener()
+GaussianListener::~GaussianListener()
 {
 }
 
-void GaussianListener :: notifyViewportSize( int width, int height )
+void GaussianListener::notifyViewportSize( int width, int height )
 {
 	mVpWidth = width;
 	mVpHeight = height;
@@ -69,7 +69,7 @@ void GaussianListener :: notifyViewportSize( int width, int height )
 	}
 }
 
-void GaussianListener :: notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
+void GaussianListener::notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
 {
 	// Prepare the fragment params offsets
 	switch ( pass_id )
@@ -98,6 +98,6 @@ void GaussianListener :: notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat 
 	}
 }
 
-void GaussianListener :: notifyMaterialRender( uint32 pass_id, MaterialPtr & mat )
+void GaussianListener::notifyMaterialRender( uint32 pass_id, MaterialPtr & mat )
 {
 }

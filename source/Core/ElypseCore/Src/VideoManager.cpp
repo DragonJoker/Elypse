@@ -19,7 +19,7 @@
 
 GENLIB_INIT_SINGLETON( VideoManager );
 
-VideoManager :: VideoManager()
+VideoManager::VideoManager()
 	:	m_currentFactory( NULL ),
 		m_volume( 100 ),
 		m_muted( false )
@@ -33,13 +33,13 @@ VideoManager :: VideoManager()
 #endif
 }
 
-VideoManager :: ~VideoManager()
+VideoManager::~VideoManager()
 {
 	Cleanup();
 	General::Utils::map::deleteAll( m_factories );
 }
 
-void VideoManager :: RegisterFactory( VideoFactory * p_factory )
+void VideoManager::RegisterFactory( VideoFactory * p_factory )
 {
 	genlib_assert( p_factory != NULL );
 	m_factories.insert( VideoFactoryMap::value_type( p_factory->GetName(), p_factory ) );
@@ -50,7 +50,7 @@ void VideoManager :: RegisterFactory( VideoFactory * p_factory )
 	}
 }
 
-void VideoManager :: SetCurrentFactory( const String & p_name )
+void VideoManager::SetCurrentFactory( const String & p_name )
 {
 	VideoFactory * l_factory = General::Utils::map::findOrNull( m_factories, p_name );
 
@@ -62,12 +62,12 @@ void VideoManager :: SetCurrentFactory( const String & p_name )
 	m_currentFactory = l_factory;
 }
 
-void VideoManager :: Update()
+void VideoManager::Update()
 {
 	General::Utils::map::cycle( m_objectList, & VideoObject::Update, static_cast <Real>( m_timer.Time() ) );
 }
 
-VideoObject * VideoManager :: CreateVideoObject( const String & p_name, EMusePlugin * p_plugin )
+VideoObject * VideoManager::CreateVideoObject( const String & p_name, EMusePlugin * p_plugin )
 {
 	VideoObject * l_object = General::Utils::map::insert( m_objectList, p_name, p_name, p_plugin );
 	l_object->SetMaxVolume( m_volume );
@@ -75,38 +75,38 @@ VideoObject * VideoManager :: CreateVideoObject( const String & p_name, EMusePlu
 	return l_object;
 }
 
-void VideoManager :: DeleteVideoObject( const String & p_name )
+void VideoManager::DeleteVideoObject( const String & p_name )
 {
 	General::Utils::map::deleteValue( m_objectList, p_name );
 }
 
-bool VideoManager :: IsVideo( const String & p_entityName )
+bool VideoManager::IsVideo( const String & p_entityName )
 {
 	//TODO.
 	return false;
 }
 
-void VideoManager :: Cleanup()
+void VideoManager::Cleanup()
 {
 	General::Utils::map::deleteAll( m_objectList );
 }
 
-void VideoManager :: StartAll()
+void VideoManager::StartAll()
 {
 	General::Utils::map::cycle( m_objectList, & VideoObject::Start );
 }
 
-void VideoManager :: StopAll()
+void VideoManager::StopAll()
 {
 	General::Utils::map::cycle( m_objectList, & VideoObject::Stop );
 }
 
-void VideoManager :: PauseAll()
+void VideoManager::PauseAll()
 {
 	General::Utils::map::cycle( m_objectList, & VideoObject::Pause );
 }
 
-void VideoManager :: SetVolume( int p_volume )
+void VideoManager::SetVolume( int p_volume )
 {
 	m_volume = p_volume;
 
@@ -122,13 +122,13 @@ void VideoManager :: SetVolume( int p_volume )
 	General::Utils::map::cycle( m_objectList, & VideoObject::SetMaxVolume, m_volume );
 }
 
-void VideoManager :: Mute( bool p_muted )
+void VideoManager::Mute( bool p_muted )
 {
 	m_muted = p_muted;
 	General::Utils::map::cycle( m_objectList, & VideoObject::Mute, m_muted );
 }
 /*
-void VideoManager :: UpdateVolume( const Vector3 & p_position, Radian p_orientation)
+void VideoManager::UpdateVolume( const Vector3 & p_position, Radian p_orientation)
 {
 	VideoObjectMap::iterator l_it = m_objectList.begin();
 
@@ -139,7 +139,7 @@ void VideoManager :: UpdateVolume( const Vector3 & p_position, Radian p_orientat
 	}
 }
 
-void VideoManager :: ReleaseAllZone( const String & p_zoneName)
+void VideoManager::ReleaseAllZone( const String & p_zoneName)
 {
 	VideoObjectMap::iterator l_it = m_objectList.begin();
 	StringArray l_toRemove;

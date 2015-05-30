@@ -15,7 +15,7 @@ using namespace Troll::GUI;
 
 //*************************************************************************************************
 
-ProjectFileContext :: ProjectFileContext( FILE * p_pFile )
+ProjectFileContext::ProjectFileContext( FILE * p_pFile )
 	:	FileParserContext( p_pFile	)
 	,	pProject( NULL	)
 {
@@ -23,18 +23,18 @@ ProjectFileContext :: ProjectFileContext( FILE * p_pFile )
 
 //*************************************************************************************************
 
-ProjectFileParser :: ProjectFileParser( Project * p_pProject, GUI::FilesTree * p_tree )
+ProjectFileParser::ProjectFileParser( Project * p_pProject, GUI::FilesTree * p_tree )
 	:	FileParser( ePROJECT_SECTION_ROOT, ePROJECT_SECTION_COUNT )
 	,	m_pProject( p_pProject	)
 	,	m_pFilesTree( p_tree	)
 {
 }
 
-ProjectFileParser :: ~ProjectFileParser()
+ProjectFileParser::~ProjectFileParser()
 {
 }
 
-void ProjectFileParser :: DoInitialiseParser( FILE * p_file )
+void ProjectFileParser::DoInitialiseParser( FILE * p_file )
 {
 	AddParser( ePROJECT_SECTION_ROOT,				wxT( "project"	),	Root_Project	);
 	AddParser( ePROJECT_SECTION_PROJECT,			wxT( "resolution"	),	Project_Resolution	);
@@ -66,12 +66,12 @@ void ProjectFileParser :: DoInitialiseParser( FILE * p_file )
 	l_pContext->pFilesTree = m_pFilesTree;
 }
 
-void ProjectFileParser :: DoCleanupParser()
+void ProjectFileParser::DoCleanupParser()
 {
 	std::static_pointer_cast< ProjectFileContext >( m_pParsingContext )->pProject = NULL;
 }
 
-void ProjectFileParser :: DoDiscardParser( wxString const & p_strLine )
+void ProjectFileParser::DoDiscardParser( wxString const & p_strLine )
 {
 	ProjectFileContextPtr l_pContext = std::static_pointer_cast< ProjectFileContext >( m_pParsingContext );
 
@@ -101,7 +101,7 @@ void ProjectFileParser :: DoDiscardParser( wxString const & p_strLine )
 	}
 }
 
-void ProjectFileParser :: DoValidate()
+void ProjectFileParser::DoValidate()
 {
 }
 

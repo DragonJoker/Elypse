@@ -8,7 +8,7 @@ using namespace Troll::GUI;
 
 
 
-MediaObject :: MediaObject( const wxString & p_name, const wxString & p_fileName, MediaObjectType p_type )
+MediaObject::MediaObject( const wxString & p_name, const wxString & p_fileName, MediaObjectType p_type )
 	:	TrollObject( p_name, p_fileName, ttMediaObject ),
 		m_mediaObjectType( p_type )
 {
@@ -42,7 +42,7 @@ MediaObject :: MediaObject( const wxString & p_name, const wxString & p_fileName
 
 
 
-MediaObject :: ~MediaObject()
+MediaObject::~MediaObject()
 {
 }
 

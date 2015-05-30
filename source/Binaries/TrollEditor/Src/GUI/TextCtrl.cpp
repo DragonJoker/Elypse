@@ -29,9 +29,9 @@ END_EVENT_TABLE()
 extern MainFrame * g_mainFrame;
 
 
-TextCtrl :: TextCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
-					  const wxPoint & pos, const wxSize & size, long style,
-					  TrollFile * p_file )
+TextCtrl::TextCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
+					const wxPoint & pos, const wxSize & size, long style,
+					TrollFile * p_file )
 	:	wxTextCtrl( parent, id, value, pos, size, style ),
 		m_posDeb( 0 ),
 		m_posFin( 0 ),
@@ -47,9 +47,9 @@ TextCtrl :: TextCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
 
 
 
-TextCtrl :: ~TextCtrl()
+TextCtrl::~TextCtrl()
 {
-//	std::cout << "TextCtrl :: ~TextCtrl - " << m_file << " - Modified : " << m_modified << " - Saved : " << m_file->Saved << "\n";
+//	std::cout << "TextCtrl::~TextCtrl - " << m_file << " - Modified : " << m_modified << " - Saved : " << m_file->Saved << "\n";
 	if ( m_file != NULL && ( m_modified || ! m_file->Saved ) )
 	{
 		if ( wxMessageBox( wxT( "Enregistrer les modifications?" ), m_file->FileName, wxYES_NO, this ) == wxYES )
@@ -63,7 +63,7 @@ TextCtrl :: ~TextCtrl()
 
 
 
-void TextCtrl :: AutoWord()
+void TextCtrl::AutoWord()
 {
 	/*
 	std::map <wxString, wxString>::const_iterator l_it, l_end;
@@ -115,7 +115,7 @@ void TextCtrl :: AutoWord()
 
 
 
-void TextCtrl :: _onMouseWheel( wxMouseEvent & p_event )
+void TextCtrl::_onMouseWheel( wxMouseEvent & p_event )
 {
 	m_scrollByWheel = true;
 
@@ -133,18 +133,18 @@ void TextCtrl :: _onMouseWheel( wxMouseEvent & p_event )
 
 
 
-void TextCtrl :: SaveFile( const wxString & p_path, int p_fileType )
+void TextCtrl::SaveFile( const wxString & p_path, int p_fileType )
 {
 	m_modified = false;
 	m_file->Saved = true;
-//	std::cout << "TextCtrl :: SaveFile - " << p_path << " - Saved : " << (m_file->Saved ? "true" : "false") << "\n";
-//	std::cout << "TextCtrl :: ~SaveFile - " << m_file << " - Modified : " << m_modified << " - Saved : " << m_file->Saved << "\n";
+//	std::cout << "TextCtrl::SaveFile - " << p_path << " - Saved : " << (m_file->Saved ? "true" : "false") << "\n";
+//	std::cout << "TextCtrl::~SaveFile - " << m_file << " - Modified : " << m_modified << " - Saved : " << m_file->Saved << "\n";
 	wxTextCtrl::SaveFile( p_path, p_fileType );
 }
 
 
 
-void TextCtrl :: GoToLine( int p_line )
+void TextCtrl::GoToLine( int p_line )
 {
 	int l_currentLine = 1;
 	SetInsertionPoint( 0 );
@@ -170,14 +170,14 @@ void TextCtrl :: GoToLine( int p_line )
 
 	if ( l_currentPosition < GetLastPosition() )
 	{
-//		std::cout << "TextCtrl :: GoToLine - Wanted : " << p_line << " - Retrieved : " << l_currentLine << " - Cursor : " << l_currentPosition << "\n";
+//		std::cout << "TextCtrl::GoToLine - Wanted : " << p_line << " - Retrieved : " << l_currentLine << " - Cursor : " << l_currentPosition << "\n";
 		SetInsertionPoint( l_currentPosition );
 	}
 }
 
 
 
-void TextCtrl :: CompleteCode( int p_keyCode )
+void TextCtrl::CompleteCode( int p_keyCode )
 {
 	/*
 	if (m_file->FileName.find( ".emscript") == wxString::npos)
@@ -286,7 +286,7 @@ void TextCtrl :: CompleteCode( int p_keyCode )
 
 
 
-void TextCtrl :: _onKeyDown( wxKeyEvent & p_event )
+void TextCtrl::_onKeyDown( wxKeyEvent & p_event )
 {
 	switch ( p_event.GetKeyCode() )
 	{
@@ -427,7 +427,7 @@ void TextCtrl :: _onKeyDown( wxKeyEvent & p_event )
 
 
 
-void TextCtrl :: _onKeyUp( wxKeyEvent & p_event )
+void TextCtrl::_onKeyUp( wxKeyEvent & p_event )
 {
 	p_event.Skip();
 	CompleteCode( p_event.GetKeyCode() );
@@ -462,7 +462,7 @@ void TextCtrl :: _onKeyUp( wxKeyEvent & p_event )
 
 
 
-void TextCtrl :: _onScrollToTop( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollToTop( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -471,7 +471,7 @@ void TextCtrl :: _onScrollToTop( wxScrollWinEvent & p_event )
 		return;
 	}
 
-//	std::cout << "TextCtrl :: _onScrollToTop\n";
+//	std::cout << "TextCtrl::_onScrollToTop\n";
 	m_lines->ScrollLines( -m_lines->GetScrollPos( wxVERTICAL ) );
 	m_panel->ScrollLines( -m_panel->GetScrollPos( wxVERTICAL ) );
 	m_precPosition = 0;
@@ -479,7 +479,7 @@ void TextCtrl :: _onScrollToTop( wxScrollWinEvent & p_event )
 
 
 
-void TextCtrl :: _onScrollToBottom( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollToBottom( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -488,7 +488,7 @@ void TextCtrl :: _onScrollToBottom( wxScrollWinEvent & p_event )
 		return;
 	}
 
-//	std::cout << "TextCtrl :: _onScrollToBottom\n";
+//	std::cout << "TextCtrl::_onScrollToBottom\n";
 	m_lines->ScrollLines( m_lines->GetScrollRange( wxVERTICAL ) );
 	m_panel->ScrollLines( m_panel->GetScrollRange( wxVERTICAL ) );
 	m_precPosition = GetScrollRange( wxVERTICAL );
@@ -496,7 +496,7 @@ void TextCtrl :: _onScrollToBottom( wxScrollWinEvent & p_event )
 
 
 
-void TextCtrl :: _onScrollLineUp( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollLineUp( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -505,14 +505,14 @@ void TextCtrl :: _onScrollLineUp( wxScrollWinEvent & p_event )
 		return;
 	}
 
-//	std::cout << "TextCtrl :: _onScrollLineUp\n";
+//	std::cout << "TextCtrl::_onScrollLineUp\n";
 	m_lines->LineUp();
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
 
 
-void TextCtrl :: _onScrollLineDown( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollLineDown( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -521,14 +521,14 @@ void TextCtrl :: _onScrollLineDown( wxScrollWinEvent & p_event )
 		return;
 	}
 
-//	std::cout << "TextCtrl :: _onScrollLineDown\n";
+//	std::cout << "TextCtrl::_onScrollLineDown\n";
 	m_lines->LineDown();
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
 
 
-void TextCtrl :: _onScrollPageUp( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollPageUp( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -537,14 +537,14 @@ void TextCtrl :: _onScrollPageUp( wxScrollWinEvent & p_event )
 		return;
 	}
 
-//	std::cout << "TextCtrl :: _onScrollPageUp\n";
+//	std::cout << "TextCtrl::_onScrollPageUp\n";
 	m_lines->PageUp();
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
 
 
-void TextCtrl :: _onScrollPageDown( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollPageDown( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -553,14 +553,14 @@ void TextCtrl :: _onScrollPageDown( wxScrollWinEvent & p_event )
 		return;
 	}
 
-//	std::cout << "TextCtrl :: _onScrollPageDown\n";
+//	std::cout << "TextCtrl::_onScrollPageDown\n";
 	m_lines->PageDown();
 	m_precPosition = GetScrollPos( wxVERTICAL );
 }
 
 
 
-void TextCtrl :: _onScrollThumbTrack( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollThumbTrack( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 
@@ -574,7 +574,7 @@ void TextCtrl :: _onScrollThumbTrack( wxScrollWinEvent & p_event )
 	m_precPosition = l_currentPosition;
 	float l_ratio = ( ( float )( GetScrollRange( wxVERTICAL ) - GetScrollThumb( wxVERTICAL ) ) ) / ( ( float )GetNumberOfLines() );
 
-//	std::cout << "TextCtrl :: _onScrollThumbTrack - Difference : " << m_difference << "\n";
+//	std::cout << "TextCtrl::_onScrollThumbTrack - Difference : " << m_difference << "\n";
 	while ( abs( m_difference ) >= l_ratio )
 	{
 		if ( m_difference < 0 )
@@ -592,7 +592,7 @@ void TextCtrl :: _onScrollThumbTrack( wxScrollWinEvent & p_event )
 
 
 
-void TextCtrl :: _onScrollThumbRelease( wxScrollWinEvent & p_event )
+void TextCtrl::_onScrollThumbRelease( wxScrollWinEvent & p_event )
 {
 	p_event.Skip();
 

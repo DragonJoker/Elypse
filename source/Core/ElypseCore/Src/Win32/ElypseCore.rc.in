@@ -53,20 +53,20 @@ END
 //
 
 1 VERSIONINFO
- FILEVERSION ${EC_VERSION_MAJOR}, ${EC_VERSION_MINOR}, ${EC_VERSION_BUILD}, 0
- PRODUCTVERSION ${VERSION_MAJOR}, ${VERSION_MINOR}, ${VERSION_BUILD}, 0
+ FILEVERSION ${${PROJECT_NAME}_VERSION_MAJOR},${${PROJECT_NAME}_VERSION_MINOR},${${PROJECT_NAME}_VERSION_BUILD},0
+ PRODUCTVERSION ${VERSION_MAJOR},${VERSION_MINOR},${VERSION_BUILD},0
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "DragonJoker"
-            VALUE "FileDescription", "ElypseCore Core engine Dll"
-            VALUE "FileVersion", "${EC_VERSION_MAJOR}.${EC_VERSION_MINOR}.${EC_VERSION_BUILD}.0"
-            VALUE "InternalName", "ElypseCore"
+            VALUE "FileDescription", "${PROJECT_NAME} dll"
+            VALUE "FileVersion", "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD}.0"
+            VALUE "InternalName", "${PROJECT_NAME}"
             VALUE "LegalCopyright", "Copyright (C) ${VERSION_YEAR}"
-            VALUE "OriginalFilename", "ElypseCore.dll"
-            VALUE "ProductName", "Elypse"
+            VALUE "OriginalFilename", "${PROJECT_NAME}.dll"
+            VALUE "ProductName", "${MAIN_PROJECT_NAME}"
             VALUE "ProductVersion", "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_BUILD}.0"
         END
     END

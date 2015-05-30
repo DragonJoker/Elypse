@@ -21,7 +21,7 @@ using namespace Troll::Temporal;
 using namespace Troll::GUI;
 
 
-TrollSequence :: TrollSequence( const wxString & p_name, const wxString & p_fileName )
+TrollSequence::TrollSequence( const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttSequence ),
 		Sequence( p_name.char_str().data() ),
 		m_panel( NULL ),
@@ -33,7 +33,7 @@ TrollSequence :: TrollSequence( const wxString & p_name, const wxString & p_file
 
 
 
-TrollSequence :: ~TrollSequence()
+TrollSequence::~TrollSequence()
 {
 //	Sequence::~Sequence();
 	multimap::deleteAll( m_teponctualEvents );
@@ -44,7 +44,7 @@ TrollSequence :: ~TrollSequence()
 
 
 
-TrollPonctualEvent * TrollSequence :: AddPonctualEvent( BasePonctualEvent * p_event, const wxString & p_targetTypeName,
+TrollPonctualEvent * TrollSequence::AddPonctualEvent( BasePonctualEvent * p_event, const wxString & p_targetTypeName,
 		const wxString & p_targetName, float p_fireTime,
 		const wxString & p_eventAction, const wxString & p_name,
 		const wxString & p_fileName )
@@ -71,7 +71,7 @@ TrollPonctualEvent * TrollSequence :: AddPonctualEvent( BasePonctualEvent * p_ev
 
 
 
-TrollPonctualEvent * TrollSequence :: AddPonctualEvent( TrollPonctualEvent * p_event )
+TrollPonctualEvent * TrollSequence::AddPonctualEvent( TrollPonctualEvent * p_event )
 {
 	float l_fireTime = p_event->GetFireTime();
 	Sequence::AddPonctualEvent( p_event->GetMuseEvent(), l_fireTime );
@@ -89,7 +89,7 @@ TrollPonctualEvent * TrollSequence :: AddPonctualEvent( TrollPonctualEvent * p_e
 
 
 
-TrollContinuousEvent * TrollSequence :: AddContinuousEvent( TrollContinuousEvent * p_event )
+TrollContinuousEvent * TrollSequence::AddContinuousEvent( TrollContinuousEvent * p_event )
 {
 	float l_fireTime = p_event->GetStartTime();
 	Sequence::AddContinuousEvent( p_event->GetMuseEvent() );
@@ -107,7 +107,7 @@ TrollContinuousEvent * TrollSequence :: AddContinuousEvent( TrollContinuousEvent
 
 
 
-void TrollSequence :: RemovePonctualEvent( TrollPonctualEvent * p_event )
+void TrollSequence::RemovePonctualEvent( TrollPonctualEvent * p_event )
 {
 	Sequence::RemovePonctualEvent( p_event->GetMuseEvent() );
 	bool l_found = false;
@@ -131,7 +131,7 @@ void TrollSequence :: RemovePonctualEvent( TrollPonctualEvent * p_event )
 
 
 
-void TrollSequence :: RemoveContinuousEvent( TrollContinuousEvent * p_event )
+void TrollSequence::RemoveContinuousEvent( TrollContinuousEvent * p_event )
 {
 	Sequence::RemoveContinuousEvent( p_event->GetMuseEvent() );
 	bool l_found = false;
@@ -155,7 +155,7 @@ void TrollSequence :: RemoveContinuousEvent( TrollContinuousEvent * p_event )
 
 
 
-int TrollSequence :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollSequence::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 20;
 
@@ -171,7 +171,7 @@ int TrollSequence :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollSequence :: Write( wxTextOutputStream * p_stream )
+void TrollSequence::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "sequence " ) + TrollObject::m_name + wxT( "\n{\n" ) );
 	TrollPonctualEventMap::iterator l_it = m_teponctualEvents.begin();
@@ -195,7 +195,7 @@ void TrollSequence :: Write( wxTextOutputStream * p_stream )
 
 
 
-void TrollSequence :: ChangeContinuousEventTime( TrollContinuousEvent * p_event )
+void TrollSequence::ChangeContinuousEventTime( TrollContinuousEvent * p_event )
 {
 	bool l_found = false;
 	TrollContinuousEventMap::iterator l_it = m_tecontinuousEvents.begin();
@@ -225,7 +225,7 @@ void TrollSequence :: ChangeContinuousEventTime( TrollContinuousEvent * p_event 
 
 
 
-void TrollSequence :: ChangePonctualEventTime( TrollPonctualEvent * p_event )
+void TrollSequence::ChangePonctualEventTime( TrollPonctualEvent * p_event )
 {
 	bool l_found = false;
 	TrollPonctualEventMap::iterator l_it = m_teponctualEvents.begin();
@@ -255,7 +255,7 @@ void TrollSequence :: ChangePonctualEventTime( TrollPonctualEvent * p_event )
 
 
 
-void TrollSequence :: _computeTimes()
+void TrollSequence::_computeTimes()
 {
 	m_begin = 0.0;
 	m_end = 0.0;
@@ -281,7 +281,7 @@ void TrollSequence :: _computeTimes()
 
 
 
-void TrollSequence :: UpdatePonctualEvent( TrollPonctualEvent * p_event )
+void TrollSequence::UpdatePonctualEvent( TrollPonctualEvent * p_event )
 {
 	bool l_found = false;
 	TrollPonctualEventMap::iterator l_it = m_teponctualEvents.begin();
@@ -309,11 +309,11 @@ void TrollSequence :: UpdatePonctualEvent( TrollPonctualEvent * p_event )
 
 
 
-void TrollSequence :: Update( Real p_time )
+void TrollSequence::Update( Real p_time )
 {
 	m_currentTime += p_time;
 
-//	std::cout << "TrollSequence :: Update - dt : " << p_time << " - current time : " << m_currentTime << "\n";
+//	std::cout << "TrollSequence::Update - dt : " << p_time << " - current time : " << m_currentTime << "\n";
 	if ( p_time < 0 )
 	{
 		_rollback( p_time );
@@ -326,7 +326,7 @@ void TrollSequence :: Update( Real p_time )
 
 
 
-void TrollSequence :: _rollback( Real p_time )
+void TrollSequence::_rollback( Real p_time )
 {
 	if ( m_ponctualIterator == m_ponctualEvents.end() )
 	{
@@ -335,14 +335,14 @@ void TrollSequence :: _rollback( Real p_time )
 
 	while ( m_ponctualIterator != m_ponctualEvents.begin() && m_ponctualIterator->first > m_currentTime )
 	{
-//		std::cout << "Sequence :: _rollback - Rollback ponctual event " << m_ponctualIterator->first << "\n";
+//		std::cout << "Sequence::_rollback - Rollback ponctual event " << m_ponctualIterator->first << "\n";
 		m_ponctualIterator->second->Rollback();
 		-- m_ponctualIterator;
 	}
 
 	if ( m_ponctualIterator == m_ponctualEvents.begin() && m_ponctualIterator->first > m_currentTime )
 	{
-//		std::cout << "Sequence :: _rollback - Rollback first ponctual event " << m_ponctualIterator->first << "\n";
+//		std::cout << "Sequence::_rollback - Rollback first ponctual event " << m_ponctualIterator->first << "\n";
 		m_ponctualIterator->second->Rollback();
 	}
 
@@ -360,7 +360,7 @@ void TrollSequence :: _rollback( Real p_time )
 
 	while ( m_continuousIterator != m_continuousEvents.end() && m_continuousIterator->first <= m_currentTime )
 	{
-//		std::cout << "Sequence :: _rollback - Begin continuous event " << m_continuousIterator->first << "\n";
+//		std::cout << "Sequence::_rollback - Begin continuous event " << m_continuousIterator->first << "\n";
 		m_currentEvents.insert( m_continuousIterator->second );
 		++ m_continuousIterator;
 	}
@@ -376,18 +376,18 @@ void TrollSequence :: _rollback( Real p_time )
 
 
 
-void TrollSequence :: _update( Real p_time )
+void TrollSequence::_update( Real p_time )
 {
 	while ( m_ponctualIterator != m_ponctualEvents.end() && m_ponctualIterator->first <= m_currentTime )
 	{
-//		std::cout << "Sequence :: _update - Apply ponctual event - " << m_ponctualIterator->first << "\n";
+//		std::cout << "Sequence::_update - Apply ponctual event - " << m_ponctualIterator->first << "\n";
 		m_ponctualIterator->second->Apply();
 		++ m_ponctualIterator;
 	}
 
 	while ( m_continuousIterator != m_continuousEvents.end() && m_continuousIterator->first <= m_currentTime )
 	{
-//		std::cout << "Sequence :: _update - Begin continuous event " << m_continuousIterator->first << "\n";
+//		std::cout << "Sequence::_update - Begin continuous event " << m_continuousIterator->first << "\n";
 		m_currentEvents.insert( m_continuousIterator->second );
 		++ m_continuousIterator;
 	}
@@ -401,7 +401,7 @@ void TrollSequence :: _update( Real p_time )
 
 		if ( ( * i )->IsFinished() )
 		{
-//			std::cout << "Sequence :: _update - Event finished\n";
+//			std::cout << "Sequence::_update - Event finished\n";
 			General::Utils::set::eraseIterator( m_currentEvents, i );
 		}
 		else

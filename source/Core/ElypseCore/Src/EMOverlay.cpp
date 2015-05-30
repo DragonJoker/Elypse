@@ -17,7 +17,7 @@
 
 using namespace Ogre;
 
-EMOverlay :: EMOverlay( const String & p_name, EMOverlayGroup * p_owner )
+EMOverlay::EMOverlay( const String & p_name, EMOverlayGroup * p_owner )
 	:	named( p_name ),
 		owned_by<EMOverlayGroup>( p_owner ),
 		m_visible( true ),
@@ -30,7 +30,7 @@ EMOverlay :: EMOverlay( const String & p_name, EMOverlayGroup * p_owner )
 {
 }
 
-EMOverlay :: ~EMOverlay()
+EMOverlay::~EMOverlay()
 {
 	m_owner->_removeElement( m_name );
 	m_owner->GetOwner()->RemoveOverlay( m_name );
@@ -60,7 +60,7 @@ EMOverlay :: ~EMOverlay()
 	}
 }
 
-bool EMOverlay :: Initialise( const String & p_className )
+bool EMOverlay::Initialise( const String & p_className )
 {
 	if ( m_overlay != NULL )
 	{
@@ -102,7 +102,7 @@ bool EMOverlay :: Initialise( const String & p_className )
 	return true;
 }
 
-void EMOverlay :: Reinitialise( const String & p_className )
+void EMOverlay::Reinitialise( const String & p_className )
 {
 	if ( m_parent != NULL )
 	{
@@ -121,7 +121,7 @@ void EMOverlay :: Reinitialise( const String & p_className )
 	}
 }
 
-EMOverlay * EMOverlay :: CreateChild( const String & p_name )
+EMOverlay * EMOverlay::CreateChild( const String & p_name )
 {
 	EMOverlay * l_element = m_owner->CreateElement( p_name );
 	l_element->SetParent( this );
@@ -129,7 +129,7 @@ EMOverlay * EMOverlay :: CreateChild( const String & p_name )
 	return l_element;
 }
 
-void EMOverlay :: DestroyChild( EMOverlay * p_child )
+void EMOverlay::DestroyChild( EMOverlay * p_child )
 {
 	if ( General::Utils::vector::has( m_childs, p_child ) )
 	{
@@ -138,7 +138,7 @@ void EMOverlay :: DestroyChild( EMOverlay * p_child )
 	}
 }
 
-void EMOverlay :: SetBaseMaterial( const String & p_materialName )
+void EMOverlay::SetBaseMaterial( const String & p_materialName )
 {
 	if ( m_overlay )
 	{
@@ -147,7 +147,7 @@ void EMOverlay :: SetBaseMaterial( const String & p_materialName )
 	}
 }
 
-Material * EMOverlay :: GetOrCopyMaterial()
+Material * EMOverlay::GetOrCopyMaterial()
 {
 	if ( m_baseMaterialCopy == NULL )
 	{
@@ -160,7 +160,7 @@ Material * EMOverlay :: GetOrCopyMaterial()
 	return m_baseMaterialCopy;
 }
 
-void EMOverlay :: SetClickedScript( ScriptNode * p_script )
+void EMOverlay::SetClickedScript( ScriptNode * p_script )
 {
 	if ( m_clickedScript != NULL )
 	{
@@ -176,7 +176,7 @@ void EMOverlay :: SetClickedScript( ScriptNode * p_script )
 }
 
 /*
-void EMOverlay :: AddChild( EMOverlay * p_child)
+void EMOverlay::AddChild( EMOverlay * p_child)
 {
 	genlib_assert( p_child != NULL);
 
@@ -184,7 +184,7 @@ void EMOverlay :: AddChild( EMOverlay * p_child)
 }
 */
 
-void EMOverlay :: Reset()
+void EMOverlay::Reset()
 {
 	if ( m_overlay )
 	{
@@ -192,7 +192,7 @@ void EMOverlay :: Reset()
 	}
 }
 
-void EMOverlay :: MouseOver()
+void EMOverlay::MouseOver()
 {
 	if ( m_overlay )
 	{
@@ -200,7 +200,7 @@ void EMOverlay :: MouseOver()
 	}
 }
 
-void EMOverlay :: Click()
+void EMOverlay::Click()
 {
 	if ( m_overlay )
 	{
@@ -208,13 +208,13 @@ void EMOverlay :: Click()
 	}
 }
 
-void EMOverlay :: AddClickableShape( ClickableShape * p_shape )
+void EMOverlay::AddClickableShape( ClickableShape * p_shape )
 {
 	genlib_assert( p_shape != NULL );
 	m_clickables.push_back( p_shape );
 }
 
-bool EMOverlay :: TestMouseCoords( Real p_mouseX, Real p_mouseY )const
+bool EMOverlay::TestMouseCoords( Real p_mouseX, Real p_mouseY )const
 {
 	if ( ! m_overlay->isVisible() )
 	{
@@ -244,7 +244,7 @@ bool EMOverlay :: TestMouseCoords( Real p_mouseX, Real p_mouseY )const
 	return false;
 }
 
-EMOverlay * EMOverlay :: GetAt( Real p_x, Real p_y )
+EMOverlay * EMOverlay::GetAt( Real p_x, Real p_y )
 {
 	if ( m_overlay == NULL )
 	{
@@ -286,7 +286,7 @@ EMOverlay * EMOverlay :: GetAt( Real p_x, Real p_y )
 	return l_retOverlay;
 }
 
-EMOverlay * EMOverlay :: RecursiveGetScript( Real p_x, Real p_y )
+EMOverlay * EMOverlay::RecursiveGetScript( Real p_x, Real p_y )
 {
 	if ( m_clickedScript != NULL )
 	{
@@ -301,7 +301,7 @@ EMOverlay * EMOverlay :: RecursiveGetScript( Real p_x, Real p_y )
 	return NULL;
 }
 
-EMOverlay * EMOverlay :: RecursiveGetMouseOver( Real p_x, Real p_y )
+EMOverlay * EMOverlay::RecursiveGetMouseOver( Real p_x, Real p_y )
 {
 	if ( ! m_mouseOverMaterialName.empty() )
 	{
@@ -316,7 +316,7 @@ EMOverlay * EMOverlay :: RecursiveGetMouseOver( Real p_x, Real p_y )
 	return NULL;
 }
 
-EMOverlay * EMOverlay :: RecursiveGetClick( Real p_x, Real p_y )
+EMOverlay * EMOverlay::RecursiveGetClick( Real p_x, Real p_y )
 {
 	if ( ! m_clickedMaterialName.empty() )
 	{
@@ -331,7 +331,7 @@ EMOverlay * EMOverlay :: RecursiveGetClick( Real p_x, Real p_y )
 	return NULL;
 }
 
-Real EMOverlay :: GetTop()const
+Real EMOverlay::GetTop()const
 {
 	if ( !m_overlay )
 	{
@@ -341,7 +341,7 @@ Real EMOverlay :: GetTop()const
 	return m_overlay->getTop();
 }
 
-Real EMOverlay :: GetLeft()const
+Real EMOverlay::GetLeft()const
 {
 	if ( !m_overlay )
 	{
@@ -351,7 +351,7 @@ Real EMOverlay :: GetLeft()const
 	return m_overlay->getLeft();
 }
 
-Real EMOverlay :: GetWidth()const
+Real EMOverlay::GetWidth()const
 {
 	if ( !m_overlay )
 	{
@@ -361,7 +361,7 @@ Real EMOverlay :: GetWidth()const
 	return m_overlay->getWidth();
 }
 
-Real EMOverlay :: GetHeight()const
+Real EMOverlay::GetHeight()const
 {
 	if ( !m_overlay )
 	{
@@ -371,7 +371,7 @@ Real EMOverlay :: GetHeight()const
 	return m_overlay->getHeight();
 }
 
-void EMOverlay :: SetTop( Real p_top )
+void EMOverlay::SetTop( Real p_top )
 {
 	if ( m_overlay )
 	{
@@ -379,7 +379,7 @@ void EMOverlay :: SetTop( Real p_top )
 	}
 }
 
-void EMOverlay :: SetLeft( Real p_left )
+void EMOverlay::SetLeft( Real p_left )
 {
 	if ( m_overlay )
 	{
@@ -387,7 +387,7 @@ void EMOverlay :: SetLeft( Real p_left )
 	}
 }
 
-void EMOverlay :: SetWidth( Real p_width )
+void EMOverlay::SetWidth( Real p_width )
 {
 	if ( m_overlay )
 	{
@@ -395,7 +395,7 @@ void EMOverlay :: SetWidth( Real p_width )
 	}
 }
 
-void EMOverlay :: SetHeight( Real p_height )
+void EMOverlay::SetHeight( Real p_height )
 {
 	if ( m_overlay )
 	{
@@ -403,7 +403,7 @@ void EMOverlay :: SetHeight( Real p_height )
 	}
 }
 
-void EMOverlay :: SetCaption( const String & p_caption )
+void EMOverlay::SetCaption( const String & p_caption )
 {
 	if ( m_overlay )
 	{
@@ -413,7 +413,7 @@ void EMOverlay :: SetCaption( const String & p_caption )
 	_wrapWords();
 }
 
-void EMOverlay :: SetAlignment( TextAreaOverlayElement::Alignment p_alignement )
+void EMOverlay::SetAlignment( TextAreaOverlayElement::Alignment p_alignement )
 {
 	Real l_slide = 0.0;
 
@@ -439,7 +439,7 @@ void EMOverlay :: SetAlignment( TextAreaOverlayElement::Alignment p_alignement )
 	m_overlay->setLeft( m_overlay->getLeft() + l_slide * m_overlay->getWidth() );
 }
 
-void EMOverlay :: _wrapWords()
+void EMOverlay::_wrapWords()
 {
 	genlib_assert( m_overlay != NULL );
 	Real l_fontSize = ( static_cast <TextAreaOverlayElement *>( m_overlay ) )->getCharHeight();
@@ -499,7 +499,7 @@ void EMOverlay :: _wrapWords()
 	m_overlay->setCaption( l_caption );
 }
 
-void EMOverlay :: SetVisible( bool p_visible )
+void EMOverlay::SetVisible( bool p_visible )
 {
 	if ( m_overlay == NULL )
 	{
@@ -518,7 +518,7 @@ void EMOverlay :: SetVisible( bool p_visible )
 	General::Utils::vector::cycle( m_childs, &EMOverlay::SetVisible, p_visible );
 }
 
-void EMOverlay :: _addChild( EMOverlay * p_child )
+void EMOverlay::_addChild( EMOverlay * p_child )
 {
 	p_child->SetParent( this );
 	m_childs.push_back( p_child );
@@ -530,7 +530,7 @@ void EMOverlay :: _addChild( EMOverlay * p_child )
 	}
 }
 
-void EMOverlay :: ChangeParent( EMOverlay * p_parent )
+void EMOverlay::ChangeParent( EMOverlay * p_parent )
 {
 	genlib_assert( p_parent != NULL );
 

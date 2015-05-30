@@ -45,7 +45,7 @@ END_EVENT_TABLE()
 extern MainFrame * g_mainFrame;
 
 
-NewProjectFrame :: NewProjectFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
+NewProjectFrame::NewProjectFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
 	:	wxDialog( p_parent, -1, title, pos, wxSize( 220, 300 )	)
 	,	m_antiAliasing( aa0	)
 	,	m_shadows( false	)
@@ -92,13 +92,13 @@ NewProjectFrame :: NewProjectFrame( wxWindow * p_parent, const wxString & title,
 
 
 
-NewProjectFrame :: ~NewProjectFrame()
+NewProjectFrame::~NewProjectFrame()
 {
 }
 
 
 
-void NewProjectFrame :: _onSelectBackgroundType( wxCommandEvent & p_event )
+void NewProjectFrame::_onSelectBackgroundType( wxCommandEvent & p_event )
 {
 	if ( m_bgRBox->GetValue() == wxT( "Couleur" ) )
 	{
@@ -114,7 +114,7 @@ void NewProjectFrame :: _onSelectBackgroundType( wxCommandEvent & p_event )
 
 
 
-void NewProjectFrame :: _onSelectBackgroundButton( wxCommandEvent & p_event )
+void NewProjectFrame::_onSelectBackgroundButton( wxCommandEvent & p_event )
 {
 	if ( m_backgroundType == bgColour )
 	{
@@ -140,14 +140,14 @@ void NewProjectFrame :: _onSelectBackgroundButton( wxCommandEvent & p_event )
 
 
 
-void NewProjectFrame :: _onShadowsChange( wxCommandEvent & p_event )
+void NewProjectFrame::_onShadowsChange( wxCommandEvent & p_event )
 {
 	m_shadows = m_shCkb->IsChecked();
 }
 
 
 
-void NewProjectFrame :: _onAntiAliasingChange( wxCommandEvent & p_event )
+void NewProjectFrame::_onAntiAliasingChange( wxCommandEvent & p_event )
 {
 	if ( m_antiAlias->GetValue() == wxT( "Aucun" ) )
 	{
@@ -165,7 +165,7 @@ void NewProjectFrame :: _onAntiAliasingChange( wxCommandEvent & p_event )
 
 
 
-void NewProjectFrame :: _onOK( wxCommandEvent & p_event )
+void NewProjectFrame::_onOK( wxCommandEvent & p_event )
 {
 	wxString l_projectName = m_projectName->GetLineText( 0 );
 
@@ -233,14 +233,14 @@ void NewProjectFrame :: _onOK( wxCommandEvent & p_event )
 
 
 
-void NewProjectFrame :: _onCancel( wxCommandEvent & p_event )
+void NewProjectFrame::_onCancel( wxCommandEvent & p_event )
 {
 	Destroy();
 }
 
 
 
-void NewProjectFrame :: _onBrowse( wxCommandEvent & p_event )
+void NewProjectFrame::_onBrowse( wxCommandEvent & p_event )
 {
 	wxDirDialog l_dialog( NULL, wxT( "Sélectionnez un dossier" ) );
 

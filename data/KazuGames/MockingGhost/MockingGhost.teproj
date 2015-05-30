@@ -1,0 +1,48 @@
+project MockingGhost
+{
+	resolution		640 480
+	colour			0 0 0
+	startup_script	string c_gameName="Mocking Ghost";string c_sceneName = "MockingGhost";bool c_modeInstant = false;int c_instantID;
+	scene KazuSplash
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+	}
+	scene MockingGhost
+	{
+		scene_files
+		{
+			MockingGhost/Interface.emscene
+			MockingGhost/Game.emscene
+		}
+		load_script_files
+		{
+			MockingGhost/Scores.emscript
+			MockingGhost/Game.emscript
+			MockingGhost/Interface.emscript
+		}
+		data_files_3d
+		{
+			MockingGhost/Interface
+			MockingGhost/MockingGhost
+		}
+		data_files_other
+		{
+			MockingGhost/Sons
+		}
+		dependencies
+		{
+			KazuSplash
+		}
+	}
+}

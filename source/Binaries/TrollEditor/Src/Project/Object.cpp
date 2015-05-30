@@ -13,7 +13,7 @@ using namespace Troll::GUI;
 extern MainFrame * g_mainFrame;
 
 
-TrollObject :: TrollObject( const wxString & p_name, const wxString & p_fileName, ObjectType p_type )
+TrollObject::TrollObject( const wxString & p_name, const wxString & p_fileName, ObjectType p_type )
 	:	TEDisplayable(),
 		m_name( p_name ),
 		m_state( Normal ),

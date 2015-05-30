@@ -60,7 +60,7 @@ namespace EMuse
 	{
 #define EMUSE_SCRIPT_FUNCTION_DEFINE( X) void d_fast_call X( ScriptNode * );
 
-#define EMUSE_SCRIPT_FUNCTION_DECLARE( X) void d_fast_call EMuse :: Script :: X( ScriptNode * caller)
+#define EMUSE_SCRIPT_FUNCTION_DECLARE( X) void d_fast_call EMuse::Script::X( ScriptNode * caller)
 
 #define VERBOSE_STARTFUNC( func) //EMUSE_LOG_MESSAGE_RELEASE( String( "ScriptFunctionStarted : ") + String( func))
 

@@ -30,7 +30,7 @@
 
 using namespace Ogre;
 
-EMuseInstance :: EMuseInstance( const Path & p_installPath, EMusePlugin * p_plugin )
+EMuseInstance::EMuseInstance( const Path & p_installPath, EMusePlugin * p_plugin )
 	:	named( "EMuseInstance" ),
 		m_installationPath( p_installPath ),
 		m_root( NULL ),
@@ -60,12 +60,12 @@ EMuseInstance :: EMuseInstance( const Path & p_installPath, EMusePlugin * p_plug
 	genlib_assert( m_plugin != NULL );
 	m_name.clear();
 	p_plugin->SetInstance( this );
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: EMuseInstance" );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::EMuseInstance" );
 }
 
-bool EMuseInstance :: Init( unsigned int p_width, unsigned int p_height, const String & p_linkedTo )
+bool EMuseInstance::Init( unsigned int p_width, unsigned int p_height, const String & p_linkedTo )
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: Init" );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::Init" );
 	m_height = p_height;
 	m_width = p_width;
 	bool ret = false;
@@ -111,9 +111,9 @@ bool EMuseInstance :: Init( unsigned int p_width, unsigned int p_height, const S
 	return ret;
 }
 
-EMuseInstance :: ~EMuseInstance()
+EMuseInstance::~EMuseInstance()
 {
-	EMUSE_MESSAGE_NORMAL( "EMuseInstance :: ~EMuseInstance : " + m_name );
+	EMUSE_MESSAGE_NORMAL( "EMuseInstance::~EMuseInstance : " + m_name );
 
 	if ( ! m_deleted )
 	{
@@ -129,14 +129,14 @@ EMuseInstance :: ~EMuseInstance()
 	}
 }
 
-void EMuseInstance :: StartThread()
+void EMuseInstance::StartThread()
 {
 	EMuseController::GetSingletonPtr()->AddThread( this );
 }
 
-void EMuseInstance :: Destroy()
+void EMuseInstance::Destroy()
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: Destroy : " + m_name );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::Destroy : " + m_name );
 	GENLIB_AUTO_SCOPED_LOCK();
 
 	if ( m_deleted )
@@ -160,18 +160,18 @@ void EMuseInstance :: Destroy()
 
 			if ( m_renderWindow != NULL )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Destroy : Removing viewports" );
+				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Destroy : Removing viewports" );
 				m_renderWindow->removeAllViewports();
 				m_renderWindow->removeAllListeners();
 
 				if ( ! m_hasPrimaryWindow )
 				{
-					EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Destroy : Destroying window" );
+					EMUSE_MESSAGE_RELEASE( "EMuseInstance::Destroy : Destroying window" );
 					m_root->getRenderSystem()->destroyRenderWindow( m_renderWindow->getName() );
 				}
 				else
 				{
-					EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Destroy : Deactivating primary window" );
+					EMUSE_MESSAGE_RELEASE( "EMuseInstance::Destroy : Deactivating primary window" );
 					m_renderWindow->setActive( false );
 					m_renderWindow->setAutoUpdated( false );
 				}
@@ -179,12 +179,12 @@ void EMuseInstance :: Destroy()
 		}
 		else
 		{
-			EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Destroy : ERROR : Main : Root already null" );
+			EMUSE_MESSAGE_RELEASE( "EMuseInstance::Destroy : ERROR : Main : Root already null" );
 		}
 	}
 	catch ( ... )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Destroy : exception caught when trying to delete the instance" );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Destroy : exception caught when trying to delete the instance" );
 	}
 
 	m_toDelete = false;
@@ -193,9 +193,9 @@ void EMuseInstance :: Destroy()
 	GENLIB_CONDITION_NOTIFY_ONE( m_condition );
 }
 
-void EMuseInstance :: Initialise()
+void EMuseInstance::Initialise()
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: Initialise" );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::Initialise" );
 	m_initialised = true;
 
 	try
@@ -241,25 +241,25 @@ void EMuseInstance :: Initialise()
 	}
 	catch ( GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (General) --> " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 		m_toDelete = true;
 		m_plugin->SetGraphicalStatus( StatusErrorOgre );
 	}
 	catch ( Exception & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (Ogre) --> " + p_exception.getDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (Ogre) --> " + p_exception.getDescription() );
 		m_toDelete = true;
 		m_plugin->SetGraphicalStatus( StatusErrorOgre );
 	}
 	catch ( std::exception & p_e )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (Stl) --> " + String( p_e.what() ) );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (Stl) --> " + String( p_e.what() ) );
 		m_toDelete = true;
 		m_plugin->SetGraphicalStatus( StatusErrorOgre );
 	}
 	catch ( ... )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (unknown)\n" );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (unknown)\n" );
 		m_toDelete = true;
 		m_plugin->SetGraphicalStatus( StatusErrorOgre );
 	}
@@ -270,7 +270,7 @@ void EMuseInstance :: Initialise()
 	}
 }
 
-void EMuseInstance :: CreateScene()
+void EMuseInstance::CreateScene()
 {
 	if ( m_linked )
 	{
@@ -278,15 +278,15 @@ void EMuseInstance :: CreateScene()
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseInstance :: CreateScene : m_filepath : " + m_mainUrl );
+		EMUSE_MESSAGE_DEBUG( "EMuseInstance::CreateScene : m_filepath : " + m_mainUrl );
 		EMuseController::GetSingletonPtr()->InitialiseRessources( m_name );
 //		EMuseController::GetSingletonPtr()->InitialiseRessources( "MIAOU ?");
 		m_downManager = EMuseController::GetSingletonPtr()->GetDownloadManager();
 		genlib_assert( m_downManager != NULL );
-		EMUSE_MESSAGE_DEBUG( "EMuseInstance :: CreateScene : wait for download initialised" );
+		EMUSE_MESSAGE_DEBUG( "EMuseInstance::CreateScene : wait for download initialised" );
 		_createFramelistener();
 //		m_downManager->WaitForFile( "main.emcfg", true);
-		EMUSE_MESSAGE_DEBUG( "EMuseInstance :: CreateScene : next is fl ctor" );
+		EMUSE_MESSAGE_DEBUG( "EMuseInstance::CreateScene : next is fl ctor" );
 		m_frameListener->Initialise();
 	}
 
@@ -295,23 +295,23 @@ void EMuseInstance :: CreateScene()
 		m_frameListener->ShowDebugOverlay( true );
 	}
 
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: CreateScene : the end" );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::CreateScene : the end" );
 }
 
-void EMuseInstance :: _createFramelistener()
+void EMuseInstance::_createFramelistener()
 {
 	m_frameListener = new EMuseFrameListener( this, m_renderWindow, m_mainUrl, m_installationPath, m_appIndexStr );
 	m_frameListener->SetStartupScript( m_startupScript );
 	m_frameListener->PreInitialise();
 }
 
-void EMuseInstance :: SetToDelete( bool p_toDelete )
+void EMuseInstance::SetToDelete( bool p_toDelete )
 {
 	m_toDelete = p_toDelete;
-	EMUSE_MESSAGE_NORMAL( "EMuseInstance :: SetToDelete - " + m_appIndexStr );
+	EMUSE_MESSAGE_NORMAL( "EMuseInstance::SetToDelete - " + m_appIndexStr );
 }
 
-void EMuseInstance :: RenderOneFrame()
+void EMuseInstance::RenderOneFrame()
 {
 //	GENLIB_AUTO_SCOPED_LOCK();
 	if ( m_toDelete )
@@ -340,19 +340,19 @@ void EMuseInstance :: RenderOneFrame()
 	}
 	catch ( GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(pre), Exception (General) --> " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(pre), Exception (General) --> " + p_exception.GetDescription() );
 	}
 	catch ( Exception & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(pre), Exception (Ogre) --> " + p_exception.getDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(pre), Exception (Ogre) --> " + p_exception.getDescription() );
 	}
 	catch ( std::exception & p_e )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(pre), Exception (Stl) --> " + String( p_e.what() ) );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(pre), Exception (Stl) --> " + String( p_e.what() ) );
 	}
 	catch ( ... )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(pre), Exception (unkown)" );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(pre), Exception (unkown)" );
 	}
 
 //	EMUSE_CONSOLE_MESSAGE_RELEASE("Time Preframe : " + StringConverter::toString( static_cast<Real>(l_preciseTimer.Time())));
@@ -370,19 +370,19 @@ void EMuseInstance :: RenderOneFrame()
 	}
 	catch ( GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(rendering), Exception (General) --> " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(rendering), Exception (General) --> " + p_exception.GetDescription() );
 	}
 	catch ( Exception & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(rendering), Exception (Ogre) --> " + p_exception.getDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(rendering), Exception (Ogre) --> " + p_exception.getDescription() );
 	}
 	catch ( std::exception & p_e )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(rendering), Exception (Stl) --> " + String( p_e.what() ) );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(rendering), Exception (Stl) --> " + String( p_e.what() ) );
 	}
 	catch ( ... )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(rendering), Exception (unkown)" );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(rendering), Exception (unkown)" );
 	}
 
 	try
@@ -397,30 +397,30 @@ void EMuseInstance :: RenderOneFrame()
 	}
 	catch ( GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(post), Exception (General) --> " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(post), Exception (General) --> " + p_exception.GetDescription() );
 	}
 	catch ( Exception & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(post), Exception (Ogre) --> " + p_exception.getDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(post), Exception (Ogre) --> " + p_exception.getDescription() );
 	}
 	catch ( std::exception & p_e )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(post), Exception (Stl) --> " + String( p_e.what() ) );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(post), Exception (Stl) --> " + String( p_e.what() ) );
 	}
 	catch ( ... )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: RenderOneFrame(post), Exception (unkown)" );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::RenderOneFrame(post), Exception (unkown)" );
 	}
 }
 
-void EMuseInstance :: LinkTo( EMuseInstance * p_originalInstance )
+void EMuseInstance::LinkTo( EMuseInstance * p_originalInstance )
 {
 	genlib_assert( p_originalInstance != NULL );
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: LinkTo from " + m_instanceName + String( " to " ) + p_originalInstance->GetName() );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::LinkTo from " + m_instanceName + String( " to " ) + p_originalInstance->GetName() );
 
 	if ( ! m_initialised )
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseInstance :: LinkTo forceful initialisation" );
+		EMUSE_MESSAGE_DEBUG( "EMuseInstance::LinkTo forceful initialisation" );
 		Initialise();
 	}
 
@@ -429,12 +429,12 @@ void EMuseInstance :: LinkTo( EMuseInstance * p_originalInstance )
 	CreateScene();
 }
 
-void EMuseInstance :: _isOriginLinkFor( EMuseInstance * p_instance )
+void EMuseInstance::_isOriginLinkFor( EMuseInstance * p_instance )
 {
 	m_instancesLinkedToSelf.insert( p_instance );
 }
 
-void EMuseInstance :: _destroyFrameListener()
+void EMuseInstance::_destroyFrameListener()
 {
 	if ( m_frameListener != NULL )
 	{
@@ -444,11 +444,11 @@ void EMuseInstance :: _destroyFrameListener()
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseInstance :: _destroyFrameListener while no FL" );
+		EMUSE_MESSAGE_DEBUG( "EMuseInstance::_destroyFrameListener while no FL" );
 	}
 }
 
-bool EMuseInstance :: IsActive()
+bool EMuseInstance::IsActive()
 {
 	if ( this != NULL )
 	{
@@ -459,9 +459,9 @@ bool EMuseInstance :: IsActive()
 	return false;
 }
 
-void EMuseInstance :: WaitForDeletion()
+void EMuseInstance::WaitForDeletion()
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseInstance :: WaitForDeletion" );
+	EMUSE_MESSAGE_DEBUG( "EMuseInstance::WaitForDeletion" );
 	m_toDelete = true;
 
 	if ( m_deleted )
@@ -471,12 +471,12 @@ void EMuseInstance :: WaitForDeletion()
 
 	if ( ! m_initialised )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: WaitForDeletion -> Already deleted or never initialised" );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::WaitForDeletion -> Already deleted or never initialised" );
 		return;
 	}
 
 	GENLIB_AUTO_SCOPED_LOCK();
-	EMUSE_MESSAGE_RELEASE( "EMuseInstance :: WaitForDeletion -> wait for deletion" );
+	EMUSE_MESSAGE_RELEASE( "EMuseInstance::WaitForDeletion -> wait for deletion" );
 	GENLIB_CONDITION_WAIT( m_condition, m_mutex );
-	EMUSE_MESSAGE_RELEASE( "EMuseInstance :: WaitForDeletion -> deleted" );
+	EMUSE_MESSAGE_RELEASE( "EMuseInstance::WaitForDeletion -> deleted" );
 }

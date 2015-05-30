@@ -8,7 +8,7 @@
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>
 
-ParametricSurface :: ParametricSurface(	SceneManager * p_manager, const String & p_name,
+ParametricSurface::ParametricSurface(	SceneManager * p_manager, const String & p_name,
 										unsigned int p_resolution, unsigned int p_numControlPoints )
 	:	Surface( p_name, p_manager ),
 		m_resolution( p_resolution ),
@@ -22,7 +22,7 @@ ParametricSurface :: ParametricSurface(	SceneManager * p_manager, const String &
 	m_manager->getRootSceneNode()->createChildSceneNode()->attachObject( m_object );
 }
 
-ParametricSurface :: ~ParametricSurface()
+ParametricSurface::~ParametricSurface()
 {
 	m_manager->destroySceneNode( m_object->getParentSceneNode()->getName() );
 	m_manager->destroyManualObject( m_object );
@@ -31,13 +31,13 @@ ParametricSurface :: ~ParametricSurface()
 	delete m_box;
 }
 
-void ParametricSurface :: CreateAtDepth( unsigned int p_depth )
+void ParametricSurface::CreateAtDepth( unsigned int p_depth )
 {
 	m_firstLayer->CreateAtDeph( p_depth );
 	m_currentDepth = p_depth;
 }
 
-void ParametricSurface :: AddControlPoint( const Vector3 & p_controlPoint )
+void ParametricSurface::AddControlPoint( const Vector3 & p_controlPoint )
 {
 	if ( m_currentControlPointIndex > m_numControlPoints )
 	{
@@ -49,7 +49,7 @@ void ParametricSurface :: AddControlPoint( const Vector3 & p_controlPoint )
 	m_currentControlPointIndex ++;
 }
 
-void ParametricSurface :: Draw()
+void ParametricSurface::Draw()
 {
 	m_object->begin( "Mesh/PureRed", RenderOperation::OT_TRIANGLE_LIST );
 //	m_object->begin( "Base/PureRed", RenderOperation::OT_LINE_LIST);
@@ -57,7 +57,7 @@ void ParametricSurface :: Draw()
 	m_object->end();
 }
 
-void ParametricSurface :: Update( Camera * p_camera )
+void ParametricSurface::Update( Camera * p_camera )
 {
 	if ( m_firstLayer->UpdateResolution( p_camera ) )
 	{

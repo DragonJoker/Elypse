@@ -40,11 +40,11 @@ namespace General
 	}
 }
 
-#	define GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_function)		General :: MultiThreading :: ClassFunctor <p_class> ( p_instance, & p_class::p_function)
+#	define GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_function)		General::MultiThreading::ClassFunctor <p_class> ( p_instance, & p_class::p_function)
 #	define GENLIB_THREAD_DECLARE_THREAD_FUNC									void BeginThread()
 #	define GENLIB_THREAD_DEFINE_THREAD_FUNC( p_class)							void p_class::BeginThread()
-#	define GENLIB_THREAD_CREATE_CLASS_THREAD( p_class, p_instance)				new General :: MultiThreading :: Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, BeginThread))
-#	define GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( p_class, p_instance, p_func)new General :: MultiThreading :: Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_func))
+#	define GENLIB_THREAD_CREATE_CLASS_THREAD( p_class, p_instance)				new General::MultiThreading::Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, BeginThread))
+#	define GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( p_class, p_instance, p_func)new General::MultiThreading::Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_func))
 #	define GENLIB_THREAD_DELETE_THREAD( p_thread)								delete p_thread
 #	define GENLIB_THREAD_WAIT_FOR_END_OF( p_thread)								p_thread->join()
 
@@ -85,11 +85,11 @@ namespace General
 	}
 }
 
-#	define GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_function)		General :: MultiThreading :: ClassFunctor <p_class> ( p_instance, & p_class::p_function)
+#	define GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_function)		General::MultiThreading::ClassFunctor <p_class> ( p_instance, & p_class::p_function)
 #	define GENLIB_THREAD_DECLARE_THREAD_FUNC									void BeginThread()
 #	define GENLIB_THREAD_DEFINE_THREAD_FUNC( p_class)							void p_class::BeginThread()
-#	define GENLIB_THREAD_CREATE_CLASS_THREAD( p_class, p_instance)				new General :: MultiThreading :: Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, BeginThread))
-#	define GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( p_class, p_instance, p_func)new General :: MultiThreading :: Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_func))
+#	define GENLIB_THREAD_CREATE_CLASS_THREAD( p_class, p_instance)				new General::MultiThreading::Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, BeginThread))
+#	define GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( p_class, p_instance, p_func)new General::MultiThreading::Thread( GENLIB_THREAD_CLASS_FUNCTOR( p_instance, p_class, p_func))
 #	define GENLIB_THREAD_DELETE_THREAD( p_thread)								delete p_thread
 #	define GENLIB_THREAD_WAIT_FOR_END_OF( p_thread)								p_thread->join()
 

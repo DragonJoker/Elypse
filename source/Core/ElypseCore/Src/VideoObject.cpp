@@ -15,7 +15,7 @@
 
 #include "EMusePlugin.h"
 
-VideoObject :: VideoObject( const String & p_name, EMusePlugin * p_plugin )
+VideoObject::VideoObject( const String & p_name, EMusePlugin * p_plugin )
 	:	named( p_name ),
 		m_isFinished( false ),
 		m_isPlaying( false ),
@@ -31,7 +31,7 @@ VideoObject :: VideoObject( const String & p_name, EMusePlugin * p_plugin )
 	genlib_assert( m_plugin != NULL );
 }
 
-VideoObject :: ~VideoObject()
+VideoObject::~VideoObject()
 {
 	if ( m_impl != NULL )
 	{
@@ -48,12 +48,12 @@ VideoObject :: ~VideoObject()
 	General::Utils::map::deleteAll( m_instanceMap );
 }
 
-void VideoObject :: RemoveFromZone( Zone * p_zone )
+void VideoObject::RemoveFromZone( Zone * p_zone )
 {
 	VideoManager::GetSingletonPtr()->DeleteVideoObject( m_name );
 }
 
-VideoOverlay * VideoObject :: CreateOverlay( EMOverlay * p_overlay )
+VideoOverlay * VideoObject::CreateOverlay( EMOverlay * p_overlay )
 {
 	VideoOverlay * l_vidOverlay = General::Utils::map::findOrNull( m_overlayMap, p_overlay );
 
@@ -67,7 +67,7 @@ VideoOverlay * VideoObject :: CreateOverlay( EMOverlay * p_overlay )
 	return l_vidOverlay;
 }
 
-VideoInstance * VideoObject :: CreateInstance( Entity * p_entity )
+VideoInstance * VideoObject::CreateInstance( Entity * p_entity )
 {
 	VideoInstance * l_vidInstance = General::Utils::map::findOrNull( m_instanceMap, p_entity );
 
@@ -81,27 +81,27 @@ VideoInstance * VideoObject :: CreateInstance( Entity * p_entity )
 	return l_vidInstance;
 }
 
-VideoOverlay * VideoObject :: GetOverlay( EMOverlay * p_overlay )
+VideoOverlay * VideoObject::GetOverlay( EMOverlay * p_overlay )
 {
 	return General::Utils::map::findOrNull( m_overlayMap, p_overlay );
 }
 
-VideoInstance * VideoObject :: GetInstance( Entity * p_instance )
+VideoInstance * VideoObject::GetInstance( Entity * p_instance )
 {
 	return General::Utils::map::findOrNull( m_instanceMap, p_instance );
 }
 
-void VideoObject :: DeleteOverlay( EMOverlay * p_overlay )
+void VideoObject::DeleteOverlay( EMOverlay * p_overlay )
 {
 	General::Utils::map::deleteValue( m_overlayMap, p_overlay );
 }
 
-void VideoObject :: DeleteInstance( Entity * p_instance )
+void VideoObject::DeleteInstance( Entity * p_instance )
 {
 	General::Utils::map::deleteValue( m_instanceMap, p_instance );
 }
 
-void VideoObject :: Update( Real p_time )
+void VideoObject::Update( Real p_time )
 {
 	if ( ! m_isPlaying )
 	{
@@ -114,7 +114,7 @@ void VideoObject :: Update( Real p_time )
 	}
 }
 
-void VideoObject :: Initialise()
+void VideoObject::Initialise()
 {
 	genlib_assert( ! m_basePath.empty() );
 
@@ -166,7 +166,7 @@ void VideoObject :: Initialise()
 	m_plugin->UnlockGui();
 }
 
-void VideoObject :: InitialiseVideoTexture()
+void VideoObject::InitialiseVideoTexture()
 {
 	if ( m_videoTexture == NULL )
 	{
@@ -195,7 +195,7 @@ void VideoObject :: InitialiseVideoTexture()
 	}
 }
 
-void VideoObject :: Reset()
+void VideoObject::Reset()
 {
 	General::Utils::map::cycle( m_overlayMap, & VideoOverlay::Reset );
 	General::Utils::map::cycle( m_instanceMap, & VideoInstance::Reset );
@@ -211,7 +211,7 @@ void VideoObject :: Reset()
 	m_isPlaying = false;
 }
 
-void VideoObject :: Start()
+void VideoObject::Start()
 {
 	if ( m_isPlaying || m_impl == NULL )
 	{
@@ -221,7 +221,7 @@ void VideoObject :: Start()
 	m_isPlaying = m_impl->Start();
 }
 
-void VideoObject :: Pause()
+void VideoObject::Pause()
 {
 	if ( ! m_isPlaying || m_impl == NULL )
 	{
@@ -232,7 +232,7 @@ void VideoObject :: Pause()
 	m_isPlaying = false;
 }
 
-void VideoObject :: Stop()
+void VideoObject::Stop()
 {
 	if ( m_impl != NULL )
 	{
@@ -249,7 +249,7 @@ void VideoObject :: Stop()
 	m_isPlaying = false;
 }
 
-void VideoObject :: SetMaxVolume( int p_maxVolume )
+void VideoObject::SetMaxVolume( int p_maxVolume )
 {
 	m_maxVolume = p_maxVolume;
 
@@ -259,7 +259,7 @@ void VideoObject :: SetMaxVolume( int p_maxVolume )
 	}
 }
 
-void VideoObject :: SetVolumePercent( Real p_percent )
+void VideoObject::SetVolumePercent( Real p_percent )
 {
 	m_volumePercent = p_percent;
 
@@ -269,7 +269,7 @@ void VideoObject :: SetVolumePercent( Real p_percent )
 	}
 }
 
-void VideoObject :: Mute( bool p_muted )
+void VideoObject::Mute( bool p_muted )
 {
 	m_muted = p_muted;
 

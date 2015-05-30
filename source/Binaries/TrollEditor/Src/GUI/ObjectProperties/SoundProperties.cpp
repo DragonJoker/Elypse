@@ -40,8 +40,8 @@ BEGIN_EVENT_TABLE( SoundProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-SoundProperties :: SoundProperties( TrollSound * p_sound, wxWindow * parent, const wxPoint & pos,
-									const wxSize & size, long style )
+SoundProperties::SoundProperties( TrollSound * p_sound, wxWindow * parent, const wxPoint & pos,
+								  const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_sound( p_sound )
 {
@@ -70,13 +70,13 @@ SoundProperties :: SoundProperties( TrollSound * p_sound, wxWindow * parent, con
 
 
 
-SoundProperties :: ~SoundProperties()
+SoundProperties::~SoundProperties()
 {
 }
 
 
 
-void SoundProperties :: UpdateProperties()
+void SoundProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	m_updatingProperties = false;
@@ -84,7 +84,7 @@ void SoundProperties :: UpdateProperties()
 
 
 
-void SoundProperties :: _onEditName( wxCommandEvent & p_event )
+void SoundProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -94,7 +94,7 @@ void SoundProperties :: _onEditName( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onEditUrl( wxCommandEvent & p_event )
+void SoundProperties::_onEditUrl( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -131,7 +131,7 @@ void SoundProperties :: _onEditUrl( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onSelectSoundType( wxCommandEvent & p_event )
+void SoundProperties::_onSelectSoundType( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -142,7 +142,7 @@ void SoundProperties :: _onSelectSoundType( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onEditAttenuation( wxCommandEvent & p_event )
+void SoundProperties::_onEditAttenuation( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -165,7 +165,7 @@ void SoundProperties :: _onEditAttenuation( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onSelectLooped( wxCommandEvent & p_event )
+void SoundProperties::_onSelectLooped( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -176,7 +176,7 @@ void SoundProperties :: _onSelectLooped( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onEditTimer( wxCommandEvent & p_event )
+void SoundProperties::_onEditTimer( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -192,7 +192,7 @@ void SoundProperties :: _onEditTimer( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onEditFadeIn( wxCommandEvent & p_event )
+void SoundProperties::_onEditFadeIn( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -208,7 +208,7 @@ void SoundProperties :: _onEditFadeIn( wxCommandEvent & p_event )
 
 
 
-void SoundProperties :: _onEditFadeOut( wxCommandEvent & p_event )
+void SoundProperties::_onEditFadeOut( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

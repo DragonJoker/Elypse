@@ -10,7 +10,7 @@
 
 #include "EMuseLogs.h"
 
-Zone :: Zone( const String & p_name, Universe * p_parent )
+Zone::Zone( const String & p_name, Universe * p_parent )
 	:	named( p_name ),
 		owned_by <Universe>	( p_parent ),
 		m_loaded( false ),
@@ -20,7 +20,7 @@ Zone :: Zone( const String & p_name, Universe * p_parent )
 //	std::cout << "Zone created : " << m_name << std::endl;
 }
 
-Zone :: ~Zone()
+Zone::~Zone()
 {
 	Unload();
 	General::Utils::map::deleteAll( m_portals );
@@ -42,20 +42,20 @@ Zone :: ~Zone()
 	}
 }
 
-void Zone :: AddPortal( Portal * p_portal )
+void Zone::AddPortal( Portal * p_portal )
 {
 	genlib_assert( p_portal != NULL );
 	m_portals.insert( PortalMap::value_type( p_portal->GetName(), p_portal ) );
 }
 
-void Zone :: ClearPortals()
+void Zone::ClearPortals()
 {
 	General::Utils::map::deleteAll( m_portals );
 }
 
-void Zone :: Load()
+void Zone::Load()
 {
-	EMUSE_MESSAGE_DEBUG( "Zone :: Load -> " + m_name );
+	EMUSE_MESSAGE_DEBUG( "Zone::Load -> " + m_name );
 
 	if ( ! m_loaded )
 	{
@@ -67,9 +67,9 @@ void Zone :: Load()
 	}
 }
 
-void Zone :: Unload()
+void Zone::Unload()
 {
-	EMUSE_MESSAGE_DEBUG( "Zone :: Unload -> " + m_name );
+	EMUSE_MESSAGE_DEBUG( "Zone::Unload -> " + m_name );
 
 	if ( m_loaded )
 	{
@@ -83,14 +83,14 @@ void Zone :: Unload()
 	}
 }
 
-void Zone :: AddZoneObject( ZoneObject * p_object )
+void Zone::AddZoneObject( ZoneObject * p_object )
 {
 	genlib_assert( p_object != NULL );
 	m_objects.insert( p_object );
 	p_object->AddToZone( this );
 }
 
-void Zone :: RemoveZoneObject( ZoneObject * p_object )
+void Zone::RemoveZoneObject( ZoneObject * p_object )
 {
 	genlib_assert( p_object != NULL );
 	General::Utils::set::eraseValue( m_objects, p_object );

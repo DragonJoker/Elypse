@@ -9,7 +9,7 @@
 
 using namespace Ogre;
 
-BoundingMesh :: BoundingMesh( Mesh * p_mesh )
+BoundingMesh::BoundingMesh( Mesh * p_mesh )
 	:	BoundingShape( COC_TriangleMesh ),
 		m_mesh( p_mesh ),
 		m_vertices( NULL ),
@@ -48,7 +48,7 @@ BoundingMesh :: BoundingMesh( Mesh * p_mesh )
 	_createTriMesh();
 }
 
-BoundingMesh :: ~BoundingMesh()
+BoundingMesh::~BoundingMesh()
 {
 	if ( m_indices != NULL )
 	{
@@ -73,7 +73,7 @@ BoundingMesh :: ~BoundingMesh()
 	dGeomTriMeshDataDestroy( m_triID );
 }
 
-void BoundingMesh :: _addVertexData( VertexData * p_data )
+void BoundingMesh::_addVertexData( VertexData * p_data )
 {
 	genlib_assert( p_data != NULL );
 	unsigned int l_previousSize = m_vertexCount;
@@ -111,7 +111,7 @@ void BoundingMesh :: _addVertexData( VertexData * p_data )
 	}
 }
 
-void BoundingMesh :: _addIndexData( IndexData * p_data, unsigned int p_offset )
+void BoundingMesh::_addIndexData( IndexData * p_data, unsigned int p_offset )
 {
 	if ( ! p_data )
 	{
@@ -160,7 +160,7 @@ void BoundingMesh :: _addIndexData( IndexData * p_data, unsigned int p_offset )
 	l_buffer->unlock();
 }
 
-void BoundingMesh :: _createTriMesh()
+void BoundingMesh::_createTriMesh()
 {
 	m_odeVertices = new dVector3[m_vertexCount];
 	m_odeIndices = new unsigned int[m_indexCount];
@@ -179,7 +179,7 @@ void BoundingMesh :: _createTriMesh()
 	_register();
 }
 
-BoundingShape * BoundingMesh :: Clone()
+BoundingShape * BoundingMesh::Clone()
 {
 	return new BoundingMesh( m_mesh );
 }

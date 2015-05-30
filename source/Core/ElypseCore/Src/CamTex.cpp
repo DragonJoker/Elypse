@@ -11,7 +11,7 @@
 
 using namespace Ogre;
 
-CamTex :: CamTex( const String & p_name, SceneManager * p_sceneManager, Camera * p_camera, unsigned int p_textureWidth, unsigned int p_textureHeight )
+CamTex::CamTex( const String & p_name, SceneManager * p_sceneManager, Camera * p_camera, unsigned int p_textureWidth, unsigned int p_textureHeight )
 	:	named( p_name ),
 		m_camera( p_camera ),
 		m_sceneManager( p_sceneManager )
@@ -47,7 +47,7 @@ CamTex :: CamTex( const String & p_name, SceneManager * p_sceneManager, Camera *
 	}
 }
 
-CamTex :: ~CamTex()
+CamTex::~CamTex()
 {
 	if ( m_ownsMaterial )
 	{
@@ -58,7 +58,7 @@ CamTex :: ~CamTex()
 	TextureManager::getSingletonPtr()->remove( m_texture->getHandle() );
 }
 
-void CamTex :: SetCamera( Camera * p_camera )
+void CamTex::SetCamera( Camera * p_camera )
 {
 	m_textureUnitState->setProjectiveTexturing( false, p_camera );
 	m_viewport->setCamera( p_camera );
@@ -66,7 +66,7 @@ void CamTex :: SetCamera( Camera * p_camera )
 	m_camera = p_camera;
 }
 
-void CamTex :: Update()const
+void CamTex::Update()const
 {
 	m_renderTarget->update();
 }

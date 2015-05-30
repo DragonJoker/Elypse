@@ -13,7 +13,7 @@ using namespace Troll::Objects3D;
 using namespace Troll::GUI;
 
 
-TrollCamera :: TrollCamera( const wxString & p_name, const wxString & p_fileName )
+TrollCamera::TrollCamera( const wxString & p_name, const wxString & p_fileName )
 	:	Troll3DObject( p_name, p_fileName, ttCamera ),
 		m_position( Vector3::ZERO ),
 		m_direction( Vector3::ZERO ),
@@ -26,13 +26,13 @@ TrollCamera :: TrollCamera( const wxString & p_name, const wxString & p_fileName
 
 
 
-TrollCamera :: ~TrollCamera()
+TrollCamera::~TrollCamera()
 {
 }
 
 
 
-void TrollCamera :: AttachTo( TrollSceneNode * p_node )
+void TrollCamera::AttachTo( TrollSceneNode * p_node )
 {
 	Troll3DObject::AttachTo( p_node );
 
@@ -50,7 +50,7 @@ void TrollCamera :: AttachTo( TrollSceneNode * p_node )
 
 
 
-int TrollCamera :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollCamera::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	wxSize l_returnSize = wxSize( p_width, 260 );
 
@@ -66,7 +66,7 @@ int TrollCamera :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollCamera :: SetOgreCamera( Ogre::Camera * p_camera )
+void TrollCamera::SetOgreCamera( Ogre::Camera * p_camera )
 {
 	m_ogreCamera = p_camera;
 	m_position = m_ogreCamera->getPosition();
@@ -77,7 +77,7 @@ void TrollCamera :: SetOgreCamera( Ogre::Camera * p_camera )
 
 
 
-void TrollCamera :: SetPosition( const Ogre::Vector3 & p_pos, bool p_updateOgre )
+void TrollCamera::SetPosition( const Ogre::Vector3 & p_pos, bool p_updateOgre )
 {
 	m_position = p_pos;
 
@@ -93,7 +93,7 @@ void TrollCamera :: SetPosition( const Ogre::Vector3 & p_pos, bool p_updateOgre 
 
 
 
-void TrollCamera :: SetDirection( const Ogre::Vector3 & p_dir, bool p_updateOgre )
+void TrollCamera::SetDirection( const Ogre::Vector3 & p_dir, bool p_updateOgre )
 {
 	m_direction = p_dir;
 
@@ -109,14 +109,14 @@ void TrollCamera :: SetDirection( const Ogre::Vector3 & p_dir, bool p_updateOgre
 
 
 
-void TrollCamera :: SetOrientation( const Ogre::Quaternion & p_orientation, bool p_updateOgre )
+void TrollCamera::SetOrientation( const Ogre::Quaternion & p_orientation, bool p_updateOgre )
 {
 	m_orientation = p_orientation;
 }
 
 
 
-void TrollCamera :: SetPolygonMode( TrollCameraPolygonMode p_cpm, bool p_updateOgre )
+void TrollCamera::SetPolygonMode( TrollCameraPolygonMode p_cpm, bool p_updateOgre )
 {
 	m_polygonMode = p_cpm;
 
@@ -132,7 +132,7 @@ void TrollCamera :: SetPolygonMode( TrollCameraPolygonMode p_cpm, bool p_updateO
 
 
 
-void TrollCamera :: SetYFOV( float p_fov, bool p_updateOgre )
+void TrollCamera::SetYFOV( float p_fov, bool p_updateOgre )
 {
 	m_yFOV = p_fov;
 
@@ -148,7 +148,7 @@ void TrollCamera :: SetYFOV( float p_fov, bool p_updateOgre )
 
 
 
-void TrollCamera :: Write( wxTextOutputStream * p_stream )
+void TrollCamera::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "camera " ) + m_name + wxT( "\n{\n" ) );
 	wxString l_tmp;

@@ -88,12 +88,12 @@
 #include <StringConverter.h>
 #include <StringUtils.h>
 
-void EMuse :: SceneFile :: SceneFileParser :: parsingError( Context * p_context, const String & l_error )
+void EMuse::SceneFile::SceneFileParser::parsingError( Context * p_context, const String & l_error )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "Line #" + StringConverter::toString( p_context->lineNo ) + " / " + l_error );
 }
 
-Vector3 EMuse :: SceneFile :: SceneFileParser :: Parser_Vector3Value( const String & p_params )
+Vector3 EMuse::SceneFile::SceneFileParser::Parser_Vector3Value( const String & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -108,7 +108,7 @@ Vector3 EMuse :: SceneFile :: SceneFileParser :: Parser_Vector3Value( const Stri
 					StringConverter::parseReal( l_split[2] ) );
 }
 
-Vector4 EMuse :: SceneFile :: SceneFileParser :: Parser_Vector4Value( const String & p_params )
+Vector4 EMuse::SceneFile::SceneFileParser::Parser_Vector4Value( const String & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -124,7 +124,7 @@ Vector4 EMuse :: SceneFile :: SceneFileParser :: Parser_Vector4Value( const Stri
 					StringConverter::parseReal( l_split[3] ) );
 }
 
-ColourValue EMuse :: SceneFile :: SceneFileParser :: Parser_ColourValue( const String & p_params )
+ColourValue EMuse::SceneFile::SceneFileParser::Parser_ColourValue( const String & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 

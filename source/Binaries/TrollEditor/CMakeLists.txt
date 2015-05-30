@@ -74,7 +74,7 @@ if ( wxWidgets_FOUND AND GTK_FOUND )
 	
 	add_subdirectory( Src )
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Binaries" )
-	set( Build "yes (version ${TE_VERSION_MAJOR}.${TE_VERSION_MINOR}.${TE_VERSION_BUILD})" PARENT_SCOPE )
+	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
 	file( GLOB_RECURSE Parser_languages ${CMAKE_CURRENT_SOURCE_DIR}/Data/*.lang )

@@ -16,7 +16,7 @@ using namespace Troll;
 using namespace Troll::GUI;
 
 
-Project :: Project()
+Project::Project()
 	:	m_shadows( false ),
 		m_antiAliasing( aa0 ),
 		m_bgImage( NULL ),
@@ -33,10 +33,10 @@ Project :: Project()
 
 
 
-Project :: Project( const wxString & p_projectName, const wxString & p_mainSceneName,
-					const wxString & p_path, BackgroundType p_backgroundType,
-					const wxString & p_background, bool p_shadows, AntiAliasing p_aa,
-					const wxSize & p_resolution )
+Project::Project( const wxString & p_projectName, const wxString & p_mainSceneName,
+				  const wxString & p_path, BackgroundType p_backgroundType,
+				  const wxString & p_background, bool p_shadows, AntiAliasing p_aa,
+				  const wxSize & p_resolution )
 	:	m_shadows( p_shadows ),
 		m_antiAliasing( p_aa ),
 		m_projectPath( p_path ),
@@ -62,7 +62,7 @@ Project :: Project( const wxString & p_projectName, const wxString & p_mainScene
 
 
 
-Project :: ~Project()
+Project::~Project()
 {
 	if ( m_mainScene != NULL )
 	{
@@ -81,7 +81,7 @@ Project :: ~Project()
 
 
 
-void Project :: FlushObjects()
+void Project::FlushObjects()
 {
 	if ( m_mainScene != NULL )
 	{
@@ -93,7 +93,7 @@ void Project :: FlushObjects()
 
 
 
-TrollScene * Project :: GetScene( const wxString & p_sceneName )
+TrollScene * Project::GetScene( const wxString & p_sceneName )
 {
 	if ( m_mainScene )
 	{
@@ -115,7 +115,7 @@ TrollScene * Project :: GetScene( const wxString & p_sceneName )
 
 
 
-TrollScene * Project :: GetScene( const wxTreeItemId & p_item )
+TrollScene * Project::GetScene( const wxTreeItemId & p_item )
 {
 	if ( m_mainScene )
 	{
@@ -131,7 +131,7 @@ TrollScene * Project :: GetScene( const wxTreeItemId & p_item )
 	{
 		if ( l_it->second->HasItem( p_item ) )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "Project :: GetScene - TrollScene : " ) + l_it->second->GetName() );
+			g_mainFrame->LogDebugMessage( wxT( "Project::GetScene - TrollScene : " ) + l_it->second->GetName() );
 			return l_it->second;
 		}
 
@@ -143,7 +143,7 @@ TrollScene * Project :: GetScene( const wxTreeItemId & p_item )
 
 
 
-void Project :: RemoveScene( const wxString & p_sceneName )
+void Project::RemoveScene( const wxString & p_sceneName )
 {
 	if ( m_mainScene )
 	{
@@ -167,7 +167,7 @@ void Project :: RemoveScene( const wxString & p_sceneName )
 
 
 
-void Project :: RemoveScene( TrollScene * p_scene )
+void Project::RemoveScene( TrollScene * p_scene )
 {
 	if ( m_mainScene )
 	{
@@ -191,7 +191,7 @@ void Project :: RemoveScene( TrollScene * p_scene )
 
 
 
-TrollScene * Project :: CreateScene( wxString const & p_strName )
+TrollScene * Project::CreateScene( wxString const & p_strName )
 {
 	TrollScene * l_pReturn = new TrollScene( this, p_strName, m_mainScene == NULL );
 
@@ -207,7 +207,7 @@ TrollScene * Project :: CreateScene( wxString const & p_strName )
 	return l_pReturn;
 }
 
-void Project :: AddScene( TrollScene * p_scene )
+void Project::AddScene( TrollScene * p_scene )
 {
 	SceneMap::iterator l_it = m_scenes.find( p_scene->GetName() );
 
@@ -223,7 +223,7 @@ void Project :: AddScene( TrollScene * p_scene )
 
 
 
-void Project :: Save( wxTextOutputStream * p_stream )
+void Project::Save( wxTextOutputStream * p_stream )
 {
 	if ( ! p_stream )
 	{
@@ -293,10 +293,10 @@ void Project :: Save( wxTextOutputStream * p_stream )
 
 
 
-void Project :: Load( const wxString & p_path, FilesTree * p_tree )
+void Project::Load( const wxString & p_path, FilesTree * p_tree )
 {
 	ProjectFileParser l_parser( this, p_tree );
-	g_mainFrame->LogDebugMessage( wxT( "Project :: Load - " ) + m_name );
+	g_mainFrame->LogDebugMessage( wxT( "Project::Load - " ) + m_name );
 
 	if ( p_tree )
 	{
@@ -324,10 +324,10 @@ void Project :: Load( const wxString & p_path, FilesTree * p_tree )
 	}
 }
 
-void Project :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, const wxString & p_path,
-					  FilesTree * p_tree )
+void Project::Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, const wxString & p_path,
+					FilesTree * p_tree )
 {
-//	std::cout << "Project :: Load - Path : " << p_path << "\n";
+//	std::cout << "Project::Load - Path : " << p_path << "\n";
 	if ( ! p_stream || ! p_input || p_input->Eof() )
 	{
 		return;
@@ -341,7 +341,7 @@ void Project :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream,
 	}
 
 	m_name = l_line;
-	g_mainFrame->LogDebugMessage( wxT( "Project :: Load - " ) + m_name );
+	g_mainFrame->LogDebugMessage( wxT( "Project::Load - " ) + m_name );
 
 	if ( p_tree != NULL )
 	{
@@ -510,16 +510,16 @@ void Project :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream,
 				std::cout << m_mainScene->GetDataFilesNumber() << "\n";
 				std::cout << m_mainScene->GetDataFoldersNumber() << "\n";
 		*/
-		g_mainFrame->LogDebugMessage( wxT( "Project :: Load - Mainscene read" ) );
+		g_mainFrame->LogDebugMessage( wxT( "Project::Load - Mainscene read" ) );
 		TrollScene * l_scene;
 
 		while ( ! p_input->Eof() )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "Project :: Load - " ) + l_line );
+			g_mainFrame->LogDebugMessage( wxT( "Project::Load - " ) + l_line );
 
 			if ( l_line == wxT( "Scene" ) )
 			{
-				g_mainFrame->LogDebugMessage( wxT( "Project :: Load - New scene" ) );
+				g_mainFrame->LogDebugMessage( wxT( "Project::Load - New scene" ) );
 				l_line = p_stream->ReadLine();
 
 				if ( l_line.empty() || p_input->Eof() )
@@ -530,7 +530,7 @@ void Project :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream,
 				l_scene = new TrollScene( this, l_line );
 				l_line = l_scene->Load( p_input, p_stream, p_tree );
 				AddScene( l_scene );
-				g_mainFrame->LogDebugMessage( wxT( "Project :: Load - New scene read" ) );
+				g_mainFrame->LogDebugMessage( wxT( "Project::Load - New scene read" ) );
 			}
 		}
 
@@ -545,7 +545,7 @@ void Project :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream,
 
 
 
-void Project :: Write()
+void Project::Write()
 {
 	if ( m_mainScene != NULL )
 	{
@@ -562,7 +562,7 @@ void Project :: Write()
 
 
 
-void Project :: SetBackgroundImage( const wxString & p_imgPath )
+void Project::SetBackgroundImage( const wxString & p_imgPath )
 {
 	m_bgImage = new wxImage( p_imgPath );
 	m_bgString = p_imgPath;
@@ -571,7 +571,7 @@ void Project :: SetBackgroundImage( const wxString & p_imgPath )
 
 
 
-void Project :: SetBackgroundColour( const wxString & p_colour )
+void Project::SetBackgroundColour( const wxString & p_colour )
 {
 	m_bgColour->Set( p_colour );
 	m_bgString = p_colour;
@@ -580,7 +580,7 @@ void Project :: SetBackgroundColour( const wxString & p_colour )
 
 
 
-bool Project :: FindFileInScenes( const wxString & p_fileName, TrollFile *& p_file, TrollScene *& p_scene )
+bool Project::FindFileInScenes( const wxString & p_fileName, TrollFile *& p_file, TrollScene *& p_scene )
 {
 	p_scene = NULL;
 	p_file = m_mainScene->GetFileByName( p_fileName );
@@ -611,7 +611,7 @@ bool Project :: FindFileInScenes( const wxString & p_fileName, TrollFile *& p_fi
 
 
 
-void Project :: _fillSceneDependencies( TrollScene * p_scene )
+void Project::_fillSceneDependencies( TrollScene * p_scene )
 {
 	wxArrayString l_neededScenes = p_scene->GetNeededScenes();
 	TrollScene * l_neededScene;
@@ -637,7 +637,7 @@ void Project :: _fillSceneDependencies( TrollScene * p_scene )
 
 
 
-void Project :: _buildColour( const wxString & p_infos )
+void Project::_buildColour( const wxString & p_infos )
 {
 	wxArrayString l_infos = Split( p_infos,  wxT( " " ) );
 	double l_red, l_green, l_blue;

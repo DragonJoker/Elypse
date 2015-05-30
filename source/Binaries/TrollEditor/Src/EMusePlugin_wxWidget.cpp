@@ -66,7 +66,7 @@ void EMusePlugin_wxWidget::Paint()
 {
 }
 
-void EMusePlugin_wxWidget :: LockGui()
+void EMusePlugin_wxWidget::LockGui()
 {
 	/*
 		if ( ! wxIsMainThread())
@@ -76,7 +76,7 @@ void EMusePlugin_wxWidget :: LockGui()
 	*/
 }
 
-void EMusePlugin_wxWidget :: UnlockGui()
+void EMusePlugin_wxWidget::UnlockGui()
 {
 	/*
 		// 3 cookies for the first one who can tell me what this changes. except it does change a lot. Prevents a bug.
@@ -87,7 +87,7 @@ void EMusePlugin_wxWidget :: UnlockGui()
 	*/
 }
 
-void EMusePlugin_wxWidget :: ChangeCursorTo( CursorType p_cursorType )
+void EMusePlugin_wxWidget::ChangeCursorTo( CursorType p_cursorType )
 {
 	switch ( p_cursorType )
 	{

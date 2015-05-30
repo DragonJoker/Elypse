@@ -89,7 +89,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_IfBlock )
 			}
 			catch ( GenException & p_exception )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (General) --> " + p_exception.GetDescription() );
+				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 			}
 		}
 
@@ -137,7 +137,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_WhileLoop )
 			}
 			catch ( GenException & p_exception )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (General) --> " + p_exception.GetDescription() );
+				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 			}
 		}
 
@@ -165,7 +165,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_WhileLoop )
 			}
 			catch ( GenException & p_exception )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (General) --> " + p_exception.GetDescription() );
+				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 			}
 
 			l_condition = cond->get<bool>();
@@ -239,7 +239,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_ForLoop )
 	}
 	catch ( GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (General) --> " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 	}
 }
 
@@ -315,7 +315,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_MultiLineFunction )
 		}
 		catch ( GenException & p_exception )
 		{
-			EMUSE_MESSAGE_RELEASE( "EMuseInstance :: Initialise, exception (General) --> " + p_exception.GetDescription() );
+			EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 		}
 
 		if ( ScriptEngine::GetContext()->m_breakOne || ScriptEngine::GetContext()->m_return || ScriptEngine::GetContext()->m_continue )

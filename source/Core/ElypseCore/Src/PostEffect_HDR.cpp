@@ -9,7 +9,7 @@
 
 using namespace Ogre;
 
-PostEffect_HDR :: PostEffect_HDR( const String & p_name, Viewport * p_viewport )
+PostEffect_HDR::PostEffect_HDR( const String & p_name, Viewport * p_viewport )
 	:	PostEffect( p_name, p_viewport, 0 )
 {
 	if ( m_instance != NULL )
@@ -21,26 +21,26 @@ PostEffect_HDR :: PostEffect_HDR( const String & p_name, Viewport * p_viewport )
 	}
 }
 
-PostEffect_HDR :: ~PostEffect_HDR()
+PostEffect_HDR::~PostEffect_HDR()
 {
 	delete m_listener;
 }
 
-HDR_Listener :: HDR_Listener()
+HDR_Listener::HDR_Listener()
 {
 }
 
-HDR_Listener :: ~HDR_Listener()
+HDR_Listener::~HDR_Listener()
 {
 }
 
-void HDR_Listener :: notifyViewportSize( int p_width, int p_height )
+void HDR_Listener::notifyViewportSize( int p_width, int p_height )
 {
 	mVpWidth = p_width;
 	mVpHeight = p_height;
 }
 
-void HDR_Listener :: notifyCompositor( CompositorInstance * instance )
+void HDR_Listener::notifyCompositor( CompositorInstance * instance )
 {
 	try
 	{
@@ -98,7 +98,7 @@ void HDR_Listener :: notifyCompositor( CompositorInstance * instance )
 	}
 }
 
-void HDR_Listener :: notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
+void HDR_Listener::notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
 {
 	try
 	{
@@ -145,6 +145,6 @@ void HDR_Listener :: notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
 	}
 }
 
-void HDR_Listener :: notifyMaterialRender( uint32, MaterialPtr & )
+void HDR_Listener::notifyMaterialRender( uint32, MaterialPtr & )
 {
 }

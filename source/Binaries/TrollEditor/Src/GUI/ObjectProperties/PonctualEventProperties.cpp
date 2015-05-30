@@ -42,7 +42,7 @@ BEGIN_EVENT_TABLE( PonctualEventProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-PonctualEventProperties :: PonctualEventProperties( TrollPonctualEvent * p_event, wxWindow * parent,
+PonctualEventProperties::PonctualEventProperties( TrollPonctualEvent * p_event, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_event( p_event ),
@@ -60,19 +60,19 @@ PonctualEventProperties :: PonctualEventProperties( TrollPonctualEvent * p_event
 
 
 
-PonctualEventProperties :: ~PonctualEventProperties()
+PonctualEventProperties::~PonctualEventProperties()
 {
 }
 
 
 
-void PonctualEventProperties :: UpdateProperties()
+void PonctualEventProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 
 	if ( ! DestroyChildren() )
 	{
-		std::cout << "PonctualEventProperties :: UpdateProperties - Can't destroy children\n";
+		std::cout << "PonctualEventProperties::UpdateProperties - Can't destroy children\n";
 		m_updatingProperties = false;
 		return;
 	}
@@ -98,7 +98,7 @@ void PonctualEventProperties :: UpdateProperties()
 
 
 
-wxArrayString PonctualEventProperties :: _getTargetTypes( const wxString & p_action )
+wxArrayString PonctualEventProperties::_getTargetTypes( const wxString & p_action )
 {
 	wxArrayString l_result;
 
@@ -128,7 +128,7 @@ wxArrayString PonctualEventProperties :: _getTargetTypes( const wxString & p_act
 
 
 
-wxString PonctualEventProperties :: _buildTargetChoice( const wxPoint & p_position, const wxString & p_targetType )
+wxString PonctualEventProperties::_buildTargetChoice( const wxPoint & p_position, const wxString & p_targetType )
 {
 	if ( m_targetCB != NULL )
 	{
@@ -192,7 +192,7 @@ wxString PonctualEventProperties :: _buildTargetChoice( const wxPoint & p_positi
 
 
 
-void PonctualEventProperties :: _buildActionArguments( wxPoint & p_position, const wxString & p_action )
+void PonctualEventProperties::_buildActionArguments( wxPoint & p_position, const wxString & p_action )
 {
 	if ( m_v3ArgX != NULL )
 	{
@@ -233,7 +233,7 @@ void PonctualEventProperties :: _buildActionArguments( wxPoint & p_position, con
 
 
 
-void PonctualEventProperties :: _onSelectAction( wxCommandEvent & p_event )
+void PonctualEventProperties::_onSelectAction( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -252,7 +252,7 @@ void PonctualEventProperties :: _onSelectAction( wxCommandEvent & p_event )
 
 
 
-void PonctualEventProperties :: _onSelectTargetType( wxCommandEvent & p_event )
+void PonctualEventProperties::_onSelectTargetType( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -267,7 +267,7 @@ void PonctualEventProperties :: _onSelectTargetType( wxCommandEvent & p_event )
 
 
 
-void PonctualEventProperties :: _onEditTarget( wxCommandEvent & p_event )
+void PonctualEventProperties::_onEditTarget( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -288,7 +288,7 @@ void PonctualEventProperties :: _onEditTarget( wxCommandEvent & p_event )
 
 
 
-void PonctualEventProperties :: _onEditTime( wxCommandEvent & p_event )
+void PonctualEventProperties::_onEditTime( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -307,7 +307,7 @@ void PonctualEventProperties :: _onEditTime( wxCommandEvent & p_event )
 
 
 
-void PonctualEventProperties :: _onEditXParam( wxCommandEvent & p_event )
+void PonctualEventProperties::_onEditXParam( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -327,7 +327,7 @@ void PonctualEventProperties :: _onEditXParam( wxCommandEvent & p_event )
 
 
 
-void PonctualEventProperties :: _onEditYParam( wxCommandEvent & p_event )
+void PonctualEventProperties::_onEditYParam( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -347,7 +347,7 @@ void PonctualEventProperties :: _onEditYParam( wxCommandEvent & p_event )
 
 
 
-void PonctualEventProperties :: _onEditZParam( wxCommandEvent & p_event )
+void PonctualEventProperties::_onEditZParam( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

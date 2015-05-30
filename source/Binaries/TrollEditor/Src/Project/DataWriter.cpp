@@ -21,7 +21,7 @@ using namespace EMuse::Download;
 
 
 
-DataWriter :: DataWriter( wxTextCtrl * p_log )
+DataWriter::DataWriter( wxTextCtrl * p_log )
 	:	m_log( p_log ),
 		m_file( NULL ),
 		m_md5( new MD5() )
@@ -30,7 +30,7 @@ DataWriter :: DataWriter( wxTextCtrl * p_log )
 
 
 
-DataWriter :: ~DataWriter()
+DataWriter::~DataWriter()
 {
 	if ( m_file != NULL )
 	{
@@ -44,7 +44,7 @@ DataWriter :: ~DataWriter()
 
 
 
-bool DataWriter :: AddFolder( const wxString & p_folder, DataBlockType p_eType )
+bool DataWriter::AddFolder( const wxString & p_folder, DataBlockType p_eType )
 {
 	m_fileslist.clear();
 	wxString l_folder = GetParentFolder( p_folder );
@@ -77,7 +77,7 @@ bool DataWriter :: AddFolder( const wxString & p_folder, DataBlockType p_eType )
 
 
 
-void DataWriter :: ListFiles( const wxString & p_folder )
+void DataWriter::ListFiles( const wxString & p_folder )
 {
 	wxDir l_dir( p_folder );
 	wxString l_strFileName;
@@ -187,7 +187,7 @@ bool DecompressFile( const wxString & p_zipFileName, const wxString & p_fileName
 
 
 
-int DataWriter :: CompressFile( const wxString & p_infilename, const wxString & p_outfilename )
+int DataWriter::CompressFile( const wxString & p_infilename, const wxString & p_outfilename )
 {
 	FILE * l_infile = fopen( p_infilename.char_str().data(), "rb" );
 	gzFile l_outfile = gzopen( p_outfilename.char_str().data(), "wb" );
@@ -233,7 +233,7 @@ int DataWriter :: CompressFile( const wxString & p_infilename, const wxString & 
 
 
 
-bool DataWriter :: CompressFolder( const wxString & p_outFolder, const wxString & p_outPath, DataBlockType p_eType )
+bool DataWriter::CompressFolder( const wxString & p_outFolder, const wxString & p_outPath, DataBlockType p_eType )
 {
 	ZipBlockList l_zipHeader;
 	wxString l_fileName, l_extension, l_outFile, l_outpath;
@@ -266,7 +266,7 @@ bool DataWriter :: CompressFolder( const wxString & p_outFolder, const wxString 
 
 
 
-bool DataWriter :: AddFile( const wxString & p_fileurl, DataBlockType p_eType )
+bool DataWriter::AddFile( const wxString & p_fileurl, DataBlockType p_eType )
 {
 	g_mainFrame->LogDebugMessage( p_fileurl );
 	wxString l_fileurl = p_fileurl;
@@ -330,7 +330,7 @@ bool DataWriter :: AddFile( const wxString & p_fileurl, DataBlockType p_eType )
 
 
 
-bool DataWriter :: DelFile( const wxString & p_file )
+bool DataWriter::DelFile( const wxString & p_file )
 {
 	BlockList::iterator l_it = m_header.begin();
 
@@ -352,7 +352,7 @@ bool DataWriter :: DelFile( const wxString & p_file )
 
 
 
-bool DataWriter :: DownFile( const wxString & p_file )
+bool DataWriter::DownFile( const wxString & p_file )
 {
 	BlockList::iterator l_it = m_header.begin();
 
@@ -374,7 +374,7 @@ bool DataWriter :: DownFile( const wxString & p_file )
 
 
 
-bool DataWriter :: UpFile( const wxString & p_file )
+bool DataWriter::UpFile( const wxString & p_file )
 {
 	BlockList::iterator l_it = m_header.begin();
 
@@ -396,7 +396,7 @@ bool DataWriter :: UpFile( const wxString & p_file )
 
 
 
-bool DataWriter :: Write( const wxString & p_filename )
+bool DataWriter::Write( const wxString & p_filename )
 {
 	if ( m_header.size() == 0 )
 	{
@@ -451,7 +451,7 @@ bool DataWriter :: Write( const wxString & p_filename )
 
 
 
-void DataWriter :: WriteZipFile( ZipBlockList p_list, FILE * p_file )
+void DataWriter::WriteZipFile( ZipBlockList p_list, FILE * p_file )
 {
 	for ( ZipBlockList::const_iterator l_it = p_list.begin(); l_it != p_list.end(); ++l_it )
 	{
@@ -478,7 +478,7 @@ void DataWriter :: WriteZipFile( ZipBlockList p_list, FILE * p_file )
 		}
 		else
 		{
-			std::cout << "DataWriter :: WriteZipFile - Can't open file " << p_block->CompleteURL << "\n";
+			std::cout << "DataWriter::WriteZipFile - Can't open file " << p_block->CompleteURL << "\n";
 		}
 
 		FileDelete( p_block->CompleteURL.char_str().data() );
@@ -487,7 +487,7 @@ void DataWriter :: WriteZipFile( ZipBlockList p_list, FILE * p_file )
 
 
 
-void DataWriter :: WriteHeader( unsigned long long & l_nbBytes )
+void DataWriter::WriteHeader( unsigned long long & l_nbBytes )
 {
 	char * l_buffer = new char[sizeof( int )];
 	// Writes the number of blocks
@@ -540,7 +540,7 @@ void DataWriter :: WriteHeader( unsigned long long & l_nbBytes )
 
 
 
-void DataWriter :: WriteZipHeader( ZipBlockList p_list, FILE * p_file )
+void DataWriter::WriteZipHeader( ZipBlockList p_list, FILE * p_file )
 {
 	//writing header size
 	int l_nbBlocks = ( int )( p_list.size() );
@@ -575,7 +575,7 @@ void DataWriter :: WriteZipHeader( ZipBlockList p_list, FILE * p_file )
 
 
 
-int DataWriter :: GetType( const wxString & p_filename )
+int DataWriter::GetType( const wxString & p_filename )
 {
 	wxString l_extension = GetExtension( p_filename );
 
@@ -624,7 +624,7 @@ int DataWriter :: GetType( const wxString & p_filename )
 
 
 
-wxString DataWriter :: GetName( const wxString & p_fileurl )
+wxString DataWriter::GetName( const wxString & p_fileurl )
 {
 	wxString l_fileUrl = p_fileurl;
 	l_fileUrl.Replace( wxT( '/' ), wxFileName::GetPathSeparator() );
@@ -636,7 +636,7 @@ wxString DataWriter :: GetName( const wxString & p_fileurl )
 
 
 
-wxString DataWriter :: GetNameWithoutExtension( const wxString & p_fileurl )
+wxString DataWriter::GetNameWithoutExtension( const wxString & p_fileurl )
 {
 	wxString l_res = GetName( p_fileurl );
 	size_t l_index = l_res.find_last_of( wxT( "." ) );
@@ -652,7 +652,7 @@ wxString DataWriter :: GetNameWithoutExtension( const wxString & p_fileurl )
 
 
 
-wxString DataWriter :: GetExtension( const wxString & p_fileurl )
+wxString DataWriter::GetExtension( const wxString & p_fileurl )
 {
 	size_t l_index = p_fileurl.find_last_of( wxT( "." ) );
 
@@ -667,7 +667,7 @@ wxString DataWriter :: GetExtension( const wxString & p_fileurl )
 
 
 
-wxString DataWriter :: GetParentFolder( const wxString & p_folder )
+wxString DataWriter::GetParentFolder( const wxString & p_folder )
 {
 	wxString l_folder = p_folder;
 	l_folder.Replace( wxT( '\\' ), wxFileName::GetPathSeparator() );
@@ -698,7 +698,7 @@ wxString DataWriter :: GetParentFolder( const wxString & p_folder )
 
 
 
-void DataWriter :: UpdateFileList( wxTextCtrl * p_listbox )
+void DataWriter::UpdateFileList( wxTextCtrl * p_listbox )
 {
 	for ( unsigned int i = 0 ; i < m_header.size() ; i++ )
 	{

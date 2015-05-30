@@ -4,18 +4,18 @@
 
 #include <ode/collision.h>
 
-BoundingRay :: BoundingRay()
+BoundingRay::BoundingRay()
 	:	BoundingShape( COC_Ray )
 {
 	m_geom = dCreateRay( NULL, 1.0 );
 	_register();
 }
 
-BoundingRay :: ~BoundingRay()
+BoundingRay::~BoundingRay()
 {
 }
 
-void BoundingRay :: SetRay( const Ray & p_ray )
+void BoundingRay::SetRay( const Ray & p_ray )
 {
 	m_ray = p_ray;
 	const Vector3 & l_direction = m_ray.getDirection();
@@ -24,14 +24,14 @@ void BoundingRay :: SetRay( const Ray & p_ray )
 	dGeomRaySetLength( m_geom, Math::POS_INFINITY );
 }
 
-void BoundingRay :: SetOrigin( const Vector3 & p_origin )
+void BoundingRay::SetOrigin( const Vector3 & p_origin )
 {
 	m_ray.setOrigin( p_origin );
 	const Vector3 l_direction = m_ray.getOrigin();
 	dGeomRaySet( m_geom, p_origin.x, p_origin.y, p_origin.z, l_direction.x, l_direction.y, l_direction.z );
 }
 
-void BoundingRay :: SetDirection( const Vector3 & p_direction )
+void BoundingRay::SetDirection( const Vector3 & p_direction )
 {
 	m_ray.setDirection( p_direction );
 	const Vector3 l_origin = m_ray.getDirection();
@@ -39,7 +39,7 @@ void BoundingRay :: SetDirection( const Vector3 & p_direction )
 	dGeomRaySetLength( m_geom, p_direction.length() );
 }
 
-BoundingShape * BoundingRay :: Clone()
+BoundingShape * BoundingRay::Clone()
 {
 	BoundingRay * l_ray = new BoundingRay();
 	l_ray->SetRay( m_ray );

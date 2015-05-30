@@ -6,7 +6,7 @@
 #include <OgreTextureManager.h>
 #include <OgreTexture.h>
 
-ClickableImage :: ClickableImage( const String & p_name, Real p_width, Real p_height )
+ClickableImage::ClickableImage( const String & p_name, Real p_width, Real p_height )
 {
 	genlib_assert( ! p_name.empty() );
 	m_raw = RawImageManager::GetSingletonPtr()->GetElementByName( p_name );
@@ -22,12 +22,12 @@ ClickableImage :: ClickableImage( const String & p_name, Real p_width, Real p_he
 	m_y = p_height;
 }
 
-ClickableImage :: ~ClickableImage()
+ClickableImage::~ClickableImage()
 {
 	m_raw->Release();
 }
 
-bool ClickableImage :: TestClick( Real p_x, Real p_y )
+bool ClickableImage::TestClick( Real p_x, Real p_y )
 {
 	p_x /= m_x;
 	p_y /= m_y;

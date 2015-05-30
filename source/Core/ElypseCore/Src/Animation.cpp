@@ -6,7 +6,7 @@
 
 #include "EMuseLogs.h"
 
-EMAnimation :: EMAnimation( AnimatedObject * p_owner, AnimationState * p_animation )
+EMAnimation::EMAnimation( AnimatedObject * p_owner, AnimationState * p_animation )
 	:	owned_by<AnimatedObject>	( p_owner ),
 		   named( p_animation->getAnimationName() ),
 		   m_animation( p_animation ),
@@ -32,11 +32,11 @@ EMAnimation :: EMAnimation( AnimatedObject * p_owner, AnimationState * p_animati
 	m_length = m_animation->getLength();
 }
 
-EMAnimation :: ~EMAnimation()
+EMAnimation::~EMAnimation()
 {
 }
 
-void EMAnimation :: _stop( bool p_continueChain )
+void EMAnimation::_stop( bool p_continueChain )
 {
 	m_time = 0.0;
 	m_weight = 0.0;
@@ -52,7 +52,7 @@ void EMAnimation :: _stop( bool p_continueChain )
 	}
 }
 
-void EMAnimation :: Update( Real p_delta )
+void EMAnimation::Update( Real p_delta )
 {
 	p_delta *= m_timescale;
 
@@ -153,7 +153,7 @@ void EMAnimation :: Update( Real p_delta )
 	}
 }
 
-void EMAnimation :: Stop()
+void EMAnimation::Stop()
 {
 	if ( m_status == AS_PLAYING || m_status == AS_PAUSED )
 	{
@@ -173,7 +173,7 @@ void EMAnimation :: Stop()
 	}
 }
 
-void EMAnimation :: Pause()
+void EMAnimation::Pause()
 {
 	if ( m_status == AS_PLAYING )
 	{
@@ -181,7 +181,7 @@ void EMAnimation :: Pause()
 	}
 }
 
-void EMAnimation :: SetPause( bool p_paused )
+void EMAnimation::SetPause( bool p_paused )
 {
 	if ( p_paused && m_status == AS_PLAYING )
 	{
@@ -193,7 +193,7 @@ void EMAnimation :: SetPause( bool p_paused )
 	}
 }
 
-void EMAnimation :: Play()
+void EMAnimation::Play()
 {
 	if ( m_status == AS_STOPPED )
 	{
@@ -221,7 +221,7 @@ void EMAnimation :: Play()
 	m_status = AS_PLAYING;
 }
 
-void EMAnimation :: _setTime( Real p_time )
+void EMAnimation::_setTime( Real p_time )
 {
 	if ( m_reversed )
 	{
@@ -233,19 +233,19 @@ void EMAnimation :: _setTime( Real p_time )
 	}
 }
 
-void EMAnimation :: SetTime( Real p_time )
+void EMAnimation::SetTime( Real p_time )
 {
 	m_time = p_time;
 	m_animation->setTimePosition( m_time );
 }
 
-void EMAnimation :: SetLooped( bool p_looped )
+void EMAnimation::SetLooped( bool p_looped )
 {
 	m_looped = p_looped;
 	m_animation->setLoop( p_looped );
 }
 
-void EMAnimation :: SetWeight( Real p_weight )
+void EMAnimation::SetWeight( Real p_weight )
 {
 	m_weight = p_weight;
 	m_animation->setWeight( p_weight );

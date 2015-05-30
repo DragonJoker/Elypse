@@ -7,7 +7,7 @@
 using namespace Troll::Temporal;
 
 
-TrollAnimatedObject :: TrollAnimatedObject( TrollObject * p_object, TrollAnimationGroup * p_group, const wxString & p_fileName )
+TrollAnimatedObject::TrollAnimatedObject( TrollObject * p_object, TrollAnimationGroup * p_group, const wxString & p_fileName )
 	:	TemporalObject( p_object->GetName(), p_fileName, ttAnimatedObject ),
 		m_object( p_object ),
 		m_group( p_group )
@@ -16,27 +16,27 @@ TrollAnimatedObject :: TrollAnimatedObject( TrollObject * p_object, TrollAnimati
 
 
 
-TrollAnimatedObject :: ~TrollAnimatedObject()
+TrollAnimatedObject::~TrollAnimatedObject()
 {
 }
 
 
 
-int TrollAnimatedObject :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollAnimatedObject::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	return 0;
 }
 
 
 
-void TrollAnimatedObject :: AddAnimation( TrollAnimation * p_anim )
+void TrollAnimatedObject::AddAnimation( TrollAnimation * p_anim )
 {
 	m_animations.insert( std::make_pair( p_anim->GetName(), p_anim ) );
 }
 
 
 
-void TrollAnimatedObject :: Write( wxTextOutputStream * p_stream )
+void TrollAnimatedObject::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "\tadd_object " ) + m_name + wxT( "\n" ) );
 

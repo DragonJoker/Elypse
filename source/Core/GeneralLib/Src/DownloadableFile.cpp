@@ -8,8 +8,8 @@
 
 using namespace General::Utils;
 
-DownloadableFile :: DownloadableFile(	const std::wstring & p_name,
-										const std::wstring & p_path )
+DownloadableFile::DownloadableFile(	const std::wstring & p_name,
+									const std::wstring & p_path )
 	:	m_name( p_name ),
 		m_path( p_path ),
 		m_executable( false ),
@@ -37,8 +37,8 @@ DownloadableFile :: DownloadableFile(	const std::wstring & p_name,
 	}
 }
 
-DownloadableFile :: DownloadableFile(	const std::wstring & p_name,
-										const WStringArray & p_multiPath )
+DownloadableFile::DownloadableFile(	const std::wstring & p_name,
+									const WStringArray & p_multiPath )
 	:	m_name( p_name ),
 		m_multiPath( p_multiPath ),
 		m_executable( false ),
@@ -74,11 +74,11 @@ DownloadableFile :: DownloadableFile(	const std::wstring & p_name,
 	}
 }
 
-DownloadableFile :: ~DownloadableFile()
+DownloadableFile::~DownloadableFile()
 {
 }
 
-bool DownloadableFile :: _exists()
+bool DownloadableFile::_exists()
 {
 	if ( ! m_usesMultiPath )
 	{
@@ -97,7 +97,7 @@ bool DownloadableFile :: _exists()
 	return m_exists;
 }
 
-void DownloadableFile :: _getHash()
+void DownloadableFile::_getHash()
 {
 	if ( m_exists )
 	{
@@ -127,7 +127,7 @@ void DownloadableFile :: _getHash()
 	}
 }
 
-bool DownloadableFile :: ExistsAndIsIdentical( const std::string & p_hash )
+bool DownloadableFile::ExistsAndIsIdentical( const std::string & p_hash )
 {
 	if ( ! m_exists )
 	{

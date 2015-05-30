@@ -1,8 +1,8 @@
 project( ElypseCore )
 
-set( EC_VERSION_MAJOR	0 )
-set( EC_VERSION_MINOR	9 )
-set( EC_VERSION_BUILD	4 )
+set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
+set( ${PROJECT_NAME}_VERSION_MINOR	9 )
+set( ${PROJECT_NAME}_VERSION_BUILD	4 )
 
 if ( NOT WIN32 )
 	find_package( Atk )
@@ -209,46 +209,35 @@ FOREACH(Lib ${DSHOW_LIBRARIES})
 ENDFOREACH()
 
 add_target(
-	ElypseCore
-	dll
+	${PROJECT_NAME}
+	api_dll
 	"GeneralLib"
 	"GeneralLib;${BoostLibraries};${ZlibLibraries};${LibZipLibraries};${CurlLibraries};${FmodLibraries};${OgreLibraries};${OdeLibraries};${GstLibraries};${DShowLibraries};${GTK2_LIBRARIES};${XmlLibraries};${GtkmmLibraries}"
 	"PrecompiledHeader.h"
 	"PrecompiledHeader.cpp"
 )
 	
-set_property( TARGET ElypseCore PROPERTY FOLDER "Core" )
-set( Build "yes (version ${EC_VERSION_MAJOR}.${EC_VERSION_MINOR}.${EC_VERSION_BUILD})" PARENT_SCOPE )
-add_target_astyle( ElypseCore ".h;.hpp;.inl;.cpp" )
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
-install_dll( ElypseCore ${Boost_DATE_TIME_LIBRARY_DEBUG} Debug )
-install_dll( ElypseCore ${Boost_DATE_TIME_LIBRARY_RELEASE} Release )
-install_dll( ElypseCore ${Boost_FILESYSTEM_LIBRARY_DEBUG} Debug )
-install_dll( ElypseCore ${Boost_FILESYSTEM_LIBRARY_RELEASE} Release )
-install_dll( ElypseCore ${Boost_SYSTEM_LIBRARY_DEBUG} Debug )
-install_dll( ElypseCore ${Boost_SYSTEM_LIBRARY_RELEASE} Release )
-install_dll( ElypseCore ${Fmod_LIBRARY} Debug )
-install_dll( ElypseCore ${Fmod_LIBRARY} Release )
-install_dll( ElypseCore ${Ogre_LIBRARY_DEBUG} Debug _d )
-install_dll( ElypseCore ${Ogre_LIBRARY_RELEASE} Release )
-copy_dll( ElypseCore ${Boost_DATE_TIME_LIBRARY_DEBUG} Debug )
-copy_dll( ElypseCore ${Boost_DATE_TIME_LIBRARY_RELEASE} Release )
-copy_dll( ElypseCore ${Boost_FILESYSTEM_LIBRARY_DEBUG} Debug )
-copy_dll( ElypseCore ${Boost_FILESYSTEM_LIBRARY_RELEASE} Release )
-copy_dll( ElypseCore ${Boost_SYSTEM_LIBRARY_DEBUG} Debug )
-copy_dll( ElypseCore ${Boost_SYSTEM_LIBRARY_RELEASE} Release )
-copy_dll( ElypseCore ${Fmod_LIBRARY} Debug )
-copy_dll( ElypseCore ${Fmod_LIBRARY} Release )
-copy_dll( ElypseCore ${Ogre_LIBRARY_DEBUG} Debug )
-copy_dll( ElypseCore ${Ogre_LIBRARY_RELEASE} Release )
-
-file( GLOB_RECURSE ElypseCoreHeaders
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*.inl
-)
-	
-install(
-	FILES ${ElypseCoreHeaders}
-	DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ElypseCore
-)
+install_dll( ${PROJECT_NAME} ${Boost_DATE_TIME_LIBRARY_DEBUG} Debug )
+install_dll( ${PROJECT_NAME} ${Boost_DATE_TIME_LIBRARY_RELEASE} Release )
+install_dll( ${PROJECT_NAME} ${Boost_FILESYSTEM_LIBRARY_DEBUG} Debug )
+install_dll( ${PROJECT_NAME} ${Boost_FILESYSTEM_LIBRARY_RELEASE} Release )
+install_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_DEBUG} Debug )
+install_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_RELEASE} Release )
+install_dll( ${PROJECT_NAME} ${Fmod_LIBRARY} Debug )
+install_dll( ${PROJECT_NAME} ${Fmod_LIBRARY} Release )
+install_dll( ${PROJECT_NAME} ${Ogre_LIBRARY_DEBUG} Debug _d )
+install_dll( ${PROJECT_NAME} ${Ogre_LIBRARY_RELEASE} Release )
+copy_dll( ${PROJECT_NAME} ${Boost_DATE_TIME_LIBRARY_DEBUG} Debug )
+copy_dll( ${PROJECT_NAME} ${Boost_DATE_TIME_LIBRARY_RELEASE} Release )
+copy_dll( ${PROJECT_NAME} ${Boost_FILESYSTEM_LIBRARY_DEBUG} Debug )
+copy_dll( ${PROJECT_NAME} ${Boost_FILESYSTEM_LIBRARY_RELEASE} Release )
+copy_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_DEBUG} Debug )
+copy_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_RELEASE} Release )
+copy_dll( ${PROJECT_NAME} ${Fmod_LIBRARY} Debug )
+copy_dll( ${PROJECT_NAME} ${Fmod_LIBRARY} Release )
+copy_dll( ${PROJECT_NAME} ${Ogre_LIBRARY_DEBUG} Debug )
+copy_dll( ${PROJECT_NAME} ${Ogre_LIBRARY_RELEASE} Release )

@@ -14,7 +14,7 @@
 #include <NeoCurl.h>
 #include <StringUtils.h>
 
-PubObject :: PubObject(	const String & p_name, EMusePlugin * p_plugin )
+PubObject::PubObject(	const String & p_name, EMusePlugin * p_plugin )
 	:	named( p_name ),
 		m_plugin( p_plugin ),
 		m_image( NULL )
@@ -25,7 +25,7 @@ PubObject :: PubObject(	const String & p_name, EMusePlugin * p_plugin )
 	m_timestamp = StringConverter::toString( static_cast <unsigned int>( abstime ) );
 }
 
-PubObject :: ~PubObject()
+PubObject::~PubObject()
 {
 	if ( m_image != NULL )
 	{
@@ -35,28 +35,28 @@ PubObject :: ~PubObject()
 	General::Utils::map::deleteAll( m_instances );
 }
 
-void PubObject :: SetLinkUrl( const String & p_url )
+void PubObject::SetLinkUrl( const String & p_url )
 {
 	m_linkURL = string::replace( p_url, " ", m_timestamp.c_str() );
 }
 
-void PubObject :: SetUrl( const String & p_url )
+void PubObject::SetUrl( const String & p_url )
 {
 	m_imageURL = string::replace( p_url, " ", m_timestamp.c_str() );
 	_retrieveUrl();
 }
 
-void PubObject :: SetImageUrl( const String & p_url )
+void PubObject::SetImageUrl( const String & p_url )
 {
 	m_imageURL = string::replace( p_url, " ", m_timestamp.c_str() );
 }
 
-void PubObject :: RemoveInstance( PubInstance * p_instance )
+void PubObject::RemoveInstance( PubInstance * p_instance )
 {
 	General::Utils::map::deleteValue( m_instances, p_instance->GetEntity()->getName() );
 }
 
-void PubObject :: _retrieveUrl()
+void PubObject::_retrieveUrl()
 {
 	CURLManager * l_curl = WebImageManager::GetSingletonPtr()->GetCurl();
 	String l_contents;
@@ -80,7 +80,7 @@ void PubObject :: _retrieveUrl()
 	}
 }
 
-void PubObject :: Finalise()
+void PubObject::Finalise()
 {
 	if ( m_linkURL.empty() )
 	{
@@ -97,14 +97,14 @@ void PubObject :: Finalise()
 	General::Utils::map::cycle( m_instances, & PubInstance::Apply );
 }
 
-PubInstance * PubObject :: CreateInstance( Entity * p_ent )
+PubInstance * PubObject::CreateInstance( Entity * p_ent )
 {
 	genlib_assert( p_ent != NULL );
 	PubInstance * l_instance = General::Utils::map::insert( m_instances, p_ent->getName(), this, p_ent );
 	return l_instance;
 }
 
-void PubObject :: OnClick()
+void PubObject::OnClick()
 {
 	if ( ! m_clicked )
 	{
@@ -122,7 +122,7 @@ void PubObject :: OnClick()
 	m_plugin->OpenURL( m_linkURL, true, false );
 }
 
-void PubObject :: Reload()
+void PubObject::Reload()
 {
 	m_image->Reload( /*& PubObject::_reloadCallback, this*/ );
 }

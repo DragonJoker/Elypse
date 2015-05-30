@@ -3,7 +3,7 @@
 #include "VideoInstance.h"
 #include "VideoObject.h"
 
-VideoInstance :: VideoInstance( VideoObject * p_owner, Entity * p_entity )
+VideoInstance::VideoInstance( VideoObject * p_owner, Entity * p_entity )
 	:	owned_by <VideoObject>	( p_owner ),
 		 m_entity( p_entity ),
 		 m_noSubMaterial( -1 ),
@@ -13,11 +13,11 @@ VideoInstance :: VideoInstance( VideoObject * p_owner, Entity * p_entity )
 	genlib_assert( m_owner != NULL );
 }
 
-VideoInstance :: ~VideoInstance()
+VideoInstance::~VideoInstance()
 {
 }
 
-void VideoInstance :: Initialise( const String & p_videoTextureName )
+void VideoInstance::Initialise( const String & p_videoTextureName )
 {
 	if ( m_noSubMaterial < 0 )
 	{
@@ -31,7 +31,7 @@ void VideoInstance :: Initialise( const String & p_videoTextureName )
 	l_subEntity->setMaterialName( p_videoTextureName );
 }
 
-void VideoInstance :: Reset()
+void VideoInstance::Reset()
 {
 	if ( m_noSubMaterial < 0 )
 	{
@@ -42,7 +42,7 @@ void VideoInstance :: Reset()
 	m_entity->getSubEntity( m_noSubMaterial )->setMaterialName( m_oldMaterialName );
 }
 
-void VideoInstance :: SetNoSubMaterial( unsigned short p_noSubMat )
+void VideoInstance::SetNoSubMaterial( unsigned short p_noSubMat )
 {
 	if ( p_noSubMat > m_entity->getNumSubEntities() )
 	{

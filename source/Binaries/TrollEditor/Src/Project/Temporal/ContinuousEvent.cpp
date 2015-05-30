@@ -15,7 +15,7 @@ using namespace Troll::Temporal;
 using namespace Troll::GUI;
 
 
-int TrollKeyFrame :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollKeyFrame::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 80;
 
@@ -32,7 +32,7 @@ int TrollKeyFrame :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollKeyFrame :: SetFireTime( float p_time, bool p_updateEvent )
+void TrollKeyFrame::SetFireTime( float p_time, bool p_updateEvent )
 {
 	m_fireTime = p_time;
 
@@ -44,7 +44,7 @@ void TrollKeyFrame :: SetFireTime( float p_time, bool p_updateEvent )
 
 
 
-void TrollKeyFrame :: Write( wxTextOutputStream * p_stream )
+void TrollKeyFrame::Write( wxTextOutputStream * p_stream )
 {
 	wxString l_tmp;
 	l_tmp << m_fireTime;
@@ -53,7 +53,7 @@ void TrollKeyFrame :: Write( wxTextOutputStream * p_stream )
 
 
 
-TrollContinuousEvent :: TrollContinuousEvent( TrollSequence * p_sequence, BaseContinuousEvent * p_event,
+TrollContinuousEvent::TrollContinuousEvent( TrollSequence * p_sequence, BaseContinuousEvent * p_event,
 		const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttContinuousEvent ),
 		m_museEvent( p_event ),
@@ -65,14 +65,14 @@ TrollContinuousEvent :: TrollContinuousEvent( TrollSequence * p_sequence, BaseCo
 
 
 
-TrollContinuousEvent :: ~TrollContinuousEvent()
+TrollContinuousEvent::~TrollContinuousEvent()
 {
 	General::Utils::map::deleteAll( m_keyFrames );
 }
 
 
 
-TrollKeyFrame * TrollContinuousEvent :: AddKeyFrame( float p_time, const wxString & p_action )
+TrollKeyFrame * TrollContinuousEvent::AddKeyFrame( float p_time, const wxString & p_action )
 {
 	if ( m_keyFrames.size() == 0 )
 	{
@@ -117,7 +117,7 @@ TrollKeyFrame * TrollContinuousEvent :: AddKeyFrame( float p_time, const wxStrin
 
 
 
-void TrollContinuousEvent :: GetKeyFrames( wxArrayString & p_list )
+void TrollContinuousEvent::GetKeyFrames( wxArrayString & p_list )
 {
 	TrollKeyFrameMap::iterator l_it = m_keyFrames.begin();
 	wxString l_tmp;
@@ -132,7 +132,7 @@ void TrollContinuousEvent :: GetKeyFrames( wxArrayString & p_list )
 
 
 
-int TrollContinuousEvent :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollContinuousEvent::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 200;
 
@@ -148,7 +148,7 @@ int TrollContinuousEvent :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollContinuousEvent :: UpdateKeyFrame( TrollKeyFrame * p_keyFrame )
+void TrollContinuousEvent::UpdateKeyFrame( TrollKeyFrame * p_keyFrame )
 {
 	bool l_found = false;
 	TrollKeyFrameMap::iterator l_it = m_keyFrames.begin();
@@ -177,7 +177,7 @@ void TrollContinuousEvent :: UpdateKeyFrame( TrollKeyFrame * p_keyFrame )
 
 
 
-void TrollContinuousEvent :: UpdateTime( float p_newStartTime )
+void TrollContinuousEvent::UpdateTime( float p_newStartTime )
 {
 	float l_diff = p_newStartTime - m_startTime;
 
@@ -191,7 +191,7 @@ void TrollContinuousEvent :: UpdateTime( float p_newStartTime )
 		while ( l_it != m_keyFrames.end() )
 		{
 			l_startTime = l_it->first + l_diff;
-//			std::cout << "TrollContinuousEvent :: UpdateTime - Before : " << l_it->first << " - New : " << l_startTime << " - Keyframe : " << l_it->second << "\n";
+//			std::cout << "TrollContinuousEvent::UpdateTime - Before : " << l_it->first << " - New : " << l_startTime << " - Keyframe : " << l_it->second << "\n";
 			l_it->second->SetFireTime( l_startTime );
 			l_newMap.insert( TrollKeyFrameMap::value_type( l_startTime, l_it->second ) );
 			++l_it;
@@ -206,7 +206,7 @@ void TrollContinuousEvent :: UpdateTime( float p_newStartTime )
 
 
 
-void TrollContinuousEvent :: _computeTimes()
+void TrollContinuousEvent::_computeTimes()
 {
 	m_duration = 0.0;
 
@@ -234,7 +234,7 @@ void TrollContinuousEvent :: _computeTimes()
 
 
 
-void TrollContinuousEvent :: Write( wxTextOutputStream * p_stream )
+void TrollContinuousEvent::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "\ttrack " ) + m_name + wxT( "\n\t{\n" ) );
 	p_stream->WriteString( wxT( "\t\ttarget " ) + m_targetTypeName + wxT( " " ) + m_targetName + wxT( "\n" ) );

@@ -6,7 +6,7 @@ using namespace Troll::GUI;
 
 //*************************************************************************************************
 
-StyleInfo :: StyleInfo( wxString const & p_strName, wxString const & p_strForeground, wxString const & p_strBackground, wxString const & p_strFontName, int p_iFontSize, int p_iFontStyle, int p_iLetterCase )
+StyleInfo::StyleInfo( wxString const & p_strName, wxString const & p_strForeground, wxString const & p_strBackground, wxString const & p_strFontName, int p_iFontSize, int p_iFontStyle, int p_iLetterCase )
 	:	m_strName( p_strName	)
 	,	m_strForeground( p_strForeground	)
 	,	m_strBackground( p_strBackground	)
@@ -17,7 +17,7 @@ StyleInfo :: StyleInfo( wxString const & p_strName, wxString const & p_strForegr
 {
 }
 
-StyleInfo :: StyleInfo( StyleInfo const & p_infos )
+StyleInfo::StyleInfo( StyleInfo const & p_infos )
 	:	m_strName( p_infos.m_strName	)
 	,	m_strForeground( p_infos.m_strForeground	)
 	,	m_strBackground( p_infos.m_strBackground	)
@@ -28,7 +28,7 @@ StyleInfo :: StyleInfo( StyleInfo const & p_infos )
 {
 }
 
-StyleInfo & StyleInfo :: operator =( StyleInfo const & p_infos )
+StyleInfo & StyleInfo::operator =( StyleInfo const & p_infos )
 {
 	m_strName		= p_infos.m_strName			;
 	m_strForeground	= p_infos.m_strForeground	;
@@ -40,13 +40,13 @@ StyleInfo & StyleInfo :: operator =( StyleInfo const & p_infos )
 	return * this;
 }
 
-StyleInfo :: ~StyleInfo()
+StyleInfo::~StyleInfo()
 {
 }
 
 //*************************************************************************************************
 
-LanguageInfo :: LanguageInfo()
+LanguageInfo::LanguageInfo()
 	:	m_strName( DEFAULT_LANGUAGE	)
 	,	m_strFilePattern( wxEmptyString	)
 	,	m_eLexerID( eSTC_LEX_COUNT	)
@@ -85,11 +85,11 @@ LanguageInfo :: LanguageInfo()
 	//m_arrayStyles[eSTC_TYPE_UNDEFINED			] = std::make_shared< StyleInfo >(	wxT("Undefined"				),	wxT("ORANGE"			),	wxT("WHITE"),	wxT(""),	10,		0,					0 );
 }
 
-LanguageInfo :: ~LanguageInfo()
+LanguageInfo::~LanguageInfo()
 {
 }
 
-void LanguageInfo :: SetWords( eSTC_TYPE p_eType, wxArrayString const & p_arrayWords )
+void LanguageInfo::SetWords( eSTC_TYPE p_eType, wxArrayString const & p_arrayWords )
 {
 	wxString l_strWords;
 
@@ -106,12 +106,12 @@ void LanguageInfo :: SetWords( eSTC_TYPE p_eType, wxArrayString const & p_arrayW
 	m_arrayWords[p_eType] = l_strWords;
 }
 
-void LanguageInfo :: AddWord( eSTC_TYPE p_eType, wxString const & p_strWord )
+void LanguageInfo::AddWord( eSTC_TYPE p_eType, wxString const & p_strWord )
 {
 	m_arrayWords[p_eType] += p_strWord + wxT( " " );
 }
 
-StyleInfoPtr LanguageInfo :: CreateStyle( wxString const & p_strType, eSTC_TYPE p_eType )
+StyleInfoPtr LanguageInfo::CreateStyle( wxString const & p_strType, eSTC_TYPE p_eType )
 {
 	StyleInfoPtr l_pDefault = GetStyle( eSTC_TYPE_DEFAULT );
 	m_arrayStyles[p_eType] = std::make_shared< StyleInfo >( p_strType,	l_pDefault->GetForeground(), l_pDefault->GetBackground(), l_pDefault->GetFontName(), l_pDefault->GetFontSize(), l_pDefault->GetFontStyle(), l_pDefault->GetLetterCase() );
@@ -120,7 +120,7 @@ StyleInfoPtr LanguageInfo :: CreateStyle( wxString const & p_strType, eSTC_TYPE 
 
 //*************************************************************************************************
 
-StcContext :: StcContext()
+StcContext::StcContext()
 	:	m_bSyntaxEnable( true	)
 	,	m_bFoldEnable( true	)
 	,	m_bIndentEnable( true	)
@@ -136,18 +136,18 @@ StcContext :: StcContext()
 	m_arrayLanguages.push_back( std::make_shared< LanguageInfo >() );
 }
 
-StcContext :: ~StcContext()
+StcContext::~StcContext()
 {
 	m_arrayLanguages.clear();
 }
 
-void StcContext :: ParseFile( wxString const & p_strFileName )
+void StcContext::ParseFile( wxString const & p_strFileName )
 {
 	LanguageFileParser l_parser( this );
 	l_parser.ParseFile( ( wxChar const * )p_strFileName.c_str() );
 }
 
-LanguagesConstIterator StcContext :: Find( wxString const & p_strName )const
+LanguagesConstIterator StcContext::Find( wxString const & p_strName )const
 {
 	LanguagesConstIterator l_itReturn = End();
 
@@ -162,7 +162,7 @@ LanguagesConstIterator StcContext :: Find( wxString const & p_strName )const
 	return l_itReturn;
 }
 
-LanguagesIterator StcContext :: Find( wxString const & p_strName )
+LanguagesIterator StcContext::Find( wxString const & p_strName )
 {
 	LanguagesIterator l_itReturn = End();
 

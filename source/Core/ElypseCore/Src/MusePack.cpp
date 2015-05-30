@@ -23,10 +23,10 @@
 
 #pragma warning( disable:4996 )
 
-MusePack :: MusePack(	MuseDownloader * p_owner,
-						const Path & p_installPath,
-						const Path & p_basePath,
-						bool p_checkHeader )
+MusePack::MusePack(	MuseDownloader * p_owner,
+					const Path & p_installPath,
+					const Path & p_basePath,
+					bool p_checkHeader )
 	:	owned_by<MuseDownloader>( p_owner ),
 		m_timer( NULL ),
 		m_installPath( p_installPath ),
@@ -41,13 +41,13 @@ MusePack :: MusePack(	MuseDownloader * p_owner,
 	m_packPath = m_installPath / "rsc" / m_basePath.GetLeaf();
 //	m_packPath.erase( m_packPath.size() - 5, String::npos);
 	DirectoryCreate( m_packPath );
-	EMUSE_MESSAGE_DEBUG( "MusePack :: MusePack -> pack path : " + m_packPath );
-	EMUSE_MESSAGE_DEBUG( "MusePack :: MusePack -> install path : " + p_installPath );
-	EMUSE_MESSAGE_DEBUG( "MusePack :: MusePack -> base path : " + p_basePath );
-	EMUSE_MESSAGE_DEBUG( "MusePack :: MusePack -> checkheader : " + p_checkHeader );
+	EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> pack path : " + m_packPath );
+	EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> install path : " + p_installPath );
+	EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> base path : " + p_basePath );
+	EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> checkheader : " + p_checkHeader );
 }
 
-MusePack :: ~MusePack()
+MusePack::~MusePack()
 {
 	General::Utils::vector::deleteAll( m_files );
 	m_waitingDatas.clear();
@@ -59,7 +59,7 @@ MusePack :: ~MusePack()
 	}
 }
 
-size_t MusePack :: GetFileIndex( const String & p_name )const
+size_t MusePack::GetFileIndex( const String & p_name )const
 {
 	for ( size_t i = 0 ; i < m_files.size() ; i ++ )
 	{
@@ -72,7 +72,7 @@ size_t MusePack :: GetFileIndex( const String & p_name )const
 	return String::npos;
 }
 
-const String & MusePack :: GetFileName( size_t p_index )const
+const String & MusePack::GetFileName( size_t p_index )const
 {
 	if ( p_index >= m_files.size() )
 	{
@@ -82,7 +82,7 @@ const String & MusePack :: GetFileName( size_t p_index )const
 	return m_files[p_index]->GetFilename();
 }
 
-bool MusePack :: IsDownloadFinished( unsigned int p_index )const
+bool MusePack::IsDownloadFinished( unsigned int p_index )const
 {
 	if ( p_index >= m_files.size() || ! m_owner->IsInitialised() )
 	{
@@ -97,7 +97,7 @@ bool MusePack :: IsDownloadFinished( unsigned int p_index )const
 	return true;
 }
 
-bool MusePack :: _getHeaders( size_t & p_indexBuffer )
+bool MusePack::_getHeaders( size_t & p_indexBuffer )
 {
 	if ( m_files.size() == m_nbHeader )
 	{
@@ -141,7 +141,7 @@ bool MusePack :: _getHeaders( size_t & p_indexBuffer )
 	return true;
 }
 
-bool MusePack :: _finishHeaders()
+bool MusePack::_finishHeaders()
 {
 	if ( _verifyFiles() )
 	{
@@ -151,14 +151,14 @@ bool MusePack :: _finishHeaders()
 
 	if ( ! m_owner->DownloadFiles() )
 	{
-		EMUSE_MESSAGE_DEBUG( "MusePack :: _finishHeaders -> not downloading" );
+		EMUSE_MESSAGE_DEBUG( "MusePack::_finishHeaders -> not downloading" );
 		return true;
 	}
 
 	return false;
 }
 
-bool MusePack :: _getNumFiles( size_t & p_indexBuffer )
+bool MusePack::_getNumFiles( size_t & p_indexBuffer )
 {
 	int l_nbHeader;
 
@@ -168,7 +168,7 @@ bool MusePack :: _getNumFiles( size_t & p_indexBuffer )
 
 		if ( l_string != "MUSEFILE" )
 		{
-			EMUSE_MESSAGE_DEBUG( "MusePack :: _getNumFiles -> Error : musefile header not present" );
+			EMUSE_MESSAGE_DEBUG( "MusePack::_getNumFiles -> Error : musefile header not present" );
 //			return false;
 		}
 		else
@@ -183,7 +183,7 @@ bool MusePack :: _getNumFiles( size_t & p_indexBuffer )
 	if ( l_nbHeader <= 0 )
 	{
 		/* Erreur */
-		EMUSE_MESSAGE_RELEASE( "MusePack :: _getNumFiles -> Error in getting file - [" + m_packPath + "], l_nbHeader : [" + StringConverter::toString( l_nbHeader ) + "]" );
+		EMUSE_MESSAGE_RELEASE( "MusePack::_getNumFiles -> Error in getting file - [" + m_packPath + "], l_nbHeader : [" + StringConverter::toString( l_nbHeader ) + "]" );
 		m_owner->SetCantDownload( true );
 		return false;
 	}
@@ -192,7 +192,7 @@ bool MusePack :: _getNumFiles( size_t & p_indexBuffer )
 	return true;
 }
 
-size_t MusePack :: CurlCallback( void * p_buffer, size_t p_size )
+size_t MusePack::CurlCallback( void * p_buffer, size_t p_size )
 {
 	if ( m_timer == NULL )
 	{
@@ -231,7 +231,7 @@ size_t MusePack :: CurlCallback( void * p_buffer, size_t p_size )
 
 	if ( m_nbHeader < m_files.size() )
 	{
-		EMUSE_MESSAGE_RELEASE( "MusePack :: CurlCallback -> Error in getting file - [" + m_packPath + "] (m_nbHeader < m_files.size())" );
+		EMUSE_MESSAGE_RELEASE( "MusePack::CurlCallback -> Error in getting file - [" + m_packPath + "] (m_nbHeader < m_files.size())" );
 		m_owner->SetCantDownload( true );
 		return p_size + 1;
 	}
@@ -255,7 +255,7 @@ size_t MusePack :: CurlCallback( void * p_buffer, size_t p_size )
 		{
 			if ( ! m_files[i]->ReadContents( l_indexBuffer, m_waitingDatas ) )
 			{
-				EMUSE_MESSAGE_RELEASE( "MusePack :: CurlCallback -> Error in reading contents - [" + m_packPath + "]" );
+				EMUSE_MESSAGE_RELEASE( "MusePack::CurlCallback -> Error in reading contents - [" + m_packPath + "]" );
 				return p_size + 1;
 			}
 		}
@@ -282,7 +282,7 @@ size_t MusePack :: CurlCallback( void * p_buffer, size_t p_size )
 	return p_size;
 }
 
-bool MusePack :: _verifyFiles()
+bool MusePack::_verifyFiles()
 {
 	size_t l_nbHeaders = m_files.size();
 
@@ -309,7 +309,7 @@ bool MusePack :: _verifyFiles()
 	return true;
 }
 
-bool MusePack :: _downloadFinished()
+bool MusePack::_downloadFinished()
 {
 	size_t l_nbHeaders = m_files.size();
 
@@ -324,7 +324,7 @@ bool MusePack :: _downloadFinished()
 	return true;
 }
 
-void MusePack :: _finishMuseFile()
+void MusePack::_finishMuseFile()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "_finish muse file : " + m_packPath );
 	size_t l_nbHeaders = m_files.size();
@@ -351,7 +351,7 @@ void MusePack :: _finishMuseFile()
 
 			if ( l_dataFile == NULL )
 			{
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _finishMuseFile -> Major error in getting DataFile from DownloadManager" );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_finishMuseFile -> Major error in getting DataFile from DownloadManager" );
 				continue;
 			}
 
@@ -363,7 +363,7 @@ void MusePack :: _finishMuseFile()
 
 			if ( l_configFile == NULL )
 			{
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _finishMuseFile -> Major error in getting ConfigFile from DownloadManager" );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_finishMuseFile -> Major error in getting ConfigFile from DownloadManager" );
 				continue;
 			}
 
@@ -374,7 +374,7 @@ void MusePack :: _finishMuseFile()
 	m_museOK = true;
 }
 
-bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileName, const String & p_folderName )
+bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileName, const String & p_folderName )
 {
 	if ( ! m_owner->DownloadFiles() )
 	{
@@ -383,13 +383,13 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 
 	if ( ! FileExists( p_basePath / p_fileName ) )
 	{
-		EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : File[" + p_basePath / p_fileName + "] doesn't exists..." );
+		EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : File[" + p_basePath / p_fileName + "] doesn't exists..." );
 		return false;
 	}
 
 	if ( ! DirectoryExists( p_basePath / p_folderName ) )
 	{
-		EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Directory[" + p_basePath / p_folderName + "] doesn't exists..." );
+		EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Directory[" + p_basePath / p_folderName + "] doesn't exists..." );
 		DirectoryCreate( p_basePath / p_folderName );
 	}
 
@@ -397,7 +397,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 
 	if ( l_file == NULL )
 	{
-		EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while opening sound file : [" + p_basePath + "/" + p_fileName + "] : " + String( strerror( errno ) ) );
+		EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while opening sound file : [" + p_basePath + "/" + p_fileName + "] : " + String( strerror( errno ) ) );
 		return false;
 	}
 
@@ -407,19 +407,19 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 	{
 		if ( ferror( l_file ) != 0 )
 		{
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
 			fclose( l_file );
 			return false;
 		}
 
-		EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
+		EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
 		fclose( l_file );
 		return false;
 	}
 
 	if ( l_nbHeader <= 0 )
 	{
-		EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error with file [" + p_basePath + "/" + p_fileName + "] l_nbHeader <= 0" );
+		EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error with file [" + p_basePath + "/" + p_fileName + "] l_nbHeader <= 0" );
 		fclose( l_file );
 		return false;
 	}
@@ -435,13 +435,13 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 		{
 			if ( ferror( l_file ) != 0 )
 			{
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
 				General::Utils::vector::deleteAll( l_sndList );
 				fclose( l_file );
 				return false;
 			}
 
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
 			General::Utils::vector::deleteAll( l_sndList );
 			fclose( l_file );
 			return false;
@@ -449,7 +449,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 
 		if ( l_sndHeader->fileSize <= 0 )
 		{
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : File size is invalid : [" + StringConverter::toString( l_sndHeader->fileSize ) + "]" );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : File size is invalid : [" + StringConverter::toString( l_sndHeader->fileSize ) + "]" );
 			General::Utils::vector::deleteAll( l_sndList );
 			fclose( l_file );
 			return false;
@@ -459,13 +459,13 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 		{
 			if ( ferror( l_file ) != 0 )
 			{
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
 				General::Utils::vector::deleteAll( l_sndList );
 				fclose( l_file );
 				return false;
 			}
 
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
 			General::Utils::vector::deleteAll( l_sndList );
 			fclose( l_file );
 			return false;
@@ -473,7 +473,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 
 		if ( l_sndHeader->fileNameSize <= 0 )
 		{
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : File size is invalid : [" + StringConverter::toString( l_sndHeader->fileSize ) + "]" );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : File size is invalid : [" + StringConverter::toString( l_sndHeader->fileSize ) + "]" );
 			General::Utils::vector::deleteAll( l_sndList );
 			fclose( l_file );
 			return false;
@@ -485,13 +485,13 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 		{
 			if ( ferror( l_file ) != 0 )
 			{
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while reading file : [" + p_basePath + "/" + p_fileName + "]" );
 				General::Utils::vector::deleteAll( l_sndList );
 				fclose( l_file );
 				return false;
 			}
 
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
 			General::Utils::vector::deleteAll( l_sndList );
 			fclose( l_file );
 			return false;
@@ -507,7 +507,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 
 		if ( l_zipFile == NULL )
 		{
-			EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while opening zip file : [" + p_basePath / p_fileName + "] : " + String( strerror( errno ) ) );
+			EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while opening zip file : [" + p_basePath / p_fileName + "] : " + String( strerror( errno ) ) );
 			General::Utils::vector::deleteAll( l_sndList );
 			fclose( l_file );
 			fclose( l_zipFile );
@@ -532,7 +532,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 			{
 				if ( ferror( l_file ) != 0 )
 				{
-					EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while reading file [" + p_basePath / p_fileName + "]" );
+					EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while reading file [" + p_basePath / p_fileName + "]" );
 					delete [] l_buffer;
 					General::Utils::vector::deleteAll( l_sndList );
 					fclose( l_file );
@@ -540,7 +540,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 					return false;
 				}
 
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
 				delete [] l_buffer;
 				General::Utils::vector::deleteAll( l_sndList );
 				fclose( l_file );
@@ -552,7 +552,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 			{
 				if ( ferror( l_file ) != 0 )
 				{
-					EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : Error while writing into file [" + p_basePath + "/" + p_folderName + "/" + l_sndHeader->fileName + "]" );
+					EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while writing into file [" + p_basePath + "/" + p_folderName + "/" + l_sndHeader->fileName + "]" );
 					delete [] l_buffer;
 					General::Utils::vector::deleteAll( l_sndList );
 					fclose( l_file );
@@ -560,7 +560,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 					return false;
 				}
 
-				EMUSE_MESSAGE_RELEASE( "MusePack :: _treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
+				EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : End of file [" + p_basePath + "/" + p_fileName + "] reached but unexpected..." );
 				delete [] l_buffer;
 				General::Utils::vector::deleteAll( l_sndList );
 				fclose( l_file );
@@ -585,7 +585,7 @@ bool MusePack :: _treatGZipFile( const Path & p_basePath, const String & p_fileN
 	return true;
 }
 
-bool MusePack :: DecompressFile( const String & p_zipFileName, const String & p_fileName, int p_size )
+bool MusePack::DecompressFile( const String & p_zipFileName, const String & p_fileName, int p_size )
 {
 	bool l_return = true;
 	gzFile l_infile = gzopen( p_zipFileName.c_str(), "r" );
@@ -659,7 +659,7 @@ bool MusePack :: DecompressFile( const String & p_zipFileName, const String & p_
 	return l_return;
 }
 
-std::string MusePack :: DataType2String( DataBlockType p_dataType )
+std::string MusePack::DataType2String( DataBlockType p_dataType )
 {
 	switch ( p_dataType )
 	{

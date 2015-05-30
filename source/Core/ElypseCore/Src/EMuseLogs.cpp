@@ -9,19 +9,19 @@
 
 String EMPTY_STRING = String();
 
-GENLIB_INIT_SINGLETON_FOR_DLL( EMuse :: Debug :: EMuseLogs );
+GENLIB_INIT_SINGLETON_FOR_DLL( EMuse::Debug::EMuseLogs );
 
-EMuse :: Debug :: EMuseLogs :: EMuseLogs()
+EMuse::Debug::EMuseLogs::EMuseLogs()
 {
 	GENLIB_SET_SINGLETON();
 }
 
-EMuse :: Debug :: EMuseLogs :: ~EMuseLogs()
+EMuse::Debug::EMuseLogs::~EMuseLogs()
 {
 	sm_singleton = NULL;
 }
 
-void EMuse :: Debug :: EMuseLogs :: _logMessage( const String & p_comment )
+void EMuse::Debug::EMuseLogs::_logMessage( const String & p_comment )
 {
 	if ( EMuseController::GetSingletonPtr() != NULL )
 	{
@@ -44,7 +44,7 @@ void EMuse :: Debug :: EMuseLogs :: _logMessage( const String & p_comment )
 	}
 }
 
-void EMuse :: Debug :: EMuseLogs :: _consoleMessage( const String & p_comment )
+void EMuse::Debug::EMuseLogs::_consoleMessage( const String & p_comment )
 {
 	GENLIB_SCOPED_LOCK( m_consoleMutex );
 	std::cout << p_comment << std::endl;

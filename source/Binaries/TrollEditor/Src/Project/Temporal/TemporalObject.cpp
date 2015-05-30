@@ -9,7 +9,7 @@ using namespace Troll::GUI;
 using namespace Troll::Temporal;
 
 
-TemporalObject :: TemporalObject( const wxString & p_name, const wxString & p_fileName, TemporalObjectType p_type )
+TemporalObject::TemporalObject( const wxString & p_name, const wxString & p_fileName, TemporalObjectType p_type )
 	:	TrollObject( p_name, p_fileName, ttTemporalObject ),
 		m_temporalObjectType( p_type )
 {
@@ -34,7 +34,7 @@ TemporalObject :: TemporalObject( const wxString & p_name, const wxString & p_fi
 
 
 
-TemporalObject :: ~TemporalObject()
+TemporalObject::~TemporalObject()
 {
 }
 

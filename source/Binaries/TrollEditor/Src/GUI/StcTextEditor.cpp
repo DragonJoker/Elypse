@@ -64,7 +64,7 @@ struct LexerStylesAssoc
 
 //*************************************************************************************************
 
-wxStcTextEditor :: wxStcTextEditor( StcContext * p_pContext, wxWindow * p_pParent, wxWindowID p_id, wxPoint const & p_ptPos, wxSize const & p_size, long p_lStyle )
+wxStcTextEditor::wxStcTextEditor( StcContext * p_pContext, wxWindow * p_pParent, wxWindowID p_id, wxPoint const & p_ptPos, wxSize const & p_size, long p_lStyle )
 	:	wxStyledTextCtrl( p_pParent, p_id, p_ptPos, p_size, p_lStyle	)
 	,	m_pContext( new StcContext( *p_pContext )	)
 	,	m_strFilename( wxEmptyString	)
@@ -95,12 +95,12 @@ wxStcTextEditor :: wxStcTextEditor( StcContext * p_pContext, wxWindow * p_pParen
 	SetLayoutCache( wxSTC_CACHE_PAGE );
 }
 
-wxStcTextEditor :: ~wxStcTextEditor()
+wxStcTextEditor::~wxStcTextEditor()
 {
 	delete m_pContext;
 }
 
-bool wxStcTextEditor :: LoadFile()
+bool wxStcTextEditor::LoadFile()
 {
 	bool l_bReturn = false;
 #if wxUSE_FILEDLG
@@ -122,7 +122,7 @@ bool wxStcTextEditor :: LoadFile()
 	return l_bReturn;
 }
 
-bool wxStcTextEditor :: LoadFile( wxString const & p_strFilename )
+bool wxStcTextEditor::LoadFile( wxString const & p_strFilename )
 {
 	if ( ! p_strFilename.empty() )
 	{
@@ -139,7 +139,7 @@ bool wxStcTextEditor :: LoadFile( wxString const & p_strFilename )
 	return true;
 }
 
-void wxStcTextEditor :: SetText( wxString const & p_strSource )
+void wxStcTextEditor::SetText( wxString const & p_strSource )
 {
 	wxStyledTextCtrl::ClearAll();
 	wxStyledTextCtrl::SetEOLMode( wxSTC_EOL_LF );
@@ -148,7 +148,7 @@ void wxStcTextEditor :: SetText( wxString const & p_strSource )
 	wxStyledTextCtrl::EmptyUndoBuffer();
 }
 
-bool wxStcTextEditor :: SaveFile()
+bool wxStcTextEditor::SaveFile()
 {
 	bool l_bReturn = false;
 #if wxUSE_FILEDLG
@@ -184,7 +184,7 @@ bool wxStcTextEditor :: SaveFile()
 	return l_bReturn;
 }
 
-bool wxStcTextEditor :: SaveFile( wxString const & p_strFilename )
+bool wxStcTextEditor::SaveFile( wxString const & p_strFilename )
 {
 	bool l_bReturn = true;
 
@@ -196,12 +196,12 @@ bool wxStcTextEditor :: SaveFile( wxString const & p_strFilename )
 	return l_bReturn;
 }
 
-bool wxStcTextEditor :: IsModified()
+bool wxStcTextEditor::IsModified()
 {
 	return ( GetModify() && ! GetReadOnly() );
 }
 
-wxString wxStcTextEditor :: DeterminePrefs( wxString const & p_strFilename )
+wxString wxStcTextEditor::DeterminePrefs( wxString const & p_strFilename )
 {
 	LanguageInfoPtr l_pCurInfo;
 	wxString l_strReturn;
@@ -232,7 +232,7 @@ wxString wxStcTextEditor :: DeterminePrefs( wxString const & p_strFilename )
 	return l_strReturn;
 }
 
-bool wxStcTextEditor :: InitializePrefs( wxString const & p_strName )
+bool wxStcTextEditor::InitializePrefs( wxString const & p_strName )
 {
 	StyleClearAll();
 	LanguageInfoPtr l_pCurInfo;
@@ -396,13 +396,13 @@ bool wxStcTextEditor :: InitializePrefs( wxString const & p_strName )
 	return l_bFound;
 }
 
-void wxStcTextEditor :: UpdatePrefs()
+void wxStcTextEditor::UpdatePrefs()
 {
 	wxFileName l_fileName( m_strFilename );
 	InitializePrefs( DeterminePrefs( l_fileName.GetFullName() ) );
 }
 
-void wxStcTextEditor :: ReinitContext( StcContext * p_pContext )
+void wxStcTextEditor::ReinitContext( StcContext * p_pContext )
 {
 	delete m_pContext;
 	m_pContext = new StcContext( *p_pContext );
@@ -449,7 +449,7 @@ BEGIN_EVENT_TABLE( wxStcTextEditor, wxStyledTextCtrl )
 END_EVENT_TABLE()
 
 
-void wxStcTextEditor :: OnSize( wxSizeEvent & p_event )
+void wxStcTextEditor::OnSize( wxSizeEvent & p_event )
 {
 	int x = GetClientSize().x + ( m_pContext->GetLineNumberEnable() ? m_iLineNrMargin : 0 ) + ( m_pContext->GetFoldEnable() ? m_iFoldingMargin : 0 );
 
@@ -469,7 +469,7 @@ void wxStcTextEditor::OnEditRedo( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnEditUndo( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditUndo( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	if ( CanUndo() )
 	{
@@ -477,7 +477,7 @@ void wxStcTextEditor :: OnEditUndo( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnEditClear( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditClear( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	if ( ! GetReadOnly() )
 	{
@@ -485,12 +485,12 @@ void wxStcTextEditor :: OnEditClear( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnKey( wxStyledTextEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnKey( wxStyledTextEvent & WXUNUSED( p_event ) )
 {
 	wxMessageBox( wxT( "OnKey" ) );
 }
 
-void wxStcTextEditor :: OnEditCut( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditCut( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	if ( ! GetReadOnly() && ( GetSelectionEnd() - GetSelectionStart() ) > 0 )
 	{
@@ -498,7 +498,7 @@ void wxStcTextEditor :: OnEditCut( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnEditCopy( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditCopy( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	if ( GetSelectionEnd() - GetSelectionStart() > 0 )
 	{
@@ -506,7 +506,7 @@ void wxStcTextEditor :: OnEditCopy( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnEditPaste( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditPaste( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	if ( CanPaste() )
 	{
@@ -514,23 +514,23 @@ void wxStcTextEditor :: OnEditPaste( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnFind( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnFind( wxCommandEvent & WXUNUSED( p_event ) )
 {
 }
 
-void wxStcTextEditor :: OnFindNext( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnFindNext( wxCommandEvent & WXUNUSED( p_event ) )
 {
 }
 
-void wxStcTextEditor :: OnReplace( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnReplace( wxCommandEvent & WXUNUSED( p_event ) )
 {
 }
 
-void wxStcTextEditor :: OnReplaceNext( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnReplaceNext( wxCommandEvent & WXUNUSED( p_event ) )
 {
 }
 
-void wxStcTextEditor :: OnBraceMatch( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnBraceMatch( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	int l_iMin = GetCurrentPos();
 	int l_iMax = BraceMatch( l_iMin );
@@ -546,63 +546,63 @@ void wxStcTextEditor :: OnBraceMatch( wxCommandEvent & WXUNUSED( p_event ) )
 	}
 }
 
-void wxStcTextEditor :: OnGoto( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnGoto( wxCommandEvent & WXUNUSED( p_event ) )
 {
 }
 
-void wxStcTextEditor :: OnEditIndentInc( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditIndentInc( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	CmdKeyExecute( wxSTC_CMD_TAB );
 }
 
-void wxStcTextEditor :: OnEditIndentRed( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditIndentRed( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	CmdKeyExecute( wxSTC_CMD_DELETEBACK );
 }
 
-void wxStcTextEditor :: OnEditSelectAll( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditSelectAll( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetSelection( 0, GetTextLength() );
 }
 
-void wxStcTextEditor :: OnEditSelectLine( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnEditSelectLine( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	int l_iLineStart = PositionFromLine( GetCurrentLine() );
 	int l_iLineEnd = PositionFromLine( GetCurrentLine() + 1 );
 	SetSelection( l_iLineStart, l_iLineEnd );
 }
 
-void wxStcTextEditor :: OnHilightLang( wxCommandEvent & p_event )
+void wxStcTextEditor::OnHilightLang( wxCommandEvent & p_event )
 {
 	InitializePrefs( ( *( m_pContext->Begin() + ( p_event.GetId() - gcID_HILIGHTFIRST ) ) )->GetName() );
 }
 
-void wxStcTextEditor :: OnDisplayEOL( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnDisplayEOL( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetViewEOL( ! GetViewEOL() );
 }
 
-void wxStcTextEditor :: OnIndentGuide( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnIndentGuide( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetIndentationGuides( ! GetIndentationGuides() );
 }
 
-void wxStcTextEditor :: OnLineNumber( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnLineNumber( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetMarginWidth( m_iLineNrID, GetMarginWidth( m_iLineNrID ) == 0 ? m_iLineNrMargin : 0 );
 }
 
-void wxStcTextEditor :: OnLongLineOn( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnLongLineOn( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetEdgeMode( GetEdgeMode() == 0 ? wxSTC_EDGE_LINE : wxSTC_EDGE_NONE );
 }
 
-void wxStcTextEditor :: OnWhiteSpace( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnWhiteSpace( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetViewWhiteSpace( GetViewWhiteSpace() == 0 ? wxSTC_WS_VISIBLEALWAYS : wxSTC_WS_INVISIBLE );
 }
 
-void wxStcTextEditor :: OnFoldToggle( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnFoldToggle( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	ToggleFold( GetFoldParent( GetCurrentLine() ) );
 }
@@ -612,17 +612,17 @@ void wxStcTextEditor::OnSetOverType( wxCommandEvent & WXUNUSED( p_event ) )
 	SetOvertype( ! GetOvertype() );
 }
 
-void wxStcTextEditor :: OnSetReadOnly( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnSetReadOnly( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetReadOnly( ! GetReadOnly() );
 }
 
-void wxStcTextEditor :: OnWrapmodeOn( wxCommandEvent & WXUNUSED( p_event ) )
+void wxStcTextEditor::OnWrapmodeOn( wxCommandEvent & WXUNUSED( p_event ) )
 {
 	SetWrapMode( GetWrapMode() == 0 ? wxSTC_WRAP_WORD : wxSTC_WRAP_NONE );
 }
 
-void wxStcTextEditor :: OnUseCharset( wxCommandEvent & p_event )
+void wxStcTextEditor::OnUseCharset( wxCommandEvent & p_event )
 {
 	int l_iCharset = GetCodePage();
 
@@ -645,7 +645,7 @@ void wxStcTextEditor :: OnUseCharset( wxCommandEvent & p_event )
 	SetCodePage( l_iCharset );
 }
 
-void wxStcTextEditor :: OnChangeCase( wxCommandEvent & p_event )
+void wxStcTextEditor::OnChangeCase( wxCommandEvent & p_event )
 {
 	switch ( p_event.GetId() )
 	{
@@ -659,7 +659,7 @@ void wxStcTextEditor :: OnChangeCase( wxCommandEvent & p_event )
 	}
 }
 
-void wxStcTextEditor :: OnConvertEOL( wxCommandEvent & p_event )
+void wxStcTextEditor::OnConvertEOL( wxCommandEvent & p_event )
 {
 	int l_iEolMode = GetEOLMode();
 
@@ -682,7 +682,7 @@ void wxStcTextEditor :: OnConvertEOL( wxCommandEvent & p_event )
 	SetEOLMode( l_iEolMode );
 }
 
-void wxStcTextEditor :: OnMarginClick( wxStyledTextEvent & p_event )
+void wxStcTextEditor::OnMarginClick( wxStyledTextEvent & p_event )
 {
 	if ( p_event.GetMargin() == 2 )
 	{
@@ -696,7 +696,7 @@ void wxStcTextEditor :: OnMarginClick( wxStyledTextEvent & p_event )
 	}
 }
 
-void wxStcTextEditor :: OnCharAdded( wxStyledTextEvent & p_event )
+void wxStcTextEditor::OnCharAdded( wxStyledTextEvent & p_event )
 {
 	char l_chr = ( char )p_event.GetKey();
 	int l_iCurrentLine = GetCurrentLine();

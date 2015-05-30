@@ -1,6 +1,6 @@
 #include "ThreadPool.h"
 
-void General :: MultiThreading :: PoolWorkerThread :: _mainLoop()
+void General::MultiThreading::PoolWorkerThread::_mainLoop()
 {
 	while ( m_pool->HasJob() )
 	{

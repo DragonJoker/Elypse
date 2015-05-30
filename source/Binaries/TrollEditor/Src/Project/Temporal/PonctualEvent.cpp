@@ -17,10 +17,10 @@ using namespace Troll::Temporal;
 using namespace Troll::GUI;
 
 
-TrollPonctualEvent :: TrollPonctualEvent( TrollSequence * p_sequence, BasePonctualEvent * p_event,
-		const wxString & p_targetTypeName, const wxString & p_targetName,
-		float p_fireTime, const wxString & p_eventAction,
-		const wxString & p_name, const wxString & p_fileName )
+TrollPonctualEvent::TrollPonctualEvent( TrollSequence * p_sequence, BasePonctualEvent * p_event,
+										const wxString & p_targetTypeName, const wxString & p_targetName,
+										float p_fireTime, const wxString & p_eventAction,
+										const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttPonctualEvent ),
 		m_museEvent( p_event ),
 		m_targetTypeName( p_targetTypeName ),
@@ -34,13 +34,13 @@ TrollPonctualEvent :: TrollPonctualEvent( TrollSequence * p_sequence, BasePonctu
 
 
 
-TrollPonctualEvent :: ~TrollPonctualEvent()
+TrollPonctualEvent::~TrollPonctualEvent()
 {
 }
 
 
 
-int TrollPonctualEvent :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollPonctualEvent::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 80 + ( m_targetTypeName == wxT( "scene_node" ) ? 60 : 0 );
 
@@ -56,7 +56,7 @@ int TrollPonctualEvent :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollPonctualEvent :: SetFireTime( float p_time )
+void TrollPonctualEvent::SetFireTime( float p_time )
 {
 	m_fireTime = p_time;
 	m_panel->Replace();
@@ -65,7 +65,7 @@ void TrollPonctualEvent :: SetFireTime( float p_time )
 
 
 
-void TrollPonctualEvent :: SetActionName( const wxString & p_name )
+void TrollPonctualEvent::SetActionName( const wxString & p_name )
 {
 	if ( m_name != p_name )
 	{
@@ -76,9 +76,9 @@ void TrollPonctualEvent :: SetActionName( const wxString & p_name )
 
 
 
-void TrollPonctualEvent :: SetTarget( const wxString & p_type, const wxString & p_target )
+void TrollPonctualEvent::SetTarget( const wxString & p_type, const wxString & p_target )
 {
-	std::cout << "TrollPonctualEvent :: SetTarget - " << p_type << " - " << p_target << "\n";
+	std::cout << "TrollPonctualEvent::SetTarget - " << p_type << " - " << p_target << "\n";
 	m_targetTypeName = p_type;
 	m_targetName = p_target;
 
@@ -121,14 +121,14 @@ void TrollPonctualEvent :: SetTarget( const wxString & p_type, const wxString & 
 
 
 
-void TrollPonctualEvent :: SetActionArgs( const wxString & p_args )
+void TrollPonctualEvent::SetActionArgs( const wxString & p_args )
 {
 	m_actionArguments = p_args;
 }
 
 
 
-void TrollPonctualEvent :: Write( wxTextOutputStream * p_stream )
+void TrollPonctualEvent::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "\ttarget " ) + m_targetTypeName + wxT( " " ) + m_targetName + wxT( "\n" ) );
 	wxString l_tmp;

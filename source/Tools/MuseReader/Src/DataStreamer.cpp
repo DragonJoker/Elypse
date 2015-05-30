@@ -27,7 +27,7 @@ CDataStreamer::CDataStreamer( wxListBox * p_log )
 {
 }
 
-CDataStreamer::~CDataStreamer ()
+CDataStreamer::~CDataStreamer()
 {
 	Cleanup();
 }
@@ -51,6 +51,7 @@ bool CDataStreamer::SetFile( wxString const & p_url )
 		else
 		{
 			CleanupStream();
+
 			// connect to the file
 			switch ( m_type )
 			{
@@ -84,13 +85,20 @@ bool CDataStreamer::ReadHeader()
 {
 	bool l_result = false;
 	m_log->AppendString( _( "Lecture de l'en-tête" ) );
-	
+
 	// retrieve number of bloc definitions contained in the header
 	try
 	{
 		std::vector< char > l_magic( 9 );
 		Read( reinterpret_cast< uint8_t * >( l_magic.data() ), 8 );
 		m_log->AppendString( wxString( _( "  Magic : " ) ) << l_magic.data() );
+
+		int l_version = 1;
+
+		if ( std::string( l_magic.data() ) != "MUSEFILE" )
+		{
+			l_version = l_magic[7] - '0';
+		}
 
 		Read( m_nbBlocks );
 		m_log->AppendString( wxString( _( "Nombre de blocs : " ) ) << m_nbBlocks );
@@ -105,7 +113,7 @@ bool CDataStreamer::ReadHeader()
 			Read( l_blockType );
 			m_log->AppendString( wxString( _( "  Type : " ) ) << l_blockType );
 
-			if ( l_blockType <= 0 || l_blockType > EM_BLOCK_INTERACTIONS )
+			if ( l_blockType <= 0 || l_blockType >= EM_BLOCK_ERROR )
 			{
 				throw std::runtime_error( "Invalid block type" );
 			}
@@ -115,7 +123,7 @@ bool CDataStreamer::ReadHeader()
 			Read( l_namesize );
 			m_log->AppendString( wxString( _( "  Taille du nom : " ) ) << l_namesize );
 
-			if ( l_namesize <= 0  )
+			if ( l_namesize <= 0 )
 			{
 				throw std::runtime_error( "Invalid block name size" );
 			}
@@ -130,15 +138,19 @@ bool CDataStreamer::ReadHeader()
 			Read( l_blocksize );
 			m_log->AppendString( wxString( _( "  Taille du bloc : " ) ) << l_blocksize << _( " octets" ) );
 
-			if ( l_blocksize <= 0  )
+			if ( l_blocksize <= 0 )
 			{
 				throw std::runtime_error( "Invalid block size" );
 			}
-
-			// retrieve block's hash
+			
 			std::vector< char > l_hash( 33, 0 );
-			Read( reinterpret_cast< uint8_t * >( l_hash.data() ), 32 );
-			m_log->AppendString( wxString( _( "  Hash du bloc : " ) ) << l_hash.data() );
+
+			if ( l_version >= 1 )
+			{
+				// retrieve block's hash
+				Read( reinterpret_cast< uint8_t * >( l_hash.data() ), 32 );
+				m_log->AppendString( wxString( _( "  Hash du bloc : " ) ) << l_hash.data() );
+			}
 
 			// write these infos into the struct deserved to it
 			EM_Block block = { l_blockType, l_namesize, wxString( l_name.data() ), l_blocksize, wxString( l_hash.data() ) };
@@ -158,7 +170,7 @@ bool CDataStreamer::ReadHeader()
 	return l_result;
 }
 
-bool CDataStreamer::GetNextBlock ()
+bool CDataStreamer::GetNextBlock()
 {
 	bool l_result = false;
 
@@ -195,7 +207,7 @@ void CDataStreamer::Read( uint8_t * p_value, size_t p_size )
 	{
 		std::string l_error;
 
-		switch( m_stream->GetLastError() )
+		switch ( m_stream->GetLastError() )
 		{
 		case wxStreamError::wxSTREAM_EOF:
 			l_error = "End of stream";
@@ -214,7 +226,7 @@ void CDataStreamer::Read( uint8_t * p_value, size_t p_size )
 	}
 }
 
-int CDataStreamer::GetType( wxString const & p_url)
+int CDataStreamer::GetType( wxString const & p_url )
 {
 	int l_return = -1;
 
@@ -223,22 +235,22 @@ int CDataStreamer::GetType( wxString const & p_url)
 		wxString l_buf = p_url.substr( 0, 3 );
 
 		if ( l_buf == wxT( "fil" )
-			 || l_buf == wxT( "c:\\") || l_buf == wxT( "d:\\") || l_buf == wxT( "e:\\" ) 
-			 || l_buf == wxT( "f:\\") || l_buf == wxT( "g:\\") || l_buf == wxT( "h:\\" )
-			 || l_buf == wxT( "i:\\") || l_buf == wxT( "j:\\") || l_buf == wxT( "k:\\" )
-			 || l_buf == wxT( "l:\\") || l_buf == wxT( "m:\\") || l_buf == wxT( "n:\\" )
-			 || l_buf == wxT( "o:\\") || l_buf == wxT( "p:\\") || l_buf == wxT( "q:\\" )
-			 || l_buf == wxT( "r:\\") || l_buf == wxT( "s:\\") || l_buf == wxT( "t:\\" )
-			 || l_buf == wxT( "u:\\") || l_buf == wxT( "v:\\") || l_buf == wxT( "w:\\" )
-			 || l_buf == wxT( "x:\\") || l_buf == wxT( "y:\\") || l_buf == wxT( "z:\\" )
-			 || l_buf == wxT( "C:\\") || l_buf == wxT( "D:\\") || l_buf == wxT( "E:\\" ) 
-			 || l_buf == wxT( "F:\\") || l_buf == wxT( "G:\\") || l_buf == wxT( "H:\\" )
-			 || l_buf == wxT( "I:\\") || l_buf == wxT( "J:\\") || l_buf == wxT( "K:\\" )
-			 || l_buf == wxT( "L:\\") || l_buf == wxT( "M:\\") || l_buf == wxT( "N:\\" )
-			 || l_buf == wxT( "O:\\") || l_buf == wxT( "P:\\") || l_buf == wxT( "Q:\\" )
-			 || l_buf == wxT( "R:\\") || l_buf == wxT( "S:\\") || l_buf == wxT( "T:\\" )
-			 || l_buf == wxT( "U:\\") || l_buf == wxT( "V:\\") || l_buf == wxT( "W:\\" )
-			 || l_buf == wxT( "X:\\") || l_buf == wxT( "Y:\\") || l_buf == wxT( "Z:\\" ) )
+				|| l_buf == wxT( "c:\\" ) || l_buf == wxT( "d:\\" ) || l_buf == wxT( "e:\\" )
+				|| l_buf == wxT( "f:\\" ) || l_buf == wxT( "g:\\" ) || l_buf == wxT( "h:\\" )
+				|| l_buf == wxT( "i:\\" ) || l_buf == wxT( "j:\\" ) || l_buf == wxT( "k:\\" )
+				|| l_buf == wxT( "l:\\" ) || l_buf == wxT( "m:\\" ) || l_buf == wxT( "n:\\" )
+				|| l_buf == wxT( "o:\\" ) || l_buf == wxT( "p:\\" ) || l_buf == wxT( "q:\\" )
+				|| l_buf == wxT( "r:\\" ) || l_buf == wxT( "s:\\" ) || l_buf == wxT( "t:\\" )
+				|| l_buf == wxT( "u:\\" ) || l_buf == wxT( "v:\\" ) || l_buf == wxT( "w:\\" )
+				|| l_buf == wxT( "x:\\" ) || l_buf == wxT( "y:\\" ) || l_buf == wxT( "z:\\" )
+				|| l_buf == wxT( "C:\\" ) || l_buf == wxT( "D:\\" ) || l_buf == wxT( "E:\\" )
+				|| l_buf == wxT( "F:\\" ) || l_buf == wxT( "G:\\" ) || l_buf == wxT( "H:\\" )
+				|| l_buf == wxT( "I:\\" ) || l_buf == wxT( "J:\\" ) || l_buf == wxT( "K:\\" )
+				|| l_buf == wxT( "L:\\" ) || l_buf == wxT( "M:\\" ) || l_buf == wxT( "N:\\" )
+				|| l_buf == wxT( "O:\\" ) || l_buf == wxT( "P:\\" ) || l_buf == wxT( "Q:\\" )
+				|| l_buf == wxT( "R:\\" ) || l_buf == wxT( "S:\\" ) || l_buf == wxT( "T:\\" )
+				|| l_buf == wxT( "U:\\" ) || l_buf == wxT( "V:\\" ) || l_buf == wxT( "W:\\" )
+				|| l_buf == wxT( "X:\\" ) || l_buf == wxT( "Y:\\" ) || l_buf == wxT( "Z:\\" ) )
 		{
 			l_return = EM_TYPE_LOCAL;
 		}
@@ -259,7 +271,7 @@ int CDataStreamer::GetType( wxString const & p_url)
 	return l_return;
 }
 
-void CDataStreamer::Cleanup ()
+void CDataStreamer::Cleanup()
 {
 	CleanupStream();
 	m_header.clear();

@@ -11,8 +11,8 @@ BEGIN_EVENT_TABLE( TextLinesCtrl, wxPanel )
 END_EVENT_TABLE()
 
 
-TextLinesCtrl :: TextLinesCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos,
-								const wxSize & size, long style )
+TextLinesCtrl::TextLinesCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos,
+							  const wxSize & size, long style )
 	:	wxPanel( parent, id, pos, size, style ),
 		m_nbLines( 0 )
 {
@@ -23,7 +23,7 @@ TextLinesCtrl :: TextLinesCtrl( wxWindow * parent, wxWindowID id, const wxPoint 
 
 
 
-void TextLinesCtrl :: AddLines( unsigned int p_nbLines )
+void TextLinesCtrl::AddLines( unsigned int p_nbLines )
 {
 	wxString l_caption;
 	int l_deltaY = 0;
@@ -42,7 +42,7 @@ void TextLinesCtrl :: AddLines( unsigned int p_nbLines )
 
 
 
-void TextLinesCtrl :: RemoveLine()
+void TextLinesCtrl::RemoveLine()
 {
 	if ( m_nbLines > 0 )
 	{
@@ -55,7 +55,7 @@ void TextLinesCtrl :: RemoveLine()
 
 
 
-void TextLinesCtrl :: GoToLine( int p_line )
+void TextLinesCtrl::GoToLine( int p_line )
 {
 	if ( p_line <= static_cast <int>( m_lines->GetCount() ) )
 	{
@@ -65,7 +65,7 @@ void TextLinesCtrl :: GoToLine( int p_line )
 
 
 
-void TextLinesCtrl :: _onDoubleClick( wxMouseEvent & p_event )
+void TextLinesCtrl::_onDoubleClick( wxMouseEvent & p_event )
 {
 	p_event.Skip();
 }

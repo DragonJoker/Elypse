@@ -8,7 +8,7 @@
 
 #include <ode/objects.h>
 
-BoundingShape :: BoundingShape( BoundingShapeClass p_class )
+BoundingShape::BoundingShape( BoundingShapeClass p_class )
 	:	m_class( p_class ),
 		m_enabled( true ),
 		m_maxContacts( 0 ),
@@ -20,7 +20,7 @@ BoundingShape :: BoundingShape( BoundingShapeClass p_class )
 	SetMaxContacts( 12 );
 }
 
-BoundingShape :: ~BoundingShape()
+BoundingShape::~BoundingShape()
 {
 	if ( m_geom != NULL )
 	{
@@ -30,7 +30,7 @@ BoundingShape :: ~BoundingShape()
 	delete [] m_contacts;
 }
 
-void BoundingShape :: _register()
+void BoundingShape::_register()
 {
 	dGeomSetData( m_geom, this );
 
@@ -40,14 +40,14 @@ void BoundingShape :: _register()
 	}
 }
 
-void BoundingShape :: SetParent( PhysicsObject * p_parent )
+void BoundingShape::SetParent( PhysicsObject * p_parent )
 {
 	genlib_assert( p_parent != NULL );
 	m_parentObject = p_parent;
 	dGeomSetBody( m_geom, p_parent->GetBodyId() );
 }
 
-void BoundingShape :: SetMaxContacts( unsigned int p_maxContacts )
+void BoundingShape::SetMaxContacts( unsigned int p_maxContacts )
 {
 	if ( m_contacts != NULL )
 	{
@@ -58,7 +58,7 @@ void BoundingShape :: SetMaxContacts( unsigned int p_maxContacts )
 	m_maxContacts = p_maxContacts;
 }
 
-const AxisAlignedBox &	BoundingShape :: GetBoundingBox()
+const AxisAlignedBox &	BoundingShape::GetBoundingBox()
 {
 	dReal aabb[6];
 	dGeomGetAABB( m_geom, aabb );
@@ -66,17 +66,17 @@ const AxisAlignedBox &	BoundingShape :: GetBoundingBox()
 	return m_box;
 }
 
-void BoundingShape :: SetPosition( const Vector3 & p_position )
+void BoundingShape::SetPosition( const Vector3 & p_position )
 {
 	dGeomSetOffsetPosition( m_geom, p_position.x, p_position.y, p_position.z );
 }
 
-void BoundingShape :: SetOrientation( const Quaternion & p_orientation )
+void BoundingShape::SetOrientation( const Quaternion & p_orientation )
 {
 	dGeomSetOffsetRotation( m_geom, p_orientation.ptr() );
 }
 
-void BoundingShape :: SetSpace( Space * p_space )
+void BoundingShape::SetSpace( Space * p_space )
 {
 	if ( p_space == m_space )
 	{
@@ -102,7 +102,7 @@ void BoundingShape :: SetSpace( Space * p_space )
 	}
 }
 
-bool BoundingShape :: Collide( BoundingShape * p_collideWith )
+bool BoundingShape::Collide( BoundingShape * p_collideWith )
 {
 	genlib_assert( p_collideWith != NULL );
 	int l_numContacts = dCollide( m_geom, p_collideWith->m_geom, m_maxContacts, & m_contacts[0].geom, sizeof( dContact ) );
@@ -167,7 +167,7 @@ bool BoundingShape :: Collide( BoundingShape * p_collideWith )
 
 	if ( l_bodyA != NULL || l_bodyB != NULL )
 	{
-		PhysicsEngine :: RollingFrictionCallback( m_parentObject, p_collideWith->m_parentObject, m_contacts, l_numContacts );
+		PhysicsEngine::RollingFrictionCallback( m_parentObject, p_collideWith->m_parentObject, m_contacts, l_numContacts );
 	}
 
 	l_v3 /= Real( l_numContacts );

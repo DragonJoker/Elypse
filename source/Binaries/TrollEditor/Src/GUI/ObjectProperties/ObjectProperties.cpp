@@ -5,7 +5,7 @@
 using namespace Troll::GUI;
 
 
-ObjectProperties :: ObjectProperties( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
+ObjectProperties::ObjectProperties( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
 	:	wxPanel( parent, wxID_ANY, pos, size, style ),
 		m_updatingProperties( false )
 {
@@ -13,7 +13,7 @@ ObjectProperties :: ObjectProperties( wxWindow * parent, const wxPoint & pos, co
 
 
 
-ObjectProperties :: ~ObjectProperties()
+ObjectProperties::~ObjectProperties()
 {
 }
 

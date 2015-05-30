@@ -68,7 +68,7 @@
 #define d_unreachable_code d_debug_assert( 0); d_hint( 0)
 #define d_no_default default : d_unreachable_code
 #define d_no_throw throw()
-#define d_coucou std::cout << "Coucou ~ " << __FILE__ << " :: " << __FUNCTION__ << " @ line " << __LINE__ << std::endl
+#define d_coucou std::cout << "Coucou ~ " << __FILE__ << "::" << __FUNCTION__ << " @ line " << __LINE__ << std::endl
 #define d_debug_catch( p_code) try { p_code; } catch (...) { std::cout << "Caught exception thrown from code : " << (#p_code) << ", file : " << __FILE__ << ", line " << __LINE__ << std::endl; }
 
 #define _forui( X, Y) for (unsigned int X = 0 ; X < Y ; X ++)

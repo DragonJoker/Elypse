@@ -12,12 +12,12 @@ using namespace Troll::GUI;
 extern MainFrame * g_mainFrame;
 
 BEGIN_EVENT_TABLE( AutoCompletionListBox, wxListBox )
-	EVT_LEFT_DCLICK(	AutoCompletionListBox :: _onMouseLeftDown )
-	EVT_KEY_DOWN(	AutoCompletionListBox :: _onKeyDown )
+	EVT_LEFT_DCLICK(	AutoCompletionListBox::_onMouseLeftDown )
+	EVT_KEY_DOWN(	AutoCompletionListBox::_onKeyDown )
 END_EVENT_TABLE()
 
 
-AutoCompletionListBox :: AutoCompletionListBox( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size,
+AutoCompletionListBox::AutoCompletionListBox( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size,
 		const wxArrayString & choices )
 	:	wxListBox( parent, id, pos, size, choices, wxLB_ALWAYS_SB | wxWANTS_CHARS )
 {
@@ -25,14 +25,14 @@ AutoCompletionListBox :: AutoCompletionListBox( wxWindow * parent, wxWindowID id
 
 
 
-void AutoCompletionListBox :: _onMouseLeftDown( wxMouseEvent & p_event )
+void AutoCompletionListBox::_onMouseLeftDown( wxMouseEvent & p_event )
 {
 //	g_mainFrame->m_editText->GetText()->AutoWord();
 }
 
 
 
-void AutoCompletionListBox :: _onKeyDown( wxKeyEvent & p_event )
+void AutoCompletionListBox::_onKeyDown( wxKeyEvent & p_event )
 {
 	int l_key = p_event.GetKeyCode();
 

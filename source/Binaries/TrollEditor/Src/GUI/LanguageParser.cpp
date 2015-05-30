@@ -11,7 +11,7 @@ using namespace Troll::GUI;
 
 //*************************************************************************************************
 
-LanguageFileContext :: LanguageFileContext( FILE * p_pFile )
+LanguageFileContext::LanguageFileContext( FILE * p_pFile )
 	:	FileParserContext( p_pFile )
 {
 	mapTypes[wxT( "default"	)] = eSTC_TYPE_DEFAULT;
@@ -150,17 +150,17 @@ LanguageFileContext :: LanguageFileContext( FILE * p_pFile )
 
 //*************************************************************************************************
 
-LanguageFileParser :: LanguageFileParser( StcContext * p_pStcContext )
+LanguageFileParser::LanguageFileParser( StcContext * p_pStcContext )
 	:	FileParser( eSECTION_ROOT, eSECTION_COUNT )
 	,	m_pStcContext( p_pStcContext )
 {
 }
 
-LanguageFileParser :: ~LanguageFileParser()
+LanguageFileParser::~LanguageFileParser()
 {
 }
 
-void LanguageFileParser :: DoInitialiseParser( FILE * p_file )
+void LanguageFileParser::DoInitialiseParser( FILE * p_file )
 {
 	AddParser( eSECTION_ROOT,		wxT( "language"	),	Root_Language	);
 	AddParser( eSECTION_LANGUAGE,	wxT( "pattern"	),	Language_Pattern	);
@@ -186,12 +186,12 @@ void LanguageFileParser :: DoInitialiseParser( FILE * p_file )
 	l_pContext->pCurrentLanguage = std::make_shared< LanguageInfo >();
 }
 
-void LanguageFileParser :: DoCleanupParser()
+void LanguageFileParser::DoCleanupParser()
 {
 	std::static_pointer_cast< LanguageFileContext >( m_pParsingContext )->pCurrentLanguage.reset();
 }
 
-void LanguageFileParser :: DoDiscardParser( wxString const & p_strLine )
+void LanguageFileParser::DoDiscardParser( wxString const & p_strLine )
 {
 	if ( m_pParsingContext->stackSections.top() == eSECTION_LIST )
 	{
@@ -207,7 +207,7 @@ void LanguageFileParser :: DoDiscardParser( wxString const & p_strLine )
 	}
 }
 
-void LanguageFileParser :: DoValidate()
+void LanguageFileParser::DoValidate()
 {
 	m_pStcContext->AddLanguage( std::static_pointer_cast< LanguageFileContext >( m_pParsingContext )->pCurrentLanguage );
 }

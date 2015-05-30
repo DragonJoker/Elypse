@@ -12,7 +12,7 @@
 #include <OgreSceneNode.h>
 #include <OgreStringConverter.h>
 
-SoundPlaylist :: SoundPlaylist( const String & p_name, Real p_SFXVolume, Real p_musicVolume, const String & p_zoneName )
+SoundPlaylist::SoundPlaylist( const String & p_name, Real p_SFXVolume, Real p_musicVolume, const String & p_zoneName )
 	:	m_name( p_name ),
 		m_zoneName( p_zoneName ),
 		m_timerType( TT_Fixed ),
@@ -29,23 +29,23 @@ SoundPlaylist :: SoundPlaylist( const String & p_name, Real p_SFXVolume, Real p_
 		m_SFXVolume( minmax <Real> ( 0, p_SFXVolume, 1 ) ),
 		m_volumePercent( 1.0 )
 {
-	EMUSE_MESSAGE_DEBUG( "SoundObject :: SoundPlaylist - " + p_name );
+	EMUSE_MESSAGE_DEBUG( "SoundObject::SoundPlaylist - " + p_name );
 }
 
-SoundPlaylist :: ~SoundPlaylist()
+SoundPlaylist::~SoundPlaylist()
 {
 	m_objectList.clear();
 	m_positions.clear();
 }
 
-void SoundPlaylist :: AddSoundObject( SoundObject * p_soundObject )
+void SoundPlaylist::AddSoundObject( SoundObject * p_soundObject )
 {
 	if ( p_soundObject == NULL || General::Utils::map::has( m_objectList, p_soundObject->GetName() ) )
 	{
 		return;
 	}
 
-	_logMessage( "SoundPlaylist :: AddSoundObject - " + p_soundObject->GetName() + " to playlist " + m_name );
+	_logMessage( "SoundPlaylist::AddSoundObject - " + p_soundObject->GetName() + " to playlist " + m_name );
 	m_objectList.insert( SoundObjectMap::value_type( p_soundObject->GetName(), p_soundObject ) );
 	m_positions.push_back( p_soundObject );
 
@@ -63,7 +63,7 @@ void SoundPlaylist :: AddSoundObject( SoundObject * p_soundObject )
 	m_volume = m_musicVolume;
 }
 
-void SoundPlaylist :: SetNode( SceneNode * p_node, const String & p_zone )
+void SoundPlaylist::SetNode( SceneNode * p_node, const String & p_zone )
 {
 	SoundObjectMap::iterator l_it = m_objectList.begin();
 	const SoundObjectMap::iterator & l_end = m_objectList.end();
@@ -78,7 +78,7 @@ void SoundPlaylist :: SetNode( SceneNode * p_node, const String & p_zone )
 	m_nbUse ++;
 }
 
-void SoundPlaylist :: _randomise()
+void SoundPlaylist::_randomise()
 {
 	EMSoundsPosition l_positions;
 	size_t l_rand;
@@ -93,9 +93,9 @@ void SoundPlaylist :: _randomise()
 	m_positions = l_positions;
 }
 
-void SoundPlaylist :: Play()
+void SoundPlaylist::Play()
 {
-	_logMessage( "SoundPlaylist :: Play - " + m_name );
+	_logMessage( "SoundPlaylist::Play - " + m_name );
 
 	if ( m_random )
 	{
@@ -115,7 +115,7 @@ void SoundPlaylist :: Play()
 	m_currentPlaying = -1;
 }
 
-void SoundPlaylist :: Pause()
+void SoundPlaylist::Pause()
 {
 	if ( m_currentPlaying == -1 )
 	{
@@ -131,7 +131,7 @@ void SoundPlaylist :: Pause()
 	}
 }
 
-void SoundPlaylist :: Stop()
+void SoundPlaylist::Stop()
 {
 	if ( m_currentPlaying == -1 )
 	{
@@ -150,7 +150,7 @@ void SoundPlaylist :: Stop()
 	m_currentPlaying = -1;
 }
 
-void SoundPlaylist :: Next()
+void SoundPlaylist::Next()
 {
 	m_currentPlaying ++;
 
@@ -176,16 +176,16 @@ void SoundPlaylist :: Next()
 	m_currentPlaying = -1;
 }
 
-void SoundPlaylist :: ReleaseAllZone( const String & p_zoneName )
+void SoundPlaylist::ReleaseAllZone( const String & p_zoneName )
 {
-	_logMessage( "SoundPlaylist :: ReleaseAllZone - Zone : " + p_zoneName + " Playlist Name : " + m_name );
+	_logMessage( "SoundPlaylist::ReleaseAllZone - Zone : " + p_zoneName + " Playlist Name : " + m_name );
 
 	if ( m_zoneName != p_zoneName )
 	{
 		return;
 	}
 
-//	_logMessage("SoundPlaylist :: ReleaseAllZone - My Zone");
+//	_logMessage("SoundPlaylist::ReleaseAllZone - My Zone");
 	m_objectList.clear();
 
 	if ( m_nbUse > 0 )
@@ -194,13 +194,13 @@ void SoundPlaylist :: ReleaseAllZone( const String & p_zoneName )
 	}
 }
 
-void SoundPlaylist :: Update( Real p_tslf )
+void SoundPlaylist::Update( Real p_tslf )
 {
 	_updateTime( p_tslf );
 	_update3D( p_tslf );
 }
 
-void SoundPlaylist :: _updateTime( Real p_tslf )
+void SoundPlaylist::_updateTime( Real p_tslf )
 {
 	if ( m_currentPlaying == -1 )
 	{
@@ -229,7 +229,7 @@ void SoundPlaylist :: _updateTime( Real p_tslf )
 	if ( m_waiting )
 	{
 		m_currentTime += p_tslf;
-		//m_log->logMessage("SoundPlaylist :: UpdateTime - " + m_name + " - m_currentTime : "+StringConverter::toString(m_currentTime));
+		//m_log->logMessage("SoundPlaylist::UpdateTime - " + m_name + " - m_currentTime : "+StringConverter::toString(m_currentTime));
 
 		if ( ( m_timerType == TT_Fixed && ( m_timerTime <= 0.0 || m_currentTime >= m_timerTime ) )
 				|| ( m_timerType == TT_Random && ( m_randomTimerTime <= 0.0 || m_currentTime >= m_randomTimerTime ) ) )
@@ -258,7 +258,7 @@ void SoundPlaylist :: _updateTime( Real p_tslf )
 	}
 }
 
-void SoundPlaylist :: _update3D( Real p_tslf )
+void SoundPlaylist::_update3D( Real p_tslf )
 {
 	if ( m_currentPlaying == -1 )
 	{
@@ -276,7 +276,7 @@ void SoundPlaylist :: _update3D( Real p_tslf )
 	l_sInstance->Update3D( p_tslf );
 }
 
-void SoundPlaylist :: _logMessage( const String & p_msg )
+void SoundPlaylist::_logMessage( const String & p_msg )
 {
 	EMUSE_MESSAGE_DEBUG( p_msg );
 }

@@ -42,8 +42,8 @@ BEGIN_EVENT_TABLE( NewOverlayFrame, wxFrame )
 END_EVENT_TABLE()
 
 
-NewOverlayFrame :: NewOverlayFrame( const wxPoint & p_position, EMOverlay * p_parentOverlay,
-									const wxString & p_name )
+NewOverlayFrame::NewOverlayFrame( const wxPoint & p_position, EMOverlay * p_parentOverlay,
+								  const wxString & p_name )
 	:	wxFrame( g_mainFrame, wxID_ANY, wxT( "Nouvel Overlay" ), p_position,
 				 wxSize( 250, 422 ), wxFRAME_TOOL_WINDOW | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT ),
 	m_parentOverlay( p_parentOverlay ),
@@ -89,7 +89,7 @@ NewOverlayFrame :: NewOverlayFrame( const wxPoint & p_position, EMOverlay * p_pa
 
 
 
-void NewOverlayFrame :: _getOverlayTemplates( wxArrayString & p_array )
+void NewOverlayFrame::_getOverlayTemplates( wxArrayString & p_array )
 {
 	p_array.clear();
 	OverlayManager::TemplateIterator l_it = OverlayManager::getSingletonPtr()->getTemplateIterator();
@@ -102,7 +102,7 @@ void NewOverlayFrame :: _getOverlayTemplates( wxArrayString & p_array )
 
 
 
-void NewOverlayFrame :: _onSelectTemplate( wxCommandEvent & p_event )
+void NewOverlayFrame::_onSelectTemplate( wxCommandEvent & p_event )
 {
 	EMOverlay * l_emov;
 	String l_templateName = p_event.GetString().char_str().data();
@@ -113,7 +113,7 @@ void NewOverlayFrame :: _onSelectTemplate( wxCommandEvent & p_event )
 	}
 	else
 	{
-//		std::cout << "NewOverlayFrame :: _onSelectTemplate - " << l_templateName << "\n";
+//		std::cout << "NewOverlayFrame::_onSelectTemplate - " << l_templateName << "\n";
 		TrollOverlay * l_parentTrollOverlay = NULL;
 		wxArrayString l_list;
 		g_mainFrame->GetCurrentProject()->GetMainScene()->GetOverlaysNames( l_list );
@@ -149,7 +149,7 @@ void NewOverlayFrame :: _onSelectTemplate( wxCommandEvent & p_event )
 
 
 
-void NewOverlayFrame :: _onOK( wxCommandEvent & p_event )
+void NewOverlayFrame::_onOK( wxCommandEvent & p_event )
 {
 	if ( m_overlay != NULL )
 	{
@@ -164,7 +164,7 @@ void NewOverlayFrame :: _onOK( wxCommandEvent & p_event )
 
 
 
-void NewOverlayFrame :: _onCancel( wxCommandEvent & p_event )
+void NewOverlayFrame::_onCancel( wxCommandEvent & p_event )
 {
 	if ( m_overlay != NULL )
 	{

@@ -21,10 +21,16 @@
 
 typedef enum EMBlockType
 {
-	EM_BLOCK_ZIPDATA = 1,
-	EM_BLOCK_GZIPDATA = 2,
-	EM_BLOCK_SCENE = 3,
-	EM_BLOCK_INTERACTIONS = 4,
+	EM_BLOCK_ZIPDATA		= 1,	/* .zip files */
+	EM_BLOCK_GZIPDATA		= 2,	/* unused */
+	EM_BLOCK_SCENE			= 3,	/* .emscene files */
+	EM_BLOCK_INTERACTIONS	= 4,	/* .emscript files */
+	EM_BLOCK_SNDDATA		= 5,	/* unused */
+	EM_BLOCK_CONFIG			= 6,	/* unused */
+	EM_BLOCK_ZIPSNDDATA		= 7,	/* .emsnd files */
+	EM_BLOCK_EMCONFIG		= 8,	/* unused */
+	EM_NB_BLOCK_TYPES		= 8,
+	EM_BLOCK_ERROR			= 9,
 };
 
 typedef enum EMSessionType
@@ -53,7 +59,7 @@ public:
 		Default constructor, does nothing special
 	*/
 	CDataStreamer( wxListBox * p_log );
-	/** 
+	/**
 		Default destructor, calls Cleanup()
 	*/
 	~CDataStreamer();
@@ -106,7 +112,7 @@ private:
 	//! The stream socket (for ftp or http file)
 	wxProtocol * m_protocol;
 	//! The session type
-	int m_type;	
+	int m_type;
 	//! The index of the next block to read in the file
 	int m_currentBlockIndex;
 	//! The number of blocks contained in the file

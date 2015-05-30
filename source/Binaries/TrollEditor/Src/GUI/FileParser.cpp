@@ -9,13 +9,13 @@ using namespace Troll::GUI;
 
 //*************************************************************************************************
 
-FileParserContext :: FileParserContext( FILE * p_pFile )
+FileParserContext::FileParserContext( FILE * p_pFile )
 	:	ui64Line( 0	)
 	,	pFile( p_pFile	)
 {
 }
 
-FileParserContext :: ~FileParserContext()
+FileParserContext::~FileParserContext()
 {
 	ui64Line		= 0;
 	pFile			= NULL;
@@ -23,7 +23,7 @@ FileParserContext :: ~FileParserContext()
 
 //*************************************************************************************************
 
-FileParser :: FileParser( int p_iRootSectionNumber, int p_iSectionCount )
+FileParser::FileParser( int p_iRootSectionNumber, int p_iSectionCount )
 	:	m_iRootSectionNumber( p_iRootSectionNumber	)
 	,	m_iSectionCount( p_iSectionCount	)
 	,	m_pParsingContext(	)
@@ -32,11 +32,11 @@ FileParser :: FileParser( int p_iRootSectionNumber, int p_iSectionCount )
 {
 }
 
-FileParser :: ~FileParser()
+FileParser::~FileParser()
 {
 }
 
-bool FileParser :: ParseFile( wxString const & p_strFileName )
+bool FileParser::ParseFile( wxString const & p_strFileName )
 {
 	m_iIgnoreLevel = 0;
 	m_bIgnored = false;
@@ -52,7 +52,7 @@ bool FileParser :: ParseFile( wxString const & p_strFileName )
 	return l_bReturn;
 }
 
-bool FileParser :: ParseFile( FILE * p_file )
+bool FileParser::ParseFile( FILE * p_file )
 {
 	bool l_bReturn = false;
 	char l_szLine[1024];
@@ -172,21 +172,21 @@ bool FileParser :: ParseFile( FILE * p_file )
 	return l_bReturn;
 }
 
-void FileParser :: ParseError( wxString const & p_strError, FileParserContextPtr p_pContext )
+void FileParser::ParseError( wxString const & p_strError, FileParserContextPtr p_pContext )
 {
 	wxString l_strError;
 	l_strError << wxT( "Error Line #" ) << p_pContext->ui64Line << wxT( " / " ) << p_strError;
 //	Logger::LogMessage( l_strError );
 }
 
-void FileParser :: ParseWarning( wxString const & p_strWarning, FileParserContextPtr p_pContext )
+void FileParser::ParseWarning( wxString const & p_strWarning, FileParserContextPtr p_pContext )
 {
 	wxString l_strError;
 	l_strError << wxT( "Warning Line #" ) << p_pContext->ui64Line << wxT( " / " ) << p_strWarning;
 //	Logger::LogMessage( l_strError );
 }
 
-bool FileParser :: CheckParams( wxString const & p_strParams, ParameterTypeArrayConstIt p_itBegin, ParameterTypeArrayConstIt p_itEnd, FileParserContextPtr p_pContext )
+bool FileParser::CheckParams( wxString const & p_strParams, ParameterTypeArrayConstIt p_itBegin, ParameterTypeArrayConstIt p_itEnd, FileParserContextPtr p_pContext )
 {
 	bool l_bReturn = true;
 	wxString l_strParams( p_strParams );
@@ -356,7 +356,7 @@ bool FileParser :: CheckParams( wxString const & p_strParams, ParameterTypeArray
 	return l_bReturn;
 }
 
-void FileParser :: AddParser( int p_iSection, wxString const & p_strName, PParserFunction p_pfnFunction, int p_iCount, ... )
+void FileParser::AddParser( int p_iSection, wxString const & p_strName, PParserFunction p_pfnFunction, int p_iCount, ... )
 {
 	ParameterTypeArray l_arrayParams;
 	va_list l_valist;
@@ -371,7 +371,7 @@ void FileParser :: AddParser( int p_iSection, wxString const & p_strName, PParse
 	m_mapParsers[p_iSection][p_strName] = std::make_pair( p_pfnFunction, l_arrayParams );
 }
 
-bool FileParser :: DoParseScriptLine( wxString & p_strLine )
+bool FileParser::DoParseScriptLine( wxString & p_strLine )
 {
 	if ( m_pParsingContext->stackSections.top() >= 0 && m_pParsingContext->stackSections.top() < m_iSectionCount )
 	{
@@ -383,7 +383,7 @@ bool FileParser :: DoParseScriptLine( wxString & p_strLine )
 	}
 }
 
-bool FileParser :: DoInvokeParser( wxString & p_strLine, AttributeParserMap const & p_parsers )
+bool FileParser::DoInvokeParser( wxString & p_strLine, AttributeParserMap const & p_parsers )
 {
 	bool l_bReturn = false;
 	wxArrayString l_splitCmd = split( p_strLine, wxT( " \t" ), 1, false );

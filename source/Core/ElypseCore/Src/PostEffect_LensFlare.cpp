@@ -9,7 +9,7 @@
 #include <OgreCamera.h>
 #include <OgreRoot.h>
 
-PostEffect_LensFlare :: PostEffect_LensFlare( const String & p_name, Viewport * p_viewport )
+PostEffect_LensFlare::PostEffect_LensFlare( const String & p_name, Viewport * p_viewport )
 	:	PostEffect( p_name, p_viewport ),
 		m_camera( p_viewport->getCamera() )
 {
@@ -34,12 +34,12 @@ PostEffect_LensFlare :: PostEffect_LensFlare( const String & p_name, Viewport * 
 	m_listener = new LensFlareListener( this );
 }
 
-PostEffect_LensFlare :: ~PostEffect_LensFlare()
+PostEffect_LensFlare::~PostEffect_LensFlare()
 {
 	delete m_listener;
 }
 
-void PostEffect_LensFlare :: SetEnabled( bool p_enable )
+void PostEffect_LensFlare::SetEnabled( bool p_enable )
 {
 	if ( p_enable )
 	{
@@ -51,7 +51,7 @@ void PostEffect_LensFlare :: SetEnabled( bool p_enable )
 	}
 }
 
-void PostEffect_LensFlare :: Update()
+void PostEffect_LensFlare::Update()
 {
 	m_lastDirection = m_camera->getProjectionMatrix() * m_camera->getViewMatrix() * ( m_camera->getDerivedPosition() + 1000.0 * m_direction );
 	m_lastDirection.normalise();
@@ -77,18 +77,18 @@ void PostEffect_LensFlare :: Update()
 	}
 }
 
-LensFlareListener :: LensFlareListener( PostEffect_LensFlare * p_owner )
+LensFlareListener::LensFlareListener( PostEffect_LensFlare * p_owner )
 	:	m_owner( p_owner )
 {
 	Root::getSingletonPtr()->addFrameListener( this );
 }
 
-LensFlareListener :: ~LensFlareListener()
+LensFlareListener::~LensFlareListener()
 {
 	Root::getSingletonPtr()->removeFrameListener( this );
 }
 
-bool LensFlareListener :: frameStarted( const FrameEvent & )
+bool LensFlareListener::frameStarted( const FrameEvent & )
 {
 	m_owner->Update();
 	return true;

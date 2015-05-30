@@ -216,49 +216,49 @@ namespace General
 
 using General::Computer::RegistryKeyBaseImpl;
 
-RegistryKeyBase<std::string> :: RegistryKeyBase( RegistryFolder p_folder, const std::string & p_keyName )
+RegistryKeyBase<std::string>::RegistryKeyBase( RegistryFolder p_folder, const std::string & p_keyName )
 	:	m_impl( new RegistryKeyBaseImpl<std::string>( p_folder, p_keyName ) ),
 		l_exists( false )
 {
 }
 
-RegistryKeyBase<std::string> :: ~RegistryKeyBase()
+RegistryKeyBase<std::string>::~RegistryKeyBase()
 {
 	Close();
 }
 
-bool RegistryKeyBase<std::string> :: SetStringValue( const std::string & p_name, const std::string & p_value )
+bool RegistryKeyBase<std::string>::SetStringValue( const std::string & p_name, const std::string & p_value )
 {
 	return m_impl->SetStringValue( p_name, p_value );
 }
 
-bool RegistryKeyBase<std::string> :: SetStringExpandValue( const std::string & p_name, const std::string & p_value )
+bool RegistryKeyBase<std::string>::SetStringExpandValue( const std::string & p_name, const std::string & p_value )
 {
 	return m_impl->SetStringExpandValue( p_name, p_value );
 }
 
-std::string RegistryKeyBase<std::string> :: GetStringValue( const std::string & p_valueName )
+std::string RegistryKeyBase<std::string>::GetStringValue( const std::string & p_valueName )
 {
 	return m_impl->GetStringValue( p_valueName );
 }
 
-void RegistryKeyBase<std::string> :: Close()
+void RegistryKeyBase<std::string>::Close()
 {
 	m_impl->Close();
 }
-bool RegistryKeyBase<std::string> :: Open()
+bool RegistryKeyBase<std::string>::Open()
 {
 	return m_impl->Open();
 }
-bool RegistryKeyBase<std::string> :: Delete()
+bool RegistryKeyBase<std::string>::Delete()
 {
 	return m_impl->Delete();
 }
-bool RegistryKeyBase<std::string> :: Create()
+bool RegistryKeyBase<std::string>::Create()
 {
 	return m_impl->Create();
 }
-bool RegistryKeyBase<std::string> :: IsValid()
+bool RegistryKeyBase<std::string>::IsValid()
 {
 	return m_impl->IsValid();
 }
@@ -267,49 +267,49 @@ bool RegistryKeyBase<std::string> :: IsValid()
 												Wide String
 ********************************************************************************************************************/
 
-RegistryKeyBase<std::wstring> :: RegistryKeyBase( RegistryFolder p_folder, const std::wstring & p_keyName )
+RegistryKeyBase<std::wstring>::RegistryKeyBase( RegistryFolder p_folder, const std::wstring & p_keyName )
 	:	m_impl( new RegistryKeyBaseImpl<std::wstring>( p_folder, p_keyName ) ),
 		l_exists( false )
 {
 }
 
-RegistryKeyBase<std::wstring> :: ~RegistryKeyBase()
+RegistryKeyBase<std::wstring>::~RegistryKeyBase()
 {
 	Close();
 }
 
-bool RegistryKeyBase<std::wstring> :: SetStringValue( const std::wstring & p_name, const std::wstring & p_value )
+bool RegistryKeyBase<std::wstring>::SetStringValue( const std::wstring & p_name, const std::wstring & p_value )
 {
 	return m_impl->SetStringValue( p_name, p_value );
 }
 
-bool RegistryKeyBase<std::wstring> :: SetStringExpandValue( const std::wstring & p_name, const std::wstring & p_value )
+bool RegistryKeyBase<std::wstring>::SetStringExpandValue( const std::wstring & p_name, const std::wstring & p_value )
 {
 	return m_impl->SetStringExpandValue( p_name, p_value );
 }
 
-std::wstring RegistryKeyBase<std::wstring> :: GetStringValue( const std::wstring & p_valueName )
+std::wstring RegistryKeyBase<std::wstring>::GetStringValue( const std::wstring & p_valueName )
 {
 	return m_impl->GetStringValue( p_valueName );
 }
 
-void RegistryKeyBase<std::wstring> :: Close()
+void RegistryKeyBase<std::wstring>::Close()
 {
 	m_impl->Close();
 }
-bool RegistryKeyBase<std::wstring> :: Open()
+bool RegistryKeyBase<std::wstring>::Open()
 {
 	return m_impl->Open();
 }
-bool RegistryKeyBase<std::wstring> :: Delete()
+bool RegistryKeyBase<std::wstring>::Delete()
 {
 	return m_impl->Delete();
 }
-bool RegistryKeyBase<std::wstring> :: Create()
+bool RegistryKeyBase<std::wstring>::Create()
 {
 	return m_impl->Create();
 }
-bool RegistryKeyBase<std::wstring> :: IsValid()
+bool RegistryKeyBase<std::wstring>::IsValid()
 {
 	return m_impl->IsValid();
 }

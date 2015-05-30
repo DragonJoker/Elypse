@@ -6,18 +6,18 @@ using namespace General::Utils;
 # include "Utils.h"
 # include "Exception.h"
 
-long long PreciseTimer :: sm_frequency = 0;
-long long RepeatTimer :: sm_frequency = 0;
+long long PreciseTimer::sm_frequency = 0;
+long long RepeatTimer::sm_frequency = 0;
 
 #else
 #	include <sys/time.h>
 
-long long PreciseTimer :: sm_frequency = 1000000;
-long long RepeatTimer :: sm_frequency = 1000000;
+long long PreciseTimer::sm_frequency = 1000000;
+long long RepeatTimer::sm_frequency = 1000000;
 
 #endif
 
-PreciseTimer :: PreciseTimer()
+PreciseTimer::PreciseTimer()
 {
 #if  GENLIB_WINDOWS
 
@@ -39,11 +39,11 @@ PreciseTimer :: PreciseTimer()
 #endif
 }
 
-PreciseTimer :: ~PreciseTimer()
+PreciseTimer::~PreciseTimer()
 {
 }
 
-double PreciseTimer :: Time()
+double PreciseTimer::Time()
 {
 	long long l_currentTime;
 #if  GENLIB_WINDOWS
@@ -58,13 +58,13 @@ double PreciseTimer :: Time()
 	return l_diff;
 }
 
-double PreciseTimer :: TimeDiff( long long p_time )
+double PreciseTimer::TimeDiff( long long p_time )
 {
 	return static_cast <double>( m_previousTime - p_time ) / static_cast <double>( sm_frequency );
 }
 
 
-RepeatTimer :: RepeatTimer( double p_time )
+RepeatTimer::RepeatTimer( double p_time )
 	:	m_repeatTime( p_time )
 {
 #if  GENLIB_WINDOWS
@@ -87,11 +87,11 @@ RepeatTimer :: RepeatTimer( double p_time )
 #endif
 }
 
-RepeatTimer :: ~RepeatTimer()
+RepeatTimer::~RepeatTimer()
 {
 }
 
-bool RepeatTimer :: Time()
+bool RepeatTimer::Time()
 {
 	long long l_currentTime;
 #if  GENLIB_WINDOWS

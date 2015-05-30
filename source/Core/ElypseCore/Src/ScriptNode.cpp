@@ -20,7 +20,7 @@
 
 unsigned int ScriptNode::sm_numNodes = 0;
 
-ScriptNode :: ScriptNode( ConfigFile * p_file, unsigned int p_lineNum )
+ScriptNode::ScriptNode( ConfigFile * p_file, unsigned int p_lineNum )
 	:	m_value( NULL ),
 		m_function( NULL ),
 		m_file( p_file ),
@@ -34,13 +34,13 @@ ScriptNode :: ScriptNode( ConfigFile * p_file, unsigned int p_lineNum )
 //	std::cout << "Create Node ( " << sm_numNodes <<  " ) -> " << this << std::endl;
 }
 
-ScriptNode :: ~ScriptNode()
+ScriptNode::~ScriptNode()
 {
 //	std::cout << "Delete Node ( " << sm_numNodes <<  " ) -> " << this << std::endl;
 	sm_numNodes --;
 }
 
-void ScriptNode :: _reinit()
+void ScriptNode::_reinit()
 {
 	if ( m_value != NULL )
 	{
@@ -56,7 +56,7 @@ void ScriptNode :: _reinit()
 	m_createdAtLine = 0;
 }
 
-void ScriptNode :: _delete()
+void ScriptNode::_delete()
 {
 	if ( m_value != NULL && ! m_ref )
 	{
@@ -71,24 +71,24 @@ namespace EMuse
 {
 	namespace Script
 	{
-		template<> NodeValue<NodeValueBaseArray> :: ~NodeValue()
+		template<> NodeValue<NodeValueBaseArray>::~NodeValue()
 		{
 			vector::deleteAll( m_value );
 		}
-		template<> NodeValue<NodeValueBaseIMap> :: ~NodeValue()
+		template<> NodeValue<NodeValueBaseIMap>::~NodeValue()
 		{
 			map::deleteAll( m_value );
 		}
-		template<> NodeValue<NodeValueBaseMap> :: ~NodeValue()
+		template<> NodeValue<NodeValueBaseMap>::~NodeValue()
 		{
 			map::deleteAll( m_value );
 		}
-		template<> NodeValue<NodeValueBaseRMap> :: ~NodeValue()
+		template<> NodeValue<NodeValueBaseRMap>::~NodeValue()
 		{
 			map::deleteAll( m_value );
 		}
 
-		template<> void NodeValue<NodeValueBaseIMap> :: CopyDeepValue( NodeValueBase * p_origin )
+		template<> void NodeValue<NodeValueBaseIMap>::CopyDeepValue( NodeValueBase * p_origin )
 		{
 			map::deleteAll( m_value );
 			NodeValue<NodeValueBaseIMap> * l_value = static_cast <NodeValue <NodeValueBaseIMap> *>( p_origin );
@@ -101,7 +101,7 @@ namespace EMuse
 			}
 		}
 
-		template<> void NodeValue<NodeValueBaseRMap> :: CopyDeepValue( NodeValueBase * p_origin )
+		template<> void NodeValue<NodeValueBaseRMap>::CopyDeepValue( NodeValueBase * p_origin )
 		{
 			map::deleteAll( m_value );
 			NodeValue<NodeValueBaseRMap> * l_value = static_cast <NodeValue <NodeValueBaseRMap> *>( p_origin );
@@ -114,7 +114,7 @@ namespace EMuse
 			}
 		}
 
-		template<> void NodeValue<NodeValueBaseMap> :: CopyDeepValue( NodeValueBase * p_origin )
+		template<> void NodeValue<NodeValueBaseMap>::CopyDeepValue( NodeValueBase * p_origin )
 		{
 			map::deleteAll( m_value );
 			NodeValue<NodeValueBaseMap> * l_value = static_cast <NodeValue <NodeValueBaseMap> *>( p_origin );
@@ -457,26 +457,26 @@ namespace EMuse
 }
 */
 
-void ScriptNode :: Use()
+void ScriptNode::Use()
 {
 	ScriptNodeArray l_callStack;
 	_use( l_callStack );
 }
 
-void ScriptNode :: Delete()
+void ScriptNode::Delete()
 {
 	ScriptNodeArray l_callStack;
 	_deleteDetails( l_callStack );
 }
 
-bool ScriptNode :: IsBaseType( VariableType * p_type )const
+bool ScriptNode::IsBaseType( VariableType * p_type )const
 {
 	genlib_assert( m_type != NULL );
 	genlib_assert( p_type != NULL );
 	return m_type->GetBase() == p_type->GetBase();
 }
 
-void ScriptNode :: _deleteDetails( ScriptNodeArray & p_callStack )
+void ScriptNode::_deleteDetails( ScriptNodeArray & p_callStack )
 {
 	if ( General::Utils::vector::has( p_callStack, this ) )
 	{
@@ -499,7 +499,7 @@ void ScriptNode :: _deleteDetails( ScriptNodeArray & p_callStack )
 	}
 }
 
-void ScriptNode :: _use( ScriptNodeArray & p_callStack )
+void ScriptNode::_use( ScriptNodeArray & p_callStack )
 {
 	if ( General::Utils::vector::has( p_callStack, this ) )
 	{
@@ -522,7 +522,7 @@ void ScriptNode :: _use( ScriptNodeArray & p_callStack )
 	++ m_numUses;
 }
 
-void ScriptNode :: CopyNode( ScriptNode * p_node )
+void ScriptNode::CopyNode( ScriptNode * p_node )
 {
 	m_childs = p_node->m_childs;
 	m_createdAtLine = p_node->m_createdAtLine;
@@ -543,7 +543,7 @@ void ScriptNode :: CopyNode( ScriptNode * p_node )
 	}
 }
 
-void ScriptNode :: ExecChild( size_t p_index )
+void ScriptNode::ExecChild( size_t p_index )
 {
 	if ( m_childs.size() <= p_index )
 	{
@@ -558,7 +558,7 @@ void ScriptNode :: ExecChild( size_t p_index )
 	}
 }
 
-VariableBaseType ScriptNode :: GetBaseType()const
+VariableBaseType ScriptNode::GetBaseType()const
 {
 	return m_type->GetBase();
 	/*
@@ -570,7 +570,7 @@ VariableBaseType ScriptNode :: GetBaseType()const
 	*/
 }
 
-NodeValueBase * ScriptNode :: CreateNodeValue( VariableType * p_type )
+NodeValueBase * ScriptNode::CreateNodeValue( VariableType * p_type )
 {
 	switch ( p_type->GetBase() )
 	{
@@ -677,7 +677,7 @@ NodeValueBase * ScriptNode :: CreateNodeValue( VariableType * p_type )
 	return NULL;
 }
 
-void ScriptNode :: SetType( VariableType * p_type )
+void ScriptNode::SetType( VariableType * p_type )
 {
 	if ( m_value == NULL )
 	{
@@ -686,7 +686,7 @@ void ScriptNode :: SetType( VariableType * p_type )
 	}
 }
 
-void ScriptNode :: CopyValue( ScriptNode * p_originalNode )
+void ScriptNode::CopyValue( ScriptNode * p_originalNode )
 {
 	if ( m_value != NULL && p_originalNode != NULL && p_originalNode->m_value != NULL )
 	{
@@ -694,7 +694,7 @@ void ScriptNode :: CopyValue( ScriptNode * p_originalNode )
 	}
 }
 
-void ScriptNode :: CopyValue_Deep( ScriptNode * p_originalNode )
+void ScriptNode::CopyValue_Deep( ScriptNode * p_originalNode )
 {
 	if ( m_value != NULL && p_originalNode != NULL && p_originalNode->m_value != NULL )
 	{
@@ -702,7 +702,7 @@ void ScriptNode :: CopyValue_Deep( ScriptNode * p_originalNode )
 	}
 }
 
-void ScriptNode :: CopyValue_Ref( NodeValueBase * p_value )
+void ScriptNode::CopyValue_Ref( NodeValueBase * p_value )
 {
 	if ( m_value != NULL && ! m_ref )
 	{

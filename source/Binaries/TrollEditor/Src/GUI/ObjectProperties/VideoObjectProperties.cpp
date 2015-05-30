@@ -22,7 +22,7 @@ BEGIN_EVENT_TABLE( VideoObjectProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-VideoObjectProperties :: VideoObjectProperties( TrollVideoObject * p_videoObject, wxWindow * parent,
+VideoObjectProperties::VideoObjectProperties( TrollVideoObject * p_videoObject, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_videoObject( p_videoObject )
@@ -33,13 +33,13 @@ VideoObjectProperties :: VideoObjectProperties( TrollVideoObject * p_videoObject
 
 
 
-VideoObjectProperties :: ~VideoObjectProperties()
+VideoObjectProperties::~VideoObjectProperties()
 {
 }
 
 
 
-void VideoObjectProperties :: UpdateProperties()
+void VideoObjectProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	m_updatingProperties = false;
@@ -47,7 +47,7 @@ void VideoObjectProperties :: UpdateProperties()
 
 
 
-void VideoObjectProperties :: _onEditAttenuation( wxCommandEvent & p_event )
+void VideoObjectProperties::_onEditAttenuation( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

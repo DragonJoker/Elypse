@@ -29,7 +29,7 @@ struct StringFromUrlLauncher
 	}
 };
 
-EMusePlugin :: EMusePlugin()
+EMusePlugin::EMusePlugin()
 	:	m_graphicalStatus( StatusNone ),
 		m_curl( new CURLManager ),
 		m_baseCursor( ArrowCursor )
@@ -37,12 +37,12 @@ EMusePlugin :: EMusePlugin()
 //	m_curl->Initialise();
 }
 
-EMusePlugin :: ~EMusePlugin()
+EMusePlugin::~EMusePlugin()
 {
 	delete m_curl;
 }
 
-void EMusePlugin :: SetSessionCookie( const String & p_cookieParams )
+void EMusePlugin::SetSessionCookie( const String & p_cookieParams )
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 //	std::cout <<"SetSessionCookie : " << p_cookieParams << std::endl;
@@ -50,11 +50,11 @@ void EMusePlugin :: SetSessionCookie( const String & p_cookieParams )
 
 	if ( l_code != CURLE_OK )
 	{
-		EMUSE_LOG_MESSAGE_RELEASE( "EMusePlugin :: SetSessionCookie -> error in curl : " + CURLManager::CurlError( l_code ) );
+		EMUSE_LOG_MESSAGE_RELEASE( "EMusePlugin::SetSessionCookie -> error in curl : " + CURLManager::CurlError( l_code ) );
 	}
 }
 
-String EMusePlugin :: GetStringFromUrl( const String & p_url, const String & p_postParams )
+String EMusePlugin::GetStringFromUrl( const String & p_url, const String & p_postParams )
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 	String l_contents;
@@ -62,13 +62,13 @@ String EMusePlugin :: GetStringFromUrl( const String & p_url, const String & p_p
 
 	if ( l_code != CURLE_OK )
 	{
-		EMUSE_LOG_MESSAGE_RELEASE( "EMusePlugin :: GetStringFromUrl -> error in curl : " + CURLManager::CurlError( l_code ) );
+		EMUSE_LOG_MESSAGE_RELEASE( "EMusePlugin::GetStringFromUrl -> error in curl : " + CURLManager::CurlError( l_code ) );
 	}
 
 	return l_contents;
 }
 
-void EMusePlugin :: ThreadedStringFromUrl(	const String & p_url, const String  & p_postParams,
+void EMusePlugin::ThreadedStringFromUrl(	const String & p_url, const String  & p_postParams,
 		ScriptNode * p_caller, ScriptNode * p_execAtAnd )
 {
 	genlib_assert( p_caller != NULL );

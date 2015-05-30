@@ -5,7 +5,7 @@
 
 using namespace Ogre;
 
-MirrorMaterial :: MirrorMaterial( const String & p_name, Mirror * p_owner )
+MirrorMaterial::MirrorMaterial( const String & p_name, Mirror * p_owner )
 	:	named( p_name ),
 		owned_by<Mirror>	( p_owner ),
 		m_opacity( 0.0 ),
@@ -14,7 +14,7 @@ MirrorMaterial :: MirrorMaterial( const String & p_name, Mirror * p_owner )
 //	std::cout << "Mirror material ; " << p_name << std::endl;
 }
 
-MirrorMaterial :: ~MirrorMaterial()
+MirrorMaterial::~MirrorMaterial()
 {
 	if ( m_tus != NULL )
 	{
@@ -22,13 +22,13 @@ MirrorMaterial :: ~MirrorMaterial()
 	}
 }
 
-void MirrorMaterial :: Remove()
+void MirrorMaterial::Remove()
 {
 	m_tus->getParent()->removeTextureUnitState( m_tus->getParent()->getTextureUnitStateIndex( m_tus ) );
 	m_tus = NULL;
 }
 
-void MirrorMaterial :: _setOpacity()
+void MirrorMaterial::_setOpacity()
 {
 	if ( m_tus != NULL )
 	{
@@ -36,7 +36,7 @@ void MirrorMaterial :: _setOpacity()
 	}
 }
 
-void MirrorMaterial :: Apply()
+void MirrorMaterial::Apply()
 {
 	if ( m_tus != NULL )
 	{

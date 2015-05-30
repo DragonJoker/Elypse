@@ -15,7 +15,7 @@
 */
 using namespace Troll::GUI;
 
-TrollScriptCompiler :: TrollScriptCompiler( const String & p_path, bool p_initTree )
+TrollScriptCompiler::TrollScriptCompiler( const String & p_path, bool p_initTree )
 	:	m_textCtrl( NULL ),
 		m_currentCharIndex( 0 ),
 		m_highlighting( true ),
@@ -25,11 +25,11 @@ TrollScriptCompiler :: TrollScriptCompiler( const String & p_path, bool p_initTr
 	m_initTree = p_initTree;
 }
 
-TrollScriptCompiler :: ~TrollScriptCompiler()
+TrollScriptCompiler::~TrollScriptCompiler()
 {
 }
 
-void TrollScriptCompiler :: Initialise( Troll::GUI::wxStcTextEditor * p_textCtrl )
+void TrollScriptCompiler::Initialise( Troll::GUI::wxStcTextEditor * p_textCtrl )
 {
 	m_textCtrl = p_textCtrl;
 	_initialiseVariableMap();
@@ -37,13 +37,13 @@ void TrollScriptCompiler :: Initialise( Troll::GUI::wxStcTextEditor * p_textCtrl
 	_initialiseOperatorMap();
 }
 
-void TrollScriptCompiler :: _log( const String & p_message )
+void TrollScriptCompiler::_log( const String & p_message )
 {
 	std::cout << p_message << std::endl;
 	g_mainFrame->LogOutMessage( p_message );
 }
 
-ScriptNode * TrollScriptCompiler :: CompileScript( const String & p_script )
+ScriptNode * TrollScriptCompiler::CompileScript( const String & p_script )
 {
 	ScriptNode * l_return = ScriptCompiler::CompileScript( p_script );
 
@@ -55,7 +55,7 @@ ScriptNode * TrollScriptCompiler :: CompileScript( const String & p_script )
 	return l_return;
 }
 
-ScriptNode * TrollScriptCompiler :: CompileScriptFile( ConfigFile * p_scriptFile )
+ScriptNode * TrollScriptCompiler::CompileScriptFile( ConfigFile * p_scriptFile )
 {
 	std::cout << "Compiling : " << p_scriptFile->GetName() << " from textctrl : " << ( m_textCtrl == NULL ? "NULL" : m_textCtrl->GetFilename() ) << std::endl;
 
@@ -76,20 +76,20 @@ ScriptNode * TrollScriptCompiler :: CompileScriptFile( ConfigFile * p_scriptFile
 	}
 }
 
-TrollScriptBlock * TrollScriptCompiler :: _getBlock()
+TrollScriptBlock * TrollScriptCompiler::_getBlock()
 {
 	TrollScriptBlock * l_block = m_trollBlockPool.Get();
 	l_block->SetCompiler( this );
 	return l_block;
 }
 
-void TrollScriptCompiler :: _releaseBlock( ScriptBlock * p_block )
+void TrollScriptCompiler::_releaseBlock( ScriptBlock * p_block )
 {
 	p_block->Clear();
 	m_trollBlockPool.Release( static_cast<TrollScriptBlock *>( p_block ) );
 }
 
-char TrollScriptCompiler :: _getNextChar()
+char TrollScriptCompiler::_getNextChar()
 {
 	m_currentCharIndex ++;
 
@@ -115,7 +115,7 @@ char TrollScriptCompiler :: _getNextChar()
 	return '\0';
 }
 
-void TrollScriptCompiler :: _putBack( char p_char )
+void TrollScriptCompiler::_putBack( char p_char )
 {
 	m_currentCharIndex --;
 
@@ -129,7 +129,7 @@ void TrollScriptCompiler :: _putBack( char p_char )
 	}
 }
 
-void TrollScriptCompiler :: _creaFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
+void TrollScriptCompiler::_creaFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
 {
 //*******************
 // Specific to Troll
@@ -174,7 +174,7 @@ void TrollScriptCompiler :: _creaFunc( const String & p_functionName, RawFunctio
 	m_functions.insert( FunctionMap::value_type( p_functionName, l_scriptFunction ) );
 }
 
-void TrollScriptCompiler :: _classFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
+void TrollScriptCompiler::_classFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
 {
 //*********************
 // Specific to Troll
@@ -222,7 +222,7 @@ void TrollScriptCompiler :: _classFunc( const String & p_functionName, RawFuncti
 	m_classFunctions[l_param1].insert( FunctionMap::value_type( p_functionName, l_scriptFunction ) );
 }
 
-ScriptNode * TrollScriptCompiler :: _createConstant( VariableBaseType p_type, const String & p_name )
+ScriptNode * TrollScriptCompiler::_createConstant( VariableBaseType p_type, const String & p_name )
 {
 	genlib_assert( ! General::Utils::map::has( m_constants, p_name ) );
 
@@ -243,7 +243,7 @@ ScriptNode * TrollScriptCompiler :: _createConstant( VariableBaseType p_type, co
 	return ScriptCompiler::_createConstant( p_type, p_name );
 }
 
-void TrollScriptCompiler :: _functionGroup( const String & p_name )
+void TrollScriptCompiler::_functionGroup( const String & p_name )
 {
 	if ( m_initTree )
 	{
@@ -251,7 +251,7 @@ void TrollScriptCompiler :: _functionGroup( const String & p_name )
 	}
 }
 
-void TrollScriptCompiler :: _constantGroup( const String & p_name )
+void TrollScriptCompiler::_constantGroup( const String & p_name )
 {
 	if ( m_initTree )
 	{
@@ -259,9 +259,9 @@ void TrollScriptCompiler :: _constantGroup( const String & p_name )
 	}
 }
 
-void TrollScriptCompiler :: _initialiseFunctionMap()
+void TrollScriptCompiler::_initialiseFunctionMap()
 {
-//	std::cout << "TrollScriptCompiler :: _initialiseFunctionMap\n";
+//	std::cout << "TrollScriptCompiler::_initialiseFunctionMap\n";
 	ScriptCompiler::_initialiseFunctionMap();
 	// Object
 	_classFunc(	"SetMaterial"				, Troll_Ent_SetMaterial,				EMVT_NULL,		EMVT_ENTITY,	EMVT_STRING,								EMVT_NULL );

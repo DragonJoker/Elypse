@@ -14,7 +14,7 @@
 using namespace General::Utils;
 using namespace Ogre;
 
-AnimatedObject :: AnimatedObject( AnimatedObjectGroup * p_group, Entity * p_entity )
+AnimatedObject::AnimatedObject( AnimatedObjectGroup * p_group, Entity * p_entity )
 	:	owned_by <AnimatedObjectGroup>	( p_group ),
 		 m_entity( p_entity )
 {
@@ -28,24 +28,24 @@ AnimatedObject :: AnimatedObject( AnimatedObjectGroup * p_group, Entity * p_enti
 	}
 }
 
-AnimatedObject :: ~AnimatedObject()
+AnimatedObject::~AnimatedObject()
 {
 	General::Utils::map::deleteAll( m_animations );
 }
 
-void AnimatedObject :: _addAnimation( AnimationState * p_state )
+void AnimatedObject::_addAnimation( AnimationState * p_state )
 {
 	genlib_assert( p_state != NULL );
 	General::Utils::map::insert( m_animations, p_state->getAnimationName(), this, p_state );
 }
 
-void AnimatedObject :: Update( Real p_timeStep )
+void AnimatedObject::Update( Real p_timeStep )
 {
 	genlib_assert( p_timeStep > 0.0 );
 	General::Utils::map::cycle( m_animations, &EMAnimation::Update, p_timeStep );
 }
 
-void AnimatedObject :: _createAnimationMap()
+void AnimatedObject::_createAnimationMap()
 {
 	if ( ! m_entity )
 	{
@@ -68,7 +68,7 @@ void AnimatedObject :: _createAnimationMap()
 	}
 }
 
-RealMap AnimatedObject :: GetAllAnimationsTimes()const
+RealMap AnimatedObject::GetAllAnimationsTimes()const
 {
 	RealMap l_map;
 	AnimationMap::const_iterator i = m_animations.begin();
@@ -82,17 +82,17 @@ RealMap AnimatedObject :: GetAllAnimationsTimes()const
 	return l_map;
 }
 
-void AnimatedObject :: StopAllAnimations()
+void AnimatedObject::StopAllAnimations()
 {
 	General::Utils::map::cycle( m_animations, & EMAnimation::Stop );
 }
 
-void AnimatedObject :: SetPauseAllAnimations( bool p_pause )
+void AnimatedObject::SetPauseAllAnimations( bool p_pause )
 {
 	General::Utils::map::cycle( m_animations, & EMAnimation::SetPause, p_pause );
 }
 
-unsigned int AnimatedObject :: GetNumPlayingAnimations()
+unsigned int AnimatedObject::GetNumPlayingAnimations()
 {
 	ConstEnabledAnimationStateIterator l_it = m_entity->getAllAnimationStates()->getEnabledAnimationStateIterator();
 	AnimationState * l_state;
@@ -107,7 +107,7 @@ unsigned int AnimatedObject :: GetNumPlayingAnimations()
 	return l_count;
 }
 
-const String & AnimatedObject :: GetPlayingAnimationName( unsigned int p_index )
+const String & AnimatedObject::GetPlayingAnimationName( unsigned int p_index )
 {
 	ConstEnabledAnimationStateIterator l_it = m_entity->getAllAnimationStates()->getEnabledAnimationStateIterator();
 	AnimationState * l_state;

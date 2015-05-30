@@ -48,8 +48,8 @@ BEGIN_EVENT_TABLE( CameraProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-CameraProperties :: CameraProperties( TrollCamera * p_camera, wxWindow * parent, const wxPoint & pos,
-									  const wxSize & size, long style )
+CameraProperties::CameraProperties( TrollCamera * p_camera, wxWindow * parent, const wxPoint & pos,
+									const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_camera( p_camera )
 {
@@ -83,13 +83,13 @@ CameraProperties :: CameraProperties( TrollCamera * p_camera, wxWindow * parent,
 
 
 
-CameraProperties :: ~CameraProperties()
+CameraProperties::~CameraProperties()
 {
 }
 
 
 
-void CameraProperties :: UpdateProperties()
+void CameraProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	m_cameraName->SetValue( m_camera->GetName() );
@@ -147,7 +147,7 @@ void CameraProperties :: UpdateProperties()
 
 
 
-void CameraProperties :: _onEditName( wxCommandEvent & p_event )
+void CameraProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -157,7 +157,7 @@ void CameraProperties :: _onEditName( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onSelectParent( wxCommandEvent & p_event )
+void CameraProperties::_onSelectParent( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -168,7 +168,7 @@ void CameraProperties :: _onSelectParent( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditXPos( wxCommandEvent & p_event )
+void CameraProperties::_onEditXPos( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -186,7 +186,7 @@ void CameraProperties :: _onEditXPos( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditYPos( wxCommandEvent & p_event )
+void CameraProperties::_onEditYPos( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -204,7 +204,7 @@ void CameraProperties :: _onEditYPos( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditZPos( wxCommandEvent & p_event )
+void CameraProperties::_onEditZPos( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -222,7 +222,7 @@ void CameraProperties :: _onEditZPos( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditXDir( wxCommandEvent & p_event )
+void CameraProperties::_onEditXDir( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -240,7 +240,7 @@ void CameraProperties :: _onEditXDir( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditYDir( wxCommandEvent & p_event )
+void CameraProperties::_onEditYDir( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -258,7 +258,7 @@ void CameraProperties :: _onEditYDir( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditZDir( wxCommandEvent & p_event )
+void CameraProperties::_onEditZDir( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -276,7 +276,7 @@ void CameraProperties :: _onEditZDir( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditRoll( wxCommandEvent & p_event )
+void CameraProperties::_onEditRoll( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -295,7 +295,7 @@ void CameraProperties :: _onEditRoll( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditPitch( wxCommandEvent & p_event )
+void CameraProperties::_onEditPitch( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -314,7 +314,7 @@ void CameraProperties :: _onEditPitch( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditYaw( wxCommandEvent & p_event )
+void CameraProperties::_onEditYaw( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -333,7 +333,7 @@ void CameraProperties :: _onEditYaw( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onSelectPolygonMode( wxCommandEvent & p_event )
+void CameraProperties::_onSelectPolygonMode( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -343,7 +343,7 @@ void CameraProperties :: _onSelectPolygonMode( wxCommandEvent & p_event )
 
 
 
-void CameraProperties :: _onEditYFOV( wxCommandEvent & p_event )
+void CameraProperties::_onEditYFOV( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

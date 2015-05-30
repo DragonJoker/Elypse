@@ -5,9 +5,9 @@
 
 #include <Bezier.h>
 
-bool Interpolators :: _getFramesV3( const BaseVector3FrameMap & p_frames, const BaseVector3Frame *& p_start, const BaseVector3Frame *& p_end, Real & p_time )
+bool Interpolators::_getFramesV3( const BaseVector3FrameMap & p_frames, const BaseVector3Frame *& p_start, const BaseVector3Frame *& p_end, Real & p_time )
 {
-	BaseVector3FrameMap :: const_iterator ileft = p_frames.lower_bound( p_time );
+	BaseVector3FrameMap::const_iterator ileft = p_frames.lower_bound( p_time );
 
 	if ( ileft == p_frames.end() )
 	{
@@ -36,9 +36,9 @@ bool Interpolators :: _getFramesV3( const BaseVector3FrameMap & p_frames, const 
 	return true;
 }
 
-bool Interpolators :: _getFramesQ( const BaseQuaternionFrameMap & p_frames, const BaseQuaternionFrame *& p_start, const BaseQuaternionFrame *& p_end, Real & p_time )
+bool Interpolators::_getFramesQ( const BaseQuaternionFrameMap & p_frames, const BaseQuaternionFrame *& p_start, const BaseQuaternionFrame *& p_end, Real & p_time )
 {
-	BaseQuaternionFrameMap :: const_iterator ileft = p_frames.lower_bound( p_time );
+	BaseQuaternionFrameMap::const_iterator ileft = p_frames.lower_bound( p_time );
 
 	if ( ileft == p_frames.end() )
 	{
@@ -67,9 +67,9 @@ bool Interpolators :: _getFramesQ( const BaseQuaternionFrameMap & p_frames, cons
 	return true;
 }
 
-bool Interpolators :: _getFramesR( const BaseRealFrameMap & p_frames, const BaseRealFrame *& p_start, const BaseRealFrame *& p_end, Real & p_time )
+bool Interpolators::_getFramesR( const BaseRealFrameMap & p_frames, const BaseRealFrame *& p_start, const BaseRealFrame *& p_end, Real & p_time )
 {
-	BaseRealFrameMap :: const_iterator ileft = p_frames.lower_bound( p_time );
+	BaseRealFrameMap::const_iterator ileft = p_frames.lower_bound( p_time );
 
 	if ( ileft == p_frames.end() )
 	{
@@ -98,7 +98,7 @@ bool Interpolators :: _getFramesR( const BaseRealFrameMap & p_frames, const Base
 	return true;
 }
 
-Vector3 Interpolators :: V3_Linear( const BaseVector3FrameMap & p_frames, Real p_time )
+Vector3 Interpolators::V3_Linear( const BaseVector3FrameMap & p_frames, Real p_time )
 {
 	const BaseVector3Frame * l_start;
 	const BaseVector3Frame * l_end;
@@ -111,7 +111,7 @@ Vector3 Interpolators :: V3_Linear( const BaseVector3FrameMap & p_frames, Real p
 	return Vector3( l_start->vector3 + ( l_end->vector3 - l_start->vector3 ) * p_time );
 }
 
-Vector3 Interpolators :: V3_Sinus( const BaseVector3FrameMap & p_frames, Real p_time )
+Vector3 Interpolators::V3_Sinus( const BaseVector3FrameMap & p_frames, Real p_time )
 {
 	const BaseVector3Frame * l_start;
 	const BaseVector3Frame * l_end;
@@ -126,7 +126,7 @@ Vector3 Interpolators :: V3_Sinus( const BaseVector3FrameMap & p_frames, Real p_
 	return Vector3( l_end->vector3 * ( l_interpolatedValue ) + l_start->vector3 * ( 1 - l_interpolatedValue ) );
 }
 
-Quaternion Interpolators :: Q_Linear( const BaseQuaternionFrameMap & p_frames, Real p_time )
+Quaternion Interpolators::Q_Linear( const BaseQuaternionFrameMap & p_frames, Real p_time )
 {
 	const BaseQuaternionFrame * l_start;
 	const BaseQuaternionFrame * l_end;
@@ -139,7 +139,7 @@ Quaternion Interpolators :: Q_Linear( const BaseQuaternionFrameMap & p_frames, R
 	return Quaternion::Slerp( p_time, l_start->quaternion, l_end->quaternion );
 }
 
-Real Interpolators :: R_Linear( const BaseRealFrameMap & p_frames, Real p_time )
+Real Interpolators::R_Linear( const BaseRealFrameMap & p_frames, Real p_time )
 {
 	const BaseRealFrame * l_start;
 	const BaseRealFrame * l_end;
@@ -153,7 +153,7 @@ Real Interpolators :: R_Linear( const BaseRealFrameMap & p_frames, Real p_time )
 }
 
 
-Vector3 Interpolators :: V3_Bezier3( const BaseVector3FrameMap & p_frames, Real p_time )
+Vector3 Interpolators::V3_Bezier3( const BaseVector3FrameMap & p_frames, Real p_time )
 {
 	if ( p_frames.size() != 3 )
 	{
@@ -169,7 +169,7 @@ Vector3 Interpolators :: V3_Bezier3( const BaseVector3FrameMap & p_frames, Real 
 	return Vector3( l_a * l_factors[0] + l_b * l_factors[1] + l_c * l_factors[2] );
 }
 
-Vector3 Interpolators :: V3_Bezier4( const BaseVector3FrameMap & p_frames, Real p_time )
+Vector3 Interpolators::V3_Bezier4( const BaseVector3FrameMap & p_frames, Real p_time )
 {
 	if ( p_frames.size() != 4 )
 	{
@@ -186,7 +186,7 @@ Vector3 Interpolators :: V3_Bezier4( const BaseVector3FrameMap & p_frames, Real 
 	return Vector3( l_a * l_factors[0] + l_b * l_factors[1] + l_c * l_factors[2] + l_d * l_factors[3] );
 }
 
-Vector3 Interpolators :: V3_Bezier5( const BaseVector3FrameMap & p_frames, Real p_time )
+Vector3 Interpolators::V3_Bezier5( const BaseVector3FrameMap & p_frames, Real p_time )
 {
 	if ( p_frames.size() != 5 )
 	{

@@ -71,7 +71,7 @@ void OdeErrorCallback( int p_errnum, const char * p_msg, va_list ap )
 
 GENLIB_INIT_SINGLETON( EMuseController );
 
-EMuseController :: EMuseController()
+EMuseController::EMuseController()
 	:	owned_by<EMuseInstance>	( NULL ),
 		m_root( NULL ),
 		m_log( NULL ),
@@ -100,7 +100,7 @@ EMuseController :: EMuseController()
 	//Optims de cout / cin ...
 	//std::ios_base::sync_with_stdio(false);
 	//std::cin.tie(0);
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: EMuseController" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::EMuseController" );
 	dInitODE();
 	dSetErrorHandler( OdeErrorCallback );
 	dSetDebugHandler( OdeErrorCallback );
@@ -109,10 +109,10 @@ EMuseController :: EMuseController()
 	srand( uint32_t( time( NULL ) ) );
 }
 
-void EMuseController :: PreInit( bool p_useConsole, bool p_direct3D, bool p_download, const Path & p_installationDir )
+void EMuseController::PreInit( bool p_useConsole, bool p_direct3D, bool p_download, const Path & p_installationDir )
 {
 	genlib_assert( ! p_installationDir.empty() );
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: PreInit" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::PreInit" );
 	m_useConsole = p_useConsole;
 	m_direct3D = p_direct3D;
 	m_downloadFiles = p_download;
@@ -120,24 +120,24 @@ void EMuseController :: PreInit( bool p_useConsole, bool p_direct3D, bool p_down
 //	CheckForUpdates();
 }
 
-EMuseController :: ~EMuseController()
+EMuseController::~EMuseController()
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: ~EMuseController" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::~EMuseController" );
 	GENLIB_SCOPED_LOCK( m_selfMutex );
 	dCloseODE();
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: ~EMuseController" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::~EMuseController" );
 	delete EMuse::Debug::EMuseLogs::GetSingletonPtr();
 }
 
-void EMuseController :: AddApplication( EMuseInstance * p_instance )
+void EMuseController::AddApplication( EMuseInstance * p_instance )
 {
 	genlib_assert( p_instance != NULL );
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: AddApplication" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::AddApplication" );
 	GENLIB_AUTO_SCOPED_LOCK();
 	m_instances.insert( InstanceMap::value_type( p_instance->GetName(), p_instance ) );
 }
 
-bool EMuseController :: _getNextAvailableRenderer( String & p_pluginName, String & p_rendererName )
+bool EMuseController::_getNextAvailableRenderer( String & p_pluginName, String & p_rendererName )
 {
 	if ( m_availableRenderers.empty() )
 	{
@@ -151,7 +151,7 @@ bool EMuseController :: _getNextAvailableRenderer( String & p_pluginName, String
 	return true;
 }
 
-bool EMuseController :: _loadRenderer( const String & p_pluginName, const String & p_rendererName )
+bool EMuseController::_loadRenderer( const String & p_pluginName, const String & p_rendererName )
 {
 	try
 	{
@@ -170,7 +170,7 @@ bool EMuseController :: _loadRenderer( const String & p_pluginName, const String
 	}
 }
 
-RenderWindow * EMuseController :: CreateRenderWindow( const String & p_name, unsigned int p_width, unsigned int p_height, const String & p_handle, unsigned int p_antialiasing,  bool & p_mainWindow )
+RenderWindow * EMuseController::CreateRenderWindow( const String & p_name, unsigned int p_width, unsigned int p_height, const String & p_handle, unsigned int p_antialiasing,  bool & p_mainWindow )
 {
 	NameValuePairList list;
 	list["externalWindowHandle"] = p_handle;
@@ -187,7 +187,7 @@ RenderWindow * EMuseController :: CreateRenderWindow( const String & p_name, uns
 
 	if ( ! m_oneTimePostWindowInit )
 	{
-		m_log->logMessage( "CEMuseController :: Main window created" );
+		m_log->logMessage( "CEMuseController::Main window created" );
 		m_oneTimePostWindowInit = true;
 		MaterialManager::getSingletonPtr()->initialise();
 		ParticleSystemManager::getSingletonPtr()->_initialise();
@@ -203,38 +203,38 @@ RenderWindow * EMuseController :: CreateRenderWindow( const String & p_name, uns
 	return l_rend;
 }
 
-SceneManager * EMuseController :: CreateSceneManager( const String & p_name )
+SceneManager * EMuseController::CreateSceneManager( const String & p_name )
 {
 	genlib_assert( ! p_name.empty() );
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: CreateSceneManager" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::CreateSceneManager" );
 	return m_root->createSceneManager( ST_GENERIC, p_name );
 }
 
-void EMuseController :: AddThread( EMuseInstance * p_owner )
+void EMuseController::AddThread( EMuseInstance * p_owner )
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: AddThread" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::AddThread" );
 
 	if ( m_status == CS_RENDERING )
 	{
 		GENLIB_AUTO_SCOPED_LOCK();
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: AddThread // OK, WAITING" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::AddThread // OK, WAITING" );
 		GENLIB_CONDITION_WAIT( m_threadCurrentlyRendering, m_mutex );
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: AddThread // OK, END WAITING" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::AddThread // OK, END WAITING" );
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: AddThread // OK, NOT WAITING" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::AddThread // OK, NOT WAITING" );
 	}
 
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: AddThread // OK, STARTED" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::AddThread // OK, STARTED" );
 
 	if ( sm_singleton == NULL )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseController :: AddThread // Problem : sm_singleton == NULL" );
+		EMUSE_MESSAGE_RELEASE( "EMuseController::AddThread // Problem : sm_singleton == NULL" );
 		return;
 	}
 
-	EMUSE_MESSAGE_RELEASE( "EMuseController :: AddThread // Pre check m_status" );
+	EMUSE_MESSAGE_RELEASE( "EMuseController::AddThread // Pre check m_status" );
 
 	if ( m_status != CS_DESTROYING && m_status != CS_DESTROYED )
 	{
@@ -245,10 +245,10 @@ void EMuseController :: AddThread( EMuseInstance * p_owner )
 	}
 }
 
-void EMuseController :: Initialise()
+void EMuseController::Initialise()
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialise" );
-	std::cout << "EMuseController :: Initialise()" << std::endl;
+	EMUSE_MESSAGE_DEBUG( "EMuseController::Initialise" );
+	std::cout << "EMuseController::Initialise()" << std::endl;
 	ElypseResourceGroupManager::setPrefix( EMPTY_STRING );
 	GENLIB_AUTO_SCOPED_LOCK();
 
@@ -264,12 +264,12 @@ void EMuseController :: Initialise()
 //		freopen ("CONOUT$", "w", stderr );
 	}
 
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: Root::getSingletonPtr" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::Root::getSingletonPtr" );
 
 	if ( Root::getSingletonPtr() == NULL )
 	{
 		Path l_directory = m_installDir / "cfg";
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialisation 1" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::Initialisation 1" );
 
 		try
 		{
@@ -309,22 +309,22 @@ void EMuseController :: Initialise()
 		{
 			std::cout << "named : " << m_root->getRenderSystem()->getName() << std::endl;
 			EMUSE_LOG_MESSAGE_RELEASE( "miaou 7" );
-			EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialisation 6" );
+			EMUSE_MESSAGE_DEBUG( "EMuseController::Initialisation 6" );
 			m_root->initialise( false );
 			EMUSE_LOG_MESSAGE_RELEASE( "miaou 8" );
 			EMUSE_LOG_MESSAGE_RELEASE( "miaou 9" );
-			m_log->logMessage( "CEMuseController :: Root Initialisation Started" );
-			EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialisation 7" );
+			m_log->logMessage( "CEMuseController::Root Initialisation Started" );
+			EMUSE_MESSAGE_DEBUG( "EMuseController::Initialisation 7" );
 			new SoundManager( m_installDir / "rsc" );
 			new VideoManager();
 			new PubManager();
 			new WebImageManager();
-			EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialisation	 8" );
-			m_log->logMessage( "CEMuseController :: Media Managers created" );
+			EMUSE_MESSAGE_DEBUG( "EMuseController::Initialisation	 8" );
+			m_log->logMessage( "CEMuseController::Media Managers created" );
 			Ogre::Animation::setDefaultInterpolationMode( Ogre::Animation::IM_LINEAR );
 			Ogre::Animation::setDefaultRotationInterpolationMode( Ogre::Animation::RIM_LINEAR );
 //	ElypseResourceGroupManager::setPrefix( EMPTY_STRING);
-			EMUSE_MESSAGE_DEBUG( "EMuseController :: InitialiseRessources , next is get win dir for fonts" );
+			EMUSE_MESSAGE_DEBUG( "EMuseController::InitialiseRessources , next is get win dir for fonts" );
 			/* // A check, normalement les font sont maintenant incluses dans le core.zip
 			#if ELYPSE_WINDOWS
 			//	char temp[100];
@@ -339,7 +339,7 @@ void EMuseController :: Initialise()
 			#endif
 			*/
 			MeshManager::getSingleton().setBoundsPaddingFactor( 0 );
-			EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialise , the end" );
+			EMUSE_MESSAGE_DEBUG( "EMuseController::Initialise , the end" );
 			m_initialised = true;
 			m_status = CS_INITIALISED;
 		}
@@ -351,16 +351,16 @@ void EMuseController :: Initialise()
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: Root::getSingletonPtr already exists" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::Root::getSingletonPtr already exists" );
 		m_initialised = true;
 		m_status = CS_INITIALISED;
 	}
 }
 
-void EMuseController :: InitialiseRessources( const String & p_prefix )
+void EMuseController::InitialiseRessources( const String & p_prefix )
 {
 	ElypseResourceGroupManager::setPrefix( p_prefix );
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: Initialise , next is get core.zip" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::Initialise , next is get core.zip" );
 
 	if ( ! FileExists( m_installDir / "cfg" / "core.zip" ) )
 	{
@@ -395,7 +395,7 @@ void EMuseController :: InitialiseRessources( const String & p_prefix )
 	ElypseResourceGroupManager::loadResourceGroup( "core.zip" );
 }
 
-void EMuseController :: UninitialiseRessources( const String & p_prefix )
+void EMuseController::UninitialiseRessources( const String & p_prefix )
 {
 	ElypseResourceGroupManager::setPrefix( p_prefix );
 
@@ -410,10 +410,10 @@ void EMuseController :: UninitialiseRessources( const String & p_prefix )
 	ElypseResourceGroupManager::destroyResourceGroup( "core.zip" );
 }
 
-void EMuseController :: MainLoop()
+void EMuseController::MainLoop()
 {
 	GENLIB_SCOPED_LOCK( m_selfMutex );
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: MainLoop() : start" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::MainLoop() : start" );
 	EMuseInstance * l_ogreApp;
 
 	if ( ! m_initialised )
@@ -473,7 +473,7 @@ void EMuseController :: MainLoop()
 				if ( l_ogreApp->IsToDelete() )
 				{
 					std::cout << "EMUSEController, removing an app " << std::endl;
-					m_log->logMessage( "CEMuseController :: Removing OgreApplication " + l_iterator->first );
+					m_log->logMessage( "CEMuseController::Removing OgreApplication " + l_iterator->first );
 					InstanceMap::iterator j = l_iterator;
 					++ j;
 					m_instances.erase( l_iterator );
@@ -482,7 +482,7 @@ void EMuseController :: MainLoop()
 					if ( m_instances.empty() )
 					{
 						l_ogreApp->Destroy();
-						m_log->logMessage( "CEMuseController :: OgreApplication removed, no more apps" );
+						m_log->logMessage( "CEMuseController::OgreApplication removed, no more apps" );
 //						GENLIB_UNLOCK_MUTEX( m_mutex);
 						m_stopThread = true;
 						break;
@@ -493,7 +493,7 @@ void EMuseController :: MainLoop()
 						{
 							m_owner->SetMain( false );
 							l_ogreApp->Destroy();
-							m_log->logMessage( "CEMuseController :: Removed the main OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
+							m_log->logMessage( "CEMuseController::Removed the main OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
 //							GENLIB_CONDITION_NOTIFY_ONE( m_threadCurrentlyRendering);
 							m_stopThread = true;
 							break;
@@ -503,7 +503,7 @@ void EMuseController :: MainLoop()
 							l_ogreApp->Destroy();
 						}
 
-						m_log->logMessage( "CEMuseController :: Removed OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
+						m_log->logMessage( "CEMuseController::Removed OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
 					}
 				} // end if (ToDelete)
 				else
@@ -522,7 +522,7 @@ void EMuseController :: MainLoop()
 			else// if (!l_ogreApp->IsDeleted())
 			{
 				++ l_iterator;
-				m_log->logMessage( "CEMuseController :: Initialising OgreApplication" );
+				m_log->logMessage( "CEMuseController::Initialising OgreApplication" );
 				l_ogreApp->Initialise();
 
 				if ( ! m_links.empty() )
@@ -546,7 +546,7 @@ void EMuseController :: MainLoop()
 					}
 				}
 
-				m_log->logMessage( "CEMuseController :: End of Initialisation" );
+				m_log->logMessage( "CEMuseController::End of Initialisation" );
 			}
 		} // end while (i)
 
@@ -557,12 +557,12 @@ void EMuseController :: MainLoop()
 	} // end while (!m_stopThread)
 
 //	GENLIB_AUTO_SCOPED_LOCK();
-	m_log->logMessage( "CEMuseController :: End of MainLoop" );
+	m_log->logMessage( "CEMuseController::End of MainLoop" );
 
 	if ( ! m_instances.empty() )
 	{
-//		m_log->logMessage("CEMuseController :: MainLoop adopted by "+(m_instances.begin()->first));
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: Main Loop // ADOPTION" );
+//		m_log->logMessage("CEMuseController::MainLoop adopted by "+(m_instances.begin()->first));
+		EMUSE_MESSAGE_DEBUG( "EMuseController::Main Loop // ADOPTION" );
 		m_owner->SetMain( false );
 		GENLIB_CONDITION_NOTIFY_ONE( m_threadCurrentlyRendering );
 //		Start((m_instances.begin()->second)->GetThread() , (m_instances.begin()->second) );
@@ -570,7 +570,7 @@ void EMuseController :: MainLoop()
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "CEMuseController :: endeded" );
+		EMUSE_MESSAGE_DEBUG( "CEMuseController::endeded" );
 		DeleteOgre();
 	}
 
@@ -579,22 +579,22 @@ void EMuseController :: MainLoop()
 	GENLIB_CONDITION_NOTIFY_ALL( m_threadEnded );
 }
 
-void EMuseController :: DeleteOgre()
+void EMuseController::DeleteOgre()
 {
-	EMUSE_CONSOLE_MESSAGE_RELEASE( "EMuseController :: DeleteOgre // Start" );
+	EMUSE_CONSOLE_MESSAGE_RELEASE( "EMuseController::DeleteOgre // Start" );
 //	GENLIB_SCOPED_LOCK( m_selfMutex);
 	m_status = CS_DESTROYING;
 
 	try
 	{
-		m_log->logMessage( "CEMuseController :: DeleteOgre()" );
-		m_log->logMessage( "CEMuseController :: \tVideoManager" );
+		m_log->logMessage( "CEMuseController::DeleteOgre()" );
+		m_log->logMessage( "CEMuseController::\tVideoManager" );
 		VideoManager::Destroy();
-		m_log->logMessage( "CEMuseController :: \tPubManager" );
+		m_log->logMessage( "CEMuseController::\tPubManager" );
 		PubManager::Destroy();
-		m_log->logMessage( "CEMuseController :: \tSoundManager" );
+		m_log->logMessage( "CEMuseController::\tSoundManager" );
 		SoundManager::Destroy();
-		m_log->logMessage( "CEMuseController :: \tWebImageManager" );
+		m_log->logMessage( "CEMuseController::\tWebImageManager" );
 		WebImageManager::Destroy();
 
 		if ( m_loadingBar->IsStarted() )
@@ -610,7 +610,7 @@ void EMuseController :: DeleteOgre()
 
 		if ( m_primaryRenderWindow != NULL )
 		{
-			m_log->logMessage( "CEMuseController :: \tPrimaryWindow" );
+			m_log->logMessage( "CEMuseController::\tPrimaryWindow" );
 //			m_currentOwner->GetPlugin()->LockGui();
 			m_primaryRenderWindow->removeAllListeners();
 			m_primaryRenderWindow->removeAllViewports();
@@ -619,18 +619,18 @@ void EMuseController :: DeleteOgre()
 		}
 		else
 		{
-			m_log->logMessage( "CEMuseController :: \tNo PrimaryWindow" );
+			m_log->logMessage( "CEMuseController::\tNo PrimaryWindow" );
 		}
 
 		delete m_downloadManager;
 		EMUSE_LOG_MESSAGE_NORMAL( "num scritpNodes : " + StringConverter::toString( ScriptNode::sm_numNodes ) + " nodes left" );
-		EMUSE_LOG_MESSAGE_RELEASE( "CEMuseController :: Root Shutdown" );
-		EMUSE_LOG_MESSAGE_RELEASE( "CEMuseController :: Bye" );
+		EMUSE_LOG_MESSAGE_RELEASE( "CEMuseController::Root Shutdown" );
+		EMUSE_LOG_MESSAGE_RELEASE( "CEMuseController::Bye" );
 		m_log = NULL;
-		EMUSE_CONSOLE_MESSAGE_DEBUG( "EMuseController :: DeleteOgre // m_root->shutdown();" );
+		EMUSE_CONSOLE_MESSAGE_DEBUG( "EMuseController::DeleteOgre // m_root->shutdown();" );
 		delete m_root;
 		PluginLoader::GetSingletonPtr()->unload();
-		EMUSE_CONSOLE_MESSAGE_DEBUG( "EMuseController :: DeleteOgre //DELETE( m_root );" );
+		EMUSE_CONSOLE_MESSAGE_DEBUG( "EMuseController::DeleteOgre //DELETE( m_root );" );
 		m_root = NULL;
 	}
 	catch ( ... )
@@ -640,52 +640,52 @@ void EMuseController :: DeleteOgre()
 	}
 
 	m_status = CS_DESTROYED;
-	EMUSE_CONSOLE_MESSAGE_RELEASE( "EMuseController :: DeleteOgre // END" );
+	EMUSE_CONSOLE_MESSAGE_RELEASE( "EMuseController::DeleteOgre // END" );
 }
 
-void EMuseController :: LinkInstanceTo( EMuseInstance * p_instance, const String & p_linkedToName )
+void EMuseController::LinkInstanceTo( EMuseInstance * p_instance, const String & p_linkedToName )
 {
-	EMUSE_MESSAGE_DEBUG( "EMuseController :: LinkInstanceTo" );
+	EMUSE_MESSAGE_DEBUG( "EMuseController::LinkInstanceTo" );
 	InstanceMap::iterator ifind;
 	EMUSE_MESSAGE_DEBUG( "CEMC link : " + p_linkedToName + String( " from " ) + p_instance->GetName() );
 	ifind = m_instances.find( p_linkedToName );
 
 	if ( ifind != m_instances.end() && ifind->second->IsActive() )
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: LinkInstanceTo : Direct Linkage" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::LinkInstanceTo : Direct Linkage" );
 		p_instance->LinkTo( ifind->second );
 	}
 	else
 	{
-		EMUSE_MESSAGE_DEBUG( "EMuseController :: LinkInstanceTo : Delayed Linkage" );
+		EMUSE_MESSAGE_DEBUG( "EMuseController::LinkInstanceTo : Delayed Linkage" );
 		m_links.insert( InstanceMultiMap::value_type( p_linkedToName , p_instance ) );
 	}
 }
 
-void EMuseController :: WaitForThreadEnded()
+void EMuseController::WaitForThreadEnded()
 {
-	EMUSE_MESSAGE_NORMAL( "EMuseController :: WaitForThreadEnded : Wait for thread ended pre lock mutex : " + ToString( ThreadId::GetSelf() ) );
+	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended pre lock mutex : " + ToString( ThreadId::GetSelf() ) );
 	GENLIB_AUTO_SCOPED_LOCK();
-	EMUSE_MESSAGE_NORMAL( "EMuseController :: WaitForThreadEnded : Wait for thread ended post lock mutex : " + ToString( ThreadId::GetSelf() ) );
+	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended post lock mutex : " + ToString( ThreadId::GetSelf() ) );
 
 	if ( sm_singleton != NULL )
 	{
 		if ( m_status == CS_RENDERING )
 		{
-			EMUSE_MESSAGE_NORMAL( "EMuseController :: WaitForThreadEnded : Wait for thread ended" );
+			EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended" );
 			{
 				GENLIB_CONDITION_WAIT( m_threadEnded, m_mutex );
 			}
-			EMUSE_MESSAGE_NORMAL( "EMuseController :: WaitForThreadEnded : End of Waiting for thread ended" );
+			EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : End of Waiting for thread ended" );
 		}
 		else
 		{
-			EMUSE_MESSAGE_NORMAL( "EMuseController :: WaitForThreadEnded : no need to wait" );
+			EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : no need to wait" );
 		}
 	}
 }
 
-bool EMuseController :: ShowConsole()
+bool EMuseController::ShowConsole()
 {
 #if defined( _WIN32 )
 

@@ -70,7 +70,7 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "DragonJoker"
-            VALUE "FileDescription", "${PROJECT_NAME}"
+            VALUE "FileDescription", "${PROJECT_NAME} application"
             VALUE "FileVersion", "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD}.0"
             VALUE "InternalName", "${PROJECT_NAME}"
             VALUE "LegalCopyright", "Copyright (C) ${VERSION_YEAR}"

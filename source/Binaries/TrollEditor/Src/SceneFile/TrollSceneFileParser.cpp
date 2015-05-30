@@ -25,7 +25,7 @@ namespace Troll
 		TrollSceneFileParser * g_fileParser;
 		wxString g_fileName;
 
-		TrollSceneFileParser :: TrollSceneFileParser( const String & p_appIndexStr, const String & p_baseDirectory )
+		TrollSceneFileParser::TrollSceneFileParser( const String & p_appIndexStr, const String & p_baseDirectory )
 			:	SceneFileParser( p_appIndexStr, p_baseDirectory )
 		{
 			g_fileParser = this;
@@ -96,11 +96,11 @@ namespace Troll
 			m_sequenceTrackParsers			["}"]					= TrollParser_SequenceTrackEnd;
 		}
 
-		TrollSceneFileParser :: ~TrollSceneFileParser()
+		TrollSceneFileParser::~TrollSceneFileParser()
 		{
 		}
 
-		void TrollSceneFileParser :: ParseScript( ConfigFile * p_file )
+		void TrollSceneFileParser::ParseScript( ConfigFile * p_file )
 		{
 			g_fileName = Troll::GUI::make_wxString( p_file->GetName() );
 

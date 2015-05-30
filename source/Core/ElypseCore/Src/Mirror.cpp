@@ -16,7 +16,7 @@
 
 using namespace Ogre;
 
-Mirror :: Mirror( const String & p_name )
+Mirror::Mirror( const String & p_name )
 	:	named( p_name ),
 		m_camera( NULL ),
 		m_texture( NULL ),
@@ -36,7 +36,7 @@ Mirror :: Mirror( const String & p_name )
 {
 }
 
-Mirror :: ~Mirror()
+Mirror::~Mirror()
 {
 	if ( m_planeNode != NULL )
 	{
@@ -66,7 +66,7 @@ Mirror :: ~Mirror()
 	}
 }
 
-void Mirror :: Initialise( const String & p_instanceKey, SceneManager * p_sceneManager )
+void Mirror::Initialise( const String & p_instanceKey, SceneManager * p_sceneManager )
 {
 	m_manager = p_sceneManager;
 	m_planeNode = m_manager->getRootSceneNode()->createChildSceneNode( "___INTERNAL_MirrorPlaneNode_" + m_name );
@@ -85,7 +85,7 @@ void Mirror :: Initialise( const String & p_instanceKey, SceneManager * p_sceneM
 	General::Utils::map::cycle( m_materials, & MirrorMaterial::Apply );
 }
 
-void Mirror :: _setBackground()
+void Mirror::_setBackground()
 {
 	if ( m_viewport != NULL )
 	{
@@ -93,7 +93,7 @@ void Mirror :: _setBackground()
 	}
 }
 
-void Mirror :: _linkCameras()
+void Mirror::_linkCameras()
 {
 	if ( m_mainCamera == NULL || m_camera == NULL )
 	{
@@ -105,7 +105,7 @@ void Mirror :: _linkCameras()
 	m_camera->setAspectRatio( m_mainCamera->getAspectRatio() );
 }
 
-void Mirror :: Update()
+void Mirror::Update()
 {
 	if ( m_camera == NULL || m_render == NULL )
 	{
@@ -135,19 +135,19 @@ void Mirror :: Update()
 	}
 }
 
-void Mirror :: AddMaterial( const String & p_materialName, Real p_opacity )
+void Mirror::AddMaterial( const String & p_materialName, Real p_opacity )
 {
 	EMUSE_MESSAGE_DEBUG( "Mirror::AddMaterial : " + m_name + String( " -> " ) + p_materialName );
 	MirrorMaterial * l_mat = General::Utils::map::insert( m_materials, p_materialName, p_materialName, this );
 	l_mat->SetOpacity( p_opacity );
 }
 
-void Mirror :: RemoveMaterial( const String & p_materialName )
+void Mirror::RemoveMaterial( const String & p_materialName )
 {
 	General::Utils::map::deleteValue( m_materials, p_materialName );
 }
 
-void Mirror :: ChangeMaterialAlpha( const String & p_materialName, Real p_opacity )
+void Mirror::ChangeMaterialAlpha( const String & p_materialName, Real p_opacity )
 {
 	MirrorMaterial * l_mat = General::Utils::map::findOrNull( m_materials, p_materialName );
 
@@ -157,7 +157,7 @@ void Mirror :: ChangeMaterialAlpha( const String & p_materialName, Real p_opacit
 	}
 }
 
-bool Mirror :: IsVisible()const
+bool Mirror::IsVisible()const
 {
 	if ( m_plane == NULL )
 	{
@@ -177,7 +177,7 @@ bool Mirror :: IsVisible()const
 	return true;
 }
 
-void Mirror :: SetAutoUpdate( bool p_redrawWhenCameraMoves, bool p_redrawEveryFrame )
+void Mirror::SetAutoUpdate( bool p_redrawWhenCameraMoves, bool p_redrawEveryFrame )
 {
 	m_autoUpdate = p_redrawWhenCameraMoves;
 	m_alwaysRedraw = p_redrawEveryFrame;

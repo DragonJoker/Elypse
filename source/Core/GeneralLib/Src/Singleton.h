@@ -61,7 +61,7 @@ namespace General
 
 #define GENLIB_INIT_SINGLETON( p_name) template <> p_name * General::Theory::Singleton <p_name> ::sm_singleton = NULL
 #define GENLIB_SINGLETON_FOR_DLL( p_name) static p_name & GetSingleton( void); static p_name * GetSingletonPtr( void)
-#define GENLIB_INIT_SINGLETON_FOR_DLL( p_name) p_name * p_name::sm_singleton = NULL; p_name * p_name :: GetSingletonPtr()	{ return sm_singleton; } p_name & p_name :: GetSingleton()	{ return *sm_singleton; }
+#define GENLIB_INIT_SINGLETON_FOR_DLL( p_name) p_name * p_name::sm_singleton = NULL; p_name * p_name::GetSingletonPtr()	{ return sm_singleton; } p_name & p_name::GetSingleton()	{ return *sm_singleton; }
 #define GENLIB_SET_SINGLETON()  sm_singleton = this
 
 #endif

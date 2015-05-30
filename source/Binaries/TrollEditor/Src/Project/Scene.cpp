@@ -32,7 +32,7 @@ using namespace Troll::Objects2D;
 using namespace General::Utils;
 
 
-TrollSceneFile :: TrollSceneFile()
+TrollSceneFile::TrollSceneFile()
 	:	m_forceShadows( false ),
 		m_shadowType( stNone ),
 		m_ambientLight( ColourValue::White )
@@ -41,7 +41,7 @@ TrollSceneFile :: TrollSceneFile()
 
 
 
-TrollSceneFile :: ~TrollSceneFile()
+TrollSceneFile::~TrollSceneFile()
 {
 	General::Utils::map::deleteAll( m_entities );
 	General::Utils::map::deleteAll( m_allOverlays );
@@ -58,63 +58,63 @@ TrollSceneFile :: ~TrollSceneFile()
 
 
 
-TrollOverlay * TrollSceneFile :: GetOverlay( const wxString & p_name )
+TrollOverlay * TrollSceneFile::GetOverlay( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_allOverlays, p_name );
 }
 
 
 
-TrollSceneNode * TrollSceneFile :: GetSceneNode( const wxString & p_name )
+TrollSceneNode * TrollSceneFile::GetSceneNode( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_allSceneNodes, p_name );
 }
 
 
 
-TrollLight * TrollSceneFile :: GetLight( const wxString & p_name )
+TrollLight * TrollSceneFile::GetLight( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_lights, p_name );
 }
 
 
 
-TrollCamera * TrollSceneFile :: GetCamera( const wxString & p_name )
+TrollCamera * TrollSceneFile::GetCamera( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_cameras, p_name );
 }
 
 
 
-TrollAnimationGroup * TrollSceneFile :: GetAnimationGroup( const wxString & p_name )
+TrollAnimationGroup * TrollSceneFile::GetAnimationGroup( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_animationGroups, p_name );
 }
 
 
 
-TrollSound * TrollSceneFile :: GetSound( const wxString & p_name )
+TrollSound * TrollSceneFile::GetSound( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_sounds, p_name );
 }
 
 
 
-TrollVideo * TrollSceneFile :: GetVideo( const wxString & p_name )
+TrollVideo * TrollSceneFile::GetVideo( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_videos, p_name );
 }
 
 
 
-TrollSequence * TrollSceneFile :: GetSequence( const wxString & p_name )
+TrollSequence * TrollSceneFile::GetSequence( const wxString & p_name )
 {
 	return General::Utils::map::findOrNull( m_sequences, p_name );
 }
 
 
 
-void TrollSceneFile :: _writeUnusedFilePieces( wxTextOutputStream * p_textStream )
+void TrollSceneFile::_writeUnusedFilePieces( wxTextOutputStream * p_textStream )
 {
 	String l_strFilePath = ( g_mainFrame->GetAppDir() + m_fileName + wxT( "Unused.emscene" ) ).char_str().data();
 
@@ -156,7 +156,7 @@ void TrollSceneFile :: _writeUnusedFilePieces( wxTextOutputStream * p_textStream
 
 
 
-void TrollSceneFile :: Write( const wxString & p_path )
+void TrollSceneFile::Write( const wxString & p_path )
 {
 	g_mainFrame->LogDebugMessage( wxT( "Writing TrollSceneFile " ) + p_path + m_fileName );
 	wxFileOutputStream l_output( p_path + m_fileName );
@@ -253,7 +253,7 @@ void TrollSceneFile :: Write( const wxString & p_path )
 
 
 
-TrollScene :: TrollScene( Project * p_project, const wxString & p_name, bool p_main )
+TrollScene::TrollScene( Project * p_project, const wxString & p_name, bool p_main )
 	:	m_minVerticCamAngle( 0 ),
 		m_maxVerticCamAngle( 90 ),
 		m_minHorizCamAngle( 0 ),
@@ -279,7 +279,7 @@ TrollScene :: TrollScene( Project * p_project, const wxString & p_name, bool p_m
 
 
 
-TrollScene :: ~TrollScene()
+TrollScene::~TrollScene()
 {
 	FlushFiles();
 	FlushObjects();
@@ -287,7 +287,7 @@ TrollScene :: ~TrollScene()
 
 
 
-void TrollScene :: FlushFiles()
+void TrollScene::FlushFiles()
 {
 	General::Utils::vector::deleteAll( m_sceneFiles );
 	General::Utils::vector::deleteAll( m_loadScriptFiles );
@@ -299,7 +299,7 @@ void TrollScene :: FlushFiles()
 
 
 
-void TrollScene :: FlushObjects()
+void TrollScene::FlushObjects()
 {
 	m_currentSceneFile = NULL;
 	General::Utils::map::deleteAll( m_sceneConfigFiles );
@@ -309,13 +309,13 @@ void TrollScene :: FlushObjects()
 
 
 
-void TrollScene :: SetCurrentSceneFile( const wxString & p_sceneFileName )
+void TrollScene::SetCurrentSceneFile( const wxString & p_sceneFileName )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.find( p_sceneFileName );
 
 	if ( l_it != m_sceneConfigFiles.end() )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: SetCurrentSceneFile - File already added" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::SetCurrentSceneFile - File already added" ) );
 		m_currentSceneFile = l_it->second;
 		return;
 	}
@@ -327,7 +327,7 @@ void TrollScene :: SetCurrentSceneFile( const wxString & p_sceneFileName )
 
 
 
-bool TrollScene :: AddSceneFile( TrollFile * p_file )
+bool TrollScene::AddSceneFile( TrollFile * p_file )
 {
 	for ( TrollFileArray::iterator l_it = m_sceneFiles.begin() ; l_it != m_sceneFiles.end() ; )
 	{
@@ -349,8 +349,8 @@ bool TrollScene :: AddSceneFile( TrollFile * p_file )
 
 
 
-bool TrollScene :: AddSceneFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
-								 const wxTreeItemId & p_item, bool p_saved, bool p_showError )
+bool TrollScene::AddSceneFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
+							   const wxTreeItemId & p_item, bool p_saved, bool p_showError )
 {
 	for ( TrollFileArray::iterator l_it = m_sceneFiles.begin() ; l_it != m_sceneFiles.end() ; )
 	{
@@ -377,7 +377,7 @@ bool TrollScene :: AddSceneFile( const wxString & p_pathName, const wxTreeItemId
 	int l_index = min( p_pathName.find_last_of( wxT( "\\" ) ), p_pathName.find_last_of( wxT( "/" ) ) );
 	l_file->FileName = p_pathName.substr( l_index + 1 );
 	l_file->Folder = p_pathName.substr( 0, l_index );
-	std::cout << "TrollScene :: AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 	l_file->FolderId = p_folder;
 	l_file->ItemId = p_item;
 	l_file->Saved = p_saved;
@@ -388,7 +388,7 @@ bool TrollScene :: AddSceneFile( const wxString & p_pathName, const wxTreeItemId
 
 
 
-bool TrollScene :: AddLoadScriptFile( TrollFile * p_file )
+bool TrollScene::AddLoadScriptFile( TrollFile * p_file )
 {
 	for ( TrollFileArray::iterator l_it = m_loadScriptFiles.begin() ; l_it != m_loadScriptFiles.end() ; )
 	{
@@ -410,8 +410,8 @@ bool TrollScene :: AddLoadScriptFile( TrollFile * p_file )
 
 
 
-bool TrollScene :: AddLoadScriptFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
-									  const wxTreeItemId & p_item, bool p_saved, bool p_showError )
+bool TrollScene::AddLoadScriptFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
+									const wxTreeItemId & p_item, bool p_saved, bool p_showError )
 {
 	for ( TrollFileArray::iterator l_it = m_loadScriptFiles.begin() ; l_it != m_loadScriptFiles.end() ; )
 	{
@@ -437,7 +437,7 @@ bool TrollScene :: AddLoadScriptFile( const wxString & p_pathName, const wxTreeI
 	int l_index = min( p_pathName.find_last_of( wxT( "\\" ) ), p_pathName.find_last_of( wxT( "/" ) ) );
 	l_file->FileName = p_pathName.substr( l_index + 1 );
 	l_file->Folder = p_pathName.substr( 0, l_index );
-	std::cout << "TrollScene :: AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 	l_file->FolderId = p_folder;
 	l_file->ItemId = p_item;
 	l_file->Saved = p_saved;
@@ -448,7 +448,7 @@ bool TrollScene :: AddLoadScriptFile( const wxString & p_pathName, const wxTreeI
 
 
 
-bool TrollScene :: AddUnloadScriptFile( TrollFile * p_file )
+bool TrollScene::AddUnloadScriptFile( TrollFile * p_file )
 {
 	for ( TrollFileArray::iterator l_it = m_unloadScriptFiles.begin() ; l_it != m_unloadScriptFiles.end() ; )
 	{
@@ -470,8 +470,8 @@ bool TrollScene :: AddUnloadScriptFile( TrollFile * p_file )
 
 
 
-bool TrollScene :: AddUnloadScriptFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
-										const wxTreeItemId & p_item, bool p_saved, bool p_showError )
+bool TrollScene::AddUnloadScriptFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
+									  const wxTreeItemId & p_item, bool p_saved, bool p_showError )
 {
 	for ( TrollFileArray::iterator l_it = m_unloadScriptFiles.begin() ; l_it != m_unloadScriptFiles.end() ; )
 	{
@@ -496,7 +496,7 @@ bool TrollScene :: AddUnloadScriptFile( const wxString & p_pathName, const wxTre
 	int l_index = min( p_pathName.find_last_of( wxT( "\\" ) ), p_pathName.find_last_of( wxT( "/" ) ) );
 	l_file->FileName = p_pathName.substr( l_index + 1 );
 	l_file->Folder = p_pathName.substr( 0, l_index );
-	std::cout << "TrollScene :: AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 	l_file->FolderId = p_folder;
 	l_file->ItemId = p_item;
 	l_file->Saved = p_saved;
@@ -507,7 +507,7 @@ bool TrollScene :: AddUnloadScriptFile( const wxString & p_pathName, const wxTre
 
 
 
-bool TrollScene :: AddDataFile( TrollFile * p_file )
+bool TrollScene::AddDataFile( TrollFile * p_file )
 {
 	for ( TrollFileArray::iterator l_it = m_dataFiles.begin() ; l_it != m_dataFiles.end() ; )
 	{
@@ -529,8 +529,8 @@ bool TrollScene :: AddDataFile( TrollFile * p_file )
 
 
 
-bool TrollScene :: AddDataFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
-								const wxTreeItemId & p_item, bool p_saved, bool p_showError )
+bool TrollScene::AddDataFile( const wxString & p_pathName, const wxTreeItemId & p_folder,
+							  const wxTreeItemId & p_item, bool p_saved, bool p_showError )
 {
 	for ( TrollFileArray::iterator l_it = m_dataFiles.begin() ; l_it != m_dataFiles.end() ; )
 	{
@@ -555,7 +555,7 @@ bool TrollScene :: AddDataFile( const wxString & p_pathName, const wxTreeItemId 
 	int l_index = min( p_pathName.find_last_of( wxT( "\\" ) ), p_pathName.find_last_of( wxT( "/" ) ) );
 	l_file->FileName = p_pathName.substr( l_index + 1 );
 	l_file->Folder = p_pathName;
-	std::cout << "TrollScene :: AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 	l_file->FolderId = p_folder;
 	l_file->ItemId = p_item;
 	l_file->Saved = p_saved;
@@ -566,7 +566,7 @@ bool TrollScene :: AddDataFile( const wxString & p_pathName, const wxTreeItemId 
 
 
 
-bool TrollScene :: AddDataFolder( TrollFile * p_file )
+bool TrollScene::AddDataFolder( TrollFile * p_file )
 {
 	for ( TrollFileArray::iterator l_it = m_dataFolders.begin() ; l_it != m_dataFolders.end() ; )
 	{
@@ -588,8 +588,8 @@ bool TrollScene :: AddDataFolder( TrollFile * p_file )
 
 
 
-bool TrollScene :: AddDataFolder( const wxString & p_pathName, const wxTreeItemId & p_folder,
-								  const wxTreeItemId & p_item, bool p_saved, bool p_showError )
+bool TrollScene::AddDataFolder( const wxString & p_pathName, const wxTreeItemId & p_folder,
+								const wxTreeItemId & p_item, bool p_saved, bool p_showError )
 {
 	for ( TrollFileArray::iterator l_it = m_dataFolders.begin() ; l_it != m_dataFolders.end() ; )
 	{
@@ -614,7 +614,7 @@ bool TrollScene :: AddDataFolder( const wxString & p_pathName, const wxTreeItemI
 	int l_index = min( p_pathName.find_last_of( wxT( "\\" ) ), p_pathName.find_last_of( wxT( "/" ) ) );
 	l_file->FileName = p_pathName.substr( l_index + 1 );
 	l_file->Folder = p_pathName.substr( 0, l_index );
-	std::cout << "TrollScene :: AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 	l_file->FolderId = p_folder;
 	l_file->ItemId = p_item;
 	l_file->Saved = p_saved;
@@ -625,7 +625,7 @@ bool TrollScene :: AddDataFolder( const wxString & p_pathName, const wxTreeItemI
 
 
 
-bool TrollScene :: AddMuseFile( TrollFile * p_file )
+bool TrollScene::AddMuseFile( TrollFile * p_file )
 {
 	for ( TrollFileArray::iterator l_it = m_museFiles.begin() ; l_it != m_museFiles.end() ; )
 	{
@@ -647,36 +647,36 @@ bool TrollScene :: AddMuseFile( TrollFile * p_file )
 
 
 
-bool TrollScene :: AddFile( const wxTreeItemId & p_folder, const wxTreeItemId & p_item,
-							const wxString & p_pathName, bool p_saved, bool p_showError )
+bool TrollScene::AddFile( const wxTreeItemId & p_folder, const wxTreeItemId & p_item,
+						  const wxString & p_pathName, bool p_saved, bool p_showError )
 {
 	if ( m_sceneFileId == p_folder )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: AddFile - TrollScene File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::AddFile - TrollScene File" ) );
 		return AddSceneFile( p_pathName, p_folder, p_item, p_saved, p_showError );
 	}
 
 	if ( m_loadScriptFileId == p_folder )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: AddFile - Load Script File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::AddFile - Load Script File" ) );
 		return AddLoadScriptFile( p_pathName, p_folder, p_item, p_saved, p_showError );
 	}
 
 	if ( m_unloadScriptFileId == p_folder )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: AddFile - Unload Script File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::AddFile - Unload Script File" ) );
 		return AddUnloadScriptFile( p_pathName, p_folder, p_item, p_saved, p_showError );
 	}
 
 	if ( m_dataFileId == p_folder )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: AddFile - Data File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::AddFile - Data File" ) );
 		return AddDataFile( p_pathName, p_folder, p_item, p_saved, p_showError );
 	}
 
 	if ( m_dataFolderId == p_folder )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: AddFile - Data Folder" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::AddFile - Data Folder" ) );
 		return AddDataFolder( p_pathName, p_folder, p_item, p_saved, p_showError );
 	}
 
@@ -685,7 +685,7 @@ bool TrollScene :: AddFile( const wxTreeItemId & p_folder, const wxTreeItemId & 
 
 
 
-TrollEntity * TrollScene :: AddEntity( const wxString & p_name, const wxString & p_fileName )
+TrollEntity * TrollScene::AddEntity( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -704,8 +704,8 @@ TrollEntity * TrollScene :: AddEntity( const wxString & p_name, const wxString &
 
 
 
-TrollOverlay * TrollScene :: AddOverlay( const wxString & p_name, const wxString & p_parentName,
-		const wxString & p_fileName )
+TrollOverlay * TrollScene::AddOverlay( const wxString & p_name, const wxString & p_parentName,
+									   const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -737,7 +737,7 @@ TrollOverlay * TrollScene :: AddOverlay( const wxString & p_name, const wxString
 
 
 
-bool TrollScene :: AddOverlay( TrollOverlay * p_overlay )
+bool TrollScene::AddOverlay( TrollOverlay * p_overlay )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -764,7 +764,7 @@ bool TrollScene :: AddOverlay( TrollOverlay * p_overlay )
 
 
 
-TrollSceneNode * TrollScene :: AddSceneNode( const wxString & p_name, const wxString & p_fileName )
+TrollSceneNode * TrollScene::AddSceneNode( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -785,7 +785,7 @@ TrollSceneNode * TrollScene :: AddSceneNode( const wxString & p_name, const wxSt
 
 
 
-void TrollScene :: AttachNode( TrollSceneNode * p_node, TrollSceneNode * p_parent )
+void TrollScene::AttachNode( TrollSceneNode * p_node, TrollSceneNode * p_parent )
 {
 	if ( p_parent != NULL )
 	{
@@ -799,7 +799,7 @@ void TrollScene :: AttachNode( TrollSceneNode * p_node, TrollSceneNode * p_paren
 
 
 
-TrollLight * TrollScene :: AddLight( const wxString & p_name, const wxString & p_fileName )
+TrollLight * TrollScene::AddLight( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -818,7 +818,7 @@ TrollLight * TrollScene :: AddLight( const wxString & p_name, const wxString & p
 
 
 
-TrollCamera * TrollScene :: AddCamera( const wxString & p_name, const wxString & p_fileName )
+TrollCamera * TrollScene::AddCamera( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -837,7 +837,7 @@ TrollCamera * TrollScene :: AddCamera( const wxString & p_name, const wxString &
 
 
 
-TrollMesh * TrollScene :: AddMesh( const wxString & p_name )
+TrollMesh * TrollScene::AddMesh( const wxString & p_name )
 {
 	if ( m_meshes.find( p_name ) != m_meshes.end() )
 	{
@@ -851,7 +851,7 @@ TrollMesh * TrollScene :: AddMesh( const wxString & p_name )
 
 
 
-TrollAnimationGroup * TrollScene :: AddAnimationGroup( const wxString & p_name, const wxString & p_fileName )
+TrollAnimationGroup * TrollScene::AddAnimationGroup( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -870,7 +870,7 @@ TrollAnimationGroup * TrollScene :: AddAnimationGroup( const wxString & p_name, 
 
 
 
-TrollSound * TrollScene :: AddSound( const wxString & p_name, const wxString & p_fileName )
+TrollSound * TrollScene::AddSound( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -882,7 +882,7 @@ TrollSound * TrollScene :: AddSound( const wxString & p_name, const wxString & p
 		return m_currentSceneFile->m_sounds.find( p_name )->second;
 	}
 
-	std::cout << "TrollScene :: AddSound - " << p_name << "\n";
+	std::cout << "TrollScene::AddSound - " << p_name << "\n";
 	TrollSound * l_object = new TrollSound( p_name, p_fileName );
 	m_currentSceneFile->m_sounds.insert( TrollSoundStrMap::value_type( p_name, l_object ) );
 	return l_object;
@@ -890,7 +890,7 @@ TrollSound * TrollScene :: AddSound( const wxString & p_name, const wxString & p
 
 
 
-TrollVideo * TrollScene :: AddVideo( const wxString & p_name, const wxString & p_fileName )
+TrollVideo * TrollScene::AddVideo( const wxString & p_name, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -909,7 +909,7 @@ TrollVideo * TrollScene :: AddVideo( const wxString & p_name, const wxString & p
 
 
 
-TrollSequence * TrollScene :: AddSequence( TrollSequence * p_sequence, const wxString & p_fileName )
+TrollSequence * TrollScene::AddSequence( TrollSequence * p_sequence, const wxString & p_fileName )
 {
 	if ( m_currentSceneFile == NULL )
 	{
@@ -927,7 +927,7 @@ TrollSequence * TrollScene :: AddSequence( TrollSequence * p_sequence, const wxS
 
 
 
-void TrollScene :: RemoveSceneFile( const wxString & p_pathName )
+void TrollScene::RemoveSceneFile( const wxString & p_pathName )
 {
 	for ( TrollFileArray::iterator l_it = m_sceneFiles.begin() ; l_it != m_sceneFiles.end() ; )
 	{
@@ -946,7 +946,7 @@ void TrollScene :: RemoveSceneFile( const wxString & p_pathName )
 
 
 
-void TrollScene :: RemoveLoadScriptFile( const wxString & p_pathName )
+void TrollScene::RemoveLoadScriptFile( const wxString & p_pathName )
 {
 	for ( TrollFileArray::iterator l_it = m_loadScriptFiles.begin() ; l_it != m_loadScriptFiles.end() ; )
 	{
@@ -963,7 +963,7 @@ void TrollScene :: RemoveLoadScriptFile( const wxString & p_pathName )
 
 
 
-void TrollScene :: RemoveUnloadScriptFile( const wxString & p_pathName )
+void TrollScene::RemoveUnloadScriptFile( const wxString & p_pathName )
 {
 	for ( TrollFileArray::iterator l_it = m_unloadScriptFiles.begin() ; l_it != m_unloadScriptFiles.end() ; )
 	{
@@ -980,7 +980,7 @@ void TrollScene :: RemoveUnloadScriptFile( const wxString & p_pathName )
 
 
 
-void TrollScene :: RemoveDataFile( const wxString & p_pathName )
+void TrollScene::RemoveDataFile( const wxString & p_pathName )
 {
 	for ( TrollFileArray::iterator l_it = m_dataFiles.begin() ; l_it != m_dataFiles.end() ; )
 	{
@@ -997,7 +997,7 @@ void TrollScene :: RemoveDataFile( const wxString & p_pathName )
 
 
 
-void TrollScene :: RemoveDataFolder( const wxString & p_pathName )
+void TrollScene::RemoveDataFolder( const wxString & p_pathName )
 {
 	for ( TrollFileArray::iterator l_it = m_dataFolders.begin() ; l_it != m_dataFolders.end() ; )
 	{
@@ -1014,42 +1014,42 @@ void TrollScene :: RemoveDataFolder( const wxString & p_pathName )
 
 
 
-void TrollScene :: RemoveFile( const wxTreeItemId & p_item )
+void TrollScene::RemoveFile( const wxTreeItemId & p_item )
 {
 	TrollFile * l_file = GetFile( p_item );
 	std::cout << m_sceneFileId << " & " << l_file->FolderId << std::endl;
 
 	if ( m_sceneFileId == l_file->FolderId )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: RemoveFile - Scene File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::RemoveFile - Scene File" ) );
 		RemoveSceneFile( l_file->FileName );
 		return;
 	}
 
 	if ( m_loadScriptFileId == l_file->FolderId )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: RemoveFile - Load Script File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::RemoveFile - Load Script File" ) );
 		RemoveLoadScriptFile( l_file->FileName );
 		return;
 	}
 
 	if ( m_unloadScriptFileId == l_file->FolderId )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: RemoveFile - Unload Script File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::RemoveFile - Unload Script File" ) );
 		RemoveUnloadScriptFile( l_file->FileName );
 		return;
 	}
 
 	if ( m_dataFileId == l_file->FolderId )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: RemoveFile - Data File" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::RemoveFile - Data File" ) );
 		RemoveDataFile( l_file->FileName );
 		return;
 	}
 
 	if ( m_dataFolderId == l_file->FolderId )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "TrollScene :: RemoveFile - Data Folder" ) );
+		g_mainFrame->LogDebugMessage( wxT( "TrollScene::RemoveFile - Data Folder" ) );
 		RemoveDataFolder( l_file->FileName );
 		return;
 	}
@@ -1057,7 +1057,7 @@ void TrollScene :: RemoveFile( const wxTreeItemId & p_item )
 
 
 
-bool TrollScene :: HasItem( const wxTreeItemId & p_item )
+bool TrollScene::HasItem( const wxTreeItemId & p_item )
 {
 	if ( m_sceneId == p_item )
 	{
@@ -1134,7 +1134,7 @@ bool TrollScene :: HasItem( const wxTreeItemId & p_item )
 
 
 
-void TrollScene :: Save( wxTextOutputStream * p_stream )
+void TrollScene::Save( wxTextOutputStream * p_stream )
 {
 	if ( ! p_stream )
 	{
@@ -1150,7 +1150,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 
 		for ( l_it = m_sceneFiles.begin() ; l_it != m_sceneFiles.end() ; ++l_it )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "TrollScene :: Save - " ) + ( * l_it )->FileName );
+			g_mainFrame->LogDebugMessage( wxT( "TrollScene::Save - " ) + ( * l_it )->FileName );
 			p_stream->WriteString( wxT( "\t\t\t" ) + ( * l_it )->FileName + wxT( "\n" ) );
 		}
 
@@ -1163,7 +1163,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 
 		for ( l_it = m_loadScriptFiles.begin() ; l_it != m_loadScriptFiles.end() ; ++l_it )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "TrollScene :: Save - " ) + ( * l_it )->FileName );
+			g_mainFrame->LogDebugMessage( wxT( "TrollScene::Save - " ) + ( * l_it )->FileName );
 			p_stream->WriteString( wxT( "\t\t\t" ) + ( * l_it )->FileName + wxT( "\n" ) );
 		}
 
@@ -1176,7 +1176,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 
 		for ( l_it = m_unloadScriptFiles.begin() ; l_it != m_unloadScriptFiles.end() ; ++l_it )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "TrollScene :: Save - " ) + ( * l_it )->FileName );
+			g_mainFrame->LogDebugMessage( wxT( "TrollScene::Save - " ) + ( * l_it )->FileName );
 			p_stream->WriteString( wxT( "\t\t\t" ) + ( * l_it )->FileName + wxT( "\n" ) );
 		}
 
@@ -1189,7 +1189,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 
 		for ( l_it = m_dataFiles.begin() ; l_it != m_dataFiles.end() ; ++l_it )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "TrollScene :: Save - " ) + ( * l_it )->FileName );
+			g_mainFrame->LogDebugMessage( wxT( "TrollScene::Save - " ) + ( * l_it )->FileName );
 			p_stream->WriteString( wxT( "\t\t\t" ) + ( * l_it )->FileName + wxT( "\n" ) );
 		}
 
@@ -1202,7 +1202,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 
 		for ( l_it = m_dataFolders.begin() ; l_it != m_dataFolders.end() ; ++l_it )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "TrollScene :: Save - " ) + ( * l_it )->FileName );
+			g_mainFrame->LogDebugMessage( wxT( "TrollScene::Save - " ) + ( * l_it )->FileName );
 			p_stream->WriteString( wxT( "\t\t\t" ) + ( * l_it )->FileName + wxT( "\n" ) );
 		}
 
@@ -1215,7 +1215,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 
 		for ( size_t i = 0 ; i < m_neededScenes.size() ; i++ )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "TrollScene :: Save - Dependency : " ) + m_neededScenes[i] );
+			g_mainFrame->LogDebugMessage( wxT( "TrollScene::Save - Dependency : " ) + m_neededScenes[i] );
 			p_stream->WriteString( wxT( "\t\t\t" ) + m_neededScenes[i] + wxT( "\n" ) );
 		}
 
@@ -1225,7 +1225,7 @@ void TrollScene :: Save( wxTextOutputStream * p_stream )
 	p_stream->WriteString( wxT( "\t}\n" ) );
 }
 
-void TrollScene :: AddToTree( FilesTree * p_tree )
+void TrollScene::AddToTree( FilesTree * p_tree )
 {
 	wxTreeItemId l_id;
 
@@ -1253,10 +1253,10 @@ void TrollScene :: AddToTree( FilesTree * p_tree )
 	}
 }
 
-void TrollScene :: AddSceneFile( wxString const & p_strFile, FilesTree * p_tree )
+void TrollScene::AddSceneFile( wxString const & p_strFile, FilesTree * p_tree )
 {
 	TrollFile * l_file = new TrollFile( this, sceneFile, p_strFile, m_museFile, m_sceneFileId );
-	std::cout << "TrollScene :: AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddSceneFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 
 	if ( p_tree != NULL )
 	{
@@ -1266,10 +1266,10 @@ void TrollScene :: AddSceneFile( wxString const & p_strFile, FilesTree * p_tree 
 	m_sceneFiles.push_back( l_file );
 }
 
-void TrollScene :: AddLoadScriptFile( wxString const & p_strFile, FilesTree * p_tree )
+void TrollScene::AddLoadScriptFile( wxString const & p_strFile, FilesTree * p_tree )
 {
 	TrollFile * l_file = new TrollFile( this, loadScriptFile, p_strFile, m_museFile, m_loadScriptFileId );
-	std::cout << "TrollScene :: AddLoadScriptFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddLoadScriptFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 
 	if ( p_tree != NULL )
 	{
@@ -1279,10 +1279,10 @@ void TrollScene :: AddLoadScriptFile( wxString const & p_strFile, FilesTree * p_
 	m_loadScriptFiles.push_back( l_file );
 }
 
-void TrollScene :: AddUnloadScriptFile( wxString const & p_strFile, FilesTree * p_tree )
+void TrollScene::AddUnloadScriptFile( wxString const & p_strFile, FilesTree * p_tree )
 {
 	TrollFile * l_file = new TrollFile( this, unloadScriptFile, p_strFile, m_museFile, m_unloadScriptFileId );
-	std::cout << "TrollScene :: AddUnloadScriptFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddUnloadScriptFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 
 	if ( p_tree != NULL )
 	{
@@ -1292,11 +1292,11 @@ void TrollScene :: AddUnloadScriptFile( wxString const & p_strFile, FilesTree * 
 	m_unloadScriptFiles.push_back( l_file );
 }
 
-void TrollScene :: Add3DDataFile( wxString const & p_strFile, FilesTree * p_tree )
+void TrollScene::Add3DDataFile( wxString const & p_strFile, FilesTree * p_tree )
 {
 	TrollFile * l_file = new TrollFile( this, dataFile, p_strFile, m_museFile, m_dataFileId );
 	l_file->Folder = p_strFile;
-	std::cout << "TrollScene :: Add3DDataFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::Add3DDataFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 
 	if ( p_tree != NULL )
 	{
@@ -1306,11 +1306,11 @@ void TrollScene :: Add3DDataFile( wxString const & p_strFile, FilesTree * p_tree
 	m_dataFiles.push_back( l_file );
 }
 
-void TrollScene :: AddOtherDataFile( wxString const & p_strFile, FilesTree * p_tree )
+void TrollScene::AddOtherDataFile( wxString const & p_strFile, FilesTree * p_tree )
 {
 	TrollFile * l_file = new TrollFile( this, dataFolder, p_strFile, m_museFile, m_dataFolderId );
 	l_file->Folder = p_strFile;
-	std::cout << "TrollScene :: AddOtherDataFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
+	std::cout << "TrollScene::AddOtherDataFile - " << l_file->Folder << " - " << l_file->FileName << "\n";
 
 	if ( p_tree != NULL )
 	{
@@ -1320,14 +1320,14 @@ void TrollScene :: AddOtherDataFile( wxString const & p_strFile, FilesTree * p_t
 	m_dataFolders.push_back( l_file );
 }
 
-void TrollScene :: AddDependency( wxString const & p_strName )
+void TrollScene::AddDependency( wxString const & p_strName )
 {
 	m_neededScenes.push_back( p_strName );
 }
 
 
 
-wxString TrollScene :: Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, FilesTree * p_tree )
+wxString TrollScene::Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, FilesTree * p_tree )
 {
 	AddToTree( p_tree );
 
@@ -1433,7 +1433,7 @@ wxString TrollScene :: Load( wxFileInputStream * p_input, wxTextInputStream * p_
 
 
 
-void TrollScene :: Write( const wxString & p_path )
+void TrollScene::Write( const wxString & p_path )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 
@@ -1446,7 +1446,7 @@ void TrollScene :: Write( const wxString & p_path )
 
 
 
-void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & p_new )
+void TrollScene::UpdateFileName( const wxString & p_ancient, const wxString & p_new )
 {
 	int l_index = min( p_new.find_last_of( wxT( "\\" ) ), p_new.find_last_of( wxT( "/" ) ) );
 
@@ -1456,7 +1456,7 @@ void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & 
 		{
 			m_sceneFiles[i]->FileName = p_new.substr( l_index + 1 );
 			m_sceneFiles[i]->Folder = p_new.substr( 0, l_index );
-			std::cout << "TrollScene :: UpdateFileName - " << m_sceneFiles[i]->Folder << " - " << m_sceneFiles[i]->FileName << "\n";
+			std::cout << "TrollScene::UpdateFileName - " << m_sceneFiles[i]->Folder << " - " << m_sceneFiles[i]->FileName << "\n";
 			m_sceneFiles[i]->Saved = true;
 			return;
 		}
@@ -1468,7 +1468,7 @@ void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & 
 		{
 			m_loadScriptFiles[i]->FileName = p_new.substr( l_index + 1 );
 			m_loadScriptFiles[i]->Folder = p_new.substr( 0, l_index );
-			std::cout << "TrollScene :: UpdateFileName - " << m_loadScriptFiles[i]->Folder << " - " << m_loadScriptFiles[i]->FileName << "\n";
+			std::cout << "TrollScene::UpdateFileName - " << m_loadScriptFiles[i]->Folder << " - " << m_loadScriptFiles[i]->FileName << "\n";
 			m_loadScriptFiles[i]->Saved = true;
 			return;
 		}
@@ -1480,7 +1480,7 @@ void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & 
 		{
 			m_unloadScriptFiles[i]->FileName = p_new.substr( l_index + 1 );
 			m_unloadScriptFiles[i]->Folder = p_new.substr( 0, l_index );
-			std::cout << "TrollScene :: UpdateFileName - " << m_unloadScriptFiles[i]->Folder << " - " << m_unloadScriptFiles[i]->FileName << "\n";
+			std::cout << "TrollScene::UpdateFileName - " << m_unloadScriptFiles[i]->Folder << " - " << m_unloadScriptFiles[i]->FileName << "\n";
 			m_unloadScriptFiles[i]->Saved = true;
 			return;
 		}
@@ -1492,7 +1492,7 @@ void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & 
 		{
 			m_dataFiles[i]->FileName = p_new.substr( l_index + 1 );
 			m_dataFiles[i]->Folder = p_new.substr( 0, l_index );
-			std::cout << "TrollScene :: UpdateFileName - " << m_dataFiles[i]->Folder << " - " << m_dataFiles[i]->FileName << "\n";
+			std::cout << "TrollScene::UpdateFileName - " << m_dataFiles[i]->Folder << " - " << m_dataFiles[i]->FileName << "\n";
 			m_dataFiles[i]->Saved = true;
 			return;
 		}
@@ -1501,7 +1501,7 @@ void TrollScene :: UpdateFileName( const wxString & p_ancient, const wxString & 
 
 
 
-FileType TrollScene :: GetType( const wxTreeItemId & p_folderId )
+FileType TrollScene::GetType( const wxTreeItemId & p_folderId )
 {
 	if ( m_sceneFileId == p_folderId )
 	{
@@ -1528,7 +1528,7 @@ FileType TrollScene :: GetType( const wxTreeItemId & p_folderId )
 
 
 
-TrollFile * TrollScene :: GetFile( const wxTreeItemId & p_itemId )
+TrollFile * TrollScene::GetFile( const wxTreeItemId & p_itemId )
 {
 	for ( unsigned int i = 0 ; i < m_sceneFiles.size() ; i++ )
 	{
@@ -1575,7 +1575,7 @@ TrollFile * TrollScene :: GetFile( const wxTreeItemId & p_itemId )
 
 
 
-TrollFile * TrollScene :: GetFileByName( const wxString & p_itemName )
+TrollFile * TrollScene::GetFileByName( const wxString & p_itemName )
 {
 	for ( unsigned int i = 0 ; i < m_sceneFiles.size() ; i++ )
 	{
@@ -1622,7 +1622,7 @@ TrollFile * TrollScene :: GetFileByName( const wxString & p_itemName )
 
 
 
-TrollFile * TrollScene :: GetSceneFile( unsigned int p_index )
+TrollFile * TrollScene::GetSceneFile( unsigned int p_index )
 {
 	if ( p_index < m_sceneFiles.size() )
 	{
@@ -1634,7 +1634,7 @@ TrollFile * TrollScene :: GetSceneFile( unsigned int p_index )
 
 
 
-TrollFile * TrollScene :: GetLoadScriptFile( unsigned int p_index )
+TrollFile * TrollScene::GetLoadScriptFile( unsigned int p_index )
 {
 	if ( p_index < m_loadScriptFiles.size() )
 	{
@@ -1646,7 +1646,7 @@ TrollFile * TrollScene :: GetLoadScriptFile( unsigned int p_index )
 
 
 
-TrollFile * TrollScene :: GetUnloadScriptFile( unsigned int p_index )
+TrollFile * TrollScene::GetUnloadScriptFile( unsigned int p_index )
 {
 	if ( p_index < m_unloadScriptFiles.size() )
 	{
@@ -1658,7 +1658,7 @@ TrollFile * TrollScene :: GetUnloadScriptFile( unsigned int p_index )
 
 
 
-TrollFile * TrollScene :: GetDataFile( unsigned int p_index )
+TrollFile * TrollScene::GetDataFile( unsigned int p_index )
 {
 	if ( p_index < m_dataFiles.size() )
 	{
@@ -1670,7 +1670,7 @@ TrollFile * TrollScene :: GetDataFile( unsigned int p_index )
 
 
 
-TrollFile * TrollScene :: GetDataFolder( unsigned int p_index )
+TrollFile * TrollScene::GetDataFolder( unsigned int p_index )
 {
 	if ( p_index < m_dataFolders.size() )
 	{
@@ -1682,7 +1682,7 @@ TrollFile * TrollScene :: GetDataFolder( unsigned int p_index )
 
 
 
-TrollEntity * TrollScene :: GetEntity( const wxString & p_name )
+TrollEntity * TrollScene::GetEntity( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollEntity * l_result;
@@ -1702,7 +1702,7 @@ TrollEntity * TrollScene :: GetEntity( const wxString & p_name )
 
 
 
-TrollMesh * TrollScene :: GetMesh( const wxString & p_name )
+TrollMesh * TrollScene::GetMesh( const wxString & p_name )
 {
 	TrollMeshStrMap::iterator l_it = m_meshes.find( p_name );
 
@@ -1716,7 +1716,7 @@ TrollMesh * TrollScene :: GetMesh( const wxString & p_name )
 
 
 
-TrollOverlay * TrollScene :: GetOverlay( const wxString & p_name )
+TrollOverlay * TrollScene::GetOverlay( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollOverlay * l_result;
@@ -1736,7 +1736,7 @@ TrollOverlay * TrollScene :: GetOverlay( const wxString & p_name )
 
 
 
-TrollSceneNode * TrollScene :: GetSceneNode( const wxString & p_name )
+TrollSceneNode * TrollScene::GetSceneNode( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollSceneNode * l_result;
@@ -1756,7 +1756,7 @@ TrollSceneNode * TrollScene :: GetSceneNode( const wxString & p_name )
 
 
 
-TrollLight * TrollScene :: GetLight( const wxString & p_name )
+TrollLight * TrollScene::GetLight( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollLight * l_result;
@@ -1776,7 +1776,7 @@ TrollLight * TrollScene :: GetLight( const wxString & p_name )
 
 
 
-TrollCamera * TrollScene :: GetCamera( const wxString & p_name )
+TrollCamera * TrollScene::GetCamera( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollCamera * l_result;
@@ -1796,7 +1796,7 @@ TrollCamera * TrollScene :: GetCamera( const wxString & p_name )
 
 
 
-TrollAnimationGroup * TrollScene :: GetAnimationGroup( const wxString & p_name )
+TrollAnimationGroup * TrollScene::GetAnimationGroup( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollAnimationGroup * l_result;
@@ -1816,7 +1816,7 @@ TrollAnimationGroup * TrollScene :: GetAnimationGroup( const wxString & p_name )
 
 
 
-TrollSound * TrollScene :: GetSound( const wxString & p_name )
+TrollSound * TrollScene::GetSound( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollSound * l_result;
@@ -1836,7 +1836,7 @@ TrollSound * TrollScene :: GetSound( const wxString & p_name )
 
 
 
-TrollVideo * TrollScene :: GetVideo( const wxString & p_name )
+TrollVideo * TrollScene::GetVideo( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollVideo * l_result;
@@ -1856,7 +1856,7 @@ TrollVideo * TrollScene :: GetVideo( const wxString & p_name )
 
 
 
-TrollSequence * TrollScene :: GetSequence( const wxString & p_name )
+TrollSequence * TrollScene::GetSequence( const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollSequence * l_result;
@@ -1876,7 +1876,7 @@ TrollSequence * TrollScene :: GetSequence( const wxString & p_name )
 
 
 
-void TrollScene :: GetNodesNames( wxArrayString & p_list, const wxString & p_name )
+void TrollScene::GetNodesNames( wxArrayString & p_list, const wxString & p_name )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollSceneNodeMap::iterator l_nodesIt;
@@ -1901,7 +1901,7 @@ void TrollScene :: GetNodesNames( wxArrayString & p_list, const wxString & p_nam
 
 
 
-void TrollScene :: GetOverlaysNames( wxArrayString & p_list )
+void TrollScene::GetOverlaysNames( wxArrayString & p_list )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollOverlayMap::iterator l_overlaysIt;
@@ -1912,7 +1912,7 @@ void TrollScene :: GetOverlaysNames( wxArrayString & p_list )
 
 		for ( ; l_overlaysIt != l_it->second->m_allOverlays.end() ; ++l_overlaysIt )
 		{
-//			std::cout << "TrollScene :: GetOverlaysNames - " << l_overlaysIt->first << "\n";
+//			std::cout << "TrollScene::GetOverlaysNames - " << l_overlaysIt->first << "\n";
 			if ( l_overlaysIt->first != wxT( "Core/DebugOverlay" ) && l_overlaysIt->first != wxT( "Core/LensFlare" ) && l_overlaysIt->first != wxT( "Core/LoadOverlay" ) )
 			{
 				p_list.Add( l_overlaysIt->first );
@@ -1923,7 +1923,7 @@ void TrollScene :: GetOverlaysNames( wxArrayString & p_list )
 
 
 
-void TrollScene :: GetMeshesNames( wxArrayString & p_list )
+void TrollScene::GetMeshesNames( wxArrayString & p_list )
 {
 	TrollMeshStrMap::iterator l_it = m_meshes.begin();
 
@@ -1935,7 +1935,7 @@ void TrollScene :: GetMeshesNames( wxArrayString & p_list )
 
 
 
-void TrollScene :: GetSequencesNames( wxArrayString & p_list )
+void TrollScene::GetSequencesNames( wxArrayString & p_list )
 {
 	SceneFileStrMap::iterator l_it = m_sceneConfigFiles.begin();
 	TrollSequenceStrMap::iterator l_sequencesIt;
@@ -1953,7 +1953,7 @@ void TrollScene :: GetSequencesNames( wxArrayString & p_list )
 
 
 
-void TrollScene :: AddDependency( TrollScene * p_scene )
+void TrollScene::AddDependency( TrollScene * p_scene )
 {
 	bool l_found = false;
 	size_t i = 0;
@@ -1978,7 +1978,7 @@ void TrollScene :: AddDependency( TrollScene * p_scene )
 
 
 
-void TrollScene :: RemoveDependency( TrollScene * p_scene )
+void TrollScene::RemoveDependency( TrollScene * p_scene )
 {
 	bool l_found = false;
 	wxArrayString::iterator l_it = m_neededScenes.begin();
@@ -1999,7 +1999,7 @@ void TrollScene :: RemoveDependency( TrollScene * p_scene )
 
 
 
-void TrollScene :: _removeSceneThatNeedMe( TrollScene * p_scene )
+void TrollScene::_removeSceneThatNeedMe( TrollScene * p_scene )
 {
 	SceneMap::iterator l_it = m_scenesThatNeedMe.find( p_scene->GetName() );
 

@@ -3,7 +3,7 @@
 #include "PhysicsMaterial.h"
 
 
-PhysicsMaterial :: PhysicsMaterial( const String & p_name )
+PhysicsMaterial::PhysicsMaterial( const String & p_name )
 	:	named( p_name ),
 		m_friction( 0.0 ),
 		m_addFriction( 0.0 ),
@@ -20,11 +20,11 @@ PhysicsMaterial :: PhysicsMaterial( const String & p_name )
 {
 }
 
-PhysicsMaterial :: ~PhysicsMaterial()
+PhysicsMaterial::~PhysicsMaterial()
 {
 }
 
-void PhysicsMaterial :: SetContactProperties( PhysicsMaterial * p_otherMaterial, dContact * p_contactPoint )
+void PhysicsMaterial::SetContactProperties( PhysicsMaterial * p_otherMaterial, dContact * p_contactPoint )
 {
 	if ( this == NULL || p_otherMaterial == NULL || p_contactPoint == NULL )
 	{

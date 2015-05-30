@@ -8,7 +8,7 @@
 #include <ode/collision_space.h>
 #include <ode/collision.h>
 
-Space :: Space( const String & p_name, PhysicsSimulation * p_simulation, bool p_autoUpdated )
+Space::Space( const String & p_name, PhysicsSimulation * p_simulation, bool p_autoUpdated )
 	:	named( p_name ),
 		owned_by<PhysicsSimulation>	( p_simulation ),
 		m_autoUpdated( p_autoUpdated ),
@@ -19,19 +19,19 @@ Space :: Space( const String & p_name, PhysicsSimulation * p_simulation, bool p_
 	dGeomSetData( reinterpret_cast <dGeomID>( m_space ), this );
 }
 
-Space :: ~Space()
+Space::~Space()
 {
 	Clear();
 	dSpaceDestroy( m_space );
 }
 
-void Space :: Clear() d_no_throw
+void Space::Clear() d_no_throw
 {
 	dSpaceClean( m_space );
 	m_objects.clear();
 }
 
-void Space :: AddObject( PhysicsObject * p_object )
+void Space::AddObject( PhysicsObject * p_object )
 {
 	genlib_assert( p_object != NULL );
 	Space * l_space = p_object->GetSpace();
@@ -45,14 +45,14 @@ void Space :: AddObject( PhysicsObject * p_object )
 	m_objects.insert( p_object );
 }
 
-void Space :: RemoveObject( PhysicsObject * p_object )
+void Space::RemoveObject( PhysicsObject * p_object )
 {
 	genlib_assert( p_object != NULL );
 	p_object->SetSpace( NULL );
 	General::Utils::set::eraseValue( m_objects, p_object );
 }
 
-const AxisAlignedBox & Space :: GetBoundingBox()
+const AxisAlignedBox & Space::GetBoundingBox()
 {
 	dReal aabb[6];
 	dGeomGetAABB( GetSpaceAsGeomID(), aabb );
@@ -62,7 +62,7 @@ const AxisAlignedBox & Space :: GetBoundingBox()
 	return m_box;
 }
 
-void Space :: CollideInternal()
+void Space::CollideInternal()
 {
 	if ( m_internalCollisions )
 	{
@@ -70,19 +70,19 @@ void Space :: CollideInternal()
 	}
 }
 
-void Space :: CollideSpace( Space * p_collidesWith )
+void Space::CollideSpace( Space * p_collidesWith )
 {
 	genlib_assert( p_collidesWith != NULL );
 	dSpaceCollide2( reinterpret_cast <dGeomID>( m_space ), reinterpret_cast <dGeomID>( p_collidesWith->m_space ), NULL, PhysicsEngine::CollisionCallback );
 }
 
-void Space :: CollideShape( BoundingShape * p_collidesWith )
+void Space::CollideShape( BoundingShape * p_collidesWith )
 {
 	genlib_assert( p_collidesWith != NULL );
 	dSpaceCollide2( reinterpret_cast <dGeomID>( m_space ), p_collidesWith->GetGeomID(), NULL, PhysicsEngine::CollisionCallback );
 }
 
-void Space :: CollideObject( PhysicsObject * p_collidesWith )
+void Space::CollideObject( PhysicsObject * p_collidesWith )
 {
 	genlib_assert( p_collidesWith != NULL );
 	size_t imax = p_collidesWith->GetNumBounds();
@@ -93,7 +93,7 @@ void Space :: CollideObject( PhysicsObject * p_collidesWith )
 	}
 }
 
-void Space :: Render( Real p_factor )
+void Space::Render( Real p_factor )
 {
 	if ( m_autoUpdated )
 	{
@@ -101,7 +101,7 @@ void Space :: Render( Real p_factor )
 	}
 }
 
-void Space :: UpdateState()
+void Space::UpdateState()
 {
 	if ( m_autoUpdated )
 	{
@@ -109,7 +109,7 @@ void Space :: UpdateState()
 	}
 }
 
-void Space :: ApplyDamping()
+void Space::ApplyDamping()
 {
 	if ( m_autoUpdated )
 	{

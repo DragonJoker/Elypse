@@ -50,7 +50,7 @@ END_EVENT_TABLE()
 extern MainFrame	* g_mainFrame;
 
 
-ObjectsTree :: ObjectsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
+ObjectsTree::ObjectsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
 	:	wxTreeCtrl( parent, TreeObjects_Ctrl, pos, size, style )
 {
 	CreateImageList();
@@ -58,14 +58,14 @@ ObjectsTree :: ObjectsTree( wxWindow * parent, const wxPoint & pos, const wxSize
 
 
 
-ObjectsTree :: ~ObjectsTree()
+ObjectsTree::~ObjectsTree()
 {
 	Cleanup();
 }
 
 
 
-void ObjectsTree :: Cleanup()
+void ObjectsTree::Cleanup()
 {
 	General::Utils::map::deleteAll( m_overlays );
 	General::Utils::map::deleteAll( m_sceneNodes );
@@ -73,7 +73,7 @@ void ObjectsTree :: Cleanup()
 
 
 
-void ObjectsTree :: CreateImageList( int p_size )
+void ObjectsTree::CreateImageList( int p_size )
 {
 	if ( p_size == -1 )
 	{
@@ -119,7 +119,7 @@ void ObjectsTree :: CreateImageList( int p_size )
 
 
 
-void ObjectsTree :: _logEvent( const wxChar * name, const wxTreeEvent & p_event )
+void ObjectsTree::_logEvent( const wxChar * name, const wxTreeEvent & p_event )
 {
 	wxTreeItemId item = p_event.GetItem();
 	wxString text;
@@ -138,7 +138,7 @@ void ObjectsTree :: _logEvent( const wxChar * name, const wxTreeEvent & p_event 
 
 
 
-void ObjectsTree :: ShowContextMenuObject( const wxPoint & pos, wxTreeItemId p_item )
+void ObjectsTree::ShowContextMenuObject( const wxPoint & pos, wxTreeItemId p_item )
 {
 	wxMenu menu;
 
@@ -152,7 +152,7 @@ void ObjectsTree :: ShowContextMenuObject( const wxPoint & pos, wxTreeItemId p_i
 
 
 
-void ObjectsTree :: InitObjectList()
+void ObjectsTree::InitObjectList()
 {
 	wxTreeItemId l_id;
 	int l_image, l_imageSel;
@@ -243,7 +243,7 @@ void ObjectsTree :: InitObjectList()
 
 
 
-void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_parentName )
+void ObjectsTree::AddSceneNode( const wxString & p_name, const wxString & p_parentName )
 {
 	wxTreeItemId l_id;
 	Troll3DObject * l_node = reinterpret_cast <Troll3DObject *>( g_mainFrame->GetCurrentProject()->GetMainScene()->GetSceneNode( p_name ) );
@@ -260,7 +260,7 @@ void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_pa
 		l_added = true;
 		l_item->ItemObject.ItemID = l_id;
 		m_sceneNodes[wxTreeItemIdValue( l_id.m_pItem )] = l_item;
-//		std::cout << "TreeCtrl :: AddSceneNode - TrollSceneNode " << p_name << " added in list\n";
+//		std::cout << "TreeCtrl::AddSceneNode - TrollSceneNode " << p_name << " added in list\n";
 	}
 	else
 	{
@@ -274,7 +274,7 @@ void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_pa
 
 		if ( l_parentItem )
 		{
-//			std::cout << "TreeCtrl :: AddSceneNode - Parent " << p_parentName << " for " << p_name << " found in list\n";
+//			std::cout << "TreeCtrl::AddSceneNode - Parent " << p_parentName << " for " << p_name << " found in list\n";
 			l_id = AppendItem( l_parentItem->ItemObject.ItemID, l_node->GetName(), l_image, l_imageSel, new TETreeItemData( wxT( "file" ), TITNode ) );
 			l_added = true;
 			l_item->ItemObject.ItemID = l_id;
@@ -284,7 +284,7 @@ void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_pa
 		/*
 				else
 				{
-					std::cout << "TreeCtrl :: AddSceneNode - Parent " << p_parentName << " for " << p_name << " not found in list\n";
+					std::cout << "TreeCtrl::AddSceneNode - Parent " << p_parentName << " for " << p_name << " not found in list\n";
 				}
 		*/
 	}
@@ -310,7 +310,7 @@ void ObjectsTree :: AddSceneNode( const wxString & p_name, const wxString & p_pa
 
 
 
-TrollOverlay * ObjectsTree :: AddOverlay( TrollOverlay * p_overlay, const wxString & p_parentName )
+TrollOverlay * ObjectsTree::AddOverlay( TrollOverlay * p_overlay, const wxString & p_parentName )
 {
 	wxTreeItemId l_id;
 	TrollObject * l_overlay = reinterpret_cast <TrollObject *>( p_overlay );
@@ -327,7 +327,7 @@ TrollOverlay * ObjectsTree :: AddOverlay( TrollOverlay * p_overlay, const wxStri
 		l_added = true;
 		l_item->ItemObject.ItemID = l_id;
 		m_overlays.insert( std::make_pair( wxTreeItemIdValue( l_id.m_pItem ), l_item ) );
-//		std::cout << "TreeCtrl :: AddOverlay - Overlay " << p_name << " added in list\n";
+//		std::cout << "TreeCtrl::AddOverlay - Overlay " << p_name << " added in list\n";
 	}
 	else
 	{
@@ -341,7 +341,7 @@ TrollOverlay * ObjectsTree :: AddOverlay( TrollOverlay * p_overlay, const wxStri
 
 		if ( l_parentItem )
 		{
-//			std::cout << "TreeCtrl :: AddOverlay - Parent " << p_parentName << " for " << p_name << " found in list\n";
+//			std::cout << "TreeCtrl::AddOverlay - Parent " << p_parentName << " for " << p_name << " found in list\n";
 			l_id = AppendItem( l_parentItem->ItemObject.ItemID, l_overlay->GetName(), l_image, l_imageSel, new TETreeItemData( wxT( "file" ), TITOverlay ) );
 			l_added = true;
 			l_item->ItemObject.ItemID = l_id;
@@ -369,9 +369,9 @@ TrollOverlay * ObjectsTree :: AddOverlay( TrollOverlay * p_overlay, const wxStri
 
 
 
-void ObjectsTree :: AddSceneObject( TrollObject * p_object )
+void ObjectsTree::AddSceneObject( TrollObject * p_object )
 {
-//	std::cout << "TETreeCtrl :: AddSceneObject - Type : " << p_object->GetObjectType() << "\n";
+//	std::cout << "TETreeCtrl::AddSceneObject - Type : " << p_object->GetObjectType() << "\n";
 	if ( p_object->GetObjectType() == tt3DObject )
 	{
 		Troll3DObject * l_3DObject = reinterpret_cast <Troll3DObject *>( p_object );
@@ -395,7 +395,7 @@ void ObjectsTree :: AddSceneObject( TrollObject * p_object )
 
 
 
-wxTreeItemId ObjectsTree :: GetFolderId( const wxString & p_name )
+wxTreeItemId ObjectsTree::GetFolderId( const wxString & p_name )
 {
 	if ( m_folders.find( p_name ) != m_folders.end() )
 	{
@@ -407,7 +407,7 @@ wxTreeItemId ObjectsTree :: GetFolderId( const wxString & p_name )
 
 
 
-void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
+void ObjectsTree::_onObjectLClic( wxTreeEvent & p_event )
 {
 	wxTreeItemId l_item = p_event.GetItem();
 	TETreeItemData * l_itemData = reinterpret_cast <TETreeItemData *>( GetItemData( l_item ) );
@@ -422,7 +422,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_objects.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Entities\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Entities\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -431,7 +431,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_lights.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Lights\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Lights\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -440,7 +440,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_cameras.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Cameras\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Cameras\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -449,7 +449,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_animationGroups.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Animation Groups\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Animation Groups\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -458,7 +458,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_animatedObjects.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Animated Objects\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Animated Objects\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -467,7 +467,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_sounds.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Sounds\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Sounds\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -476,7 +476,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it != m_videos.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Videos\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Videos\n";
 			g_mainFrame->ShowObjectInfos( l_it->second.Object );
 			return;
 		}
@@ -485,7 +485,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it2 != m_overlays.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in Overlays\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in Overlays\n";
 			g_mainFrame->ShowObjectInfos( l_it2->second->ItemObject.Object );
 			return;
 		}
@@ -496,7 +496,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 		{
 			if ( ( l_elem = l_it2->second->RecursiveIsIn( l_item.m_pItem ) ) != NULL )
 			{
-//				std::cout << "TETreeCtrl :: _onObjectClic - Found in Overlay Elements\n";
+//				std::cout << "TETreeCtrl::_onObjectClic - Found in Overlay Elements\n";
 				g_mainFrame->ShowObjectInfos( l_elem->ItemObject.Object );
 				return;
 			}
@@ -508,7 +508,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 		if ( l_it2 != m_sceneNodes.end() )
 		{
-//			std::cout << "TETreeCtrl :: _onObjectClic - Found in TrollScene Nodes\n";
+//			std::cout << "TETreeCtrl::_onObjectClic - Found in TrollScene Nodes\n";
 			g_mainFrame->ShowObjectInfos( l_it2->second->ItemObject.Object );
 			return;
 		}
@@ -519,7 +519,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 		{
 			if ( ( l_elem = l_it2->second->RecursiveIsIn( l_item.m_pItem ) ) != NULL )
 			{
-//				std::cout << "TETreeCtrl :: _onObjectClic - Found in TrollScene Nodes Childs\n";
+//				std::cout << "TETreeCtrl::_onObjectClic - Found in TrollScene Nodes Childs\n";
 				g_mainFrame->ShowObjectInfos( l_elem->ItemObject.Object );
 				return;
 			}
@@ -531,7 +531,7 @@ void ObjectsTree :: _onObjectLClic( wxTreeEvent & p_event )
 
 
 
-void ObjectsTree :: _onObjectRClic( wxTreeEvent & p_event )
+void ObjectsTree::_onObjectRClic( wxTreeEvent & p_event )
 {
 	wxTreeItemId l_item = p_event.GetItem();
 	wxPoint l_pos = p_event.GetPoint();
@@ -545,7 +545,7 @@ void ObjectsTree :: _onObjectRClic( wxTreeEvent & p_event )
 
 
 
-void ObjectsTree :: _add3DObject( Troll3DObject * p_object )
+void ObjectsTree::_add3DObject( Troll3DObject * p_object )
 {
 	wxTreeItemId l_id;
 	bool l_added = false;
@@ -560,7 +560,7 @@ void ObjectsTree :: _add3DObject( Troll3DObject * p_object )
 		l_object.ItemID = l_id;
 		l_object.Object = p_object;
 		m_objects[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
-//			std::cout << "TETreeCtrl :: AddSceneObject - Added Object - ID : " << l_id << " - NbElems : " << m_objects.size() << "\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Added Object - ID : " << l_id << " - NbElems : " << m_objects.size() << "\n";
 		l_added = true;
 	}
 	else if ( p_object->Get3DObjectType() == ttLight )
@@ -593,7 +593,7 @@ void ObjectsTree :: _add3DObject( Troll3DObject * p_object )
 
 
 
-void ObjectsTree :: _addTemporalObject( TemporalObject * p_object )
+void ObjectsTree::_addTemporalObject( TemporalObject * p_object )
 {
 	wxTreeItemId l_id;
 	bool l_added = false;
@@ -609,22 +609,22 @@ void ObjectsTree :: _addTemporalObject( TemporalObject * p_object )
 		l_object.ItemID = l_id;
 		l_object.Object = p_object;
 		m_animationGroups[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
-//			std::cout << "TETreeCtrl :: AddSceneObject - Added animation group - ID : " << l_id << " - " << l_temporalObject->GetName() << " - NbElems : " << m_animationGroups.size() << "\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Added animation group - ID : " << l_id << " - " << l_temporalObject->GetName() << " - NbElems : " << m_animationGroups.size() << "\n";
 		l_added = true;
 	}
 	else if ( p_object->GetTemporalObjectType() == ttAnimatedObject )
 	{
-//			std::cout << "TETreeCtrl :: AddSceneObject - Adding " << l_temporalObject->GetName() << "\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Adding " << l_temporalObject->GetName() << "\n";
 		TrollAnimatedObject * l_animatedObject = reinterpret_cast <TrollAnimatedObject *>( p_object );
 		wxString l_groupName = l_animatedObject->GetGroup()->GetName();
 		wxTreeItemId l_parentId;
 		TreeItemObjectMap::iterator l_it = m_animationGroups.begin();
 		bool l_found = false;
 
-//		std::cout << "TETreeCtrl :: AddSceneObject - Looking for group " << l_groupName << "\n";
+//		std::cout << "TETreeCtrl::AddSceneObject - Looking for group " << l_groupName << "\n";
 		while ( l_it != m_animationGroups.end() && ! l_found )
 		{
-//			std::cout << "TETreeCtrl :: AddSceneObject - Current group : " << l_it->second.Object->GetName() << "\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Current group : " << l_it->second.Object->GetName() << "\n";
 			if ( l_it->second.Object->GetName() == l_groupName )
 			{
 				l_parentId = l_it->second.ItemID;
@@ -636,7 +636,7 @@ void ObjectsTree :: _addTemporalObject( TemporalObject * p_object )
 
 		if ( l_found )
 		{
-//			std::cout << "TETreeCtrl :: AddSceneObject - Group found\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Group found\n";
 			l_id = AppendItem( l_parentId, l_animatedObject->GetName(), l_image, l_imageSel, new TETreeItemData( wxT( "file" ), TITAnimatedObject ) );
 			TreeItemObject l_object;
 			l_object.ItemID = l_id;
@@ -659,7 +659,7 @@ void ObjectsTree :: _addTemporalObject( TemporalObject * p_object )
 
 
 
-void ObjectsTree :: _addMediaObject( MediaObject * p_object )
+void ObjectsTree::_addMediaObject( MediaObject * p_object )
 {
 	if ( ! p_object )
 	{
@@ -695,10 +695,10 @@ void ObjectsTree :: _addMediaObject( MediaObject * p_object )
 		TreeItemObjectMap::iterator l_it = m_sounds.begin();
 		bool l_found = false;
 
-//		std::cout << "TETreeCtrl :: AddSceneObject - Looking for parent node " << l_soundName << "\n";
+//		std::cout << "TETreeCtrl::AddSceneObject - Looking for parent node " << l_soundName << "\n";
 		while ( l_it != m_sounds.end() && ! l_found )
 		{
-//			std::cout << "TETreeCtrl :: AddSceneObject - Current node : " << l_it->second.Object->GetName() << "\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Current node : " << l_it->second.Object->GetName() << "\n";
 			if ( l_it->second.Object->GetName() == l_soundName )
 			{
 				l_parentId = l_it->second.ItemID;
@@ -710,7 +710,7 @@ void ObjectsTree :: _addMediaObject( MediaObject * p_object )
 
 		if ( l_found )
 		{
-//			std::cout << "TETreeCtrl :: AddSceneObject - Parent node found\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Parent node found\n";
 			l_id = AppendItem( l_parentId, l_soundObject->GetName(), l_image, l_imageSel, new TETreeItemData( wxT( "file" ), TITSoundObject ) );
 			TreeItemObject l_object;
 			l_object.ItemID = l_id;
@@ -748,11 +748,11 @@ void ObjectsTree :: _addMediaObject( MediaObject * p_object )
 		wxTreeItemId l_parentId;
 		TreeItemObjectMap::iterator l_it = m_videos.begin();
 		bool l_found = false;
-		std::cout << "TETreeCtrl :: AddVideoObject - Looking for parent node " << l_videoName << "\n";
+		std::cout << "TETreeCtrl::AddVideoObject - Looking for parent node " << l_videoName << "\n";
 
 		while ( l_it != m_videos.end() && ! l_found )
 		{
-			std::cout << "TETreeCtrl :: AddVideoObject - Current node : " << l_it->second.Object->GetName() << "\n";
+			std::cout << "TETreeCtrl::AddVideoObject - Current node : " << l_it->second.Object->GetName() << "\n";
 
 			if ( l_it->second.Object->GetName() == l_videoName )
 			{
@@ -765,7 +765,7 @@ void ObjectsTree :: _addMediaObject( MediaObject * p_object )
 
 		if ( l_found )
 		{
-//			std::cout << "TETreeCtrl :: AddSceneObject - Parent node found\n";
+//			std::cout << "TETreeCtrl::AddSceneObject - Parent node found\n";
 			l_id = AppendItem( l_parentId, l_videoObject->GetName(), l_image, l_imageSel, new TETreeItemData( wxT( "file" ), TITVideoObject ) );
 			TreeItemObject l_object;
 			l_object.ItemID = l_id;

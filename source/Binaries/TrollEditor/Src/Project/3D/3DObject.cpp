@@ -10,7 +10,7 @@ namespace Troll
 {
 	namespace Objects3D
 	{
-		Troll3DObject :: Troll3DObject( const wxString & p_name, const wxString & p_fileName, Troll3DObjectType p_type )
+		Troll3DObject::Troll3DObject( const wxString & p_name, const wxString & p_fileName, Troll3DObjectType p_type )
 			:	TrollObject( p_name, p_fileName, tt3DObject ),
 				m_parent( NULL ),
 				m_3DObjectType( p_type )
@@ -38,7 +38,7 @@ namespace Troll
 			g_mainFrame->LogDebugMessage( l_msg );
 		}
 
-		Troll3DObject :: ~Troll3DObject()
+		Troll3DObject::~Troll3DObject()
 		{
 			if ( m_parent != NULL )
 			{
@@ -46,7 +46,7 @@ namespace Troll
 			}
 		}
 
-		void Troll3DObject :: AttachTo( TrollSceneNode * p_node )
+		void Troll3DObject::AttachTo( TrollSceneNode * p_node )
 		{
 			if ( m_parent )
 			{
@@ -61,7 +61,7 @@ namespace Troll
 			m_parent = p_node;
 		}
 
-		void Troll3DObject :: Detach()
+		void Troll3DObject::Detach()
 		{
 			if ( m_parent == NULL )
 			{

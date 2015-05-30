@@ -12,12 +12,12 @@ using namespace Troll::GUI;
 //String EMPTY_STRING = String();
 #endif
 
-TrollLogs :: TrollLogs()
+TrollLogs::TrollLogs()
 {
 	GENLIB_SET_SINGLETON();
 }
 
-void TrollLogs :: _logMessage( const String & p_comment )
+void TrollLogs::_logMessage( const String & p_comment )
 {
 	if ( sm_singleton != NULL )
 	{
@@ -26,7 +26,7 @@ void TrollLogs :: _logMessage( const String & p_comment )
 	}
 }
 
-void TrollLogs :: _consoleMessage( const String & p_comment )
+void TrollLogs::_consoleMessage( const String & p_comment )
 {
 	if ( sm_singleton != NULL )
 	{

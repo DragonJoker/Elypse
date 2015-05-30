@@ -134,7 +134,7 @@ namespace General
 				}
 
 				ZipDirectoryBase< CharType > * l_currentDirectory = this->m_rootDirectory;
-				std::cout << "ZipArchive :: load : " << this->m_fullPath << std::endl;
+				std::cout << "ZipArchive::load : " << this->m_fullPath << std::endl;
 				int l_count = zip_get_num_files( this->m_zip );
 
 				if ( l_count == -1 )

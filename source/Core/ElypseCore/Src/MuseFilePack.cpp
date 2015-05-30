@@ -18,7 +18,7 @@ namespace
 	const unsigned short MAX_MD5SIZE		= 32;
 }
 
-bool MuseFilePack :: ReadHeader( size_t & p_indexBuffer, const DataArray & p_waitingDatas )
+bool MuseFilePack::ReadHeader( size_t & p_indexBuffer, const DataArray & p_waitingDatas )
 {
 	while ( p_indexBuffer < p_waitingDatas.size()
 			&& !IsHeaderCompleted() )
@@ -130,7 +130,7 @@ bool MuseFilePack :: ReadHeader( size_t & p_indexBuffer, const DataArray & p_wai
 	return true;
 }
 
-bool MuseFilePack :: ReadContents( size_t & p_indexBuffer, const DataArray & p_waitingDatas )
+bool MuseFilePack::ReadContents( size_t & p_indexBuffer, const DataArray & p_waitingDatas )
 {
 	if ( m_fileSize <= m_downloadedBytes )
 	{
@@ -148,7 +148,7 @@ bool MuseFilePack :: ReadContents( size_t & p_indexBuffer, const DataArray & p_w
 
 		if ( m_fileDescriptor == NULL )
 		{
-			EMUSE_MESSAGE_RELEASE( "MuseFilePack :: ReadContents - Error in opening file [" + m_owner->GetPackPath() + "][" + m_filename + "] : [" + String( strerror( errno ) ) + "]" );
+			EMUSE_MESSAGE_RELEASE( "MuseFilePack::ReadContents - Error in opening file [" + m_owner->GetPackPath() + "][" + m_filename + "] : [" + String( strerror( errno ) ) + "]" );
 			return false;
 		}
 	}
@@ -171,7 +171,7 @@ bool MuseFilePack :: ReadContents( size_t & p_indexBuffer, const DataArray & p_w
 	return true;
 }
 
-void MuseFilePack :: SetFinished()
+void MuseFilePack::SetFinished()
 {
 	m_finished = true;
 

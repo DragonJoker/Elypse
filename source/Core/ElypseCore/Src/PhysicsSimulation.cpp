@@ -19,7 +19,7 @@ namespace
 	const unsigned int c_fastStepIterationCount = 40;
 }
 
-PhysicsSimulation :: PhysicsSimulation( const String & p_name )
+PhysicsSimulation::PhysicsSimulation( const String & p_name )
 	:	named( p_name	)
 	,	m_dynamicSpace( NULL	)
 	,	m_phantomSpace( NULL	)
@@ -45,7 +45,7 @@ PhysicsSimulation :: PhysicsSimulation( const String & p_name )
 	_initialiseDefaultObjects();
 }
 
-PhysicsSimulation :: ~PhysicsSimulation()
+PhysicsSimulation::~PhysicsSimulation()
 {
 	ClearObjects( false );
 	ClearSpaces( false );
@@ -54,7 +54,7 @@ PhysicsSimulation :: ~PhysicsSimulation()
 	dWorldDestroy( m_world );
 }
 
-void PhysicsSimulation :: _initialiseDefaultObjects()
+void PhysicsSimulation::_initialiseDefaultObjects()
 {
 	m_rayHolder = CreateObject( "RayHolder" );
 	m_phantomSpace->AddObject( m_rayHolder );
@@ -62,7 +62,7 @@ void PhysicsSimulation :: _initialiseDefaultObjects()
 	m_rayHolder->AddBound( m_rayInstance );
 }
 
-void PhysicsSimulation :: _initialiseDefaultSpaces()
+void PhysicsSimulation::_initialiseDefaultSpaces()
 {
 	m_dynamicSpace = CreateSpace( "default_dynamic", true );
 	m_phantomSpace = CreateSpace( "default_phantom", false );
@@ -72,7 +72,7 @@ void PhysicsSimulation :: _initialiseDefaultSpaces()
 	m_staticSpace->SetInternalCollisions( false );
 }
 
-void PhysicsSimulation :: ClearObjects( bool p_recreateDefaults ) d_no_throw
+void PhysicsSimulation::ClearObjects( bool p_recreateDefaults ) d_no_throw
 {
 	_clearContacts();
 
@@ -89,7 +89,7 @@ void PhysicsSimulation :: ClearObjects( bool p_recreateDefaults ) d_no_throw
 	}
 }
 
-void PhysicsSimulation :: ClearSpaces( bool p_recreateDefaults ) d_no_throw
+void PhysicsSimulation::ClearSpaces( bool p_recreateDefaults ) d_no_throw
 {
 	General::Utils::map::deleteAll( m_spaces );
 
@@ -99,13 +99,13 @@ void PhysicsSimulation :: ClearSpaces( bool p_recreateDefaults ) d_no_throw
 	}
 }
 
-void PhysicsSimulation :: SetDefaultDamping( Real p_linear, Real p_angular )
+void PhysicsSimulation::SetDefaultDamping( Real p_linear, Real p_angular )
 {
 	m_defaultDampingLinear = p_linear;
 	m_defaultDampingAngular = p_angular;
 }
 
-void PhysicsSimulation :: SetDefaultAutoDisable( Real p_time, Real p_linear, Real p_angular )
+void PhysicsSimulation::SetDefaultAutoDisable( Real p_time, Real p_linear, Real p_angular )
 {
 	m_defaultAutoDisableTime = p_time;
 	m_defaultAutoDisableLinear = p_linear;
@@ -115,25 +115,25 @@ void PhysicsSimulation :: SetDefaultAutoDisable( Real p_time, Real p_linear, Rea
 	dWorldSetAutoDisableAngularThreshold( m_world, p_time );
 }
 
-void PhysicsSimulation :: SetCFM( Real p_cfm )
+void PhysicsSimulation::SetCFM( Real p_cfm )
 {
 	m_cfm = p_cfm;
 	dWorldSetCFM( m_world, p_cfm );
 }
 
-void PhysicsSimulation :: SetERP( Real p_erp )
+void PhysicsSimulation::SetERP( Real p_erp )
 {
 	m_erp = p_erp;
 	dWorldSetERP( m_world, p_erp );
 }
 
-void PhysicsSimulation :: SetGravity( const Vector3 & p_gravity )
+void PhysicsSimulation::SetGravity( const Vector3 & p_gravity )
 {
 	dWorldSetGravity( m_world, p_gravity.x, p_gravity.y, p_gravity.z );
 	m_gravity = p_gravity;
 }
 
-PhysicsObject * PhysicsSimulation :: CreateObject( Entity * p_entity, bool p_static, bool p_phantom )
+PhysicsObject * PhysicsSimulation::CreateObject( Entity * p_entity, bool p_static, bool p_phantom )
 {
 	genlib_assert( p_entity != NULL );
 	const PhysicsObjectMap::iterator & ifind = m_objects.find( p_entity->getName() );
@@ -162,7 +162,7 @@ PhysicsObject * PhysicsSimulation :: CreateObject( Entity * p_entity, bool p_sta
 	return l_object;
 }
 
-PhysicsObject * PhysicsSimulation :: CreateObject( const String & p_name )
+PhysicsObject * PhysicsSimulation::CreateObject( const String & p_name )
 {
 	PhysicsObject * l_object = General::Utils::map::insert( m_objects, p_name, p_name, m_staticSpace );
 	l_object->SetOwner( this );
@@ -171,17 +171,17 @@ PhysicsObject * PhysicsSimulation :: CreateObject( const String & p_name )
 	return l_object;
 }
 
-void PhysicsSimulation :: DestroyObject( const String & p_name )
+void PhysicsSimulation::DestroyObject( const String & p_name )
 {
 	General::Utils::map::deleteValue( m_objects, p_name );
 }
 
-void PhysicsSimulation :: DestroyObject( PhysicsObject * p_object )
+void PhysicsSimulation::DestroyObject( PhysicsObject * p_object )
 {
 	DestroyObject( p_object->GetName() );
 }
 
-void PhysicsSimulation :: Update()
+void PhysicsSimulation::Update()
 {
 	m_accumulatedTime += m_timer.Time() * m_timescale;
 	clamp( 0.0, m_accumulatedTime, m_steptimeLimit );
@@ -195,12 +195,12 @@ void PhysicsSimulation :: Update()
 	Render();
 }
 
-void PhysicsSimulation :: _clearContacts()
+void PhysicsSimulation::_clearContacts()
 {
 	dJointGroupEmpty( m_contacts );
 }
 
-void PhysicsSimulation :: _step( Real p_deltaTime )
+void PhysicsSimulation::_step( Real p_deltaTime )
 {
 	_clearContacts();
 	General::Utils::map::cycle( m_objects, & PhysicsObject::ClearContacts );
@@ -228,13 +228,13 @@ void PhysicsSimulation :: _step( Real p_deltaTime )
 	}
 }
 
-void PhysicsSimulation :: Render()
+void PhysicsSimulation::Render()
 {
 	Real l_factor = Real( m_accumulatedTime / m_steptime );
 	General::Utils::map::cycle( m_spaces, & Space::Render, l_factor );
 }
 
-Space * PhysicsSimulation :: CreateSpace( const String & p_name, bool p_autoUpdated )
+Space * PhysicsSimulation::CreateSpace( const String & p_name, bool p_autoUpdated )
 {
 	const SpaceMap::iterator & ifind = m_spaces.find( p_name );
 
@@ -248,18 +248,18 @@ Space * PhysicsSimulation :: CreateSpace( const String & p_name, bool p_autoUpda
 	return l_space;
 }
 
-bool PhysicsSimulation :: DestroySpace( const String & p_name )
+bool PhysicsSimulation::DestroySpace( const String & p_name )
 {
 	return General::Utils::map::deleteValue( m_spaces, p_name );
 }
 
-PhysicsObject * PhysicsSimulation :: GetRay( const Ray & p_ray )
+PhysicsObject * PhysicsSimulation::GetRay( const Ray & p_ray )
 {
 	m_rayInstance->SetRay( p_ray );
 	return m_rayHolder;
 }
 
-DistanceMap PhysicsSimulation :: Raytrace( const Ray & p_ray, bool p_collideDynamic, bool p_collideStatic, bool p_collidePhandom, Space * p_collidePrecise )
+DistanceMap PhysicsSimulation::Raytrace( const Ray & p_ray, bool p_collideDynamic, bool p_collideStatic, bool p_collidePhandom, Space * p_collidePrecise )
 {
 	PhysicsObjectArray l_raytraceArray;
 	DistanceMap l_tempMap;
@@ -305,7 +305,7 @@ DistanceMap PhysicsSimulation :: Raytrace( const Ray & p_ray, bool p_collideDyna
 	return l_tempMap;
 }
 
-PhysicsObject * PhysicsSimulation :: CloneObject( PhysicsObject * p_object, const String & p_clonedName, Space * p_newSpace )
+PhysicsObject * PhysicsSimulation::CloneObject( PhysicsObject * p_object, const String & p_clonedName, Space * p_newSpace )
 {
 	if ( p_newSpace == NULL )
 	{

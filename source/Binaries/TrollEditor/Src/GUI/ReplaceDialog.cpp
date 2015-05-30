@@ -22,7 +22,7 @@ BEGIN_EVENT_TABLE( ReplaceDialog, wxFrame )
 END_EVENT_TABLE()
 
 
-ReplaceDialog :: ReplaceDialog( wxWindow * p_parent, TextPanel * p_textPanel )
+ReplaceDialog::ReplaceDialog( wxWindow * p_parent, TextPanel * p_textPanel )
 	:	wxFrame( p_parent, wxID_ANY, wxT( "Remplacer..." ), wxPoint( 100, 100 ), wxSize( 200, 160 ),
 				 wxDEFAULT_FRAME_STYLE | wxFRAME_FLOAT_ON_PARENT ),
 	m_textPanel( p_textPanel ),
@@ -42,7 +42,7 @@ ReplaceDialog :: ReplaceDialog( wxWindow * p_parent, TextPanel * p_textPanel )
 
 
 
-void ReplaceDialog :: _onFind( wxCommandEvent & p_event )
+void ReplaceDialog::_onFind( wxCommandEvent & p_event )
 {
 	wxString l_text = m_textToReplace->GetValue();
 
@@ -65,7 +65,7 @@ void ReplaceDialog :: _onFind( wxCommandEvent & p_event )
 
 
 
-void ReplaceDialog :: _onReplace( wxCommandEvent & p_event )
+void ReplaceDialog::_onReplace( wxCommandEvent & p_event )
 {
 	if ( m_text.empty() )
 	{
@@ -87,7 +87,7 @@ void ReplaceDialog :: _onReplace( wxCommandEvent & p_event )
 
 
 
-void ReplaceDialog :: _onReplaceAll( wxCommandEvent & p_event )
+void ReplaceDialog::_onReplaceAll( wxCommandEvent & p_event )
 {
 	wxString l_text = m_textToReplace->GetValue();
 

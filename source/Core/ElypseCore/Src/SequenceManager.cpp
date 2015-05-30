@@ -10,7 +10,7 @@
 #include "Context.h"
 #include "EMuseLogs.h"
 
-SequenceManager :: SequenceManager()
+SequenceManager::SequenceManager()
 {
 	RegisterInterpolator( "linear", Interpolators::V3_Linear );
 	RegisterInterpolator( "linear", Interpolators::Q_Linear );
@@ -38,18 +38,18 @@ SequenceManager :: SequenceManager()
 	RegisterFactory( "Overlay_ResizeRelative", new Overlay_RelativeResizing_Factory );
 }
 
-SequenceManager :: ~SequenceManager()
+SequenceManager::~SequenceManager()
 {
 	General::Utils::map::deleteAll( m_continuousEventFactories );
 	General::Utils::map::deleteAll( m_ponctualEventFactories );
 }
 
-void SequenceManager :: Update( Real p_time )
+void SequenceManager::Update( Real p_time )
 {
 	General::Utils::map::cycle( m_objectMap, & Sequence::Update, p_time );
 }
 
-StringArray SequenceManager :: GetAvailablePonctualEvents()
+StringArray SequenceManager::GetAvailablePonctualEvents()
 {
 	StringArray l_result;
 	BasePonctualEventFactoryMap::iterator l_it = m_ponctualEventFactories.begin();
@@ -63,7 +63,7 @@ StringArray SequenceManager :: GetAvailablePonctualEvents()
 	return l_result;
 }
 
-StringArray SequenceManager :: GetAvailableContinuousEvents()
+StringArray SequenceManager::GetAvailableContinuousEvents()
 {
 	StringArray l_result;
 	BaseContinuousEventFactoryMap::iterator l_it = m_continuousEventFactories.begin();
@@ -77,22 +77,22 @@ StringArray SequenceManager :: GetAvailableContinuousEvents()
 	return l_result;
 }
 
-void SequenceManager :: RegisterInterpolator( const String & p_name, Vector3_Interpolator * p_interpolator )
+void SequenceManager::RegisterInterpolator( const String & p_name, Vector3_Interpolator * p_interpolator )
 {
 	m_interpolators_V3.insert( V3InterpolatorMap::value_type( p_name, p_interpolator ) );
 }
 
-void SequenceManager :: RegisterInterpolator( const String & p_name, Quaternion_Interpolator * p_interpolator )
+void SequenceManager::RegisterInterpolator( const String & p_name, Quaternion_Interpolator * p_interpolator )
 {
 	m_interpolators_Q.insert( QInterpolatorMap::value_type( p_name, p_interpolator ) );
 }
 
-void SequenceManager :: RegisterInterpolator( const String & p_name, Real_Interpolator * p_interpolator )
+void SequenceManager::RegisterInterpolator( const String & p_name, Real_Interpolator * p_interpolator )
 {
 	m_interpolators_R.insert( RInterpolatorMap::value_type( p_name, p_interpolator ) );
 }
 
-void SequenceManager :: RegisterFactory( const String & p_name, BaseContinuousEventFactory * p_factory )
+void SequenceManager::RegisterFactory( const String & p_name, BaseContinuousEventFactory * p_factory )
 {
 	if ( General::Utils::map::has( m_continuousEventFactories, p_name ) )
 	{
@@ -102,7 +102,7 @@ void SequenceManager :: RegisterFactory( const String & p_name, BaseContinuousEv
 	m_continuousEventFactories.insert( BaseContinuousEventFactoryMap::value_type( p_name, p_factory ) );
 }
 
-void SequenceManager :: RegisterFactory( const String & p_name, BasePonctualEventFactory * p_factory )
+void SequenceManager::RegisterFactory( const String & p_name, BasePonctualEventFactory * p_factory )
 {
 	if ( General::Utils::map::has( m_ponctualEventFactories, p_name ) )
 	{
@@ -112,7 +112,7 @@ void SequenceManager :: RegisterFactory( const String & p_name, BasePonctualEven
 	m_ponctualEventFactories.insert( BasePonctualEventFactoryMap::value_type( p_name, p_factory ) );
 }
 
-Vector3_Interpolator * SequenceManager :: GetInterpolator_V3( const String & p_name )
+Vector3_Interpolator * SequenceManager::GetInterpolator_V3( const String & p_name )
 {
 	const V3InterpolatorMap::iterator & ifind = m_interpolators_V3.find( p_name );
 
@@ -124,7 +124,7 @@ Vector3_Interpolator * SequenceManager :: GetInterpolator_V3( const String & p_n
 	return Interpolators::V3_Linear;
 }
 
-Quaternion_Interpolator * SequenceManager :: GetInterpolator_Q( const String & p_name )
+Quaternion_Interpolator * SequenceManager::GetInterpolator_Q( const String & p_name )
 {
 	const QInterpolatorMap::iterator & ifind = m_interpolators_Q.find( p_name );
 
@@ -136,7 +136,7 @@ Quaternion_Interpolator * SequenceManager :: GetInterpolator_Q( const String & p
 	return Interpolators::Q_Linear;
 }
 
-Real_Interpolator * SequenceManager :: GetInterpolator_R( const String & p_name )
+Real_Interpolator * SequenceManager::GetInterpolator_R( const String & p_name )
 {
 	const RInterpolatorMap::iterator & ifind = m_interpolators_R.find( p_name );
 
@@ -148,26 +148,26 @@ Real_Interpolator * SequenceManager :: GetInterpolator_R( const String & p_name 
 	return Interpolators::R_Linear;
 }
 
-BasePonctualEvent * SequenceManager :: CreatePonctualEvent( const String & p_name, const StringArray & p_params )
+BasePonctualEvent * SequenceManager::CreatePonctualEvent( const String & p_name, const StringArray & p_params )
 {
 	BasePonctualEventFactory * l_factory = General::Utils::map::findOrNull( m_ponctualEventFactories, p_name );
 
 	if ( l_factory == NULL )
 	{
-		EMUSE_MESSAGE_RELEASE( "SequenceManager :: CreatePonctualEvent - Can't find ponctual event factory for " + p_name );
+		EMUSE_MESSAGE_RELEASE( "SequenceManager::CreatePonctualEvent - Can't find ponctual event factory for " + p_name );
 		return NULL;
 	}
 
 	return l_factory->CreateEvent( p_params );
 }
 
-BaseContinuousEvent * SequenceManager :: CreateContinuousEvent( const String & p_name )
+BaseContinuousEvent * SequenceManager::CreateContinuousEvent( const String & p_name )
 {
 	BaseContinuousEventFactory * l_factory = General::Utils::map::findOrNull( m_continuousEventFactories, p_name );
 
 	if ( l_factory == NULL )
 	{
-		EMUSE_MESSAGE_RELEASE( "SequenceManager :: CreateContinuousEvent - Can't find continuous event factory for " + p_name );
+		EMUSE_MESSAGE_RELEASE( "SequenceManager::CreateContinuousEvent - Can't find continuous event factory for " + p_name );
 		return NULL;
 	}
 

@@ -7,27 +7,27 @@
 #include "Function.h"
 
 
-Structure :: Structure( const String & p_name )
+Structure::Structure( const String & p_name )
 	:	named( p_name )
 {
 	m_type = new VariableType( EMVT_STRUCT, NULL, NULL );
 	m_type->m_struct = this;
 }
 
-Structure :: ~Structure()
+Structure::~Structure()
 {
 	General::Utils::vector::deleteAll( m_members );
 	General::Utils::map::deleteAll( m_classFunctions );
 	delete m_type;
 }
 
-void Structure :: AddMember( const String & p_name, VariableType * p_type )
+void Structure::AddMember( const String & p_name, VariableType * p_type )
 {
 	m_members.push_back( new StructRow( p_name, p_type ) );
 	m_type->AddSubType( p_type );
 }
 
-void Structure :: AddFunction( UserFunction * p_function )
+void Structure::AddFunction( UserFunction * p_function )
 {
 	m_classFunctions.insert( UserFunctionMap::value_type( p_function->GetName(), p_function ) );
 	p_function->m_params.push_back( m_type );
@@ -39,7 +39,7 @@ void Structure :: AddFunction( UserFunction * p_function )
 	p_function->m_localVars.insert( ScriptNodeMap::value_type( "this", l_node ) );
 }
 
-String Structure :: GetDesc() const
+String Structure::GetDesc() const
 {
 	String l_desc = "struct " + m_name + "\n{\n";
 
@@ -52,7 +52,7 @@ String Structure :: GetDesc() const
 	return l_desc;
 }
 
-unsigned int Structure :: FindMember( const String & p_name )const
+unsigned int Structure::FindMember( const String & p_name )const
 {
 	unsigned int i = 0;
 
@@ -69,7 +69,7 @@ unsigned int Structure :: FindMember( const String & p_name )const
 	return String::npos;
 }
 
-StructInstance :: StructInstance( VariableType * p_def )
+StructInstance::StructInstance( VariableType * p_def )
 	:	m_definition( p_def )
 {
 	for ( auto & l_type : m_definition->m_subTypes )
@@ -78,12 +78,12 @@ StructInstance :: StructInstance( VariableType * p_def )
 	}
 }
 
-StructInstance :: ~StructInstance()
+StructInstance::~StructInstance()
 {
 	General::Utils::vector::deleteAll( m_members );
 }
 
-void StructInstance :: Copy( StructInstance * p_origin )
+void StructInstance::Copy( StructInstance * p_origin )
 {
 	m_definition = p_origin->m_definition;
 	General::Utils::vector::deleteAll( m_members );

@@ -6,19 +6,19 @@
 #include "MuseDownloader.h"
 #include "EMuseLoadingBar.h"
 
-DownloadManager :: DownloadManager( const Path & p_installPath, EMuseLoadingBar * p_bar, bool p_download )
+DownloadManager::DownloadManager( const Path & p_installPath, EMuseLoadingBar * p_bar, bool p_download )
 	:	m_loadingBar( p_bar ),
 		m_installPath( p_installPath ),
 		m_downloadFiles( p_download )
 {
 }
 
-DownloadManager :: ~DownloadManager()
+DownloadManager::~DownloadManager()
 {
 	General::Utils::map::deleteAll( m_museFiles );
 }
 
-MuseFile * DownloadManager :: StartDownloadFile( const Url & p_url, bool p_download )
+MuseFile * DownloadManager::StartDownloadFile( const Url & p_url, bool p_download )
 {
 	genlib_assert( ! p_url.empty() );
 	Url l_url = p_url;

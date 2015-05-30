@@ -32,7 +32,7 @@ BEGIN_EVENT_TABLE( SimpleTransientPopup, wxPopupTransientWindow )
 END_EVENT_TABLE()
 
 
-SimpleTransientPopup :: SimpleTransientPopup( wxWindow * p_parent )
+SimpleTransientPopup::SimpleTransientPopup( wxWindow * p_parent )
 	:	wxPopupTransientWindow( p_parent )
 {
 	m_panel = new wxScrolledWindow( this, wxID_ANY );
@@ -65,13 +65,13 @@ SimpleTransientPopup :: SimpleTransientPopup( wxWindow * p_parent )
 
 
 
-SimpleTransientPopup :: ~SimpleTransientPopup()
+SimpleTransientPopup::~SimpleTransientPopup()
 {
 }
 
 
 
-void SimpleTransientPopup :: Popup( wxWindow * p_focus )
+void SimpleTransientPopup::Popup( wxWindow * p_focus )
 {
 	g_mainFrame->LogDebugMessage( wxT( "0x%lx SimpleTransientPopup::Popup" ) );
 	wxPopupTransientWindow::Popup( p_focus ? p_focus : m_panel );
@@ -79,7 +79,7 @@ void SimpleTransientPopup :: Popup( wxWindow * p_focus )
 
 
 
-void SimpleTransientPopup :: OnDismiss()
+void SimpleTransientPopup::OnDismiss()
 {
 	g_mainFrame->LogDebugMessage( wxT( "0x%lx SimpleTransientPopup::OnDismiss" ) );
 	wxPopupTransientWindow::OnDismiss();
@@ -87,7 +87,7 @@ void SimpleTransientPopup :: OnDismiss()
 
 
 
-bool SimpleTransientPopup :: ProcessLeftDown( wxMouseEvent & p_event )
+bool SimpleTransientPopup::ProcessLeftDown( wxMouseEvent & p_event )
 {
 	g_mainFrame->LogDebugMessage( wxT( "0x%lx SimpleTransientPopup::ProcessLeftDown" ) );
 	return wxPopupTransientWindow::ProcessLeftDown( p_event );
@@ -95,7 +95,7 @@ bool SimpleTransientPopup :: ProcessLeftDown( wxMouseEvent & p_event )
 
 
 
-bool SimpleTransientPopup :: Show( bool show )
+bool SimpleTransientPopup::Show( bool show )
 {
 	g_mainFrame->LogDebugMessage( wxT( "0x%lx SimpleTransientPopup::Show" ) );
 	return wxPopupTransientWindow::Show( show );
@@ -103,7 +103,7 @@ bool SimpleTransientPopup :: Show( bool show )
 
 
 
-void SimpleTransientPopup :: _onSize( wxSizeEvent & p_event )
+void SimpleTransientPopup::_onSize( wxSizeEvent & p_event )
 {
 	g_mainFrame->LogDebugMessage( wxT( "0x%lx SimpleTransientPopup::OnSize" ) );
 	p_event.Skip();
@@ -111,7 +111,7 @@ void SimpleTransientPopup :: _onSize( wxSizeEvent & p_event )
 
 
 
-void SimpleTransientPopup :: _onSetFocus( wxFocusEvent & p_event )
+void SimpleTransientPopup::_onSetFocus( wxFocusEvent & p_event )
 {
 	g_mainFrame->LogDebugMessage( wxT( "SimpleTransientPopup::OnSetFocus" ) );
 	p_event.Skip();
@@ -119,7 +119,7 @@ void SimpleTransientPopup :: _onSetFocus( wxFocusEvent & p_event )
 
 
 
-void SimpleTransientPopup :: _onKillFocus( wxFocusEvent & p_event )
+void SimpleTransientPopup::_onKillFocus( wxFocusEvent & p_event )
 {
 	g_mainFrame->LogDebugMessage( wxT( "SimpleTransientPopup::OnKillFocus" ) );
 	p_event.Skip();
@@ -127,7 +127,7 @@ void SimpleTransientPopup :: _onKillFocus( wxFocusEvent & p_event )
 
 
 
-void SimpleTransientPopup :: _onMouse( wxMouseEvent & p_event )
+void SimpleTransientPopup::_onMouse( wxMouseEvent & p_event )
 {
 	wxRect rect( m_mouseText->GetRect() );
 	rect.SetX( -100000 );
@@ -151,7 +151,7 @@ void SimpleTransientPopup :: _onMouse( wxMouseEvent & p_event )
 
 
 
-void SimpleTransientPopup :: _onButton( wxCommandEvent & p_event )
+void SimpleTransientPopup::_onButton( wxCommandEvent & p_event )
 {
 	g_mainFrame->LogDebugMessage( wxT( "SimpleTransientPopup::OnButton" ) );
 	wxButton * button = wxDynamicCast( p_event.GetEventObject(), wxButton );
@@ -170,7 +170,7 @@ void SimpleTransientPopup :: _onButton( wxCommandEvent & p_event )
 
 
 
-void SimpleTransientPopup :: _onSpinCtrl( wxSpinEvent & p_event )
+void SimpleTransientPopup::_onSpinCtrl( wxSpinEvent & p_event )
 {
 	g_mainFrame->LogDebugMessage( wxT( "SimpleTransientPopup::OnSpinCtrl" ) );
 	p_event.Skip();

@@ -58,9 +58,9 @@
 #include <Manager.h>
 #include "EMuseLogs.h"
 
-EMuseFrameListener :: EMuseFrameListener(	EMuseInstance * p_ogre, RenderWindow * p_window,
-		const Url & p_baseURL, const Path & p_installDir,
-		const String & p_appStringIndex )
+EMuseFrameListener::EMuseFrameListener(	EMuseInstance * p_ogre, RenderWindow * p_window,
+										const Url & p_baseURL, const Path & p_installDir,
+										const String & p_appStringIndex )
 	:	owned_by <EMuseInstance>	( p_ogre ),			m_window( p_window ),
 				 m_sceneManager( NULL ),				m_objectMaterialManager( NULL ),
 				 m_gui( NULL ),				m_physics( NULL ),
@@ -105,8 +105,8 @@ EMuseFrameListener :: EMuseFrameListener(	EMuseInstance * p_ogre, RenderWindow *
 	EMUSE_LOG_MESSAGE_DEBUG( "Framelistener : creating" );
 }
 
-EMuseFrameListener :: EMuseFrameListener( EMuseInstance * p_instance, EMuseFrameListener * p_ofl,
-		RenderWindow * p_window, const String & p_appStringIndex )
+EMuseFrameListener::EMuseFrameListener( EMuseInstance * p_instance, EMuseFrameListener * p_ofl,
+										RenderWindow * p_window, const String & p_appStringIndex )
 	:	owned_by <EMuseInstance>	( p_instance ),
 		   m_window( p_window ),
 		   m_scriptQueue( 50 ),
@@ -124,7 +124,7 @@ EMuseFrameListener :: EMuseFrameListener( EMuseInstance * p_instance, EMuseFrame
 	EMUSE_LOG_MESSAGE_DEBUG( "Framelistener : finished creation" );
 }
 
-EMuseFrameListener :: ~EMuseFrameListener()
+EMuseFrameListener::~EMuseFrameListener()
 {
 	EMUSE_LOG_MESSAGE_DEBUG( "EMuseFrameListener : ~EMuseFrameListener" );
 	_destroyBinds();
@@ -154,7 +154,7 @@ EMuseFrameListener :: ~EMuseFrameListener()
 	EMUSE_LOG_MESSAGE_DEBUG( "EMuseFrameListener : Destroyed" );
 }
 
-void EMuseFrameListener :: _setupEffectsManager()
+void EMuseFrameListener::_setupEffectsManager()
 {
 	m_camTexManager = new CamTexManager;
 	m_mirrorManager = new MirrorManager( m_appIndexStr );
@@ -164,7 +164,7 @@ void EMuseFrameListener :: _setupEffectsManager()
 	m_objectMaterialManager = new ObjectMaterialManager;
 }
 
-void EMuseFrameListener :: _setupUniverse()
+void EMuseFrameListener::_setupUniverse()
 {
 	m_universeManager = new UniverseManager( m_appIndexStr );
 	Universe * l_uni = m_universeManager->CreateUniverse( "Main" );
@@ -176,14 +176,14 @@ void EMuseFrameListener :: _setupUniverse()
 	m_camera->setNearClipDistance( 5.0 );
 }
 
-void EMuseFrameListener :: _setupInterfaces()
+void EMuseFrameListener::_setupInterfaces()
 {
 	m_gui = new EMGui( m_appIndexStr, m_camera->getViewport()->getActualWidth() / static_cast<Real>( m_camera->getViewport()->getActualHeight() ) );
 	m_parser = new SceneFileParser( m_appIndexStr, m_installDir / "rsc" / m_filename );
 	m_physics = new PhysicsEngine;
 }
 
-void EMuseFrameListener :: _setupScript()
+void EMuseFrameListener::_setupScript()
 {
 	m_scriptEngine = new ScriptEngine( m_installDir / "rsc" / m_filename, m_owner->GetLoadingBar() );
 	m_scriptEngine->Initialise();
@@ -221,7 +221,7 @@ void EMuseFrameListener :: _setupScript()
 	m_scriptEngine->GetVariable( "GENERAL_SCREEN_HEIGHT" )->set( static_cast <Real>( m_window->getHeight() ) );
 }
 
-void EMuseFrameListener :: _setupMainScript()
+void EMuseFrameListener::_setupMainScript()
 {
 	if ( ! m_startupScript.empty() )
 	{
@@ -253,12 +253,12 @@ void EMuseFrameListener :: _setupMainScript()
 	}
 }
 
-void EMuseFrameListener :: PreInitialise()
+void EMuseFrameListener::PreInitialise()
 {
 	_setupUniverse();
 }
 
-void EMuseFrameListener :: Initialise()
+void EMuseFrameListener::Initialise()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "Framelistener : _initialise" );
 	_setupEffectsManager();
@@ -268,7 +268,7 @@ void EMuseFrameListener :: Initialise()
 	_setupBinds();
 }
 
-void EMuseFrameListener :: _initialiseFromExisting( EMuseFrameListener * p_other )
+void EMuseFrameListener::_initialiseFromExisting( EMuseFrameListener * p_other )
 {
 	genlib_assert( p_other != NULL );
 	m_debugOverlay = p_other->m_debugOverlay;
@@ -294,7 +294,7 @@ void EMuseFrameListener :: _initialiseFromExisting( EMuseFrameListener * p_other
 	_setupBinds();
 }
 
-void EMuseFrameListener :: _setupBinds()
+void EMuseFrameListener::_setupBinds()
 {
 	EMUSE_CONSOLE_MESSAGE_NORMAL( "_setupBinds" );
 #define MT_RETRIEVE_VAR( X) m_scriptVars[X] = m_scriptEngine->GetVariable( #X)
@@ -319,7 +319,7 @@ void EMuseFrameListener :: _setupBinds()
 	m_ready = true;
 }
 
-void EMuseFrameListener :: _destroyBinds()
+void EMuseFrameListener::_destroyBinds()
 {
 	for ( unsigned int i = 0 ; i < static_cast<unsigned int>( NUM_SCRIPT_BINDS ); i ++ )
 	{
@@ -337,7 +337,7 @@ void EMuseFrameListener :: _destroyBinds()
 	}
 }
 
-void EMuseFrameListener :: ShowDebugOverlay( bool show )
+void EMuseFrameListener::ShowDebugOverlay( bool show )
 {
 	m_showFPS = show;
 
@@ -354,7 +354,7 @@ void EMuseFrameListener :: ShowDebugOverlay( bool show )
 	}
 }
 
-void EMuseFrameListener :: _updateStats( void )
+void EMuseFrameListener::_updateStats( void )
 {
 	OverlayElement * guiAvg = OverlayManager::getSingleton().getOverlayElement( "Core/AverageFps" );
 	OverlayElement * guiCurr = OverlayManager::getSingleton().getOverlayElement( "Core/CurrFps" );
@@ -371,7 +371,7 @@ void EMuseFrameListener :: _updateStats( void )
 	guiTris->setCaption( "Triangle Count: " + StringConverter::toString( stats.triangleCount ) + ", Batches : " + StringConverter::toString( stats.batchCount ) );
 }
 
-bool EMuseFrameListener :: frameStarted( Real p_timeSinceLastFrame )
+bool EMuseFrameListener::frameStarted( Real p_timeSinceLastFrame )
 {
 	ScriptNode * l_script;
 
@@ -486,7 +486,7 @@ bool EMuseFrameListener :: frameStarted( Real p_timeSinceLastFrame )
 	return true;
 }
 
-bool EMuseFrameListener :: frameEnded( Real p_timeSinceLastFrame )
+bool EMuseFrameListener::frameEnded( Real p_timeSinceLastFrame )
 {
 	if ( m_showFPS )
 	{
@@ -498,7 +498,7 @@ bool EMuseFrameListener :: frameEnded( Real p_timeSinceLastFrame )
 	return true;
 }
 
-void EMuseFrameListener :: MouseMove( Real p_x, Real p_y )
+void EMuseFrameListener::MouseMove( Real p_x, Real p_y )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	m_scriptVars[MOUSE_DIFFERENCE_X]->get <Real> () += p_x - m_scriptVars[MOUSE_POSITION_X]->get <Real> ();
@@ -508,7 +508,7 @@ void EMuseFrameListener :: MouseMove( Real p_x, Real p_y )
 	m_mouseMove = true;
 }
 
-void EMuseFrameListener :: SetMouse( Real p_x, Real p_y )
+void EMuseFrameListener::SetMouse( Real p_x, Real p_y )
 {
 	m_scriptVars[MOUSE_DIFFERENCE_X]->set <Real> ( 0.0 );
 	m_scriptVars[MOUSE_DIFFERENCE_Y]->set <Real> ( 0.0 );
@@ -521,7 +521,7 @@ void EMuseFrameListener :: SetMouse( Real p_x, Real p_y )
 	}
 }
 
-void EMuseFrameListener :: MouseRDown( Real x, Real y )
+void EMuseFrameListener::MouseRDown( Real x, Real y )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	SetMouse( x, y );
@@ -529,7 +529,7 @@ void EMuseFrameListener :: MouseRDown( Real x, Real y )
 	m_mouseRDown = true;
 }
 
-void EMuseFrameListener :: MouseLDown( Real x, Real y )
+void EMuseFrameListener::MouseLDown( Real x, Real y )
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 	SetMouse( x, y );
@@ -565,7 +565,7 @@ void EMuseFrameListener :: MouseLDown( Real x, Real y )
 	m_mouseLDown = true;
 }
 
-void EMuseFrameListener :: MouseMDown( Real x, Real y )
+void EMuseFrameListener::MouseMDown( Real x, Real y )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	SetMouse( x, y );
@@ -573,7 +573,7 @@ void EMuseFrameListener :: MouseMDown( Real x, Real y )
 	m_mouseMDown = true;
 }
 
-void EMuseFrameListener :: MouseRUp( Real x, Real y )
+void EMuseFrameListener::MouseRUp( Real x, Real y )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	SetMouse( x, y );
@@ -581,7 +581,7 @@ void EMuseFrameListener :: MouseRUp( Real x, Real y )
 	m_mouseRDown = false;
 }
 
-void EMuseFrameListener :: MouseLUp( Real x, Real y )
+void EMuseFrameListener::MouseLUp( Real x, Real y )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	SetMouse( x, y );
@@ -589,7 +589,7 @@ void EMuseFrameListener :: MouseLUp( Real x, Real y )
 	m_mouseLDown = false;
 }
 
-void EMuseFrameListener :: MouseMUp( Real x, Real y )
+void EMuseFrameListener::MouseMUp( Real x, Real y )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	SetMouse( x, y );
@@ -597,7 +597,7 @@ void EMuseFrameListener :: MouseMUp( Real x, Real y )
 	m_mouseMDown = false;
 }
 
-void EMuseFrameListener :: MouseWheel( short move )
+void EMuseFrameListener::MouseWheel( short move )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 	if ( move > 0 )
@@ -610,7 +610,7 @@ void EMuseFrameListener :: MouseWheel( short move )
 	}
 }
 
-void EMuseFrameListener :: ResetAll()
+void EMuseFrameListener::ResetAll()
 {
 	if ( m_mouseLDown )
 	{
@@ -636,7 +636,7 @@ void EMuseFrameListener :: ResetAll()
 	}
 }
 
-void EMuseFrameListener :: KeyDown( unsigned int p_key )
+void EMuseFrameListener::KeyDown( unsigned int p_key )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 //	std::cout << "keydown : " << p_key << std::endl;
@@ -649,7 +649,7 @@ void EMuseFrameListener :: KeyDown( unsigned int p_key )
 	}
 }
 
-void EMuseFrameListener :: KeyUp( unsigned int p_key )
+void EMuseFrameListener::KeyUp( unsigned int p_key )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 //	std::cout << "keyup : " << p_key << std::endl;
@@ -662,7 +662,7 @@ void EMuseFrameListener :: KeyUp( unsigned int p_key )
 	}
 }
 
-void EMuseFrameListener :: KeyRepeat( unsigned int p_key, unsigned int p_repeat )
+void EMuseFrameListener::KeyRepeat( unsigned int p_key, unsigned int p_repeat )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 //	std::cout << "keyrepeat : " << p_key << std::endl;
@@ -677,7 +677,7 @@ void EMuseFrameListener :: KeyRepeat( unsigned int p_key, unsigned int p_repeat 
 	}
 }
 
-void EMuseFrameListener :: OnChar( unsigned int p_char )
+void EMuseFrameListener::OnChar( unsigned int p_char )
 {
 //	std::cout << "on char : " << _keycodeToChar( p_char) << " (" << p_char << ")" << std::endl;
 	if ( m_scriptBinds[KEY_CHAR_DOWN] != NULL )
@@ -687,7 +687,7 @@ void EMuseFrameListener :: OnChar( unsigned int p_char )
 	}
 }
 
-void EMuseFrameListener :: OnCharRepeat( unsigned int p_char, unsigned int p_numRepeat )
+void EMuseFrameListener::OnCharRepeat( unsigned int p_char, unsigned int p_numRepeat )
 {
 //	std::cout << "on char repeat : " << _keycodeToChar( p_char) << std::endl;
 	if ( m_scriptBinds[KEY_CHAR_REPEAT] != NULL )
@@ -701,7 +701,7 @@ void EMuseFrameListener :: OnCharRepeat( unsigned int p_char, unsigned int p_num
 	}
 }
 
-void EMuseFrameListener :: _updateMedia( Real p_time )
+void EMuseFrameListener::_updateMedia( Real p_time )
 {
 	// Get camera position to compute volume and balance
 	Vector3 l_position;
@@ -724,7 +724,7 @@ void EMuseFrameListener :: _updateMedia( Real p_time )
 	}
 }
 
-void EMuseFrameListener :: AddToScriptQueue( ScriptNode * p_node )
+void EMuseFrameListener::AddToScriptQueue( ScriptNode * p_node )
 {
 	if ( p_node != NULL )
 	{
@@ -732,7 +732,7 @@ void EMuseFrameListener :: AddToScriptQueue( ScriptNode * p_node )
 	}
 }
 
-void EMuseFrameListener :: AddToScriptQueue( const String & p_script )
+void EMuseFrameListener::AddToScriptQueue( const String & p_script )
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 //	std::cout << "AddToScriptQueue : " << p_script << std::endl;
@@ -746,7 +746,7 @@ void EMuseFrameListener :: AddToScriptQueue( const String & p_script )
 	}
 }
 
-void EMuseFrameListener :: SetCallback( CallbackType p_type, ScriptNode * p_node )
+void EMuseFrameListener::SetCallback( CallbackType p_type, ScriptNode * p_node )
 {
 	genlib_assert( p_node != NULL );
 
@@ -763,7 +763,7 @@ void EMuseFrameListener :: SetCallback( CallbackType p_type, ScriptNode * p_node
 	}
 }
 
-char EMuseFrameListener :: _keycodeToChar( unsigned int p_keycode )
+char EMuseFrameListener::_keycodeToChar( unsigned int p_keycode )
 {
 	//TODO : delegate to plugin, avec check du mappage clavier et check maj/min, etc, pour avoir la vraie touche.
 	return static_cast <char>( p_keycode );

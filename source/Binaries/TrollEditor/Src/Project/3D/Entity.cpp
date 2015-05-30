@@ -18,7 +18,7 @@ using namespace Troll::GUI;
 extern MainFrame * g_mainFrame;
 
 
-TrollEntity :: TrollEntity( const wxString & p_name, const wxString & p_fileName )
+TrollEntity::TrollEntity( const wxString & p_name, const wxString & p_fileName )
 	:	Troll3DObject( p_name, p_fileName, ttEntity ),
 		m_mesh( NULL ),
 		m_ogreEntity( NULL ),
@@ -28,13 +28,13 @@ TrollEntity :: TrollEntity( const wxString & p_name, const wxString & p_fileName
 
 
 
-TrollEntity :: ~TrollEntity()
+TrollEntity::~TrollEntity()
 {
 }
 
 
 
-void TrollEntity :: AttachTo( TrollSceneNode * p_node )
+void TrollEntity::AttachTo( TrollSceneNode * p_node )
 {
 	Troll3DObject::AttachTo( p_node );
 
@@ -52,7 +52,7 @@ void TrollEntity :: AttachTo( TrollSceneNode * p_node )
 
 
 
-int TrollEntity :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollEntity::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 120 + ( m_mesh ? 30 * m_mesh->GetNumSubMaterials() : 0 );
 	wxSize l_returnSize( p_width, l_height );
@@ -69,14 +69,14 @@ int TrollEntity :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollEntity :: SetOgreEntity( Ogre::Entity * p_entity )
+void TrollEntity::SetOgreEntity( Ogre::Entity * p_entity )
 {
 	m_ogreEntity = p_entity;
 }
 
 
 
-void TrollEntity :: SetMaterial( const wxString & p_name, bool p_updateOgre )
+void TrollEntity::SetMaterial( const wxString & p_name, bool p_updateOgre )
 {
 	m_material = p_name;
 
@@ -92,7 +92,7 @@ void TrollEntity :: SetMaterial( const wxString & p_name, bool p_updateOgre )
 
 
 
-void TrollEntity :: SetMesh( TrollMesh * p_mesh )
+void TrollEntity::SetMesh( TrollMesh * p_mesh )
 {
 	m_mesh = p_mesh;
 //	m_ogreEntity->setMesh( p_mesh->GetName().char_str().data());
@@ -100,7 +100,7 @@ void TrollEntity :: SetMesh( TrollMesh * p_mesh )
 
 
 
-void TrollEntity :: Write( wxTextOutputStream * p_stream )
+void TrollEntity::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "object " ) + m_name + wxT( "\n{\n" ) );
 	p_stream->WriteString( wxT( "\tmesh " ) + m_mesh->GetName() + wxT( "\n" ) );

@@ -37,7 +37,7 @@ BEGIN_EVENT_TABLE( ContinuousEventProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-ContinuousEventProperties :: ContinuousEventProperties( TrollContinuousEvent * p_event, wxWindow * parent,
+ContinuousEventProperties::ContinuousEventProperties( TrollContinuousEvent * p_event, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_event( p_event ),
@@ -54,7 +54,7 @@ ContinuousEventProperties :: ContinuousEventProperties( TrollContinuousEvent * p
 
 
 
-ContinuousEventProperties :: ~ContinuousEventProperties()
+ContinuousEventProperties::~ContinuousEventProperties()
 {
 	/*
 		if (m_viewedKeyFrame != NULL)
@@ -67,13 +67,13 @@ ContinuousEventProperties :: ~ContinuousEventProperties()
 
 
 
-void ContinuousEventProperties :: UpdateProperties()
+void ContinuousEventProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 
 	if ( ! DestroyChildren() )
 	{
-		std::cout << "ContinuousEventProperties :: UpdateProperties - Can't destroy children\n";
+		std::cout << "ContinuousEventProperties::UpdateProperties - Can't destroy children\n";
 		m_updatingProperties = false;
 		return;
 	}
@@ -100,7 +100,7 @@ void ContinuousEventProperties :: UpdateProperties()
 
 
 
-wxArrayString ContinuousEventProperties :: _getTargetTypes( const wxString & p_action )
+wxArrayString ContinuousEventProperties::_getTargetTypes( const wxString & p_action )
 {
 	wxArrayString l_result;
 
@@ -130,7 +130,7 @@ wxArrayString ContinuousEventProperties :: _getTargetTypes( const wxString & p_a
 
 
 
-wxString ContinuousEventProperties :: _buildTargetChoice( const wxPoint & p_position, const wxString & p_targetType )
+wxString ContinuousEventProperties::_buildTargetChoice( const wxPoint & p_position, const wxString & p_targetType )
 {
 	if ( m_target != NULL )
 	{
@@ -153,12 +153,12 @@ wxString ContinuousEventProperties :: _buildTargetChoice( const wxPoint & p_posi
 
 		if ( p_targetType == wxT( "scene_node" ) )
 		{
-//			std::cout << "ContinuousEventProperties :: _buildTargetChoice - TrollSceneNode\n";
+//			std::cout << "ContinuousEventProperties::_buildTargetChoice - TrollSceneNode\n";
 			g_mainFrame->GetCurrentProject()->GetMainScene()->GetNodesNames( l_targets );
 		}
 		else if ( p_targetType == wxT( "overlay" ) )
 		{
-//			std::cout << "ContinuousEventProperties :: _buildTargetChoice - Overlay\n";
+//			std::cout << "ContinuousEventProperties::_buildTargetChoice - Overlay\n";
 			Ogre::OverlayManager::OverlayMapIterator l_it = OverlayManager::getSingletonPtr()->getOverlayIterator();
 			wxString l_name;
 
@@ -199,7 +199,7 @@ wxString ContinuousEventProperties :: _buildTargetChoice( const wxPoint & p_posi
 				}
 			}
 
-//			std::cout << "ContinuousEventProperties :: _buildTargetChoice - OverlayElement\n";
+//			std::cout << "ContinuousEventProperties::_buildTargetChoice - OverlayElement\n";
 //			g_mainFrame->GetCurrentProject()->GetMainScene()->GetOverlaysNames( l_targets);
 		}
 
@@ -219,7 +219,7 @@ wxString ContinuousEventProperties :: _buildTargetChoice( const wxPoint & p_posi
 
 
 
-wxString ContinuousEventProperties :: _buildInterpolationChoice( const wxPoint & p_position )
+wxString ContinuousEventProperties::_buildInterpolationChoice( const wxPoint & p_position )
 {
 	if ( m_interpolation != NULL )
 	{
@@ -258,7 +258,7 @@ wxString ContinuousEventProperties :: _buildInterpolationChoice( const wxPoint &
 
 
 
-void ContinuousEventProperties :: _buildKeyFramesList( const wxPoint & p_position )
+void ContinuousEventProperties::_buildKeyFramesList( const wxPoint & p_position )
 {
 	if ( m_keys != NULL )
 	{
@@ -275,7 +275,7 @@ void ContinuousEventProperties :: _buildKeyFramesList( const wxPoint & p_positio
 
 
 
-void ContinuousEventProperties :: _onSelectAction( wxCommandEvent & p_event )
+void ContinuousEventProperties::_onSelectAction( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -292,7 +292,7 @@ void ContinuousEventProperties :: _onSelectAction( wxCommandEvent & p_event )
 
 
 
-void ContinuousEventProperties :: _onSelectTargetType( wxCommandEvent & p_event )
+void ContinuousEventProperties::_onSelectTargetType( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -303,7 +303,7 @@ void ContinuousEventProperties :: _onSelectTargetType( wxCommandEvent & p_event 
 
 
 
-void ContinuousEventProperties :: _onEditTarget( wxCommandEvent & p_event )
+void ContinuousEventProperties::_onEditTarget( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -320,7 +320,7 @@ void ContinuousEventProperties :: _onEditTarget( wxCommandEvent & p_event )
 
 
 
-void ContinuousEventProperties :: _onSelectInterpolation( wxCommandEvent & p_event )
+void ContinuousEventProperties::_onSelectInterpolation( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -330,7 +330,7 @@ void ContinuousEventProperties :: _onSelectInterpolation( wxCommandEvent & p_eve
 
 
 
-void ContinuousEventProperties :: _onSelectKey( wxCommandEvent & p_event )
+void ContinuousEventProperties::_onSelectKey( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -348,7 +348,7 @@ void ContinuousEventProperties :: _onSelectKey( wxCommandEvent & p_event )
 		}
 		else
 		{
-			std::cout << "ContinuousEventProperties :: _onSelectKey - " << l_value.c_str() << "\n";
+			std::cout << "ContinuousEventProperties::_onSelectKey - " << l_value.c_str() << "\n";
 			float l_tmp;
 
 			if ( GetReal( l_value, l_tmp ) )

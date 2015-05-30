@@ -35,35 +35,35 @@
 
 #include "EMuseLogs.h"
 
-Context * ScriptEngine :: sm_context = NULL;
+Context * ScriptEngine::sm_context = NULL;
 
-ScriptEngine :: ScriptEngine( const Path & p_path,  EMuseLoadingBar * p_loadingBar )
+ScriptEngine::ScriptEngine( const Path & p_path,  EMuseLoadingBar * p_loadingBar )
 	:	m_path( p_path ),
 		m_loadingBar( p_loadingBar )
 {
 	m_compiler = new ScriptCompiler( p_path );
 }
 
-ScriptEngine :: ~ScriptEngine()
+ScriptEngine::~ScriptEngine()
 {
 	delete m_timerManager;
 	delete m_compiler;
 }
 
-void ScriptEngine :: Initialise()
+void ScriptEngine::Initialise()
 {
 	m_compiler->Initialise();
 	m_timerManager = new ScriptTimerManager( this );
 }
 
-void ScriptEngine :: SetContext( Context * p_context )
+void ScriptEngine::SetContext( Context * p_context )
 {
 	m_context = p_context;
 	m_context->timerManager = m_timerManager;
 	UseContext();
 }
 
-void ScriptEngine :: AddScriptZone( String & p_scriptString )
+void ScriptEngine::AddScriptZone( String & p_scriptString )
 {
 	ScriptNode * l_node = NULL;
 
@@ -85,7 +85,7 @@ void ScriptEngine :: AddScriptZone( String & p_scriptString )
 	}
 }
 
-void ScriptEngine :: Execute( ScriptNode * p_node )
+void ScriptEngine::Execute( ScriptNode * p_node )
 {
 	if ( p_node->HasFunction() )
 	{
@@ -93,27 +93,27 @@ void ScriptEngine :: Execute( ScriptNode * p_node )
 	}
 }
 
-ScriptNode * ScriptEngine :: GetKeyboardBind( unsigned int p_keyCode, unsigned int p_bindType )const
+ScriptNode * ScriptEngine::GetKeyboardBind( unsigned int p_keyCode, unsigned int p_bindType )const
 {
 	return m_compiler->m_keyboardBinds[p_bindType][p_keyCode];
 }
 
-ScriptNode * ScriptEngine :: CompileScript( String & p_scriptString )
+ScriptNode * ScriptEngine::CompileScript( String & p_scriptString )
 {
 	return m_compiler->CompileScript( p_scriptString );
 }
 
-ScriptNode * ScriptEngine :: GetVariable( const String & p_variableName )const
+ScriptNode * ScriptEngine::GetVariable( const String & p_variableName )const
 {
 	return m_compiler->GetProgramConstant( p_variableName );
 }
 
-ScriptNode * ScriptEngine :: CompileScriptFile( ConfigFile * p_scriptFile )
+ScriptNode * ScriptEngine::CompileScriptFile( ConfigFile * p_scriptFile )
 {
 	return m_compiler->CompileScriptFile( p_scriptFile );
 }
 
-void ScriptEngine :: LoadZone( Zone * p_zone )
+void ScriptEngine::LoadZone( Zone * p_zone )
 {
 //	std::cout << "LoadZone : " << p_zone->GetName() << " from isntance : " << ResourceGroupManager::getPrefix() << std::endl;
 	if ( p_zone == NULL )
@@ -201,7 +201,7 @@ void ScriptEngine :: LoadZone( Zone * p_zone )
 	EMUSE_LOG_MESSAGE_DEBUG( "Load zone end : " + p_zone->GetName() );
 }
 
-void ScriptEngine :: UnloadZone( Zone * p_zone )
+void ScriptEngine::UnloadZone( Zone * p_zone )
 {
 	if ( p_zone == NULL )
 	{
@@ -227,18 +227,18 @@ void ScriptEngine :: UnloadZone( Zone * p_zone )
 	}
 }
 
-void ScriptEngine :: ScriptError( ScriptNode * p_node, const String & p_string )
+void ScriptEngine::ScriptError( ScriptNode * p_node, const String & p_string )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( String( "Runtime Error Line # " ) + StringConverter::toString( p_node->m_createdAtLine ) + " @ file " + ( p_node->m_file != NULL ? p_node->m_file->GetName() : "none" ) + " : " + p_string );
 }
 
-void ScriptEngine :: UseContext()const
+void ScriptEngine::UseContext()const
 {
 	sm_context = m_context;
 	ScriptCompiler::SetSingleton( m_compiler );
 }
 
-ScriptNode * ScriptEngine :: GetFunction( const String & p_functionName )const
+ScriptNode * ScriptEngine::GetFunction( const String & p_functionName )const
 {
 	return m_compiler->GetUsableFunctionNode( p_functionName );
 }

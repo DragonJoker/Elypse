@@ -25,8 +25,8 @@ BEGIN_EVENT_TABLE( TimeLinePanel, wxPanel )
 END_EVENT_TABLE()
 
 
-TimeLinePanel :: TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
-								const wxSize & p_size )
+TimeLinePanel::TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
+							  const wxSize & p_size )
 	:	wxPanel( p_parent, p_id, p_position, p_size ),
 		m_totalWidth( p_size.x ),
 		m_totalHeight( p_size.y ),
@@ -48,13 +48,13 @@ TimeLinePanel :: TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPo
 
 
 
-TimeLinePanel :: ~TimeLinePanel()
+TimeLinePanel::~TimeLinePanel()
 {
 }
 
 
 
-void TimeLinePanel :: UpdateSequence( TrollSequence * p_sequence )
+void TimeLinePanel::UpdateSequence( TrollSequence * p_sequence )
 {
 	TrollSequenceStrMap::iterator l_it = m_alreadyAddedSequences.find( p_sequence->TrollObject::GetName() );
 
@@ -74,7 +74,7 @@ void TimeLinePanel :: UpdateSequence( TrollSequence * p_sequence )
 		g_mainFrame->m_timeLineContainer->Scroll( 0, 0 );
 		SetSize( m_totalWidth + 20, m_totalHeight );
 		int l_verticalScroll = g_mainFrame->m_timeLineContainer->GetScrollPos( wxVERTICAL );
-//		std::cout << "TimeLinePanel :: UpdateSequence - " << l_verticalScroll << "\n";
+//		std::cout << "TimeLinePanel::UpdateSequence - " << l_verticalScroll << "\n";
 		g_mainFrame->m_timeLineContainer->SetScrollbars( 20, 20, ( m_totalWidth + 20 ) / 20, m_totalHeight / 20, 0, 0 );
 		g_mainFrame->m_timeLineContainer->Scroll( int( l_first >= 0.1 ? l_first * 5 + 1 : l_first * 5 ), l_verticalScroll );
 	}
@@ -82,7 +82,7 @@ void TimeLinePanel :: UpdateSequence( TrollSequence * p_sequence )
 
 
 
-void TimeLinePanel :: UpdateSequences( float p_time )
+void TimeLinePanel::UpdateSequences( float p_time )
 {
 	TrollSequenceStrMap::iterator l_it = m_alreadyAddedSequences.begin();
 
@@ -94,7 +94,7 @@ void TimeLinePanel :: UpdateSequences( float p_time )
 
 
 
-LinePanel * TimeLinePanel :: GetSequencePanel( const wxString & p_name )
+LinePanel * TimeLinePanel::GetSequencePanel( const wxString & p_name )
 {
 	TrollSequenceStrMap::iterator l_it = m_alreadyAddedSequences.find( p_name );
 
@@ -108,7 +108,7 @@ LinePanel * TimeLinePanel :: GetSequencePanel( const wxString & p_name )
 
 
 
-TrollSequence * TimeLinePanel :: AddSequence( TrollSequence * p_sequence )
+TrollSequence * TimeLinePanel::AddSequence( TrollSequence * p_sequence )
 {
 	if ( m_displayedSequences >= 20 )
 	{
@@ -117,7 +117,7 @@ TrollSequence * TimeLinePanel :: AddSequence( TrollSequence * p_sequence )
 
 	if ( m_alreadyAddedSequences.find( p_sequence->TrollObject::GetName() ) == m_alreadyAddedSequences.end() )
 	{
-//		std::cout << "TimeLinePanel :: AddSequence - left : " << m_currentLeft << " - top : " << m_currentTop << " - width : " << l_size.x << " - height : " << l_size.y << "\n";
+//		std::cout << "TimeLinePanel::AddSequence - left : " << m_currentLeft << " - top : " << m_currentTop << " - width : " << l_size.x << " - height : " << l_size.y << "\n";
 		SequencePanel * l_sequencePanel = m_sequences[m_displayedSequences++];
 		l_sequencePanel->SetSequence( p_sequence );
 		l_sequencePanel->SetPosition( wxPoint( m_currentLeft, m_currentTop ) );
@@ -136,7 +136,7 @@ TrollSequence * TimeLinePanel :: AddSequence( TrollSequence * p_sequence )
 			m_totalHeight = m_currentTop;
 		}
 
-		std::cout << "TimeLinePanel :: AddSequence - Total width : " << m_totalWidth << " - Total Height : " << m_totalHeight << "\n";
+		std::cout << "TimeLinePanel::AddSequence - Total width : " << m_totalWidth << " - Total Height : " << m_totalHeight << "\n";
 		SetSize( m_totalWidth + 20, m_totalHeight );
 		return p_sequence;
 	}

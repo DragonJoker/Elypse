@@ -5,7 +5,7 @@
 #include <OgreTextureManager.h>
 #include <OgreHardwarePixelBuffer.h>
 
-RawImage :: RawImage( const String & p_name )
+RawImage::RawImage( const String & p_name )
 	:	named( p_name ),
 		m_refCount( 0 )
 {
@@ -29,7 +29,7 @@ RawImage :: RawImage( const String & p_name )
 	l_ptr->getBuffer()->unlock();
 }
 
-RawImage :: ~RawImage()
+RawImage::~RawImage()
 {
 	delete [] m_data;
 	RawImageManager::GetSingletonPtr()->RemoveElement( this );

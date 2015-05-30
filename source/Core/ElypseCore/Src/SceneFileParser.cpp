@@ -27,7 +27,7 @@
 
 #include <File.h>
 
-SceneFileParser :: SceneFileParser( const String & p_appIndexStr, const Path & p_baseDirectory )
+SceneFileParser::SceneFileParser( const String & p_appIndexStr, const Path & p_baseDirectory )
 	:	m_baseDirectory( p_baseDirectory ),
 		m_appIndexStr( p_appIndexStr )
 {
@@ -249,7 +249,7 @@ SceneFileParser :: SceneFileParser( const String & p_appIndexStr, const Path & p
 	m_sequenceTrackParsers			["}"]					= Parser_SequenceTrackEnd;
 }
 
-SceneFileParser :: ~SceneFileParser()
+SceneFileParser::~SceneFileParser()
 {
 }
 
@@ -392,7 +392,7 @@ bool SceneFileParser::_invokeParser( String & p_line, const AttributeParserMap &
 	return l_iter->second( EMPTY_STRING, m_context );
 }
 
-void SceneFileParser :: ParseScript( ConfigFile * p_configFile )
+void SceneFileParser::ParseScript( ConfigFile * p_configFile )
 {
 	bool nextIsOpenBrace = false;
 	bool commented = false;

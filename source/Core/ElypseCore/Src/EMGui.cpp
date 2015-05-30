@@ -10,7 +10,7 @@
 #include <OgreOverlayElement.h>
 #include <OgreFontManager.h>
 
-EMGui :: EMGui( const String & p_instanceKey, Real p_aspect )
+EMGui::EMGui( const String & p_instanceKey, Real p_aspect )
 	:	m_currentClickedOverlay( NULL ),
 		m_currentMouseOverOverlay( NULL ),
 		m_topmostOverlay( NULL ),
@@ -19,12 +19,12 @@ EMGui :: EMGui( const String & p_instanceKey, Real p_aspect )
 {
 }
 
-EMGui :: ~EMGui()
+EMGui::~EMGui()
 {
 	ClearAll();
 }
 
-void EMGui :: ClearAll() d_no_throw
+void EMGui::ClearAll() d_no_throw
 {
 	m_currentMouseOverOverlay = NULL;
 	m_currentClickedOverlay = NULL;
@@ -35,7 +35,7 @@ void EMGui :: ClearAll() d_no_throw
 	m_overlays.clear();
 }
 /*
-EMOverlayGroup * EMGui :: AddOverlay( Overlay * p_overlay)
+EMOverlayGroup * EMGui::AddOverlay( Overlay * p_overlay)
 {
 	genlib_assert( p_overlay != NULL);
 
@@ -45,13 +45,13 @@ EMOverlayGroup * EMGui :: AddOverlay( Overlay * p_overlay)
 }
 */
 
-EMOverlayGroup * EMGui :: CreateOverlayGroup( const String & p_name )
+EMOverlayGroup * EMGui::CreateOverlayGroup( const String & p_name )
 {
 	return General::Utils::map::insert( m_groups, p_name, p_name, this );
 }
 
 
-ScriptNode * EMGui :: Click( Real p_x, Real p_y )
+ScriptNode * EMGui::Click( Real p_x, Real p_y )
 {
 	if ( m_topmostOverlay != NULL )
 	{
@@ -66,7 +66,7 @@ ScriptNode * EMGui :: Click( Real p_x, Real p_y )
 	return NULL;
 }
 
-EMOverlay * EMGui :: GetTopmostAt( Real p_x, Real p_y )const
+EMOverlay * EMGui::GetTopmostAt( Real p_x, Real p_y )const
 {
 	EMOverlay * l_topmost = NULL;
 	unsigned short l_minZorder = 0;
@@ -95,7 +95,7 @@ EMOverlay * EMGui :: GetTopmostAt( Real p_x, Real p_y )const
 	return l_topmost;
 }
 
-void EMGui :: MouseOver( Real p_x, Real p_y )
+void EMGui::MouseOver( Real p_x, Real p_y )
 {
 	if ( m_currentMouseOverOverlay != NULL )
 	{
@@ -124,18 +124,18 @@ void EMGui :: MouseOver( Real p_x, Real p_y )
 	}
 }
 
-void EMGui :: SetAllOverlaysVisibility( bool p_show )const
+void EMGui::SetAllOverlaysVisibility( bool p_show )const
 {
 	General::Utils::map::cycle( m_groups, & EMOverlayGroup::ShowImmediate, p_show );
 }
 
-void EMGui :: AddElement( EMOverlay * p_element )
+void EMGui::AddElement( EMOverlay * p_element )
 {
 	genlib_assert( p_element != NULL );
-	m_overlays.insert( EMOverlayMap :: value_type( p_element->GetName(), p_element ) );
+	m_overlays.insert( EMOverlayMap::value_type( p_element->GetName(), p_element ) );
 }
 
-void EMGui :: RemoveOverlay( const String & p_overlayName )
+void EMGui::RemoveOverlay( const String & p_overlayName )
 {
 	if ( p_overlayName.empty() )
 	{
@@ -150,7 +150,7 @@ void EMGui :: RemoveOverlay( const String & p_overlayName )
 	}
 }
 
-void EMGui :: DestroyEMOverlay( const String & p_name )
+void EMGui::DestroyEMOverlay( const String & p_name )
 {
 	EMOverlayMap::iterator l_it = m_overlays.find( p_name );
 
@@ -165,13 +165,13 @@ void EMGui :: DestroyEMOverlay( const String & p_name )
 	}
 }
 
-void EMGui :: DestroyOverlayGroup( const String & p_name )
+void EMGui::DestroyOverlayGroup( const String & p_name )
 {
 	General::Utils::map::deleteValue( m_groups, p_name );
 }
 
 
-Real EMGui :: GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )const
+Real EMGui::GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )const
 {
 	if ( p_font.isNull() )
 	{
@@ -186,7 +186,7 @@ Real EMGui :: GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )co
 	return p_font->getGlyphAspectRatio( p_char ) * p_fontSize / m_aspectRatio;
 }
 
-Real EMGui :: GetWidth( const String & p_string, const FontPtr & p_font, Real p_fontSize )const
+Real EMGui::GetWidth( const String & p_string, const FontPtr & p_font, Real p_fontSize )const
 {
 	if ( p_font.isNull() )
 	{

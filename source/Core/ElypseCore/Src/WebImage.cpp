@@ -16,7 +16,7 @@
 
 using namespace Ogre;
 
-WebImage :: WebImage( const String & p_name )
+WebImage::WebImage( const String & p_name )
 	:	named( p_name ),
 		m_material( NULL ),
 		m_texture( NULL ),
@@ -26,7 +26,7 @@ WebImage :: WebImage( const String & p_name )
 	m_material = static_cast <Material *>( MaterialManager::getSingleton().create( m_name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME ).getPointer() );
 }
 
-WebImage :: ~WebImage()
+WebImage::~WebImage()
 {
 	while ( m_loading )
 	{
@@ -41,7 +41,7 @@ WebImage :: ~WebImage()
 	General::Utils::vector::deleteAll( m_targets );
 }
 
-void WebImage :: _delete()
+void WebImage::_delete()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 
@@ -52,7 +52,7 @@ void WebImage :: _delete()
 	}
 }
 
-void WebImage :: Reload()
+void WebImage::Reload()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 
@@ -64,12 +64,12 @@ void WebImage :: Reload()
 	}
 }
 
-void WebImage :: Load()
+void WebImage::Load()
 {
 	_setupImage();
 }
 
-void WebImage :: _setupImage()
+void WebImage::_setupImage()
 {
 	Image * l_image = new Image;
 	CURLManager l_curl;
@@ -137,7 +137,7 @@ void WebImage :: _setupImage()
 	WebImageManager::GetSingletonPtr()->Unlock();
 }
 
-void WebImage :: _loadFromMemory( const String & p_ext, const String & p_buffer, Image * p_image )
+void WebImage::_loadFromMemory( const String & p_ext, const String & p_buffer, Image * p_image )
 {
 	Codec * l_codec = Codec::getCodec( p_ext );
 	genlib_assert( l_codec != NULL );
@@ -149,7 +149,7 @@ void WebImage :: _loadFromMemory( const String & p_ext, const String & p_buffer,
 	delete [] l_buffer;
 }
 
-void WebImage :: AddTarget( MaterialTarget * p_target )
+void WebImage::AddTarget( MaterialTarget * p_target )
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 	m_targets.push_back( p_target );

@@ -13,7 +13,7 @@
  2 3
 */
 
-ParametricLayer :: ParametricLayer(	Vector3 * p_controlPoints, unsigned int p_resolution,
+ParametricLayer::ParametricLayer(	Vector3 * p_controlPoints, unsigned int p_resolution,
 									ParametricLayer * p_parent, unsigned int p_quadrant,
 									unsigned int p_depth )
 	:	m_controlPoints( p_controlPoints ),

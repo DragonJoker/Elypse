@@ -118,8 +118,8 @@ String GetKeyFromReg( const char * p_registerName , const char * p_keyName )
 
 
 
-ElypseCtrl :: ElypseCtrl(	wxWindow * p_parent, Troll::Project * p_project,
-							MainFrame * p_mainFrame, bool p_edit )
+ElypseCtrl::ElypseCtrl(	wxWindow * p_parent, Troll::Project * p_project,
+						MainFrame * p_mainFrame, bool p_edit )
 	:	wxControl( p_parent, wxID_ANY, wxPoint( 0, 0 ), GetClientSize( p_parent ), wxWANTS_CHARS | wxBORDER_NONE ),
 
 #if ! defined( __WXMSW__) && defined( __WXGTK__)
@@ -146,14 +146,14 @@ ElypseCtrl :: ElypseCtrl(	wxWindow * p_parent, Troll::Project * p_project,
 	m_width = static_cast <Real>( l_width );
 	m_height = static_cast <Real>( l_height );
 //	SetFocus();
-	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: ElypseCtrl - Begin" ) );
+	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::ElypseCtrl - Begin" ) );
 	_initialise();
-	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: ElypseCtrl - End" ) );
+	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::ElypseCtrl - End" ) );
 }
 
 
 
-ElypseCtrl :: ~ElypseCtrl()
+ElypseCtrl::~ElypseCtrl()
 {
 //	FreeConsole();
 #if ! defined( __WXMSW__) && defined( __WXGTK__)
@@ -167,7 +167,7 @@ ElypseCtrl :: ~ElypseCtrl()
 
 
 
-const String ElypseCtrl :: GetWHandle()
+const String ElypseCtrl::GetWHandle()
 {
 	SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 #ifdef __WXMSW__
@@ -191,11 +191,11 @@ const String ElypseCtrl :: GetWHandle()
 
 
 
-void ElypseCtrl :: Init()
+void ElypseCtrl::Init()
 {
-	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - Begin" ) );
-	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - Path : " ) + wxString( m_path.c_str(), wxMBConvLibc() ) );
-	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - File : " ) + wxString( m_museFile.c_str(), wxMBConvLibc() ) );
+	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::Init - Begin" ) );
+	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::Init - Path : " ) + wxString( m_path.c_str(), wxMBConvLibc() ) );
+	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::Init - File : " ) + wxString( m_museFile.c_str(), wxMBConvLibc() ) );
 	String l_path = String( m_path );
 	String l_fileName = String( m_museFile );
 
@@ -222,7 +222,7 @@ void ElypseCtrl :: Init()
 		m_rightButton = false;
 		m_middleButton = false;
 		wxString l_strUrl = wxString( wxT( "file://" ) ) + m_project->GetPath() + wxString( l_fileName.c_str(), wxMBConvLibc() );
-		std::cout << "ElypseCtrl :: Init - " << l_strUrl.char_str().data() << "\n";
+		std::cout << "ElypseCtrl::Init - " << l_strUrl.char_str().data() << "\n";
 		m_emuse->SetFileUrl( l_strUrl.char_str().data() );
 		//	m_emuse->SetInstanceName( String( "TrollScene Test"));
 		m_plugin->SetBaseUrl( l_path );
@@ -233,7 +233,7 @@ void ElypseCtrl :: Init()
 	}
 	catch ( ... )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - Unable to initialise Elypse" ) );
+		g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::Init - Unable to initialise Elypse" ) );
 		m_fucked = true;
 
 		try
@@ -242,17 +242,17 @@ void ElypseCtrl :: Init()
 		}
 		catch ( ... )
 		{
-			g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - Unable to stop Elypse cleanly" ) );
+			g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::Init - Unable to stop Elypse cleanly" ) );
 			return;
 		}
 	}
 
-	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl :: Init - End" ) );
+	g_mainFrame->LogDebugMessage( wxT( "ElypseCtrl::Init - End" ) );
 }
 
 
 
-void ElypseCtrl :: _setCustomFocus( bool p_hasFocus )
+void ElypseCtrl::_setCustomFocus( bool p_hasFocus )
 {
 	if ( p_hasFocus )
 	{
@@ -280,7 +280,7 @@ void ElypseCtrl :: _setCustomFocus( bool p_hasFocus )
 
 
 
-void ElypseCtrl :: OnSetFocus( wxFocusEvent & p_event )
+void ElypseCtrl::OnSetFocus( wxFocusEvent & p_event )
 {
 	if ( ! m_destroyed )
 	{
@@ -290,7 +290,7 @@ void ElypseCtrl :: OnSetFocus( wxFocusEvent & p_event )
 
 
 
-void ElypseCtrl :: OnKillFocus( wxFocusEvent & )
+void ElypseCtrl::OnKillFocus( wxFocusEvent & )
 {
 	if ( ! m_destroyed )
 	{
@@ -300,7 +300,7 @@ void ElypseCtrl :: OnKillFocus( wxFocusEvent & )
 
 
 
-void ElypseCtrl :: OnShow( wxShowEvent & p_event )
+void ElypseCtrl::OnShow( wxShowEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -312,7 +312,7 @@ void ElypseCtrl :: OnShow( wxShowEvent & p_event )
 
 
 
-void ElypseCtrl :: OnActivate( wxActivateEvent & p_event )
+void ElypseCtrl::OnActivate( wxActivateEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -324,7 +324,7 @@ void ElypseCtrl :: OnActivate( wxActivateEvent & p_event )
 
 
 
-void ElypseCtrl :: OnIconise( wxIconizeEvent & p_event )
+void ElypseCtrl::OnIconise( wxIconizeEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -336,11 +336,11 @@ void ElypseCtrl :: OnIconise( wxIconizeEvent & p_event )
 
 
 
-void ElypseCtrl :: OnMouseMove( wxMouseEvent & p_event )
+void ElypseCtrl::OnMouseMove( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed || ! m_emuse->IsActive() )
 	{
-//		std::cout << "ElypseCtrl :: OnMouseMove - Not focused\n";
+//		std::cout << "ElypseCtrl::OnMouseMove - Not focused\n";
 		return;
 	}
 
@@ -357,7 +357,7 @@ void ElypseCtrl :: OnMouseMove( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnMouseWheel( wxMouseEvent & p_event )
+void ElypseCtrl::OnMouseWheel( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -380,7 +380,7 @@ void ElypseCtrl :: OnMouseWheel( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnButtonMiddleDown( wxMouseEvent & p_event )
+void ElypseCtrl::OnButtonMiddleDown( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -418,7 +418,7 @@ void ElypseCtrl :: OnButtonMiddleDown( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnButtonMiddleUp( wxMouseEvent & p_event )
+void ElypseCtrl::OnButtonMiddleUp( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -444,7 +444,7 @@ void ElypseCtrl :: OnButtonMiddleUp( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnButtonLeftDown( wxMouseEvent & p_event )
+void ElypseCtrl::OnButtonLeftDown( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -558,7 +558,7 @@ void ElypseCtrl :: OnButtonLeftDown( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnButtonLeftUp( wxMouseEvent & p_event )
+void ElypseCtrl::OnButtonLeftUp( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -584,7 +584,7 @@ void ElypseCtrl :: OnButtonLeftUp( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnButtonRightDown( wxMouseEvent & p_event )
+void ElypseCtrl::OnButtonRightDown( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -622,7 +622,7 @@ void ElypseCtrl :: OnButtonRightDown( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnButtonRightUp( wxMouseEvent & p_event )
+void ElypseCtrl::OnButtonRightUp( wxMouseEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -655,7 +655,7 @@ void ElypseCtrl :: OnButtonRightUp( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnMouseEnter( wxMouseEvent & p_event )
+void ElypseCtrl::OnMouseEnter( wxMouseEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -667,7 +667,7 @@ void ElypseCtrl :: OnMouseEnter( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnMouseLeave( wxMouseEvent & p_event )
+void ElypseCtrl::OnMouseLeave( wxMouseEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -679,7 +679,7 @@ void ElypseCtrl :: OnMouseLeave( wxMouseEvent & p_event )
 
 
 
-void ElypseCtrl :: OnKeyUp( wxKeyEvent & p_event )
+void ElypseCtrl::OnKeyUp( wxKeyEvent & p_event )
 {
 	if ( ! m_focused || m_destroyed )
 	{
@@ -694,7 +694,7 @@ void ElypseCtrl :: OnKeyUp( wxKeyEvent & p_event )
 
 
 
-void ElypseCtrl :: OnKeyDown( wxKeyEvent & p_event )
+void ElypseCtrl::OnKeyDown( wxKeyEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -749,7 +749,7 @@ void ElypseCtrl :: OnKeyDown( wxKeyEvent & p_event )
 
 
 
-void ElypseCtrl :: OnChar( wxKeyEvent & p_event )
+void ElypseCtrl::OnChar( wxKeyEvent & p_event )
 {
 	if ( ! m_emuse->IsActive() || m_destroyed )
 	{
@@ -761,7 +761,7 @@ void ElypseCtrl :: OnChar( wxKeyEvent & p_event )
 
 
 
-void ElypseCtrl :: SetCtrlFocus()
+void ElypseCtrl::SetCtrlFocus()
 {
 	if ( ! m_destroyed )
 	{
@@ -771,7 +771,7 @@ void ElypseCtrl :: SetCtrlFocus()
 
 
 
-void ElypseCtrl :: KillCtrlFocus()
+void ElypseCtrl::KillCtrlFocus()
 {
 	if ( ! m_destroyed )
 	{
@@ -781,7 +781,7 @@ void ElypseCtrl :: KillCtrlFocus()
 
 
 
-void ElypseCtrl :: _onClose( wxCloseEvent & p_event )
+void ElypseCtrl::_onClose( wxCloseEvent & p_event )
 {
 	if ( m_project->GetShowDebug() )
 	{
@@ -816,7 +816,7 @@ void ElypseCtrl :: _onClose( wxCloseEvent & p_event )
 
 
 
-void ElypseCtrl :: _onResize( wxCommandEvent & p_event )
+void ElypseCtrl::_onResize( wxCommandEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -839,7 +839,7 @@ void ElypseCtrl :: _onResize( wxCommandEvent & p_event )
 
 
 
-void ElypseCtrl :: _onReplace( wxCommandEvent & p_event )
+void ElypseCtrl::_onReplace( wxCommandEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -851,7 +851,7 @@ void ElypseCtrl :: _onReplace( wxCommandEvent & p_event )
 
 
 
-void ElypseCtrl :: _onNew( wxCommandEvent & p_event )
+void ElypseCtrl::_onNew( wxCommandEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -882,7 +882,7 @@ void ElypseCtrl :: _onNew( wxCommandEvent & p_event )
 
 
 
-void ElypseCtrl :: _onDelete( wxCommandEvent & p_event )
+void ElypseCtrl::_onDelete( wxCommandEvent & p_event )
 {
 	if ( m_destroyed )
 	{
@@ -905,12 +905,12 @@ void ElypseCtrl :: _onDelete( wxCommandEvent & p_event )
 
 
 
-void ElypseCtrl :: _initialise()
+void ElypseCtrl::_initialise()
 {
 	m_path = m_project->GetPath().char_str().data();
 	m_museFile = ( m_project->GetName() + wxT( ".muse" ) ).char_str().data();
 	m_fsaa = static_cast <unsigned int>( m_project->GetFSAA() ) * 2;
-	std::cout << "ElypseCtrl :: _initialise - Path : " << m_path << " - Muse file : " << m_museFile << "\n";
+	std::cout << "ElypseCtrl::_initialise - Path : " << m_path << " - Muse file : " << m_museFile << "\n";
 //	SetBackgroundColour( wxColour( 212, 208, 200));
 	m_plugin = new EMusePlugin_wxWidget;
 #if defined( _WIN32 )
@@ -1054,7 +1054,7 @@ void ElypseCtrl :: _initialise()
 
 
 
-void ElypseCtrl :: _showContextMenu( const wxPoint & p_position )
+void ElypseCtrl::_showContextMenu( const wxPoint & p_position )
 {
 	if ( m_destroyed )
 	{

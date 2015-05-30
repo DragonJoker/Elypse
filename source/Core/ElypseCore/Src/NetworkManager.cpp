@@ -7,7 +7,7 @@
 
 using namespace boost;
 
-ElypseTcpClient :: ElypseTcpClient( const std::string & p_name, asio::io_service * p_service, NetworkManager * p_owner )
+ElypseTcpClient::ElypseTcpClient( const std::string & p_name, asio::io_service * p_service, NetworkManager * p_owner )
 	:	TcpConnectorBase( *p_service ),
 		TcpReaderBase( TcpConnectorBase::m_socket, *p_service ),
 		TcpWriterBase( TcpConnectorBase::m_socket, *p_service ),
@@ -18,7 +18,7 @@ ElypseTcpClient :: ElypseTcpClient( const std::string & p_name, asio::io_service
 {
 }
 
-ElypseTcpClient :: ~ElypseTcpClient()
+ElypseTcpClient::~ElypseTcpClient()
 {
 	m_service->stop();
 
@@ -31,12 +31,12 @@ ElypseTcpClient :: ~ElypseTcpClient()
 	// delete service in main app
 }
 
-void ElypseTcpClient :: Run()
+void ElypseTcpClient::Run()
 {
 	m_boostThread = new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, ElypseTcpClient, _mainLoop ) );
 }
 
-void ElypseTcpClient :: _mainLoop()
+void ElypseTcpClient::_mainLoop()
 {
 	try
 	{
@@ -45,29 +45,29 @@ void ElypseTcpClient :: _mainLoop()
 	catch ( exception & p_exc )
 	{
 #	if BOOST_VERSION > 103600
-		EMUSE_LOG_MESSAGE_RELEASE( "ERROR : NetworkManager :: _mainLoop - [" + diagnostic_information( p_exc ) + "]" );
+		EMUSE_LOG_MESSAGE_RELEASE( "ERROR : NetworkManager::_mainLoop - [" + diagnostic_information( p_exc ) + "]" );
 #	else
-		EMUSE_LOG_MESSAGE_RELEASE( "ERROR : NetworkManager :: _mainLoop - [" + String( p_exc.diagnostic_information() ) + "]" );
+		EMUSE_LOG_MESSAGE_RELEASE( "ERROR : NetworkManager::_mainLoop - [" + String( p_exc.diagnostic_information() ) + "]" );
 #	endif
 		m_owner->AddMessage( m_name, "disconnected" );
 	}
 }
 
-void ElypseTcpClient :: _finishConnectCallback()
+void ElypseTcpClient::_finishConnectCallback()
 {
-//	std::cout << "ElypseTcpClient :: _finishConnectCallback\n";
-	EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _finishConnectCallback" );
+//	std::cout << "ElypseTcpClient::_finishConnectCallback\n";
+	EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_finishConnectCallback" );
 	StartSending();
 	StartAsyncRead();
 	m_connected = true;
 }
 
-void ElypseTcpClient :: _receivedMessageCallback( const std::string & p_message )
+void ElypseTcpClient::_receivedMessageCallback( const std::string & p_message )
 {
 	m_owner->AddMessage( m_name, p_message );
 }
 
-bool ElypseTcpClient :: _writerErrorCB( const boost::system::error_code & p_err )
+bool ElypseTcpClient::_writerErrorCB( const boost::system::error_code & p_err )
 {
 	try
 	{
@@ -75,11 +75,11 @@ bool ElypseTcpClient :: _writerErrorCB( const boost::system::error_code & p_err 
 		std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port() );
 		l_endPoint = TcpConnectorBase::m_socket.local_endpoint();
 		std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port() );
-		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _writerErrorCB : [" + l_remoteAddr + "]-[" + l_localAddr + "] -> " + p_err.message() );
+		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_writerErrorCB : [" + l_remoteAddr + "]-[" + l_localAddr + "] -> " + p_err.message() );
 	}
 	catch ( ... )
 	{
-		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _errorCallback : not connected -> " + p_err.message() );
+		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_errorCallback : not connected -> " + p_err.message() );
 	}
 
 	m_owner->AddMessage( m_name, "disconnected" );
@@ -87,7 +87,7 @@ bool ElypseTcpClient :: _writerErrorCB( const boost::system::error_code & p_err 
 	return false;
 }
 
-bool ElypseTcpClient :: _readerErrorCB( const boost::system::error_code & p_err )
+bool ElypseTcpClient::_readerErrorCB( const boost::system::error_code & p_err )
 {
 	try
 	{
@@ -95,11 +95,11 @@ bool ElypseTcpClient :: _readerErrorCB( const boost::system::error_code & p_err 
 		std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port() );
 		l_endPoint = TcpConnectorBase::m_socket.local_endpoint();
 		std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port() );
-		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _readerErrorCB : [" + l_remoteAddr + "]-[" + l_localAddr + "] -> " + p_err.message() );
+		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_readerErrorCB : [" + l_remoteAddr + "]-[" + l_localAddr + "] -> " + p_err.message() );
 	}
 	catch ( ... )
 	{
-		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _errorCallback : not connected -> "  + p_err.message() );
+		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_errorCallback : not connected -> "  + p_err.message() );
 	}
 
 	m_owner->AddMessage( m_name, "disconnected" );
@@ -107,7 +107,7 @@ bool ElypseTcpClient :: _readerErrorCB( const boost::system::error_code & p_err 
 	return false;
 }
 
-bool ElypseTcpClient :: _connectorErrorCB( const boost::system::error_code & p_err )
+bool ElypseTcpClient::_connectorErrorCB( const boost::system::error_code & p_err )
 {
 	try
 	{
@@ -115,11 +115,11 @@ bool ElypseTcpClient :: _connectorErrorCB( const boost::system::error_code & p_e
 		std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port() );
 		l_endPoint = TcpConnectorBase::m_socket.local_endpoint();
 		std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port() );
-		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _errorCallback : [" + l_remoteAddr + "]-[" + l_localAddr + "] -> " + p_err.message() );
+		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_errorCallback : [" + l_remoteAddr + "]-[" + l_localAddr + "] -> " + p_err.message() );
 	}
 	catch ( ... )
 	{
-		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient :: _errorCallback : not connected -> " + p_err.message() );
+		EMUSE_LOG_MESSAGE_RELEASE( "ElypseTcpClient::_errorCallback : not connected -> " + p_err.message() );
 	}
 
 	m_owner->AddMessage( m_name, "disconnected" );
@@ -127,12 +127,12 @@ bool ElypseTcpClient :: _connectorErrorCB( const boost::system::error_code & p_e
 	return false;
 }
 
-NetworkManager :: NetworkManager()
+NetworkManager::NetworkManager()
 	:	m_stop( false )
 {
 }
 
-NetworkManager :: ~NetworkManager()
+NetworkManager::~NetworkManager()
 {
 	m_stop = true;
 	asio::io_service * l_service;
@@ -148,7 +148,7 @@ NetworkManager :: ~NetworkManager()
 	General::Utils::vector::deleteAll( m_messages );
 }
 
-bool NetworkManager :: CreateClient( const String & p_name )
+bool NetworkManager::CreateClient( const String & p_name )
 {
 	ElypseTcpClientStrMap::iterator l_it = m_clients.find( p_name );
 
@@ -163,7 +163,7 @@ bool NetworkManager :: CreateClient( const String & p_name )
 	return true;
 }
 
-bool NetworkManager :: Connect( const String & p_name, const String & p_host, unsigned short p_port )
+bool NetworkManager::Connect( const String & p_name, const String & p_host, unsigned short p_port )
 {
 	ElypseTcpClientStrMap::iterator l_it = m_clients.find( p_name );
 
@@ -177,7 +177,7 @@ bool NetworkManager :: Connect( const String & p_name, const String & p_host, un
 	return true;
 }
 
-bool NetworkManager :: Write( const String & p_name, const String & p_msg )
+bool NetworkManager::Write( const String & p_name, const String & p_msg )
 {
 	ElypseTcpClientStrMap::iterator l_it = m_clients.find( p_name );
 
@@ -198,7 +198,7 @@ bool NetworkManager :: Write( const String & p_name, const String & p_msg )
 	return true;
 }
 
-ElypseTcpClient * NetworkManager :: GetTcpClient( const String & p_name )const
+ElypseTcpClient * NetworkManager::GetTcpClient( const String & p_name )const
 {
 	ElypseTcpClientStrMap::const_iterator l_it = m_clients.find( p_name );
 
@@ -210,7 +210,7 @@ ElypseTcpClient * NetworkManager :: GetTcpClient( const String & p_name )const
 	return l_it->second;
 }
 
-ElypseMessage * NetworkManager :: GetLastMessage()
+ElypseMessage * NetworkManager::GetLastMessage()
 {
 	if ( m_messages.size() <= 0 )
 	{
@@ -222,7 +222,7 @@ ElypseMessage * NetworkManager :: GetLastMessage()
 	return l_msg;
 }
 
-bool NetworkManager :: CloseClient( const String & p_name )
+bool NetworkManager::CloseClient( const String & p_name )
 {
 	ElypseTcpClientStrMap::iterator l_it = m_clients.find( p_name );
 
@@ -237,7 +237,7 @@ bool NetworkManager :: CloseClient( const String & p_name )
 	return true;
 }
 
-void NetworkManager :: AddMessage( const String & p_name, const String & p_msg )
+void NetworkManager::AddMessage( const String & p_name, const String & p_msg )
 {
 	m_messages.push_back( new ElypseMessage( p_name, p_msg ) );
 }

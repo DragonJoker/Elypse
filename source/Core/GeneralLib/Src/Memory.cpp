@@ -12,9 +12,9 @@
 
 using namespace General::Utils;
 
-unsigned int MemoryManager :: sm_initialised = 0;
+unsigned int MemoryManager::sm_initialised = 0;
 
-MemoryManager :: MemoryManager( const char * p_logLocation )
+MemoryManager::MemoryManager( const char * p_logLocation )
 	:	m_locked( false ),
 		m_currentMemoryAllocated( 0 ),
 		m_maximumMemoryAllocated( 0 ),
@@ -26,19 +26,19 @@ MemoryManager :: MemoryManager( const char * p_logLocation )
 	sm_initialised = 1;
 }
 
-MemoryManager :: ~MemoryManager()
+MemoryManager::~MemoryManager()
 {
 	sm_initialised = 0;
 	_finalReport();
 }
 
-MemoryManager & MemoryManager :: operator <<( const MemoryBlock & p_block )
+MemoryManager & MemoryManager::operator <<( const MemoryBlock & p_block )
 {
 	m_lastBlock = p_block;
 	return * this;
 }
 
-void MemoryManager :: _localise( void * p_ptr )
+void MemoryManager::_localise( void * p_ptr )
 {
 	const MemoryBlockMap::iterator & ifind = m_memoryMap.find( p_ptr );
 
@@ -50,7 +50,7 @@ void MemoryManager :: _localise( void * p_ptr )
 	m_lastBlock.Clear();
 }
 
-void MemoryManager :: AddLocation( size_t p_size, void * p_pointer, bool p_typeArray )
+void MemoryManager::AddLocation( size_t p_size, void * p_pointer, bool p_typeArray )
 {
 	RecordAllocation( p_size );
 
@@ -66,7 +66,7 @@ void MemoryManager :: AddLocation( size_t p_size, void * p_pointer, bool p_typeA
 	m_memoryMap.insert( MemoryBlockMap::value_type( p_pointer, MemoryBlock( p_pointer, p_size, p_typeArray ) ) );
 }
 
-bool MemoryManager :: RemoveLocation( void * p_pointer, bool p_isArray )
+bool MemoryManager::RemoveLocation( void * p_pointer, bool p_isArray )
 {
 	const MemoryBlockMap::iterator & ifind = m_memoryMap.find( p_pointer );
 
@@ -81,12 +81,12 @@ bool MemoryManager :: RemoveLocation( void * p_pointer, bool p_isArray )
 	return false;
 }
 
-void MemoryManager :: FailedAlloc( size_t p_size, bool p_isArray )
+void MemoryManager::FailedAlloc( size_t p_size, bool p_isArray )
 {
 //	m_failedNews.push_back( MemoryBlock( m_tempFileName, m_tempFuncName, m_tempLineNum, p_size, p_isArray));
 }
 
-void MemoryManager :: RecordAllocation( size_t p_size )
+void MemoryManager::RecordAllocation( size_t p_size )
 {
 	m_currentMemoryAllocated += p_size;
 	m_totalMemoryAllocated += p_size;
@@ -97,12 +97,12 @@ void MemoryManager :: RecordAllocation( size_t p_size )
 	}
 }
 
-void MemoryManager :: RecordDeallocation( size_t p_size )
+void MemoryManager::RecordDeallocation( size_t p_size )
 {
 	m_currentMemoryAllocated -= p_size;
 }
 
-void MemoryManager :: _finalReport()
+void MemoryManager::_finalReport()
 {
 	FILE * l_file = fopen( m_logLocation, "w" );
 
@@ -147,7 +147,7 @@ void MemoryManager :: _finalReport()
 	}
 }
 
-void MemoryManager :: MemoryLeaksReport( const std::string & p_filename )
+void MemoryManager::MemoryLeaksReport( const std::string & p_filename )
 {
 	MemoryManager::Lock();
 	std::ostream  * out;

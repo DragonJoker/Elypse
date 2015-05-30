@@ -16,13 +16,13 @@
 */
 using namespace Troll::Script;
 
-TrollScriptEngine :: TrollScriptEngine( const Path & p_path, EMuseLoadingBar * p_loadingBar )
+TrollScriptEngine::TrollScriptEngine( const Path & p_path, EMuseLoadingBar * p_loadingBar )
 	:	ScriptEngine( p_path, p_loadingBar )
 {
 	delete m_compiler;
 	m_compiler = new TrollScriptCompiler( p_path, false );
 }
 
-TrollScriptEngine :: ~TrollScriptEngine()
+TrollScriptEngine::~TrollScriptEngine()
 {
 }

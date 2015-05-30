@@ -1,7 +1,7 @@
 #include "StringConverter.h"
 #include "StringUtils.h"
 
-std::string General :: Utils :: ConvertToString( const std::wstring & p_wideString, const char * p_locale, const char p_unknownCharReplacedBy )
+std::string General::Utils::ConvertToString( const std::wstring & p_wideString, const char * p_locale, const char p_unknownCharReplacedBy )
 {
 	std::string l_return;
 	l_return.resize( p_wideString.length() );
@@ -10,7 +10,7 @@ std::string General :: Utils :: ConvertToString( const std::wstring & p_wideStri
 	return l_return;
 }
 
-std::wstring General :: Utils :: ConvertToWString( const std::string & p_string, const char * p_locale )
+std::wstring General::Utils::ConvertToWString( const std::string & p_string, const char * p_locale )
 {
 	std::wstring l_return;
 	l_return.resize( p_string.length() );
@@ -19,7 +19,7 @@ std::wstring General :: Utils :: ConvertToWString( const std::string & p_string,
 	return l_return;
 }
 
-float General :: Utils :: parseFloat( const std::string & val )
+float General::Utils::parseFloat( const std::string & val )
 {
 	std::istringstream str( val );
 	float ret = 0;
@@ -27,7 +27,7 @@ float General :: Utils :: parseFloat( const std::string & val )
 	return ret;
 }
 
-int General :: Utils :: parseInt( const std::string & val )
+int General::Utils::parseInt( const std::string & val )
 {
 	std::istringstream str( val );
 	int ret = 0;
@@ -35,7 +35,7 @@ int General :: Utils :: parseInt( const std::string & val )
 	return ret;
 }
 
-unsigned int General :: Utils :: parseUnsignedInt( const std::string & val )
+unsigned int General::Utils::parseUnsignedInt( const std::string & val )
 {
 	std::istringstream str( val );
 	unsigned int ret = 0;
@@ -43,7 +43,7 @@ unsigned int General :: Utils :: parseUnsignedInt( const std::string & val )
 	return ret;
 }
 
-bool General :: Utils :: parseBool( const std::string & val )
+bool General::Utils::parseBool( const std::string & val )
 {
 	return ( string::startsWith( val, "true" ) || string::startsWith( val, "yes" )
 			 || string::startsWith( val, "1" ) );

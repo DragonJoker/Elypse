@@ -10,7 +10,7 @@
 
 using namespace Ogre;
 
-EMOverlayGroup :: EMOverlayGroup( const String & p_name, EMGui * p_owner )
+EMOverlayGroup::EMOverlayGroup( const String & p_name, EMGui * p_owner )
 	:	named( p_name ),
 		owned_by<EMGui>	( p_owner ),
 		m_overlay( NULL ),
@@ -21,7 +21,7 @@ EMOverlayGroup :: EMOverlayGroup( const String & p_name, EMGui * p_owner )
 	m_first = CreateElement( m_name );
 }
 
-EMOverlayGroup :: ~EMOverlayGroup()
+EMOverlayGroup::~EMOverlayGroup()
 {
 	m_overlay->clear();
 
@@ -33,7 +33,7 @@ EMOverlayGroup :: ~EMOverlayGroup()
 	OverlayManager::getSingletonPtr()->destroy( m_overlay );
 }
 
-void EMOverlayGroup :: ShowImmediate( bool p_visible )
+void EMOverlayGroup::ShowImmediate( bool p_visible )
 {
 	if ( p_visible && m_visible )
 	{
@@ -45,7 +45,7 @@ void EMOverlayGroup :: ShowImmediate( bool p_visible )
 	}
 }
 
-bool EMOverlayGroup :: Contains( Real p_x, Real p_y )const
+bool EMOverlayGroup::Contains( Real p_x, Real p_y )const
 {
 	if ( m_first != NULL )
 	{
@@ -55,7 +55,7 @@ bool EMOverlayGroup :: Contains( Real p_x, Real p_y )const
 	return false;
 }
 
-void EMOverlayGroup :: _finaliseAddElement( EMOverlay * p_element )
+void EMOverlayGroup::_finaliseAddElement( EMOverlay * p_element )
 {
 	m_overlay->add2D( static_cast <OverlayContainer *>( p_element->GetOgreOverlayElement() ) );
 
@@ -65,14 +65,14 @@ void EMOverlayGroup :: _finaliseAddElement( EMOverlay * p_element )
 	}
 }
 
-EMOverlay * EMOverlayGroup :: CreateElement( const String & p_name )
+EMOverlay * EMOverlayGroup::CreateElement( const String & p_name )
 {
 	EMOverlay * l_overlay = General::Utils::map::insert( m_elements, p_name, p_name, this );
 	m_owner->AddElement( l_overlay );
 	return l_overlay;
 }
 
-void EMOverlayGroup :: _removeElement( const String & p_name )
+void EMOverlayGroup::_removeElement( const String & p_name )
 {
 	const EMOverlayMap::iterator & l_it = m_elements.find( p_name );
 
@@ -89,7 +89,7 @@ void EMOverlayGroup :: _removeElement( const String & p_name )
 	m_elements.erase( l_it );
 }
 
-void EMOverlayGroup :: DestroyElement( const String & p_name )
+void EMOverlayGroup::DestroyElement( const String & p_name )
 {
 	const EMOverlayMap::iterator & l_it = m_elements.find( p_name );
 

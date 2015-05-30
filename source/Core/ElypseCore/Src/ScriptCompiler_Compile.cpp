@@ -24,7 +24,7 @@
 							+ " ] -> " + p_desc );												\
  
 
-UserFunction * EMuse::Script::ScriptCompiler :: _compileUserFunction( ScriptBlockArray & p_childs, bool p_predeclareOnly )
+UserFunction * EMuse::Script::ScriptCompiler::_compileUserFunction( ScriptBlockArray & p_childs, bool p_predeclareOnly )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileUserFunction" );
 //	_printBlockArray( "_compileUserFunction", p_childs);
@@ -122,7 +122,7 @@ UserFunction * EMuse::Script::ScriptCompiler :: _compileUserFunction( ScriptBloc
 	return l_function;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileSentence( ScriptBlockArray & p_childs )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileSentence( ScriptBlockArray & p_childs )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileSentence" );
 
@@ -233,13 +233,13 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileSentence( ScriptBlockArray
 	}
 	catch ( const GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "ScriptCompiler :: _compileSentence : exception caught : " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "ScriptCompiler::_compileSentence : exception caught : " + p_exception.GetDescription() );
 	}
 
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileFunctionUse( ScriptBlockArray & p_blockArray )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileFunctionUse( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileFunctionUse" );
 	ScriptNode * l_functionUseNode = NULL;
@@ -277,7 +277,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileFunctionUse( ScriptBlockAr
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileOperatedSentence( ScriptBlockArray & p_blockArray )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileOperatedSentence" );
 
@@ -438,7 +438,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileOperatedSentence( ScriptBl
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileBrakets( ScriptBlockArray & p_blockArray )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileBrakets( ScriptBlockArray & p_blockArray )
 {
 	if ( p_blockArray.size() == 1 )
 	{
@@ -448,7 +448,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileBrakets( ScriptBlockArray 
 	return NULL;
 }
 
-ScriptBlock * EMuse::Script::ScriptCompiler :: _getHighestOperator( ScriptBlockArray & p_blockArray )
+ScriptBlock * EMuse::Script::ScriptCompiler::_getHighestOperator( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getHighestOperator" );
 	OperatorLevel l_level = SO_NONE;
@@ -474,7 +474,7 @@ ScriptBlock * EMuse::Script::ScriptCompiler :: _getHighestOperator( ScriptBlockA
 	return l_block;
 }
 
-void EMuse::Script::ScriptCompiler :: _compileFuncParamsWithinParenthesis( const ScriptBlockArray & p_blockArray, ScriptNodeArray & p_compiledNodes )
+void EMuse::Script::ScriptCompiler::_compileFuncParamsWithinParenthesis( const ScriptBlockArray & p_blockArray, ScriptNodeArray & p_compiledNodes )
 {
 	ScriptBlockArray l_currentArray;
 	size_t i = 0;
@@ -505,7 +505,7 @@ void EMuse::Script::ScriptCompiler :: _compileFuncParamsWithinParenthesis( const
 	}
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileFuncParams( ScriptBlockArray & p_blockArray, Function * p_function , ScriptNode * p_classInstance )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArray & p_blockArray, Function * p_function , ScriptNode * p_classInstance )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileFunctionParameters" );
 //	_printBlockArray( "_compileFunctionParameters for ( " + p_function->GetName() + " )", p_blockArray);
@@ -597,7 +597,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileFuncParams( ScriptBlockArr
 	return l_finalNode;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileUserFunctionUse( ScriptBlockArray & p_blockArray, UserFunction * p_userFunction )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileUserFunctionUse( ScriptBlockArray & p_blockArray, UserFunction * p_userFunction )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileUserFunctionUse" );
 
@@ -652,7 +652,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileUserFunctionUse( ScriptBlo
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileIfThenElse( ScriptBlockArray & p_blockArray )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileIfThenElse( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileIfThenElse" );
 	ScriptBlockArray l_array = p_blockArray;
@@ -769,7 +769,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileIfThenElse( ScriptBlockArr
 	return l_finalNode;
 }
 
-void EMuse::Script::ScriptCompiler :: _declareVariable( ScriptBlockArray & p_childs )
+void EMuse::Script::ScriptCompiler::_declareVariable( ScriptBlockArray & p_childs )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareVariable" );
 	ScriptBlockArray l_array;
@@ -805,7 +805,7 @@ void EMuse::Script::ScriptCompiler :: _declareVariable( ScriptBlockArray & p_chi
 	}
 }
 
-void EMuse::Script::ScriptCompiler :: _declareVariableDetail( VariableType * p_type, ScriptBlockArray & p_array )
+void EMuse::Script::ScriptCompiler::_declareVariableDetail( VariableType * p_type, ScriptBlockArray & p_array )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareVariableDetail" );
 	genlib_assert( p_array.size() > 0 );
@@ -863,7 +863,7 @@ void EMuse::Script::ScriptCompiler :: _declareVariableDetail( VariableType * p_t
 	}
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _getOperator( ScriptBlock * p_operator, ScriptNode * p_leftOperand, ScriptNode * p_rightOperand )
+ScriptNode * EMuse::Script::ScriptCompiler::_getOperator( ScriptBlock * p_operator, ScriptNode * p_leftOperand, ScriptNode * p_rightOperand )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getOperator" );
 	ScriptNode * l_returnValue = NULL;
@@ -977,7 +977,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _getOperator( ScriptBlock * p_oper
 	return l_returnValue;
 }
 
-VariableType * EMuse::Script::ScriptCompiler :: _getVariableType( ScriptBlockArray & p_blockArray )
+VariableType * EMuse::Script::ScriptCompiler::_getVariableType( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getVariableType" );
 
@@ -1000,7 +1000,7 @@ VariableType * EMuse::Script::ScriptCompiler :: _getVariableType( ScriptBlockArr
 	return _getVariableTypeRecus( l_array, l_index );
 }
 
-VariableType * EMuse::Script::ScriptCompiler :: _getVariableTypeRecus( ScriptBlockArray & p_blockArray, unsigned int & p_recursIndex )
+VariableType * EMuse::Script::ScriptCompiler::_getVariableTypeRecus( ScriptBlockArray & p_blockArray, unsigned int & p_recursIndex )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getVariableTypeRecus" );
 
@@ -1092,7 +1092,7 @@ VariableType * EMuse::Script::ScriptCompiler :: _getVariableTypeRecus( ScriptBlo
 	return l_type;
 }
 
-void EMuse::Script::ScriptCompiler :: _compileStructDeclatation( ScriptBlockArray & p_blockArray )
+void EMuse::Script::ScriptCompiler::_compileStructDeclatation( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileStructDeclatation" );
 //	_printBlockArray( "_compileStructDeclatation", p_blockArray);
@@ -1139,7 +1139,7 @@ void EMuse::Script::ScriptCompiler :: _compileStructDeclatation( ScriptBlockArra
 	m_structures.insert( StructureMap::value_type( l_name, l_struct ) );
 }
 
-void EMuse::Script::ScriptCompiler :: _addStructMember( Structure * p_struct, ScriptBlockArray & p_blockArray )
+void EMuse::Script::ScriptCompiler::_addStructMember( Structure * p_struct, ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_addStructMember" );
 	ScriptBlockArray l_array;
@@ -1162,7 +1162,7 @@ void EMuse::Script::ScriptCompiler :: _addStructMember( Structure * p_struct, Sc
 	p_struct->AddMember( p_blockArray[l_current]->m_contents, l_type );
 }
 
-void EMuse::Script::ScriptCompiler :: _typedef( ScriptBlockArray & p_blockArray )
+void EMuse::Script::ScriptCompiler::_typedef( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_typedef" );
 
@@ -1177,7 +1177,7 @@ void EMuse::Script::ScriptCompiler :: _typedef( ScriptBlockArray & p_blockArray 
 	m_typedefs.insert( VariableTypeMap::value_type( l_name, l_type ) );
 }
 
-ScriptNode  * EMuse::Script::ScriptCompiler :: _compileStructMember( ScriptBlockArray & p_left, ScriptBlockArray & p_right, ScriptBlock * p_block )
+ScriptNode  * EMuse::Script::ScriptCompiler::_compileStructMember( ScriptBlockArray & p_left, ScriptBlockArray & p_right, ScriptBlock * p_block )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileStructMember" );
 //	_printBlockArray( "_compileStructMember - Left", p_left);
@@ -1227,7 +1227,7 @@ ScriptNode  * EMuse::Script::ScriptCompiler :: _compileStructMember( ScriptBlock
 	return l_finalNode;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler :: _compileReturn( ScriptBlockArray & p_childs )
+ScriptNode * EMuse::Script::ScriptCompiler::_compileReturn( ScriptBlockArray & p_childs )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileReturn" );
 
@@ -1268,7 +1268,7 @@ ScriptNode * EMuse::Script::ScriptCompiler :: _compileReturn( ScriptBlockArray &
 	return l_finalNode;
 }
 
-VariableType * EMuse::Script::ScriptCompiler :: _substituteVarType( VariableType * p_base, VariableType * p_type )
+VariableType * EMuse::Script::ScriptCompiler::_substituteVarType( VariableType * p_base, VariableType * p_type )
 {
 	if ( p_type != NULL )
 	{
@@ -1309,7 +1309,7 @@ VariableType * EMuse::Script::ScriptCompiler :: _substituteVarType( VariableType
 	return p_base;
 }
 
-void EMuse::Script::ScriptCompiler :: _declareStruct( ScriptBlockArray & p_blockArray )
+void EMuse::Script::ScriptCompiler::_declareStruct( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareStruct" );
 
@@ -1332,7 +1332,7 @@ void EMuse::Script::ScriptCompiler :: _declareStruct( ScriptBlockArray & p_block
 	m_currentStructure = l_struct;
 }
 
-void EMuse::Script::ScriptCompiler :: _printBlockArray( const String & p_where, const ScriptBlockArray & p_childs )
+void EMuse::Script::ScriptCompiler::_printBlockArray( const String & p_where, const ScriptBlockArray & p_childs )
 {
 	std::cout << p_where << " : " << p_childs.size() << "\n{" << std::endl;
 	size_t i = 0;

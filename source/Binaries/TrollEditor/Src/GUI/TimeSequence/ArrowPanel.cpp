@@ -23,8 +23,8 @@ END_EVENT_TABLE()
 extern MainFrame * g_mainFrame;
 
 
-ArrowPanel :: ArrowPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
-						  const wxSize & p_size )
+ArrowPanel::ArrowPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
+						const wxSize & p_size )
 	:	wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_NONE ),
 		m_mouseLeftDown( false ),
 		m_boundPanel( NULL )
@@ -34,13 +34,13 @@ ArrowPanel :: ArrowPanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & 
 
 
 
-ArrowPanel :: ~ArrowPanel()
+ArrowPanel::~ArrowPanel()
 {
 }
 
 
 
-void ArrowPanel :: _onPaint( wxPaintEvent & p_event )
+void ArrowPanel::_onPaint( wxPaintEvent & p_event )
 {
 	wxPaintDC l_dc( this );
 	wxBrush l_brush( wxColour( 255, 255, 255 ), wxSOLID );
@@ -60,7 +60,7 @@ void ArrowPanel :: _onPaint( wxPaintEvent & p_event )
 
 
 
-void ArrowPanel :: _onMouseLeftDown( wxMouseEvent & p_event )
+void ArrowPanel::_onMouseLeftDown( wxMouseEvent & p_event )
 {
 	m_mouseLeftDown = true;
 //	m_boundPanel->SetMouseLeftDown( true);
@@ -68,7 +68,7 @@ void ArrowPanel :: _onMouseLeftDown( wxMouseEvent & p_event )
 
 
 
-void ArrowPanel :: _onMouseLeftUp( wxMouseEvent & p_event )
+void ArrowPanel::_onMouseLeftUp( wxMouseEvent & p_event )
 {
 	m_mouseLeftDown = false;
 //	m_boundPanel->SetMouseLeftDown( false);
@@ -76,7 +76,7 @@ void ArrowPanel :: _onMouseLeftUp( wxMouseEvent & p_event )
 
 
 
-void ArrowPanel :: _onMouseMove( wxMouseEvent & p_event )
+void ArrowPanel::_onMouseMove( wxMouseEvent & p_event )
 {
 	/*
 		if (m_mouseLeftDown && m_boundPanel != NULL && GetPosition().x != -6)
@@ -92,7 +92,7 @@ void ArrowPanel :: _onMouseMove( wxMouseEvent & p_event )
 
 
 
-void ArrowPanel :: _onMouseLeave( wxMouseEvent & p_event )
+void ArrowPanel::_onMouseLeave( wxMouseEvent & p_event )
 {
 	m_mouseLeftDown = false;
 //	m_boundPanel->SetMouseLeftDown( false);
@@ -100,7 +100,7 @@ void ArrowPanel :: _onMouseLeave( wxMouseEvent & p_event )
 
 
 
-void ArrowPanel :: _onKillFocus( wxFocusEvent & p_event )
+void ArrowPanel::_onKillFocus( wxFocusEvent & p_event )
 {
 	m_mouseLeftDown = false;
 //	m_boundPanel->SetMouseLeftDown( false);

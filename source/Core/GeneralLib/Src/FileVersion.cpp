@@ -14,7 +14,7 @@
 
 using namespace General::Utils;
 
-bool General :: Computer :: GetFileVersion( const std::string & p_fileName, std::string & p_version )
+bool General::Computer::GetFileVersion( const std::string & p_fileName, std::string & p_version )
 {
 #if GENLIB_WINDOWS
 	VS_FIXEDFILEINFO * l_fileInfo;
@@ -58,7 +58,7 @@ bool General :: Computer :: GetFileVersion( const std::string & p_fileName, std:
 	return false;
 }
 
-bool General :: Computer :: GetFileVersion( const std::wstring & p_fileName, std::wstring & p_version )
+bool General::Computer::GetFileVersion( const std::wstring & p_fileName, std::wstring & p_version )
 {
 #if GENLIB_WINDOWS
 	VS_FIXEDFILEINFO * l_fileInfo;

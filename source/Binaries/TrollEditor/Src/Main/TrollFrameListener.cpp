@@ -24,9 +24,9 @@ using namespace Troll::Main;
 using namespace Troll::Script;
 
 
-TrollFrameListener :: TrollFrameListener( TrollInstance * p_ogre, RenderWindow * p_window,
-		const String & p_baseURL, const String & p_installDir,
-		const String & p_appStringIndex )
+TrollFrameListener::TrollFrameListener( TrollInstance * p_ogre, RenderWindow * p_window,
+										const String & p_baseURL, const String & p_installDir,
+										const String & p_appStringIndex )
 	:	EMuseFrameListener( p_ogre, p_window, p_baseURL, p_installDir, p_appStringIndex ),
 		m_ogre( p_ogre )
 {
@@ -35,8 +35,8 @@ TrollFrameListener :: TrollFrameListener( TrollInstance * p_ogre, RenderWindow *
 
 
 
-TrollFrameListener :: TrollFrameListener( TrollInstance * p_instance, TrollFrameListener * p_ofl,
-		RenderWindow * p_window, const String & p_appStringIndex )
+TrollFrameListener::TrollFrameListener( TrollInstance * p_instance, TrollFrameListener * p_ofl,
+										RenderWindow * p_window, const String & p_appStringIndex )
 	:	EMuseFrameListener( p_instance, p_ofl, p_window, p_appStringIndex )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "TrollFrameListener : finished creation" );
@@ -44,14 +44,14 @@ TrollFrameListener :: TrollFrameListener( TrollInstance * p_instance, TrollFrame
 
 
 
-TrollFrameListener :: ~TrollFrameListener()
+TrollFrameListener::~TrollFrameListener()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "GenderzFramelistener : Destroyed" );
 }
 
 
 
-void TrollFrameListener :: _setupInterfaces()
+void TrollFrameListener::_setupInterfaces()
 {
 	m_gui = new EMGui( m_appIndexStr, m_camera->getViewport()->getActualWidth() / static_cast<Real>( m_camera->getViewport()->getActualHeight() ) );
 	m_parser = new Troll::Scene::TrollSceneFileParser( m_appIndexStr, m_installDir + "rsc/" + m_filename + "/" );
@@ -60,7 +60,7 @@ void TrollFrameListener :: _setupInterfaces()
 
 
 
-void TrollFrameListener :: _setupScript()
+void TrollFrameListener::_setupScript()
 {
 	m_scriptEngine = new TrollScriptEngine( m_installDir / "rsc" / m_filename, m_ogre->GetLoadingBar() );
 	static_cast <TrollScriptEngine *>( m_scriptEngine )->Initialise();
@@ -100,7 +100,7 @@ void TrollFrameListener :: _setupScript()
 
 
 
-void TrollFrameListener :: Initialise()
+void TrollFrameListener::Initialise()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "TrollFrameListener : _initialise" );
 	_setupEffectsManager();
@@ -112,7 +112,7 @@ void TrollFrameListener :: Initialise()
 
 
 
-bool TrollFrameListener :: frameStarted( Real p_timeSinceLastFrame )
+bool TrollFrameListener::frameStarted( Real p_timeSinceLastFrame )
 {
 	ScriptNode * l_script;
 

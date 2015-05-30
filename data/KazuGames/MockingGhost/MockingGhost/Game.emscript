@@ -1,0 +1,446 @@
+bool l_gameStarted;
+bool l_inGame;
+bool l_titleShown;
+bool l_music;
+bool l_sound;
+bool l_melted;
+bool l_selected;
+bool l_odd;
+
+int l_randBox;
+int l_pieceAttachedTo;
+int l_ghost1AttachedTo;
+int l_ghost2AttachedTo;
+int l_selectedNumber;
+int l_nbSwitches;
+int l_maxSwitches;
+int l_nbTries;
+int l_maxTries;
+
+real l_ticPos;
+real l_musicVol;
+real l_soundVol;
+real l_relativeRegletteWidth;
+real l_speed;
+real l_currentSpeed;
+
+vector3 l_minPitch;
+vector3 l_maxPitch;
+vector3 l_currentPitch;
+vector3 l_startPos1;
+vector3 l_endPos1;
+vector3 l_middlePos1;
+vector3 l_currentPos1;
+vector3 l_startPos2;
+vector3 l_endPos2;
+vector3 l_middlePos2;
+vector3 l_currentPos2;
+vector3 l_maxHeight;
+vector3 l_minHeight;
+
+overlay l_ticMusic;
+overlay l_ticSound;
+
+scene_node l_pieceNode;
+scene_node l_revealedNode;
+scene_node l_box1;
+scene_node l_box2;
+scene_node l_box3;
+scene_node l_tmpBox;
+scene_node l_revealedObjectNode;
+
+object l_revealedObject;
+object l_selectedObject;
+
+string l_name;
+
+void EndGame()
+{
+	Echo( "EndGame " + itoa( l_nbTries) + "/" + itoa( l_maxTries));
+	if (l_nbTries == l_maxTries)
+	{
+		Overlay_Hide( "MenuInGame");
+		OverlayElement_GetByName( "Fin/Score")->Show();
+		OverlayElement_GetByName( "Fin/Text")->Show();
+		OverlayElement_GetByName( "Fin/Text")->SetCaption( itoa( g_score));
+		_submitHighscore();
+		timer( "EndGame", TIMERTYPE_ONCE, 2.0)
+		{
+			Overlay_Hide( "Fin");
+			CheckClearToGo();
+			if (g_clearToGo)
+			{
+				Overlay_Show( "Menu");
+				OverlayElement_GetByName( "Menu/Jouer")->Hide();
+				OverlayElement_GetByName( "Menu/Continuer")->Hide();
+				OverlayElement_GetByName( "Menu/Recommencer")->Show();
+				OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
+				if (g_free)
+				{
+					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit");
+				}
+				elseif (g_freeLimited)
+				{
+					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "gratuit, " + l_infos + " parties");
+				}
+				elseif (g_priced)
+				{
+					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "payant : " + l_infos + " credits");
+				}
+				elseif (g_abonne)
+				{
+					OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "abonne");
+				};
+			}
+			else
+			{
+				Overlay_Hide( "Menu");
+			};
+		};
+	};
+};
+
+void LoseGame()
+{
+//	Echo( "Perdu");
+	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Perdu");
+	Overlay_Show( "Fin");
+	OverlayElement_GetByName( "Fin/Score")->Hide();
+	OverlayElement_GetByName( "Fin/Text")->Hide();
+	EndGame();
+};
+
+void WinGame()
+{
+//	Echo( "Gagne");
+	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Gagne");
+	Overlay_Show( "Fin");
+	OverlayElement_GetByName( "Fin/Score")->Hide();
+	OverlayElement_GetByName( "Fin/Text")->Hide();
+	g_score = g_score + 1000;
+	EndGame();
+};
+
+void ChangeSpeed()
+{
+	if (l_nbSwitches > 7)
+	{
+		l_speed = 0.05;
+	}
+	elseif (l_nbSwitches > 5)
+	{
+		l_speed = 0.1;
+	}
+	else
+	{
+		l_speed = l_speed - 0.05;
+	};
+	Echo( "NbSwitches : " + itoa( l_nbSwitches) + " - Speed : " + rtoa( l_speed));
+};
+
+void Switch_1_2()
+{
+	l_currentSpeed = l_speed;
+	l_startPos1 = SetVector3( -200.0, 0.0, 0.0);
+	l_endPos1 = SetVector3( 0.0, 0.0, 0.0);
+	l_middlePos1 = SetVector3( -100.0, 0.0, 200.0);
+	l_startPos2 = SetVector3( 0.0, 0.0, 0.0);
+	l_endPos2 = SetVector3( -200.0, 0.0, 0.0);
+	l_middlePos2 = SetVector3( -100.0, 0.0, -200.0);
+	timer( "Switch_1_2" + rtoa( l_currentSpeed), TIMERTYPE_CONTINUOUS, l_currentSpeed)
+	{
+		l_currentPos1 = V3_BezierInterpolation( l_startPos1, l_middlePos1, l_endPos1, CURRENTTIMER_TIME_LEFT / l_speed);
+		l_currentPos2 = V3_BezierInterpolation( l_startPos2, l_middlePos2, l_endPos2, CURRENTTIMER_TIME_LEFT / l_speed);
+		l_box1->SetPosition( l_currentPos1);
+		l_box2->SetPosition( l_currentPos2);
+	};
+	timer( "EndSwitch_1_2" + rtoa( l_currentSpeed), TIMERTYPE_ONCE, l_currentSpeed)
+	{
+		l_tmpBox = l_box1;
+		l_box1 = l_box2;
+		l_box2 = l_tmpBox;
+		ChangeSpeed();
+//		Echo( "EndSwitch_1_2 " + rtoa( l_speed));
+	};
+};
+
+void Switch_1_3()
+{
+	l_currentSpeed = l_speed;
+	l_startPos1 = SetVector3( -200.0, 0.0, 0.0);
+	l_endPos1 = SetVector3( 200.0, 0.0, 0.0);
+	l_middlePos1 = SetVector3( 0.0, 0.0, 200.0);
+	l_startPos2 = SetVector3( 200.0, 0.0, 0.0);
+	l_endPos2 = SetVector3( -200.0, 0.0, 0.0);
+	l_middlePos2 = SetVector3( 0.0, 0.0, -200.0);
+	timer( "Switch_1_3" + rtoa( l_currentSpeed), TIMERTYPE_CONTINUOUS, l_currentSpeed)
+	{
+		l_currentPos1 = V3_BezierInterpolation( l_startPos1, l_middlePos1, l_endPos1, CURRENTTIMER_TIME_LEFT / l_speed);
+		l_currentPos2 = V3_BezierInterpolation( l_startPos2, l_middlePos2, l_endPos2, CURRENTTIMER_TIME_LEFT / l_speed);
+		l_box1->SetPosition( l_currentPos1);
+		l_box3->SetPosition( l_currentPos2);
+	};
+	timer( "EndSwitch_1_3" + rtoa( l_currentSpeed), TIMERTYPE_ONCE, l_currentSpeed)
+	{
+		l_tmpBox = l_box1;
+		l_box1 = l_box3;
+		l_box3 = l_tmpBox;
+		ChangeSpeed();
+//		Echo( "EndSwitch_1_3 " + rtoa( l_speed));
+	};
+};
+
+void Switch_2_3()
+{
+	l_currentSpeed = l_speed;
+	l_startPos1 = SetVector3( 0.0, 0.0, 0.0);
+	l_endPos1 = SetVector3( 200.0, 0.0, 0.0);
+	l_middlePos1 = SetVector3( 100.0, 0.0, 200.0);
+	l_startPos2 = SetVector3( 200.0, 0.0, 0.0);
+	l_endPos2 = SetVector3( 0.0, 0.0, 0.0);
+	l_middlePos2 = SetVector3( 100.0, 0.0, -200.0);
+	timer( "Switch_2_3" + rtoa( l_currentSpeed), TIMERTYPE_CONTINUOUS, l_currentSpeed)
+	{
+		l_currentPos1 = V3_BezierInterpolation( l_startPos1, l_middlePos1, l_endPos1, CURRENTTIMER_TIME_LEFT / l_speed);
+		l_currentPos2 = V3_BezierInterpolation( l_startPos2, l_middlePos2, l_endPos2, CURRENTTIMER_TIME_LEFT / l_speed);
+		l_box2->SetPosition( l_currentPos1);
+		l_box3->SetPosition( l_currentPos2);
+	};
+	timer( "EndSwitch_2_3" + rtoa( l_currentSpeed), TIMERTYPE_ONCE, l_currentSpeed)
+	{
+		l_tmpBox = l_box2;
+		l_box2 = l_box3;
+		l_box3 = l_tmpBox;
+		ChangeSpeed();
+//		Echo( "EndSwitch_2_3 " + rtoa( l_speed));
+	};
+};
+
+void SwitchBoxes()
+{
+	l_nbSwitches = l_nbSwitches + 1;
+	l_pieceAttachedTo = rtoi( rand( 1.0, 3.1));
+	l_pieceAttachedTo = rtoi( rand( 1.0, 3.1));
+	l_pieceAttachedTo = rtoi( rand( 1.0, 3.1));
+	l_pieceAttachedTo = rtoi( rand( 1.0, 3.1));
+	l_pieceAttachedTo = rtoi( rand( 1.0, 3.1));
+	if (l_pieceAttachedTo == 1)
+	{
+		Switch_1_2();
+	}
+	elseif (l_pieceAttachedTo == 2)
+	{
+		Switch_1_3();
+	}
+	else
+	{
+		Switch_2_3();
+	};
+};
+
+void MeltBoxes()
+{
+	l_selected = false;
+	l_nbSwitches = 0;
+	Sequence_Start( "ShuffleBoxes");
+	timer( "EndSwitch", TIMERTYPE_ONCE, 7.0)
+	{
+		l_melted = true;
+	};
+};
+
+void HidePieceBox()
+{
+	Object_GetByName( "Box_1")->Hide();
+};
+
+void ShowPieceBox()
+{
+	Object_GetByName( "Box_1")->Show();
+	MeltBoxes();
+};
+
+void ShowPiece()
+{
+	if (l_nbTries < 3)
+	{
+		l_speed = 0.5;
+		Sequence_Start( "RevealPiece");
+		l_nbTries = l_nbTries + 1;
+	};
+};
+
+void RevealBox()
+{
+	l_revealedObjectNode = l_selectedObject->GetParent();
+	l_minHeight = l_revealedObjectNode->GetPosition();
+	l_maxHeight = SetVector3( l_minHeight[0], l_minHeight[1] + 20.0, l_minHeight[2]);
+	l_maxPitch = SetVector3( -50.0, 0.0, 0.0);
+	l_minPitch = VECTOR3_ZERO;
+	SceneNode_GetByName( "RevealedBox")->SetPosition( l_minHeight);
+	if (l_selectedNumber == 1)
+	{
+		l_revealedObject = Object_GetByName( "Piece");
+		l_revealedObject->SetParent( SceneNode_GetByName( "RevealedBox"));
+	}
+	else
+	{
+		l_revealedObject = Object_GetByName( "Ghost_" + itoa( l_selectedNumber - 1));
+		l_revealedObject->SetParent( SceneNode_GetByName( "RevealedBox"));
+		SceneNode_GetByName( "RevealedBox")->Translate( SetVector3( 0.0, 15.0, 0.0));
+	};
+	timer( "RevealBox", TIMERTYPE_CONTINUOUS, 1.0)
+	{
+		l_currentPitch = V3_LinearInterpolation( l_minPitch, l_maxPitch, CURRENTTIMER_TIME_LEFT);
+		l_selectedObject->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
+		l_selectedObject->GetParent()->SetPosition( V3_LinearInterpolation( l_minHeight, l_maxHeight, CURRENTTIMER_TIME_LEFT));
+	};
+	timer( "EndReveal", TIMERTYPE_ONCE, 1.0)
+	{
+		if (l_selectedObject->GetName() == "Box_1")
+		{
+			Sound_Play_Global( "Coin");
+			WinGame();
+		}
+		else
+		{
+			Sound_Play_Global( "Ghost");
+			LoseGame();
+		};
+		if (l_nbTries < l_maxTries)
+		{
+			timer( "ReHide", TIMERTYPE_ONCE, 2.0)
+			{
+				Overlay_Hide( "Fin");
+				timer( "ReHideBox", TIMERTYPE_CONTINUOUS, 1.0)
+				{
+					l_currentPitch = V3_LinearInterpolation( l_minPitch, l_maxPitch, CURRENTTIMER_TIME_ELAPSED);
+					l_selectedObject->GetParent()->SetOrientation( SetQuaternion( SetVector3( 1.0, 0.0, 0.0), l_currentPitch[0]));
+					l_selectedObject->GetParent()->SetPosition( V3_LinearInterpolation( l_minHeight, l_maxHeight, CURRENTTIMER_TIME_ELAPSED));
+				};
+				timer( "EndReHideBox", TIMERTYPE_ONCE, 2.0)
+				{
+					l_revealedObject->SetParent( l_revealedObjectNode);
+					ShowPiece();
+				};
+			};
+		};
+	};
+};
+
+void ChooseBox()
+{
+	l_selectedObject = MousePickupObject( MOUSE_POSITION_X, MOUSE_POSITION_Y, false);
+	if (l_selectedObject != NULL)
+	{
+		l_name = l_selectedObject->GetName();
+//		Echo( l_name);
+		if (l_name->find( "Box_") != npos)
+		{
+			strSplitOne( l_name, "_");
+//			Echo( l_name);
+			l_selectedNumber = atoi( l_name);
+			l_melted = false;
+			l_selected = true;
+			RevealBox();
+		};
+	};
+};
+
+void StopGame()
+{
+	l_inGame = false;
+	l_gameStarted = false;
+	Overlay_Show( "Menu");
+	Overlay_Hide( "MenuInGame");
+	OverlayElement_GetByName( "Menu/Jouer")->Show();
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	l_box1->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	l_box2->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	l_box3->SetOrientation( SetQuaternion( SetVector3( 1.0, 1.0, 1.0), 0.0));
+	l_revealedObject->SetParent( l_revealedObjectNode);
+	l_selectedObject->GetParent()->SetPosition( l_minHeight);
+};
+
+void PauseGame()
+{
+	l_inGame = false;
+	Overlay_Show( "Menu");
+	Overlay_Hide( "MenuInGame");
+	Timer_PauseAll();
+};
+
+void ContinueGame()
+{
+	l_inGame = true;
+	Overlay_Hide( "Menu");
+	Overlay_Show( "MenuInGame");
+	Timer_PlayAll();
+};
+
+void BeginGame()
+{
+	Overlay_Hide( "Menu");
+	Overlay_Show( "MenuInGame");
+	Overlay_Hide( "Title");
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	l_inGame = true;
+	l_gameStarted = true;
+	l_titleShown = false;
+	l_melted = false;
+	l_selected = false;
+	g_score = 0;
+	l_nbTries = 0;
+	if (c_modeInstant)
+	{
+		l_maxTries = 1;
+	}
+	else
+	{
+		l_maxTries = 3;
+	};
+	ShowPiece();
+};
+
+void InitialiseGame()
+{
+	l_titleShown = true;
+	l_sound = false;
+	l_music = false;
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
+	l_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+
+	l_pieceNode = SceneNode_GetByName( "Piece");
+	l_box1 = SceneNode_GetByName( "Box_1");
+	l_box2 = SceneNode_GetByName( "Box_2");
+	l_box3 = SceneNode_GetByName( "Box_3");
+	l_maxSwitches = 10;
+	l_odd = false;
+
+	Overlay_Hide( "MenuInGame");
+	Overlay_Hide( "Commandes");
+	Overlay_Hide( "Regles");
+	Overlay_Hide( "Options");
+	Overlay_Hide( "Fin");
+	Overlay_Hide( "FinInstant");
+	Overlay_Hide( "Scores");
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	OverlayElement_GetByName( "Fin/Score")->Hide();
+	OverlayElement_GetByName( "Fin/Text")->Hide();
+
+	Sound_Play_Global( "Haunted");
+
+	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
+	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
+};
+
+InitialiseGame();

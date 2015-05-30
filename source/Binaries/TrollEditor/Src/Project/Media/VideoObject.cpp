@@ -17,7 +17,7 @@ using namespace Troll::GUI;
 using namespace EMuse::Media;
 
 
-TrollVideoObject :: TrollVideoObject( const wxString & p_name, const wxString & p_fileName )
+TrollVideoObject::TrollVideoObject( const wxString & p_name, const wxString & p_fileName )
 	:	MediaObject( p_name, p_fileName, ttVideoObject ),
 		m_video( NULL ),
 		m_object( NULL ),
@@ -27,13 +27,13 @@ TrollVideoObject :: TrollVideoObject( const wxString & p_name, const wxString & 
 
 
 
-TrollVideoObject :: ~TrollVideoObject()
+TrollVideoObject::~TrollVideoObject()
 {
 }
 
 
 
-int TrollVideoObject :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollVideoObject::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 20;
 	wxSize l_returnSize( p_width, l_height );
@@ -50,21 +50,21 @@ int TrollVideoObject :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 /*
-void TrollVideoObject :: SetMuseMediaEntity( MediaEntity * p_me)
+void TrollVideoObject::SetMuseMediaEntity( MediaEntity * p_me)
 {
 	m_museMediaEntity = p_me;
 }
 */
 
 
-void TrollVideoObject :: SetAttenuation( float p_att )
+void TrollVideoObject::SetAttenuation( float p_att )
 {
 	m_attenuation = p_att;
 }
 
 
 
-void TrollVideoObject :: SetMuseVideoObject( VideoObject * p_videoObject )
+void TrollVideoObject::SetMuseVideoObject( VideoObject * p_videoObject )
 {
 	m_videoOverlay = NULL;
 	m_videoObject = p_videoObject;
@@ -72,7 +72,7 @@ void TrollVideoObject :: SetMuseVideoObject( VideoObject * p_videoObject )
 
 
 
-void TrollVideoObject :: SetMuseVideoOverlay( VideoOverlay * p_videoOverlay )
+void TrollVideoObject::SetMuseVideoOverlay( VideoOverlay * p_videoOverlay )
 {
 	m_videoOverlay = p_videoOverlay;
 	m_videoObject = NULL;
@@ -80,7 +80,7 @@ void TrollVideoObject :: SetMuseVideoOverlay( VideoOverlay * p_videoOverlay )
 
 
 
-void TrollVideoObject :: Write( wxTextOutputStream * p_stream )
+void TrollVideoObject::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "\tuse_video " ) + m_video->GetName() + wxT( "\n\t{\n" ) );
 	wxString l_tmp;

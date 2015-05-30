@@ -6,7 +6,7 @@
 #include "ScriptTimer.h"
 #include "ScriptNode.h"
 
-ScriptTimerManager :: ScriptTimerManager( ScriptEngine * p_scriptEngine )
+ScriptTimerManager::ScriptTimerManager( ScriptEngine * p_scriptEngine )
 	:	m_engine( p_scriptEngine ),
 		m_currentTimer( NULL ),
 		m_paused( false ),
@@ -25,12 +25,12 @@ ScriptTimerManager :: ScriptTimerManager( ScriptEngine * p_scriptEngine )
 	genlib_assert( m_self != NULL );
 }
 
-ScriptTimerManager :: ~ScriptTimerManager()
+ScriptTimerManager::~ScriptTimerManager()
 {
 	General::Utils::map::deleteAll( m_timers );
 }
 
-void ScriptTimerManager :: UpdateAll( Real p_time )
+void ScriptTimerManager::UpdateAll( Real p_time )
 {
 	if ( m_paused )
 	{
@@ -110,7 +110,7 @@ void ScriptTimerManager :: UpdateAll( Real p_time )
 	}
 }
 
-ScriptTimer * ScriptTimerManager :: AddTimer( const String & p_timerName, Real p_timerBaseTime, ScriptNode * p_timerCode, ScriptTimerType p_type, ScriptNode * p_finalTimer )
+ScriptTimer * ScriptTimerManager::AddTimer( const String & p_timerName, Real p_timerBaseTime, ScriptNode * p_timerCode, ScriptTimerType p_type, ScriptNode * p_finalTimer )
 {
 	genlib_assert( ! p_timerName.empty() );
 
@@ -138,7 +138,7 @@ ScriptTimer * ScriptTimerManager :: AddTimer( const String & p_timerName, Real p
 	return l_timer;
 }
 
-void ScriptTimerManager :: DestroyTimer( const String & p_timerName )
+void ScriptTimerManager::DestroyTimer( const String & p_timerName )
 {
 	ScriptTimer * l_timer = General::Utils::map::findOrNull( m_timers, p_timerName );
 
@@ -151,17 +151,17 @@ void ScriptTimerManager :: DestroyTimer( const String & p_timerName )
 	General::Utils::map::deleteValue( m_timers, p_timerName );
 }
 
-void ScriptTimerManager :: PauseAll()
+void ScriptTimerManager::PauseAll()
 {
 	General::Utils::map::cycle( m_timers, & ScriptTimer::Pause );
 }
 
-void ScriptTimerManager :: PlayAll()
+void ScriptTimerManager::PlayAll()
 {
 	General::Utils::map::cycle( m_timers, & ScriptTimer::Play );
 }
 
-void ScriptTimerManager :: KillAll()
+void ScriptTimerManager::KillAll()
 {
 	General::Utils::map::deleteAll( m_timers );
 }

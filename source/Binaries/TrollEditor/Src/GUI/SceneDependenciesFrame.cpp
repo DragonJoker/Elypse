@@ -18,7 +18,7 @@ BEGIN_EVENT_TABLE( SceneDependenciesFrame, wxFrame )
 END_EVENT_TABLE()
 
 
-SceneDependenciesFrame :: SceneDependenciesFrame( wxWindow * p_parent, TrollScene * p_scene,
+SceneDependenciesFrame::SceneDependenciesFrame( wxWindow * p_parent, TrollScene * p_scene,
 		const wxString & title, const wxPoint & pos )
 	:	wxFrame( p_parent, wxID_ANY, title, pos, wxSize( 200, 300 ), wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT | wxFRAME_TOOL_WINDOW ),
 		m_selectedScene( p_scene ),
@@ -35,7 +35,7 @@ SceneDependenciesFrame :: SceneDependenciesFrame( wxWindow * p_parent, TrollScen
 
 
 
-void SceneDependenciesFrame :: SetScene( TrollScene * p_scene )
+void SceneDependenciesFrame::SetScene( TrollScene * p_scene )
 {
 	m_selectedScene = p_scene;
 	_initialise();
@@ -43,7 +43,7 @@ void SceneDependenciesFrame :: SetScene( TrollScene * p_scene )
 
 
 
-void SceneDependenciesFrame :: _initialise()
+void SceneDependenciesFrame::_initialise()
 {
 	if ( !g_mainFrame->GetCurrentProject() || !g_mainFrame->GetCurrentProject()->GetMainScene() )
 	{
@@ -88,14 +88,14 @@ void SceneDependenciesFrame :: _initialise()
 
 
 
-SceneDependenciesFrame :: ~SceneDependenciesFrame()
+SceneDependenciesFrame::~SceneDependenciesFrame()
 {
 	m_scenes.clear();
 }
 
 
 
-void SceneDependenciesFrame :: _populateSceneDependencies()
+void SceneDependenciesFrame::_populateSceneDependencies()
 {
 	if ( m_sceneDependencies != NULL )
 	{
@@ -140,14 +140,14 @@ void SceneDependenciesFrame :: _populateSceneDependencies()
 
 
 
-void SceneDependenciesFrame :: _onClose( wxCloseEvent & p_event )
+void SceneDependenciesFrame::_onClose( wxCloseEvent & p_event )
 {
 	Hide();
 }
 
 
 
-void SceneDependenciesFrame :: _onCheckScene( wxCommandEvent & p_event )
+void SceneDependenciesFrame::_onCheckScene( wxCommandEvent & p_event )
 {
 	unsigned int l_count = m_sceneDependencies->GetCount();
 	wxString l_scene;
@@ -174,7 +174,7 @@ void SceneDependenciesFrame :: _onCheckScene( wxCommandEvent & p_event )
 
 
 
-void SceneDependenciesFrame :: _onSelectScene( wxCommandEvent & p_event )
+void SceneDependenciesFrame::_onSelectScene( wxCommandEvent & p_event )
 {
 	SceneMap::iterator l_it = m_scenes.find( m_sceneSelector->GetValue() );
 
@@ -187,7 +187,7 @@ void SceneDependenciesFrame :: _onSelectScene( wxCommandEvent & p_event )
 
 
 
-void SceneDependenciesFrame :: _onOK( wxCommandEvent & p_event )
+void SceneDependenciesFrame::_onOK( wxCommandEvent & p_event )
 {
 	Hide();
 }

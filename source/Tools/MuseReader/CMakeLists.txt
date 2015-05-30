@@ -68,7 +68,7 @@ if ( wxWidgets_FOUND AND GTK_FOUND )
 	)
 	
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Tools" )
-	set( Build "yes (version ${MR_VERSION_MAJOR}.${MR_VERSION_MINOR}.${MR_VERSION_BUILD})" PARENT_SCOPE )
+	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 else()
 	if ( NOT wxWidgets_FOUND )

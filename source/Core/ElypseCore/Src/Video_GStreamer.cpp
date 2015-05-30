@@ -14,7 +14,7 @@
 
 #include <StringConverter.h>
 
-VideoImpl_GStreamer :: VideoImpl_GStreamer( VideoObject * p_owner )
+VideoImpl_GStreamer::VideoImpl_GStreamer( VideoObject * p_owner )
 	:	VideoImplementation( p_owner ),
 		m_videoLinked( false ),
 		m_pipeline( NULL ),
@@ -22,7 +22,7 @@ VideoImpl_GStreamer :: VideoImpl_GStreamer( VideoObject * p_owner )
 {
 }
 
-VideoImpl_GStreamer :: ~VideoImpl_GStreamer()
+VideoImpl_GStreamer::~VideoImpl_GStreamer()
 {
 	_cleanup();
 
@@ -33,7 +33,7 @@ VideoImpl_GStreamer :: ~VideoImpl_GStreamer()
 	}
 }
 
-void VideoImpl_GStreamer :: _cleanup()
+void VideoImpl_GStreamer::_cleanup()
 {
 	m_videoLinked = false;
 
@@ -53,7 +53,7 @@ void VideoImpl_GStreamer :: _cleanup()
 	m_binEltSet.clear();
 }
 
-bool VideoImpl_GStreamer :: Start()
+bool VideoImpl_GStreamer::Start()
 {
 	if ( m_pipeline == NULL )
 	{
@@ -71,7 +71,7 @@ bool VideoImpl_GStreamer :: Start()
 	return true;
 }
 
-bool VideoImpl_GStreamer :: Pause()
+bool VideoImpl_GStreamer::Pause()
 {
 	if ( m_pipeline == NULL )
 	{
@@ -82,7 +82,7 @@ bool VideoImpl_GStreamer :: Pause()
 	return true;
 }
 
-bool VideoImpl_GStreamer :: Stop()
+bool VideoImpl_GStreamer::Stop()
 {
 	if ( m_pipeline == NULL )
 	{
@@ -94,12 +94,12 @@ bool VideoImpl_GStreamer :: Stop()
 	return true;
 }
 
-void VideoImpl_GStreamer :: Reset()
+void VideoImpl_GStreamer::Reset()
 {
 	_cleanup();
 }
 
-void VideoImpl_GStreamer :: Initialise( const Url & p_mediaUrl )
+void VideoImpl_GStreamer::Initialise( const Url & p_mediaUrl )
 {
 	if ( m_pipeline != NULL )
 	{
@@ -188,7 +188,7 @@ void VideoImpl_GStreamer :: Initialise( const Url & p_mediaUrl )
 	gst_element_link_many( m_audioQueue, m_audioConverter, m_audioSink, NULL );
 }
 
-gboolean VideoImpl_GStreamer :: _busCB( GstBus * p_bus, GstMessage * p_msg, gpointer p_data )
+gboolean VideoImpl_GStreamer::_busCB( GstBus * p_bus, GstMessage * p_msg, gpointer p_data )
 {
 	VideoImpl_GStreamer * l_player = reinterpret_cast <VideoImpl_GStreamer *>( p_data );
 
@@ -220,7 +220,7 @@ gboolean VideoImpl_GStreamer :: _busCB( GstBus * p_bus, GstMessage * p_msg, gpoi
 	}
 }
 
-void VideoImpl_GStreamer :: _newPadCB( GstElement * p_elt, GstPad * p_pad, gpointer p_data )
+void VideoImpl_GStreamer::_newPadCB( GstElement * p_elt, GstPad * p_pad, gpointer p_data )
 {
 	genlib_assert( p_data != NULL );
 	GstCaps * l_caps = gst_pad_get_caps( p_pad );
@@ -228,7 +228,7 @@ void VideoImpl_GStreamer :: _newPadCB( GstElement * p_elt, GstPad * p_pad, gpoin
 	gst_caps_unref( l_caps );
 }
 
-void VideoImpl_GStreamer :: _typeFoundCB( GstElement * p_typeFind, guint p_probability, GstCaps * p_caps, gpointer p_data )
+void VideoImpl_GStreamer::_typeFoundCB( GstElement * p_typeFind, guint p_probability, GstCaps * p_caps, gpointer p_data )
 {
 	genlib_assert( p_data != NULL );
 	gchar * l_strCaps = gst_caps_to_string( p_caps );
@@ -239,14 +239,14 @@ void VideoImpl_GStreamer :: _typeFoundCB( GstElement * p_typeFind, guint p_proba
 	g_free( l_strCaps );
 }
 
-void VideoImpl_GStreamer :: _handoffCB( GstElement *, GstBuffer * p_buffer, void *, VideoImpl_GStreamer * p_player )
+void VideoImpl_GStreamer::_handoffCB( GstElement *, GstBuffer * p_buffer, void *, VideoImpl_GStreamer * p_player )
 {
 	genlib_assert( p_player != NULL );
 	genlib_assert( p_buffer != NULL );
 	p_player->GetOwner()->GetVideoTexture()->CopyToBuffer( GST_BUFFER_DATA( p_buffer ), GST_BUFFER_SIZE( p_buffer ) );
 }
 
-void VideoImpl_GStreamer :: _closeLink( GstPad * p_srcPad, GstElement * p_sinkElt, const gchar * p_padName, const GList * p_tmplList )
+void VideoImpl_GStreamer::_closeLink( GstPad * p_srcPad, GstElement * p_sinkElt, const gchar * p_padName, const GList * p_tmplList )
 {
 	genlib_assert( p_srcPad != NULL );
 	genlib_assert( p_sinkElt != NULL );
@@ -325,7 +325,7 @@ void VideoImpl_GStreamer :: _closeLink( GstPad * p_srcPad, GstElement * p_sinkEl
 	}
 }
 
-void VideoImpl_GStreamer :: _tryToPlug( GstPad * p_pad, const GstCaps * p_caps )
+void VideoImpl_GStreamer::_tryToPlug( GstPad * p_pad, const GstCaps * p_caps )
 {
 	GstObject * l_parent = GST_OBJECT_PARENT( p_pad );
 	const gchar * l_mime = gst_structure_get_name( gst_caps_get_structure( p_caps, 0 ) );
@@ -395,7 +395,7 @@ void VideoImpl_GStreamer :: _tryToPlug( GstPad * p_pad, const GstCaps * p_caps )
 	gst_element_set_state( m_audioSink, GST_STATE_PLAYING );
 }
 
-bool VideoImpl_GStreamer :: _tryToPlugAudio( GstPad * p_pad, const GstCaps * p_caps )
+bool VideoImpl_GStreamer::_tryToPlugAudio( GstPad * p_pad, const GstCaps * p_caps )
 {
 	GstCaps * l_audioCaps = gst_pad_get_caps( gst_element_get_static_pad( m_audioQueue, "sink" ) );
 	GstCaps * l_res = gst_caps_intersect( p_caps, l_audioCaps );
@@ -444,7 +444,7 @@ bool VideoImpl_GStreamer :: _tryToPlugAudio( GstPad * p_pad, const GstCaps * p_c
 	return false;
 }
 
-bool VideoImpl_GStreamer :: _tryToPlugVideo( GstPad * p_pad, const GstCaps * p_caps )
+bool VideoImpl_GStreamer::_tryToPlugVideo( GstPad * p_pad, const GstCaps * p_caps )
 {
 	GstCaps * l_res = gst_caps_intersect( p_caps, m_videoCaps );
 

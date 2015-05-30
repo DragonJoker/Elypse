@@ -27,7 +27,7 @@
 
 using namespace Ogre;
 
-VideoTexture :: VideoTexture( VideoObject * p_owner )
+VideoTexture::VideoTexture( VideoObject * p_owner )
 	:	owned_by <VideoObject>	( p_owner ),
 		 m_bufferChange( false ),
 		 m_bufferSize( m_owner->m_width * m_owner->m_height * 4 ),
@@ -35,20 +35,20 @@ VideoTexture :: VideoTexture( VideoObject * p_owner )
 {
 }
 
-VideoTexture :: ~VideoTexture()
+VideoTexture::~VideoTexture()
 {
 	delete [] m_tmpBuffer;
 	MaterialManager::getSingletonPtr()->remove( m_owner->GetName() );
 	TextureManager::getSingletonPtr()->remove( m_texture->getHandle() );
 }
 
-bool VideoTexture :: initialise()
+bool VideoTexture::initialise()
 {
 	createDefinedTexture( m_owner->GetName() );
 	return true;
 }
 
-void VideoTexture :: _createTexture( const String & p_materialName, const String & p_groupName, bool p_createMat )
+void VideoTexture::_createTexture( const String & p_materialName, const String & p_groupName, bool p_createMat )
 {
 	TextureUnitState * l_texUnitState;
 	MaterialPtr l_pMaterial = MaterialManager::getSingleton().getByName( p_materialName );
@@ -76,7 +76,7 @@ void VideoTexture :: _createTexture( const String & p_materialName, const String
 	l_texUnitState->setTextureAddressingMode( TextureUnitState::TAM_WRAP );
 }
 
-void VideoTexture :: createDefinedTexture( const String & p_materialName, const String & p_groupName )
+void VideoTexture::createDefinedTexture( const String & p_materialName, const String & p_groupName )
 {
 	if ( TextureManager::getSingleton().getByName( p_materialName ).isNull() )
 	{
@@ -84,7 +84,7 @@ void VideoTexture :: createDefinedTexture( const String & p_materialName, const 
 	}
 }
 
-void VideoTexture :: CopyToBuffer( unsigned char * p_buffer, unsigned int p_bufferSize )
+void VideoTexture::CopyToBuffer( unsigned char * p_buffer, unsigned int p_bufferSize )
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 
@@ -95,11 +95,11 @@ void VideoTexture :: CopyToBuffer( unsigned char * p_buffer, unsigned int p_buff
 	}
 	else
 	{
-		EMUSE_MESSAGE_NORMAL( "VideoTexture :: CopyToBuffer : decrepancy in buffer sizes : " + StringConverter::toString( m_bufferSize ) + " against : " + StringConverter::toString( p_bufferSize ) );
+		EMUSE_MESSAGE_NORMAL( "VideoTexture::CopyToBuffer : decrepancy in buffer sizes : " + StringConverter::toString( m_bufferSize ) + " against : " + StringConverter::toString( p_bufferSize ) );
 	}
 }
 
-void VideoTexture :: Update()
+void VideoTexture::Update()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 
@@ -115,7 +115,7 @@ void VideoTexture :: Update()
 	l_pixelBuffer->unlock();
 }
 
-void VideoTexture :: RedrawInBlack()
+void VideoTexture::RedrawInBlack()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 	memset( m_tmpBuffer, 0, m_bufferSize );

@@ -84,8 +84,8 @@ namespace General
 			template <typename T, typename U, typename Z>
 			static inline void cycle( const std::multimap <T, U *> & p_map, void( U::* p_func )( const Z & ), const Z & p_param )
 			{
-				typename std::multimap <T, U *> :: const_iterator i = p_map.begin();
-				const typename std::multimap <T, U *> :: const_iterator & iend = p_map.end();
+				typename std::multimap <T, U *>::const_iterator i = p_map.begin();
+				const typename std::multimap <T, U *>::const_iterator & iend = p_map.end();
 
 				for ( ; i != iend; ++ i )
 				{

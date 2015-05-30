@@ -22,7 +22,7 @@ END_EVENT_TABLE()
 extern MainFrame * g_mainFrame;
 
 
-AboutFrame :: AboutFrame( wxWindow * parent )
+AboutFrame::AboutFrame( wxWindow * parent )
 	:	wxFrame( parent, wxID_ANY, _( "About Troll Editor" ), wxDefaultPosition, wxSize( 240, 155 ),
 				 wxFRAME_TOOL_WINDOW | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT ),
 	m_easterEggFrame( NULL )
@@ -48,14 +48,14 @@ AboutFrame :: AboutFrame( wxWindow * parent )
 
 
 
-void AboutFrame :: _onBack( wxCommandEvent & p_event )
+void AboutFrame::_onBack( wxCommandEvent & p_event )
 {
 	Destroy();
 }
 
 
 
-void AboutFrame :: _onCloseKeumar( wxCommandEvent & p_event )
+void AboutFrame::_onCloseKeumar( wxCommandEvent & p_event )
 {
 	if ( m_easterEggFrame != NULL )
 	{
@@ -65,7 +65,7 @@ void AboutFrame :: _onCloseKeumar( wxCommandEvent & p_event )
 
 
 
-void AboutFrame :: _onShowKeumar( wxCommandEvent & p_event )
+void AboutFrame::_onShowKeumar( wxCommandEvent & p_event )
 {
 	if ( m_easterEggFrame != NULL )
 	{

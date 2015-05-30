@@ -35,7 +35,7 @@ template< class T > void SafeRelease( T *& p_pReleasable )
 	}
 }
 
-VideoImpl_DirectShow :: VideoImpl_DirectShow( VideoObject * p_owner )
+VideoImpl_DirectShow::VideoImpl_DirectShow( VideoObject * p_owner )
 	:	VideoImplementation( p_owner	)
 	,	m_mediaControl( NULL	)
 	,	m_audio( NULL	)
@@ -61,16 +61,16 @@ VideoImpl_DirectShow :: VideoImpl_DirectShow( VideoObject * p_owner )
 //	CoInitialize(NULL);
 }
 
-VideoImpl_DirectShow :: ~VideoImpl_DirectShow()
+VideoImpl_DirectShow::~VideoImpl_DirectShow()
 {
 	_cleanup();
 }
 
-void VideoImpl_DirectShow :: Reset()
+void VideoImpl_DirectShow::Reset()
 {
 }
 
-void VideoImpl_DirectShow :: _cleanup()
+void VideoImpl_DirectShow::_cleanup()
 {
 	GENLIB_SCOPED_RECURSIVE_LOCK( m_mutex );
 
@@ -106,7 +106,7 @@ void VideoImpl_DirectShow :: _cleanup()
 	}
 }
 
-bool VideoImpl_DirectShow :: _connectPins( IBaseFilter * p_outputFilter,	unsigned int p_outputNum,
+bool VideoImpl_DirectShow::_connectPins( IBaseFilter * p_outputFilter,	unsigned int p_outputNum,
 		IBaseFilter * p_inputFilter,	unsigned int p_inputNum )
 {
 	genlib_assert( p_inputFilter != NULL );
@@ -124,7 +124,7 @@ bool VideoImpl_DirectShow :: _connectPins( IBaseFilter * p_outputFilter,	unsigne
 	return false;
 }
 
-void VideoImpl_DirectShow :: _findPin( IBaseFilter * p_baseFilter, int p_iDirection, int p_pinNumber, IPin ** p_destPin )
+void VideoImpl_DirectShow::_findPin( IBaseFilter * p_baseFilter, int p_iDirection, int p_pinNumber, IPin ** p_destPin )
 {
 	PIN_DIRECTION p_direction = PIN_DIRECTION( p_iDirection );
 	IEnumPins * pEnum = NULL;
@@ -177,7 +177,7 @@ void VideoImpl_DirectShow :: _findPin( IBaseFilter * p_baseFilter, int p_iDirect
 	return;
 }
 
-bool VideoImpl_DirectShow :: Start()
+bool VideoImpl_DirectShow::Start()
 {
 	{
 		GENLIB_SCOPED_RECURSIVE_LOCK( m_mutex );
@@ -210,7 +210,7 @@ bool VideoImpl_DirectShow :: Start()
 }
 
 
-bool VideoImpl_DirectShow :: Pause()
+bool VideoImpl_DirectShow::Pause()
 {
 	{
 		GENLIB_SCOPED_RECURSIVE_LOCK( m_mutex );
@@ -225,7 +225,7 @@ bool VideoImpl_DirectShow :: Pause()
 	return true;
 }
 
-bool VideoImpl_DirectShow :: Stop()
+bool VideoImpl_DirectShow::Stop()
 {
 	{
 		GENLIB_SCOPED_RECURSIVE_LOCK( m_mutex );
@@ -242,7 +242,7 @@ bool VideoImpl_DirectShow :: Stop()
 	return true;
 }
 
-IBaseFilter * VideoImpl_DirectShow :: _createSampleGrabber()
+IBaseFilter * VideoImpl_DirectShow::_createSampleGrabber()
 {
 	IBaseFilter * l_grabber;
 	CoCreateInstance( CLSID_SampleGrabber, NULL, CLSCTX_INPROC, IID_IBaseFilter,
@@ -259,7 +259,7 @@ IBaseFilter * VideoImpl_DirectShow :: _createSampleGrabber()
 	return l_grabber;
 }
 
-IBaseFilter * VideoImpl_DirectShow :: _findSplitter( const wchar_t * p_name )
+IBaseFilter * VideoImpl_DirectShow::_findSplitter( const wchar_t * p_name )
 {
 	IBaseFilter * l_splitter;
 
@@ -271,7 +271,7 @@ IBaseFilter * VideoImpl_DirectShow :: _findSplitter( const wchar_t * p_name )
 	return l_splitter;
 }
 
-IBaseFilter * VideoImpl_DirectShow :: _createFilter( const IID & p_id, const wchar_t * p_name )
+IBaseFilter * VideoImpl_DirectShow::_createFilter( const IID & p_id, const wchar_t * p_name )
 {
 	IBaseFilter * l_filter;
 	CoCreateInstance( p_id, NULL, CLSCTX_INPROC, IID_IBaseFilter,
@@ -281,7 +281,7 @@ IBaseFilter * VideoImpl_DirectShow :: _createFilter( const IID & p_id, const wch
 	return l_filter;
 }
 
-bool VideoImpl_DirectShow :: _initialiseInstances( const String & p_url )
+bool VideoImpl_DirectShow::_initialiseInstances( const String & p_url )
 {
 	ICaptureGraphBuilder2 * l_graphBuilder;
 	IFilterGraph2 * l_filterGraph;
@@ -301,7 +301,7 @@ bool VideoImpl_DirectShow :: _initialiseInstances( const String & p_url )
 	return true;
 }
 
-bool VideoImpl_DirectShow :: _getDimensions()
+bool VideoImpl_DirectShow::_getDimensions()
 {
 	bool l_mediaConnected = false;
 	AM_MEDIA_TYPE l_connectedType;
@@ -350,7 +350,7 @@ bool VideoImpl_DirectShow :: _getDimensions()
 	return true;
 }
 
-void VideoImpl_DirectShow :: _initialise()
+void VideoImpl_DirectShow::_initialise()
 {
 	try
 	{
@@ -456,7 +456,7 @@ void VideoImpl_DirectShow :: _initialise()
 	}
 }
 
-void VideoImpl_DirectShow :: Initialise( const Url & p_url )
+void VideoImpl_DirectShow::Initialise( const Url & p_url )
 {
 	m_url = p_url;
 	m_format = _getVideoType( p_url );
@@ -470,7 +470,7 @@ void VideoImpl_DirectShow :: Initialise( const Url & p_url )
 	m_thread = GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( VideoImpl_DirectShow, this, _initialise );
 }
 
-void VideoImpl_DirectShow :: SetMaxVolume( int p_maxVolume )
+void VideoImpl_DirectShow::SetMaxVolume( int p_maxVolume )
 {
 	m_maxVolume = ( p_maxVolume * 100 ) - 10000;
 	m_currentVolume = int( ( m_maxVolume + 10000 ) * m_volumePercent ) - 10000;
@@ -481,7 +481,7 @@ void VideoImpl_DirectShow :: SetMaxVolume( int p_maxVolume )
 	}
 }
 
-void VideoImpl_DirectShow :: SetVolumePercent( Real p_percent )
+void VideoImpl_DirectShow::SetVolumePercent( Real p_percent )
 {
 	m_volumePercent = p_percent;
 	m_currentVolume = int( ( m_maxVolume + 10000 ) * m_volumePercent ) - 10000;
@@ -492,7 +492,7 @@ void VideoImpl_DirectShow :: SetVolumePercent( Real p_percent )
 	}
 }
 
-void VideoImpl_DirectShow :: Mute( bool p_muted )
+void VideoImpl_DirectShow::Mute( bool p_muted )
 {
 	m_muted = p_muted;
 
@@ -509,7 +509,7 @@ void VideoImpl_DirectShow :: Mute( bool p_muted )
 	}
 }
 
-bool VideoImpl_DirectShow :: Update( Real p_time )
+bool VideoImpl_DirectShow::Update( Real p_time )
 {
 	{
 		GENLIB_SCOPED_RECURSIVE_LOCK( m_mutex );
@@ -563,7 +563,7 @@ bool VideoImpl_DirectShow :: Update( Real p_time )
 	return _grabFrame();
 }
 
-bool VideoImpl_DirectShow :: _grabFrame()
+bool VideoImpl_DirectShow::_grabFrame()
 {
 	HRESULT hr = m_sampleGrabber->GetCurrentBuffer( & m_bufferLength, ( long * )m_buffer );
 
@@ -608,34 +608,34 @@ bool VideoImpl_DirectShow :: _grabFrame()
 
 	if ( hr == E_INVALIDARG )
 	{
-		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture :: frameStarted - Samples are not being buffered. Call SetBufferSamples." );
+		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture::frameStarted - Samples are not being buffered. Call SetBufferSamples." );
 	}
 	else if ( hr == E_OUTOFMEMORY )
 	{
-		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture :: frameStarted - The specified buffer is not large enough. - "
+		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture::frameStarted - The specified buffer is not large enough. - "
 								  + StringConverter::toString( m_bufferLength ) );
 	}
 	else if ( hr == E_POINTER )
 	{
-		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture :: frameStarted - NULL pointer argument." );
+		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture::frameStarted - NULL pointer argument." );
 	}
 	else if ( hr == VFW_E_NOT_CONNECTED )
 	{
-		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture :: frameStarted - The filter is not connected." );
+		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture::frameStarted - The filter is not connected." );
 	}
 	else if ( hr == VFW_E_WRONG_STATE )
 	{
-		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture :: frameStarted - The filter has not received any samples yet." );
+		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture::frameStarted - The filter has not received any samples yet." );
 	}
 	else
 	{
-		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture :: frameStarted - Unknown error : " + StringConverter::toString( hr ) + "." );
+		EMUSE_LOG_MESSAGE_NORMAL( "CVideoTexture::frameStarted - Unknown error : " + StringConverter::toString( hr ) + "." );
 	}
 
 	return false;
 }
 
-DShowVideoFormat VideoImpl_DirectShow :: _getVideoType( const String & p_videoUrl )
+DShowVideoFormat VideoImpl_DirectShow::_getVideoType( const String & p_videoUrl )
 {
 	String l_extension = p_videoUrl.substr( p_videoUrl.find_last_of( '.' ) + 1 );
 

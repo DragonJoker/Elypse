@@ -14,7 +14,7 @@ using namespace Troll::Objects3D;
 using namespace Troll::GUI;
 
 
-TrollLight :: TrollLight( const wxString & p_name, const wxString & p_fileName )
+TrollLight::TrollLight( const wxString & p_name, const wxString & p_fileName )
 	:	Troll3DObject( p_name, p_fileName, ttLight ),
 		m_lightType( ltDirectional ),
 		m_direction( Vector3::ZERO ),
@@ -25,13 +25,13 @@ TrollLight :: TrollLight( const wxString & p_name, const wxString & p_fileName )
 
 
 
-TrollLight :: ~TrollLight()
+TrollLight::~TrollLight()
 {
 }
 
 
 
-void TrollLight :: AttachTo( TrollSceneNode * p_node )
+void TrollLight::AttachTo( TrollSceneNode * p_node )
 {
 	Troll3DObject::AttachTo( p_node );
 
@@ -49,7 +49,7 @@ void TrollLight :: AttachTo( TrollSceneNode * p_node )
 
 
 
-int TrollLight :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollLight::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	int l_height = 340 + ( m_lightType == ltSpotLight ? 60 : 0 );
 	wxSize l_returnSize( p_width, l_height );
@@ -66,7 +66,7 @@ int TrollLight :: BuildPanel( wxWindow * p_parent, int p_width )
 
 
 
-void TrollLight :: SetOgreLight( Ogre::Light * p_light )
+void TrollLight::SetOgreLight( Ogre::Light * p_light )
 {
 	m_ogreLight = p_light;
 	m_lightType = static_cast <TrollLightType>( m_ogreLight->getType() );
@@ -84,7 +84,7 @@ void TrollLight :: SetOgreLight( Ogre::Light * p_light )
 
 
 
-void TrollLight :: SetLightType( TrollLightType p_lt, bool p_updateOgre )
+void TrollLight::SetLightType( TrollLightType p_lt, bool p_updateOgre )
 {
 	m_lightType = p_lt;
 
@@ -100,7 +100,7 @@ void TrollLight :: SetLightType( TrollLightType p_lt, bool p_updateOgre )
 
 
 
-void TrollLight :: SetDirection( const Vector3 & p_dir, bool p_updateOgre )
+void TrollLight::SetDirection( const Vector3 & p_dir, bool p_updateOgre )
 {
 	m_direction = p_dir;
 
@@ -116,7 +116,7 @@ void TrollLight :: SetDirection( const Vector3 & p_dir, bool p_updateOgre )
 
 
 
-void TrollLight :: SetPosition( const Vector3 & p_pos, bool p_updateOgre )
+void TrollLight::SetPosition( const Vector3 & p_pos, bool p_updateOgre )
 {
 	m_position = p_pos;
 
@@ -132,7 +132,7 @@ void TrollLight :: SetPosition( const Vector3 & p_pos, bool p_updateOgre )
 
 
 
-void TrollLight :: SetDiffuse( const ColourValue & p_l, bool p_updateOgre )
+void TrollLight::SetDiffuse( const ColourValue & p_l, bool p_updateOgre )
 {
 	m_diffuse = p_l;
 
@@ -148,7 +148,7 @@ void TrollLight :: SetDiffuse( const ColourValue & p_l, bool p_updateOgre )
 
 
 
-void TrollLight :: SetSpecular( const ColourValue & p_l, bool p_updateOgre )
+void TrollLight::SetSpecular( const ColourValue & p_l, bool p_updateOgre )
 {
 	m_specular = p_l;
 
@@ -164,7 +164,7 @@ void TrollLight :: SetSpecular( const ColourValue & p_l, bool p_updateOgre )
 
 
 
-void TrollLight :: SetAttenuation( const Vector4 & p_att, bool p_updateOgre )
+void TrollLight::SetAttenuation( const Vector4 & p_att, bool p_updateOgre )
 {
 	m_attenuation = p_att;
 
@@ -180,7 +180,7 @@ void TrollLight :: SetAttenuation( const Vector4 & p_att, bool p_updateOgre )
 
 
 
-void TrollLight :: SetSpotLightRange( const Vector3 & p_splr, bool p_updateOgre )
+void TrollLight::SetSpotLightRange( const Vector3 & p_splr, bool p_updateOgre )
 {
 	m_spotLightRange = p_splr;
 
@@ -196,7 +196,7 @@ void TrollLight :: SetSpotLightRange( const Vector3 & p_splr, bool p_updateOgre 
 
 
 
-void TrollLight :: Write( wxTextOutputStream * p_stream )
+void TrollLight::Write( wxTextOutputStream * p_stream )
 {
 	p_stream->WriteString( wxT( "light " ) + m_name + wxT( "\n{\n" ) );
 	wxString l_tmp;

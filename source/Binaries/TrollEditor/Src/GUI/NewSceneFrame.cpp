@@ -18,7 +18,7 @@ END_EVENT_TABLE()
 extern MainFrame * g_mainFrame;
 
 
-NewSceneFrame :: NewSceneFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
+NewSceneFrame::NewSceneFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
 	:	wxDialog( p_parent, -1, title, pos, wxSize( 200, 90 ) )
 {
 	wxSize l_size = GetClientSize();
@@ -31,20 +31,20 @@ NewSceneFrame :: NewSceneFrame( wxWindow * p_parent, const wxString & title, con
 
 
 
-NewSceneFrame :: ~NewSceneFrame()
+NewSceneFrame::~NewSceneFrame()
 {
 }
 
 
 
-wxString NewSceneFrame :: GetSceneName()
+wxString NewSceneFrame::GetSceneName()
 {
 	return wxEmptyString;
 }
 
 
 
-void NewSceneFrame :: _onOK( wxCommandEvent & p_event )
+void NewSceneFrame::_onOK( wxCommandEvent & p_event )
 {
 	wxString l_sceneName = m_sceneName->GetValue();
 
@@ -73,7 +73,7 @@ void NewSceneFrame :: _onOK( wxCommandEvent & p_event )
 	}
 	catch ( bool )
 	{
-		g_mainFrame->LogDebugMessage( wxT( "NewSceneFrame :: OnNewScene - Probleme d'ajout" ) );
+		g_mainFrame->LogDebugMessage( wxT( "NewSceneFrame::OnNewScene - Probleme d'ajout" ) );
 		return;
 	}
 
@@ -82,7 +82,7 @@ void NewSceneFrame :: _onOK( wxCommandEvent & p_event )
 
 
 
-void NewSceneFrame :: _onCancel( wxCommandEvent & p_event )
+void NewSceneFrame::_onCancel( wxCommandEvent & p_event )
 {
 	Destroy();
 }

@@ -58,7 +58,7 @@ extern MainFrame	* g_mainFrame;
 //DECLARE_APP( TEApplication);
 
 
-FunctionsTree :: FunctionsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
+FunctionsTree::FunctionsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style )
 	:	wxTreeCtrl( parent, TreeFunctions_Ctrl, pos, size, style | wxTR_HIDE_ROOT )
 {
 	CreateImageList();
@@ -66,14 +66,14 @@ FunctionsTree :: FunctionsTree( wxWindow * parent, const wxPoint & pos, const wx
 
 
 
-FunctionsTree :: ~FunctionsTree()
+FunctionsTree::~FunctionsTree()
 {
 	Cleanup();
 }
 
 
 
-void FunctionsTree :: Cleanup()
+void FunctionsTree::Cleanup()
 {
 	m_functionGroupsItems.clear();
 	m_constantGroupsItems.clear();
@@ -84,7 +84,7 @@ void FunctionsTree :: Cleanup()
 
 
 
-void FunctionsTree :: CreateImageList( int p_size )
+void FunctionsTree::CreateImageList( int p_size )
 {
 	if ( p_size == -1 )
 	{
@@ -130,7 +130,7 @@ void FunctionsTree :: CreateImageList( int p_size )
 
 
 
-void FunctionsTree :: CreateTitreFunction( const wxString & p_idCat )
+void FunctionsTree::CreateTitreFunction( const wxString & p_idCat )
 {
 	StrPairArray l_functions, l_classFunctions;
 	m_functions.insert( StrPairArrayStrMap::value_type( p_idCat, l_functions ) );
@@ -141,7 +141,7 @@ void FunctionsTree :: CreateTitreFunction( const wxString & p_idCat )
 
 
 
-void FunctionsTree :: CreateTitreConstant( const wxString & p_idCat )
+void FunctionsTree::CreateTitreConstant( const wxString & p_idCat )
 {
 	StrPairArray l_constants;
 	m_constants.insert( StrPairArrayStrMap::value_type( p_idCat, l_constants ) );
@@ -151,8 +151,8 @@ void FunctionsTree :: CreateTitreConstant( const wxString & p_idCat )
 
 
 
-void FunctionsTree :: CreaFunc( const wxString & p_idfunc, VariableBaseType p_returnValue,
-								std::vector <VariableBaseType> p_params )
+void FunctionsTree::CreaFunc( const wxString & p_idfunc, VariableBaseType p_returnValue,
+							  std::vector <VariableBaseType> p_params )
 {
 	StrPair l_function;
 	l_function.first = p_idfunc;
@@ -169,8 +169,8 @@ void FunctionsTree :: CreaFunc( const wxString & p_idfunc, VariableBaseType p_re
 
 
 
-void FunctionsTree :: ClassFunc( const wxString & p_idfunc, VariableBaseType p_returnValue,
-								 std::vector <VariableBaseType> p_params )
+void FunctionsTree::ClassFunc( const wxString & p_idfunc, VariableBaseType p_returnValue,
+							   std::vector <VariableBaseType> p_params )
 {
 	StrPair l_function;
 	l_function.first = p_idfunc;
@@ -187,7 +187,7 @@ void FunctionsTree :: ClassFunc( const wxString & p_idfunc, VariableBaseType p_r
 
 
 
-void FunctionsTree :: CreateConstant( const wxString & p_id, VariableBaseType p_type )
+void FunctionsTree::CreateConstant( const wxString & p_id, VariableBaseType p_type )
 {
 	StrPair l_constant;
 	l_constant.first = p_id;
@@ -203,7 +203,7 @@ void FunctionsTree :: CreateConstant( const wxString & p_id, VariableBaseType p_
 
 
 
-void FunctionsTree :: AddFunctionsToTree()
+void FunctionsTree::AddFunctionsToTree()
 {
 //	int l_image = (wxGetApp().ShowImages() ? FunctionsTreeIcon_Folder : -1);
 	int l_image = FunctionsTreeIcon_Folder;
@@ -225,7 +225,7 @@ void FunctionsTree :: AddFunctionsToTree()
 
 
 
-void FunctionsTree :: CreateFunctionsTree()
+void FunctionsTree::CreateFunctionsTree()
 {
 	int l_groupImage = FunctionsTreeIcon_Folder;
 	int l_groupImageSel = l_groupImage + 1;
@@ -245,7 +245,7 @@ void FunctionsTree :: CreateFunctionsTree()
 
 
 
-void FunctionsTree :: CreateConstantsTree()
+void FunctionsTree::CreateConstantsTree()
 {
 	int l_groupImage = FunctionsTreeIcon_Folder;
 	int l_groupImageSel = l_groupImage + 1;
@@ -290,7 +290,7 @@ void FunctionsTree :: CreateConstantsTree()
 
 
 
-void FunctionsTree :: _buildFunctionsList( const StrPairArrayStrMap & p_list, int p_image, int p_imageSel )
+void FunctionsTree::_buildFunctionsList( const StrPairArrayStrMap & p_list, int p_image, int p_imageSel )
 {
 	wxString l_section;
 	wxTreeItemId l_id, l_idParent;
@@ -321,7 +321,7 @@ void FunctionsTree :: _buildFunctionsList( const StrPairArrayStrMap & p_list, in
 
 
 
-wxString FunctionsTree :: _buildFunctionHelper( const wxString & p_function, VariableBaseType p_returnValue,
+wxString FunctionsTree::_buildFunctionHelper( const wxString & p_function, VariableBaseType p_returnValue,
 		std::vector <VariableBaseType> p_params )
 {
 	wxString l_data = ( p_returnValue != EMVT_NULL ? wxString( VariableTypeManager::GetBaseTypeName( p_returnValue ).c_str(), wxMBConvLibc() ) : wxString( wxT( "" ) ) ) + wxT( " " )  + p_function + wxT( "( " );
@@ -345,7 +345,7 @@ wxString FunctionsTree :: _buildFunctionHelper( const wxString & p_function, Var
 
 
 
-void FunctionsTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_event )
+void FunctionsTree::_logEvent( const wxChar * p_name, const wxTreeEvent & p_event )
 {
 	wxTreeItemId l_item = p_event.GetItem();
 	wxString l_text;
@@ -364,9 +364,9 @@ void FunctionsTree :: _logEvent( const wxChar * p_name, const wxTreeEvent & p_ev
 
 
 
-void FunctionsTree :: _onItemActivated( wxTreeEvent & p_event )
+void FunctionsTree::_onItemActivated( wxTreeEvent & p_event )
 {
-//	std::cout << "FunctionsTree :: _onItemActivated\n";
+//	std::cout << "FunctionsTree::_onItemActivated\n";
 	if ( g_mainFrame->m_editText == NULL )
 	{
 		return;
@@ -414,7 +414,7 @@ void FunctionsTree :: _onItemActivated( wxTreeEvent & p_event )
 
 
 
-void FunctionsTree :: _onItemRClick( wxTreeEvent & p_event )
+void FunctionsTree::_onItemRClick( wxTreeEvent & p_event )
 {
 	m_selectedItem = p_event.GetItem();
 	SelectItem( m_selectedItem );
@@ -422,7 +422,7 @@ void FunctionsTree :: _onItemRClick( wxTreeEvent & p_event )
 
 
 
-void FunctionsTree :: _onDragBegin( wxTreeEvent & p_event )
+void FunctionsTree::_onDragBegin( wxTreeEvent & p_event )
 {
 	/*
 		wxTextDataObject my_data( "This text will be dragged.");
@@ -434,20 +434,20 @@ void FunctionsTree :: _onDragBegin( wxTreeEvent & p_event )
 
 
 
-void FunctionsTree :: _onDragEnd( wxTreeEvent & p_event )
+void FunctionsTree::_onDragEnd( wxTreeEvent & p_event )
 {
 }
 
 
 
-void FunctionsTree :: _onShowToolTip( wxTreeEvent & p_event )
+void FunctionsTree::_onShowToolTip( wxTreeEvent & p_event )
 {
 	wxTreeItemId l_item = p_event.GetItem();
 	MapType::iterator l_it = g_mainFrame->m_map.find( GetItemText( l_item ) );
 
 	if ( l_it != g_mainFrame->m_map.end() )
 	{
-//		std::cout << "FunctionsTree :: _onShowToolTip - [" << l_it->second << "]\n";
+//		std::cout << "FunctionsTree::_onShowToolTip - [" << l_it->second << "]\n";
 		p_event.SetToolTip( l_it->second );
 	}
 }

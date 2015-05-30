@@ -28,7 +28,7 @@ BEGIN_EVENT_TABLE( TimePanel, wxPanel )
 END_EVENT_TABLE()
 
 
-TimeTick :: TimeTick( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
+TimeTick::TimeTick( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
 	:	wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_NONE )
 {
 	m_panel = static_cast <TimePanel *>( p_parent );
@@ -37,22 +37,22 @@ TimeTick :: TimeTick( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_po
 
 
 
-void TimeTick :: _onLeftMouseDown( wxMouseEvent & p_event )
+void TimeTick::_onLeftMouseDown( wxMouseEvent & p_event )
 {
 	m_panel->SetLeftDown( true );
 }
 
 
 
-void TimeTick :: _onLeftMouseUp( wxMouseEvent & p_event )
+void TimeTick::_onLeftMouseUp( wxMouseEvent & p_event )
 {
 	m_panel->SetLeftDown( false );
 }
 
 
 
-TimePanel :: TimePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
-						const wxSize & p_size )
+TimePanel::TimePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
+					  const wxSize & p_size )
 	:	wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_NONE ),
 		m_first( 0.0 ),
 		m_leftDown( false ),
@@ -64,20 +64,20 @@ TimePanel :: TimePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_
 
 
 
-TimePanel :: ~TimePanel()
+TimePanel::~TimePanel()
 {
 }
 
 
 
-void TimePanel :: IncrementTickPosition( int p_left )
+void TimePanel::IncrementTickPosition( int p_left )
 {
 	UpdateTick( m_tick->GetPosition().x + p_left );
 }
 
 
 
-void TimePanel :: UpdateTick( int p_left, bool p_updateSequence )
+void TimePanel::UpdateTick( int p_left, bool p_updateSequence )
 {
 	m_tick->SetPosition( wxPoint( p_left, 0 ) );
 
@@ -91,14 +91,14 @@ void TimePanel :: UpdateTick( int p_left, bool p_updateSequence )
 
 
 
-void TimePanel :: _onLeftMouseDown( wxMouseEvent & p_event )
+void TimePanel::_onLeftMouseDown( wxMouseEvent & p_event )
 {
 	m_leftDown = true;
 }
 
 
 
-void TimePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
+void TimePanel::_onLeftMouseUp( wxMouseEvent & p_event )
 {
 	m_leftDown = false;
 	UpdateTick( p_event.GetX(), true );
@@ -106,18 +106,18 @@ void TimePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
 
 
 
-void TimePanel :: _onMouseMove( wxMouseEvent & p_event )
+void TimePanel::_onMouseMove( wxMouseEvent & p_event )
 {
 	if ( m_leftDown )
 	{
-//		std::cout << "TimePanel :: _onMouseMove - Left down\n";
+//		std::cout << "TimePanel::_onMouseMove - Left down\n";
 		UpdateTick( p_event.GetX(), true );
 	}
 }
 
 
 
-void TimePanel :: _onPaint( wxPaintEvent & p_event )
+void TimePanel::_onPaint( wxPaintEvent & p_event )
 {
 	wxPaintDC l_dc( this );
 	wxFont l_font( 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false );

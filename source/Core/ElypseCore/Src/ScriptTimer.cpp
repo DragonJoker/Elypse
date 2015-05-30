@@ -14,7 +14,7 @@
 #include "ScriptTimer.h"
 #include "ScriptNode.h"
 
-ScriptTimer :: ScriptTimer( const String & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction )
+ScriptTimer::ScriptTimer( const String & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction )
 	:	named( p_name ),
 		m_action( p_code ),
 		m_finalAction( p_finalAction ),
@@ -26,7 +26,7 @@ ScriptTimer :: ScriptTimer( const String & p_name, Real p_baseTime, ScriptNode *
 {
 }
 
-ScriptTimer :: ~ScriptTimer()
+ScriptTimer::~ScriptTimer()
 {
 	if ( m_action != NULL )
 	{
@@ -41,7 +41,7 @@ ScriptTimer :: ~ScriptTimer()
 	}
 }
 
-bool ScriptTimer :: NeedExec( Real p_timeStep )
+bool ScriptTimer::NeedExec( Real p_timeStep )
 {
 	if ( m_paused )
 	{

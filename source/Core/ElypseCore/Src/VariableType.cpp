@@ -3,7 +3,7 @@
 #include "VariableType.h"
 #include "Structure.h"
 
-VariableTypeManager :: VariableTypeManager()
+VariableTypeManager::VariableTypeManager()
 {
 	for ( uint32_t i = 0; i < EMVT_NUM_TYPES; ++i )
 	{
@@ -13,12 +13,12 @@ VariableTypeManager :: VariableTypeManager()
 	_populateBaseTypeNames();
 }
 
-VariableTypeManager :: ~VariableTypeManager()
+VariableTypeManager::~VariableTypeManager()
 {
 	General::Utils::map::deleteAll( m_types );
 }
 
-void VariableTypeManager :: _populateBaseTypeNames()
+void VariableTypeManager::_populateBaseTypeNames()
 {
 	m_baseTypeNames[EMVT_NULL]				 = "void";
 	m_baseTypeNames[EMVT_INT]				 = "int";
@@ -60,7 +60,7 @@ void VariableTypeManager :: _populateBaseTypeNames()
 //	m_baseTypeNames[EMVT_SUB3]				 = "SUB3";
 }
 
-VariableType * VariableTypeManager :: _add( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2, const String & p_hash )
+VariableType * VariableTypeManager::_add( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2, const String & p_hash )
 {
 	VariableType * l_type = new VariableType( p_type, p_subType1, p_subType2 );
 	const String & l_hash = ( p_hash.empty() ? _hash( p_type, p_subType1, p_subType2 ) : p_hash );
@@ -68,7 +68,7 @@ VariableType * VariableTypeManager :: _add( VariableBaseType p_type, VariableTyp
 	return l_type;
 }
 
-String VariableTypeManager :: _hash( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2 )
+String VariableTypeManager::_hash( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2 )
 {
 	uint64_t l_hash[3];
 	l_hash[0] = static_cast< uint64_t >( p_type );
@@ -77,7 +77,7 @@ String VariableTypeManager :: _hash( VariableBaseType p_type, VariableType * p_s
 	return	std::string( reinterpret_cast<const char *>( &l_hash[0] ), sizeof( l_hash ) );
 }
 
-VariableType * VariableTypeManager :: _get( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2 )
+VariableType * VariableTypeManager::_get( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2 )
 {
 	const String & l_hash = _hash( p_type, p_subType1, p_subType2 );
 	VariableType * l_vt = General::Utils::map::findOrNull( m_types, l_hash );

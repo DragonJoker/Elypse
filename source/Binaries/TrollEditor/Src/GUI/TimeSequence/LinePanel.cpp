@@ -31,8 +31,8 @@ END_EVENT_TABLE()
 extern MainFrame * g_mainFrame;
 
 
-LinePanel :: LinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
-						const wxSize & p_size )
+LinePanel::LinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
+					  const wxSize & p_size )
 	:	wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_SIMPLE ),
 		m_currentLeft( 20 )
 {
@@ -42,13 +42,13 @@ LinePanel :: LinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_
 
 
 
-LinePanel :: ~LinePanel()
+LinePanel::~LinePanel()
 {
 }
 
 
 
-void LinePanel :: Replace()
+void LinePanel::Replace()
 {
 	SetSize( int( m_sequence->GetTotalLength() * 100 ), 20 );
 	g_mainFrame->m_timelineEditor->UpdateSequence( m_sequence );
@@ -56,7 +56,7 @@ void LinePanel :: Replace()
 
 
 
-void LinePanel :: SetSequence( TrollSequence * p_sequence )
+void LinePanel::SetSequence( TrollSequence * p_sequence )
 {
 	m_sequence = p_sequence;
 	p_sequence->SetPanel( this );
@@ -64,7 +64,7 @@ void LinePanel :: SetSequence( TrollSequence * p_sequence )
 
 
 
-void LinePanel :: _showContextMenu( const wxPoint & p_pos )
+void LinePanel::_showContextMenu( const wxPoint & p_pos )
 {
 	wxMenu l_menu;
 	l_menu.Append( addPonctualEvent, _T( "Ajouter Evènement Ponctuel" ) );
@@ -86,35 +86,35 @@ void LinePanel :: _showContextMenu( const wxPoint & p_pos )
 
 
 
-void LinePanel :: _onAddPonctualEvent( wxCommandEvent & p_event )
+void LinePanel::_onAddPonctualEvent( wxCommandEvent & p_event )
 {
 	g_mainFrame->AddPonctualEvent( m_sequence, m_currentLeft / 100.0f );
 }
 
 
 
-void LinePanel :: _onAddContinuousEvent( wxCommandEvent & p_event )
+void LinePanel::_onAddContinuousEvent( wxCommandEvent & p_event )
 {
 	g_mainFrame->AddContinuousEvent( m_sequence, m_currentLeft / 100.0f );
 }
 
 
 
-void LinePanel :: _onLeftMouseUp( wxMouseEvent & p_event )
+void LinePanel::_onLeftMouseUp( wxMouseEvent & p_event )
 {
 	g_mainFrame->ShowObjectInfos( m_sequence );
 }
 
 
 
-void LinePanel :: _onRightMouseUp( wxMouseEvent & p_event )
+void LinePanel::_onRightMouseUp( wxMouseEvent & p_event )
 {
 	_showContextMenu( p_event.GetPosition() );
 }
 
 
 
-void LinePanel :: _onMouseEnter( wxMouseEvent & p_event )
+void LinePanel::_onMouseEnter( wxMouseEvent & p_event )
 {
 	wxClientDC l_dc( this );
 	wxBrush l_brush( wxColour( 0, 255, 255 ), wxSOLID );
@@ -128,7 +128,7 @@ void LinePanel :: _onMouseEnter( wxMouseEvent & p_event )
 
 
 
-void LinePanel :: _onMouseLeave( wxMouseEvent & p_event )
+void LinePanel::_onMouseLeave( wxMouseEvent & p_event )
 {
 	wxClientDC l_dc( this );
 	wxBrush l_brush( wxColour( 0, 255, 255 ), wxSOLID );

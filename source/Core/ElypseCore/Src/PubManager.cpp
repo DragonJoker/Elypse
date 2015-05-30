@@ -11,22 +11,22 @@
 
 GENLIB_INIT_SINGLETON( PubManager );
 
-PubManager :: PubManager()
+PubManager::PubManager()
 {
 	GENLIB_SET_SINGLETON();
 }
 
-PubManager :: ~PubManager()
+PubManager::~PubManager()
 {
 	General::Utils::map::deleteAll( m_objectList );
 }
 
-void PubManager :: RemovePubObject( const String & p_name )
+void PubManager::RemovePubObject( const String & p_name )
 {
 	General::Utils::map::deleteValue( m_objectList, p_name );
 }
 
-void PubManager :: OnClick( Real p_x, Real p_y, SceneManager * p_sceneManager, Camera * p_camera, PhysicsSimulation * p_physics )
+void PubManager::OnClick( Real p_x, Real p_y, SceneManager * p_sceneManager, Camera * p_camera, PhysicsSimulation * p_physics )
 {
 	genlib_assert( p_physics != NULL );
 	genlib_assert( p_camera != NULL );
@@ -67,7 +67,7 @@ void PubManager :: OnClick( Real p_x, Real p_y, SceneManager * p_sceneManager, C
 	}
 }
 
-PubObject * PubManager :: CreatePubObject( const String & p_name, EMusePlugin * p_plugin )
+PubObject * PubManager::CreatePubObject( const String & p_name, EMusePlugin * p_plugin )
 {
 	return General::Utils::map::insert( m_objectList, p_name, p_name, p_plugin );
 }

@@ -110,7 +110,7 @@ static unsigned char PADDING[64] =
 
 using namespace General::Utils;
 
-std::string MD5 :: HashFile( const std::string & p_filePath )
+std::string MD5::HashFile( const std::string & p_filePath )
 {
 	//open the file as a binary file in readonly mode, denying write access
 	FILE * l_file = fopen( p_filePath.c_str(), "rb" );
@@ -126,7 +126,7 @@ std::string MD5 :: HashFile( const std::string & p_filePath )
 	return l_returnValue;
 }
 
-std::string MD5 :: HashFile( FILE * p_file )
+std::string MD5::HashFile( FILE * p_file )
 {
 	if ( p_file == NULL )
 	{
@@ -155,27 +155,27 @@ std::string MD5 :: HashFile( FILE * p_file )
 	}
 }
 
-std::string  MD5 :: Hash( const unsigned char * p_buffer, unsigned int p_len )
+std::string  MD5::Hash( const unsigned char * p_buffer, unsigned int p_len )
 {
 	MD5 l_MD5Checksum;
 	l_MD5Checksum._update( p_buffer, p_len );
 	return l_MD5Checksum._final();
 }
 
-std::string  MD5 :: Hash( const std::string & p_string )
+std::string  MD5::Hash( const std::string & p_string )
 {
-	return MD5 :: Hash( reinterpret_cast<const unsigned char * >( p_string.c_str() ), ( unsigned int )( p_string.length() ) );
+	return MD5::Hash( reinterpret_cast<const unsigned char * >( p_string.c_str() ), ( unsigned int )( p_string.length() ) );
 }
 
-unsigned long MD5 :: _rotateLeft( unsigned long p_x, int p_n )
+unsigned long MD5::_rotateLeft( unsigned long p_x, int p_n )
 {
 	//rotate and return x
 	return ( ( p_x << p_n ) | ( p_x >> ( 32 - p_n ) ) );
 }
 
-void MD5 :: FF( unsigned long & A,
-				unsigned long B, unsigned long C, unsigned long D,
-				unsigned long X, unsigned long S, unsigned long T )
+void MD5::FF( unsigned long & A,
+			  unsigned long B, unsigned long C, unsigned long D,
+			  unsigned long X, unsigned long S, unsigned long T )
 {
 	unsigned long F = ( ( B & C ) | ( ~B & D ) );
 	A += F + X + T;
@@ -183,9 +183,9 @@ void MD5 :: FF( unsigned long & A,
 	A += B;
 }
 
-void MD5 :: GG( unsigned long & A,
-				unsigned long B, unsigned long C, unsigned long D,
-				unsigned long X, unsigned long S, unsigned long T )
+void MD5::GG( unsigned long & A,
+			  unsigned long B, unsigned long C, unsigned long D,
+			  unsigned long X, unsigned long S, unsigned long T )
 {
 	unsigned long G = ( ( B & D ) | ( C & ~D ) );
 	A += G + X + T;
@@ -193,9 +193,9 @@ void MD5 :: GG( unsigned long & A,
 	A += B;
 }
 
-void MD5 :: HH( unsigned long & A,
-				unsigned long B, unsigned long C, unsigned long D,
-				unsigned long X, unsigned long S, unsigned long T )
+void MD5::HH( unsigned long & A,
+			  unsigned long B, unsigned long C, unsigned long D,
+			  unsigned long X, unsigned long S, unsigned long T )
 {
 	unsigned long H = ( B ^ C ^ D );
 	A += H + X + T;
@@ -203,9 +203,9 @@ void MD5 :: HH( unsigned long & A,
 	A += B;
 }
 
-void MD5 :: II( unsigned long & A,
-				unsigned long B, unsigned long C, unsigned long D,
-				unsigned long X, unsigned long S, unsigned long T )
+void MD5::II( unsigned long & A,
+			  unsigned long B, unsigned long C, unsigned long D,
+			  unsigned long X, unsigned long S, unsigned long T )
 {
 	unsigned long I = ( C ^ ( B | ~D ) );
 	A += I + X + T;
@@ -213,7 +213,7 @@ void MD5 :: II( unsigned long & A,
 	A += B;
 }
 
-void MD5 :: ByteToDWord( unsigned long * p_output, const unsigned char * p_input, unsigned int p_len )
+void MD5::ByteToDWord( unsigned long * p_output, const unsigned char * p_input, unsigned int p_len )
 {
 	unsigned int i = 0; //index to p_output array
 	unsigned int j = 0; //index to p_input array
@@ -228,7 +228,7 @@ void MD5 :: ByteToDWord( unsigned long * p_output, const unsigned char * p_input
 	}
 }
 
-void MD5 :: _transform( const unsigned char p_block[64] )
+void MD5::_transform( const unsigned char p_block[64] )
 {
 	//initialise local data with current checksum
 	unsigned long a = m_MD5[0];
@@ -313,7 +313,7 @@ void MD5 :: _transform( const unsigned char p_block[64] )
 	m_MD5[3] += d;
 }
 
-MD5 :: MD5()
+MD5::MD5()
 {
 	std::memset( m_buffer, 0, 64 );
 	m_count[0] = m_count[1] = 0;
@@ -323,7 +323,7 @@ MD5 :: MD5()
 	m_MD5[3] = MD5_INIT_STATE_3;
 }
 
-void MD5 :: DWordToByte( unsigned char * p_output, unsigned long * p_input, unsigned int p_len )
+void MD5::DWordToByte( unsigned char * p_output, unsigned long * p_input, unsigned int p_len )
 {
 	//transfer the data by shifting and copying
 	unsigned int i = 0;
@@ -338,7 +338,7 @@ void MD5 :: DWordToByte( unsigned char * p_output, unsigned long * p_input, unsi
 	}
 }
 
-std::string MD5 :: _final()
+std::string MD5::_final()
 {
 	//Save number of bits
 	unsigned char l_bits[8];
@@ -389,7 +389,7 @@ std::string MD5 :: _final()
 	return l_strMD5;
 }
 
-void MD5 :: _update( const unsigned char * p_input, unsigned long p_len )
+void MD5::_update( const unsigned char * p_input, unsigned long p_len )
 {
 	//Compute number of bytes mod 64
 	unsigned int l_index = static_cast <unsigned int>( ( m_count[0] >> 3 ) & 0x3F );

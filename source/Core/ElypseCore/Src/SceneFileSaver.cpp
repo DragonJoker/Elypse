@@ -34,19 +34,19 @@
 
 using namespace Ogre;
 
-SceneFileSaver :: SceneFileSaver( SceneManager * p_manager, ScriptEngine * p_engine, EMGui * p_gui )
+SceneFileSaver::SceneFileSaver( SceneManager * p_manager, ScriptEngine * p_engine, EMGui * p_gui )
 	:	m_sceneManager( p_manager ),
 		m_scriptEngine( p_engine ),
 		m_gui( p_gui )
 {
 }
 
-SceneFileSaver :: ~SceneFileSaver()
+SceneFileSaver::~SceneFileSaver()
 {
 	;
 }
 
-void SceneFileSaver :: _ntabs( unsigned int p_numTabs )
+void SceneFileSaver::_ntabs( unsigned int p_numTabs )
 {
 	for ( unsigned int  i = 0 ; i < p_numTabs ; i ++ )
 	{
@@ -54,7 +54,7 @@ void SceneFileSaver :: _ntabs( unsigned int p_numTabs )
 	}
 }
 
-void SceneFileSaver :: _writeObjects()
+void SceneFileSaver::_writeObjects()
 {
 	SceneManager::MovableObjectIterator iter = m_sceneManager->getMovableObjectIterator( "Entity" );
 
@@ -104,7 +104,7 @@ void SceneFileSaver :: _writeObjects()
 	}
 }
 
-void SceneFileSaver :: _writeSceneNodes( SceneNode * p_node )
+void SceneFileSaver::_writeSceneNodes( SceneNode * p_node )
 {
 	if ( p_node != m_sceneManager->getRootSceneNode() )
 	{
@@ -180,7 +180,7 @@ void SceneFileSaver :: _writeSceneNodes( SceneNode * p_node )
 	}
 }
 
-void SceneFileSaver :: _writeLights()
+void SceneFileSaver::_writeLights()
 {
 	SceneManager::MovableObjectIterator  iter = m_sceneManager->getMovableObjectIterator( "Light" );
 
@@ -478,8 +478,8 @@ void SceneFileSaver::_writeSounds()
 {
 	const SoundObjectMap & l_soundMap = SoundManager::GetSingletonPtr()->GetAllSoundsObjects();
 
-	SoundObjectMap :: const_iterator i = l_soundMap.begin();
-	const SoundObjectMap :: const_iterator & iend = l_soundMap.end();
+	SoundObjectMap::const_iterator i = l_soundMap.begin();
+	const SoundObjectMap::const_iterator & iend = l_soundMap.end();
 
 	for ( ; i != iend ; ++ i)
 	{
@@ -502,7 +502,7 @@ void SceneFileSaver::_writeSounds()
 }
 */
 
-void SceneFileSaver :: SaveAll( const String & p_filename )
+void SceneFileSaver::SaveAll( const String & p_filename )
 {
 	m_buffer.open( p_filename.c_str() );
 

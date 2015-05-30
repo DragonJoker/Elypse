@@ -3,18 +3,18 @@
 #include "Portal.h"
 #include "Space.h"
 
-Portal :: Portal( const String & p_name )
+Portal::Portal( const String & p_name )
 	:	named( p_name ),
 		m_active( true ),
 		m_trigger( NULL )
 {
 }
 
-Portal :: ~Portal()
+Portal::~Portal()
 {
 }
 
-void Portal :: SetSpace( Space * p_space )
+void Portal::SetSpace( Space * p_space )
 {
 	genlib_assert( p_space != NULL );
 	genlib_assert( m_trigger != NULL );

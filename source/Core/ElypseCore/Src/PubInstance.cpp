@@ -7,7 +7,7 @@
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>
 
-PubInstance :: PubInstance( PubObject * p_owner, Entity * p_entity )
+PubInstance::PubInstance( PubObject * p_owner, Entity * p_entity )
 	:	owned_by <PubObject>	( p_owner ),
 		   m_entity( p_entity ),
 		   m_zone( NULL ),
@@ -15,7 +15,7 @@ PubInstance :: PubInstance( PubObject * p_owner, Entity * p_entity )
 {
 }
 
-PubInstance :: ~PubInstance()
+PubInstance::~PubInstance()
 {
 	if ( m_zone != NULL )
 	{
@@ -23,7 +23,7 @@ PubInstance :: ~PubInstance()
 	}
 }
 
-void PubInstance :: Apply()
+void PubInstance::Apply()
 {
 	if ( m_submat >= m_entity->getNumSubEntities() )
 	{
@@ -35,7 +35,7 @@ void PubInstance :: Apply()
 	}
 }
 
-void PubInstance :: RemoveFromZone( Zone * p_zone )
+void PubInstance::RemoveFromZone( Zone * p_zone )
 {
 	m_owner->RemoveInstance( this );
 	m_zone = NULL;

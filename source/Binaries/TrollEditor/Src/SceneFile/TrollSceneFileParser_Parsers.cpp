@@ -399,7 +399,7 @@ DEFINE_SCENE_FILE_TROLL_PARSER( TrollParser_OverlayEnd )
 	{
 		if ( p_context->overlay != NULL && g_currentOverlay )
 		{
-//			std::cout << "TrollSceneFileParser_Parsers :: OverlayEnd - " << l_overlay->GetName().c_str() << "\n";
+//			std::cout << "TrollSceneFileParser_Parsers::OverlayEnd - " << l_overlay->GetName().c_str() << "\n";
 			g_currentOverlay->SetMuseOverlay( p_context->overlay );
 			g_currentOverlay = g_currentOverlay->GetParent();
 		}
@@ -570,7 +570,7 @@ DEFINE_SCENE_FILE_TROLL_PARSER( TrollParser_SoundNodeEnd )
 			}
 			else
 			{
-				std::cout << "TrollScenFileParser :: TrollParser_SoundNodeEnd - NULL Sound\n";
+				std::cout << "TrollScenFileParser::TrollParser_SoundNodeEnd - NULL Sound\n";
 			}
 		}
 	}

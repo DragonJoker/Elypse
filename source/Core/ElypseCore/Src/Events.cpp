@@ -10,33 +10,33 @@
 #include "EMOverlay.h"
 #include <OgreLog.h>
 
-void SceneNode_SetPosition :: Apply()
+void SceneNode_SetPosition::Apply()
 {
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	m_previousPosition = l_target->getPosition();
 	l_target->setPosition( m_position );
 }
 
-void SceneNode_SetPosition :: Rollback()
+void SceneNode_SetPosition::Rollback()
 {
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	l_target->setPosition( m_previousPosition );
 }
 
-void SceneNode_SetScale :: Apply()
+void SceneNode_SetScale::Apply()
 {
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	m_previousScale = l_target->getScale();
 	l_target->setScale( m_scale );
 }
 
-void SceneNode_SetScale :: Rollback()
+void SceneNode_SetScale::Rollback()
 {
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	l_target->setScale( m_previousScale );
 }
 
-void Overlay_Hide :: Apply()
+void Overlay_Hide::Apply()
 {
 	EMOverlayGroup * l_target = static_cast <EMOverlayGroup *>( m_target );
 
@@ -48,7 +48,7 @@ void Overlay_Hide :: Apply()
 	l_target->SetVisible( false );
 }
 
-void Overlay_Hide :: Rollback()
+void Overlay_Hide::Rollback()
 {
 	EMOverlayGroup * l_target = static_cast <EMOverlayGroup *>( m_target );
 
@@ -60,7 +60,7 @@ void Overlay_Hide :: Rollback()
 	l_target->SetVisible( true );
 }
 
-void Overlay_Show :: Apply()
+void Overlay_Show::Apply()
 {
 	EMOverlayGroup * l_target = static_cast <EMOverlayGroup *>( m_target );
 
@@ -72,7 +72,7 @@ void Overlay_Show :: Apply()
 	l_target->SetVisible( true );
 }
 
-void Overlay_Show :: Rollback()
+void Overlay_Show::Rollback()
 {
 	EMOverlayGroup * l_target = static_cast <EMOverlayGroup *>( m_target );
 
@@ -84,7 +84,7 @@ void Overlay_Show :: Rollback()
 	l_target->SetVisible( false );
 }
 
-void ScriptNode_Execute :: Apply()
+void ScriptNode_Execute::Apply()
 {
 	ScriptNode * l_target = static_cast <ScriptNode *>( m_target );
 
@@ -96,7 +96,7 @@ void ScriptNode_Execute :: Apply()
 	l_target->Execute();
 }
 
-void Sequence_Start :: Apply()
+void Sequence_Start::Apply()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -108,7 +108,7 @@ void Sequence_Start :: Apply()
 	l_target->Start();
 }
 
-void Sequence_Start :: Rollback()
+void Sequence_Start::Rollback()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -120,7 +120,7 @@ void Sequence_Start :: Rollback()
 	l_target->Stop();
 }
 
-void Sequence_Pause :: Apply()
+void Sequence_Pause::Apply()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -132,7 +132,7 @@ void Sequence_Pause :: Apply()
 	l_target->Pause( true );
 }
 
-void Sequence_Pause :: Rollback()
+void Sequence_Pause::Rollback()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -144,7 +144,7 @@ void Sequence_Pause :: Rollback()
 	l_target->Pause( false );
 }
 
-void Sequence_Unpause :: Apply()
+void Sequence_Unpause::Apply()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -156,7 +156,7 @@ void Sequence_Unpause :: Apply()
 	l_target->Pause( false );
 }
 
-void Sequence_Unpause :: Rollback()
+void Sequence_Unpause::Rollback()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -168,7 +168,7 @@ void Sequence_Unpause :: Rollback()
 	l_target->Pause( true );
 }
 
-void Sequence_Stop :: Apply()
+void Sequence_Stop::Apply()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -180,7 +180,7 @@ void Sequence_Stop :: Apply()
 	l_target->Stop();
 }
 
-void Sequence_Stop :: Rollback()
+void Sequence_Stop::Rollback()
 {
 	Sequence * l_target = static_cast <Sequence *>( m_target );
 
@@ -192,28 +192,28 @@ void Sequence_Stop :: Rollback()
 	l_target->Start();
 }
 
-void SceneNode_Translate :: Apply( Real p_time )
+void SceneNode_Translate::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	l_target->setPosition( m_interpolator( m_frames, m_currentTime ) );
 }
 
-void SceneNode_Scale :: Apply( Real p_time )
+void SceneNode_Scale::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	l_target->setScale( m_interpolator( m_frames, m_currentTime ) );
 }
 
-void SceneNode_Rotate :: Apply( Real p_time )
+void SceneNode_Rotate::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	SceneNode * l_target = static_cast <SceneNode *>( m_target );
 	l_target->setOrientation( m_interpolator( m_frames, m_currentTime ) );
 }
 
-void Overlay_Translate :: Apply( Real p_time )
+void Overlay_Translate::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	OverlayElement * l_target = static_cast <OverlayElement *>( m_target );
@@ -222,14 +222,14 @@ void Overlay_Translate :: Apply( Real p_time )
 	l_target->setTop( l_tmp.y );
 }
 
-void Overlay_Rotate :: Apply( Real p_time )
+void Overlay_Rotate::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	Overlay * l_target = static_cast <EMOverlayGroup *>( m_target )->GetOverlay();
 	l_target->setRotate( Degree( m_interpolator( m_frames, m_currentTime ) ) );
 }
 
-void Overlay_Resize :: Apply( Real p_time )
+void Overlay_Resize::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	EMOverlay * l_target = static_cast <EMOverlay *>( m_target );
@@ -238,7 +238,7 @@ void Overlay_Resize :: Apply( Real p_time )
 	l_target->SetHeight( l_tmp.y );
 }
 
-void Overlay_TranslateRelative :: Apply( Real p_time )
+void Overlay_TranslateRelative::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	EMOverlay * l_target = static_cast <EMOverlay *>( m_target );
@@ -247,7 +247,7 @@ void Overlay_TranslateRelative :: Apply( Real p_time )
 	l_target->SetTop( l_tmp.y * ScriptEngine::GetContext()->mainViewport->getActualHeight() );
 }
 
-void Overlay_ResizeRelative :: Apply( Real p_time )
+void Overlay_ResizeRelative::Apply( Real p_time )
 {
 	_getRemainingTime( p_time );
 	EMOverlay * l_target = static_cast <EMOverlay *>( m_target );

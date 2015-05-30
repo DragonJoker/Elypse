@@ -4,7 +4,7 @@
 
 #include <OgreCompositorManager.h>
 
-PostEffect :: PostEffect( const String & p_name, Viewport * p_viewport, int p_position, bool p_autocreate )
+PostEffect::PostEffect( const String & p_name, Viewport * p_viewport, int p_position, bool p_autocreate )
 	:	named( p_name ),
 		m_viewport( p_viewport )
 {
@@ -15,12 +15,12 @@ PostEffect :: PostEffect( const String & p_name, Viewport * p_viewport, int p_po
 	}
 }
 
-PostEffect :: ~PostEffect()
+PostEffect::~PostEffect()
 {
 	SetEnabled( false );
 }
 
-void PostEffect :: SetEnabled( bool p_enable )
+void PostEffect::SetEnabled( bool p_enable )
 {
 	if ( m_instance != NULL )
 	{

@@ -10,7 +10,7 @@
 
 #include "EMuseLogs.h"
 
-ConfigFile :: ConfigFile( const String & p_name, MuseFile * p_owner )
+ConfigFile::ConfigFile( const String & p_name, MuseFile * p_owner )
 	:	named( p_name ),
 		owned_by( p_owner ),
 		m_useCount( 0 ),
@@ -20,18 +20,18 @@ ConfigFile :: ConfigFile( const String & p_name, MuseFile * p_owner )
 {
 }
 
-ConfigFile :: ~ConfigFile()
+ConfigFile::~ConfigFile()
 {
 //	ReleaseScript();
 }
 
-String ConfigFile :: GetDescriptiveName()const
+String ConfigFile::GetDescriptiveName()const
 {
 	return m_owner->GetName() + " > " + m_name;
 }
 
 /*
-void ConfigFile :: ReleaseScript() d_no_throw
+void ConfigFile::ReleaseScript() d_no_throw
 {
 	if (m_compiled != NULL)
 	{
@@ -49,10 +49,10 @@ void ConfigFile :: ReleaseScript() d_no_throw
 	}
 }
 */
-void ConfigFile :: _load()
+void ConfigFile::_load()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
-	EMUSE_CONSOLE_MESSAGE_DEBUG( "ConfigFile :: Load - " + m_name + "\n" );
+	EMUSE_CONSOLE_MESSAGE_DEBUG( "ConfigFile::Load - " + m_name + "\n" );
 
 	if ( ! m_downloaded )
 	{
@@ -61,10 +61,10 @@ void ConfigFile :: _load()
 		GENLIB_LOCK_MUTEX( m_mutex );
 	}
 
-	EMUSE_CONSOLE_MESSAGE_DEBUG( "ConfigFile :: Loaded - " + m_name + "\n" );
+	EMUSE_CONSOLE_MESSAGE_DEBUG( "ConfigFile::Loaded - " + m_name + "\n" );
 }
 
-void ConfigFile :: Use()
+void ConfigFile::Use()
 {
 	if ( m_useCount == 0 )
 	{
@@ -74,32 +74,32 @@ void ConfigFile :: Use()
 	m_useCount ++;
 }
 
-void ConfigFile :: Release()
+void ConfigFile::Release()
 {
 	m_useCount --;
 }
 
-void ConfigFile :: DownloadFinished()
+void ConfigFile::DownloadFinished()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 	m_downloaded = true;
 }
 /*
-bool ConfigFile :: IsParsed ()
+bool ConfigFile::IsParsed ()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 
 	return m_parsed;
 }
 
-void ConfigFile :: SetParsed( bool p_parsed)
+void ConfigFile::SetParsed( bool p_parsed)
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 
 	m_parsed = p_parsed;
 }
 
-void ConfigFile :: SetCompiled( ScriptNode * p_compiledScriptNode)
+void ConfigFile::SetCompiled( ScriptNode * p_compiledScriptNode)
 {
 	genlib_assert( p_compiledScriptNode != NULL);
 

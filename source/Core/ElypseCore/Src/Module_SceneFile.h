@@ -61,7 +61,7 @@ namespace EMuse
 
 #define DECLARE_SCENE_FILE_PARSER( X) bool d_dll_export X( String & p_params, Context * p_context);
 #define DECLARE_SCENE_FILE_PARSER_NO_EXPORT( X) bool X( String & p_params, Context * p_context);
-#define DEFINE_SCENE_FILE_PARSER( X) bool EMuse :: SceneFile :: X( String & p_params, Context * p_context)
+#define DEFINE_SCENE_FILE_PARSER( X) bool EMuse::SceneFile::X( String & p_params, Context * p_context)
 #define PARSING_ERROR( p_error) SceneFileParser::parsingError( p_context, p_error)
 #define PARSING_ERROR2( p_error) SceneFileParser::parsingError( p_context, /* String( "Parsing Error (") + String(__FUNCTION__).substr( 18, 1000) + String(") -> ") + */ p_error)
 	}

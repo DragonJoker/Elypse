@@ -12,7 +12,7 @@
 #include <OgreOverlayElement.h>
 #include <OgreStringConverter.h>
 
-EMuseLoadingBar :: EMuseLoadingBar()
+EMuseLoadingBar::EMuseLoadingBar()
 	:	m_window( NULL ),
 		m_loadOverlay( NULL ),
 		m_loadingBarElement( NULL ),
@@ -28,7 +28,7 @@ EMuseLoadingBar :: EMuseLoadingBar()
 {
 }
 
-EMuseLoadingBar :: ~EMuseLoadingBar()
+EMuseLoadingBar::~EMuseLoadingBar()
 {
 	if ( m_started )
 	{
@@ -36,7 +36,7 @@ EMuseLoadingBar :: ~EMuseLoadingBar()
 	}
 }
 
-void EMuseLoadingBar :: finish()
+void EMuseLoadingBar::finish()
 {
 	if ( m_started )
 	{
@@ -46,7 +46,7 @@ void EMuseLoadingBar :: finish()
 	}
 }
 
-void EMuseLoadingBar :: start( unsigned short p_numGroupsInit, unsigned short p_numGroupsLoad, Real p_initProportion )
+void EMuseLoadingBar::start( unsigned short p_numGroupsInit, unsigned short p_numGroupsLoad, Real p_initProportion )
 {
 	if ( p_numGroupsInit == 0 )
 	{
@@ -87,14 +87,14 @@ void EMuseLoadingBar :: start( unsigned short p_numGroupsInit, unsigned short p_
 	_updateWindow();
 }
 
-void EMuseLoadingBar :: _updateWindow()
+void EMuseLoadingBar::_updateWindow()
 {
 	EMuseController::GetSingletonPtr()->GetOwner()->GetPlugin()->LockGui();
 	m_window->update();
 	EMuseController::GetSingletonPtr()->GetOwner()->GetPlugin()->UnlockGui();
 }
 
-void EMuseLoadingBar :: UpdateBar()
+void EMuseLoadingBar::UpdateBar()
 {
 	m_loadingBarElement->setWidth( m_loadingBarElement->getWidth() + m_progressBarInc );
 	int percent = Math::IFloor( 100.0f * float( m_loadingBarElement->getWidth() ) / m_progressBarMaxSize );
@@ -102,19 +102,19 @@ void EMuseLoadingBar :: UpdateBar()
 	_updateWindow();
 }
 
-void EMuseLoadingBar :: resourceGroupScriptingStarted( const String & p_name , size_t scriptCount )
+void EMuseLoadingBar::resourceGroupScriptingStarted( const String & p_name , size_t scriptCount )
 {
 	m_progressBarInc = m_progressBarMaxSize * m_initProportion / static_cast <Real>( scriptCount );
 	m_progressBarInc /= m_numGroupsInit;
 	_updateWindow();
 }
 
-void EMuseLoadingBar :: scriptParseEnded( const String & p_name )
+void EMuseLoadingBar::scriptParseEnded( const String & p_name )
 {
 	UpdateBar();
 }
 
-void EMuseLoadingBar :: resourceGroupLoadStarted( const String & p_name, size_t resourceCount )
+void EMuseLoadingBar::resourceGroupLoadStarted( const String & p_name, size_t resourceCount )
 {
 	m_progressBarInc = m_progressBarMaxSize * ( 1 - m_initProportion ) / static_cast <Real>( resourceCount );
 	m_progressBarInc /= m_numGroupsLoad;
@@ -122,17 +122,17 @@ void EMuseLoadingBar :: resourceGroupLoadStarted( const String & p_name, size_t 
 }
 
 
-void EMuseLoadingBar :: resourceLoadEnded()
+void EMuseLoadingBar::resourceLoadEnded()
 {
 	UpdateBar();
 }
 
-void EMuseLoadingBar :: resourceDownloadStarted( const String & p_name )
+void EMuseLoadingBar::resourceDownloadStarted( const String & p_name )
 {
 	m_dlres = p_name;
 }
 
-void EMuseLoadingBar :: setPercent( float p_percent, float p_downSpeed )
+void EMuseLoadingBar::setPercent( float p_percent, float p_downSpeed )
 {
 	float l_width = float( Math::IFloor( m_progressBarMaxSize * p_percent ) );
 	String l_tmp = m_dlres + " - ";
@@ -152,7 +152,7 @@ void EMuseLoadingBar :: setPercent( float p_percent, float p_downSpeed )
 	_updateWindow();
 }
 
-void EMuseLoadingBar :: StartDownloadOfFile()
+void EMuseLoadingBar::StartDownloadOfFile()
 {
 	m_startByDownload = ! m_started;
 
@@ -169,7 +169,7 @@ void EMuseLoadingBar :: StartDownloadOfFile()
 	}
 }
 
-void EMuseLoadingBar :: EndDownloadOfFile()
+void EMuseLoadingBar::EndDownloadOfFile()
 {
 	if ( m_startByDownload )
 	{

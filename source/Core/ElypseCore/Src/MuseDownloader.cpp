@@ -37,7 +37,7 @@ extern Ogre::String g_programFilesDirectory;
 using namespace General::Files;
 using namespace General::Utils;
 
-MuseDownloader :: MuseDownloader( MuseFile * p_owner, const Path & p_basePath )
+MuseDownloader::MuseDownloader( MuseFile * p_owner, const Path & p_basePath )
 	:	named( p_basePath ),
 		owned_by( p_owner ),
 		m_cantDownload( false ),
@@ -48,11 +48,11 @@ MuseDownloader :: MuseDownloader( MuseFile * p_owner, const Path & p_basePath )
 		m_curlManager( new CURLManager ),
 		m_thread( NULL )
 {
-	EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader :: base path : " + p_basePath );
+	EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader::base path : " + p_basePath );
 	m_basePath = p_basePath.substr( 0, p_basePath.find_last_of( "." ) );
 }
 
-MuseDownloader :: ~MuseDownloader()
+MuseDownloader::~MuseDownloader()
 {
 	if ( m_musePack != NULL )
 	{
@@ -69,7 +69,7 @@ MuseDownloader :: ~MuseDownloader()
 	delete m_curlManager;
 }
 
-void MuseDownloader :: SetURL( const String & p_url )
+void MuseDownloader::SetURL( const String & p_url )
 {
 	m_url = p_url;
 	m_stopThread = false;
@@ -83,21 +83,21 @@ void MuseDownloader :: SetURL( const String & p_url )
 	}
 }
 
-void MuseDownloader :: StartDownload()
+void MuseDownloader::StartDownload()
 {
 	m_musePack = new MusePack( this, m_installPath, m_basePath, m_verifyHeader );
 	m_thread = GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( MuseDownloader, this, Execute );
 }
 
-void MuseDownloader :: Execute()
+void MuseDownloader::Execute()
 {
 	PreciseTimer l_timer;
-	EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader :: Execute -> curl : " + m_url );
+	EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader::Execute -> curl : " + m_url );
 	CURLcode l_error = m_curlManager->OpenUrl( m_url, MusePack::CurlCallback, m_musePack );
 
 	if ( l_error != CURLE_OK && ! m_musePack->IsOK() )
 	{
-		EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader :: Execute -> curl error happened : " + CURLManager::CurlError( l_error ) );
+		EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader::Execute -> curl error happened : " + CURLManager::CurlError( l_error ) );
 		m_cantDownload = true;
 		return;
 	}
@@ -105,7 +105,7 @@ void MuseDownloader :: Execute()
 	EMUSE_LOG_MESSAGE_RELEASE( "MuseDownloader - " + m_url + " finished, downloaded in " + StringConverter::toString( static_cast <Real>( l_timer.Time() ) ) + " seconds" );
 }
 
-String MuseDownloader :: GetExtension( const String & p_fileurl )
+String MuseDownloader::GetExtension( const String & p_fileurl )
 {
 	size_t l_index = p_fileurl.find_last_of( "." );
 
@@ -117,7 +117,7 @@ String MuseDownloader :: GetExtension( const String & p_fileurl )
 	return p_fileurl.substr( l_index, String::npos );
 }
 
-DataBlockType MuseDownloader :: GetFileType( const String & p_filename )
+DataBlockType MuseDownloader::GetFileType( const String & p_filename )
 {
 	String l_extension = GetExtension( p_filename );
 
@@ -164,32 +164,32 @@ DataBlockType MuseDownloader :: GetFileType( const String & p_filename )
 	return EM_BLOCK_ERROR;
 }
 
-Real MuseDownloader :: GetPercent()const
+Real MuseDownloader::GetPercent()const
 {
 	return m_musePack->GetPercent();
 }
 
-Real MuseDownloader :: GetDownloadSpeed()const
+Real MuseDownloader::GetDownloadSpeed()const
 {
 	return m_musePack->GetDownloadSpeed();
 }
 
-unsigned int MuseDownloader :: GetNbBlocks()const
+unsigned int MuseDownloader::GetNbBlocks()const
 {
 	return m_musePack->GetNbBlocks();
 }
 
-const String & MuseDownloader :: GetFileName( unsigned int p_index )const
+const String & MuseDownloader::GetFileName( unsigned int p_index )const
 {
 	return m_musePack->GetFileName( p_index );
 }
 
-size_t MuseDownloader :: GetFileIndex( const String & p_name )const
+size_t MuseDownloader::GetFileIndex( const String & p_name )const
 {
 	return m_musePack->GetFileIndex( p_name );
 }
 
-bool MuseDownloader :: IsDownloadFinished( unsigned int p_index )const
+bool MuseDownloader::IsDownloadFinished( unsigned int p_index )const
 {
 	return m_musePack->IsDownloadFinished( p_index );
 }

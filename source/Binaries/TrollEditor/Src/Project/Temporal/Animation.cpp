@@ -10,7 +10,7 @@ using namespace Troll::Temporal;
 using namespace EMuse::Animation;
 
 
-TrollAnimation :: TrollAnimation( const wxString & p_name, const wxString & p_fileName )
+TrollAnimation::TrollAnimation( const wxString & p_name, const wxString & p_fileName )
 	:	TemporalObject( p_name, p_fileName, ttAnimation ),
 		m_looped( false ),
 		m_timein( 0.0 ),
@@ -20,20 +20,20 @@ TrollAnimation :: TrollAnimation( const wxString & p_name, const wxString & p_fi
 
 
 
-TrollAnimation :: ~TrollAnimation()
+TrollAnimation::~TrollAnimation()
 {
 }
 
 
 
-int TrollAnimation :: BuildPanel( wxWindow * p_parent, int p_width )
+int TrollAnimation::BuildPanel( wxWindow * p_parent, int p_width )
 {
 	return 0;
 }
 
 
 
-void TrollAnimation :: SetMuseAnimation( EMAnimation * p_animation )
+void TrollAnimation::SetMuseAnimation( EMAnimation * p_animation )
 {
 	m_museAnimation = p_animation;
 	m_looped = p_animation->IsLooped();
@@ -43,7 +43,7 @@ void TrollAnimation :: SetMuseAnimation( EMAnimation * p_animation )
 
 
 
-void TrollAnimation :: Write( wxTextOutputStream * p_stream )
+void TrollAnimation::Write( wxTextOutputStream * p_stream )
 {
 	wxString l_tmp;
 	p_stream->WriteString( wxT( "\t\tanimation " ) + m_name + wxT( "\n\t\t{\n" ) );

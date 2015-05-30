@@ -8,7 +8,7 @@
 #include <OgreSceneNode.h>
 #include <OgreVector3.h>
 
-SoundInstance :: SoundInstance( SoundObject * p_parent )
+SoundInstance::SoundInstance( SoundObject * p_parent )
 	:	owned_by <SoundObject>	( p_parent ),
 		 m_node( NULL ),
 		 m_status( EM_STATUS_INIT ),
@@ -42,7 +42,7 @@ SoundInstance :: SoundInstance( SoundObject * p_parent )
 	EMUSE_MESSAGE_DEBUG( "SoundInstance create : " + m_owner->GetName() + ", timed : " + StringConverter::toString( m_mediaTime ) );
 }
 
-SoundInstance :: ~SoundInstance()
+SoundInstance::~SoundInstance()
 {
 	if ( m_status == EM_STATUS_PLAY || m_status == EM_STATUS_PAUSE )
 	{
@@ -50,19 +50,19 @@ SoundInstance :: ~SoundInstance()
 	}
 }
 
-void SoundInstance :: _setVolume()
+void SoundInstance::_setVolume()
 {
 	m_volume = m_maxVolume * m_volumePercent;
 }
 
-void SoundInstance :: SetNode( SceneNode * p_node )
+void SoundInstance::SetNode( SceneNode * p_node )
 {
 	m_node = p_node;
 	SetLastPosition();
 	_set3D();
 }
 
-void SoundInstance :: _set3D()
+void SoundInstance::_set3D()
 {
 //	CHECKFMODERROR( m_owner->GetFMODSound()->setMode( FMOD_3D));
 	CHECKFMODERROR( m_channel->setMode( FMOD_3D ) );
@@ -70,7 +70,7 @@ void SoundInstance :: _set3D()
 	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
 }
 
-void SoundInstance :: SetVelocity( const Vector3 & p_velocity )
+void SoundInstance::SetVelocity( const Vector3 & p_velocity )
 {
 	FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
 	l_velocity.x = p_velocity.x;
@@ -79,7 +79,7 @@ void SoundInstance :: SetVelocity( const Vector3 & p_velocity )
 	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
 }
 
-void SoundInstance :: SetLastPosition()
+void SoundInstance::SetLastPosition()
 {
 	if ( m_node == NULL )
 	{
@@ -92,7 +92,7 @@ void SoundInstance :: SetLastPosition()
 	m_lastPosition.z = l_lastPos.z / 100;
 }
 
-void SoundInstance :: Update3D( Real p_time )
+void SoundInstance::Update3D( Real p_time )
 {
 	if ( ! Is3D() )
 	{
@@ -113,13 +113,13 @@ void SoundInstance :: Update3D( Real p_time )
 	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
 }
 
-void SoundInstance :: Mute( bool p_mute )
+void SoundInstance::Mute( bool p_mute )
 {
 	m_mute = p_mute;
 	CHECKFMODERROR( m_channel->setMute( p_mute ) );
 }
 
-void SoundInstance :: UpdateFade( Real p_time, bool p_muted )
+void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 {
 	if ( m_status != EM_STATUS_PLAY
 			&& m_status != EM_STATUS_PAUSE
@@ -214,7 +214,7 @@ void SoundInstance :: UpdateFade( Real p_time, bool p_muted )
 	CHECKFMODERROR( m_channel->setVolume( m_volume ) );
 }
 
-void SoundInstance :: Pause()
+void SoundInstance::Pause()
 {
 	if ( m_status != EM_STATUS_PLAY )
 	{
@@ -227,7 +227,7 @@ void SoundInstance :: Pause()
 	}
 }
 
-void SoundInstance :: Stop()
+void SoundInstance::Stop()
 {
 	if ( m_status != EM_STATUS_PLAY && m_status != EM_STATUS_PAUSE )
 	{
@@ -242,7 +242,7 @@ void SoundInstance :: Stop()
 	}
 }
 
-void SoundInstance :: Play()
+void SoundInstance::Play()
 {
 	if ( m_status < EM_STATUS_READY )
 	{
@@ -253,7 +253,7 @@ void SoundInstance :: Play()
 	{
 		if ( ! CHECKFMODERROR( m_channel->setPaused( false ) ) )
 		{
-			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject :: Play - can't play " ) + m_owner->GetName() );
+			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + m_owner->GetName() );
 			return;
 		}
 	}
@@ -261,7 +261,7 @@ void SoundInstance :: Play()
 	{
 		if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( FMOD_CHANNEL_FREE, m_owner->GetFMODSound(), false, & m_channel ) ) )
 		{
-			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject :: Play - can't play " ) + m_owner->GetName() );
+			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + m_owner->GetName() );
 			return;
 		}
 
@@ -280,7 +280,7 @@ void SoundInstance :: Play()
 	m_status = EM_STATUS_PLAY;
 }
 
-void SoundInstance :: SetLooped( bool p_looped )
+void SoundInstance::SetLooped( bool p_looped )
 {
 	m_looped = p_looped;
 

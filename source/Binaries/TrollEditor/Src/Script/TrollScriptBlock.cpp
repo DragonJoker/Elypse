@@ -36,26 +36,26 @@ using namespace Troll::GUI;
 													 + " @ L# "+ StringConverter::toString( p_block->m_lineNumBegin)\
 													 + " ] -> " + p_desc );
 
-TrollScriptBlock :: TrollScriptBlock()
+TrollScriptBlock::TrollScriptBlock()
 	:	ScriptBlock(),
 		m_trollCompiler( NULL )
 {
 }
 
-TrollScriptBlock :: ~TrollScriptBlock()
+TrollScriptBlock::~TrollScriptBlock()
 {
 }
 
-ScriptBlock * TrollScriptBlock :: _initialise( ScriptCompiler * p_compiler, BlockType p_type,
+ScriptBlock * TrollScriptBlock::_initialise( ScriptCompiler * p_compiler, BlockType p_type,
 		unsigned int p_lineNum , unsigned int p_depth,
 		ScriptBlock * p_parent )
 {
 	m_trollCompiler = static_cast<TrollScriptCompiler *>( p_compiler );
 	m_compiler = p_compiler;
-	return ScriptBlock :: _initialise( p_compiler, p_type, p_lineNum, p_depth, p_parent );
+	return ScriptBlock::_initialise( p_compiler, p_type, p_lineNum, p_depth, p_parent );
 }
 
-bool TrollScriptBlock :: _parseString()
+bool TrollScriptBlock::_parseString()
 {
 	unsigned int l_begin = m_trollCompiler->GetCurrentCharIndex();
 
@@ -83,7 +83,7 @@ bool TrollScriptBlock :: _parseString()
 	return false;
 }
 
-bool TrollScriptBlock :: _parseNumeral()
+bool TrollScriptBlock::_parseNumeral()
 {
 	VERBOSE_COMPILATOR( "TrollScriptBlock _parseNumeral" );
 	unsigned int l_begin = m_trollCompiler->GetCurrentCharIndex();
@@ -100,7 +100,7 @@ bool TrollScriptBlock :: _parseNumeral()
 	return true;
 }
 
-bool TrollScriptBlock :: _parseOperator()
+bool TrollScriptBlock::_parseOperator()
 {
 	VERBOSE_COMPILATOR( "_parseOperator_TROLL" );
 	bool l_commented = false;
@@ -209,7 +209,7 @@ bool TrollScriptBlock :: _parseOperator()
 	return false;
 }
 
-bool TrollScriptBlock :: _parseSimpleQuote()
+bool TrollScriptBlock::_parseSimpleQuote()
 {
 	VERBOSE_COMPILATOR( "TrollScriptBlock _parseSimpleQuote" );
 	unsigned int l_begin = m_trollCompiler->GetCurrentCharIndex();
@@ -254,7 +254,7 @@ bool TrollScriptBlock :: _parseSimpleQuote()
 	return false;
 }
 
-bool TrollScriptBlock :: _parseDoubleQuote()
+bool TrollScriptBlock::_parseDoubleQuote()
 {
 	VERBOSE_COMPILATOR( "TrollScriptBlock _parseDoubleQuote" );
 	unsigned int l_begin = m_trollCompiler->GetCurrentCharIndex();

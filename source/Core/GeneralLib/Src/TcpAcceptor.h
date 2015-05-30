@@ -128,9 +128,9 @@ namespace General
 							{
 								std::cout << "Catch boost::exception, diagnostic_information : [" << p_except2.diagnostic_information() << "]" << std::endl;
 								General::Utils::set::eraseIterator( m_clients, l_it );
-//							std::cout << "TCPAcceptor :: _mainLoop - coucou 1.1\n";
+//							std::cout << "TCPAcceptor::_mainLoop - coucou 1.1\n";
 								DeleteClient( l_toTest );
-//							std::cout << "TCPAcceptor :: _mainLoop - coucou 1.2\n";
+//							std::cout << "TCPAcceptor::_mainLoop - coucou 1.2\n";
 								continue;
 							}
 
@@ -138,9 +138,9 @@ namespace General
 							{
 								std::cout << "A closed socket was detected in client list... Will be deleted..." << std::endl;
 								General::Utils::set::eraseIterator( m_clients, l_it );
-//							std::cout << "TCPAcceptor :: _mainLoop - coucou 2.1\n";
+//							std::cout << "TCPAcceptor::_mainLoop - coucou 2.1\n";
 								DeleteClient( l_toTest );
-//							std::cout << "TCPAcceptor :: _mainLoop - coucou 2.2\n";
+//							std::cout << "TCPAcceptor::_mainLoop - coucou 2.2\n";
 								continue;
 							}
 
@@ -185,13 +185,13 @@ namespace General
 
 				if ( l_toDel != l_endIt )
 				{
-//				std::cout << "TCPAcceptor :: EraseClient - Found in clients" << std::endl;
+//				std::cout << "TCPAcceptor::EraseClient - Found in clients" << std::endl;
 					m_clients.erase( l_toDel );
 					DeleteClient( p_toDelete );
-//				std::cout << "TCPAcceptor :: EraseClient - Deleted" << std::endl;
+//				std::cout << "TCPAcceptor::EraseClient - Deleted" << std::endl;
 				}
 
-//			std::cout << "TCPAcceptor :: EraseClient - End" << std::endl;
+//			std::cout << "TCPAcceptor::EraseClient - End" << std::endl;
 			}
 		};
 	}

@@ -20,7 +20,7 @@ using namespace General::Files;
 using namespace General::Theory;
 using namespace General::Utils;
 
-DataFile :: DataFile( const String & p_name, MuseFile * p_owner )
+DataFile::DataFile( const String & p_name, MuseFile * p_owner )
 	:	named( p_name ),
 		owned_by( p_owner ),
 		m_initialised( false ),
@@ -29,7 +29,7 @@ DataFile :: DataFile( const String & p_name, MuseFile * p_owner )
 {
 }
 
-DataFile :: ~DataFile()
+DataFile::~DataFile()
 {
 	UIntMap::const_iterator i = m_loadedBy.begin();
 	const UIntMap::const_iterator & iend = m_loadedBy.end();
@@ -45,12 +45,12 @@ DataFile :: ~DataFile()
 	ElypseResourceGroupManager::setPrefix( l_curPrefix );
 }
 
-String DataFile :: GetDescriptiveName()const
+String DataFile::GetDescriptiveName()const
 {
 	return m_owner->GetName() + " > " + m_name;
 }
 
-void DataFile :: _load()
+void DataFile::_load()
 {
 	GENLIB_LOCK_MUTEX( m_mutex );
 
@@ -101,12 +101,12 @@ void DataFile :: _load()
 	GENLIB_UNLOCK_MUTEX( m_mutex );
 }
 
-void DataFile :: _unload()
+void DataFile::_unload()
 {
 	ElypseResourceGroupManager::unloadResourceGroup( m_name, true );
 }
 
-void DataFile :: Use()
+void DataFile::Use()
 {
 	if ( ! map::has( m_loadedBy, ElypseResourceGroupManager::getPrefix() ) )
 	{
@@ -119,7 +119,7 @@ void DataFile :: Use()
 	}
 }
 
-void DataFile :: Release()
+void DataFile::Release()
 {
 	UIntMap::iterator l_find = m_loadedBy.find( ElypseResourceGroupManager::getPrefix() );
 	l_find->second--;
@@ -131,7 +131,7 @@ void DataFile :: Release()
 	}
 }
 
-void DataFile :: DownloadFinished()
+void DataFile::DownloadFinished()
 {
 	GENLIB_AUTO_SCOPED_LOCK();
 	m_downloaded = true;

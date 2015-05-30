@@ -27,12 +27,12 @@ BEGIN_EVENT_TABLE( FolderList, wxFrame )
 END_EVENT_TABLE()
 
 
-FolderList :: FolderList( const wxString & p_folder, wxWindow * p_parent, const wxPoint & p_position )
+FolderList::FolderList( const wxString & p_folder, wxWindow * p_parent, const wxPoint & p_position )
 	:	wxFrame( p_parent, wxID_ANY, wxT( "Liste" ), p_position, wxSize( 200, 350 ), wxFRAME_TOOL_WINDOW | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT ),
 		m_folder( p_folder ),
 		m_filesList( NULL )
 {
-//	std::cout << "FolderList :: FolderList - " << m_folder << "\n";
+//	std::cout << "FolderList::FolderList - " << m_folder << "\n";
 	wxSize l_size = GetClientSize();
 	int l_iBtnCx = 80;
 	int l_iBtnCy = 25;
@@ -50,38 +50,38 @@ FolderList :: FolderList( const wxString & p_folder, wxWindow * p_parent, const 
 
 
 
-FolderList :: ~FolderList()
+FolderList::~FolderList()
 {
 }
 
 
 
-void FolderList :: RemoveFile( const wxString & p_file )
+void FolderList::RemoveFile( const wxString & p_file )
 {
 	FileDelete( ( m_folder + wxT( "/" ) + p_file ).char_str().data() );
 }
 
 
 
-void FolderList :: AddFile( const wxString & p_file )
+void FolderList::AddFile( const wxString & p_file )
 {
 	unsigned int l_index = min( p_file.find_last_of( wxT( "/" ) ), p_file.find_last_of( wxT( "\\" ) ) );
 	wxString l_fileName = p_file.substr( l_index + 1 );
 
-//	std::cout << "FolderList :: AddFile - " << m_folder + "/" + l_fileName << "\n";
+//	std::cout << "FolderList::AddFile - " << m_folder + "/" + l_fileName << "\n";
 	if ( FileCopy( p_file.char_str().data(), ( m_folder + wxT( "/" ) + l_fileName ).char_str().data() ) )
 	{
 		m_filesList->InsertItems( 1, & l_fileName, m_filesList->GetCount() );
 	}
 	else
 	{
-		std::cout << "FolderList :: AddFile - Can't copy from : " << p_file.char_str().data() << " to : " << ( m_folder + wxT( "/" ) + l_fileName ).char_str().data() << "\n";
+		std::cout << "FolderList::AddFile - Can't copy from : " << p_file.char_str().data() << " to : " << ( m_folder + wxT( "/" ) + l_fileName ).char_str().data() << "\n";
 	}
 }
 
 
 
-void FolderList :: _listFolder()
+void FolderList::_listFolder()
 {
 	if ( m_filesList != NULL )
 	{
@@ -93,7 +93,7 @@ void FolderList :: _listFolder()
 
 	if ( ! exists( m_folder.char_str().data() ) )
 	{
-		std::cout << "FolderList :: _listFolder - Folder " << m_folder << " doesn't exist\n";
+		std::cout << "FolderList::_listFolder - Folder " << m_folder << " doesn't exist\n";
 	}
 	else
 	{
@@ -110,7 +110,7 @@ void FolderList :: _listFolder()
 				l_file = wxString( itr->path().string().c_str(), wxMBConvLibc() );
 				l_lastSepIndex = min( l_file.find_last_of( wxT( "/" ) ), l_file.find_last_of( wxT( "\\" ) ) );
 				l_file = l_file.substr( l_lastSepIndex + 1 );
-//				std::cout << "FolderList :: _listFolder - Index : " << l_index << " - File : " << l_file << "\n";
+//				std::cout << "FolderList::_listFolder - Index : " << l_index << " - File : " << l_file << "\n";
 				l_files.push_back( l_file );
 			}
 		}
@@ -123,14 +123,14 @@ void FolderList :: _listFolder()
 
 
 
-void FolderList :: _onQuit( wxCommandEvent & p_event )
+void FolderList::_onQuit( wxCommandEvent & p_event )
 {
 	Close();
 }
 
 
 
-void FolderList :: _onAddFile( wxCommandEvent & p_event )
+void FolderList::_onAddFile( wxCommandEvent & p_event )
 {
 	wxFileDialog l_dialog( this, wxT( "Choisissez un ou plusieurs fichiers à ouvrir" ), wxT( "" ), wxT( "" ), wxT( "Tous|*.*" ),
 						   wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
@@ -149,7 +149,7 @@ void FolderList :: _onAddFile( wxCommandEvent & p_event )
 
 
 
-void FolderList :: _onDelFile( wxCommandEvent & p_event )
+void FolderList::_onDelFile( wxCommandEvent & p_event )
 {
 	if ( m_filesList == NULL )
 	{
@@ -172,7 +172,7 @@ void FolderList :: _onDelFile( wxCommandEvent & p_event )
 
 
 
-void FolderList :: _onKeyUp( wxKeyEvent & p_event )
+void FolderList::_onKeyUp( wxKeyEvent & p_event )
 {
 	if ( p_event.GetKeyCode() == WXK_ESCAPE )
 	{

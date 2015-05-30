@@ -13,7 +13,7 @@
 
 GENLIB_INIT_SINGLETON( SoundManager );
 
-SoundManager :: SoundManager( const String  & p_basePath )
+SoundManager::SoundManager( const String  & p_basePath )
 	:	m_basePath( p_basePath ),
 		m_musicVolume( 0.0 ),
 		m_SFXVolume( 0.0 ),
@@ -118,7 +118,7 @@ SoundManager :: SoundManager( const String  & p_basePath )
 	CHECKFMODERROR( m_system->set3DListenerAttributes( 0, & m_listenerPos, & l_velocity, & l_forward, & l_up ) );
 }
 
-SoundManager :: ~SoundManager()
+SoundManager::~SoundManager()
 {
 	Cleanup();
 
@@ -137,7 +137,7 @@ SoundManager :: ~SoundManager()
 	}
 }
 
-void SoundManager :: AddPlaylist( SoundPlaylist * p_playlist )
+void SoundManager::AddPlaylist( SoundPlaylist * p_playlist )
 {
 	if ( ! m_initialised )
 	{
@@ -151,14 +151,14 @@ void SoundManager :: AddPlaylist( SoundPlaylist * p_playlist )
 
 	if ( General::Utils::map::has( m_playlists, p_playlist->GetName() ) )
 	{
-		_logMessage( "SoundManager :: AddPlaylist - Can't add the playlist " + p_playlist->GetName() + " because it already exists" );
+		_logMessage( "SoundManager::AddPlaylist - Can't add the playlist " + p_playlist->GetName() + " because it already exists" );
 		return;
 	}
 
 	m_playlists.insert( SoundPlaylistMap::value_type( p_playlist->GetName(), p_playlist ) );
 }
 
-SoundObject * SoundManager :: CreateSound( const String & p_name )
+SoundObject * SoundManager::CreateSound( const String & p_name )
 {
 	if ( ! m_initialised )
 	{
@@ -169,7 +169,7 @@ SoundObject * SoundManager :: CreateSound( const String & p_name )
 
 	if ( l_sound != NULL )
 	{
-		_logMessage( "SoundManager :: AddPlaylist - Can't add the sound " + p_name + " because it already exists" );
+		_logMessage( "SoundManager::AddPlaylist - Can't add the sound " + p_name + " because it already exists" );
 		return l_sound;
 	}
 
@@ -178,7 +178,7 @@ SoundObject * SoundManager :: CreateSound( const String & p_name )
 	return l_sound;
 }
 
-void SoundManager :: RemoveSoundObject( const String & p_name )
+void SoundManager::RemoveSoundObject( const String & p_name )
 {
 	if ( ! m_initialised )
 	{
@@ -188,7 +188,7 @@ void SoundManager :: RemoveSoundObject( const String & p_name )
 	General::Utils::map::deleteValue( m_sounds, p_name );
 }
 
-void SoundManager :: RegisterInstance( SoundInstance * p_instance )
+void SoundManager::RegisterInstance( SoundInstance * p_instance )
 {
 	if ( ! m_initialised )
 	{
@@ -207,7 +207,7 @@ void SoundManager :: RegisterInstance( SoundInstance * p_instance )
 		return;
 	}
 
-	SoundNodeMap :: iterator ifind = m_nodeInstances.find( l_node->getName() );
+	SoundNodeMap::iterator ifind = m_nodeInstances.find( l_node->getName() );
 
 	if ( ifind == m_nodeInstances.end() )
 	{
@@ -217,14 +217,14 @@ void SoundManager :: RegisterInstance( SoundInstance * p_instance )
 	ifind->second.insert( p_instance );
 }
 
-void SoundManager :: RemoveNode( const String & p_nodeName )
+void SoundManager::RemoveNode( const String & p_nodeName )
 {
 	if ( ! m_initialised )
 	{
 		return;
 	}
 
-	const SoundNodeMap :: iterator & ifind = m_nodeInstances.find( p_nodeName );
+	const SoundNodeMap::iterator & ifind = m_nodeInstances.find( p_nodeName );
 
 	if ( ifind == m_nodeInstances.end() )
 	{
@@ -244,7 +244,7 @@ void SoundManager :: RemoveNode( const String & p_nodeName )
 }
 
 
-void SoundManager :: SetVolumePercent( const String & p_nodeName, Real p_percent )
+void SoundManager::SetVolumePercent( const String & p_nodeName, Real p_percent )
 {
 	if ( ! m_initialised )
 	{
@@ -252,7 +252,7 @@ void SoundManager :: SetVolumePercent( const String & p_nodeName, Real p_percent
 	}
 
 	p_percent = minmax <Real> ( 0.0, p_percent, 1.0 );
-	const SoundNodeMap :: iterator & ifind = m_nodeInstances.find( p_nodeName );
+	const SoundNodeMap::iterator & ifind = m_nodeInstances.find( p_nodeName );
 
 	if ( ifind == m_nodeInstances.end() )
 	{
@@ -270,7 +270,7 @@ void SoundManager :: SetVolumePercent( const String & p_nodeName, Real p_percent
 }
 
 /*
-bool SoundManager :: IsSoundObject( const String &  p_name)
+bool SoundManager::IsSoundObject( const String &  p_name)
 {
 	SoundObjectMap::iterator l_it = m_objectList.begin();
 	const SoundObjectMap::iterator & l_end =m_objectList.end();
@@ -287,7 +287,7 @@ bool SoundManager :: IsSoundObject( const String &  p_name)
 }
 */
 
-void SoundManager :: Cleanup()
+void SoundManager::Cleanup()
 {
 	if ( ! m_initialised )
 	{
@@ -298,7 +298,7 @@ void SoundManager :: Cleanup()
 	General::Utils::map::deleteAll( m_playlists );
 }
 
-void SoundManager :: StartAll()
+void SoundManager::StartAll()
 {
 	if ( ! m_initialised )
 	{
@@ -308,7 +308,7 @@ void SoundManager :: StartAll()
 	General::Utils::map::cycle( m_sounds, &SoundObject::PlayAll );
 }
 
-void SoundManager :: StopAll()
+void SoundManager::StopAll()
 {
 	if ( ! m_initialised )
 	{
@@ -318,7 +318,7 @@ void SoundManager :: StopAll()
 	General::Utils::map::cycle( m_sounds, &SoundObject::StopAll );
 }
 
-void SoundManager :: PauseAll()
+void SoundManager::PauseAll()
 {
 	if ( ! m_initialised )
 	{
@@ -328,7 +328,7 @@ void SoundManager :: PauseAll()
 	General::Utils::map::cycle( m_sounds, &SoundObject::PauseAll );
 }
 
-void SoundManager :: SetVolume( Real p_volume, SoundType p_type )
+void SoundManager::SetVolume( Real p_volume, SoundType p_type )
 {
 	if ( ! m_initialised )
 	{
@@ -357,7 +357,7 @@ void SoundManager :: SetVolume( Real p_volume, SoundType p_type )
 	}
 }
 
-void SoundManager :: Mute( bool p_mute, SoundType p_type )
+void SoundManager::Mute( bool p_mute, SoundType p_type )
 {
 	if ( ! m_initialised )
 	{
@@ -385,10 +385,10 @@ void SoundManager :: Mute( bool p_mute, SoundType p_type )
 	}
 }
 
-void SoundManager :: Update(	const Vector3 & p_position,
-								const Real * p_up,
-								const Real * p_forward,
-								Real p_updateTime )
+void SoundManager::Update(	const Vector3 & p_position,
+							const Real * p_up,
+							const Real * p_forward,
+							Real p_updateTime )
 {
 	if ( ! m_initialised )
 	{
@@ -410,7 +410,7 @@ void SoundManager :: Update(	const Vector3 & p_position,
 	CHECKFMODERROR( m_system->update() );
 }
 
-void SoundManager :: _update( Real p_time )
+void SoundManager::_update( Real p_time )
 {
 	if ( ! m_initialised )
 	{
@@ -429,12 +429,12 @@ void SoundManager :: _update( Real p_time )
 	General::Utils::map::cycle( m_playlists, &SoundPlaylist::Update, p_time );
 }
 
-void SoundManager :: _logMessage( const String & p_msg )
+void SoundManager::_logMessage( const String & p_msg )
 {
 	EMUSE_MESSAGE_RELEASE( p_msg );
 }
 
-bool SoundManager :: CheckFMODError( FMOD_RESULT p_result, unsigned int p_line, const char * p_file )
+bool SoundManager::CheckFMODError( FMOD_RESULT p_result, unsigned int p_line, const char * p_file )
 {
 	if ( p_result == FMOD_OK )
 	{
@@ -447,7 +447,7 @@ bool SoundManager :: CheckFMODError( FMOD_RESULT p_result, unsigned int p_line, 
 	return false;
 }
 
-const String SoundManager :: OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
+const String SoundManager::OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
 {
 	switch ( p_outputType )
 	{

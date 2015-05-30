@@ -12,7 +12,7 @@ using namespace Troll::GUI;
 IMPLEMENT_APP( TEApplication )
 
 
-TEApplication :: TEApplication()
+TEApplication::TEApplication()
 	:	wxApp(),
 		m_mainFrame( NULL )
 {
@@ -20,13 +20,13 @@ TEApplication :: TEApplication()
 
 
 
-TEApplication :: ~TEApplication()
+TEApplication::~TEApplication()
 {
 }
 
 
 
-bool TEApplication :: OnInit()
+bool TEApplication::OnInit()
 {
 	m_mainFrame = new MainFrame( _T( "Troll Editor" ), 50, 50, 800, 600 );
 	m_mainFrame->Show();

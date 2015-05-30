@@ -11,7 +11,7 @@
 
 #include <ode/objects.h>
 
-PhysicsObject :: PhysicsObject( Entity * p_entity, Space * p_space )
+PhysicsObject::PhysicsObject( Entity * p_entity, Space * p_space )
 	:	named( p_entity->getName() ),
 		m_entity( p_entity ),
 		m_node( p_entity->getParentSceneNode() ),
@@ -49,7 +49,7 @@ PhysicsObject :: PhysicsObject( Entity * p_entity, Space * p_space )
 	SetEnabled( true );
 }
 
-PhysicsObject :: PhysicsObject( const String & p_name, Space * p_space )
+PhysicsObject::PhysicsObject( const String & p_name, Space * p_space )
 	:	named( p_name ),
 		m_entity( NULL ),
 		m_node( NULL ),
@@ -71,7 +71,7 @@ PhysicsObject :: PhysicsObject( const String & p_name, Space * p_space )
 	SetEnabled( false );
 }
 
-PhysicsObject :: ~PhysicsObject()
+PhysicsObject::~PhysicsObject()
 {
 	if ( m_space != NULL )
 	{
@@ -83,14 +83,14 @@ PhysicsObject :: ~PhysicsObject()
 	dBodyDestroy( m_body );
 }
 
-void PhysicsObject :: ApplyMoveOut()
+void PhysicsObject::ApplyMoveOut()
 {
 	m_linearVelocity -= m_linearVelocity * m_linearVelocity.normalisedCopy().dotProduct( m_outTranslate.normalisedCopy() );
 	SetPosition( GetActualPosition() + m_outTranslate * 1.00 );
 	m_outTranslate  = Vector3::ZERO;
 }
 
-void PhysicsObject :: SetNode( SceneNode * p_node )
+void PhysicsObject::SetNode( SceneNode * p_node )
 {
 	m_node = p_node;
 	m_node->_update( false, false );
@@ -98,7 +98,7 @@ void PhysicsObject :: SetNode( SceneNode * p_node )
 	InterpolateSpacialState( 0.0 );
 }
 
-void PhysicsObject :: UpdateNode()
+void PhysicsObject::UpdateNode()
 {
 	if ( m_node != NULL )
 	{
@@ -118,12 +118,12 @@ void PhysicsObject :: UpdateNode()
 	}
 }
 
-Vector3 PhysicsObject :: GetActualPosition()
+Vector3 PhysicsObject::GetActualPosition()
 {
 	return Vector3( dBodyGetPosition( m_body ) );
 }
 
-void PhysicsObject :: UpdateState()
+void PhysicsObject::UpdateState()
 {
 	if ( m_static || m_phantom )
 	{
@@ -152,7 +152,7 @@ void PhysicsObject :: UpdateState()
 	}
 }
 
-void PhysicsObject :: SetEnabled( bool p_enabled )
+void PhysicsObject::SetEnabled( bool p_enabled )
 {
 	m_enabled = p_enabled;
 
@@ -166,7 +166,7 @@ void PhysicsObject :: SetEnabled( bool p_enabled )
 	}
 }
 
-void PhysicsObject :: SetAutoDisable( Real p_time, Real p_angular, Real p_linear )
+void PhysicsObject::SetAutoDisable( Real p_time, Real p_angular, Real p_linear )
 {
 	m_disableThresold_time = p_time;
 	m_disableThresold_angular = p_angular;
@@ -177,75 +177,75 @@ void PhysicsObject :: SetAutoDisable( Real p_time, Real p_angular, Real p_linear
 	dBodySetAutoDisableTime( m_body, p_time );
 }
 
-void PhysicsObject :: SetMass( Real p_mass )
+void PhysicsObject::SetMass( Real p_mass )
 {
 	m_mass->SetSphereMass( p_mass, 1.0 );
 }
 
-Vector3 PhysicsObject :: GetSpeed()
+Vector3 PhysicsObject::GetSpeed()
 {
 	const dReal * l_speed = dBodyGetLinearVel( m_body );
 	return Vector3( l_speed[0], l_speed[1], l_speed[2] );
 }
 
-void PhysicsObject :: SetSpeed( const Vector3 & p_speed )
+void PhysicsObject::SetSpeed( const Vector3 & p_speed )
 {
 	m_enabled = true;
 	dBodySetLinearVel( m_body, p_speed.x, p_speed.y, p_speed.z );
 }
 
-Vector3 PhysicsObject :: GetAngularSpeed()
+Vector3 PhysicsObject::GetAngularSpeed()
 {
 	const dReal * l_speed = dBodyGetAngularVel( m_body );
 	return Vector3( l_speed[0], l_speed[1], l_speed[2] );
 }
 
-void PhysicsObject :: SetAngularSpeed( const Vector3 & p_speed )
+void PhysicsObject::SetAngularSpeed( const Vector3 & p_speed )
 {
 	dBodySetAngularVel( m_body, p_speed.x, p_speed.y, p_speed.z );
 }
 
-void PhysicsObject :: AddForce( const Vector3 & p_force )
+void PhysicsObject::AddForce( const Vector3 & p_force )
 {
 	dBodyAddForce( m_body, p_force.x, p_force.y, p_force.z );
 }
 
-void PhysicsObject :: AddTorque( const Vector3 & p_torque )
+void PhysicsObject::AddTorque( const Vector3 & p_torque )
 {
 	dBodyAddTorque( m_body, p_torque.x, p_torque.y, p_torque.z );
 }
 
-void PhysicsObject :: AddRelativeForce( const Vector3 & p_force )
+void PhysicsObject::AddRelativeForce( const Vector3 & p_force )
 {
 	dBodyAddRelForce( m_body, p_force.x, p_force.y, p_force.z );
 }
 
-void PhysicsObject :: AddRelativeTorque( const Vector3 & p_torque )
+void PhysicsObject::AddRelativeTorque( const Vector3 & p_torque )
 {
 	dBodyAddRelTorque( m_body, p_torque.x, p_torque.y, p_torque.z );
 }
 
-void PhysicsObject :: AddForceAt( const Vector3 & p_force, const Vector3 & p_position )
+void PhysicsObject::AddForceAt( const Vector3 & p_force, const Vector3 & p_position )
 {
 	dBodyAddForceAtPos( m_body, p_force.x, p_force.y, p_force.z, p_position.x, p_position.y, p_position.z );
 }
 
-void PhysicsObject :: AddForceAtRelative( const Vector3 & p_force, const Vector3 & p_position )
+void PhysicsObject::AddForceAtRelative( const Vector3 & p_force, const Vector3 & p_position )
 {
 	dBodyAddForceAtRelPos( m_body, p_force.x, p_force.y, p_force.z, p_position.x, p_position.y, p_position.z );
 }
 
-void PhysicsObject :: AddRelativeForceAt( const Vector3 & p_force, const Vector3 & p_position )
+void PhysicsObject::AddRelativeForceAt( const Vector3 & p_force, const Vector3 & p_position )
 {
 	dBodyAddRelForceAtPos( m_body, p_force.x, p_force.y, p_force.z, p_position.x, p_position.y, p_position.z );
 }
 
-void PhysicsObject :: AddRelativeForceAtRelative( const Vector3 & p_force, const Vector3 & p_position )
+void PhysicsObject::AddRelativeForceAtRelative( const Vector3 & p_force, const Vector3 & p_position )
 {
 	dBodyAddRelForceAtRelPos( m_body, p_force.x, p_force.y, p_force.z, p_position.x, p_position.y, p_position.z );
 }
 
-const Vector3 & PhysicsObject :: GetForce()
+const Vector3 & PhysicsObject::GetForce()
 {
 	const dReal * l_force = dBodyGetForce( m_body );
 	m_forces.x = l_force[0];
@@ -254,7 +254,7 @@ const Vector3 & PhysicsObject :: GetForce()
 	return m_forces;
 }
 
-const Vector3 & PhysicsObject :: GetTorque()
+const Vector3 & PhysicsObject::GetTorque()
 {
 	const dReal * l_torque = dBodyGetTorque( m_body );
 	m_torque.x = l_torque[0];
@@ -263,24 +263,24 @@ const Vector3 & PhysicsObject :: GetTorque()
 	return m_torque;
 }
 
-void PhysicsObject :: SetForce( const Vector3 & p_force )
+void PhysicsObject::SetForce( const Vector3 & p_force )
 {
 	dBodySetForce( m_body, p_force.x, p_force.y, p_force.z );
 }
 
-void PhysicsObject :: SetTorque( const Vector3 & p_torque )
+void PhysicsObject::SetTorque( const Vector3 & p_torque )
 {
 	dBodySetTorque( m_body, p_torque.x, p_torque.y, p_torque.z );
 }
 
-Vector3 PhysicsObject :: GetLocalVelocity( const Vector3 & p_position )
+Vector3 PhysicsObject::GetLocalVelocity( const Vector3 & p_position )
 {
 	dVector3 l_vel;
 	dBodyGetPointVel( m_body, p_position.x, p_position.y, p_position.z, l_vel );
 	return Vector3( l_vel[0], l_vel[1], l_vel[2] );
 }
 
-void PhysicsObject :: AddBound( BoundingShape * p_shape )
+void PhysicsObject::AddBound( BoundingShape * p_shape )
 {
 	genlib_assert( p_shape != NULL );
 	m_bounds.push_back( p_shape );
@@ -288,41 +288,41 @@ void PhysicsObject :: AddBound( BoundingShape * p_shape )
 	p_shape->SetSpace( m_space );
 }
 
-void PhysicsObject :: SetFloating( bool p_floating )
+void PhysicsObject::SetFloating( bool p_floating )
 {
 	dBodySetGravityMode( m_body, p_floating ? 0 : 1 );
 }
 
-bool PhysicsObject :: GetFloating()
+bool PhysicsObject::GetFloating()
 {
 	return dBodyGetGravityMode( m_body ) != 0;
 }
 
-void PhysicsObject :: SetLinearDamping( Real p_linearDamping )
+void PhysicsObject::SetLinearDamping( Real p_linearDamping )
 {
 	m_linearDamping = -p_linearDamping;
 	m_isLinearDamped = m_linearDamping < 0.0;
 	m_isDamped = m_isLinearDamped || m_isAngularDamped;
 }
 
-void PhysicsObject :: SetAngularDamping( Real p_angularDamping )
+void PhysicsObject::SetAngularDamping( Real p_angularDamping )
 {
 	m_angularDamping = -p_angularDamping;
 	m_isAngularDamped = m_angularDamping < 0.0;
 	m_isDamped = m_isLinearDamped || m_isAngularDamped;
 }
 
-Real PhysicsObject :: GetLinearDamping()
+Real PhysicsObject::GetLinearDamping()
 {
 	return -m_linearDamping;
 }
 
-Real PhysicsObject :: GetAngularDamping()
+Real PhysicsObject::GetAngularDamping()
 {
 	return -m_angularDamping;
 }
 
-void PhysicsObject :: ApplyDamping()
+void PhysicsObject::ApplyDamping()
 {
 	if ( m_isLinearDamped )
 	{
@@ -337,14 +337,14 @@ void PhysicsObject :: ApplyDamping()
 	}
 }
 
-void PhysicsObject :: InterpolateSpacialState( Real p_factor )
+void PhysicsObject::InterpolateSpacialState( Real p_factor )
 {
 	m_previousState = m_currentState;
 	m_drawState.position = m_currentState.position * p_factor + m_previousState.position * ( 1.0f - p_factor );
 	m_drawState.orientation = Quaternion::Slerp( p_factor, m_previousState.orientation, m_currentState.orientation, true );
 }
 
-void PhysicsObject :: ReassertSpatialState()
+void PhysicsObject::ReassertSpatialState()
 {
 	if ( m_node != NULL )
 	{
@@ -353,7 +353,7 @@ void PhysicsObject :: ReassertSpatialState()
 	}
 }
 
-void PhysicsObject :: SetPosition( const Vector3 & p_position )
+void PhysicsObject::SetPosition( const Vector3 & p_position )
 {
 	if ( m_drawState.position == p_position )
 	{
@@ -371,7 +371,7 @@ void PhysicsObject :: SetPosition( const Vector3 & p_position )
 	}
 }
 
-void PhysicsObject :: SetOrientation( const Quaternion & p_orientation )
+void PhysicsObject::SetOrientation( const Quaternion & p_orientation )
 {
 	if ( m_drawState.orientation == p_orientation )
 	{
@@ -394,18 +394,18 @@ void PhysicsObject :: SetOrientation( const Quaternion & p_orientation )
 	}
 }
 
-void PhysicsObject :: SetSpace( Space * p_space )
+void PhysicsObject::SetSpace( Space * p_space )
 {
 	m_space = p_space;
 	General::Utils::vector::cycle( m_bounds, &BoundingShape::SetSpace, p_space );
 }
 
-void PhysicsObject :: ClearContacts()
+void PhysicsObject::ClearContacts()
 {
 	m_currentContacts.clear();
 }
 
-void PhysicsObject :: AddContact( PhysicsObject * p_object, dContact * p_contact )
+void PhysicsObject::AddContact( PhysicsObject * p_object, dContact * p_contact )
 {
 	genlib_assert( p_contact != NULL );
 
@@ -415,12 +415,12 @@ void PhysicsObject :: AddContact( PhysicsObject * p_object, dContact * p_contact
 	}
 }
 
-bool PhysicsObject :: CollisionTest_Fast( PhysicsObject * p_collideWith )
+bool PhysicsObject::CollisionTest_Fast( PhysicsObject * p_collideWith )
 {
 	return m_currentContacts.find( p_collideWith ) != m_currentContacts.end();
 }
 
-int PhysicsObject :: NumCollisionTest_Fast( PhysicsObject * p_collideWith )
+int PhysicsObject::NumCollisionTest_Fast( PhysicsObject * p_collideWith )
 {
 	ContactMap::iterator l_it = m_currentContacts.find( p_collideWith );
 
@@ -432,7 +432,7 @@ int PhysicsObject :: NumCollisionTest_Fast( PhysicsObject * p_collideWith )
 	return 0;
 }
 
-bool PhysicsObject :: CollisionTest_Complete( PhysicsObject * p_collideWith )
+bool PhysicsObject::CollisionTest_Complete( PhysicsObject * p_collideWith )
 {
 	genlib_assert( p_collideWith != NULL );
 	size_t imax = m_bounds.size();
@@ -452,7 +452,7 @@ bool PhysicsObject :: CollisionTest_Complete( PhysicsObject * p_collideWith )
 	return false;
 }
 
-int PhysicsObject :: NumCollisionTest_Complete( PhysicsObject * p_collideWith )
+int PhysicsObject::NumCollisionTest_Complete( PhysicsObject * p_collideWith )
 {
 	genlib_assert( p_collideWith != NULL );
 	size_t imax = m_bounds.size();
@@ -474,7 +474,7 @@ int PhysicsObject :: NumCollisionTest_Complete( PhysicsObject * p_collideWith )
 }
 
 
-PhysicsObject * PhysicsObject :: Clone( const String & p_name, Space * p_space )
+PhysicsObject * PhysicsObject::Clone( const String & p_name, Space * p_space )
 {
 	genlib_assert( ! p_name.empty() );
 
@@ -496,7 +496,7 @@ PhysicsObject * PhysicsObject :: Clone( const String & p_name, Space * p_space )
 	return l_object;
 }
 
-void PhysicsObject :: SetMoveOut( const Vector3 & p_translate )
+void PhysicsObject::SetMoveOut( const Vector3 & p_translate )
 {
 	m_outTranslate += p_translate;
 	m_outTranslate /= 2.0;

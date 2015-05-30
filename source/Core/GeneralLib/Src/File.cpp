@@ -5,15 +5,39 @@
 #include "File.h"
 #include "Path.h"
 
+#if defined( _WIN32 )
+#	include <direct.h>
+#	include <Shlobj.h>
+#	if defined( _MSC_VER )
+#		pragma warning( push )
+#		pragma warning( disable:4311 )
+#		pragma warning( disable:4312 )
+#	endif
+#	include <windows.h>
+#	if defined( _MSC_VER )
+#		pragma warning( pop )
+#	endif
+#	define GetCurrentDir _getcwd
+#	undef CopyFile
+#	undef DeleteFile
+#else
+#	include <unistd.h>
+#	include <sys/types.h>
+#	include <dirent.h>
+#	include <errno.h>
+#	include <pwd.h>
+#	define GetCurrentDir getcwd
+#endif
+
 using namespace boost::filesystem;
 
-bool General :: Files :: FileExists( const char * p_filename )
+bool General::Files::FileExists( const char * p_filename )
 {
 	struct stat l_stat;
 	return ( stat( p_filename, & l_stat ) == 0 );
 }
 
-bool General :: Files :: DirectoryCreate( const std::string & p_filename )
+bool General::Files::DirectoryCreate( const std::string & p_filename )
 {
 	if ( p_filename.empty() )
 	{
@@ -47,7 +71,7 @@ bool General :: Files :: DirectoryCreate( const std::string & p_filename )
 	}
 }
 
-bool General :: Files :: DirectoryExists( const std::string & p_filename )
+bool General::Files::DirectoryExists( const std::string & p_filename )
 {
 	try
 	{
@@ -59,7 +83,7 @@ bool General :: Files :: DirectoryExists( const std::string & p_filename )
 	}
 }
 
-bool General :: Files :: FileDelete( const std::string & p_filename )
+bool General::Files::FileDelete( const std::string & p_filename )
 {
 	try
 	{
@@ -72,7 +96,7 @@ bool General :: Files :: FileDelete( const std::string & p_filename )
 	}
 }
 
-bool General :: Files :: FileCopy( const std::string & p_origin, const std::string & p_dest )
+bool General::Files::FileCopy( const std::string & p_origin, const std::string & p_dest )
 {
 	try
 	{
@@ -85,7 +109,7 @@ bool General :: Files :: FileCopy( const std::string & p_origin, const std::stri
 	}
 }
 
-bool General :: Files :: DirectoryDelete( const std::string & p_dirName )
+bool General::Files::DirectoryDelete( const std::string & p_dirName )
 {
 	if ( ! exists( p_dirName ) )
 	{
@@ -126,7 +150,7 @@ bool General :: Files :: DirectoryDelete( const std::string & p_dirName )
 	}
 }
 
-unsigned int General :: Files :: GetFileSize( const char * p_filename )
+unsigned int General::Files::GetFileSize( const char * p_filename )
 {
 	struct stat tagStat;
 	stat( p_filename, & tagStat );
@@ -135,13 +159,13 @@ unsigned int General :: Files :: GetFileSize( const char * p_filename )
 
 #if GENLIB_WINDOWS
 
-bool General :: Files :: FileExists( const wchar_t * p_filename )
+bool General::Files::FileExists( const wchar_t * p_filename )
 {
 	struct _stat l_stat;
 	return ( _wstat( p_filename, & l_stat ) == 0 );
 }
 
-bool General :: Files :: DirectoryCreate( const std::wstring & p_filename )
+bool General::Files::DirectoryCreate( const std::wstring & p_filename )
 {
 	if ( p_filename.empty() )
 	{
@@ -175,7 +199,7 @@ bool General :: Files :: DirectoryCreate( const std::wstring & p_filename )
 	}
 }
 
-bool General :: Files :: DirectoryExists( const std::wstring & p_filename )
+bool General::Files::DirectoryExists( const std::wstring & p_filename )
 {
 	try
 	{
@@ -187,7 +211,7 @@ bool General :: Files :: DirectoryExists( const std::wstring & p_filename )
 	}
 }
 
-bool General :: Files :: FileDelete( const std::wstring & p_filename )
+bool General::Files::FileDelete( const std::wstring & p_filename )
 {
 	try
 	{
@@ -200,7 +224,7 @@ bool General :: Files :: FileDelete( const std::wstring & p_filename )
 	}
 }
 
-bool General :: Files :: DirectoryDelete( const std::wstring & p_dirName )
+bool General::Files::DirectoryDelete( const std::wstring & p_dirName )
 {
 	if ( ! exists( p_dirName ) )
 	{
@@ -234,6 +258,109 @@ bool General :: Files :: DirectoryDelete( const std::wstring & p_dirName )
 		//ERROR : could not delete a directory ?
 		return false;
 	}
+}
+
+bool General::Files::ListDirectoryFiles( General::Utils::Path const & p_folderPath, std::vector< General::Utils::Path > & p_files, bool p_recursive )
+{
+	bool l_bReturn = false;
+#if defined( _WIN32 )
+	WIN32_FIND_DATAA l_findData;
+	HANDLE l_hHandle = ::FindFirstFileA( ( p_folderPath / "*.*" ).c_str(), &l_findData );
+	std::string l_strBuffer;
+
+	if ( l_hHandle != INVALID_HANDLE_VALUE )
+	{
+		l_strBuffer = l_findData.cFileName;
+
+		if ( l_strBuffer != "." && l_strBuffer != ".." )
+		{
+			p_files.push_back( l_strBuffer );
+		}
+
+		l_bReturn = true;
+
+		while ( l_bReturn )
+		{
+			if ( ::FindNextFileA( l_hHandle, &l_findData ) && l_findData.cFileName != l_strBuffer )
+			{
+				l_strBuffer = l_findData.cFileName;
+
+				if ( l_strBuffer != "." && l_strBuffer != ".." )
+				{
+					p_files.push_back( p_folderPath / l_strBuffer );
+				}
+			}
+			else
+			{
+				l_bReturn = false;
+			}
+		}
+
+		l_bReturn = true;
+	}
+
+#elif defined( __linux__ )
+	DIR * l_pDir;
+
+	if ( ( l_pDir = opendir( p_folderPath.c_str() ) ) == NULL )
+	{
+		switch ( errno )
+		{
+		case EACCES:
+			std::cerr << "Can't open dir : Permission denied - Directory : " << p_folderPath;
+			break;
+
+		case EBADF:
+			std::cerr << "Can't open dir : Invalid file descriptor - Directory : " << p_folderPath;
+			break;
+
+		case EMFILE:
+			std::cerr << "Can't open dir : Too many file descriptor in use - Directory : " << p_folderPath;
+			break;
+
+		case ENFILE:
+			std::cerr << "Can't open dir : Too many files currently open - Directory : " << p_folderPath;
+			break;
+
+		case ENOENT:
+			std::cerr << "Can't open dir : Directory doesn't exist - Directory : " << p_folderPath;
+			break;
+
+		case ENOMEM:
+			std::cerr << "Can't open dir : Insufficient memory - Directory : " << p_folderPath;
+			break;
+
+		case ENOTDIR:
+			std::cerr << "Can't open dir : <name> is not a directory - Directory : " << p_folderPath;
+			break;
+
+		default:
+			std::cerr << "Can't open dir : Unknown error - Directory : " << p_folderPath;
+			break;
+		}
+
+		l_bReturn = false;
+	}
+	else
+	{
+		dirent * l_pDirent;
+
+		while ( ( l_pDirent = readdir( l_pDir ) ) != NULL )
+		{
+			if ( strcmp( l_pDirent->d_name, "." ) )
+			{
+				p_files.push_back( p_folderPath / l_pDirent->d_name );
+			}
+		}
+
+		closedir( l_pDir );
+		l_bReturn = true;
+	}
+
+#else
+#	error "Unsupported platform"
+#endif
+	return l_bReturn;
 }
 
 #endif

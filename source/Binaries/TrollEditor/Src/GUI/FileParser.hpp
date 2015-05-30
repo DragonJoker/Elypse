@@ -289,7 +289,7 @@ namespace Troll
 		//!\~english Define to ease the declaration of a parser	\~french Un define pour faciliter la déclaration d'un analyseur
 #	define DECLARE_ATTRIBUTE_PARSER( X ) bool X( Troll::GUI::FileParser * p_pParser, wxString & p_strParams, Troll::GUI::FileParserContextPtr p_pContext );
 		//!\~english Define to ease the implementation of a parser	\~french Un define pour faciliter l'implémentation d'un analyseur
-#	define IMPLEMENT_ATTRIBUTE_PARSER( nmspc, X )	bool nmspc :: X( Troll::GUI::FileParser * p_pParser, wxString & p_strParams, Troll::GUI::FileParserContextPtr p_pContext )	\
+#	define IMPLEMENT_ATTRIBUTE_PARSER( nmspc, X )	bool nmspc::X( Troll::GUI::FileParser * p_pParser, wxString & p_strParams, Troll::GUI::FileParserContextPtr p_pContext )	\
 													{																															\
 														bool l_bReturn = false;																									\
 														if( !p_pParser->IsIgnored() )

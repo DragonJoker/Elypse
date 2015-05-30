@@ -34,7 +34,7 @@ BEGIN_EVENT_TABLE( ProjectProperties, wxFrame )
 END_EVENT_TABLE()
 
 
-ProjectProperties :: ProjectProperties( Project * p_project, wxWindow * parent, const wxPoint & pos )
+ProjectProperties::ProjectProperties( Project * p_project, wxWindow * parent, const wxPoint & pos )
 	:	wxFrame( parent, wxID_ANY, wxT( "Propriétés du projet" ), pos, wxSize( 200, 230 ),
 				 wxFRAME_TOOL_WINDOW | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT ),
 	m_project( p_project )
@@ -102,13 +102,13 @@ ProjectProperties :: ProjectProperties( Project * p_project, wxWindow * parent, 
 
 
 
-ProjectProperties :: ~ProjectProperties()
+ProjectProperties::~ProjectProperties()
 {
 }
 
 
 
-void ProjectProperties :: _onSelectBackgroundType( wxCommandEvent & p_event )
+void ProjectProperties::_onSelectBackgroundType( wxCommandEvent & p_event )
 {
 	if ( m_backgroundType->GetValue() == wxT( "Couleur" ) )
 	{
@@ -124,7 +124,7 @@ void ProjectProperties :: _onSelectBackgroundType( wxCommandEvent & p_event )
 
 
 
-void ProjectProperties :: _onBackground( wxCommandEvent & p_event )
+void ProjectProperties::_onBackground( wxCommandEvent & p_event )
 {
 	if ( m_project->GetBackgroundType() == bgColour )
 	{
@@ -150,14 +150,14 @@ void ProjectProperties :: _onBackground( wxCommandEvent & p_event )
 
 
 
-void ProjectProperties :: _onShadowsChange( wxCommandEvent & p_event )
+void ProjectProperties::_onShadowsChange( wxCommandEvent & p_event )
 {
 	m_project->SetShadows( m_shadows->IsChecked() );
 }
 
 
 
-void ProjectProperties :: _onSelectFSAA( wxCommandEvent & p_event )
+void ProjectProperties::_onSelectFSAA( wxCommandEvent & p_event )
 {
 	if ( m_fsaa->GetValue() == wxT( "Aucun" ) )
 	{
@@ -175,28 +175,28 @@ void ProjectProperties :: _onSelectFSAA( wxCommandEvent & p_event )
 
 
 
-void ProjectProperties :: _onShowConsoleChange( wxCommandEvent & p_event )
+void ProjectProperties::_onShowConsoleChange( wxCommandEvent & p_event )
 {
 	m_project->SetShowDebug( p_event.IsChecked() );
 }
 
 
 
-void ProjectProperties :: _onShowFPSChange( wxCommandEvent & p_event )
+void ProjectProperties::_onShowFPSChange( wxCommandEvent & p_event )
 {
 	m_project->SetShowFPS( p_event.IsChecked() );
 }
 
 
 
-void ProjectProperties :: _onStartupScriptChange( wxCommandEvent & p_event )
+void ProjectProperties::_onStartupScriptChange( wxCommandEvent & p_event )
 {
 	m_project->SetStartupScript( m_startupScript->GetValue() );
 }
 
 
 
-void ProjectProperties :: _onBack( wxCommandEvent & p_event )
+void ProjectProperties::_onBack( wxCommandEvent & p_event )
 {
 	Destroy();
 }

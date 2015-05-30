@@ -39,6 +39,11 @@
 #include "xpm/BMPNew.xpm"
 #include "xpm/BMPOpen.xpm"
 #include "xpm/BMPSave.xpm"
+
+#include <zip.h>
+
+#include <File.h>
+#include <StringUtils.h>
 /*
 #include <Data/ConfigFile.h>
 #include <ScriptNode.h>
@@ -150,7 +155,7 @@ namespace Troll
 
 		static const long c_toolbarStyle = wxTB_FLAT | wxTB_DOCKABLE | wxTB_TEXT;
 
-		MainFrame :: MainFrame( const wxString & title, int x, int y, int w, int h )
+		MainFrame::MainFrame( const wxString & title, int x, int y, int w, int h )
 			:	wxFrame( NULL, wxID_ANY, title, wxPoint( x, y ), wxSize( w, h )	)
 			,	m_tbar( NULL	),	m_numSceneFile( 1	)
 			,	m_numScriptFile( 1	),	m_numDataFile( 1	)
@@ -187,14 +192,14 @@ namespace Troll
 			m_appPath.Replace( wxT( "\\" ), wxString( wxFileName::GetPathSeparator() ) );
 			size_t l_index = m_appPath.find_last_of( wxFileName::GetPathSeparator() );
 			m_appPath = m_appPath.substr( 0, l_index + 1 );
-			//	std::cout << "MainFrame :: MainFrame - " << m_appPath << "\n";
+			//	std::cout << "MainFrame::MainFrame - " << m_appPath << "\n";
 			LanguageFileParser l_parser( m_pStcContext );
 			l_parser.ParseFile( m_appPath + wxT( "EMSCRIPT.lang" ) );
 			l_parser.ParseFile( m_appPath + wxT( "EMSCENE.lang" ) );
 			_initialise();
 		}
 
-		void MainFrame :: _initialise()
+		void MainFrame::_initialise()
 		{
 			SetIcon( wxIcon( troll_editor_xpm ) );
 			SetBackgroundColour( wxColour( 255, 255, 255 ) );
@@ -257,7 +262,7 @@ namespace Troll
 			_resize();
 		}
 
-		void MainFrame :: _setMenuBar()
+		void MainFrame::_setMenuBar()
 		{
 			m_menuBar =	new wxMenuBar( wxMB_DOCKABLE );
 			m_menuFile = new wxMenu;
@@ -300,7 +305,7 @@ namespace Troll
 			*/
 		}
 
-		void MainFrame :: _createTreeWithDefStyle()
+		void MainFrame::_createTreeWithDefStyle()
 		{
 			long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS;
 			wxMenuBar * mbar = GetMenuBar();
@@ -316,7 +321,7 @@ namespace Troll
 			*/
 		}
 
-		void MainFrame :: _resizeTrees()
+		void MainFrame::_resizeTrees()
 		{
 			wxSize l_size = m_splitterV->GetWindow1()->GetClientSize();
 
@@ -375,7 +380,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _resizePanels()
+		void MainFrame::_resizePanels()
 		{
 			if ( m_mainTabsContainer == NULL )
 			{
@@ -440,7 +445,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _resizeLogs()
+		void MainFrame::_resizeLogs()
 		{
 			wxSize l_size = m_splitterH->GetWindow2()->GetClientSize();
 
@@ -471,14 +476,14 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _resize()
+		void MainFrame::_resize()
 		{
 			m_resizing = true;
 
 			if ( m_splitterV != NULL && m_splitterH != NULL )
 			{
 				wxSize l_size = GetClientSize();
-				//		std::cout << "MainFrame :: _resize - Width : " << l_size.x << " - Height : " << l_size.y << "\n";
+				//		std::cout << "MainFrame::_resize - Width : " << l_size.x << " - Height : " << l_size.y << "\n";
 				m_splitterH->SetSize( l_size );
 				m_splitterH->SetSashPosition( m_splitterH->GetClientSize().y - m_logsHeight );
 				m_splitterV->SetSize( l_size.x, l_size.y - m_logsHeight );
@@ -491,7 +496,7 @@ namespace Troll
 			m_resizing = false;
 		}
 
-		void MainFrame :: _musinate( Project * p_project, bool p_createMain, bool p_withScripts )
+		void MainFrame::_musinate( Project * p_project, bool p_createMain, bool p_withScripts )
 		{
 			if ( ! p_project )
 			{
@@ -515,7 +520,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - Data Folder - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - Data Folder - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFolder( l_path + l_files[i]->FileName, EM_BLOCK_ZIPSNDDATA );
 				}
 
@@ -523,7 +528,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 				}
 
@@ -533,7 +538,7 @@ namespace Troll
 
 					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 					{
-						LogDebugMessage( wxT( "MainFrame :: Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
+						LogDebugMessage( wxT( "MainFrame::Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
 						l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 					}
 
@@ -541,7 +546,7 @@ namespace Troll
 
 					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 					{
-						LogDebugMessage( wxT( "MainFrame :: Musiner - Unload Script File - " ) + l_path + l_files[i]->FileName );
+						LogDebugMessage( wxT( "MainFrame::Musiner - Unload Script File - " ) + l_path + l_files[i]->FileName );
 						l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 					}
 				}
@@ -550,7 +555,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					//LogDebugMessage(wxT( "MainFrame :: Musiner - Data File - " ) + l_path + l_files[i]->FileName);
+					//LogDebugMessage(wxT( "MainFrame::Musiner - Data File - " ) + l_path + l_files[i]->FileName);
 					//l_dataWriter->AddFolder( l_path + l_files[i]->FileName, EM_BLOCK_GZIPDATA );
 					ZipFolder( l_path + l_files[i]->FileName, l_path + l_files[i]->FileName + wxT( ".zip" ) );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName + wxT( ".zip" ) );
@@ -573,7 +578,7 @@ namespace Troll
 
 					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 					{
-						LogDebugMessage( wxT( "MainFrame :: Musiner - Data Folder - " ) + l_path + l_files[i]->FileName );
+						LogDebugMessage( wxT( "MainFrame::Musiner - Data Folder - " ) + l_path + l_files[i]->FileName );
 						l_sceneDataWriter->AddFolder( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName, EM_BLOCK_ZIPSNDDATA );
 					}
 
@@ -581,7 +586,7 @@ namespace Troll
 
 					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 					{
-						LogDebugMessage( wxT( "MainFrame :: Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
+						LogDebugMessage( wxT( "MainFrame::Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
 						l_sceneDataWriter->AddFile( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName );
 					}
 
@@ -591,7 +596,7 @@ namespace Troll
 
 						for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 						{
-							LogDebugMessage( wxT( "MainFrame :: Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
+							LogDebugMessage( wxT( "MainFrame::Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
 							l_sceneDataWriter->AddFile( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName );
 						}
 
@@ -599,7 +604,7 @@ namespace Troll
 
 						for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 						{
-							LogDebugMessage( wxT( "MainFrame :: Musiner - Unload Script File - " ) + l_path + l_files[i]->FileName );
+							LogDebugMessage( wxT( "MainFrame::Musiner - Unload Script File - " ) + l_path + l_files[i]->FileName );
 							l_sceneDataWriter->AddFile( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName );
 						}
 					}
@@ -608,13 +613,13 @@ namespace Troll
 
 					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 					{
-						//LogDebugMessage(wxT( "MainFrame :: Musiner - Data File - " ) + l_path + l_files[i]->FileName);
+						//LogDebugMessage(wxT( "MainFrame::Musiner - Data File - " ) + l_path + l_files[i]->FileName);
 						//l_sceneDataWriter->AddFolder( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName, EM_BLOCK_GZIPDATA );
 						ZipFolder( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName, l_path + l_files[i]->FileName + wxT( ".zip" ) );
 						l_sceneDataWriter->AddFile( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName + wxT( ".zip" ) );
 					}
 
-					l_sceneDataWriter->Write( l_path + l_scene->GetName() + wxT( ".muse" ) );
+					l_sceneDataWriter->Write( l_path + p_project->GetName() + wxT( "_" ) + l_scene->GetName() + wxT( ".muse" ) );
 					delete l_sceneDataWriter;
 					++l_it;
 				}
@@ -624,7 +629,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _musinateSceneEditor( Project * p_project )
+		void MainFrame::_musinateSceneEditor( Project * p_project )
 		{
 			if ( ! p_project )
 			{
@@ -642,7 +647,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - Data Folder - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - Data Folder - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFolder( l_path + l_files[i]->FileName, EM_BLOCK_ZIPSNDDATA );
 				}
 
@@ -650,7 +655,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 				}
 
@@ -658,7 +663,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 				}
 
@@ -666,7 +671,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - Unload Script File - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - Unload Script File - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 				}
 
@@ -674,7 +679,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					//LogDebugMessage(wxT( "MainFrame :: Musiner - Data File - ") + l_path + l_files[i]->FileName);
+					//LogDebugMessage(wxT( "MainFrame::Musiner - Data File - ") + l_path + l_files[i]->FileName);
 					//l_dataWriter->AddFolder( l_path + l_files[i]->FileName, EM_BLOCK_GZIPDATA );
 					ZipFolder( l_path + l_files[i]->FileName, l_path + l_files[i]->FileName + wxT( ".zip" ) );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName + wxT( ".zip" ) );
@@ -686,7 +691,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _musinateOverlayEditor( Project * p_project )
+		void MainFrame::_musinateOverlayEditor( Project * p_project )
 		{
 			if ( ! p_project )
 			{
@@ -704,7 +709,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - TrollScene File - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 				}
 
@@ -712,7 +717,7 @@ namespace Troll
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
 				{
-					LogDebugMessage( wxT( "MainFrame :: Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
+					LogDebugMessage( wxT( "MainFrame::Musiner - Load Script File - " ) + l_path + l_files[i]->FileName );
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName );
 				}
 
@@ -722,12 +727,12 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onOpenSelectedFile( wxCommandEvent & p_event )
+		void MainFrame::_onOpenSelectedFile( wxCommandEvent & p_event )
 		{
 			OpenSelectedFile();
 		}
 
-		void MainFrame :: _onOpenFile( wxCommandEvent & p_event )
+		void MainFrame::_onOpenFile( wxCommandEvent & p_event )
 		{
 			wxString l_fileName = wxFileSelector( wxT( "Choisissez un fichier à ouvrir" ), wxEmptyString, wxEmptyString, wxEmptyString,
 												  wxT( "Fichiers de TrollScene (*.emscene)|*.emscene|Fichiers de Script (*.emscript)|*.emscript" ) );
@@ -738,14 +743,14 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onOpenProject( wxCommandEvent & p_event )
+		void MainFrame::_onOpenProject( wxCommandEvent & p_event )
 		{
 			wxString l_fileName = wxFileSelector( wxT( "Choisissez un projet à ouvrir" ), wxEmptyString, wxEmptyString, wxEmptyString,
 												  wxT( "Projets Troll Editor (*.teproj)|*.teproj" ) );
 			OpenProjectFile( l_fileName );
 		}
 
-		void MainFrame :: _onWriteSceneFiles( wxCommandEvent & p_event )
+		void MainFrame::_onWriteSceneFiles( wxCommandEvent & p_event )
 		{
 			if ( m_currentProject != NULL )
 			{
@@ -753,18 +758,18 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onNew( wxCommandEvent & p_event )
+		void MainFrame::_onNew( wxCommandEvent & p_event )
 		{
 			NewProjectFrame * l_frame = new NewProjectFrame( this );
 			l_frame->ShowModal();
 		}
 
-		void MainFrame :: _onCloseProject( wxCommandEvent & p_event )
+		void MainFrame::_onCloseProject( wxCommandEvent & p_event )
 		{
 			CloseProject();
 		}
 
-		void MainFrame :: _onSaveAll( wxCommandEvent & p_event )
+		void MainFrame::_onSaveAll( wxCommandEvent & p_event )
 		{
 			SaveSceneFiles( m_currentProject->GetMainScene() );
 			SceneMap l_scenes = m_currentProject->GetScenes();
@@ -776,7 +781,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onQuit( wxCommandEvent & p_event )
+		void MainFrame::_onQuit( wxCommandEvent & p_event )
 		{
 			delete m_logDebug;
 			m_logDebug = NULL;
@@ -786,7 +791,7 @@ namespace Troll
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onClose( wxCloseEvent & p_event )
+		void MainFrame::_onClose( wxCloseEvent & p_event )
 		{
 			wxLog::SetActiveTarget( NULL );
 			delete m_logDebug;
@@ -826,7 +831,7 @@ namespace Troll
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onCompile( wxCommandEvent & p_event )
+		void MainFrame::_onCompile( wxCommandEvent & p_event )
 		{
 			if ( !m_currentProject )
 			{
@@ -867,13 +872,13 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onAbout( wxCommandEvent & p_event )
+		void MainFrame::_onAbout( wxCommandEvent & p_event )
 		{
 			AboutFrame * l_frame = new AboutFrame( this );
 			l_frame->Show();
 		}
 
-		void MainFrame :: _onAdd( wxCommandEvent & p_event )
+		void MainFrame::_onAdd( wxCommandEvent & p_event )
 		{
 			if ( ! m_currentProject )
 			{
@@ -914,12 +919,12 @@ namespace Troll
 			//std::cout<< l_str << std::endl;
 		}
 
-		void MainFrame :: _onRename( wxCommandEvent & p_event )
+		void MainFrame::_onRename( wxCommandEvent & p_event )
 		{
 			m_filesList->EditLabel( m_filesList->GetSelected() );
 		}
 
-		void MainFrame :: _onAddExistingFile( wxCommandEvent & p_event )
+		void MainFrame::_onAddExistingFile( wxCommandEvent & p_event )
 		{
 			if ( m_currentProject == NULL )
 			{
@@ -988,7 +993,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onSaveFile( wxCommandEvent & p_event )
+		void MainFrame::_onSaveFile( wxCommandEvent & p_event )
 		{
 			if ( m_editText != NULL )
 			{
@@ -999,18 +1004,18 @@ namespace Troll
 				{
 					m_editText->SaveFile();
 					//TextPanel * l_editCtrl = static_cast <TextPanel *>( m_mainTabsContainer->GetPage( l_selectedPage )->GetChildren().GetFirst()->GetData() );
-					////std::cout << "MainFrame :: _onSaveFile - Selected Page : " << l_selectedPage << " - " << l_fileName << "\n";
+					////std::cout << "MainFrame::_onSaveFile - Selected Page : " << l_selectedPage << " - " << l_fileName << "\n";
 					//SaveFile( l_editCtrl->GetFile(), l_fileName );
 				}
 			}
 		}
 
-		void MainFrame :: _onSaveProject( wxCommandEvent & p_event )
+		void MainFrame::_onSaveProject( wxCommandEvent & p_event )
 		{
 			SaveProject( m_currentProject );
 		}
 
-		void MainFrame :: _onSaveSelectedFile( wxCommandEvent & p_event )
+		void MainFrame::_onSaveSelectedFile( wxCommandEvent & p_event )
 		{
 			wxTreeItemId l_itemId = m_filesList->GetSelected();
 			TrollScene * l_scene = m_filesList->GetSelectedScene();
@@ -1029,7 +1034,7 @@ namespace Troll
 
 			if ( l_file->Saved )
 			{
-				//		std::cout << "MainFrame :: _onSaveSelectedFile" << l_file->FileName << "\n";
+				//		std::cout << "MainFrame::_onSaveSelectedFile" << l_file->FileName << "\n";
 				l_file->EditPanel->SaveFile( m_currentProject->GetPath() + l_file->FileName );
 			}
 			else
@@ -1038,9 +1043,9 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onSaveFileAs( wxCommandEvent & p_event )
+		void MainFrame::_onSaveFileAs( wxCommandEvent & p_event )
 		{
-			//	std::cout << "MainFrame :: _onSaveFileAs\n";
+			//	std::cout << "MainFrame::_onSaveFileAs\n";
 			int l_selectedPage = m_mainTabsContainer->GetSelection();
 			wxString l_fileName = m_mainTabsContainer->GetPageText( l_selectedPage );
 			TrollScene * l_scene = m_filesList->GetSelectedScene();
@@ -1048,7 +1053,7 @@ namespace Troll
 			SaveFileAs( l_file );
 		}
 
-		void MainFrame :: _onMusinate( wxCommandEvent & )
+		void MainFrame::_onMusinate( wxCommandEvent & )
 		{
 			if ( !m_currentProject )
 			{
@@ -1059,7 +1064,7 @@ namespace Troll
 			_musinate( m_currentProject );
 		}
 
-		void MainFrame :: _onRemoveFile( wxCommandEvent & )
+		void MainFrame::_onRemoveFile( wxCommandEvent & )
 		{
 			wxTreeItemId l_itemId = m_filesList->GetSelected();
 			TrollFile * l_file = m_filesList->GetSelectedScene()->GetFile( l_itemId );
@@ -1082,7 +1087,7 @@ namespace Troll
 			m_filesList->Delete( l_itemId );
 		}
 
-		void MainFrame :: _onDeleteFile( wxCommandEvent & p_event )
+		void MainFrame::_onDeleteFile( wxCommandEvent & p_event )
 		{
 			if ( wxMessageBox( wxT( "Voulez vous vraiment supprimer ce fichier?" ), wxT( "Confirmation" ), wxYES_NO | wxICON_EXCLAMATION, this ) == wxYES )
 			{
@@ -1103,25 +1108,25 @@ namespace Troll
 					i++;
 				}
 
-				//		std::cout << "MainFrame :: _onDeleteFile - " << remove( m_currentProject->GetPath() + l_file->FileName) << "\n";
+				//		std::cout << "MainFrame::_onDeleteFile - " << remove( m_currentProject->GetPath() + l_file->FileName) << "\n";
 				m_filesList->GetSelectedScene()->RemoveFile( l_itemId );
 				m_filesList->Delete( l_itemId );
 			}
 		}
 
-		void MainFrame :: _onFunctionCopy( wxCommandEvent & )
+		void MainFrame::_onFunctionCopy( wxCommandEvent & )
 		{
 		}
 
-		void MainFrame :: _onFunctionCut( wxCommandEvent & )
+		void MainFrame::_onFunctionCut( wxCommandEvent & )
 		{
 		}
 
-		void MainFrame :: _onFunctionPaste( wxCommandEvent & )
+		void MainFrame::_onFunctionPaste( wxCommandEvent & )
 		{
 		}
 
-		void MainFrame :: _onNewScene( wxCommandEvent & p_event )
+		void MainFrame::_onNewScene( wxCommandEvent & p_event )
 		{
 			if ( m_currentProject )
 			{
@@ -1140,12 +1145,12 @@ namespace Troll
 				}
 				catch ( bool )
 				{
-					LogDebugMessage( wxT( "MainFrame :: OnNewScene - Probleme d'ajout" ) );
+					LogDebugMessage( wxT( "MainFrame::OnNewScene - Probleme d'ajout" ) );
 				}
 			}
 		}
 
-		void MainFrame :: _onRemoveScene( wxCommandEvent & p_event )
+		void MainFrame::_onRemoveScene( wxCommandEvent & p_event )
 		{
 			if ( ! m_currentProject )
 			{
@@ -1159,7 +1164,7 @@ namespace Troll
 			m_currentProject->RemoveScene( l_scene );
 		}
 
-		void MainFrame :: _onEditProject( wxCommandEvent & p_event )
+		void MainFrame::_onEditProject( wxCommandEvent & p_event )
 		{
 			if ( !m_currentProject )
 			{
@@ -1221,7 +1226,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onEditOverlays( wxCommandEvent & p_event )
+		void MainFrame::_onEditOverlays( wxCommandEvent & p_event )
 		{
 			if ( !m_currentProject )
 			{
@@ -1284,7 +1289,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onTestProject( wxCommandEvent & p_event )
+		void MainFrame::_onTestProject( wxCommandEvent & p_event )
 		{
 			if ( !m_currentProject )
 			{
@@ -1330,7 +1335,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onSize( wxSizeEvent & p_event )
+		void MainFrame::_onSize( wxSizeEvent & p_event )
 		{
 			if ( m_tbar )
 			{
@@ -1344,7 +1349,7 @@ namespace Troll
 			_resize();
 		}
 
-		void MainFrame :: _onShow( wxShowEvent & p_event )
+		void MainFrame::_onShow( wxShowEvent & p_event )
 		{
 			if ( m_elypseCtrl != NULL )
 			{
@@ -1352,7 +1357,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onSetFocus( wxFocusEvent & p_event )
+		void MainFrame::_onSetFocus( wxFocusEvent & p_event )
 		{
 			if ( m_elypseCtrl != NULL )
 			{
@@ -1360,7 +1365,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onKillFocus( wxFocusEvent & p_event )
+		void MainFrame::_onKillFocus( wxFocusEvent & p_event )
 		{
 			if ( m_elypseCtrl != NULL )
 			{
@@ -1368,7 +1373,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onActivate( wxActivateEvent & p_event )
+		void MainFrame::_onActivate( wxActivateEvent & p_event )
 		{
 			if ( m_elypseCtrl != NULL )
 			{
@@ -1376,13 +1381,13 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onNotebook( wxNotebookEvent & p_event )
+		void MainFrame::_onNotebook( wxNotebookEvent & p_event )
 		{
 			int l_idx = p_event.GetSelection();
 			wxBookCtrlBase  * l_book = wx_static_cast( wxBookCtrlBase *, p_event.GetEventObject() );
 			m_currentPage = l_book->GetPageText( l_idx );
 
-			//	std::cout << "MainFrame :: _onNotebook - " << m_currentPage << std::endl;
+			//	std::cout << "MainFrame::_onNotebook - " << m_currentPage << std::endl;
 
 			if ( l_book->GetName() == wxT( "Test de TrollScene" ) )
 			{
@@ -1414,12 +1419,12 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onNotebookMiddleDown( wxMouseEvent & p_event )
+		void MainFrame::_onNotebookMiddleDown( wxMouseEvent & p_event )
 		{
-			std::cout << "MainFrame :: _onNotebookMiddleDown\n";
+			std::cout << "MainFrame::_onNotebookMiddleDown\n";
 		}
 
-		void MainFrame :: _onCloseFile( wxCommandEvent & p_event )
+		void MainFrame::_onCloseFile( wxCommandEvent & p_event )
 		{
 			TrollFile * l_file = m_filesList->GetSelectedScene()->GetFile( m_filesList->GetSelected() );
 
@@ -1438,9 +1443,9 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onEditTimeLine( wxCommandEvent & p_event )
+		void MainFrame::_onEditTimeLine( wxCommandEvent & p_event )
 		{
-			//	std::cout << "MainFrame :: _onEditTimeLine\n";
+			//	std::cout << "MainFrame::_onEditTimeLine\n";
 			if ( !m_currentProject )
 			{
 				LogDebugMessage( wxT( "Aucun projet sélectionné" ) );
@@ -1496,7 +1501,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: _onVerticalSplitterPositionChanged( wxSplitterEvent & p_event )
+		void MainFrame::_onVerticalSplitterPositionChanged( wxSplitterEvent & p_event )
 		{
 			if ( m_resizing )
 			{
@@ -1511,22 +1516,22 @@ namespace Troll
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onVerticalSplitterPositionChanging( wxSplitterEvent & p_event )
+		void MainFrame::_onVerticalSplitterPositionChanging( wxSplitterEvent & p_event )
 		{
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onVerticalSplitterDClick( wxSplitterEvent & p_event )
+		void MainFrame::_onVerticalSplitterDClick( wxSplitterEvent & p_event )
 		{
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onVerticalSplitterUnsplitEvent( wxSplitterEvent & p_event )
+		void MainFrame::_onVerticalSplitterUnsplitEvent( wxSplitterEvent & p_event )
 		{
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onHorizontalSplitterPositionChanged( wxSplitterEvent & p_event )
+		void MainFrame::_onHorizontalSplitterPositionChanged( wxSplitterEvent & p_event )
 		{
 			if ( m_resizing )
 			{
@@ -1540,7 +1545,7 @@ namespace Troll
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onHorizontalSplitterPositionChanging( wxSplitterEvent & p_event )
+		void MainFrame::_onHorizontalSplitterPositionChanging( wxSplitterEvent & p_event )
 		{
 			/*
 				m_treesWidth = p_event.GetSashPosition();
@@ -1551,29 +1556,29 @@ namespace Troll
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onHorizontalSplitterDClick( wxSplitterEvent & p_event )
+		void MainFrame::_onHorizontalSplitterDClick( wxSplitterEvent & p_event )
 		{
 			p_event.Skip();
 		}
 
-		void MainFrame :: _onHorizontalSplitterUnsplitEvent( wxSplitterEvent & p_event )
+		void MainFrame::_onHorizontalSplitterUnsplitEvent( wxSplitterEvent & p_event )
 		{
 			p_event.Skip();
 		}
 
 
-		void MainFrame :: _onListFolder( wxCommandEvent & p_event )
+		void MainFrame::_onListFolder( wxCommandEvent & p_event )
 		{
 			ListFolder();
 		}
 
-		void MainFrame :: _onProjectProperties( wxCommandEvent & p_event )
+		void MainFrame::_onProjectProperties( wxCommandEvent & p_event )
 		{
 			ProjectProperties * l_properties = new ProjectProperties( m_currentProject, this );
 			l_properties->Show();
 		}
 
-		void MainFrame :: _onGoToLine( wxCommandEvent & p_event )
+		void MainFrame::_onGoToLine( wxCommandEvent & p_event )
 		{
 			if ( m_mainTabsContainer->GetPageCount() <= 0 )
 			{
@@ -1607,7 +1612,7 @@ namespace Troll
 			l_dialog->Destroy();
 		}
 
-		void MainFrame :: _onSearch( wxCommandEvent & p_event )
+		void MainFrame::_onSearch( wxCommandEvent & p_event )
 		{
 			if ( m_mainTabsContainer == NULL || m_mainTabsContainer->GetPageCount() == 0 )
 			{
@@ -1619,7 +1624,7 @@ namespace Troll
 			l_editCtrl->Search( m_search->GetValue() );
 		}
 
-		void MainFrame :: _onSearchNext( wxCommandEvent & p_event )
+		void MainFrame::_onSearchNext( wxCommandEvent & p_event )
 		{
 			if ( m_mainTabsContainer == NULL || m_mainTabsContainer->GetPageCount() == 0 )
 			{
@@ -1631,7 +1636,7 @@ namespace Troll
 			l_editCtrl->SearchNext();
 		}
 
-		void MainFrame :: _onSearchPrevious( wxCommandEvent & p_event )
+		void MainFrame::_onSearchPrevious( wxCommandEvent & p_event )
 		{
 			if ( m_mainTabsContainer == NULL || m_mainTabsContainer->GetPageCount() == 0 )
 			{
@@ -1643,7 +1648,7 @@ namespace Troll
 			l_editCtrl->SearchPrevious();
 		}
 
-		void MainFrame :: _onReplace( wxCommandEvent & p_event )
+		void MainFrame::_onReplace( wxCommandEvent & p_event )
 		{
 			if ( m_mainTabsContainer == NULL || m_mainTabsContainer->GetPageCount() == 0 )
 			{
@@ -1656,7 +1661,7 @@ namespace Troll
 			l_dialog->Show();
 		}
 
-		void MainFrame :: _initEditLists()
+		void MainFrame::_initEditLists()
 		{
 			m_objectsListContainer = new wxPanel( m_treeTabsContainer, ObjectsList, wxPoint( 0, 0 ), m_treeTabsContainer->GetClientSize() );
 			m_treeTabsContainer->InsertPage( 2, m_objectsListContainer, _T( "Objets" ), false );
@@ -1667,7 +1672,7 @@ namespace Troll
 			m_objectInfosContainer = new wxScrolledWindow( m_objectsListContainer, PropertiesList, wxPoint( 5, l_size.y + 5 ), wxSize( l_size.x - 10, l_size.y - 10 ) );
 		}
 
-		void MainFrame :: _initElypse( Project * p_project, const wxString & p_title, bool p_edit, int p_adjustY )
+		void MainFrame::_initElypse( Project * p_project, const wxString & p_title, bool p_edit, int p_adjustY )
 		{
 			wxSize l_projectSize = p_project->GetResolution();
 			wxSize l_size = m_mainTabsContainer->GetClientSize();
@@ -1714,7 +1719,7 @@ namespace Troll
 			m_elypseCtrl->Init();
 		}
 
-		void MainFrame :: _onTreeNewScene( wxCommandEvent & p_event )
+		void MainFrame::_onTreeNewScene( wxCommandEvent & p_event )
 		{
 			if ( m_currentProject == NULL )
 			{
@@ -1725,7 +1730,7 @@ namespace Troll
 			l_frame->Show();
 		}
 
-		void MainFrame :: _onEditSceneDependencies( wxCommandEvent & p_event )
+		void MainFrame::_onEditSceneDependencies( wxCommandEvent & p_event )
 		{
 			if ( m_currentProject == NULL )
 			{
@@ -1736,7 +1741,7 @@ namespace Troll
 			m_sceneDependencies->Show();
 		}
 
-		void MainFrame :: LayoutChildren()
+		void MainFrame::LayoutChildren()
 		{
 			if ( m_tbar )
 			{
@@ -1745,7 +1750,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: PopulateToolbar( wxToolBarBase * toolBar )
+		void MainFrame::PopulateToolbar( wxToolBarBase * toolBar )
 		{
 			wxBitmap toolBarBitmaps[Tool_Max];
 			toolBarBitmaps[Tool_new] = wxBitmap( new_xpm );
@@ -1779,9 +1784,9 @@ namespace Troll
 			toolBar->SetRows( !( toolBar->IsVertical() ) ? m_rows : 10 / m_rows );
 		}
 
-		void MainFrame :: SetProject( const wxString & p_name, const wxString & p_path, const wxString & p_mainSceneName,
-									  BackgroundType p_backgroundType, const wxString & p_background, bool p_shadows,
-									  AntiAliasing p_aa, const wxSize & p_resolution )
+		void MainFrame::SetProject( const wxString & p_name, const wxString & p_path, const wxString & p_mainSceneName,
+									BackgroundType p_backgroundType, const wxString & p_background, bool p_shadows,
+									AntiAliasing p_aa, const wxSize & p_resolution )
 		{
 			if ( m_currentProject )
 			{
@@ -1806,7 +1811,7 @@ namespace Troll
 			}
 			catch ( bool )
 			{
-				LogDebugMessage( wxT( "MainFrame :: SetProject - Probleme d'ajout" ) );
+				LogDebugMessage( wxT( "MainFrame::SetProject - Probleme d'ajout" ) );
 				return;
 			}
 
@@ -1816,7 +1821,7 @@ namespace Troll
 			}
 		}
 
-		wxString MainFrame :: CreateMain( Project * p_project, bool p_writeScripts )
+		wxString MainFrame::CreateMain( Project * p_project, bool p_writeScripts )
 		{
 			wxString l_mainFileName;
 
@@ -1862,10 +1867,16 @@ namespace Troll
 				l_sceneName = l_scene->GetName();
 				l_line = wxT( "scene " ) + l_sceneName + wxT( "\n{\n" );
 				l_textStream.WriteString( l_line );
-				//		if ( ! l_scene->IsNeeded())
-				//		{
-				l_textStream.WriteString( wxT( "\tmuse_file " ) + l_scene->GetName() + wxT( ".muse\n" ) );
-				//		}
+
+				if ( l_scene->IsMainScene())
+				{
+					l_textStream.WriteString( wxT( "\tmuse_file " ) + l_scene->GetName() + wxT( ".muse\n" ) );
+				}
+				else
+				{
+					l_textStream.WriteString( wxT( "\tmuse_file " ) + p_project->GetName() + wxT( "_" ) + l_scene->GetName() + wxT( ".muse\n" ) );
+				}
+
 				l_files = l_scene->m_dataFiles;
 
 				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
@@ -1992,7 +2003,7 @@ namespace Troll
 			return l_mainFileName;
 		}
 
-		wxString MainFrame :: CreateSceneEditorMain( Project * p_project )
+		wxString MainFrame::CreateSceneEditorMain( Project * p_project )
 		{
 			wxString l_mainFileName;
 
@@ -2104,7 +2115,7 @@ namespace Troll
 			return l_mainFileName;
 		}
 
-		wxString MainFrame :: CreateOverlayEditorMain( Project * p_project )
+		wxString MainFrame::CreateOverlayEditorMain( Project * p_project )
 		{
 			wxString l_mainFileName;
 
@@ -2199,7 +2210,7 @@ namespace Troll
 			return l_mainFileName;
 		}
 
-		void MainFrame :: OpenSelectedFile()
+		void MainFrame::OpenSelectedFile()
 		{
 			wxTreeItemId l_itemId = m_filesList->GetSelected();
 			TrollFile * l_file = m_filesList->GetSelectedScene()->GetFile( l_itemId );
@@ -2231,7 +2242,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: LogDebugMessage( const wxString & p_message )
+		void MainFrame::LogDebugMessage( const wxString & p_message )
 		{
 			//	std::cout << p_message << "\n";
 			wxLog::SetActiveTarget( m_logDebug );
@@ -2239,7 +2250,7 @@ namespace Troll
 			m_debugLog->SetSelection( m_debugLog->GetLastPosition() - 2, m_debugLog->GetLastPosition() - 1 );
 		}
 
-		void MainFrame :: LogOutMessage( const wxString & p_message )
+		void MainFrame::LogOutMessage( const wxString & p_message )
 		{
 			//	std::cout << p_message << "\n";
 			wxLog::SetActiveTarget( m_logCompilation );
@@ -2247,7 +2258,7 @@ namespace Troll
 			m_compilationLog->SetSelection( m_compilationLog->GetLastPosition() - 2, m_compilationLog->GetLastPosition() - 1 );
 		}
 
-		void MainFrame :: CloseProject()
+		void MainFrame::CloseProject()
 		{
 			m_elypseContainer = NULL;
 			m_tbar = NULL;
@@ -2313,7 +2324,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: HideObjectInfos()
+		void MainFrame::HideObjectInfos()
 		{
 			if ( m_viewedObject != NULL )
 			{
@@ -2322,9 +2333,9 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: ShowObjectInfos( TrollObject * p_object )
+		void MainFrame::ShowObjectInfos( TrollObject * p_object )
 		{
-			//	std::cout << "MainFrame :: ShowObjectInfos\n";
+			//	std::cout << "MainFrame::ShowObjectInfos\n";
 			HideObjectInfos();
 			int l_height = p_object->BuildPanel( m_objectInfosContainer, m_objectInfosContainer->GetClientSize().x - 20 );
 
@@ -2341,7 +2352,7 @@ namespace Troll
 			m_viewedObject = p_object;
 		}
 
-		float MainFrame :: GetMuseHeight()
+		float MainFrame::GetMuseHeight()
 		{
 			if ( m_elypseCtrl != NULL )
 			{
@@ -2351,7 +2362,7 @@ namespace Troll
 			return 0;
 		}
 
-		float MainFrame :: GetMuseWidth()
+		float MainFrame::GetMuseWidth()
 		{
 			if ( m_elypseCtrl != NULL )
 			{
@@ -2361,11 +2372,11 @@ namespace Troll
 			return 0;
 		}
 
-		void MainFrame :: CreateNewContinuousEventFrame( TrollContinuousEvent * p_event )
+		void MainFrame::CreateNewContinuousEventFrame( TrollContinuousEvent * p_event )
 		{
 		}
 
-		void MainFrame :: AddPonctualEvent( TrollSequence * p_sequence, float p_fireTime )
+		void MainFrame::AddPonctualEvent( TrollSequence * p_sequence, float p_fireTime )
 		{
 			StringArray l_tmp;
 			EMuse::Sequences::BasePonctualEvent * l_museEvent = ScriptEngine::GetContext()->sequenceManager->CreatePonctualEvent( "Overlay_Hide", l_tmp );
@@ -2375,7 +2386,7 @@ namespace Troll
 			l_panel->AddPonctualEvent( l_event, p_fireTime );
 		}
 
-		void MainFrame :: AddContinuousEvent( TrollSequence * p_sequence, float p_fireTime )
+		void MainFrame::AddContinuousEvent( TrollSequence * p_sequence, float p_fireTime )
 		{
 			StringArray l_tmp;
 			Overlay_Translate * l_museEvent = reinterpret_cast <Overlay_Translate *>( ScriptEngine::GetContext()->sequenceManager->CreateContinuousEvent( "Overlay_Translate" ) );
@@ -2391,7 +2402,7 @@ namespace Troll
 			l_panel->AddContinuousEvent( l_event );
 		}
 
-		void MainFrame :: OpenProjectFile( const wxString & p_fileName )
+		void MainFrame::OpenProjectFile( const wxString & p_fileName )
 		{
 			if ( ! p_fileName.empty() )
 			{
@@ -2438,7 +2449,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: SaveSceneFiles( TrollScene * p_scene )
+		void MainFrame::SaveSceneFiles( TrollScene * p_scene )
 		{
 			TrollFile * l_currentFile;
 			unsigned int l_number = p_scene->GetSceneFilesNumber();
@@ -2478,7 +2489,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: SaveScene( TrollScene * p_scene )
+		void MainFrame::SaveScene( TrollScene * p_scene )
 		{
 			TrollFile * l_file;
 
@@ -2540,7 +2551,7 @@ namespace Troll
 			*/
 		}
 
-		void MainFrame :: SaveProject( Project * p_project )
+		void MainFrame::SaveProject( Project * p_project )
 		{
 			if ( p_project == NULL )
 			{
@@ -2561,11 +2572,11 @@ namespace Troll
 				p_project->SetProjectFileName( l_fileName );
 			}
 
-			LogDebugMessage( wxT( "MainFrame :: SaveProject - " ) + l_fileName );
+			LogDebugMessage( wxT( "MainFrame::SaveProject - " ) + l_fileName );
 
 			if ( ! l_fileName.empty() )
 			{
-				LogDebugMessage( wxT( "MainFrame :: OnSaveProject - " ) + l_fileName );
+				LogDebugMessage( wxT( "MainFrame::OnSaveProject - " ) + l_fileName );
 				wxFileOutputStream fileOutput( l_fileName );
 				wxTextOutputStream * l_textStream = new wxTextOutputStream( fileOutput );
 				TrollScene * l_scene = p_project->GetMainScene();
@@ -2593,11 +2604,11 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: SaveFileAs( TrollFile * p_file )
+		void MainFrame::SaveFileAs( TrollFile * p_file )
 		{
 			if ( p_file == NULL )
 			{
-				LogDebugMessage( wxT( "MainFrame :: SaveFileAs - Nothing to save" ) );
+				LogDebugMessage( wxT( "MainFrame::SaveFileAs - Nothing to save" ) );
 				return;
 			}
 
@@ -2635,7 +2646,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: SaveFile( TrollFile * p_file, const wxString & p_fileName )
+		void MainFrame::SaveFile( TrollFile * p_file, const wxString & p_fileName )
 		{
 			if ( p_file != NULL && p_file->EditPanel != NULL )
 			{
@@ -2651,13 +2662,13 @@ namespace Troll
 			}
 		}
 
-		bool MainFrame :: ZipFolder( const wxString & p_folderPath, const wxString & p_zipFileName )
+		bool MainFrame::ZipFolder( const wxString & p_folderPath, const wxString & p_zipFileName )
 		{
 			/*
 				CkZip l_zip;
 				if ( ! l_zip.UnlockComponent("Anything for 30-day trial."))
 				{
-					LogDebugMessage( wxString( "MainFrame :: ZipFolder - ") + l_zip.lastErrorText());
+					LogDebugMessage( wxString( "MainFrame::ZipFolder - ") + l_zip.lastErrorText());
 					return false;
 				}
 
@@ -2665,7 +2676,7 @@ namespace Troll
 
 				if ( ! l_zip.AppendFiles( p_folderPath.c_str(), true, 0))
 				{
-					LogDebugMessage( wxString( "MainFrame :: ZipFolder - ") + l_zip.lastErrorText());
+					LogDebugMessage( wxString( "MainFrame::ZipFolder - ") + l_zip.lastErrorText());
 					return false;
 				}
 
@@ -2673,14 +2684,14 @@ namespace Troll
 
 				if ( ! l_zip.WriteZipAndClose( 0))
 				{
-					LogDebugMessage( wxString( "MainFrame :: ZipFolder - ") + l_zip.lastErrorText());
+					LogDebugMessage( wxString( "MainFrame::ZipFolder - ") + l_zip.lastErrorText());
 					return false;
 				}
 			*/
 			return true;
 		}
 
-		void MainFrame :: CompileNeededScenes( const wxArrayString & p_scenes, TrollScriptCompiler * p_compiler, wxArrayString & p_compiledScenes )
+		void MainFrame::CompileNeededScenes( const wxArrayString & p_scenes, TrollScriptCompiler * p_compiler, wxArrayString & p_compiledScenes )
 		{
 			TrollScene * l_scene;
 			wxArrayString l_neededScenes;
@@ -2737,7 +2748,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: Compile( TrollFile * p_file, TrollScene * p_scene )
+		void MainFrame::Compile( TrollFile * p_file, TrollScene * p_scene )
 		{
 			m_compilationLog->Clear();
 			m_logTabsContainer->SetSelection( 1 );
@@ -2792,7 +2803,7 @@ namespace Troll
 				{
 					l_textCtrl = m_editText;
 				}
-				
+
 				wxString l_fileName = ( l_file->m_scene->IsMainScene() ? wxString() : l_file->m_scene->GetName() + wxFileName::GetPathSeparator() ) + l_file->FileName;
 				wxString l_path = GetCurrentProject()->GetPath() + l_fileName;
 				LogOutMessage( wxString( wxT( "Compiling " ) ) << l_fileName );
@@ -2828,7 +2839,7 @@ namespace Troll
 					{
 						l_textCtrl = m_editText;
 					}
-					
+
 					wxString l_fileName = ( l_file->m_scene->IsMainScene() ? wxString() : l_file->m_scene->GetName() + wxFileName::GetPathSeparator() ) + l_file->FileName;
 					wxString l_path = GetCurrentProject()->GetPath() + l_fileName;
 					LogOutMessage( wxString( wxT( "Compiling " ) ) << l_fileName );
@@ -2862,13 +2873,13 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: ListFolder()
+		void MainFrame::ListFolder()
 		{
 			FolderList * l_list = new FolderList( m_currentProject->GetPath() + m_filesList->GetSelectedScene()->GetFile( m_filesList->GetSelected() )->Folder, this );
 			l_list->Show();
 		}
 
-		void MainFrame :: CloseElypse()
+		void MainFrame::CloseElypse()
 		{
 			if ( m_elypseCtrl != NULL && m_elypseCtrl->GetTrollInstance()->IsSceneCreated() )
 			{
@@ -2906,7 +2917,7 @@ namespace Troll
 #endif
 		}
 
-		void MainFrame :: CreateFunctionsGroup( const wxString & p_name )
+		void MainFrame::CreateFunctionsGroup( const wxString & p_name )
 		{
 			if ( m_functionsList )
 			{
@@ -2914,7 +2925,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: CreateFreeFunction( const wxString & p_funcName, VariableBaseType p_returnValue, std::vector< VariableBaseType > p_params )
+		void MainFrame::CreateFreeFunction( const wxString & p_funcName, VariableBaseType p_returnValue, std::vector< VariableBaseType > p_params )
 		{
 			if ( m_functionsList )
 			{
@@ -2922,7 +2933,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: CreateClassFunction( const wxString & p_funcName, VariableBaseType p_returnValue, std::vector< VariableBaseType > p_params )
+		void MainFrame::CreateClassFunction( const wxString & p_funcName, VariableBaseType p_returnValue, std::vector< VariableBaseType > p_params )
 		{
 			if ( m_functionsList )
 			{
@@ -2930,7 +2941,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: CreateConstantsGroup( const wxString & p_name )
+		void MainFrame::CreateConstantsGroup( const wxString & p_name )
 		{
 			if ( m_functionsList )
 			{
@@ -2938,7 +2949,7 @@ namespace Troll
 			}
 		}
 
-		void MainFrame :: CreateConstant( const wxString & p_constName, VariableBaseType p_type )
+		void MainFrame::CreateConstant( const wxString & p_constName, VariableBaseType p_type )
 		{
 			if ( m_functionsList )
 			{

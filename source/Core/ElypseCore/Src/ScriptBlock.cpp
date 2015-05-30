@@ -25,7 +25,7 @@
 #define COMPILE_ERROR_IN_BLOCK( p_desc , p_block ) m_compiler->_error();GENLIB_EXCEPTION( "Compiler Error : [" + m_compiler->_getScriptFileName()+" @ L# "+ StringConverter::toString( p_block->m_lineNumBegin ) + " ] -> " + p_desc );
 #define COMPILE_WARNING_IN_BLOCK( p_desc , p_block )  m_compiler->_warning();EMUSE_MESSAGE_RELEASE( "Compiler Warning [ "+m_compiler->_getScriptFileName()+" @ L# "+ StringConverter::toString( p_block->m_lineNumBegin ) + " ] -> " + p_desc );
 
-ScriptBlock :: ScriptBlock()
+ScriptBlock::ScriptBlock()
 	:	m_parent( NULL ),
 		m_compiledScript( NULL ),
 		m_compiler( NULL ),
@@ -39,9 +39,9 @@ ScriptBlock :: ScriptBlock()
 {
 }
 
-ScriptBlock * ScriptBlock :: _initialise( ScriptCompiler * p_compiler, BlockType p_type,
-		unsigned int p_lineNum, unsigned int p_depth,
-		ScriptBlock * p_parent )
+ScriptBlock * ScriptBlock::_initialise( ScriptCompiler * p_compiler, BlockType p_type,
+										unsigned int p_lineNum, unsigned int p_depth,
+										ScriptBlock * p_parent )
 {
 	genlib_assert( p_compiler != NULL );
 	m_compiler = p_compiler;
@@ -54,12 +54,12 @@ ScriptBlock * ScriptBlock :: _initialise( ScriptCompiler * p_compiler, BlockType
 	return this;
 }
 
-ScriptBlock :: ~ScriptBlock()
+ScriptBlock::~ScriptBlock()
 {
 	Clear();
 }
 
-void ScriptBlock :: Clear() d_no_throw
+void ScriptBlock::Clear() d_no_throw
 {
 	for ( auto & l_child : m_childs )
 	{
@@ -71,7 +71,7 @@ void ScriptBlock :: Clear() d_no_throw
 	m_subType = BST_NONE;
 }
 
-bool ScriptBlock :: Parse()
+bool ScriptBlock::Parse()
 {
 	try
 	{
@@ -117,7 +117,7 @@ bool ScriptBlock :: Parse()
 	return false;
 }
 
-bool ScriptBlock :: _parseSeparator()
+bool ScriptBlock::_parseSeparator()
 {
 	VERBOSE_COMPILATOR( "_parseSeparator" );
 
@@ -147,7 +147,7 @@ bool ScriptBlock :: _parseSeparator()
 	return false;
 }
 
-bool ScriptBlock :: _preCompiledCurrent( ScriptBlockArray & p_childs, ScriptNodeArray & p_nodeArray, bool p_clear )
+bool ScriptBlock::_preCompiledCurrent( ScriptBlockArray & p_childs, ScriptNodeArray & p_nodeArray, bool p_clear )
 {
 	if ( p_childs.empty() )
 	{
@@ -179,7 +179,7 @@ bool ScriptBlock :: _preCompiledCurrent( ScriptBlockArray & p_childs, ScriptNode
 	return true;
 }
 
-bool ScriptBlock :: _parseInitial()
+bool ScriptBlock::_parseInitial()
 {
 	VERBOSE_COMPILATOR( "_parseInitial" );
 	ScriptNodeArray l_nodeArray;
@@ -282,7 +282,7 @@ bool ScriptBlock :: _parseInitial()
 	return true;
 }
 
-bool ScriptBlock :: _parseString()
+bool ScriptBlock::_parseString()
 {
 	VERBOSE_COMPILATOR( "_parseString" );
 

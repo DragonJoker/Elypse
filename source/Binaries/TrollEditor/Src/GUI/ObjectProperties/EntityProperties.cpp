@@ -30,8 +30,8 @@ BEGIN_EVENT_TABLE( EntityProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-EntityProperties :: EntityProperties( TrollEntity * p_entity, wxWindow * parent, const wxPoint & pos,
-									  const wxSize & size, long style )
+EntityProperties::EntityProperties( TrollEntity * p_entity, wxWindow * parent, const wxPoint & pos,
+									const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_entity( p_entity )
 {
@@ -66,13 +66,13 @@ EntityProperties :: EntityProperties( TrollEntity * p_entity, wxWindow * parent,
 
 
 
-EntityProperties :: ~EntityProperties()
+EntityProperties::~EntityProperties()
 {
 }
 
 
 
-void EntityProperties :: UpdateProperties()
+void EntityProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	wxPoint l_position = wxPoint( GetClientSize().x / 2, 0 );
@@ -118,7 +118,7 @@ void EntityProperties :: UpdateProperties()
 
 
 
-void EntityProperties :: _onEditName( wxCommandEvent & p_event )
+void EntityProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -128,7 +128,7 @@ void EntityProperties :: _onEditName( wxCommandEvent & p_event )
 
 
 
-void EntityProperties :: _onSelectParent( wxCommandEvent & p_event )
+void EntityProperties::_onSelectParent( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -139,7 +139,7 @@ void EntityProperties :: _onSelectParent( wxCommandEvent & p_event )
 
 
 
-void EntityProperties :: _onSelectMesh( wxCommandEvent & p_event )
+void EntityProperties::_onSelectMesh( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -150,11 +150,11 @@ void EntityProperties :: _onSelectMesh( wxCommandEvent & p_event )
 
 
 
-void EntityProperties :: _onEndEditLabel( wxListEvent & p_event )
+void EntityProperties::_onEndEditLabel( wxListEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
-		std::cout << "EntityProperties :: _onEndEditLabel\n";
+		std::cout << "EntityProperties::_onEndEditLabel\n";
 		long l_index = p_event.GetIndex();
 		wxString l_value = p_event.GetText();
 		TrollMesh * l_mesh = m_entity->GetMesh();

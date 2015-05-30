@@ -194,8 +194,8 @@ namespace General
 			template <typename T, typename U, typename Z>
 			static inline void cycle( const std::map <T, U *> & p_map, void( U::* p_func )( const Z & ), const Z & p_param )
 			{
-				typename std::map <T, U *> :: const_iterator i = p_map.begin();
-				const typename std::map <T, U *> :: const_iterator & iend = p_map.end();
+				typename std::map <T, U *>::const_iterator i = p_map.begin();
+				const typename std::map <T, U *>::const_iterator & iend = p_map.end();
 
 				for ( ; i != iend; ++ i )
 				{
@@ -206,8 +206,8 @@ namespace General
 			template <typename T, typename U, typename V, typename W>
 			static inline void cycle( const std::map <T, U *> & p_map, void( U::* p_func )( const V &, const W & ), const V & p_param, const W & p_param2 )
 			{
-				typename std::map <T, U *> :: const_iterator i = p_map.begin();
-				const typename std::map <T, U *> :: const_iterator & iend = p_map.end();
+				typename std::map <T, U *>::const_iterator i = p_map.begin();
+				const typename std::map <T, U *>::const_iterator & iend = p_map.end();
 
 				for ( ; i != iend; ++ i )
 				{

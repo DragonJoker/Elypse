@@ -30,7 +30,7 @@ BEGIN_EVENT_TABLE( SoundObjectProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-SoundObjectProperties :: SoundObjectProperties( TrollSoundObject * p_soundObject, wxWindow * parent,
+SoundObjectProperties::SoundObjectProperties( TrollSoundObject * p_soundObject, wxWindow * parent,
 		const wxPoint & pos, const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_soundObject( p_soundObject )
@@ -48,13 +48,13 @@ SoundObjectProperties :: SoundObjectProperties( TrollSoundObject * p_soundObject
 
 
 
-SoundObjectProperties :: ~SoundObjectProperties()
+SoundObjectProperties::~SoundObjectProperties()
 {
 }
 
 
 
-void SoundObjectProperties :: UpdateProperties()
+void SoundObjectProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	m_updatingProperties = false;
@@ -62,7 +62,7 @@ void SoundObjectProperties :: UpdateProperties()
 
 
 
-void SoundObjectProperties :: _onEditAttenuation( wxCommandEvent & p_event )
+void SoundObjectProperties::_onEditAttenuation( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -85,7 +85,7 @@ void SoundObjectProperties :: _onEditAttenuation( wxCommandEvent & p_event )
 
 
 
-void SoundObjectProperties :: _onSelectLooped( wxCommandEvent & p_event )
+void SoundObjectProperties::_onSelectLooped( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -96,7 +96,7 @@ void SoundObjectProperties :: _onSelectLooped( wxCommandEvent & p_event )
 
 
 
-void SoundObjectProperties :: _onEditTimer( wxCommandEvent & p_event )
+void SoundObjectProperties::_onEditTimer( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -112,7 +112,7 @@ void SoundObjectProperties :: _onEditTimer( wxCommandEvent & p_event )
 
 
 
-void SoundObjectProperties :: _onEditFadeIn( wxCommandEvent & p_event )
+void SoundObjectProperties::_onEditFadeIn( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -128,7 +128,7 @@ void SoundObjectProperties :: _onEditFadeIn( wxCommandEvent & p_event )
 
 
 
-void SoundObjectProperties :: _onEditFadeOut( wxCommandEvent & p_event )
+void SoundObjectProperties::_onEditFadeOut( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

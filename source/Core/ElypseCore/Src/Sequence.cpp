@@ -5,7 +5,7 @@
 
 #include "Context.h"
 
-Sequence :: Sequence( const String & p_name )
+Sequence::Sequence( const String & p_name )
 	:	named( p_name ),
 		m_target( NULL ),
 		m_totalLength( 0.0 ),
@@ -17,13 +17,13 @@ Sequence :: Sequence( const String & p_name )
 	m_continuousIterator = m_continuousEvents.begin();
 }
 
-Sequence :: ~Sequence()
+Sequence::~Sequence()
 {
 	multimap::deleteAll( m_ponctualEvents );
 	multimap::deleteAll( m_continuousEvents );
 }
 
-void Sequence :: Start()
+void Sequence::Start()
 {
 	m_ponctualIterator = m_ponctualEvents.begin();
 	m_continuousIterator = m_continuousEvents.begin();
@@ -31,7 +31,7 @@ void Sequence :: Start()
 	m_status = PLAYING;
 }
 
-void Sequence :: Stop()
+void Sequence::Stop()
 {
 	m_status = STOPPED;
 	m_currentTime = 0.0;
@@ -40,7 +40,7 @@ void Sequence :: Stop()
 	multimap::cycle( m_continuousEvents, & BaseContinuousEvent::Reset );
 }
 
-void Sequence :: Pause( bool p_pause )
+void Sequence::Pause( bool p_pause )
 {
 	if ( p_pause )
 	{
@@ -51,13 +51,13 @@ void Sequence :: Pause( bool p_pause )
 	m_status = PLAYING;
 }
 
-void Sequence :: AddPonctualEvent( BasePonctualEvent * p_event, Real p_when )
+void Sequence::AddPonctualEvent( BasePonctualEvent * p_event, Real p_when )
 {
 	m_ponctualEvents.insert( PonctualEventMap::value_type( p_when, p_event ) );
 	m_totalLength = max( m_totalLength, p_when );
 }
 
-void Sequence :: ChangePonctualEventTime( BasePonctualEvent * p_event, Real p_when )
+void Sequence::ChangePonctualEventTime( BasePonctualEvent * p_event, Real p_when )
 {
 	bool l_found = false;
 	PonctualEventMap::iterator l_it = m_ponctualEvents.begin();
@@ -77,14 +77,14 @@ void Sequence :: ChangePonctualEventTime( BasePonctualEvent * p_event, Real p_wh
 	}
 }
 
-void Sequence :: AddContinuousEvent( BaseContinuousEvent * p_event )
+void Sequence::AddContinuousEvent( BaseContinuousEvent * p_event )
 {
 	p_event->CalcLength();
 	m_continuousEvents.insert( ContinuousEventMap::value_type( p_event->GetStartTime(), p_event ) );
 	m_totalLength = max( m_totalLength, p_event->GetLength() + p_event->GetStartTime() );
 }
 
-void Sequence :: ChangeContinuousEventTime( BaseContinuousEvent * p_event, Real p_when )
+void Sequence::ChangeContinuousEventTime( BaseContinuousEvent * p_event, Real p_when )
 {
 	bool l_found = false;
 	ContinuousEventMap::iterator l_it = m_continuousEvents.begin();
@@ -106,7 +106,7 @@ void Sequence :: ChangeContinuousEventTime( BaseContinuousEvent * p_event, Real 
 	}
 }
 
-void Sequence :: RemovePonctualEvent( BasePonctualEvent * p_event )
+void Sequence::RemovePonctualEvent( BasePonctualEvent * p_event )
 {
 	bool l_found = false;
 	PonctualEventMap::iterator l_it = m_ponctualEvents.begin();
@@ -126,7 +126,7 @@ void Sequence :: RemovePonctualEvent( BasePonctualEvent * p_event )
 	}
 }
 
-void Sequence :: RemoveContinuousEvent( BaseContinuousEvent * p_event )
+void Sequence::RemoveContinuousEvent( BaseContinuousEvent * p_event )
 {
 	bool l_found = false;
 	ContinuousEventMap::iterator l_it = m_continuousEvents.begin();
@@ -146,14 +146,14 @@ void Sequence :: RemoveContinuousEvent( BaseContinuousEvent * p_event )
 	}
 }
 
-void Sequence :: SetTarget( void * p_target )
+void Sequence::SetTarget( void * p_target )
 {
 	m_target = p_target;
 	multimap::cycle( m_ponctualEvents, &BasePonctualEvent::SetTarget, p_target );
 	multimap::cycle( m_continuousEvents, &BaseContinuousEvent::SetTarget, p_target );
 }
 
-void Sequence :: Update( Real p_time )
+void Sequence::Update( Real p_time )
 {
 	if ( m_status != PLAYING )
 	{

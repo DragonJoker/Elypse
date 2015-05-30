@@ -28,8 +28,8 @@ BEGIN_EVENT_TABLE( VideoProperties, wxPanel )
 END_EVENT_TABLE()
 
 
-VideoProperties :: VideoProperties( TrollVideo * p_video, wxWindow * parent, const wxPoint & pos,
-									const wxSize & size, long style )
+VideoProperties::VideoProperties( TrollVideo * p_video, wxWindow * parent, const wxPoint & pos,
+								  const wxSize & size, long style )
 	:	ObjectProperties( parent, pos, size, style ),
 		m_video( p_video )
 {
@@ -45,13 +45,13 @@ VideoProperties :: VideoProperties( TrollVideo * p_video, wxWindow * parent, con
 
 
 
-VideoProperties :: ~VideoProperties()
+VideoProperties::~VideoProperties()
 {
 }
 
 
 
-void VideoProperties :: UpdateProperties()
+void VideoProperties::UpdateProperties()
 {
 	m_updatingProperties = true;
 	m_updatingProperties = false;
@@ -59,7 +59,7 @@ void VideoProperties :: UpdateProperties()
 
 
 
-void VideoProperties :: _onEditName( wxCommandEvent & p_event )
+void VideoProperties::_onEditName( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -69,7 +69,7 @@ void VideoProperties :: _onEditName( wxCommandEvent & p_event )
 
 
 
-void VideoProperties :: _onEditUrl( wxCommandEvent & p_event )
+void VideoProperties::_onEditUrl( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -86,7 +86,7 @@ void VideoProperties :: _onEditUrl( wxCommandEvent & p_event )
 
 
 
-void VideoProperties :: _onSelectLooped( wxCommandEvent & p_event )
+void VideoProperties::_onSelectLooped( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{
@@ -97,7 +97,7 @@ void VideoProperties :: _onSelectLooped( wxCommandEvent & p_event )
 
 
 
-void VideoProperties :: _onSelectEnabled( wxCommandEvent & p_event )
+void VideoProperties::_onSelectEnabled( wxCommandEvent & p_event )
 {
 	if ( ! m_updatingProperties )
 	{

@@ -10,46 +10,46 @@
 #include <ode/contact.h>
 #include <ode/objects.h>
 
-PhysicsEngine :: PhysicsEngine()
+PhysicsEngine::PhysicsEngine()
 {
 	CreateSimulation( "Main" );
 	CreateMaterial( "Default" );
 }
 
-PhysicsEngine :: ~PhysicsEngine()
+PhysicsEngine::~PhysicsEngine()
 {
 	ClearAllUniverses();
 	General::Utils::map::deleteAll( m_materials );
 }
 
-void PhysicsEngine :: ClearAllUniverses() d_no_throw
+void PhysicsEngine::ClearAllUniverses() d_no_throw
 {
 	General::Utils::map::deleteAll( m_universes );
 }
 
-PhysicsSimulation * PhysicsEngine :: CreateSimulation( const String & p_name )
+PhysicsSimulation * PhysicsEngine::CreateSimulation( const String & p_name )
 {
 	genlib_assert( ! p_name.empty() );
 	return General::Utils::map::insert( m_universes, p_name, p_name );
 }
 
-bool PhysicsEngine :: DestroySimulation( const String & p_name )
+bool PhysicsEngine::DestroySimulation( const String & p_name )
 {
 	return General::Utils::map::deleteValue( m_universes, p_name );
 }
 
-PhysicsMaterial * PhysicsEngine :: CreateMaterial( const String & p_name )
+PhysicsMaterial * PhysicsEngine::CreateMaterial( const String & p_name )
 {
 	genlib_assert( ! p_name.empty() );
 	return General::Utils::map::insert( m_materials, p_name, p_name );
 }
 
-bool PhysicsEngine :: DestroyMaterial( const String & p_name )
+bool PhysicsEngine::DestroyMaterial( const String & p_name )
 {
 	return General::Utils::map::deleteValue( m_materials, p_name );
 }
 
-void PhysicsEngine :: Update()
+void PhysicsEngine::Update()
 {
 	PhysicsSimulationMap::iterator i = m_universes.begin();
 	const PhysicsSimulationMap::iterator & iend = m_universes.end();
@@ -63,7 +63,7 @@ void PhysicsEngine :: Update()
 	}
 }
 
-void PhysicsEngine :: Render()
+void PhysicsEngine::Render()
 {
 	PhysicsSimulationMap::iterator i = m_universes.begin();
 	const PhysicsSimulationMap::iterator & iend = m_universes.end();
@@ -77,7 +77,7 @@ void PhysicsEngine :: Render()
 	}
 }
 
-void PhysicsEngine :: CollisionCallback( void *, dGeomID p_geomA, dGeomID p_geomB )
+void PhysicsEngine::CollisionCallback( void *, dGeomID p_geomA, dGeomID p_geomB )
 {
 	bool l_aIsSpace = dGeomIsSpace( p_geomA ) != 0;
 	bool l_bIsSpace = dGeomIsSpace( p_geomB ) != 0;
@@ -115,7 +115,7 @@ void PhysicsEngine :: CollisionCallback( void *, dGeomID p_geomA, dGeomID p_geom
 	}
 }
 
-void PhysicsEngine :: RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObject * p_objB, dContact * p_contact, unsigned int p_numContacts )
+void PhysicsEngine::RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObject * p_objB, dContact * p_contact, unsigned int p_numContacts )
 {
 	//TODO
 	if ( p_objA->IsStatic() )

@@ -16,7 +16,7 @@ namespace General
 		private:
 			Strand * m_strand;
 			TClass * m_instance;
-			void ( TClass :: * m_function )();
+			void ( TClass::* m_function )();
 
 		public:
 			StrandFunctor( Strand * p_strand, const ClassFunctor<TClass> & p_functor )
@@ -43,7 +43,7 @@ namespace General
 		};
 
 		template<class TClass>
-		void StrandFunctor<TClass> :: operator()()
+		void StrandFunctor<TClass>::operator()()
 		{
 			GENLIB_THREAD_INIT();
 			boost::mutex::scoped_lock scoped_lock( m_strand->m_mutex );
