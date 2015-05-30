@@ -602,7 +602,7 @@ String ChatTcpClient::_buildJoinMessage()
 {
 	if ( ! CheckValid( ccsNone ) )
 	{
-		return false;
+		return String();
 	}
 
 	WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );

@@ -31,14 +31,14 @@ typedef enum EMBlockType
 	EM_BLOCK_EMCONFIG		= 8,	/* unused */
 	EM_NB_BLOCK_TYPES		= 8,
 	EM_BLOCK_ERROR			= 9,
-};
+}	EMBlockType;
 
 typedef enum EMSessionType
 {
 	EM_TYPE_LOCAL = 1,
 	EM_TYPE_HTTP = 2,
 	EM_TYPE_FTP = 3,
-};
+}	EMSessionType;
 
 // The struct to stock blocks informations
 struct EM_Block

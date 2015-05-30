@@ -8,7 +8,7 @@ add_target(
 	${PROJECT_NAME}
 	lib
 	""
-	"${BoostLibraries};${ZZipLibraries}"
+	"${BoostLibraries};${LibZipLibraries}"
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )

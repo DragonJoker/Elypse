@@ -13,7 +13,7 @@ add_target(
 	${PROJECT_NAME}
 	lib
 	""
-	"${BoostLibraries}"
+	"${BoostLibraries};${X11Libraries}"
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )

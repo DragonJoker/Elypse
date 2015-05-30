@@ -13,7 +13,7 @@ add_target(
 	${PROJECT_NAME}
 	bin_dos
 	"ElypseServer"
-	"${BoostLibraries};ElypseServer"
+	"ElypseServer;${BoostLibraries};${x11Libraries}"
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )

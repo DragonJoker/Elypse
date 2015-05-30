@@ -54,6 +54,8 @@
 
 #include <tuple>
 
+#include "ScriptNode.h"
+
 namespace EMuse
 {
 	namespace Script

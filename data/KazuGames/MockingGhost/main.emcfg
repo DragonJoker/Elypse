@@ -2,7 +2,7 @@ background_colour 0.000000 0.000000 0.000000 1.000000
 
 scene MockingGhost
 {
-	muse_file MockingGhost_MockingGhost.muse
+	muse_file MockingGhost.muse
 	data_file Interface.zip
 	data_file MockingGhost.zip
 	scene_file Interface.emscene
@@ -14,7 +14,7 @@ scene MockingGhost
 
 scene KazuSplash
 {
-	muse_file MockingGhost.muse
+	muse_file KazuSplash.muse
 	data_file kazu.zip
 	scene_file kazu.emscene
 	load_script_file kazu.emscript

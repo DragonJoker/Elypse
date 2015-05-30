@@ -297,7 +297,7 @@ Clothes * ChatDatabase::LoadDresses( ChatTcpClient * p_client )
 		if ( !l_result1 || l_result1->GetRowCount() == 0 )
 		{
 			std::cout << "ChatDatabase::LoadDresses - can't retrieve sex\n";
-			return false;
+			return NULL;
 		}
 
 		Clothes * l_clothes = new Clothes();

@@ -10,7 +10,7 @@
 
 namespace
 {
-	typedef enum eIDS
+	enum eIDS
 	{
 		eBTNINFILE,
 		eBTNOUTFOLDER,
@@ -41,7 +41,7 @@ CMuseReaderDlg::CMuseReaderDlg( wxWindow * pParent )
 
 	int l_left = l_listWidth + OFFSET * 2;
 	int l_top = l_listHeight + STATIC_HEIGHT + OFFSET * 2;
-	new wxStaticText( this, wxID_ANY, _( "Fichier à lire" ), wxPoint( OFFSET, l_top ), wxSize( l_listWidth, STATIC_HEIGHT ) );
+	new wxStaticText( this, wxID_ANY, _( "Fichier Ã  lire" ), wxPoint( OFFSET, l_top ), wxSize( l_listWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
 	m_inFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_listWidth, EDIT_HEIGHT ) );
 	new wxButton( this, eBTNINFILE, _( "Parcourir" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
@@ -78,16 +78,16 @@ void CMuseReaderDlg::OnBnClickedBtninfile( wxCommandEvent & p_event )
 		wxString l_log;
 		wxString l_path = l_dialog.GetPath();
 
-		if ( m_dataStreamer->SetFile( l_path.char_str().data() ) )
+		if ( m_dataStreamer->SetFile( wxString( l_path.char_str().data(), wxConvLibc ) ) )
 		{
-			l_log += _( "Connection à " ) + l_path + _( " effectuée" );
+			l_log += _( "Connection Ã  " ) + l_path + _( " effectuÃ©e" );
 			m_log->AppendString( l_log );
 			m_inFileName = l_path;
 			m_inFile->SetLabel( l_path );
 		}
 		else
 		{
-			l_log += _( "Connection à " ) + l_path + _( " échouée" );
+			l_log += _( "Connection Ã  " ) + l_path + _( " Ã©chouÃ©e" );
 			m_log->AppendString( l_log );
 		}
 	}
@@ -123,7 +123,7 @@ void CMuseReaderDlg::OnBnClickedBtnread( wxCommandEvent & p_event )
 	{
 		if ( m_inFileName.empty() )
 		{
-			m_log->AppendString( _( "Choisissez un fichier à lire" ) );
+			m_log->AppendString( _( "Choisissez un fichier Ã  lire" ) );
 		}
 		else
 		{
@@ -135,7 +135,7 @@ void CMuseReaderDlg::OnBnClickedBtnread( wxCommandEvent & p_event )
 
 					while ( m_dataStreamer->GetNextBlock() )
 					{
-						std::string l_name = m_dataStreamer->GetFileName( i++ );
+						wxString l_name = m_dataStreamer->GetFileName( i++ );
 						m_output->AppendString( l_name );
 					}
 

@@ -66,7 +66,7 @@ unsigned int Structure::FindMember( const String & p_name )const
 		i++;
 	}
 
-	return String::npos;
+	return -1;
 }
 
 StructInstance::StructInstance( VariableType * p_def )

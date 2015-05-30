@@ -92,6 +92,35 @@ namespace Troll
 
 				return l_return;
 			}
+
+			void WriteFilesInMain( TrollFileArray const & p_files, wxString const & p_name, wxTextOutputStream & p_stream )
+			{
+				for ( auto && l_file : p_files )
+				{
+					size_t l_index = min( l_file->FileName.find_last_of( '\\' ) , l_file->FileName.find_last_of( '/' ) );
+					wxString l_fileName = l_file->FileName.substr( l_index + 1, l_file->FileName.size() );
+					p_stream.WriteString( wxT( "\t" ) + p_name + wxT( " " ) + l_fileName + wxT( ".zip\n" ) );
+				}
+			}
+
+			void WriteSceneInMain( TrollScene * p_scene, bool p_writeScripts, wxTextOutputStream & p_stream )
+			{
+				wxString l_sceneName = p_scene->GetName();
+				wxString l_line = wxT( "scene " ) + l_sceneName + wxT( "\n{\n" );
+				p_stream.WriteString( l_line );
+				p_stream.WriteString( wxT( "\tmuse_file " ) + p_scene->GetName() + wxT( ".muse\n" ) );
+				WriteFilesInMain( p_scene->m_dataFiles, wxT( "data_file" ), p_stream );
+				WriteFilesInMain( p_scene->m_sceneFiles, wxT( "scene_file" ), p_stream );
+
+				if ( p_writeScripts )
+				{
+					WriteFilesInMain( p_scene->m_loadScriptFiles, wxT( "load_script_file" ), p_stream );
+					WriteFilesInMain( p_scene->m_unloadScriptFiles, wxT( "unload_script_file" ), p_stream );
+				}
+
+				WriteFilesInMain( p_scene->m_museFiles, wxT( "muse_file" ), p_stream );
+				p_stream.WriteString( wxT( "}\n\n" ) );
+			}
 		}
 
 		MainFrame * g_mainFrame;
@@ -297,28 +326,24 @@ namespace Troll
 			m_menuBar->Append( m_menuProject,	wxT( "&Projet" )	);
 			m_menuBar->Append( m_menuHelp,		wxT( "&Aide" )	);
 			SetMenuBar( m_menuBar );
-			/*
-				// Associate the menu bar with the frame
-				m_menuBar->Check( M_TOOLBAR_SHOW_BOTH, true);
-				m_menuBar->Check( M_TOOLBAR_TOGGLETOOLTIPS, true);
-				m_menuBar->Check( M_TOOLBAR_TOP_ORIENTATION, true);
-			*/
+			//// Associate the menu bar with the frame
+			//m_menuBar->Check( M_TOOLBAR_SHOW_BOTH, true);
+			//m_menuBar->Check( M_TOOLBAR_TOGGLETOOLTIPS, true);
+			//m_menuBar->Check( M_TOOLBAR_TOP_ORIENTATION, true);
 		}
 
 		void MainFrame::_createTreeWithDefStyle()
 		{
 			long style = wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS;
 			wxMenuBar * mbar = GetMenuBar();
-			/*
-				mbar->Check( TreeTest_TogButtons,		(style & wxTR_HAS_BUTTONS)			!= 0);
-				mbar->Check( TreeTest_TogButtons,		(style & wxTR_TWIST_BUTTONS)		!= 0);
-				mbar->Check( TreeTest_TogLines,			(style & wxTR_NO_LINES)				== 0);
-				mbar->Check( TreeTest_TogRootLines,		(style & wxTR_LINES_AT_ROOT)		!= 0);
-				mbar->Check( TreeTest_TogHideRoot,		(style & wxTR_HIDE_ROOT)			!= 0);
-				mbar->Check( TreeTest_TogEdit,			(style & wxTR_EDIT_LABELS)			!= 0);
-				mbar->Check( TreeTest_TogBorder,		(style & wxTR_ROW_LINES)			!= 0);
-				mbar->Check( TreeTest_TogFullHighlight,	(style & wxTR_FULL_ROW_HIGHLIGHT)	!= 0);
-			*/
+			//mbar->Check( TreeTest_TogButtons,		(style & wxTR_HAS_BUTTONS)			!= 0);
+			//mbar->Check( TreeTest_TogButtons,		(style & wxTR_TWIST_BUTTONS)		!= 0);
+			//mbar->Check( TreeTest_TogLines,			(style & wxTR_NO_LINES)				== 0);
+			//mbar->Check( TreeTest_TogRootLines,		(style & wxTR_LINES_AT_ROOT)		!= 0);
+			//mbar->Check( TreeTest_TogHideRoot,		(style & wxTR_HIDE_ROOT)			!= 0);
+			//mbar->Check( TreeTest_TogEdit,			(style & wxTR_EDIT_LABELS)			!= 0);
+			//mbar->Check( TreeTest_TogBorder,		(style & wxTR_ROW_LINES)			!= 0);
+			//mbar->Check( TreeTest_TogFullHighlight,	(style & wxTR_FULL_ROW_HIGHLIGHT)	!= 0);
 		}
 
 		void MainFrame::_resizeTrees()
@@ -561,7 +586,7 @@ namespace Troll
 					l_dataWriter->AddFile( l_path + l_files[i]->FileName + wxT( ".zip" ) );
 				}
 
-				if ( p_createMain )
+				if ( l_scene->GetName() == p_project->GetName() && p_createMain )
 				{
 					l_dataWriter->AddFile( l_mainFile );
 				}
@@ -619,12 +644,17 @@ namespace Troll
 						l_sceneDataWriter->AddFile( l_path + l_scene->GetName() + wxT( "/" ) + l_files[i]->FileName + wxT( ".zip" ) );
 					}
 
-					l_sceneDataWriter->Write( l_path + p_project->GetName() + wxT( "_" ) + l_scene->GetName() + wxT( ".muse" ) );
+					if ( l_scene->GetName() == p_project->GetName() && p_createMain )
+					{
+						l_sceneDataWriter->AddFile( l_mainFile );
+					}
+
+					l_sceneDataWriter->Write( l_path + l_scene->GetName() + wxT( ".muse" ) );
 					delete l_sceneDataWriter;
 					++l_it;
 				}
 
-				l_dataWriter->Write( l_path + p_project->GetName() + wxT( ".muse" ) );
+				l_dataWriter->Write( l_path + p_project->GetMainScene()->GetName() + wxT( ".muse" ) );
 				delete l_dataWriter;
 			}
 		}
@@ -839,13 +869,12 @@ namespace Troll
 				return;
 			}
 
-			/*
-				if ( ! m_filesList->GetSelectedScene())
-				{
-					LogDebugMessage( "Aucune scène sélectionnée");
-					return;
-				}
-			*/
+			//if ( ! m_filesList->GetSelectedScene())
+			//{
+			//	LogDebugMessage( "Aucune scène sélectionnée");
+			//	return;
+			//}
+
 			std::cout << m_mainTabsContainer->GetPageText( m_mainTabsContainer->GetSelection() ) << "\n";
 			TrollScene * l_scene;
 			TrollFile * l_file;
@@ -1034,7 +1063,7 @@ namespace Troll
 
 			if ( l_file->Saved )
 			{
-				//		std::cout << "MainFrame::_onSaveSelectedFile" << l_file->FileName << "\n";
+				//std::cout << "MainFrame::_onSaveSelectedFile" << l_file->FileName << "\n";
 				l_file->EditPanel->SaveFile( m_currentProject->GetPath() + l_file->FileName );
 			}
 			else
@@ -1045,7 +1074,7 @@ namespace Troll
 
 		void MainFrame::_onSaveFileAs( wxCommandEvent & p_event )
 		{
-			//	std::cout << "MainFrame::_onSaveFileAs\n";
+			//std::cout << "MainFrame::_onSaveFileAs\n";
 			int l_selectedPage = m_mainTabsContainer->GetSelection();
 			wxString l_fileName = m_mainTabsContainer->GetPageText( l_selectedPage );
 			TrollScene * l_scene = m_filesList->GetSelectedScene();
@@ -1840,10 +1869,10 @@ namespace Troll
 				wxColour * l_colour = p_project->GetBackgroundColour();
 				LogOutMessage( l_colour->GetAsString() );
 				l_line.Printf( wxT( "background_colour %f %f %f %f\n\n" ),
-							   static_cast <int>( l_colour->Red() ) / 255.0,
-							   static_cast <int>( l_colour->Green() ) / 255.0,
-							   static_cast <int>( l_colour->Blue() ) / 255.0,
-							   static_cast <int>( l_colour->Alpha() ) / 255.0 );
+							   static_cast< int >( l_colour->Red() ) / 255.0,
+							   static_cast< int >( l_colour->Green() ) / 255.0,
+							   static_cast< int >( l_colour->Blue() ) / 255.0,
+							   static_cast< int >( l_colour->Alpha() ) / 255.0 );
 				l_line.Replace( wxT( "," ), wxT( "." ), true );
 			}
 			else
@@ -1852,153 +1881,20 @@ namespace Troll
 			}
 
 			l_textStream.WriteString( l_line );
-			SceneMap l_scenes = p_project->GetScenes();
-			SceneMap::iterator l_it = l_scenes.begin();
-			wxString l_sceneName;
-			TrollScene * l_scene;
-			size_t l_index;
-			wxString l_fileName;
-			TrollFileArray l_files;
-			wxArrayString l_neededScenes;
 
-			while ( l_it != l_scenes.end() )
+			for ( auto && l_scene : p_project->GetScenes() )
 			{
-				l_scene = l_it->second;
-				l_sceneName = l_scene->GetName();
-				l_line = wxT( "scene " ) + l_sceneName + wxT( "\n{\n" );
-				l_textStream.WriteString( l_line );
-
-				if ( l_scene->IsMainScene())
-				{
-					l_textStream.WriteString( wxT( "\tmuse_file " ) + l_scene->GetName() + wxT( ".muse\n" ) );
-				}
-				else
-				{
-					l_textStream.WriteString( wxT( "\tmuse_file " ) + p_project->GetName() + wxT( "_" ) + l_scene->GetName() + wxT( ".muse\n" ) );
-				}
-
-				l_files = l_scene->m_dataFiles;
-
-				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-				{
-					l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-					l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-					l_textStream.WriteString( wxT( "\tdata_file " ) + l_fileName + wxT( ".zip\n" ) );
-				}
-
-				l_files = l_scene->m_sceneFiles;
-
-				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-				{
-					l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-					l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-					l_textStream.WriteString( wxT( "\tscene_file " ) + l_fileName + wxT( "\n" ) );
-				}
-
-				if ( p_writeScripts )
-				{
-					l_files = l_scene->m_loadScriptFiles;
-
-					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-					{
-						l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-						l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-						l_textStream.WriteString( wxT( "\tload_script_file " ) + l_fileName + wxT( "\n" ) );
-					}
-
-					l_files = l_scene->m_unloadScriptFiles;
-
-					for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-					{
-						l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-						l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-						l_textStream.WriteString( wxT( "\tunload_script_file " ) + l_fileName + wxT( "\n" ) );
-					}
-				}
-
-				l_files = l_scene->m_museFiles;
-
-				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-				{
-					l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-					l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-					l_textStream.WriteString( wxT( "\tmuse_file " ) + l_fileName + wxT( "\n" ) );
-				}
-
-				/*
-						l_neededScenes = l_scene->GetNeededScenes();
-						for (size_t i = 0 ; i < l_neededScenes.size() ; i++)
-						{
-							l_textStream.WriteString( wxT( "\tmuse_file " ) + l_neededScenes[i] + wxT( ".muse\n"));
-						}
-				*/
-				l_textStream.WriteString( wxT( "}\n\n" ) );
-				++l_it;
+				WriteSceneInMain( l_scene.second, p_writeScripts, l_textStream );
 			}
 
-			l_scene = p_project->GetMainScene();
+			TrollScene * l_scene = p_project->GetMainScene();
 
-			if ( ! l_scene )
+			if ( l_scene )
 			{
-				l_fileOutput.Close();
-				return l_mainFileName;
+				WriteSceneInMain( l_scene, p_writeScripts, l_textStream );
+				l_textStream.WriteString( wxT( "start_scene " ) + l_scene->GetName() );
 			}
 
-			l_sceneName = l_scene->GetName();
-			l_line = wxT( "scene " ) + l_sceneName + wxT( "\n{\n" );
-			l_textStream.WriteString( l_line );
-			l_textStream.WriteString( wxT( "\tmuse_file " ) + p_project->GetName() + wxT( ".muse\n" ) );
-			l_files = l_scene->m_dataFiles;
-
-			for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-			{
-				l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-				l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-				l_textStream.WriteString( wxT( "\tdata_file " ) + l_fileName + wxT( ".zip\n" ) );
-			}
-
-			l_files = l_scene->m_sceneFiles;
-
-			for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-			{
-				l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-				l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-				l_textStream.WriteString( wxT( "\tscene_file " ) + l_fileName + wxT( "\n" ) );
-			}
-
-			if ( p_writeScripts )
-			{
-				l_files = l_scene->m_loadScriptFiles;
-
-				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-				{
-					l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-					std::cout << "l_index : " << l_index << std::endl;
-					l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-					l_textStream.WriteString( wxT( "\tload_script_file " ) + l_fileName + wxT( "\n" ) );
-				}
-
-				l_files = l_scene->m_unloadScriptFiles;
-
-				for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-				{
-					l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-					l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-					l_textStream.WriteString( wxT( "\tunload_script_file " ) + l_fileName + wxT( "\n" ) );
-				}
-			}
-
-			l_files = l_scene->m_museFiles;
-
-			for ( unsigned int i = 0 ; i < l_files.size() ; i++ )
-			{
-				l_index = min( l_files[i]->FileName.find_last_of( '\\' ) , l_files[i]->FileName.find_last_of( '/' ) );
-				l_fileName = l_files[i]->FileName.substr( l_index + 1, l_files[i]->FileName.size() );
-				l_textStream.WriteString( wxT( "\tmuse_file " ) + l_fileName + wxT( "\n" ) );
-			}
-
-			l_textStream.WriteString( wxT( "}\n\n" ) );
-			l_textStream.WriteString( wxT( "start_scene " ) + p_project->GetMainScene()->GetName() );
 			l_fileOutput.Close();
 			return l_mainFileName;
 		}
@@ -2085,6 +1981,7 @@ namespace Troll
 			}
 
 			l_textStream.WriteString( wxT( "}\n\n" ) );
+
 			l_scene = m_currentProject->GetMainScene();
 			l_sceneName = l_scene->GetName();
 			l_line = wxT( "scene " ) + l_sceneName + wxT( "\n{\n" );

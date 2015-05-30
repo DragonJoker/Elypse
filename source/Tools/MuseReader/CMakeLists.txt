@@ -59,8 +59,8 @@ if ( wxWidgets_FOUND AND GTK_FOUND )
 	add_target(
 		${PROJECT_NAME}
 		bin
-		"GeneralLib;ElypseCore"
-		"GeneralLib;ElypseCore;${wxWidgetsLibraries};${BoostLibraries};${ZZipLibraries};${OgreLibraries};${OdeLibraries};${GstLibraries};${GTK2_LIBRARIES};${XmlLibraries};${GtkmmLibraries}"
+		""
+		"${wxWidgetsLibraries}"
 		"stdafx.h"
 		"stdafx.cpp"
 		"${wxWidgets_CFLAGS}"

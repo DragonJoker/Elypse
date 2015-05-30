@@ -4,6 +4,9 @@
 #include "Zip.h"
 
 #include "Macros.h"
+#include "StringUtils.h"
+
+#include <fstream>
 
 namespace General
 {
@@ -60,7 +63,7 @@ namespace General
 			: public ZipFileImpl< CharType >
 		{
 		protected:
-			typedef ZipFileImpl< CharType >::StringType StringType;
+			typedef typename ZipFileImpl< CharType >::StringType StringType;
 			uint64_t m_index;
 
 		public:

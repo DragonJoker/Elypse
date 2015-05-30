@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <vector>
+#include <cstring>
 
 #include "Macros.h"
 

@@ -117,7 +117,7 @@ namespace General
 			: public ZipArchiveImpl< CharType >
 		{
 		protected:
-			typedef ZipArchiveImpl< CharType >::StringType StringType;
+			typedef typename ZipArchiveImpl< CharType >::StringType StringType;
 
 			bool _load()
 			{

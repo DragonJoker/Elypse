@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 2.8.10 )
 #--------------------------------------------------------------------------------------------------
 #	Initial configurations
 #--------------------------------------------------------------------------------------------------
@@ -42,13 +42,13 @@ set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 #--------------------------------------------------------------------------------------------------
 #	Looking for needed libraries
 #--------------------------------------------------------------------------------------------------
-if (NOT MINGW)
+if (WIN32)
 	set( Boost_USE_STATIC_LIBS ON)
 	set( BOOST_THREAD_USE_LIB ON)
 endif()
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-	COMPILER_DUMPVERSION(Castor_COMPILER_VERSION)
+	DumpCompilerVersion(Castor_COMPILER_VERSION)
 	if (${Castor_COMPILER_VERSION} LESS "46")
 		find_package( Boost REQUIRED date_time filesystem system thread)
 	else ()
@@ -61,7 +61,7 @@ endif ()
 find_package( CURL )
 find_package( Ogre )
 find_package( ODE )
-find_package( FMOD )
+find_package( Fmod )
 find_package( ZLIB 1.2.7 )
 find_package( LibZip )
 
@@ -198,6 +198,13 @@ endif()
 msg_debug( "CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
 msg_debug( "CMAKE_C_FLAGS    : ${CMAKE_C_FLAGS}" )
 msg_debug( "CMAKE_CXX_FLAGS  : ${CMAKE_CXX_FLAGS}" )
+
+macro( parse_subdir_files _FOLDER _GROUP )
+	file( GLOB _FOLDER_HEADER_FILES ${_FOLDER}/*.h ${_FOLDER}/*.hpp ${_FOLDER}/*.inl )
+	file( GLOB _FOLDER_SOURCE_FILES ${_FOLDER}/*.c ${_FOLDER}/*.cpp )
+	source_group( "Header Files\\${_GROUP}" FILES ${_FOLDER_HEADER_FILES} )
+	source_group( "Source Files\\${_GROUP}" FILES ${_FOLDER_SOURCE_FILES} )
+endmacro()
 
 if( Boost_FOUND AND OGRE_FOUND AND ODE_FOUND AND ZLIB_FOUND AND LIBZIP_FOUND AND CURL_FOUND AND FMOD_FOUND )
 	add_subdirectory( Core )

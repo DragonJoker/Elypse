@@ -84,14 +84,14 @@ bool CDataStreamer::SetFile( wxString const & p_url )
 bool CDataStreamer::ReadHeader()
 {
 	bool l_result = false;
-	m_log->AppendString( _( "Lecture de l'en-tête" ) );
+	m_log->AppendString( _( "Lecture de l'en-tÃªte" ) );
 
 	// retrieve number of bloc definitions contained in the header
 	try
 	{
 		std::vector< char > l_magic( 9 );
 		Read( reinterpret_cast< uint8_t * >( l_magic.data() ), 8 );
-		m_log->AppendString( wxString( _( "  Magic : " ) ) << l_magic.data() );
+		m_log->AppendString( wxString( _( "  Magic : " ) ) << wxString( l_magic.data(), wxConvLibc ) );
 
 		int l_version = 1;
 
@@ -131,7 +131,7 @@ bool CDataStreamer::ReadHeader()
 			// retrieve name
 			std::vector< char > l_name( l_namesize + 1, 0 );
 			Read( reinterpret_cast< uint8_t * >( l_name.data() ), l_namesize );
-			m_log->AppendString( wxString( _( "  Nom : " ) ) << l_name.data() );
+			m_log->AppendString( wxString( _( "  Nom : " ) ) << wxString( l_name.data(), wxConvLibc ) );
 
 			// retrieve block's size
 			int l_blocksize = 0;
@@ -149,11 +149,11 @@ bool CDataStreamer::ReadHeader()
 			{
 				// retrieve block's hash
 				Read( reinterpret_cast< uint8_t * >( l_hash.data() ), 32 );
-				m_log->AppendString( wxString( _( "  Hash du bloc : " ) ) << l_hash.data() );
+				m_log->AppendString( wxString( _( "  Hash du bloc : " ) ) << wxString( l_hash.data(), wxConvLibc ) );
 			}
 
 			// write these infos into the struct deserved to it
-			EM_Block block = { l_blockType, l_namesize, wxString( l_name.data() ), l_blocksize, wxString( l_hash.data() ) };
+			EM_Block block = { l_blockType, l_namesize, wxString( l_name.data(), wxConvLibc ), l_blocksize, wxString( l_hash.data(), wxConvLibc ) };
 
 			// put this block in the list of blocks
 			m_header.push_back( block );
@@ -164,7 +164,7 @@ bool CDataStreamer::ReadHeader()
 	}
 	catch ( std::runtime_error & p_exc )
 	{
-		m_log->AppendString( _( "Erreur de lecture: " ) + wxString( p_exc.what() ) );
+		m_log->AppendString( _( "Erreur de lecture: " ) + wxString( p_exc.what(), wxConvLibc ) );
 	}
 
 	return l_result;
@@ -190,7 +190,7 @@ bool CDataStreamer::GetNextBlock()
 		}
 		catch ( std::runtime_error & p_exc )
 		{
-			m_log->AppendString( _( "Erreur de lecture: " ) + wxString( p_exc.what() ) );
+			m_log->AppendString( _( "Erreur de lecture: " ) + wxString( p_exc.what(), wxConvLibc ) );
 		}
 
 		m_currentBlockIndex++;
@@ -234,7 +234,7 @@ int CDataStreamer::GetType( wxString const & p_url )
 	{
 		wxString l_buf = p_url.substr( 0, 3 );
 
-		if ( l_buf == wxT( "fil" )
+		if ( l_buf == wxT( "fil" ) || l_buf[0] == wxT( '/' )
 				|| l_buf == wxT( "c:\\" ) || l_buf == wxT( "d:\\" ) || l_buf == wxT( "e:\\" )
 				|| l_buf == wxT( "f:\\" ) || l_buf == wxT( "g:\\" ) || l_buf == wxT( "h:\\" )
 				|| l_buf == wxT( "i:\\" ) || l_buf == wxT( "j:\\" ) || l_buf == wxT( "k:\\" )

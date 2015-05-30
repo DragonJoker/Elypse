@@ -26,8 +26,8 @@ private:
 	wxListBox * m_output;
 	wxTextCtrl * m_inFile;
 	wxTextCtrl * m_outFolder;
-	std::string m_outFolderName;
-	std::string m_inFileName;
+	wxString m_outFolderName;
+	wxString m_inFileName;
 };
 
 #endif
