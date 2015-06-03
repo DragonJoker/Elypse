@@ -54,7 +54,7 @@ namespace General
 		{
 			return FileExists( p_filename.c_str() );
 		}
-		
+
 		bool ListDirectoryFiles( Utils::Path const & p_folderPath, std::vector< Utils::Path > & p_files, bool p_recursive = false );
 	}
 }

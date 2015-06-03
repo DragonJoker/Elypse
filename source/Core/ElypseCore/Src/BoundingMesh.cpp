@@ -174,7 +174,7 @@ void BoundingMesh::_createTriMesh()
 
 	memcpy( m_odeIndices, m_indices, sizeof( unsigned int ) * m_indexCount );
 	m_triID = dGeomTriMeshDataCreate();
-	dGeomTriMeshDataBuildSimple( m_triID, m_odeVertices[0], static_cast <int>( m_vertexCount ), reinterpret_cast <dTriIndex *>( m_odeIndices ), static_cast <int>( m_indexCount ) );
+	dGeomTriMeshDataBuildSimple( m_triID, m_odeVertices[0], static_cast< int >( m_vertexCount ), reinterpret_cast <dTriIndex *>( m_odeIndices ), static_cast< int >( m_indexCount ) );
 	m_geom = dCreateTriMesh( 0, m_triID, 0, 0, 0 );
 	_register();
 }

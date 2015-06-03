@@ -27,19 +27,17 @@ namespace Chat
 		bool Initialize();
 		bool Update();
 		unsigned char * Md5( unsigned char * p_toHash )const;
-		bool ConnectUser( ChatTcpClient * p_client );
-		Clothes * LoadDresses( ChatTcpClient * p_client );
-		bool UpdateClothes( ChatTcpClient * p_client );
+		bool ConnectUser( LoginInformations & p_client );
+		bool LoadClothes( Clothes & p_clothes, int p_id );
+		bool SaveClothes( Clothes const & p_clothes, int p_id );
 		bool RemoveFriend( unsigned int p_id, unsigned int p_friend );
 		bool RemoveIgnored( unsigned int p_id, unsigned int p_ignored );
 		bool AddFriend( unsigned int p_id, unsigned int p_friend );
 		bool AddIgnored( unsigned int p_id, unsigned int p_ignored );
-		bool LoadFriends( ChatTcpClient * p_client );
-		bool LoadIgnored( ChatTcpClient * p_client );
-		bool LoadRooms( ChatWorld * p_world );
+		bool LoadFriends( ClientIdStrMap & p_friends, int p_id );
+		bool LoadIgnored( ClientIdStrMap & p_ignored, int p_id );
+		bool LoadRooms( ChatWorld & p_world );
 		bool LoadGames( StrUIntIdMap & p_names );
-		bool ReloadRooms( ChatWorld * p_world );
-		bool ReloadGames( StrUIntIdMap & p_names );
 		unsigned int GetClientId( const String & p_name );
 		void AddPlayerToGame( unsigned int p_gameId );
 		void RemovePlayerFromGame( unsigned int p_gameId );
@@ -52,8 +50,8 @@ namespace Chat
 		}
 
 	private:
-		bool _flushDBFromPlayerInfos( ChatTcpClient * p_client );
-		bool _fillDBWithPlayerInfos( ChatTcpClient * p_client );
+		bool DoFlushDBFromPlayerInfos( int p_id );
+		bool DoFillDBWithPlayerInfos( Clothes const & p_clothes, int p_id );
 	};
 }
 

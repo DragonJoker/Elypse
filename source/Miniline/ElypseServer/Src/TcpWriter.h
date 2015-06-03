@@ -9,9 +9,9 @@
 #include "Macros.h"
 #include "Exception.h"
 
-namespace General
+namespace Elypse
 {
-	namespace MultiThreading
+	namespace Network
 	{
 		class TcpWriterBase
 		{
@@ -38,7 +38,7 @@ namespace General
 			{
 			}
 		protected:
-			virtual bool _writerErrorCB( const boost::system::error_code & p_err ) = 0;
+			virtual bool CallbackWriterError( const boost::system::error_code & p_err ) = 0;
 
 			void _endWrite( const boost::system::error_code & p_err )
 			{
@@ -64,8 +64,8 @@ namespace General
 			void _asyncWrite()
 			{
 				unsigned short l_length = static_cast <unsigned short>( m_messages.front().size() );
-				m_buffer.data()[0] = static_cast <unsigned char>( l_length & 0xFF );
-				m_buffer.data()[1] = static_cast <unsigned char>( ( l_length >> 8 ) & 0xFF );
+				m_buffer.data()[0] = static_cast< unsigned char >( l_length & 0xFF );
+				m_buffer.data()[1] = static_cast< unsigned char >( ( l_length >> 8 ) & 0xFF );
 //			memcpy( m_buffer.data(), &l_length, c_headerLength);
 				memcpy( m_buffer.data() + c_headerLength, m_messages.front().c_str(), m_messages.front().size() );
 

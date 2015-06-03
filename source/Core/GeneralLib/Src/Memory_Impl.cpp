@@ -3,6 +3,8 @@
 #include "Memory.h"
 #include "MultiThreadConfig.h"
 
+#ifndef ____GENLIB_NO_MEMORY_DEBUG____
+
 using namespace General::Theory;
 using namespace General::Utils;
 using namespace General::MultiThreading;
@@ -124,3 +126,5 @@ void operator delete[]( void * p_pointer )
 		free( p_pointer );
 	}
 }
+
+#endif

@@ -185,44 +185,36 @@ namespace General
 			template <typename T>
 			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( void ) )
 			{
-				size_t imax = p_vector.size();
-
-				for ( size_t i = 0 ; i < imax ; i ++ )
+				for ( auto && l_element : p_vector )
 				{
-					( p_vector[i]->* p_func )();
+					( l_element->* p_func )();
 				}
 			}
 
 			template <typename T, typename U>
 			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( const U & ), const U & p_param )
 			{
-				size_t imax = p_vector.size();
-
-				for ( size_t i = 0 ; i < imax ; i ++ )
+				for ( auto && l_element : p_vector )
 				{
-					( p_vector[i]->* p_func )( p_param );
+					( l_element->* p_func )( p_param );
 				}
 			}
 
 			template <typename T, typename U>
 			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( U & ), U & p_param )
 			{
-				size_t imax = p_vector.size();
-
-				for ( size_t i = 0 ; i < imax ; i ++ )
+				for ( auto && l_element : p_vector )
 				{
-					( p_vector[i]->* p_func )( p_param );
+					( l_element->* p_func )( p_param );
 				}
 			}
 
 			template <typename T, typename U>
 			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( U ), U p_param )
 			{
-				size_t imax = p_vector.size();
-
-				for ( size_t i = 0 ; i < imax ; i ++ )
+				for ( auto && l_element : p_vector )
 				{
-					( p_vector[i]->* p_func )( p_param );
+					( l_element->* p_func )( p_param );
 				}
 			}
 		};

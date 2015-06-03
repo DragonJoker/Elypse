@@ -142,7 +142,7 @@ bool CDataStreamer::ReadHeader()
 			{
 				throw std::runtime_error( "Invalid block size" );
 			}
-			
+
 			std::vector< char > l_hash( 33, 0 );
 
 			if ( l_version >= 1 )

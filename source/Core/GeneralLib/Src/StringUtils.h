@@ -17,7 +17,7 @@ namespace General
 			template< typename CharType >
 			static inline void trim( std::basic_string< CharType > & str, bool left = true, bool right = true )
 			{
-				static const std::basic_string< CharType > delims = string_cast< CharType >( " \t\r" );
+				static const std::basic_string< CharType > delims = string_cast< CharType >( std::string( " \t\r" ) );
 
 				if ( right )
 				{
@@ -164,7 +164,29 @@ namespace General
 			template< typename CharType >
 			static inline std::basic_string< CharType > replace( const std::basic_string< CharType > & p_target, const CharType * p_find, const CharType * p_replaced )
 			{
-				return replace( p_target, std::basic_string< CharType >( p_find ), std::basic_string< CharType >( p_replaced ) );
+				typedef std::basic_string< CharType > StringType;
+				return replace( p_target, StringType() + p_find, StringType() + p_replaced );
+			}
+
+			template< typename CharType >
+			static inline std::basic_string< CharType > replace( const std::basic_string< CharType > & p_target, const CharType * p_find, const CharType p_replaced )
+			{
+				typedef std::basic_string< CharType > StringType;
+				return replace( p_target, StringType() + p_find, StringType() + p_replaced );
+			}
+
+			template< typename CharType >
+			static inline std::basic_string< CharType > replace( const std::basic_string< CharType > & p_target, const CharType p_find, const CharType * p_replaced )
+			{
+				typedef std::basic_string< CharType > StringType;
+				return replace( p_target, StringType() + p_find, StringType() + p_replaced );
+			}
+
+			template< typename CharType >
+			static inline std::basic_string< CharType > replace( const std::basic_string< CharType > & p_target, const CharType p_find, const CharType p_replaced )
+			{
+				typedef std::basic_string< CharType > StringType;
+				return replace( p_target, StringType() + p_find, StringType() + p_replaced );
 			}
 		};
 	}

@@ -3,6 +3,8 @@
 
 #include "NonCopyable.h"
 
+#include <memory>
+
 namespace General
 {
 	namespace Theory
@@ -11,12 +13,9 @@ namespace General
 		class Singleton : d_noncopyable
 		{
 		protected:
-			static T * sm_singleton;
-
-		protected:
 			Singleton()
 			{
-				sm_singleton = reinterpret_cast <T *>( this );
+				SetSingleton( reinterpret_cast< T * >( this ) );
 			}
 
 			~Singleton()
@@ -26,42 +25,50 @@ namespace General
 		public:
 			static inline T * GetSingletonPtr()
 			{
-				return sm_singleton;
+				return GetSingletonUPtr();
 			}
+
 			static inline T & GetSingleton()
 			{
-				return *sm_singleton;
+				return *GetSingletonUPtr();
 			}
+
 			static inline T * Create()
 			{
-				if ( sm_singleton == NULL )
+				if ( !GetSingletonUPtr() )
 				{
-					sm_singleton = new T();
+					SetSingleton( new T );
 				}
 
-				return sm_singleton;
+				return GetSingletonPtr();
 			}
 
 			static inline void Destroy()
 			{
-				if ( sm_singleton != NULL )
-				{
-					delete sm_singleton;
-				}
-
-				sm_singleton = NULL;
+				T * l_instance = GetSingletonUPtr();
+				delete l_instance;
+				SetSingleton( NULL );
 			}
+
 			static inline void SetSingleton( T * p_singleton )
 			{
-				sm_singleton = p_singleton;
+				GetSingletonUPtr() = p_singleton;
+			}
+
+		private:
+			static inline T *& GetSingletonUPtr()
+			{
+				static T * sm_singleton;
+				return sm_singleton;
 			}
 		};
 	}
 }
 
-#define GENLIB_INIT_SINGLETON( p_name) template <> p_name * General::Theory::Singleton <p_name> ::sm_singleton = NULL
+#define GENLIB_INIT_SINGLETON( p_name ) //template <> p_name * General::Theory::Singleton <p_name> ::sm_singleton = NULL
+#define GENLIB_SET_SINGLETON() SetSingleton( this )
 #define GENLIB_SINGLETON_FOR_DLL( p_name) static p_name & GetSingleton( void); static p_name * GetSingletonPtr( void)
 #define GENLIB_INIT_SINGLETON_FOR_DLL( p_name) p_name * p_name::sm_singleton = NULL; p_name * p_name::GetSingletonPtr()	{ return sm_singleton; } p_name & p_name::GetSingleton()	{ return *sm_singleton; }
-#define GENLIB_SET_SINGLETON()  sm_singleton = this
+#define GENLIB_SET_SINGLETON_FOR_DLL() sm_singleton = this
 
 #endif

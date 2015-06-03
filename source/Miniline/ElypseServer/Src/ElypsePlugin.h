@@ -3,14 +3,17 @@
 
 #include "ElypseService.h"
 
+#include <functional>
+
 namespace Elypse
 {
 	namespace ServerPlugin
 	{
-		class ElypsePlugin : public named
+		class ElypsePlugin
+			: public General::Theory::named
 		{
 		protected:
-			ElypsePlugin( const std::string p_name );
+			ElypsePlugin( const std::string & p_name );
 			virtual ~ElypsePlugin();
 
 		public:
@@ -21,8 +24,8 @@ namespace Elypse
 			static unsigned short sm_versionNo;
 		};
 
-		typedef ElypsePlugin * ( *PluginFactoryFct )( const char * );
-		typedef void( *PluginDestroyerFct )( ElypsePlugin *& );
+		typedef std::function< ElypsePlugin * ( const char * ) > PluginFactoryFct;
+		typedef std::function< void( ElypsePlugin *& ) > PluginDestroyerFct;
 
 	}
 }

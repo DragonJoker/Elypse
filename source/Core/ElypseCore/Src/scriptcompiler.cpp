@@ -808,11 +808,11 @@ void EMuse::Script::ScriptCompiler::_initialiseVariableMap()
 	_createConstant(	EMVT_REAL,				"MOUSE_POSITION_Y"	);
 	_createConstant(	EMVT_REAL,				"MOUSE_DIFFERENCE_X"	);
 	_createConstant(	EMVT_REAL,				"MOUSE_DIFFERENCE_Y"	);
-	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_TEXT"	)->set<int>( static_cast <int>( TextCursor ) );
-	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_HAND"	)->set<int>( static_cast <int>( HandCursor ) );
-	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_ARROW"	)->set<int>( static_cast <int>( ArrowCursor ) );
-	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_SIZENS"	)->set<int>( static_cast <int>( SizeNSCursor ) );
-	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_SIZEWE"	)->set<int>( static_cast <int>( SizeWECursor ) );
+	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_TEXT"	)->set<int>( static_cast< int >( TextCursor ) );
+	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_HAND"	)->set<int>( static_cast< int >( HandCursor ) );
+	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_ARROW"	)->set<int>( static_cast< int >( ArrowCursor ) );
+	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_SIZENS"	)->set<int>( static_cast< int >( SizeNSCursor ) );
+	_createConstant(	EMVT_INT,				"MOUSE_CURSOR_SIZEWE"	)->set<int>( static_cast< int >( SizeWECursor ) );
 	_constantGroup(	"Network" );
 	_createConstant(	EMVT_STRING,			"NETWORK_CURRENT_MESSAGE"	);
 	_constantGroup(	"Math" );
@@ -1678,7 +1678,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_getUserVariable( const String & p_v
 				l_finalNode->SetFunction( Ope_StructGetMember );
 				ScriptNode * l_node = General::Utils::map::findOrNull( m_currentUserFunction->m_localVars, String( "this" ) );
 				l_finalNode->AddChild( l_node );
-				l_finalNode->AddChild( GetFlyweight( static_cast <int>( l_index ) ) );
+				l_finalNode->AddChild( GetFlyweight( static_cast< int >( l_index ) ) );
 				return l_finalNode;
 			}
 		}
@@ -1705,7 +1705,7 @@ UserFunction::~UserFunction()
 
 void EMuse::Script::ScriptCompiler::ReleaseScriptNode( ScriptNode * p_node )
 {
-	sm_singleton->_releaseNode( p_node );
+	GetSingletonPtr()->_releaseNode( p_node );
 }
 
 

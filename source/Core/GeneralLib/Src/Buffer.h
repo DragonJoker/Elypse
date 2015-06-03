@@ -83,7 +83,7 @@ namespace General
 			}
 
 			template <typename T>
-			inline void writeArray( T * p_value, unsigned int p_numItems )
+			inline void writeArray( T const * p_value, unsigned int p_numItems )
 			{
 				if ( _canAdd( sizeof( T ) * p_numItems ) )
 				{
@@ -205,6 +205,10 @@ namespace General
 			inline unsigned int left()const
 			{
 				return m_size + uint32_t( m_buffer - m_currentIndex );
+			}
+			inline char const * c_str()const
+			{
+				return m_buffer;
 			}
 		};
 	}

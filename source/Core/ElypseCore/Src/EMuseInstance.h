@@ -34,7 +34,7 @@ namespace EMuse
 
 			DownloadManager * m_downManager;
 
-//		SceneManager * m_sceneMgr;
+			//SceneManager * m_sceneMgr;
 			EMuseFrameListener * m_frameListener;
 			EMuseLoadingBar * m_loadingBar;
 

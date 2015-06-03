@@ -4,94 +4,118 @@
 
 using namespace Chat;
 
-ChatGame::ChatGame( unsigned int p_id, ChatTcpClient * p_initiator,
+ChatGame::ChatGame( unsigned int p_id, std::shared_ptr< ChatTcpClient > p_initiator,
 					const String & p_gameName, unsigned int p_maxPlayers,
-					ChatDatabase * p_database )
-	:	m_initiator( p_initiator ),
-		m_initiatorId( m_initiator->GetId() ),
-		m_gameName( p_gameName ),
-		m_maxPlayers( p_maxPlayers ),
-		m_started( false ),
-		m_id( p_id ),
-		m_database( p_database )
+					std::shared_ptr< ChatDatabase > p_database )
+	: m_initiator( p_initiator )
+	, m_initiatorId( p_initiator->GetId() )
+	, m_gameName( p_gameName )
+	, m_maxPlayers( p_maxPlayers )
+	, m_started( false )
+	, m_id( p_id )
+	, m_database( p_database )
 {
-	m_players.insert( ClientIdChatCLientMap::value_type( m_initiator->GetId(), m_initiator ) );
-	m_playersPlaces.push_back( m_initiator->GetName() );
+	m_players.insert( std::make_pair( p_initiator->GetId(), p_initiator ) );
+	m_playersPlaces.push_back( p_initiator->GetName() );
 }
 
 ChatGame::~ChatGame()
 {
-	m_initiator = NULL;
+	m_initiator.reset();
 	EndGame();
 	m_players.clear();
 }
 
-bool ChatGame::AddPlayer( ChatTcpClient * p_client )
+bool ChatGame::AddPlayer( std::shared_ptr< ChatTcpClient > p_client )
 {
-	if ( m_players.find( p_client->GetId() ) != m_players.end() || IsFull() )
+	bool l_return = false;
+
+	if ( m_players.find( p_client->GetId() ) == m_players.end() || IsFull() )
 	{
-		return false;
+		std::cout << "ChatGame::AddPlayer - adding id :" << p_client->GetId() << "\n";
+		m_players.insert( std::make_pair( p_client->GetId(), p_client ) );
+		m_playersPlaces.push_back( p_client->GetName() );
+		DoGetDatabase()->AddPlayerToGame( m_id );
+		l_return = true;
 	}
 
-	std::cout << "ChatGame::AddPlayer - adding id :" << p_client->GetId() << "\n";
-	m_players.insert( ClientIdChatCLientMap::value_type( p_client->GetId(), p_client ) );
-	m_playersPlaces.push_back( p_client->GetName() );
-	m_database->AddPlayerToGame( m_id );
-	return true;
+	return l_return;
 }
 
-bool ChatGame::RemovePlayer( ChatTcpClient * p_client )
+bool ChatGame::RemovePlayer( std::shared_ptr< ChatTcpClient > p_client )
 {
-	ClientIdChatCLientMap::iterator l_it = m_players.find( p_client->GetId() );
+	bool l_return = false;
+	auto && l_it = m_players.find( p_client->GetId() );
 
-	if ( l_it == m_players.end() )
+	if ( l_it != m_players.end() )
 	{
-		return false;
+		m_started = p_client != m_initiator.lock();
+		m_players.erase( l_it );
+		DoGetDatabase()->RemovePlayerFromGame( m_id );
+		l_return = true;
 	}
 
-	if ( p_client == m_initiator )
-	{
-		m_started = false;
-	}
-
-	m_players.erase( l_it );
-	m_database->RemovePlayerFromGame( m_id );
-	return true;
+	return l_return;
 }
 
 void ChatGame::StartGame()
 {
 	m_started = true;
 
-	for ( ClientIdChatCLientMap::iterator l_it = m_players.begin() ; l_it != m_players.end() ; ++l_it )
+	for ( auto && l_it : m_players )
 	{
-		l_it->second->SendStartGameMessage();
+		std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+
+		if ( l_player )
+		{
+			l_player->SendStartGameMessage();
+		}
 	}
 }
 
 void ChatGame::EndGame()
 {
 	m_started = false;
-
-	for ( ClientIdChatCLientMap::iterator l_it = m_players.begin() ; l_it != m_players.end() ; ++l_it )
+	
+	for ( auto && l_it : m_players )
 	{
-		l_it->second->SendEndGameMessage();
+		std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+
+		if ( l_player )
+		{
+			l_player->SendEndGameMessage();
+		}
 	}
 }
 
 int ChatGame::GetPlayerPlace( const String & p_name )
 {
-	int i = 0;
-
-	while ( i < static_cast <int>( m_playersPlaces.size() ) )
+	auto && l_it = std::find_if( m_playersPlaces.begin(), m_playersPlaces.end(), [&p_name]( String const & l_name )
 	{
-		if ( m_playersPlaces[i] == p_name )
-		{
-			return i;
-		}
+		return l_name == p_name;
+	} );
 
-		i++;
+	int l_return = -1;
+
+	if ( l_it != m_playersPlaces.end() )
+	{
+		l_return = int( std::distance( m_playersPlaces.begin(), l_it ) );
 	}
 
-	return -1;
+	return l_return;
+}
+
+void ChatGame::ForwardMessage( const String & p_message, const String & p_name )
+{
+	for ( auto && l_it : m_players )
+	{
+		std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+
+		if ( l_player && !l_player->IsToDelete() && l_player->GetName() != p_name )
+		{
+			//std::cout << "forwarding message to ";
+			//std::cout << l_it->second->GetName() << "\n";
+			l_player->AsyncSend( p_message );
+		}
+	}
 }

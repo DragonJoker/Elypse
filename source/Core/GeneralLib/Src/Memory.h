@@ -3,6 +3,10 @@
 
 #include "Config.h"
 
+#if VLD_AVAILABLE
+#	define ____GENLIB_NO_MEMORY_DEBUG____
+#endif
+
 #ifndef GENLIB_LOG_LOCATION
 #	if GENLIB_WINDOWS
 #		define GENLIB_LOG_LOCATION "c:\\memoryleaks.log"

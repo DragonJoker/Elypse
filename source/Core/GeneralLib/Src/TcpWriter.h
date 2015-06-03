@@ -66,8 +66,8 @@ namespace General
 			void _asyncWrite()
 			{
 				unsigned short l_length = static_cast <unsigned short>( m_messages.front().size() );
-				m_buffer.data()[0] = static_cast <unsigned char>( l_length & 0xFF );
-				m_buffer.data()[1] = static_cast <unsigned char>( l_length >> 8 );
+				m_buffer.data()[0] = static_cast< unsigned char >( l_length & 0xFF );
+				m_buffer.data()[1] = static_cast< unsigned char >( l_length >> 8 );
 //			memcpy( m_buffer.data(), &l_length, c_headerLength);
 				memcpy( m_buffer.data() + c_headerLength, m_messages.front().c_str(), m_messages.front().size() );
 				boost::asio::async_write(	m_socket,

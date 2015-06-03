@@ -27,9 +27,9 @@ namespace General
 		public:
 			ComputerInfo()
 			{
-				m_numScreens = static_cast <int>( GetSystemMetrics( SM_CMONITORS ) );
-				m_mainScreenX = static_cast <int>( GetSystemMetrics( SM_CXSCREEN ) );
-				m_mainScreenY = static_cast <int>( GetSystemMetrics( SM_CYSCREEN ) );
+				m_numScreens = static_cast< int >( GetSystemMetrics( SM_CMONITORS ) );
+				m_mainScreenX = static_cast< int >( GetSystemMetrics( SM_CXSCREEN ) );
+				m_mainScreenY = static_cast< int >( GetSystemMetrics( SM_CYSCREEN ) );
 				ZeroMemory( & m_operatingSystem, sizeof( OSVERSIONINFO ) );
 				m_operatingSystem.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
 				GetVersionEx( & m_operatingSystem );

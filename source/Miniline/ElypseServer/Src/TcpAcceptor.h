@@ -5,19 +5,16 @@
 
 #include "BoostHeaders.h"
 
-#include "Thread.h"
-#include "StringConverter.h"
-#include "STLSetMacros.h"
+#include <Thread.h>
+#include <StringConverter.h>
+#include <STLSetMacros.h>
 
-namespace General
+namespace Elypse
 {
-	namespace MultiThreading
+	namespace Network
 	{
 		class TcpBaseClient
 		{
-		public:
-			boost::asio::ip::tcp::socket m_socket;
-
 		public:
 			TcpBaseClient( boost::asio::io_service & p_service )
 				:	m_socket( p_service )
@@ -36,69 +33,55 @@ namespace General
 			{
 				return m_socket;
 			}
+
+		public:
+			boost::asio::ip::tcp::socket m_socket;
 		};
 
-		typedef std::set <TcpBaseClient *>							ClientSet;
-		typedef std::set <TcpBaseClient *> ::iterator				ClientSetIt;
-		typedef const std::set <TcpBaseClient *> ::const_iterator &	ClientSetEndIt;
+		typedef std::vector< std::shared_ptr< TcpBaseClient > > ClientSet;
 
 		class TcpAcceptor
 		{
-		private:
-			Thread * m_boostThread;
-
-		public:
-			boost::asio::io_service m_service;
-
-		protected:
-			boost::asio::ip::tcp::acceptor m_acceptor;
-
-			ClientSet m_clients;
-			TcpBaseClient * m_currentClient;
-
 		public:
 			TcpAcceptor( unsigned short p_port )
-				:	m_boostThread( NULL ),
-					m_service(),
-					m_acceptor( m_service, boost::asio::ip::tcp::endpoint( boost::asio::ip::tcp::v4(), p_port ) )
+				: m_service()
+				, m_acceptor( m_service, boost::asio::ip::tcp::endpoint( boost::asio::ip::tcp::v4(), p_port ) )
 			{
 			}
 
 			virtual ~TcpAcceptor()
 			{
-				if ( m_boostThread != NULL )
+				if ( m_thread.joinable() )
 				{
-					GENLIB_THREAD_WAIT_FOR_END_OF( m_boostThread );
-					delete m_boostThread;
+					m_thread.join();
 				}
 
 				m_service.stop();
 				m_acceptor.close();
 				DeleteClient( m_currentClient );
 
-				for ( ClientSetIt l_it = m_clients.begin() ; l_it != m_clients.end() ; ++l_it )
+				for ( auto && l_client : m_clients )
 				{
-					DeleteClient( *l_it );
+					DeleteClient( l_client );
 				}
 
 				m_clients.clear();
-
 			}
 
 		protected:
-			virtual TcpBaseClient * _createNewClient() = 0;
-			virtual void _deleteClient( TcpBaseClient * p_toDelete ) = 0;
+			virtual std::shared_ptr< TcpBaseClient > DoCreateNewClient() = 0;
+			virtual void DoDestroyClient( std::shared_ptr< TcpBaseClient > & p_client ) = 0;
 
-			void _accept()
+			void DoAccept()
 			{
 				std::cout << "TCPAcceptor - Accepted somebody\n";
-				m_currentClient = _createNewClient();
-				m_acceptor.async_accept( m_currentClient->GetSocket(), boost::bind( & TcpAcceptor::_acceptCallback, this, boost::asio::placeholders::error ) );
+				m_currentClient = DoCreateNewClient();
+				m_acceptor.async_accept( m_currentClient->GetSocket(), boost::bind( &TcpAcceptor::CallbackAccept, this, boost::asio::placeholders::error ) );
 			}
 
-			virtual void _mainLoop()
+			virtual void DoMainLoop()
 			{
-				_accept();
+				DoAccept();
 
 				while ( true )
 				{
@@ -110,44 +93,38 @@ namespace General
 					catch ( const boost::exception & )
 					{
 						std::cout << "Catch boost::exception" << std::endl;//, diagnostic_information : [" << p_except.get_diagnostic_information() << "]" << std::endl;
+						ClientSet l_clients;
 
-						ClientSetIt l_it = m_clients.begin();
-						ClientSetEndIt l_endIt = m_clients.end();
-
-						while ( l_it != l_endIt )
+						for ( auto && l_client : m_clients )
 						{
-							TcpBaseClient * l_toTest = ( * l_it );
-
 							try
 							{
-								boost::asio::ip::tcp::endpoint l_endPoint = l_toTest->GetSocket().remote_endpoint();
+								boost::asio::ip::tcp::endpoint l_endPoint = l_client->GetSocket().remote_endpoint();
 								std::cout << "Test socket [" << l_endPoint.address().to_string() << ":" << General::Utils::ToString( l_endPoint.port() ) << "]" << std::endl;
+
+								if ( !l_client->GetSocket().is_open() )
+								{
+									std::cout << "A closed socket was detected in client list... Will be deleted..." << std::endl;
+									DeleteClient( l_client );
+								}
+								else
+								{
+									l_clients.push_back( l_client );
+								}
 							}
 							catch ( const boost::exception & )
 							{
-								std::cout << "Catch boost::exception" << std::endl;//, diagnostic_information : [" << p_except2.get_diagnostic_information() << "]" << std::endl;
-
-								General::Utils::set::eraseIterator( m_clients, l_it );
-								DeleteClient( l_toTest );
-								continue;
+								std::cout << "Re-catch boost::exception" << std::endl;//, diagnostic_information : [" << p_except2.get_diagnostic_information() << "]" << std::endl;
+								DeleteClient( l_client );
 							}
-
-							if ( ! l_toTest->GetSocket().is_open() )
-							{
-								std::cout << "A closed socket was detected in client list... Will be deleted..." << std::endl;
-
-								General::Utils::set::eraseIterator( m_clients, l_it );
-								DeleteClient( l_toTest );
-								continue;
-							}
-
-							l_it ++;
 						}
+
+						std::swap( m_clients, l_clients );
 					}
 				}
 			}
 
-			virtual void _acceptCallback( const boost::system::error_code & p_error )
+			virtual void CallbackAccept( const boost::system::error_code & p_error )
 			{
 				std::cout << "TCPAcceptor - _acceptCallback\n";
 
@@ -156,37 +133,52 @@ namespace General
 					std::cout << "Error at _acceptCallback" << std::endl;
 					return;
 				}
-
-				m_clients.insert( m_currentClient );
+				
 				m_currentClient->Start();
+				m_clients.push_back( std::move( m_currentClient ) );
 
-				_accept();
+				DoAccept();
 			}
 
 		public:
 			virtual void Run()
 			{
-				m_boostThread = new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, TcpAcceptor, _mainLoop ) );
+				m_thread = std::thread( std::bind( &TcpAcceptor::DoMainLoop, this ) );
 			}
 
-			virtual void DeleteClient( TcpBaseClient * p_toDelete )
+			virtual void DeleteClient( std::shared_ptr< TcpBaseClient > & p_client )
 			{
-				std::cout << "DeleteClient : " << &( p_toDelete->m_socket ) << std::endl;
-				_deleteClient( p_toDelete );
+				std::cout << "DeleteClient : " << &( p_client->m_socket ) << std::endl;
+				DoDestroyClient( p_client );
 			}
 
-			virtual void EraseClient( TcpBaseClient * p_toDelete )
+			virtual void EraseClient( std::shared_ptr< TcpBaseClient > p_client )
 			{
-				std::cout << "EraseClient : " << &( p_toDelete->m_socket ) << std::endl;
-				ClientSetIt l_toDel = m_clients.find( p_toDelete );
-				ClientSetEndIt l_endIt = m_clients.end();
-
-				if ( l_toDel != l_endIt )
+				std::cout << "EraseClient : " << &( p_client->m_socket ) << std::endl;
+				auto && l_it = std::find_if( m_clients.begin(), m_clients.end(), [&p_client]( std::shared_ptr< TcpBaseClient > const & l_client )
 				{
-					m_clients.erase( l_toDel );
-					DeleteClient( p_toDelete );
+					return p_client == l_client;
+				} );
+
+				auto && l_endIt = m_clients.end();
+
+				if ( l_it != l_endIt )
+				{
+					m_clients.erase( l_it );
+					DeleteClient( *l_it );
 				}
 			}
+
+		private:
+			std::thread m_thread;
+
+		public:
+			boost::asio::io_service m_service;
+
+		protected:
+			boost::asio::ip::tcp::acceptor m_acceptor;
+			ClientSet m_clients;
+			std::shared_ptr< TcpBaseClient > m_currentClient;
 		};
 	}
 }

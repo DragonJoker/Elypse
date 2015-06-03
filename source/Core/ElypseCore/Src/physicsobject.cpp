@@ -426,7 +426,7 @@ int PhysicsObject::NumCollisionTest_Fast( PhysicsObject * p_collideWith )
 
 	if ( l_it != m_currentContacts.end() )
 	{
-		return static_cast <int>( l_it->second.size() );
+		return static_cast< int >( l_it->second.size() );
 	}
 
 	return 0;

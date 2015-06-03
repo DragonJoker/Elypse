@@ -1223,7 +1223,7 @@ ScriptNode  * EMuse::Script::ScriptCompiler::_compileStructMember( ScriptBlockAr
 	l_finalNode->SetRefType( l_struct->GetType()->GetSubType( l_index ) );
 	l_finalNode->SetFunction( Ope_StructGetMember );
 	l_finalNode->AddChild( l_leftNode );
-	l_finalNode->AddChild( GetFlyweight( static_cast <int>( l_index ) ) );
+	l_finalNode->AddChild( GetFlyweight( static_cast< int >( l_index ) ) );
 	return l_finalNode;
 }
 

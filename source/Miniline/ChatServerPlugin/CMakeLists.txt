@@ -37,9 +37,6 @@ if ( DATABASE_FOUND )
 	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
-	install_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
-	install_dll( ${PROJECT_NAME} ${Database_LIBRARY_RELEASE} Release )
-
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_RELEASE} Release )
 else ()

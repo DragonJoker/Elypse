@@ -15,9 +15,7 @@
 
 #if ELYPSE_WINDOWS
 #	define _WINGDI_
-//#	include <afxdlgs.h>
 #elif ELYPSE_LINUX
-#	include <gtk/gtk.h>
 #	include <sys/stat.h>
 #elif ELYPSE_MACOS
 
@@ -1794,7 +1792,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Arr_GetSize )
 {
 	VERBOSE_STARTFUNC( "Array_GetSize" );
 	GET_AND_EXEC_PARAM( NodeValueBaseArray, arr, 0 );
-	RETURN_AS( int ) static_cast <int>( arr.size() );
+	RETURN_AS( int ) static_cast< int >( arr.size() );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Arr_Clear )
@@ -3250,7 +3248,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Str_Substr )
 	VERBOSE_STARTFUNC( "String_Substr" );
 	GET_AND_EXEC_THREE_PARAM( String, l_string, int, l_start, int, l_len );
 
-	if ( l_start >= 0 && l_start < static_cast <int>( l_string.length() ) )
+	if ( l_start >= 0 && l_start < static_cast< int >( l_string.length() ) )
 	{
 		RETURN_AS( String ) l_string.substr( static_cast <size_t>( l_start ), static_cast<size_t>( l_len ) );
 	}
@@ -3617,7 +3615,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( AOb_GetNumPlayingAnimations )
 
 	if ( l_object != NULL )
 	{
-		int l_nbAnims = static_cast <int>( l_object->GetNumPlayingAnimations() );
+		int l_nbAnims = static_cast< int >( l_object->GetNumPlayingAnimations() );
 	}
 	else
 	{
@@ -4445,7 +4443,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( POb_CheckAllCollisions )
 			ScriptEngine::GetContext()->physicsSimulation->GetPhantomSpace()->CollideObject( l_pobj );
 		}
 
-		RETURN_AS( int ) static_cast <int>( l_pobj->GetNumContacts() );
+		RETURN_AS( int ) static_cast< int >( l_pobj->GetNumContacts() );
 	}
 	else
 	{
@@ -4474,7 +4472,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( POb_GetNumCollisions )
 
 	if ( l_pobj != NULL )
 	{
-		RETURN_AS( int ) static_cast <int>( l_pobj->GetNumContacts() );
+		RETURN_AS( int ) static_cast< int >( l_pobj->GetNumContacts() );
 	}
 	else
 	{

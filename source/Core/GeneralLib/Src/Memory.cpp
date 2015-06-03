@@ -5,6 +5,8 @@
 
 #include "Memory.h"
 
+#ifndef ____GENLIB_NO_MEMORY_DEBUG____
+
 #pragma warning( disable:4996 )
 
 #undef new
@@ -244,3 +246,5 @@ void MemoryManager::MemoryLeaksReport( const std::string & p_filename )
 
 	MemoryManager::Unlock();
 }
+
+#endif

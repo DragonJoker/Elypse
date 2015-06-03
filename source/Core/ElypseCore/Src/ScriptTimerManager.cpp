@@ -45,7 +45,7 @@ void ScriptTimerManager::UpdateAll( Real p_time )
 
 		if ( l_timer->NeedExec( p_time ) )
 		{
-			m_numExecutions->set <int> ( static_cast <int>( l_timer->m_numExecs ) );
+			m_numExecutions->set <int> ( static_cast< int >( l_timer->m_numExecs ) );
 			m_timeBase->set <Real> ( l_timer->m_baseTime );
 			m_self->get <ScriptTimer *> () = l_timer;
 

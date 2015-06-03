@@ -141,7 +141,7 @@ std::string MD5::HashFile( FILE * p_file )
 		unsigned char l_buffer[l_bufferSize];	//buffer for data read from the file
 
 		//checksum the file in blocks of 1024 bytes
-		while ( ( l_len = static_cast <int>( fread( l_buffer, sizeof( char ), l_bufferSize, p_file ) ) ) > 0 )
+		while ( ( l_len = static_cast< int >( fread( l_buffer, sizeof( char ), l_bufferSize, p_file ) ) ) > 0 )
 		{
 			l_MD5Checksum._update( l_buffer, l_len );
 		}
@@ -331,10 +331,10 @@ void MD5::DWordToByte( unsigned char * p_output, unsigned long * p_input, unsign
 
 	for ( ; j < p_len; i++, j += 4 )
 	{
-		p_output[j]		= static_cast <unsigned char>( p_input[i] & 0xff );
-		p_output[j + 1] = static_cast <unsigned char>( ( p_input[i] >> 8 ) & 0xff );
-		p_output[j + 2] = static_cast <unsigned char>( ( p_input[i] >> 16 ) & 0xff );
-		p_output[j + 3] = static_cast <unsigned char>( ( p_input[i] >> 24 ) & 0xff );
+		p_output[j]		= static_cast< unsigned char >( p_input[i] & 0xff );
+		p_output[j + 1] = static_cast< unsigned char >( ( p_input[i] >> 8 ) & 0xff );
+		p_output[j + 2] = static_cast< unsigned char >( ( p_input[i] >> 16 ) & 0xff );
+		p_output[j + 3] = static_cast< unsigned char >( ( p_input[i] >> 24 ) & 0xff );
 	}
 }
 

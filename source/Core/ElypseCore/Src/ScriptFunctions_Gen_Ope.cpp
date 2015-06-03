@@ -816,7 +816,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Cst_Bool_To_Int )
 {
 	VERBOSE_STARTFUNC( "btoi" );
 	GET_AND_EXEC_PARAM( bool, val, 0 );
-	RETURN_AS( int ) static_cast <int>( val );
+	RETURN_AS( int ) static_cast< int >( val );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Cst_Bool_To_String )
@@ -837,7 +837,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Cst_Char_To_Int )
 {
 	VERBOSE_STARTFUNC( "ctoi" );
 	GET_AND_EXEC_PARAM( char, val, 0 );
-	RETURN_AS( int ) static_cast <int>( val );
+	RETURN_AS( int ) static_cast< int >( val );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Cst_Vector3_To_String )
@@ -1104,7 +1104,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Real_EraseIter )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Int_Size )
 {
 	GET_AND_EXEC_PARAM( NodeValueBaseIMap, p_map, 0 );
-	RETURN_AS( int ) static_cast <int>( p_map.size() );
+	RETURN_AS( int ) static_cast< int >( p_map.size() );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Int_Empty )
@@ -1134,7 +1134,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Int_Clear )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Real_Size )
 {
 	GET_AND_EXEC_PARAM( NodeValueBaseRMap, p_map, 0 );
-	RETURN_AS( int ) static_cast <int>( p_map.size() );
+	RETURN_AS( int ) static_cast< int >( p_map.size() );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Real_Empty )
@@ -1164,7 +1164,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Real_Clear )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Map_String_Size )
 {
 	GET_AND_EXEC_PARAM( NodeValueBaseMap, p_map, 0 );
-	RETURN_AS( int ) static_cast <int>( p_map.size() );
+	RETURN_AS( int ) static_cast< int >( p_map.size() );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Map_String_Empty )

@@ -70,7 +70,7 @@ namespace General
 				}
 
 				unsigned short l_size;
-				l_size = static_cast <unsigned char>( m_headerBuffer[0] ) + ( static_cast <unsigned char>( m_headerBuffer[1] ) << 8 );
+				l_size = static_cast< unsigned char >( m_headerBuffer[0] ) + ( static_cast< unsigned char >( m_headerBuffer[1] ) << 8 );
 				_startReadBody( l_size );
 			}
 

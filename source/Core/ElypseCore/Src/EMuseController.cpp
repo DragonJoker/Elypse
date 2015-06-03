@@ -228,7 +228,7 @@ void EMuseController::AddThread( EMuseInstance * p_owner )
 
 	EMUSE_MESSAGE_DEBUG( "EMuseController::AddThread // OK, STARTED" );
 
-	if ( sm_singleton == NULL )
+	if ( !GetSingletonPtr() )
 	{
 		EMUSE_MESSAGE_RELEASE( "EMuseController::AddThread // Problem : sm_singleton == NULL" );
 		return;
@@ -668,7 +668,7 @@ void EMuseController::WaitForThreadEnded()
 	GENLIB_AUTO_SCOPED_LOCK();
 	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended post lock mutex : " + ToString( ThreadId::GetSelf() ) );
 
-	if ( sm_singleton != NULL )
+	if ( !GetSingletonPtr() )
 	{
 		if ( m_status == CS_RENDERING )
 		{

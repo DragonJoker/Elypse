@@ -20,15 +20,15 @@ namespace Chat
 		~ChatWorld();
 
 		void AddRoom( const String & p_name, const String & p_sceneName );
-		void AddRoom( ChatRoom * p_room );
-		ChatRoom * GetRoom( const String & p_name );
+		void AddRoom( std::shared_ptr< ChatRoom > p_room );
+		std::shared_ptr< ChatRoom > GetRoom( const String & p_name );
+		void Save( General::Templates::WriteBuffer & p_buffer )const;
 
-	public:
-		inline size_t 					GetNumRooms()
+		inline size_t GetRoomsCount()
 		{
 			return m_rooms.size();
 		}
-		inline ChatRoomStrMap 			GetRooms()
+		inline ChatRoomStrMap GetRooms()
 		{
 			return m_rooms;
 		}

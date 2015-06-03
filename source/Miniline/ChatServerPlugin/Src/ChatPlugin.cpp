@@ -11,6 +11,8 @@
 #endif
 
 using namespace Chat;
+using namespace Elypse::ServerPlugin;
+using namespace Elypse::Network;
 
 ChatPlugin * g_plugin;
 
@@ -47,17 +49,17 @@ ChatTcpService::~ChatTcpService()
 	std::cout << "~ChatTCPService(" << m_name << ")" << std::endl;
 }
 
-TcpBaseClient * ChatTcpService::_createNewClient()
+std::shared_ptr< TcpBaseClient > ChatTcpService::DoCreateNewClient()
 {
-	return reinterpret_cast <TcpBaseClient *>( new ChatTcpClient( this, m_plugin ) );
+	return std::make_shared< ChatTcpClient >( shared_from_this(), m_plugin );
 }
 
-void ChatTcpService::___deleteClient( TcpBaseClient * p_toDelete )
+void ChatTcpService::DoDeleteClient( std::shared_ptr< TcpBaseClient > & p_toDelete )
 {
 //	delete (reinterpret_cast <ChatTcpClient *> ( p_toDelete));
 }
 
-void ChatTcpService::_deleteClient( TcpBaseClient * p_toDelete )
+void ChatTcpService::DoDestroyClient( std::shared_ptr< TcpBaseClient > & p_toDelete )
 {
 //	reinterpret_cast <ChatTcpClient *> ( p_toDelete)->Stop();
 //	m_service.post( boost::bind( & ChatTcpService::___deleteClient, this, p_toDelete));
@@ -81,13 +83,13 @@ ChatUdpService::~ChatUdpService()
 
 ChatPlugin::ChatPlugin( String const & p_path )
 	:	ElypsePlugin( "Chat Plugin" ),
-		m_world( new ChatWorld( "Base", 256 ) ),
-		m_database( new ChatDatabase( p_path ) )
+		m_world( std::make_shared< ChatWorld >( "Base", 256 ) ),
+		m_database( std::make_shared< ChatDatabase >( p_path ) )
 {
 	g_plugin = this;
 	std::cout << "Chatplugin(" << m_name << ") - Services creation" << std::endl;
-	m_services.push_back( new ChatTcpService( this ) );
-	m_services.push_back( new ChatUdpService() );
+	m_services.push_back( std::make_shared< ChatTcpService >( this ) );
+	m_services.push_back( std::make_shared< ChatUdpService >() );
 
 	srand( time( NULL ) );
 
@@ -113,7 +115,7 @@ ChatPlugin::~ChatPlugin()
 {
 	std::cout << "~Chatplugin(" << m_name << ") - Services deletion" << std::endl;
 
-	General::Utils::vector::deleteAll <ElypseService> ( m_services );
+	m_services.clear();
 
 	std::cout << "~Chatplugin(" << m_name << ") - Services deleted" << std::endl;
 }
@@ -128,31 +130,31 @@ ElypseServiceArray ChatPlugin::GetServices()
 	return m_services;
 }
 
-void ChatPlugin::AddRoom( ChatRoom * p_room )
+void ChatPlugin::AddRoom( std::shared_ptr< ChatRoom > p_room )
 {
 	m_world->AddRoom( p_room );
 }
 
-ChatRoom * ChatPlugin::GetRoom( const String & p_roomName )
+std::shared_ptr< ChatRoom > ChatPlugin::GetRoom( const String & p_roomName )
 {
 	return m_world->GetRoom( p_roomName );
 }
 
-ChatTcpClient * ChatPlugin::GetClient( const String & p_name )
+std::shared_ptr< ChatTcpClient > ChatPlugin::GetClient( const String & p_name )
 {
-	ClientIdStrMap::iterator l_clientIdIt = m_clientIDs.find( p_name );
+	auto && l_clientIdIt = m_clientIDs.find( p_name );
 
 	if ( l_clientIdIt != m_clientIDs.end() )
 	{
-		ClientIdChatCLientMap::iterator l_clientIt = m_connectedClients.find( l_clientIdIt->second );
+		auto && l_clientIt = m_connectedClients.find( l_clientIdIt->second );
 
 		if ( l_clientIt != m_connectedClients.end() )
 		{
-			return l_clientIt->second;
+			return l_clientIt->second.lock();
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 const String & ChatPlugin::GetClientName( unsigned int p_id )
@@ -172,15 +174,15 @@ const String & ChatPlugin::GetClientName( unsigned int p_id )
 	return ChatEmptyString;
 }
 
-void ChatPlugin::AddClient( ChatTcpClient * p_client )
+void ChatPlugin::AddClient( std::shared_ptr< ChatTcpClient > p_client )
 {
-	m_connectedClients.insert( ClientIdChatCLientMap::value_type( p_client->GetId(), p_client ) );
-	m_clientIDs.insert( ClientIdStrMap::value_type( p_client->GetName(), p_client->GetId() ) );
+	m_connectedClients.insert( std::make_pair( p_client->GetId(), p_client ) );
+	m_clientIDs.insert( std::make_pair( p_client->GetName(), p_client->GetId() ) );
 }
 
-void ChatPlugin::RemoveClient( ChatTcpClient * p_client )
+void ChatPlugin::RemoveClient( std::shared_ptr< ChatTcpClient > p_client )
 {
-	ClientIdChatCLientMap::iterator l_it1 = m_connectedClients.find( p_client->GetId() );
+	auto && l_it1 = m_connectedClients.find( p_client->GetId() );
 
 	if ( l_it1 != m_connectedClients.end() )
 	{
@@ -188,7 +190,7 @@ void ChatPlugin::RemoveClient( ChatTcpClient * p_client )
 		m_connectedClients.erase( l_it1 );
 	}
 
-	ClientIdStrMap::iterator l_it2 = m_clientIDs.find( p_client->GetName() );
+	auto && l_it2 = m_clientIDs.find( p_client->GetName() );
 
 	if ( l_it2 != m_clientIDs.end() )
 	{
@@ -197,20 +199,19 @@ void ChatPlugin::RemoveClient( ChatTcpClient * p_client )
 	}
 }
 
-ChatGame * ChatPlugin::AddGame( const String & p_gameName,
-								ChatTcpClient * p_initiator )
+std::shared_ptr< ChatGame > ChatPlugin::AddGame( const String & p_gameName, std::shared_ptr< ChatTcpClient > p_initiator )
 {
-	if ( p_initiator == NULL )
+	if ( !p_initiator )
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	unsigned int l_gameId = 0;
 	unsigned int l_maxPlayers = 0;
 	bool l_found = false;
-	StrUIntIdMap::iterator l_gnit = m_gamesNames.begin();
+	auto && l_gnit = m_gamesNames.begin();
 
-	while ( l_gnit != m_gamesNames.end() && ! l_found )
+	while ( l_gnit != m_gamesNames.end() && !l_found )
 	{
 		if ( l_gnit->second.first == p_gameName )
 		{
@@ -222,17 +223,17 @@ ChatGame * ChatPlugin::AddGame( const String & p_gameName,
 		++l_gnit;
 	}
 
-	if ( ! l_found )
+	if ( !l_found )
 	{
 		p_initiator->SendGameDontExistMessage();
-		return NULL;
+		return nullptr;
 	}
 
-	ChatGameStrMap::iterator l_it = m_games.find( p_gameName );
+	auto && l_it = m_games.find( p_gameName );
 
 	if ( l_it != m_games.end() )
 	{
-		ChatGameIDMap::iterator l_it2 = l_it->second.find( p_initiator->GetId() );
+		auto && l_it2 = l_it->second.find( p_initiator->GetId() );
 
 		if ( l_it2 != l_it->second.end() )
 		{
@@ -243,37 +244,37 @@ ChatGame * ChatPlugin::AddGame( const String & p_gameName,
 			else
 			{
 				p_initiator->SendGameAlreadyCreatedMessage();
-				return NULL;
+				return nullptr;
 			}
 		}
 	}
 	else
 	{
 		ChatGameIDMap l_map;
-		m_games.insert( ChatGameStrMap::value_type( p_gameName, l_map ) );
+		m_games.insert( std::make_pair( p_gameName, l_map ) );
 		l_it = m_games.find( p_gameName );
 	}
 
-	ChatGame * l_game = new ChatGame( l_gameId, p_initiator, p_gameName, l_maxPlayers, m_database );
-	l_it->second.insert( ChatGameIDMap::value_type( p_initiator->GetId(), l_game ) );
+	std::shared_ptr< ChatGame > l_game = std::make_shared< ChatGame >( l_gameId, p_initiator, p_gameName, l_maxPlayers, m_database );
+	l_it->second.insert( std::make_pair( p_initiator->GetId(), l_game ) );
 	p_initiator->SendCreateGameOK();
 	return l_game;
 }
 
-ChatGame * ChatPlugin::GetGame( const String & p_gameName, int p_initiatorID )
+std::shared_ptr< ChatGame > ChatPlugin::GetGame( const String & p_gameName, int p_initiatorID )
 {
-	ChatGameStrMap::iterator l_it = m_games.find( p_gameName );
+	auto && l_it = m_games.find( p_gameName );
 
 	if ( l_it == m_games.end() )
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	ChatGameIDMap::iterator l_it2 = l_it->second.find( p_initiatorID );
+	auto && l_it2 = l_it->second.find( p_initiatorID );
 
 	if ( l_it2 == l_it->second.end() )
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	return l_it2->second;
@@ -282,19 +283,19 @@ ChatGame * ChatPlugin::GetGame( const String & p_gameName, int p_initiatorID )
 StrUIntIdMap ChatPlugin::GetGamesList( const String & p_gameName )
 {
 	StrUIntIdMap l_map;
-	ChatGameStrMap::iterator l_it = m_games.find( p_gameName );
+	auto && l_it = m_games.find( p_gameName );
 
 	if ( l_it == m_games.end() )
 	{
 		return l_map;
 	}
 
-	for ( ChatGameIDMap::iterator l_it2 = l_it->second.begin() ; l_it2 != l_it->second.end() ; ++l_it2 )
+	for ( auto && l_it2 : l_it->second )
 	{
-		if ( ! l_it2->second->IsFull() )
+		if ( !l_it2.second->IsFull() )
 		{
-			StrUIntPair l_pair( GetClientName( l_it2->first ), l_it2->second->GetNbPlayers() );
-			l_map.insert( StrUIntIdMap::value_type( l_it2->first, l_pair ) );
+			StrUIntPair l_pair( GetClientName( l_it2.first ), l_it2.second->GetPlayersCount() );
+			l_map.insert( std::make_pair( l_it2.first, l_pair ) );
 		}
 	}
 
@@ -304,7 +305,7 @@ StrUIntIdMap ChatPlugin::GetGamesList( const String & p_gameName )
 unsigned int ChatPlugin::GetGameMaxPLayers( const String & p_gameName )
 {
 	StrUIntIdMap l_map;
-	StrUIntIdMap::iterator l_it = m_gamesNames.begin();
+	auto && l_it = m_gamesNames.begin();
 	bool l_found = false;
 
 	while ( l_it != m_gamesNames.end() )
@@ -323,7 +324,7 @@ unsigned int ChatPlugin::GetGameMaxPLayers( const String & p_gameName )
 
 void ChatPlugin::RemoveGame( const String & p_gameName, int p_initiatorID )
 {
-	ChatGameStrMap::iterator l_it = m_games.find( p_gameName );
+	auto && l_it = m_games.find( p_gameName );
 
 	if ( l_it == m_games.end() )
 	{
@@ -331,7 +332,7 @@ void ChatPlugin::RemoveGame( const String & p_gameName, int p_initiatorID )
 		return;
 	}
 
-	ChatGameIDMap::iterator l_it2 = l_it->second.find( p_initiatorID );
+	auto && l_it2 = l_it->second.find( p_initiatorID );
 
 	if ( l_it2 == l_it->second.end() )
 	{
@@ -339,13 +340,13 @@ void ChatPlugin::RemoveGame( const String & p_gameName, int p_initiatorID )
 		return;
 	}
 
-	delete l_it2->second;
+	l_it2->second.reset();
 	l_it->second.erase( l_it2 );
 }
 
 void ChatPlugin::_loadRooms()
 {
-	if ( ! m_database->LoadRooms( m_world ) )
+	if ( !m_database->LoadRooms( *m_world ) )
 	{
 		exit( 1 );
 	}
@@ -353,7 +354,7 @@ void ChatPlugin::_loadRooms()
 
 void ChatPlugin::_loadGames()
 {
-	if ( ! m_database->LoadGames( m_gamesNames ) )
+	if ( !m_database->LoadGames( m_gamesNames ) )
 	{
 		exit( 2 );
 	}

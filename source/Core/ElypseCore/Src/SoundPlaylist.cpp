@@ -154,7 +154,7 @@ void SoundPlaylist::Next()
 {
 	m_currentPlaying ++;
 
-	if ( m_currentPlaying == static_cast <int>( m_positions.size() ) )
+	if ( m_currentPlaying == static_cast< int >( m_positions.size() ) )
 	{
 		if ( m_looped )
 		{

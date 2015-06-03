@@ -61,7 +61,7 @@ namespace General
 				p_value += p_modulo;
 			}
 
-			return p_value - p_modulo * static_cast <int>( l_v );
+			return p_value - p_modulo * static_cast< int >( l_v );
 		}
 
 

@@ -13,7 +13,7 @@ GENLIB_INIT_SINGLETON_FOR_DLL( EMuse::Debug::EMuseLogs );
 
 EMuse::Debug::EMuseLogs::EMuseLogs()
 {
-	GENLIB_SET_SINGLETON();
+	GENLIB_SET_SINGLETON_FOR_DLL();
 }
 
 EMuse::Debug::EMuseLogs::~EMuseLogs()

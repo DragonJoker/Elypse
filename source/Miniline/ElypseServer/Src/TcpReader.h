@@ -5,13 +5,13 @@
 
 #include "BoostHeaders.h"
 
-#include "Macros.h"
-#include "LocklessQueue.h"
-#include "Exception.h"
+#include <Macros.h>
+#include <LocklessQueue.h>
+#include <Exception.h>
 
-namespace General
+namespace Elypse
 {
-	namespace MultiThreading
+	namespace Network
 	{
 		class d_abstract TcpReaderBase
 		{
@@ -25,14 +25,14 @@ namespace General
 				c_maxMessageLength = 8190
 			};
 
-			boost::array	<char, c_headerLength>		m_headerBuffer;
-			boost::array	<char, c_maxMessageLength>	m_bodyBuffer;
+			boost::array< char, c_headerLength > m_headerBuffer;
+			boost::array< char, c_maxMessageLength > m_bodyBuffer;
 			unsigned short m_messageLength;
 
 		public:
 			TcpReaderBase( boost::asio::ip::tcp::socket & p_socket, boost::asio::io_service & p_service )
-				:	m_socket( p_socket ),
-					m_service( p_service )
+				: m_socket( p_socket )
+				, m_service( p_service )
 			{
 			}
 			virtual ~TcpReaderBase()
@@ -40,70 +40,66 @@ namespace General
 			}
 
 		protected:
-			virtual void _receivedMessageCallback( const std::string & p_message ) = 0;
-			virtual bool _readerErrorCB( const boost::system::error_code & p_err ) = 0;
+			virtual void CallbackReceivedMessage( const std::string & p_message ) = 0;
+			virtual bool CallbackReaderError( const boost::system::error_code & p_err ) = 0;
 
-			void _startReadHeader()
+			void DoStartReadHeader()
 			{
-				boost::asio::async_read(	m_socket, boost::asio::buffer( m_headerBuffer, c_headerLength ),
-											boost::bind(	& TcpReaderBase::_endHeaderCallback,
-													this,
-													boost::asio::placeholders::error ) );
+				boost::asio::async_read( m_socket, boost::asio::buffer( m_headerBuffer, c_headerLength ),
+										 boost::bind( &TcpReaderBase::CallbackEndHeader,
+													  this,
+													  boost::asio::placeholders::error ) );
 			}
 
-			void _startReadBody( unsigned short p_messageLength )
+			void DoStartReadBody( unsigned short p_messageLength )
 			{
 				m_messageLength = p_messageLength;
-				boost::asio::async_read(	m_socket, boost::asio::buffer( m_bodyBuffer, p_messageLength ),
-											boost::bind(	& TcpReaderBase::_endBodyCallback,
-													this,
-													boost::asio::placeholders::error ) );
+				boost::asio::async_read( m_socket, boost::asio::buffer( m_bodyBuffer, p_messageLength ),
+										 boost::bind( &TcpReaderBase::CallbackEndBody,
+													  this,
+													  boost::asio::placeholders::error ) );
 			}
 
-			void _endHeaderCallback( const boost::system::error_code & p_err )
+			void CallbackEndHeader( const boost::system::error_code & p_err )
 			{
-				if ( p_err && _readerErrorCB( p_err ) )
+				if ( !!p_err || !CallbackReaderError( p_err ) )
 				{
-					return;
+					unsigned short l_size;
+					l_size = static_cast< unsigned char >( m_headerBuffer[0] ) + ( static_cast< unsigned char >( m_headerBuffer[1] ) << 8 );
+					//std::cout << "_endHeaderCallback " << l_size << "\n";
+					DoStartReadBody( l_size );
 				}
-
-				unsigned short l_size;
-				l_size = static_cast <unsigned char>( m_headerBuffer[0] ) + ( static_cast <unsigned char>( m_headerBuffer[1] ) << 8 );
-//			std::cout << "_endHeaderCallback " << l_size << "\n";
-				_startReadBody( l_size );
 			}
 
-			void _endBodyCallback( const boost::system::error_code & p_err )
+			void CallbackEndBody( const boost::system::error_code & p_err )
 			{
-				if ( p_err && _readerErrorCB( p_err ) )
+				if ( !p_err || !CallbackReaderError( p_err ) )
 				{
-					return;
+					if ( m_messageLength > 0 )
+					{
+						std::string l_string;
+						l_string.append( m_bodyBuffer.data(), m_messageLength );
+						CallbackReceivedMessage( l_string );
+					}
+
+					DoStartReadHeader();
 				}
-
-				if ( m_messageLength > 0 )
-				{
-					std::string l_string;
-					l_string.append( m_bodyBuffer.data(), m_messageLength );
-
-					_receivedMessageCallback( l_string );
-				}
-
-				_startReadHeader();
 			}
 
 		public:
 			boost::system::error_code BlockingRead( std::string & p_contents )
 			{
 				boost::system::error_code l_error;
-				boost::array <char, 8192> l_buffer;
-
+				boost::array< char, 8192 > l_buffer;
 				size_t l_length = m_socket.read_some( boost::asio::buffer( l_buffer ), l_error );
-
-				p_contents.clear();
 
 				if ( l_length > 0 )
 				{
-					p_contents.append( l_buffer.data(), l_length );
+					p_contents.assign( l_buffer.data(), l_length );
+				}
+				else
+				{
+					p_contents.clear();
 				}
 
 				return l_error;
@@ -111,12 +107,13 @@ namespace General
 
 			void StartAsyncRead()
 			{
-				_startReadHeader();
+				DoStartReadHeader();
 			}
 		};
 
-//	Exemple de TcpReader qui merde fais par le Bubar à revoir avant usage
-		class TcpQueuedReader : public TcpReaderBase
+		// Exemple de TcpReader qui merde fait par le Bubar à revoir avant usage
+		class TcpQueuedReader
+			: public TcpReaderBase
 		{
 		protected:
 			General::Templates::lockless_queue <std::string> m_messages;
@@ -133,7 +130,7 @@ namespace General
 		protected:
 			virtual void _receivedMessageCallback( const std::string & p_message )
 			{
-//			std::cout << "message recu : " << p_message << std::endl;
+				//std::cout << "message recu : " << p_message << std::endl;
 				m_messages.push_back( p_message );
 			}
 

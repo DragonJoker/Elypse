@@ -39,8 +39,8 @@ namespace EMuse
 			void PauseAll();
 			void SetVolume( int p_volume );
 			void Mute( bool p_muted );
-//		void UpdateVolume( const Vector3 & p_position,  Radian p_orientation);
-//		void ReleaseAllZone( const String & p_zoneName);
+			//void UpdateVolume( const Vector3 & p_position,  Radian p_orientation);
+			//void ReleaseAllZone( const String & p_zoneName);
 			void DeleteVideoObject( const String & p_name );
 
 			void RegisterFactory( VideoFactory * p_factory );
