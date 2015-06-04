@@ -1,6 +1,7 @@
 function( ToolsInit )
 	set( ElpsBinry "no (Not wanted)" PARENT_SCOPE )
 	set( MuseReadr "no (Not wanted)" PARENT_SCOPE )
+	set( MuseWritr "no (Not wanted)" PARENT_SCOPE )
 	set( TrollEdtr "no (Not wanted)" PARENT_SCOPE )
 endfunction( ToolsInit )
 
@@ -60,6 +61,10 @@ function( ToolsBuild )
 		add_subdirectory( Tools/MuseReader )
 		set( MuseReadr ${Build} PARENT_SCOPE )
 		
+		#set( Build ${MuseWritr} )
+		#add_subdirectory( Tools/MuseWriter )
+		#set( MuseWritr ${Build} PARENT_SCOPE )
+		
 		set( Build ${TrollEdtr} )
 		add_subdirectory( Tools/TrollEditor )
 		set( TrollEdtr ${Build} PARENT_SCOPE )
@@ -71,23 +76,27 @@ function( ToolsBuild )
 		if ( NOT wxWidgets_FOUND )
 			set( ElpsBinry "${SEP}${ElpsBinry}wxWidgets library " )
 			set( MuseReadr "${SEP}${MuseReadr}wxWidgets library " )
+			set( TrollEdtr "${SEP}${MuseWritr}wxWidgets library " )
 			set( TrollEdtr "${SEP}${TrollEdtr}wxWidgets library " )
 			set( SEP ", " )
 		endif()
 		if ( NOT GTK_FOUND )
 			set( ElpsBinry "${SEP}${ElpsBinry}GTK library" )
 			set( MuseReadr "${SEP}${MuseReadr}GTK library" )
+			set( MuseReadr "${SEP}${MuseWritr}GTK library" )
 			set( TrollEdtr "${SEP}${TrollEdtr}GTK library" )
 			set( SEP ", " )
 		endif()
 		if ( NOT OPENGL_FOUND )
 			set( ElpsBinry "${SEP}${ElpsBinry}OpenGL library" )
 			set( MuseReadr "${SEP}${MuseReadr}OpenGL library" )
+			set( MuseReadr "${SEP}${MuseWritr}OpenGL library" )
 			set( TrollEdtr "${SEP}${TrollEdtr}OpenGL library" )
 			set( SEP ", " )
 		endif()
 		set( ElpsBinry "${ElpsBinry})" )
 		set( MuseReadr "${MuseReadr})" )
+		set( MuseReadr "${MuseWritr})" )
 		set( TrollEdtr "${TrollEdtr})" )
 	endif ()
 endfunction( ToolsBuild )
@@ -96,8 +105,9 @@ function( ToolsSummary msg )
 	set( msg_tmp "\nTools :" )
 	set( msg_tmp "${msg_tmp}\n    ElypseBinary       ${ElpsBinry}" )
 	set( msg_tmp "${msg_tmp}\n    MuseReader         ${MuseReadr}" )
+	set( msg_tmp "${msg_tmp}\n    MuseWriter         ${MuseWritr}" )
 	set( msg_tmp "${msg_tmp}\n    TrollEditor        ${TrollEdtr}" )
-	SET( msg "${msg}${msg_tmp}" PARENT_SCOPE )
+	set( msg "${msg}${msg_tmp}" PARENT_SCOPE )
 endfunction( ToolsSummary )
 
 function( ToolsSetup )
@@ -118,6 +128,13 @@ function( ToolsSetup )
 	cpack_add_component( MuseReader
 		DISPLAY_NAME "MuseReader Application"
 		DESCRIPTION "Application used to read the content of a muse file"
+		GROUP Tools
+		DEPENDS ElypseCore
+		INSTALL_TYPES Developer Full
+	)
+	cpack_add_component( MuseWriter
+		DISPLAY_NAME "MuseWriter Application"
+		DESCRIPTION "Application used to builf muse files from scene files, script files and folders"
 		GROUP Tools
 		DEPENDS ElypseCore
 		INSTALL_TYPES Developer Full

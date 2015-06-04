@@ -1,0 +1,22 @@
+project( MuseWriter )
+
+option( BUILD_${PROJECT_NAME} "Build ${PROJECT_NAME}" TRUE )
+
+add_definitions( -D_CRT_SECURE_NO_WARNINGS )
+
+set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
+set( ${PROJECT_NAME}_VERSION_MINOR	9 )
+set( ${PROJECT_NAME}_VERSION_BUILD	4 )
+
+add_target(
+	${PROJECT_NAME}
+	bin
+	"GeneralLib;ElypseCore"
+	"ElypseCore;${ElypseCoreLibraries};${BinariesLibraries}"
+	"stdafx.h"
+	"stdafx.cpp"
+)
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Tools" )
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )

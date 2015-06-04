@@ -6,17 +6,13 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
 set( ${PROJECT_NAME}_VERSION_MINOR	9 )
 set( ${PROJECT_NAME}_VERSION_BUILD	4 )
 
-include_directories( ${CMAKE_SOURCE_DIR}/Core/GeneralLib/Src )
-include_directories( ${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Data )
-include_directories( ${Ogre_INCLUDE_DIRS} )
 
 add_target(
 	${PROJECT_NAME}
 	bin
 	"GeneralLib;ElypseCore"
-	"ElypseCore;${ElypseCoreLibraries};${BinariesLibraries}"
+	"GeneralLib;ElypseCore;${ElypseCoreLibraries};${BinariesLibraries}"
 	"PrecompiledHeader.h"
 	"PrecompiledHeader.cpp"
 )

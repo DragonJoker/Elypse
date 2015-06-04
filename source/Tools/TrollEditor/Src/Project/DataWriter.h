@@ -17,7 +17,7 @@
 #include <wx/textctrl.h>
 #include <zlib.h>
 #include <MD5.h>
-
+#include <Module_Download.h>
 
 // The struct to stock blocks informations*
 namespace EMuse
