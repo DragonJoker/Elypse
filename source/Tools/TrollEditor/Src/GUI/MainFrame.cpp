@@ -135,15 +135,15 @@ namespace Troll
 
 				p_stream.WriteString( wxT( "}\n\n" ) );
 			}
-			
-			bool wxCopyDir( wxString sFrom, wxString sTo)
+
+			bool wxCopyDir( wxString sFrom, wxString sTo )
 			{
-				if ( sFrom[sFrom.Len() - 1] != '\\' && sFrom[sFrom.Len() - 1] != '/')
+				if ( sFrom[sFrom.Len() - 1] != '\\' && sFrom[sFrom.Len() - 1] != '/' )
 				{
 					sFrom += wxFileName::GetPathSeparator();
 				}
 
-				if ( sTo[sTo.Len() - 1] != '\\' && sTo[sTo.Len() - 1] != '/')
+				if ( sTo[sTo.Len() - 1] != '\\' && sTo[sTo.Len() - 1] != '/' )
 				{
 					sTo += wxFileName::GetPathSeparator();
 				}

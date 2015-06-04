@@ -5,6 +5,7 @@
 #	define GENLIB_LINUX 0
 #	define GENLIB_MACOS 0
 #	define GENLIB_WINDOWS 1
+#	include <sdkddkver.h>
 #elif defined(linux) || defined(__linux) || defined(__linux__)
 #	define GENLIB_LINUX 1
 #	define GENLIB_MACOS 0

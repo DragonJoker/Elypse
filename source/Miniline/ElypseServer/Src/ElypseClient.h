@@ -5,19 +5,18 @@
 
 namespace Elypse
 {
-	namespace ServerPlugin
+	namespace Server
 	{
 		class ElypseTcpClient
-			: public Network::TcpBaseClient
-			, public Network::TcpReaderBase
-			, public Network::TcpWriterBase
-			, public std::enable_shared_from_this< ElypseTcpClient >
+			: public General::Network::TcpBaseClient
+			, public General::Network::TcpReaderBase
+			, public General::Network::TcpWriterBase
 		{
 		protected:
 			ElypseTcpClient( std::shared_ptr< ElypseTcpService > p_elypseService )
-				: Network::TcpBaseClient( p_elypseService->m_service )
-				, Network::TcpReaderBase( Network::TcpBaseClient::m_socket, p_elypseService->m_service )
-				, Network::TcpWriterBase( Network::TcpBaseClient::m_socket, p_elypseService->m_service )
+				: General::Network::TcpBaseClient( p_elypseService->m_service )
+				, General::Network::TcpReaderBase( General::Network::TcpBaseClient::m_socket, p_elypseService->m_service )
+				, General::Network::TcpWriterBase( General::Network::TcpBaseClient::m_socket, p_elypseService->m_service )
 				, m_elypseService( p_elypseService )
 			{
 			}
@@ -33,8 +32,8 @@ namespace Elypse
 					l_endPoint = TcpBaseClient::m_socket.local_endpoint();
 					std::string l_localAddr = l_endPoint.address().to_string() + ":" + std::to_string( l_endPoint.port() );
 
-					std::cout << "ElypseTcpClient::CallbackReaderError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
-					l_service->EraseClient( shared_from_this() );
+					std::cerr << "ElypseTcpClient::CallbackReaderError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
+					l_service->EraseClient( this );
 				}
 
 				return false;
@@ -51,8 +50,8 @@ namespace Elypse
 					l_endPoint = TcpBaseClient::m_socket.local_endpoint();
 					std::string l_localAddr = l_endPoint.address().to_string() + ":" + std::to_string( l_endPoint.port() );
 
-					std::cout << "ElypseTcpClient::CallbackWriterError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
-					l_service->EraseClient( shared_from_this() );
+					std::cerr << "ElypseTcpClient::CallbackWriterError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
+					l_service->EraseClient( this );
 				}
 
 				return false;

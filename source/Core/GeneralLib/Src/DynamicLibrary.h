@@ -29,7 +29,7 @@ namespace General
 		private:
 			void DoClose()
 			{
-				if( m_library )
+				if ( m_library )
 				{
 #ifndef __GNUG__
 					FreeLibrary( static_cast< HMODULE >( m_library ) );

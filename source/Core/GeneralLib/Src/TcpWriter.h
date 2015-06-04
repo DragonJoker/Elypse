@@ -4,16 +4,16 @@
 #include <string>
 #include <deque>
 
+#include "Macros.h"
+#include "Exception.h"
+
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 
-#include <Macros.h>
-#include <Exception.h>
-
 namespace General
 {
-	namespace MultiThreading
+	namespace Network
 	{
 		class TcpWriterBase
 		{
@@ -40,55 +40,54 @@ namespace General
 			{
 			}
 		protected:
-			virtual bool _writerErrorCB( const boost::system::error_code & p_err ) = 0;
+			virtual bool CallbackWriterError( const boost::system::error_code & p_err ) = 0;
 
-			void _endWrite( const boost::system::error_code & p_err )
+			void DoEndWrite( const boost::system::error_code & p_err )
 			{
 				if ( p_err )
 				{
 					return;
 				}
 
-				/*
-							if (p_err && _writerErrorCB( p_err))
-							{
-								return;
-							}
-				*/
+				//if (p_err && CallbackWriterError( p_err))
+				//{
+				//	return;
+				//}
+
 				m_messages.pop_front();
 
 				if ( ! m_messages.empty() )
 				{
-					_asyncWrite();
+					DoAsyncWrite();
 				}
 			}
 
-			void _asyncWrite()
+			void DoAsyncWrite()
 			{
 				unsigned short l_length = static_cast <unsigned short>( m_messages.front().size() );
 				m_buffer.data()[0] = static_cast< unsigned char >( l_length & 0xFF );
 				m_buffer.data()[1] = static_cast< unsigned char >( l_length >> 8 );
-//			memcpy( m_buffer.data(), &l_length, c_headerLength);
+				//memcpy( m_buffer.data(), &l_length, c_headerLength);
 				memcpy( m_buffer.data() + c_headerLength, m_messages.front().c_str(), m_messages.front().size() );
 				boost::asio::async_write(	m_socket,
 											boost::asio::buffer( m_buffer.data(), l_length + c_headerLength ),
-											boost::bind(	& TcpWriterBase::_endWrite,
+											boost::bind(	& TcpWriterBase::DoEndWrite,
 													this,
 													boost::asio::placeholders::error ) );
 			}
 
-			void _addMessage( const std::string & p_message )
+			void DoAddMessage( const std::string & p_message )
 			{
 				bool l_noWrite = m_messages.empty();
 				m_messages.push_back( p_message );
 
 				if ( l_noWrite )
 				{
-					_asyncWrite();
+					DoAsyncWrite();
 				}
 			}
 
-			void _addMessageNoSend( const std::string & p_message )
+			void DoAddMessageNoSend( const std::string & p_message )
 			{
 				m_messages.push_back( p_message );
 			}
@@ -108,7 +107,7 @@ namespace General
 					return;
 				}
 
-				m_service.post( boost::bind( & TcpWriterBase::_addMessage, this, p_message ) );
+				m_service.post( boost::bind( & TcpWriterBase::DoAddMessage, this, p_message ) );
 			}
 
 			void StoreMessage( const std::string & p_message )
@@ -118,20 +117,20 @@ namespace General
 					return;
 				}
 
-				m_service.post( boost::bind( & TcpWriterBase::_addMessageNoSend, this, p_message ) );
+				m_service.post( boost::bind( & TcpWriterBase::DoAddMessageNoSend, this, p_message ) );
 			}
 
 			void StartSending()
 			{
-				if ( ! m_messages.empty() )
+				if ( !m_messages.empty() )
 				{
-					_asyncWrite();
+					DoAsyncWrite();
 				}
 			}
 		};
 
 
-//	Exemple de TcpWriter très simplifié
+		// Exemple de TcpWriter très simplifié
 		class TcpWriter : public TcpWriterBase
 		{
 		public:
@@ -144,9 +143,9 @@ namespace General
 			}
 
 		protected:
-			virtual bool _errorCallback( const boost::system::error_code & p_err )
+			virtual bool CallbackWriterError( const boost::system::error_code & p_err )
 			{
-//			std::cout << "TcpWriter -> error : " + p_err.message() << std::endl;
+				//std::cout << "TcpWriter -> error : " + p_err.message() << std::endl;
 				GENLIB_EXCEPTION( "TcpWriter -> error : " + p_err.message() );
 				return false;
 			}

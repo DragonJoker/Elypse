@@ -5,7 +5,7 @@
 using namespace Chat;
 using namespace General::Templates;
 
-bool ChatRoom::AddClient( std::shared_ptr< ChatTcpClient > p_client )
+bool ChatRoom::AddClient( ChatTcpClient * p_client )
 {
 	bool l_return = false;
 
@@ -19,7 +19,7 @@ bool ChatRoom::AddClient( std::shared_ptr< ChatTcpClient > p_client )
 	return l_return;
 }
 
-bool ChatRoom::RemoveClient( std::shared_ptr< ChatTcpClient > p_client )
+bool ChatRoom::RemoveClient( ChatTcpClient * p_client )
 {
 	bool l_return = false;
 	auto && l_it = m_clients.find( p_client->GetName() );
@@ -40,8 +40,7 @@ void ChatRoom::ForwardMessage( const String & p_message, const String & p_name )
 	{
 		if ( l_client.second && l_client.second->IsToDelete() && l_client.second->GetName() != p_name )
 		{
-			//std::cout << "forwarding message to ";
-			//std::cout << l_it->second->GetName() << "\n";
+			std::clog << "forwarding message to " << l_client.second->GetName() << "\n";
 			l_client.second->AsyncSend( p_message );
 		}
 	}
@@ -60,7 +59,7 @@ void ChatRoom::ForwardMessage( const String & p_message, const String & p_name, 
 
 void ChatRoom::Save( General::Templates::WriteBuffer & p_buffer )const
 {
-	//std::cout << m_name << " - " << m_sceneName << " - " << m_clients.size() << "\n";
+	std::clog << m_name << " - " << m_sceneName << " - " << m_clients.size() << "\n";
 	p_buffer << int( m_name.size() );
 	p_buffer.writeArray< char >( m_name.c_str(), m_name.size() );
 	p_buffer << int( m_sceneName.size() );

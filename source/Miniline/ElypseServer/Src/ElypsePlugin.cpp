@@ -2,7 +2,7 @@
 
 namespace Elypse
 {
-	namespace ServerPlugin
+	namespace Server
 	{
 		/*
 		 *	Ici on définit la version du serveur.
@@ -14,12 +14,12 @@ namespace Elypse
 		ElypsePlugin::ElypsePlugin( const std::string & p_name )
 			: General::Theory::named( p_name )
 		{
-			std::cout << "ElypsePlugin(" << p_name << ")" << std::endl;
+			std::clog << "ElypsePlugin(" << p_name << ")" << std::endl;
 		}
 
 		ElypsePlugin::~ElypsePlugin()
 		{
-			std::cout << "~ElypsePlugin(" << m_name << ")" << std::endl;
+			std::clog << "~ElypsePlugin(" << m_name << ")" << std::endl;
 		}
 	}
 }

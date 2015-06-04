@@ -4,7 +4,7 @@
 
 using namespace Chat;
 
-ChatGame::ChatGame( unsigned int p_id, std::shared_ptr< ChatTcpClient > p_initiator,
+ChatGame::ChatGame( unsigned int p_id, ChatTcpClient * p_initiator,
 					const String & p_gameName, unsigned int p_maxPlayers,
 					std::shared_ptr< ChatDatabase > p_database )
 	: m_initiator( p_initiator )
@@ -21,12 +21,12 @@ ChatGame::ChatGame( unsigned int p_id, std::shared_ptr< ChatTcpClient > p_initia
 
 ChatGame::~ChatGame()
 {
-	m_initiator.reset();
+	m_initiator = NULL;
 	EndGame();
 	m_players.clear();
 }
 
-bool ChatGame::AddPlayer( std::shared_ptr< ChatTcpClient > p_client )
+bool ChatGame::AddPlayer( ChatTcpClient * p_client )
 {
 	bool l_return = false;
 
@@ -42,14 +42,14 @@ bool ChatGame::AddPlayer( std::shared_ptr< ChatTcpClient > p_client )
 	return l_return;
 }
 
-bool ChatGame::RemovePlayer( std::shared_ptr< ChatTcpClient > p_client )
+bool ChatGame::RemovePlayer( ChatTcpClient * p_client )
 {
 	bool l_return = false;
 	auto && l_it = m_players.find( p_client->GetId() );
 
 	if ( l_it != m_players.end() )
 	{
-		m_started = p_client != m_initiator.lock();
+		m_started = p_client != m_initiator;
 		m_players.erase( l_it );
 		DoGetDatabase()->RemovePlayerFromGame( m_id );
 		l_return = true;
@@ -64,7 +64,7 @@ void ChatGame::StartGame()
 
 	for ( auto && l_it : m_players )
 	{
-		std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+		ChatTcpClient * l_player = l_it.second;
 
 		if ( l_player )
 		{
@@ -76,10 +76,10 @@ void ChatGame::StartGame()
 void ChatGame::EndGame()
 {
 	m_started = false;
-	
+
 	for ( auto && l_it : m_players )
 	{
-		std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+		ChatTcpClient * l_player = l_it.second;
 
 		if ( l_player )
 		{
@@ -109,12 +109,11 @@ void ChatGame::ForwardMessage( const String & p_message, const String & p_name )
 {
 	for ( auto && l_it : m_players )
 	{
-		std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+		ChatTcpClient * l_player = l_it.second;
 
 		if ( l_player && !l_player->IsToDelete() && l_player->GetName() != p_name )
 		{
-			//std::cout << "forwarding message to ";
-			//std::cout << l_it->second->GetName() << "\n";
+			std::clog << "forwarding message to " << l_player->GetName() << "\n";
 			l_player->AsyncSend( p_message );
 		}
 	}

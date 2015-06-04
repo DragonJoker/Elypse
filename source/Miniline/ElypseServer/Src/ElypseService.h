@@ -1,16 +1,16 @@
 #ifndef ___ELYPSESERVICE_H___
 #define ___ELYPSESERVICE_H___
 
-#include "TcpAcceptor.h"
-#include "TcpWriter.h"
-#include "TcpReader.h"
+#include <TcpAcceptor.h>
+#include <TcpWriter.h>
+#include <TcpReader.h>
 
 #include <Named.h>
 #include <memory>
 
 namespace Elypse
 {
-	namespace ServerPlugin
+	namespace Server
 	{
 		enum TypeService
 		{
@@ -39,20 +39,20 @@ namespace Elypse
 
 		class ElypseTcpService
 			: public ElypseService
-			, public Network::TcpAcceptor
+			, public General::Network::TcpAcceptor
 		{
 		protected:
 			ElypseTcpService( const std::string & p_name, unsigned short p_port )
 				: ElypseService( p_name )
-				, Network::TcpAcceptor( p_port )
+				, General::Network::TcpAcceptor( p_port )
 			{
-				std::cout << "ElypseTCPService(" << p_name << ") created" << std::endl;
+				std::clog << "ElypseTCPService(" << p_name << ") created" << std::endl;
 			}
 
 		public:
 			virtual ~ElypseTcpService()
 			{
-				std::cout << "~ElypseTCPService(" << m_name << ") deleted" << std::endl;
+				std::clog << "~ElypseTCPService(" << m_name << ") deleted" << std::endl;
 			}
 
 		public:
@@ -77,13 +77,13 @@ namespace Elypse
 				: ElypseService( p_name )
 				, m_port( p_port )
 			{
-				std::cout << "ElypseUDPService(" << p_name << ") created" << std::endl;
+				std::clog << "ElypseUDPService(" << p_name << ") created" << std::endl;
 			}
 
 		public:
 			virtual ~ElypseUdpService()
 			{
-				std::cout << "~ElypseUDPService(" << m_name << ") deleted" << std::endl;
+				std::clog << "~ElypseUDPService(" << m_name << ") deleted" << std::endl;
 			}
 
 		public:

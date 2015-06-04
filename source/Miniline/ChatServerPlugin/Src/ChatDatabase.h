@@ -1,7 +1,8 @@
 #ifndef ___Database___
 #define ___Database___
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdint>
 
 #include "Common.h"
 
@@ -11,12 +12,12 @@ namespace Chat
 	{
 	private:
 		Database::CDatabase * m_manager;
-		ConfigInfo * m_configInfo;
+		ConfigInfo m_configInfo;
 		Database::DatabaseConnectionPtr m_db;
 		Database::String m_modulePath;
 		ClientIdStrMap m_clients;
-		int m_numDressSlots;
-		int m_numTattooSlots;
+		uint64_t m_numDressSlots;
+		uint64_t m_numTattooSlots;
 		std::map <int, std::map <int, std::vector <int> > > m_allDresses;
 		std::map <int, std::map <int, std::vector <int> > > m_allTattoos;
 
@@ -44,7 +45,7 @@ namespace Chat
 		size_t GetDressesSize( size_t p_sex, size_t p_slotId );
 		int GetDress( size_t p_sex, size_t p_slotId, size_t p_index );
 
-		inline int GetNumDressSlots()
+		inline uint64_t GetNumDressSlots()
 		{
 			return m_numDressSlots;
 		}

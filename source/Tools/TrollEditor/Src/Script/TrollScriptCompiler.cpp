@@ -195,7 +195,7 @@ void TrollScriptCompiler::_classFunc( const String & p_functionName, RawFunction
 		va_end( l_argsList );
 		g_mainFrame->CreateClassFunction( wxString( p_functionName.c_str(), wxConvLibc ), p_returnValue, l_params );
 	}
-	
+
 	if ( m_textCtrl && m_textCtrl->GetContext() )
 	{
 		auto && l_it = m_textCtrl->GetContext()->Find( wxT( "emscript" ) );

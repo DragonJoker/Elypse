@@ -1,4 +1,4 @@
-project( ElypseServer )
+project( ClientTest )
 
 if (NOT MINGW)
 	set( Boost_USE_STATIC_LIBS ON)
@@ -11,11 +11,12 @@ set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 
 add_target(
 	${PROJECT_NAME}
-	lib
-	"GeneralLib"
-	"GeneralLib;${BoostLibraries};${X11Libraries}"
+	bin_dos
+	"GeneralLib;ElypseServer"
+	"GeneralLib;ElypseServer;${BoostLibraries}"
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )
 set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
+

@@ -29,8 +29,8 @@ if ( DATABASE_FOUND )
 	add_target(
 		${PROJECT_NAME}
 		api_dll
-		"ElypseServer"
-		"${BoostLibraries};${DatabaseLibraries};ElypseServer"
+		"GeneralLib;ElypseServer"
+		"GeneralLib;${BoostLibraries};${DatabaseLibraries};ElypseServer"
 	)
 
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )
@@ -39,6 +39,8 @@ if ( DATABASE_FOUND )
 
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_RELEASE} Release )
+	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/DatabasePluginMySqld.lib Debug )
+	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/DatabasePluginMySql.lib  Release )
 else ()
 	set( Build "No (missing DatabaseEngine library" )
 endif ()

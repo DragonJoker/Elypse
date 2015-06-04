@@ -34,7 +34,7 @@ namespace General
 			PoolWorkerThread( ThreadPool * p_pool )
 				:	m_pool( p_pool	)
 			{
-				m_boostThread	= new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, PoolWorkerThread, _mainLoop ) );
+				m_boostThread	= new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, PoolWorkerThread, DoMainLoop ) );
 			}
 			~PoolWorkerThread()
 			{
@@ -43,7 +43,7 @@ namespace General
 			}
 
 		private:
-			void _mainLoop();
+			void DoMainLoop();
 		};
 
 		class ThreadPool

@@ -11,8 +11,8 @@
 #endif
 
 using namespace Chat;
-using namespace Elypse::ServerPlugin;
-using namespace Elypse::Network;
+using namespace Elypse::Server;
+using namespace General::Network;
 
 ChatPlugin * g_plugin;
 
@@ -41,25 +41,25 @@ ChatTcpService::ChatTcpService( ChatPlugin * p_plugin )
 	:	ElypseTcpService( "Chat TCP Service", 48621 ),
 		m_plugin( p_plugin )
 {
-	std::cout << "ChatTCPService(" << m_name << ")" << std::endl;
+	std::clog << "ChatTCPService(" << m_name << ")" << std::endl;
 }
 
 ChatTcpService::~ChatTcpService()
 {
-	std::cout << "~ChatTCPService(" << m_name << ")" << std::endl;
+	std::clog << "~ChatTCPService(" << m_name << ")" << std::endl;
 }
 
-std::shared_ptr< TcpBaseClient > ChatTcpService::DoCreateNewClient()
+TcpBaseClient * ChatTcpService::DoCreateClient()
 {
-	return std::make_shared< ChatTcpClient >( shared_from_this(), m_plugin );
+	return new ChatTcpClient( shared_from_this(), m_plugin );
 }
 
-void ChatTcpService::DoDeleteClient( std::shared_ptr< TcpBaseClient > & p_toDelete )
+void ChatTcpService::DoDeleteClient( TcpBaseClient * p_toDelete )
 {
 //	delete (reinterpret_cast <ChatTcpClient *> ( p_toDelete));
 }
 
-void ChatTcpService::DoDestroyClient( std::shared_ptr< TcpBaseClient > & p_toDelete )
+void ChatTcpService::DoDestroyClient( TcpBaseClient * p_toDelete )
 {
 //	reinterpret_cast <ChatTcpClient *> ( p_toDelete)->Stop();
 //	m_service.post( boost::bind( & ChatTcpService::___deleteClient, this, p_toDelete));
@@ -71,12 +71,12 @@ void ChatTcpService::DoDestroyClient( std::shared_ptr< TcpBaseClient > & p_toDel
 ChatUdpService::ChatUdpService()
 	:	ElypseUdpService( "Chat UDP Service", 48622 )
 {
-	std::cout << "ChatUDPService(" << m_name << ")" << std::endl;
+	std::clog << "ChatUDPService(" << m_name << ")" << std::endl;
 }
 
 ChatUdpService::~ChatUdpService()
 {
-	std::cout << "~ChatUDPService(" << m_name << ")" << std::endl;
+	std::clog << "~ChatUDPService(" << m_name << ")" << std::endl;
 }
 
 //******************************************************************************
@@ -87,20 +87,20 @@ ChatPlugin::ChatPlugin( String const & p_path )
 		m_database( std::make_shared< ChatDatabase >( p_path ) )
 {
 	g_plugin = this;
-	std::cout << "Chatplugin(" << m_name << ") - Services creation" << std::endl;
+	std::clog << "Chatplugin(" << m_name << ") - Services creation" << std::endl;
 	m_services.push_back( std::make_shared< ChatTcpService >( this ) );
 	m_services.push_back( std::make_shared< ChatUdpService >() );
 
 	srand( time( NULL ) );
 
-	if ( ! m_database->Initialize() )
+	if ( !m_database->Initialize() )
 	{
-		exit( 3 );
+		throw std::runtime_error( "Couldn't initialise database" );
 	}
 
 	_loadRooms();
 	_loadGames();
-	std::cout << "Chatplugin(" << m_name << ") - Services created" << std::endl;
+	std::clog << "Chatplugin(" << m_name << ") - Services created" << std::endl;
 #ifdef __GNUG__
 	struct sigaction l_action;
 	memset( & l_action, 0, sizeof( l_action ) );
@@ -113,11 +113,11 @@ ChatPlugin::ChatPlugin( String const & p_path )
 
 ChatPlugin::~ChatPlugin()
 {
-	std::cout << "~Chatplugin(" << m_name << ") - Services deletion" << std::endl;
+	std::clog << "~Chatplugin(" << m_name << ") - Services deletion" << std::endl;
 
 	m_services.clear();
 
-	std::cout << "~Chatplugin(" << m_name << ") - Services deleted" << std::endl;
+	std::clog << "~Chatplugin(" << m_name << ") - Services deleted" << std::endl;
 }
 
 unsigned short ChatPlugin::GetVersionNo()
@@ -140,7 +140,7 @@ std::shared_ptr< ChatRoom > ChatPlugin::GetRoom( const String & p_roomName )
 	return m_world->GetRoom( p_roomName );
 }
 
-std::shared_ptr< ChatTcpClient > ChatPlugin::GetClient( const String & p_name )
+ChatTcpClient * ChatPlugin::GetClient( const String & p_name )
 {
 	auto && l_clientIdIt = m_clientIDs.find( p_name );
 
@@ -150,7 +150,7 @@ std::shared_ptr< ChatTcpClient > ChatPlugin::GetClient( const String & p_name )
 
 		if ( l_clientIt != m_connectedClients.end() )
 		{
-			return l_clientIt->second.lock();
+			return l_clientIt->second;
 		}
 	}
 
@@ -159,7 +159,7 @@ std::shared_ptr< ChatTcpClient > ChatPlugin::GetClient( const String & p_name )
 
 const String & ChatPlugin::GetClientName( unsigned int p_id )
 {
-	ClientIdStrMap::iterator l_it = m_clientIDs.begin();
+	auto && l_it = m_clientIDs.begin();
 
 	while ( l_it != m_clientIDs.end() )
 	{
@@ -174,19 +174,19 @@ const String & ChatPlugin::GetClientName( unsigned int p_id )
 	return ChatEmptyString;
 }
 
-void ChatPlugin::AddClient( std::shared_ptr< ChatTcpClient > p_client )
+void ChatPlugin::AddClient( ChatTcpClient * p_client )
 {
 	m_connectedClients.insert( std::make_pair( p_client->GetId(), p_client ) );
 	m_clientIDs.insert( std::make_pair( p_client->GetName(), p_client->GetId() ) );
 }
 
-void ChatPlugin::RemoveClient( std::shared_ptr< ChatTcpClient > p_client )
+void ChatPlugin::RemoveClient( ChatTcpClient * p_client )
 {
 	auto && l_it1 = m_connectedClients.find( p_client->GetId() );
 
 	if ( l_it1 != m_connectedClients.end() )
 	{
-		std::cout << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_connectedClients\n";
+		std::clog << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_connectedClients\n";
 		m_connectedClients.erase( l_it1 );
 	}
 
@@ -194,12 +194,12 @@ void ChatPlugin::RemoveClient( std::shared_ptr< ChatTcpClient > p_client )
 
 	if ( l_it2 != m_clientIDs.end() )
 	{
-		std::cout << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_clientIDs\n";
+		std::clog << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_clientIDs\n";
 		m_clientIDs.erase( l_it2 );
 	}
 }
 
-std::shared_ptr< ChatGame > ChatPlugin::AddGame( const String & p_gameName, std::shared_ptr< ChatTcpClient > p_initiator )
+std::shared_ptr< ChatGame > ChatPlugin::AddGame( const String & p_gameName, ChatTcpClient * p_initiator )
 {
 	if ( !p_initiator )
 	{
@@ -370,7 +370,22 @@ __declspec( dllexport )
 #endif
 ElypsePlugin * PluginFactory( const char * p_path )
 {
-	return new ChatPlugin( p_path );
+	ElypsePlugin * l_return = NULL;
+
+	try
+	{
+		l_return = new ChatPlugin( p_path );
+	}
+	catch ( std::exception & p_exc )
+	{
+		std::cerr << p_exc.what() << std::endl;
+	}
+	catch ( ... )
+	{
+		std::cerr << "Unknown error while creating the plugin" << std::endl;
+	}
+
+	return l_return;
 }
 
 #ifndef __GNUG__
@@ -378,7 +393,7 @@ __declspec( dllexport )
 #endif
 void PluginDestroyer( ElypsePlugin *& p_pluginToDelete )
 {
-	delete reinterpret_cast <ChatPlugin *>( p_pluginToDelete );
+	delete reinterpret_cast< ChatPlugin * >( p_pluginToDelete );
 	p_pluginToDelete = NULL;
 }
 

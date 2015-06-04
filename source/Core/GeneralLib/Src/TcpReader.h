@@ -3,17 +3,17 @@
 
 #include <string>
 
+#include "Macros.h"
+#include "LocklessQueue.h"
+#include "Exception.h"
+
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 
-#include <Macros.h>
-#include <LocklessQueue.h>
-#include <Exception.h>
-
 namespace General
 {
-	namespace MultiThreading
+	namespace Network
 	{
 		class d_abstract TcpReaderBase
 		{
@@ -42,41 +42,41 @@ namespace General
 			}
 
 		protected:
-			virtual void _receivedMessageCallback( const std::string & p_message ) = 0;
-			virtual bool _readerErrorCB( const boost::system::error_code & p_err ) = 0;
+			virtual void CallbackReceivedMessage( const std::string & p_message ) = 0;
+			virtual bool CallbackReaderError( const boost::system::error_code & p_err ) = 0;
 
-			void _startReadHeader()
+			void DoStartReadHeader()
 			{
 				boost::asio::async_read(	m_socket, boost::asio::buffer( m_headerBuffer, c_headerLength ),
-											boost::bind(	& TcpReaderBase::_endHeaderCallback,
+											boost::bind(	& TcpReaderBase::CallbackEndHeader,
 													this,
 													boost::asio::placeholders::error ) );
 			}
 
-			void _startReadBody( unsigned short p_messageLength )
+			void DoStartReadBody( unsigned short p_messageLength )
 			{
 				m_messageLength = p_messageLength;
 				boost::asio::async_read(	m_socket, boost::asio::buffer( m_bodyBuffer, p_messageLength ),
-											boost::bind(	& TcpReaderBase::_endBodyCallback,
+											boost::bind(	& TcpReaderBase::CallbackEndBody,
 													this,
 													boost::asio::placeholders::error ) );
 			}
 
-			void _endHeaderCallback( const boost::system::error_code & p_err )
+			void CallbackEndHeader( const boost::system::error_code & p_err )
 			{
-				if ( p_err && _readerErrorCB( p_err ) )
+				if ( p_err && CallbackReaderError( p_err ) )
 				{
 					return;
 				}
 
 				unsigned short l_size;
 				l_size = static_cast< unsigned char >( m_headerBuffer[0] ) + ( static_cast< unsigned char >( m_headerBuffer[1] ) << 8 );
-				_startReadBody( l_size );
+				DoStartReadBody( l_size );
 			}
 
-			void _endBodyCallback( const boost::system::error_code & p_err )
+			void CallbackEndBody( const boost::system::error_code & p_err )
 			{
-				if ( p_err && _readerErrorCB( p_err ) )
+				if ( p_err && CallbackReaderError( p_err ) )
 				{
 					return;
 				}
@@ -85,10 +85,10 @@ namespace General
 				{
 					std::string l_string;
 					l_string.append( m_bodyBuffer.data(), m_messageLength );
-					_receivedMessageCallback( l_string );
+					CallbackReceivedMessage( l_string );
 				}
 
-				_startReadHeader();
+				DoStartReadHeader();
 			}
 
 		public:
@@ -109,11 +109,11 @@ namespace General
 
 			void StartAsyncRead()
 			{
-				_startReadHeader();
+				DoStartReadHeader();
 			}
 		};
 
-//	Exemple de TcpReader qui merde fais par le Bubar à revoir avant usage
+		// Exemple de TcpReader qui merde fais par le Bubar à revoir avant usage
 		class TcpQueuedReader : public TcpReaderBase
 		{
 		protected:
@@ -129,13 +129,13 @@ namespace General
 			}
 
 		protected:
-			virtual void _receivedMessageCallback( const std::string & p_message )
+			virtual void CallbackReceivedMessage( const std::string & p_message )
 			{
-//			std::cout << "message recu : " << p_message << std::endl;
+				//std::cout << "message recu : " << p_message << std::endl;
 				m_messages.push_back( p_message );
 			}
 
-			virtual bool _errorCallback( const boost::system::error_code & p_err )
+			virtual bool CallbackReaderError( const boost::system::error_code & p_err )
 			{
 				GENLIB_EXCEPTION( "TcpQueuedReader -> error : " + p_err.message() );
 				return false;

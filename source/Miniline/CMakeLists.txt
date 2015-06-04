@@ -2,6 +2,7 @@ function( MinilineInit )
 	set( ElpsServr "no (Not wanted)" PARENT_SCOPE )
 	set( ChatSvPlg "no (Not wanted)" PARENT_SCOPE )
 	set( ElpsSvBin "no (Not wanted)" PARENT_SCOPE )
+	set( ClientTst "no (Not wanted)" PARENT_SCOPE )
 endfunction( MinilineInit )
 
 function( MinilineBuild )
@@ -42,10 +43,15 @@ function( MinilineBuild )
 		set( Build ${ElpsSvBin} )
 		add_subdirectory( Miniline/ElypseServerBin )
 		set( ElpsSvBin ${Build} PARENT_SCOPE )
+		
+		set( Build ${ClientTst} )
+		add_subdirectory( Miniline/ClientTest )
+		set( ClientTst ${Build} PARENT_SCOPE )
 	else()
 		set( ElpsServr "No (missing: Boost library)" )
 		set( ChatSvPlg "No (missing: Boost library)" )
 		set( ElpsSvBin "No (missing: Boost library)" )
+		set( ClientTst "No (missing: Boost library)" )
 	endif ()
 endfunction( MinilineBuild )
 
@@ -54,6 +60,7 @@ function( MinilineSummary msg )
 	set( msg_tmp "${msg_tmp}\n    ElypseServer       ${ElpsServr}" )
 	set( msg_tmp "${msg_tmp}\n    ChatServerPlugin   ${ChatSvPlg}" )
 	set( msg_tmp "${msg_tmp}\n    ElypseServerBin    ${ElpsSvBin}" )
+	set( msg_tmp "${msg_tmp}\n    ClientTest         ${ClientTst}" )
 	SET( msg "${msg}${msg_tmp}" PARENT_SCOPE )
 endfunction( MinilineSummary )
 
@@ -93,6 +100,13 @@ function( MinilineSetup )
 		GROUP Miniline
 		DEPENDS ElypseCore ElypseServer
 		INSTALL_TYPES Developer Full
+	)
+	cpack_add_component( ClientTest
+		DISPLAY_NAME "Client test Application"
+		DESCRIPTION "A client test application"
+		GROUP Miniline
+		DEPENDS ElypseCore ElypseServer
+		INSTALL_TYPES Developer
 	)
 endfunction( MinilineSetup )
 

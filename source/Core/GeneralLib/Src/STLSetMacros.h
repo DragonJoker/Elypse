@@ -2,6 +2,7 @@
 #define ___STL_MACROS_H___
 
 #include <set>
+#include <map>
 
 namespace General
 {

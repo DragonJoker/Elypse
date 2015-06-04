@@ -24,7 +24,7 @@ namespace Chat
 	typedef std::string String;
 
 	static const String ChatEmptyString;
-	
+
 	class LoginInformations;
 	struct Avatar;
 
@@ -36,9 +36,9 @@ namespace Chat
 	class ChatGame;
 	class ChatDatabase;
 
-	typedef std::map< String, std::shared_ptr< ChatTcpClient > > ChatTcpClientStrMap;
+	typedef std::map< String, ChatTcpClient * > ChatTcpClientStrMap;
 	typedef std::map< String, uint32_t > ClientIdStrMap;
-	typedef std::map< uint32_t, std::weak_ptr< ChatTcpClient > > ClientIdChatCLientMap;
+	typedef std::map< uint32_t, ChatTcpClient * > ClientIdChatCLientMap;
 	typedef std::map< String, std::shared_ptr< ChatRoom > > ChatRoomStrMap;
 	typedef std::map< uint32_t, std::shared_ptr< ChatGame > > ChatGameIDMap;
 	typedef std::multimap< String, ChatGameIDMap > ChatGameStrMap;
@@ -55,7 +55,7 @@ namespace Chat
 	};
 
 	enum ChatClientStatus
-		: int
+	: int
 	{
 		ccsNone,
 		ccsConnected,
@@ -65,7 +65,7 @@ namespace Chat
 	};
 
 	enum ChatClientDressSlot
-		: int
+	: int
 	{
 		ccdsSex,
 		ccdsBody,
@@ -113,11 +113,11 @@ namespace Chat
 		String DBPass;
 		String DBUser;
 		String DBHost;
-		uint16_t DBPort;
+		uint16_t DBPort = 0;
 	};
 
 	enum MessageReceived
-		: int
+	: int
 	{
 		mrConnect,
 		mrAvatar,
@@ -155,7 +155,7 @@ namespace Chat
 	};
 
 	enum MessageSent
-		: int
+	: int
 	{
 		msConnectOK,
 		msConnectFail,

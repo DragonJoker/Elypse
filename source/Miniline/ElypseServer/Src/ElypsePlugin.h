@@ -7,7 +7,7 @@
 
 namespace Elypse
 {
-	namespace ServerPlugin
+	namespace Server
 	{
 		class ElypsePlugin
 			: public General::Theory::named

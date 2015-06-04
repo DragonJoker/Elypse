@@ -41,7 +41,7 @@ std::shared_ptr< ChatRoom > ChatWorld::GetRoom( const String & p_name )
 
 void ChatWorld::Save( General::Templates::WriteBuffer & p_buffer )const
 {
-	//std::cout << "DoSendRoomsMessage - " << m_rooms.size() << "\n";
+	std::clog << "DoSendRoomsMessage - " << m_rooms.size() << "\n";
 	p_buffer << int( m_rooms.size() );
 
 	for ( auto && l_room : m_rooms )

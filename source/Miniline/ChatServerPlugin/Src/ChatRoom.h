@@ -23,8 +23,8 @@ namespace Chat
 		{
 		}
 
-		bool AddClient( std::shared_ptr< ChatTcpClient > p_client );
-		bool RemoveClient( std::shared_ptr< ChatTcpClient > p_client );
+		bool AddClient( ChatTcpClient * p_client );
+		bool RemoveClient( ChatTcpClient * p_client );
 		void ForwardMessage( const String & p_message, const String & p_name );
 		void ForwardMessage( const String & p_message, const String & p_name, ClientIdStrMap const & p_ignored );
 		void Save( General::Templates::WriteBuffer & p_buffer )const;

@@ -8,7 +8,7 @@ namespace Chat
 	class ChatGame
 	{
 	private:
-		std::weak_ptr< ChatTcpClient > m_initiator;
+		ChatTcpClient * m_initiator;
 		StringArray m_playersPlaces;
 		unsigned int m_initiatorId;
 		String m_gameName;
@@ -19,13 +19,13 @@ namespace Chat
 		std::weak_ptr< ChatDatabase > m_database;
 
 	public:
-		ChatGame( unsigned int p_id, std::shared_ptr< ChatTcpClient > p_initiator,
+		ChatGame( unsigned int p_id, ChatTcpClient * p_initiator,
 				  const String & p_gameName, unsigned int p_maxPlayers,
 				  std::shared_ptr< ChatDatabase > p_database );
 		~ChatGame();
 
-		bool AddPlayer( std::shared_ptr< ChatTcpClient > p_client );
-		bool RemovePlayer( std::shared_ptr< ChatTcpClient > p_client );
+		bool AddPlayer( ChatTcpClient * p_client );
+		bool RemovePlayer( ChatTcpClient * p_client );
 		void StartGame();
 		void EndGame();
 		int GetPlayerPlace( const String & p_name );
@@ -51,7 +51,7 @@ namespace Chat
 		{
 			return m_players;
 		}
-		
+
 	private:
 		inline std::shared_ptr< ChatDatabase > DoGetDatabase()
 		{

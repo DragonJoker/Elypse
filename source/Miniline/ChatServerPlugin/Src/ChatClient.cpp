@@ -9,6 +9,7 @@
 
 using namespace General::Templates;
 using namespace General::Utils;
+using namespace Elypse::Server;
 
 namespace Chat
 {
@@ -19,16 +20,16 @@ namespace Chat
 		struct SocketKiller
 		{
 		public:
-			std::shared_ptr< ElypseTcpClient > & m_instance;
+			ElypseTcpClient * m_instance;
 
 		public:
-			SocketKiller( std::shared_ptr< ElypseTcpClient > & p_instance )
+			SocketKiller( ElypseTcpClient * p_instance )
 				:	m_instance( p_instance )
 			{
 			}
 			void operator()()const
 			{
-				m_instance.reset();
+				delete m_instance;
 			}
 		};
 	}
@@ -42,24 +43,25 @@ namespace Chat
 		p_buffer >> m_id;
 		p_buffer >> l_count;
 
-		//std::cout << "ChatTcpClient::SaveDresses - Dress N°" << i << " = " << m_id << " at slot " << m_slot << " - Nb mats : " << l_count;
+		std::clog << "ChatTcpClient::SaveDresses - Dress " << m_id << " at slot " << m_slot << " - Nb mats : " << l_count;
+
 		for ( int j = 0 ; j < l_count ; j++ )
 		{
 			int l_submatId = 0;
 			int l_matIndex = 0;
 			p_buffer >> l_submatId;
 			p_buffer >> l_matIndex;
-			//std::cout << " - Material at submat " << l_submatId << ", index : " << l_matIndex;
+			std::clog << " - Material at submat " << l_submatId << ", index : " << l_matIndex;
 			m_materials.insert( std::make_pair( l_submatId, l_matIndex ) );
 		}
 
-		//std::cout << "\n";
+		std::clog << "\n";
 		return true;
 	}
 
 	void Dress::Save( General::Templates::WriteBuffer & p_buffer )const
 	{
-		//std::cout << "Slot : " << m_slot << " - Dress : " << m_id;
+		std::clog << "Slot : " << m_slot << " - Dress : " << m_id;
 		p_buffer << m_slot;
 		p_buffer << m_id;
 		p_buffer << int( m_materials.size() );
@@ -68,10 +70,10 @@ namespace Chat
 		{
 			p_buffer << l_mat.first;
 			p_buffer << l_mat.second;
-			//std::cout << " - SubMaterial " << l_mat.first << " : " << l_mat.second;
+			std::clog << " - SubMaterial " << l_mat.first << " : " << l_mat.second;
 		}
 
-		//std::cout << "\n";
+		std::clog << "\n";
 	}
 
 	//************************************************************************************************
@@ -80,7 +82,7 @@ namespace Chat
 	{
 		p_buffer >> m_slot;
 		p_buffer >> m_id;
-		//std::cout << "ChatTcpClient::SaveDresses - Tattoo N°" << i << " = " << m_id << " at slot " << m_slot << "\n";
+		std::clog << "ChatTcpClient::SaveDresses - Tattoo " << m_id << " at slot " << m_slot << "\n";
 		return true;
 	}
 
@@ -88,7 +90,7 @@ namespace Chat
 	{
 		p_buffer << m_slot;
 		p_buffer << m_id;
-		//std::cout << "Slot : " << m_slot - Tattoo : " << m_id << "\n";
+		std::clog << "Slot : " << m_slot << " - Tattoo : " << m_id << "\n";
 	}
 
 	//************************************************************************************************
@@ -99,7 +101,8 @@ namespace Chat
 		p_buffer >> m_sex;
 		p_buffer >> l_count;
 
-		//std::cout << "ChatTcpClient::SaveDresses - nb dresses : " << l_numDresses << "\n";
+		std::clog << "ChatTcpClient::SaveDresses - nb dresses : " << l_count << "\n";
+
 		for ( int i = 0 ; i < l_count ; i++ )
 		{
 			Dress l_dress;
@@ -109,7 +112,8 @@ namespace Chat
 
 		p_buffer >> l_count;
 
-		//std::cout << "ChatTcpClient::SaveDresses - nb tattoos : " << l_numDresses << "\n";
+		std::clog << "ChatTcpClient::SaveDresses - nb tattoos : " << l_count << "\n";
+
 		for ( int i = 0 ; i < l_count ; i++ )
 		{
 			Tattoo l_tattoo;
@@ -129,9 +133,9 @@ namespace Chat
 		{
 			l_dress.second.Save( p_buffer );
 		}
-		
+
 		p_buffer << int( m_tattoos.size() );
-		
+
 		for ( auto && l_tattoo : m_tattoos )
 		{
 			l_tattoo.second.Save( p_buffer );
@@ -225,12 +229,12 @@ namespace Chat
 		, m_login( ++ClientsCount )
 		, m_game()
 	{
-		std::cout << "ChatTcpClient()" << std::endl;
+		std::clog << "ChatTcpClient()" << std::endl;
 	}
 
 	ChatTcpClient::~ChatTcpClient()
 	{
-		std::cout << "ChatTcpClient - Deleting " << m_login.GetName() << std::endl;
+		std::clog << "ChatTcpClient - Deleting " << m_login.GetName() << std::endl;
 		DoQuitRoom();
 		DoQuitGame();
 
@@ -238,12 +242,12 @@ namespace Chat
 
 		if ( m_plugin != NULL )
 		{
-			m_plugin->RemoveClient( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+			m_plugin->RemoveClient( this );
 			m_plugin = NULL;
 		}
 
 		m_messages.clear();
-		std::cout << "ChatTcpClient - Client " << m_login.GetName() << " deleted" << std::endl;
+		std::clog << "ChatTcpClient - Client " << m_login.GetName() << " deleted" << std::endl;
 	}
 
 	void ChatTcpClient::Stop()
@@ -253,7 +257,7 @@ namespace Chat
 			m_avatar.Stop();
 			m_noSend = true;
 			TcpWriterBase::m_socket.close();
-			TcpWriterBase::m_service.post( SocketKiller( shared_from_this() ) );
+			TcpWriterBase::m_service.post( SocketKiller( this ) );
 		}
 	}
 
@@ -557,7 +561,7 @@ namespace Chat
 
 		if ( m_toDelete )
 		{
-			DoGetService()->EraseClient( shared_from_this() );
+			DoGetService()->EraseClient( this );
 			return false;
 		}
 
@@ -568,7 +572,7 @@ namespace Chat
 	{
 		if ( m_toDelete )
 		{
-			DoGetService()->EraseClient( shared_from_this() );
+			DoGetService()->EraseClient( this );
 			return false;
 		}
 
@@ -586,7 +590,7 @@ namespace Chat
 			m_login.Save( l_buffer );
 			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
 			DoForwardMessage( m_toSend );
-			l_room->RemoveClient( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+			l_room->RemoveClient( this );
 			m_room.reset();
 		}
 	}
@@ -603,7 +607,7 @@ namespace Chat
 			m_login.Save( l_buffer );
 			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
 			DoForwardGameMessage( m_toSend );
-			l_game->RemovePlayer( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+			l_game->RemovePlayer( this );
 
 			if ( l_game->GetInitiatorId() == m_login.GetId() )
 			{
@@ -648,10 +652,11 @@ namespace Chat
 
 	void ChatTcpClient::DoSendDressesMessage()
 	{
-		//std::cout << "ChatTcpClient::DoSendDressesMessage - " << m_name << " sends his dresses\n";
+		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " sends his dresses\n";
+
 		if ( !CheckValid( ccsNone ) )
 		{
-			std::cout << "ChatTcpClient::DoSendDressesMessage - nothing to send\n";
+			std::cerr << "ChatTcpClient::DoSendDressesMessage - nothing to send\n";
 			return;
 		}
 
@@ -660,7 +665,7 @@ namespace Chat
 		m_clothes.Save( l_buffer );
 		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
 		AsyncSend( m_toSend );
-		//std::cout << "ChatTcpClient::DoSendDressesMessage - " << m_name << " has ended the sending of his dresses : " << l_buffer.size() << "\n";
+		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " has ended the sending of his dresses : " << l_buffer.size() << "\n";
 	}
 
 	void ChatTcpClient::DoSendRoomsMessage()
@@ -723,7 +728,7 @@ namespace Chat
 		{
 			return;
 		}
-		
+
 		l_game->ForwardMessage( p_message, GetName() );
 	}
 
@@ -755,7 +760,7 @@ namespace Chat
 
 			if ( !IsAnonymous() )
 			{
-				std::shared_ptr< ChatTcpClient > l_client = m_plugin->GetClient( GetName() );
+				ChatTcpClient * l_client = m_plugin->GetClient( GetName() );
 
 				if ( l_client )
 				{
@@ -764,14 +769,14 @@ namespace Chat
 					m_plugin->RemoveClient( l_client );
 				}
 
-				m_plugin->AddClient( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+				m_plugin->AddClient( this );
 				m_avatar.Work();
 
 				std::swap( m_clothes, Clothes() );
 
 				if ( !DoGetDatabase()->LoadClothes( m_clothes, GetId() ) )
 				{
-					std::cout << "ChatTcpClient::DoProcessConnectMessage - Can't load dresses for " << GetName() << "\n";
+					std::cerr << "ChatTcpClient::DoProcessConnectMessage - Can't load dresses for " << GetName() << "\n";
 					return;
 				}
 
@@ -779,7 +784,7 @@ namespace Chat
 
 				if ( !DoEndWork() )
 				{
-					std::cout << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
+					std::cerr << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
 					return;
 				}
 
@@ -788,7 +793,7 @@ namespace Chat
 
 				if ( !DoEndWork() )
 				{
-					std::cout << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
+					std::cerr << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
 					return;
 				}
 
@@ -797,15 +802,15 @@ namespace Chat
 
 				if ( !DoEndWork() )
 				{
-					std::cout << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
+					std::cerr << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
 					return;
 				}
 			}
 			else
 			{
-				//std::cout << "ChatClient::DoProcessConnectMessage - Anonymous\n";
-				m_plugin->AddClient( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
-				//std::cout << "ChatClient::DoProcessConnectMessage - Added\n";
+				std::clog << "ChatClient::DoProcessConnectMessage - Anonymous\n";
+				m_plugin->AddClient( this );
+				std::clog << "ChatClient::DoProcessConnectMessage - Added\n";
 				std::map <int, Dress *>::iterator l_it;
 				size_t l_size;
 				size_t l_sex = GetRandom( 2 );
@@ -853,8 +858,7 @@ namespace Chat
 			return;
 		}
 
-		//std::cout << "ChatTcpClient::DoProcessConnectMessage - Not connected\n";
-
+		std::clog << "ChatTcpClient::DoProcessConnectMessage - Not connected\n";
 		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
 		l_buffer << msConnectFail;
 		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
@@ -871,12 +875,12 @@ namespace Chat
 
 		if ( !IsAnonymous() )
 		{
-			//std::cout << "ChatTcpClient::DoProcessDressMessage - not anonymous\n";
+			std::clog << "ChatTcpClient::DoProcessDressMessage - not anonymous\n";
 			SaveDresses( p_buffer );
 		}
 		else
 		{
-			//std::cout << "ChatTcpClient::DoProcessDressMessage - anonymous\n";
+			std::clog << "ChatTcpClient::DoProcessDressMessage - anonymous\n";
 		}
 
 		if ( m_status < ccsInRoom )
@@ -899,7 +903,7 @@ namespace Chat
 		String l_roomName;
 		l_roomName.assign( p_buffer.readArray< char >( l_size ), l_size );
 
-		//std::cout << "DoProcessJoinMessage - " << l_roomName << "\n";
+		std::clog << "DoProcessJoinMessage - " << l_roomName << "\n";
 		std::shared_ptr< ChatRoom > l_room = m_plugin->GetRoom( l_roomName );
 		String l_joinMessage = DoBuildJoinMessage();
 
@@ -911,7 +915,7 @@ namespace Chat
 				l_it.second->AsyncSend( l_joinMessage );
 			}
 
-			l_room->AddClient( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+			l_room->AddClient( this );
 			m_status = ccsInRoom;
 		}
 		else
@@ -929,13 +933,13 @@ namespace Chat
 			return;
 		}
 
-		//std::cout << "Sending quit to room clients\n";
+		std::clog << "Sending quit to room clients\n";
 		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
 		l_buffer << msQuit;
 		m_login.Save( l_buffer );
 		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
-		l_room->RemoveClient( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+		l_room->RemoveClient( this );
 	}
 
 	void ChatTcpClient::DoProcessUpdateMessage( ReadBuffer & p_buffer )
@@ -1002,7 +1006,7 @@ namespace Chat
 
 		int l_size;
 		p_buffer >> l_size;
-		//std::cout << l_size << "\n";
+		std::clog << l_size << "\n";
 		String l_message;
 		l_message.assign( p_buffer.readArray< char >( l_size ), l_size );
 		std::cout << GetName() << " : " << l_message << "\n";
@@ -1063,7 +1067,7 @@ namespace Chat
 
 			while ( l_it != l_clients.end() && ! l_found )
 			{
-				std::shared_ptr< ChatTcpClient > l_client = l_it->second;
+				ChatTcpClient * l_client = l_it->second;
 
 				if ( l_client->GetName() == l_distantName && l_client->GetName() != GetName() )
 				{
@@ -1234,7 +1238,7 @@ namespace Chat
 				return;
 			}
 
-			std::shared_ptr< ChatTcpClient > l_friend = m_plugin->GetClient( l_toRemove );
+			ChatTcpClient * l_friend = m_plugin->GetClient( l_toRemove );
 
 			if ( l_friend )
 			{
@@ -1294,11 +1298,11 @@ namespace Chat
 		p_buffer >> l_size;
 		String l_name;
 		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
-		//std::cout << "DoProcessNewFriendMessage - " << l_name << "\n";
+		std::clog << "DoProcessNewFriendMessage - " << l_name << "\n";
 
 		if ( l_name != GetName() )
 		{
-			std::shared_ptr< ChatTcpClient > l_newFriend = m_plugin->GetClient( l_name );
+			ChatTcpClient * l_newFriend = m_plugin->GetClient( l_name );
 			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
 
 			if ( l_newFriend == NULL )
@@ -1319,7 +1323,7 @@ namespace Chat
 			}
 			else
 			{
-				//std::cout << "DoProcessNewFriendMessage - Friend found\n";
+				std::clog << "DoProcessNewFriendMessage - Friend found\n";
 				l_buffer << msNewFriendAsk;
 				m_login.Save( l_buffer );
 				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
@@ -1418,7 +1422,7 @@ namespace Chat
 
 		for ( auto && l_it : m_friends )
 		{
-			std::shared_ptr< ChatTcpClient > l_friend = m_plugin->GetClient( l_it.first );
+			ChatTcpClient * l_friend = m_plugin->GetClient( l_it.first );
 			l_buffer << int( l_it.first.size() );
 			l_buffer.writeArray< char >( l_it.first.c_str(), l_it.first.size() );
 
@@ -1460,7 +1464,7 @@ namespace Chat
 
 		for ( auto && l_it : m_ignored )
 		{
-			std::shared_ptr< ChatTcpClient > l_ignored = m_plugin->GetClient( l_it.first );
+			ChatTcpClient * l_ignored = m_plugin->GetClient( l_it.first );
 			l_buffer << int( l_it.first.size() );
 			l_buffer.writeArray< char >( l_it.first.c_str(), l_it.first.size() );
 
@@ -1499,7 +1503,7 @@ namespace Chat
 		String l_refusedName;
 		l_refusedName.assign( p_buffer.readArray< char >( l_size ), l_size );
 
-		std::shared_ptr< ChatTcpClient > l_refused = m_plugin->GetClient( l_refusedName );
+		ChatTcpClient * l_refused = m_plugin->GetClient( l_refusedName );
 
 		if ( l_refused )
 		{
@@ -1532,7 +1536,7 @@ namespace Chat
 		String l_acceptedName;
 		l_acceptedName.assign( p_buffer.readArray< char >( l_size ), l_size );
 
-		std::shared_ptr< ChatTcpClient > l_accepted = m_plugin->GetClient( l_acceptedName );
+		ChatTcpClient * l_accepted = m_plugin->GetClient( l_acceptedName );
 
 		if ( l_accepted )
 		{
@@ -1621,7 +1625,7 @@ namespace Chat
 		p_buffer >> l_id;
 		std::shared_ptr< ChatGame > l_game = m_plugin->GetGame( l_name, l_id );
 
-		if ( l_game || !l_game->AddPlayer( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) ) )
+		if ( l_game || !l_game->AddPlayer( this ) )
 		{
 			DoSendGameJoinFail();
 			return;
@@ -1635,7 +1639,7 @@ namespace Chat
 
 			for ( auto && l_it : l_players )
 			{
-				std::shared_ptr< ChatTcpClient > l_player = l_it.second.lock();
+				ChatTcpClient * l_player = l_it.second;
 
 				if ( l_player && l_player->GetId() != GetId() && !l_player->IsToDelete() )
 				{
@@ -1661,17 +1665,17 @@ namespace Chat
 			return;
 		}
 
-		//std::cout << "Sending quit to game players\n";
+		std::clog << "Sending quit to game players\n";
 		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
 		l_buffer << msQuitGame;
 		m_login.Save( l_buffer );
 		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
 		DoForwardGameMessage( m_toSend );
-		l_game->RemovePlayer( std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+		l_game->RemovePlayer( this );
 
 		if ( l_game->GetInitiatorId() == m_login.GetId() )
 		{
-			//std::cout << m_name << " was the initiator of the game, deleting it\n";
+			std::clog << GetName() << " was the initiator of the game, deleting it\n";
 			m_plugin->RemoveGame( l_game->GetGameName(), m_login.GetId() );
 		}
 		else if ( l_game->GetPlayersCount() == 0 )
@@ -1725,7 +1729,7 @@ namespace Chat
 		p_buffer >> l_size;
 		String l_name;
 		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
-		m_game = m_plugin->AddGame( l_name, std::static_pointer_cast< ChatTcpClient >( shared_from_this() ) );
+		m_game = m_plugin->AddGame( l_name, this );
 		m_status = ccsInGame;
 	}
 
@@ -1735,7 +1739,7 @@ namespace Chat
 		{
 			return;
 		}
-		
+
 		m_avatar.Sit();
 
 		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
@@ -1814,147 +1818,182 @@ namespace Chat
 		ReadBuffer l_buffer( l_msgBuf, p_message.size() );
 		int l_header;
 		l_buffer >> l_header;
-		//std::cout << m_name << " Received a message : " << l_header << "\n";
+		std::clog << GetName() << " Received a message : " << l_header << "\n";
 
 		switch ( l_header )
 		{
 		case mrConnect:
 			if ( m_status < ccsConnected )
 			{
-				//std::cout << m_name << " Received message Connect\n";
+				std::clog << GetName() << " Received message Connect\n";
 				DoProcessConnectMessage( l_buffer );
 			}
+
 			break;
+
 		case mrAvatar:
 			std::cout << GetName() << " Received message Avatar\n";
 			DoProcessDressMessage( l_buffer );
 			break;
+
 		case mrJoin:
 			if ( m_status < ccsInRoom )
 			{
 				std::cout << GetName() << " Received message Join\n";
 				DoProcessJoinMessage( l_buffer );
 			}
+
 			break;
+
 		case mrQuit:
 			if ( m_status == ccsInRoom )
 			{
 				std::cout << GetName() << " Received message Quit\n";
 				DoProcessQuitMessage();
 			}
+
 			break;
+
 		case mrUpdateRooms:
 			std::cout << GetName() << " Received message UpdateRooms\n";
 			DoSendRoomsMessage();
 			break;
+
 		case mrUpdate:
-			//std::cout << "Received message Update\n";
+			std::clog << "Received message Update\n";
 			DoProcessUpdateMessage( l_buffer );
 			break;
+
 		case mrWalk:
-			//std::cout << "Received message Walk\n";
+			std::clog << "Received message Walk\n";
 			DoProcessWalkMessage( l_buffer );
 			break;
+
 		case mrTurn:
-			//std::cout << "Received message Turn\n";
+			std::clog << "Received message Turn\n";
 			DoProcessTurnMessage( l_buffer );
 			break;
+
 		case mrTalk:
-			//std::cout << "Received message Talk\n";
+			std::clog << "Received message Talk\n";
 			DoProcessTalkMessage( l_buffer );
 			break;
+
 		case mrWhisp:
-			//std::cout << "Received message Whisp\n";
+			std::clog << "Received message Whisp\n";
 			DoProcessWhispMessage( l_buffer );
 			break;
+
 		case mrBeginWalk:
-			//std::cout << "Received message BeginWalk\n";
+			std::clog << "Received message BeginWalk\n";
 			DoProcessBeginWalkMessage();
 			break;
+
 		case mrEndWalk:
-			//std::cout << "Received message EndWalk\n";
+			std::clog << "Received message EndWalk\n";
 			DoProcessEndWalkMessage( l_buffer );
 			break;
+
 		case mrBeginRun:
-			//std::cout << "Received message BeginRun\n";
+			std::clog << "Received message BeginRun\n";
 			DoProcessBeginRunMessage();
 			break;
+
 		case mrEndRun:
-			//std::cout << "Received message EndRun\n";
+			std::clog << "Received message EndRun\n";
 			DoProcessEndRunMessage( l_buffer );
 			break;
+
 		case mrEmote:
 			std::cout << GetName() << " Received message Emote\n";
 			DoProcessEmoteMessage( l_buffer );
 			break;
+
 		case mrRemoveFriend:
 			std::cout << GetName() << " Received message RemoveFriend\n";
 			DoProcessRemoveFriendMessage( l_buffer );
 			break;
+
 		case mrRemoveIgnored:
 			std::cout << GetName() << " Received message RemoveIgnored\n";
 			DoProcessRemoveIgnoredMessage( l_buffer );
 			break;
+
 		case mrUpdateFriendsList:
 			std::cout << GetName() << " Received message UpdateFriendsList\n";
 			DoProcessUpdateFriendsMessage();
 			break;
+
 		case mrUpdateIgnoredList:
 			std::cout << GetName() << " Received message UpdateIgnoredList\n";
 			DoProcessUpdateIgnoredMessage();
 			break;
+
 		case mrNewFriend:
 			std::cout << GetName() << " Received message NewFriend\n";
 			DoProcessNewFriendMessage( l_buffer );
 			break;
+
 		case mrNewIgnored:
 			std::cout << GetName() << " Received message NewIgnored\n";
 			DoProcessNewIgnoredMessage( l_buffer );
 			break;
+
 		case mrNewFriendAccept:
 			std::cout << GetName() << " Received message NewFriendAccept\n";
 			DoProcessFriendAcceptMessage( l_buffer );
 			break;
+
 		case mrNewFriendRefuse:
 			std::cout << GetName() << " Received message NewFriendRefuse\n";
 			DoProcessFriendRefuseMessage( l_buffer );
 			break;
+
 		case mrRefreshGamesList:
 			std::cout << GetName() << " Received message RefreshGamesList\n";
 			DoProcessRefreshGamesListMessage( l_buffer );
 			break;
+
 		case mrJoinGame:
 			std::cout << GetName() << " Received message JoinGame\n";
 			DoProcessJoinGameMessage( l_buffer );
 			break;
+
 		case mrCreateGame:
 			std::cout << GetName() << " Received message CreateGame\n";
 			DoProcessCreateGameMessage( l_buffer );
 			break;
+
 		case mrQuitGame:
 			std::cout << GetName() << " Received message QuitGame\n";
 			DoProcessQuitGameMessage();
 			break;
+
 		case mrGame:
-			//std::cout << m_name << " Received message Game\n";
+			std::clog << GetName() << " Received message Game\n";
 			DoProcessGameMessage( l_buffer );
 			break;
+
 		case mrSitDown:
 			std::cout << GetName() << " Received message Sitdown\n";
 			DoProcessSitDownMessage();
 			break;
+
 		case mrSitUp:
 			std::cout << GetName() << " Received message Situp\n";
 			DoProcessSitUpMessage();
 			break;
+
 		case mrGameInfo:
 			std::cout << GetName() << " Received message Game info\n";
 			DoProcessGameInfoMessage( l_buffer );
 			break;
+
 		case mrGameStart:
 			std::cout << GetName() << " Received message Game start\n";
 			DoProcessGameStartMessage();
 			break;
+
 		case mrRequestDresses:
 			std::cout << GetName() << " Received message Request dresses\n";
 			DoSendDressesMessage();
@@ -1968,54 +2007,44 @@ namespace Chat
 
 	bool ChatTcpClient::CallbackReaderError( const boost::system::error_code & p_err )
 	{
-		/*
-		if (_checkOk()) return true;
+		//std::clog << "ChatTcpClient::CallbackReaderError - Active" << std::endl;
+		//boost::asio::ip::tcp::endpoint l_endPoint = TcpBaseClient::m_socket.remote_endpoint();
+		//std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
+		//l_endPoint = TcpBaseClient::m_socket.local_endpoint();
+		//std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
 
-		//	std::cout << "ChatTcpClient::_readerErrorCB - Active" << std::endl;
+		//std::cout << "ChatTcpClient::CallbackReaderError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
+		//if (m_working)
+		//{
+		//	m_toDelete = true;
+		//}
+		//else
+		//{
+		//	m_elypseService->EraseClient( this);
+		//}
 
-		boost::asio::ip::tcp::endpoint l_endPoint = TcpBaseClient::m_socket.remote_endpoint();
-		std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-		l_endPoint = TcpBaseClient::m_socket.local_endpoint();
-		std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-
-		std::cout << "ChatTcpClient::_readerErrorCB => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
-		if (m_working)
-		{
-			m_toDelete = true;
-		}
-		else
-		{
-			m_elypseService->EraseClient( this);
-		}
-		*/
-		TcpReaderBase::m_service.post( SocketKiller( shared_from_this() ) );
-
-
+		TcpReaderBase::m_service.post( SocketKiller( this ) );
 		return true;
 	}
 
 	bool ChatTcpClient::CallbackWriterError( const boost::system::error_code & p_err )
 	{
 		Stop();
-		/*
-		if (_checkOk()) return false;
+		//std::clog << "ChatTcpClient::CallbackWriterError - Active" << std::endl;
+		//boost::asio::ip::tcp::endpoint l_endPoint = TcpBaseClient::m_socket.remote_endpoint();
+		//std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
+		//l_endPoint = TcpBaseClient::m_socket.local_endpoint();
+		//std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
 
-		//	std::cout << "ChatTcpClient::_writerErrorCB - Active" << std::endl;
-
-		boost::asio::ip::tcp::endpoint l_endPoint = TcpBaseClient::m_socket.remote_endpoint();
-		std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-		l_endPoint = TcpBaseClient::m_socket.local_endpoint();
-		std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-
-		std::cout << "ChatTcpClient::_writerErrorCB => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
-		if (m_working)
-		{
-			m_toDelete = true;
-		}
-		else
-		{
-			m_elypseService->EraseClient( this);
-		}*/
+		//std::cout << "ChatTcpClient::CallbackWriterError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
+		//if (m_working)
+		//{
+		//	m_toDelete = true;
+		//}
+		//else
+		//{
+		//	m_elypseService->EraseClient( this);
+		//}
 
 		return true;
 	}

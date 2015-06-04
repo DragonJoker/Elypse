@@ -22,7 +22,7 @@ namespace General
 			WorkerThread()
 				:	m_stopThread( false )
 			{
-				m_boostThread = new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, WorkerThread, _mainLoop ) );
+				m_boostThread = new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, WorkerThread, DoMainLoop ) );
 			}
 			~WorkerThread()
 			{
@@ -30,7 +30,7 @@ namespace General
 			}
 
 		private:
-			void _mainLoop()
+			void DoMainLoop()
 			{
 				bool l_stopThread = false;
 

@@ -7,8 +7,6 @@
 #include <ElypseClient.h>
 #include <ElypseService.h>
 
-using namespace Elypse::ServerPlugin;
-
 #define MAX_HEADER_LENGTH 3
 #define MAX_MSG_LENGTH 4192
 
@@ -40,7 +38,7 @@ namespace Chat
 		{
 			return m_id;
 		}
-		
+
 		inline void SetId( uint32_t p_id )
 		{
 			m_id = p_id;
@@ -118,7 +116,7 @@ namespace Chat
 	};
 
 	class ChatTcpClient
-		: public ElypseTcpClient
+		: public Elypse::Server::ElypseTcpClient
 	{
 	private:
 		enum
@@ -146,7 +144,7 @@ namespace Chat
 		bool m_toDelete;
 
 	public:
-		ChatTcpClient( std::shared_ptr< ElypseTcpService > p_elypseService, ChatPlugin * p_plugin );
+		ChatTcpClient( std::shared_ptr< Elypse::Server::ElypseTcpService > p_elypseService, ChatPlugin * p_plugin );
 		virtual ~ChatTcpClient();
 
 		void Stop();

@@ -17,7 +17,12 @@ namespace EMuse
 {
 	namespace Network
 	{
-		class d_dll_export ElypseTcpClient : public TcpConnectorBase, public TcpReaderBase, public TcpWriterBase, public owned_by<NetworkManager>, public named
+		class d_dll_export ElypseTcpClient
+			: public General::Network::TcpConnectorBase
+			, public General::Network::TcpReaderBase
+			, public General::Network::TcpWriterBase
+			, public owned_by<NetworkManager>
+			, public named
 		{
 		private:
 			bool m_connected;
@@ -25,13 +30,13 @@ namespace EMuse
 			boost::asio::io_service * m_service;
 
 		private:
-			virtual void _finishConnectCallback();
-			virtual bool _connectorErrorCB( const boost::system::error_code & p_err );
-			virtual bool _writerErrorCB( const boost::system::error_code & p_err );
-			virtual bool _readerErrorCB( const boost::system::error_code & p_err );
-			virtual void _receivedMessageCallback( const std::string & p_message );
+			virtual void CallbackFinishConnect();
+			virtual bool CallbackConnectorError( const boost::system::error_code & p_err );
+			virtual bool CallbackWriterError( const boost::system::error_code & p_err );
+			virtual bool CallbackReaderError( const boost::system::error_code & p_err );
+			virtual void CallbackReceivedMessage( const std::string & p_message );
 
-			void _mainLoop();
+			void DoMainLoop();
 
 		public:
 			ElypseTcpClient( const std::string & p_name, boost::asio::io_service * p_service, NetworkManager * p_owner );
