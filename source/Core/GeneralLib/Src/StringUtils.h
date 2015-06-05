@@ -31,7 +31,7 @@ namespace General
 			}
 
 			template< typename CharType >
-			static inline std::vector<std::basic_string< CharType > > split( const std::string & str, const std::basic_string< CharType > & delims = string_cast< CharType >( "\t\n " ), unsigned int maxSplits = 10 )
+			static inline std::vector<std::basic_string< CharType > > split( const std::string & str, const CharType * delims, unsigned int maxSplits = 10 )
 			{
 				std::vector< std::basic_string< CharType > > ret;
 				ret.reserve( maxSplits ? maxSplits + 1 : 10 );
@@ -64,6 +64,12 @@ namespace General
 				while ( pos != std::basic_string< CharType >::npos );
 
 				return ret;
+			}
+
+			template< typename CharType >
+			static inline std::vector<std::basic_string< CharType > > split( const std::string & str, const std::basic_string< CharType > & delims = string_cast< CharType >( "\t\n " ), unsigned int maxSplits = 10 )
+			{
+				return split( str, delims.c_str(), maxSplits );
 			}
 
 			static inline void toLowerCase( std::string & p_str )

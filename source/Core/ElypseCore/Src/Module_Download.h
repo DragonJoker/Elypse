@@ -25,6 +25,7 @@ namespace EMuse
 
 		enum DataBlockType
 		{
+			EM_BLOCK_UNKNOWN		= 0,
 			EM_BLOCK_ZIPDATA		= 1,	/* .zip files */
 			EM_BLOCK_GZIPDATA		= 2,	/* unused */
 			EM_BLOCK_SCENE			= 3,	/* .emscene files */

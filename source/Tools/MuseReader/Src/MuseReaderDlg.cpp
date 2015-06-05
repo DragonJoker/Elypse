@@ -17,45 +17,49 @@ namespace
 		eBUTTON2,
 	};
 
-	const int OFFSET = 10;
+	const int OFFSET = 5;
 	const int STATIC_HEIGHT = 20;
 	const int EDIT_HEIGHT = 25;
 	const wxSize BUTTON_SIZE( 75, 25 );
 }
 
 CMuseReaderDlg::CMuseReaderDlg( wxWindow * pParent )
-	: wxDialog( pParent, wxID_ANY, _( "Lecteur de fichiers MUSE" ), wxDefaultPosition, wxSize( 579, 358 ) )
+	: wxDialog( pParent, wxID_ANY, _( "Muse file reader" ) )
 	, m_dataStreamer( NULL )
 {
-	int l_width = 570;
-	int l_height = 350;
+	int l_width = 640;
+	int l_height = 480;
 	SetClientSize( wxSize( l_width, l_height ) );
 
-	int l_listWidth = ( l_width / 2 ) - ( OFFSET * 3 );
+	int l_leftListWidth = ( l_width / 3 ) - ( OFFSET * 3 );
+	int l_rightListWidth = ( 2 * l_width / 3 ) - ( OFFSET * 3 );
 	int l_listHeight = l_height - ( EDIT_HEIGHT * 2 ) - ( STATIC_HEIGHT * 3 ) - ( OFFSET * 3 );
+	int l_left = l_leftListWidth + OFFSET * 2;
+	int l_top = OFFSET;
 
-	new wxStaticText( this, wxID_ANY, _( "Fichiers lus" ), wxPoint( OFFSET, OFFSET ), wxSize( l_listWidth, STATIC_HEIGHT ) );
-	new wxStaticText( this, wxID_ANY, _( "Log" ), wxPoint( 285, OFFSET ), wxSize( l_listWidth, STATIC_HEIGHT ) );
-	m_output = new wxListBox( this, wxID_ANY, wxPoint( OFFSET, OFFSET + STATIC_HEIGHT ), wxSize( l_listWidth, l_listHeight ) );
-	m_log = new wxListBox( this, wxID_ANY, wxPoint( 285, OFFSET + STATIC_HEIGHT ), wxSize( l_listWidth, l_listHeight ) );
-
-	int l_left = l_listWidth + OFFSET * 2;
-	int l_top = l_listHeight + STATIC_HEIGHT + OFFSET * 2;
-	new wxStaticText( this, wxID_ANY, _( "Fichier à lire" ), wxPoint( OFFSET, l_top ), wxSize( l_listWidth, STATIC_HEIGHT ) );
+	new wxStaticText( this, wxID_ANY, _( "Read files" ), wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, STATIC_HEIGHT ) );
+	new wxStaticText( this, wxID_ANY, _( "Log" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
-	m_inFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_listWidth, EDIT_HEIGHT ) );
-	new wxButton( this, eBTNINFILE, _( "Parcourir" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	m_output = new wxListBox( this, wxID_ANY, wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, l_listHeight ) );
+	m_log = new wxListBox( this, wxID_ANY, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, l_listHeight ) );
+
+	l_left = l_rightListWidth + OFFSET * 2;
+	l_top += l_listHeight + OFFSET;
+	new wxStaticText( this, wxID_ANY, _( "File to read" ), wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	l_top += STATIC_HEIGHT;
+	m_inFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, EDIT_HEIGHT ) );
+	new wxButton( this, eBTNINFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 	l_top += EDIT_HEIGHT;
-	new wxStaticText( this, wxID_ANY, _( "Dossier de sortie" ), wxPoint( OFFSET, l_top ), wxSize( l_listWidth, STATIC_HEIGHT ) );
+	new wxStaticText( this, wxID_ANY, _( "Output folder" ), wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
-	m_outFolder = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_listWidth, EDIT_HEIGHT ) );
-	new wxButton( this, eBTNOUTFOLDER, _( "Parcourir" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	m_outFolder = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, EDIT_HEIGHT ) );
+	new wxButton( this, eBTNOUTFOLDER, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 
 	l_left = l_width - OFFSET - BUTTON_SIZE.x;
 	l_top = l_height - ( BUTTON_SIZE.y + OFFSET ) * 2;
-	new wxButton( this, eBUTTON2, _( "Lire" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	new wxButton( this, eBUTTON2, _( "Read" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 	l_top += BUTTON_SIZE.y + OFFSET;
-	new wxButton( this, wxID_CANCEL, _( "Quitter" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	new wxButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 }
 
 BEGIN_EVENT_TABLE( CMuseReaderDlg, wxDialog )
@@ -71,7 +75,7 @@ void CMuseReaderDlg::OnBnClickedBtninfile( wxCommandEvent & p_event )
 		m_dataStreamer = std::make_shared< CDataStreamer >( m_log );
 	}
 
-	wxFileDialog l_dialog( this, _( "muse" ), wxEmptyString, wxEmptyString, _( "Fichiers (*.muse)|*.muse||" ), wxFD_OPEN | wxFD_FILE_MUST_EXIST );
+	wxFileDialog l_dialog( this, _( "muse" ), wxEmptyString, wxEmptyString, _( "Muse files" ) + wxString( wxT( " (*.muse)|*.muse||" ) ), wxFD_OPEN | wxFD_FILE_MUST_EXIST );
 
 	if ( l_dialog.ShowModal() == wxID_OK )
 	{
@@ -80,14 +84,14 @@ void CMuseReaderDlg::OnBnClickedBtninfile( wxCommandEvent & p_event )
 
 		if ( m_dataStreamer->SetFile( wxString( l_path.char_str().data(), wxConvLibc ) ) )
 		{
-			l_log += _( "Connection à " ) + l_path + _( " effectuée" );
+			l_log.Format( _( "Successfully connected to %s" ), l_path );
 			m_log->AppendString( l_log );
 			m_inFileName = l_path;
 			m_inFile->SetLabel( l_path );
 		}
 		else
 		{
-			l_log += _( "Connection à " ) + l_path + _( " échouée" );
+			l_log.Format( _( "Couldn't connect to %s" ), l_path );
 			m_log->AppendString( l_log );
 		}
 	}
@@ -100,7 +104,7 @@ void CMuseReaderDlg::OnBnClickedBtnoutfolder( wxCommandEvent & p_event )
 		m_dataStreamer = std::make_shared< CDataStreamer >( m_log );
 	}
 
-	wxDirDialog l_dialog( this, _( "Choisissez un dossier" ) );
+	wxDirDialog l_dialog( this, _( "Choose a folder" ) );
 
 	if ( l_dialog.ShowModal() == wxID_OK )
 	{
@@ -116,14 +120,13 @@ void CMuseReaderDlg::OnBnClickedBtnread( wxCommandEvent & p_event )
 
 	if ( m_outFolderName.empty() )
 	{
-		m_log->AppendString( _( "Choisissez un dossier de sortie" ) );
-		return;
+		m_log->AppendString( _( "Choose an output folder" ) );
 	}
 	else
 	{
 		if ( m_inFileName.empty() )
 		{
-			m_log->AppendString( _( "Choisissez un fichier à lire" ) );
+			m_log->AppendString( _( "Choose a file to read" ) );
 		}
 		else
 		{

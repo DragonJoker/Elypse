@@ -5,6 +5,7 @@
 #include <cstdio>
 
 #include <wx/app.h>
+#include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/dir.h>
 #include <wx/dirdlg.h>

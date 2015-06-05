@@ -61,9 +61,9 @@ function( ToolsBuild )
 		add_subdirectory( Tools/MuseReader )
 		set( MuseReadr ${Build} PARENT_SCOPE )
 		
-		#set( Build ${MuseWritr} )
-		#add_subdirectory( Tools/MuseWriter )
-		#set( MuseWritr ${Build} PARENT_SCOPE )
+		set( Build ${MuseWritr} )
+		add_subdirectory( Tools/MuseWriter )
+		set( MuseWritr ${Build} PARENT_SCOPE )
 		
 		set( Build ${TrollEdtr} )
 		add_subdirectory( Tools/TrollEditor )

@@ -6,6 +6,7 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
 set( ${PROJECT_NAME}_VERSION_MINOR	9 )
 set( ${PROJECT_NAME}_VERSION_BUILD	4 )
 
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Data )
 
 add_target(
