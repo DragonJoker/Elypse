@@ -5,16 +5,14 @@ namespace General
 {
 	namespace Theory
 	{
-		template <typename T>
+		template< typename T >
 		class ReferenceCounted
 		{
 		protected:
-			unsigned int m_count;
-
-		protected:
 			ReferenceCounted()
-				:	m_count( 0 )
-			{}
+				: m_count( 0 )
+			{
+			}
 
 		public:
 			void Use()
@@ -27,20 +25,20 @@ namespace General
 
 				if ( m_count == 0 )
 				{
-					delete static_cast <T *>( this );
+					delete static_cast< T * >( this );
 				}
 			}
+
+		protected:
+			unsigned int m_count;
 		};
 
-		template <typename T>
+		template< typename T >
 		class ReferenceHolder
 		{
-		protected:
-			ReferenceCounted <T> * m_ref;
-
 		public:
-			ReferenceHolder( ReferenceCounted <T> * p_ref )
-				:	m_ref( p_ref )
+			ReferenceHolder( ReferenceCounted< T > * p_ref )
+				: m_ref( p_ref )
 			{
 				m_ref->Use();
 			}
@@ -50,6 +48,9 @@ namespace General
 				m_ref->Release();
 				m_ref = NULL;
 			}
+
+		protected:
+			ReferenceCounted< T > * m_ref;
 		};
 	}
 }

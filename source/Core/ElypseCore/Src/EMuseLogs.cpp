@@ -4,7 +4,6 @@
 
 #include "EMuseController.h"
 #include <Mutex.h>
-#include <ThreadId.h>
 #include <OgreLog.h>
 
 String EMPTY_STRING = String();

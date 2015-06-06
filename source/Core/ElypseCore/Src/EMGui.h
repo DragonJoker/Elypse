@@ -42,7 +42,7 @@ namespace EMuse
 
 			void SetAllOverlaysVisibility( bool p_visible )const;
 
-			void ClearAll() d_no_throw;
+			void __declspec(nothrow) ClearAll();
 
 			EMOverlayGroup * CreateOverlayGroup( const String & p_name );
 

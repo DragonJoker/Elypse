@@ -165,7 +165,7 @@ Vector3 Interpolators::V3_Bezier3( const BaseVector3FrameMap & p_frames, Real p_
 	const Vector3 & l_b = ( ++ i )->second.vector3;
 	const Vector3 & l_c = ( ++ i )->second.vector3;
 	p_time /= i->first;
-	Real * l_factors = General::Math::Bezier<3>::GetSingletonPtr()->Get( p_time );
+	Real const * l_factors = General::Math::Bezier<3>::GetSingletonPtr()->Get( p_time );
 	return Vector3( l_a * l_factors[0] + l_b * l_factors[1] + l_c * l_factors[2] );
 }
 
@@ -182,7 +182,7 @@ Vector3 Interpolators::V3_Bezier4( const BaseVector3FrameMap & p_frames, Real p_
 	const Vector3 & l_c = ( ++ i )->second.vector3;
 	const Vector3 & l_d = ( ++ i )->second.vector3;
 	p_time /= i->first;
-	Real * l_factors = General::Math::Bezier<4>::GetSingletonPtr()->Get( p_time );
+	Real const * l_factors = General::Math::Bezier<4>::GetSingletonPtr()->Get( p_time );
 	return Vector3( l_a * l_factors[0] + l_b * l_factors[1] + l_c * l_factors[2] + l_d * l_factors[3] );
 }
 
@@ -201,6 +201,6 @@ Vector3 Interpolators::V3_Bezier5( const BaseVector3FrameMap & p_frames, Real p_
 	const Vector3 & l_d = ( ++ i )->second.vector3;
 	const Vector3 & l_e = ( ++ i )->second.vector3;
 	p_time /= i->first;
-	Real * l_factors = General::Math::Bezier <5> ::GetSingletonPtr()->Get( p_time );
+	Real const * l_factors = General::Math::Bezier <5> ::GetSingletonPtr()->Get( p_time );
 	return Vector3( l_a * l_factors[0] + l_b * l_factors[1] + l_c * l_factors[2] + l_d * l_factors[3] + l_e * l_factors[4] );
 }

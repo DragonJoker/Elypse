@@ -7,13 +7,9 @@ namespace General
 {
 	namespace Math
 	{
-		template <unsigned int tp_class, typename T_floatingType = float>
+		template< unsigned int tp_class, typename T_floatingType = float >
 		class Pascal
 		{
-		private:
-			T_floatingType * m_values;
-			RuntimeFactorial <tp_class, T_floatingType> m_factorials;
-
 		public:
 			Pascal()
 			{
@@ -34,6 +30,10 @@ namespace General
 			{
 				return m_values[p_num];
 			}
+
+		private:
+			T_floatingType * m_values;
+			RuntimeFactorial <tp_class, T_floatingType> m_factorials;
 		};
 	}
 }

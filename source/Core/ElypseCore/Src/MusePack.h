@@ -75,7 +75,7 @@ namespace EMuse
 			}
 
 		public:
-			inline static size_t CurlCallback( void * p_buffer, size_t p_size, size_t p_nmemb, void * p_userp )
+			inline static size_t StCurlCallback( void * p_buffer, size_t p_size, size_t p_nmemb, void * p_userp )
 			{
 				return reinterpret_cast <MusePack *>( p_userp )->CurlCallback( p_buffer, p_size * p_nmemb );
 			}

@@ -27,19 +27,18 @@ namespace General
 		class PoolWorkerThread
 		{
 		private:
-			Thread * m_boostThread;
+			Thread m_boostThread;
 			ThreadPool * m_pool;
 
 		public:
 			PoolWorkerThread( ThreadPool * p_pool )
 				:	m_pool( p_pool	)
 			{
-				m_boostThread	= new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, PoolWorkerThread, DoMainLoop ) );
+				m_boostThread	= Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, PoolWorkerThread, DoMainLoop ) );
 			}
 			~PoolWorkerThread()
 			{
-				m_boostThread->join();
-				delete m_boostThread;
+				m_boostThread.join();
 			}
 
 		private:
@@ -54,13 +53,16 @@ namespace General
 
 		public:
 			ThreadPool()
-				:	m_jobQueue( 10000 )
-			{}
+				: m_jobQueue( 10000 )
+			{
+			}
+
 			ThreadPool( unsigned int p_numThreads, unsigned int p_queueSize = 10 )
-				:	m_jobQueue( p_queueSize )
+				: m_jobQueue( p_queueSize )
 			{
 				AddThreads( p_numThreads );
 			}
+
 			~ThreadPool()
 			{
 				unsigned int imax = static_cast <unsigned int>( m_threads.size() );
@@ -73,21 +75,21 @@ namespace General
 				m_threads.clear();
 			}
 
-		public:
 			inline const ThreadPoolFunctor & GetFunctor()
 			{
 				return m_jobQueue.Pop();
 			}
+
 			inline void AddJob( const ThreadPoolFunctor & p_job )
 			{
 				m_jobQueue.Push( p_job );
 			}
+
 			inline bool HasJob()const
 			{
 				return !m_jobQueue.IsEmpty();
 			}
 
-		public:
 			void AddThreads( unsigned int p_numThreads )
 			{
 				for ( unsigned int i = 0 ; i < p_numThreads ; i ++ )

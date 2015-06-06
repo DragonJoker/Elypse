@@ -17,13 +17,13 @@ using namespace General::Utils;
 unsigned int MemoryManager::sm_initialised = 0;
 
 MemoryManager::MemoryManager( const char * p_logLocation )
-	:	m_locked( false ),
-		m_currentMemoryAllocated( 0 ),
-		m_maximumMemoryAllocated( 0 ),
-		m_totalObjectsAllocated( 0 ),
-		m_totalArraysAllocated( 0 ),
-		m_totalMemoryAllocated( 0 ),
-		m_logLocation( p_logLocation )
+	: m_locked( false )
+	, m_currentMemoryAllocated( 0 )
+	, m_maximumMemoryAllocated( 0 )
+	, m_totalObjectsAllocated( 0 )
+	, m_totalArraysAllocated( 0 )
+	, m_totalMemoryAllocated( 0 )
+	, m_logLocation( p_logLocation )
 {
 	sm_initialised = 1;
 }
@@ -42,7 +42,7 @@ MemoryManager & MemoryManager::operator <<( const MemoryBlock & p_block )
 
 void MemoryManager::_localise( void * p_ptr )
 {
-	const MemoryBlockMap::iterator & ifind = m_memoryMap.find( p_ptr );
+	auto && ifind = m_memoryMap.find( p_ptr );
 
 	if ( ifind != m_memoryMap.end() )
 	{
@@ -70,7 +70,7 @@ void MemoryManager::AddLocation( size_t p_size, void * p_pointer, bool p_typeArr
 
 bool MemoryManager::RemoveLocation( void * p_pointer, bool p_isArray )
 {
-	const MemoryBlockMap::iterator & ifind = m_memoryMap.find( p_pointer );
+	auto && ifind = m_memoryMap.find( p_pointer );
 
 	if ( ifind != m_memoryMap.end() )
 	{
@@ -121,22 +121,17 @@ void MemoryManager::_finalReport()
 		fprintf( l_file, "Maximum memory usage : %d bytes\n", m_maximumMemoryAllocated );
 		fprintf( l_file, "Total memory allocated : %lld bytes on %d objects and %d arrays\n", m_totalMemoryAllocated, m_totalObjectsAllocated, m_totalArraysAllocated );
 
-		if ( ! m_memoryMap.empty() )
+		if ( !m_memoryMap.empty() )
 		{
-			MemoryBlockMap::iterator iter = m_memoryMap.begin();
-			const MemoryBlockMap::iterator & iend = m_memoryMap.end();
-
-			for ( ; iter != iend ; ++ iter )
+			for ( auto && l_it : m_memoryMap )
 			{
-				const MemoryBlock & l_block = iter->second;
-
-				if ( l_block.file == NULL )
+				if ( !l_it.second.file )
 				{
-					fprintf( l_file, "Outside object leaked : %d bytes\n", l_block.size );
+					fprintf( l_file, "Outside object leaked : %d bytes\n", l_it.second.size );
 				}
 				else
 				{
-					fprintf( l_file, "%s (%p)leaked : %d bytes, created in %s(), line %d of file %s\n", ( l_block.isArray ? "Array" : "Object" ), &l_block.ptr, l_block.size, l_block.function, l_block.line, l_block.file );
+					fprintf( l_file, "%s (%p)leaked : %d bytes, created in %s(), line %d of file %s\n", ( l_it.second.isArray ? "Array" : "Object" ), &l_it.second.ptr, l_it.second.size, l_it.second.function, l_it.second.line, l_it.second.file );
 				}
 			}
 		}
@@ -182,60 +177,50 @@ void MemoryManager::MemoryLeaksReport( const std::string & p_filename )
 	tm * ti;
 	time( & rawtime );
 	ti = localtime( & rawtime );
-	* out << "Memoryleak.log : " << ti->tm_mday << "/" << ( ti->tm_mon + 1 ) << "/" << ( ti->tm_year + 1900 ) << " @ " << ti->tm_hour << ":" << ti->tm_min << ":" << ti->tm_sec << std::endl << std::endl;
-	* out << "Total memory leaked : " << m_currentMemoryAllocated << " bytes" << std::endl;
-	* out << "Maximum memory usage : " << m_maximumMemoryAllocated << " bytes" << std::endl;
-	* out << "Total memory allocated : " << m_totalMemoryAllocated << " bytes on " << m_totalObjectsAllocated << " objects and " << m_totalArraysAllocated << " arrays" << std::endl;
-	* out << std::endl;
+	*out << "Memoryleak.log : " << ti->tm_mday << "/" << ( ti->tm_mon + 1 ) << "/" << ( ti->tm_year + 1900 ) << " @ " << ti->tm_hour << ":" << ti->tm_min << ":" << ti->tm_sec << std::endl << std::endl;
+	*out << "Total memory leaked : " << m_currentMemoryAllocated << " bytes" << std::endl;
+	*out << "Maximum memory usage : " << m_maximumMemoryAllocated << " bytes" << std::endl;
+	*out << "Total memory allocated : " << m_totalMemoryAllocated << " bytes on " << m_totalObjectsAllocated << " objects and " << m_totalArraysAllocated << " arrays" << std::endl;
+	*out << std::endl;
 
-	if ( ! m_memoryMap.empty() )
+	if ( !m_memoryMap.empty() )
 	{
-		MemoryBlockMap::iterator iter = m_memoryMap.begin();
-		const MemoryBlockMap::iterator & iend = m_memoryMap.end();
-
-		for ( ; iter != iend ; ++ iter )
+		for ( auto && l_it : m_memoryMap )
 		{
-			const MemoryBlock & l_block = iter->second;
-			* out << ( l_block.isArray ? "Array" : "Object" ) << " leaked : " << l_block.size << " bytes, created in " << l_block.function << "() , line " << l_block.line << " of file " << l_block.file << std::endl;
+			*out << ( l_it.second.isArray ? "Array" : "Object" ) << " leaked : " << l_it.second.size << " bytes, created in " << l_it.second.function << "() , line " << l_it.second.line << " of file " << l_it.second.file << std::endl;
 		}
 	}
 	else
 	{
-		* out << "No memory leaked" << std::endl;
+		*out << "No memory leaked" << std::endl;
 	}
 
-	* out << std::endl;
+	*out << std::endl;
 
-	if ( ! m_failedDeletes.empty() )
+	if ( !m_failedDeletes.empty() )
 	{
-		size_t imax = m_failedDeletes.size();
-
-		for ( size_t i = 0 ; i < imax ; i++ )
+		for ( auto && l_it : m_failedDeletes )
 		{
-			const MemoryBlock & l_block = m_failedDeletes[i];
-			* out << "Deletion of an invalid " << ( l_block.isArray ? "array" : "object" ) << " pointer @ " << l_block.function << "() , line " << l_block.line << " of file " << l_block.file << std::endl;
+			*out << "Deletion of an invalid " << ( l_it.isArray ? "array" : "object" ) << " pointer @ " << l_it.function << "() , line " << l_it.line << " of file " << l_it.file << std::endl;
 		}
 	}
 	else
 	{
-		* out << "No invalid pointers" << std::endl;
+		*out << "No invalid pointers" << std::endl;
 	}
 
-	* out << std::endl;
+	*out << std::endl;
 
 	if ( ! m_failedNews.empty() )
 	{
-		size_t imax = m_failedNews.size();
-
-		for ( size_t i = 0 ; i < imax ; i++ )
+		for ( auto && l_it : m_failedNews )
 		{
-			const MemoryBlock & l_block = m_failedNews[i];
-			* out << "Failed allocation of an " << ( l_block.isArray ? "array" : "object" ) << " pointer @ " << l_block.function << "() , line " << l_block.line << " of file " << l_block.file << std::endl;
+			*out << "Failed allocation of an " << ( l_it.isArray ? "array" : "object" ) << " pointer @ " << l_it.function << "() , line " << l_it.line << " of file " << l_it.file << std::endl;
 		}
 	}
 	else
 	{
-		* out << "No failed allocation" << std::endl;
+		*out << "No failed allocation" << std::endl;
 	}
 
 	if ( ! p_filename.empty() )

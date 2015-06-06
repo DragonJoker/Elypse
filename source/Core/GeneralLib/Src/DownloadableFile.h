@@ -12,6 +12,68 @@ namespace General
 
 		class DownloadableFile
 		{
+		public:
+			DownloadableFile( const std::wstring & p_name, const std::wstring & p_path );
+			DownloadableFile( const std::wstring & p_name, const WStringArray & p_multiPath );
+
+			~DownloadableFile();
+
+		public:
+			bool ExistsAndIsIdentical( const std::string & p_version );
+
+		public:
+			inline std::wstring GetPath()const
+			{
+				if ( ! m_usesMultiPath )
+				{
+					return m_path + m_name;
+				}
+
+				return m_multiPath[0] + m_name;
+			}
+			inline const std::wstring & GetBasePath()const
+			{
+				if ( ! m_usesMultiPath )
+				{
+					return m_path;
+				}
+
+				return m_multiPath[0];
+			}
+			inline void SetToExec( const std::wstring & p_params )
+			{
+				m_toExec = true;
+				m_executionParams = p_params;
+			}
+			inline const std::wstring & GetExecParams()const
+			{
+				return m_executionParams;
+			}
+			inline bool IsMultiPath()const
+			{
+				return m_usesMultiPath;
+			}
+			inline bool IsZipped()const
+			{
+				return m_zipped;
+			}
+			inline bool GetToExec()const
+			{
+				return m_toExec;
+			}
+			inline const std::wstring & GetName()const
+			{
+				return m_name;
+			}
+			inline const std::string & GetHash()const
+			{
+				return m_hash;
+			}
+
+		private:
+			bool _exists();
+			void _getHash();
+
 		private:
 			std::wstring m_name;
 			std::wstring m_path;
@@ -26,70 +88,7 @@ namespace General
 
 		public:
 			WStringArray m_multiPath;
-
-		private:
-			bool _exists();
-			void _getHash();
-
-		public:
-			DownloadableFile( const std::wstring & p_name, const std::wstring & p_path );
-			DownloadableFile( const std::wstring & p_name, const WStringArray & p_multiPath );
-
-			~DownloadableFile();
-
-		public:
-			bool ExistsAndIsIdentical( const std::string & p_version );
-
-		public:
-			inline std::wstring			GetPath()const
-			{
-				if ( ! m_usesMultiPath )
-				{
-					return m_path + m_name;
-				}
-
-				return m_multiPath[0] + m_name;
-			}
-			inline const std::wstring &	GetBasePath()const
-			{
-				if ( ! m_usesMultiPath )
-				{
-					return m_path;
-				}
-
-				return m_multiPath[0];
-			}
-			inline void					SetToExec( const std::wstring & p_params )
-			{
-				m_toExec = true;
-				m_executionParams = p_params;
-			}
-			inline const std::wstring &	GetExecParams()const
-			{
-				return m_executionParams;
-			}
-			inline bool					IsMultiPath()const
-			{
-				return m_usesMultiPath;
-			}
-			inline bool					IsZipped()const
-			{
-				return m_zipped;
-			}
-			inline bool					GetToExec()const
-			{
-				return m_toExec;
-			}
-			inline const std::wstring &	GetName()const
-			{
-				return m_name;
-			}
-			inline const std::string & GetHash()const
-			{
-				return m_hash;
-			}
 		};
-
 	}
 }
 

@@ -18,8 +18,8 @@ bool General::Computer::GetFileVersion( const std::string & p_fileName, std::str
 {
 #if GENLIB_WINDOWS
 	VS_FIXEDFILEINFO * l_fileInfo;
-	unsigned int l_handle;
-	unsigned int l_length = GetFileVersionInfoSizeA( p_fileName.c_str(), reinterpret_cast <LPDWORD>( & l_handle ) );
+	DWORD l_handle;
+	UINT l_length = GetFileVersionInfoSizeA( p_fileName.c_str(), &l_handle );
 	p_version = "0.0.0.0";
 
 	if ( l_length == 0 )
@@ -34,13 +34,13 @@ bool General::Computer::GetFileVersion( const std::string & p_fileName, std::str
 		return false;
 	}
 
-	if ( ! GetFileVersionInfoA( p_fileName.c_str(), l_handle, l_length, l_buffer ) )
+	if ( !GetFileVersionInfoA( p_fileName.c_str(), l_handle, l_length, l_buffer ) )
 	{
 		delete [] l_buffer;
 		return false;
 	}
 
-	if ( VerQueryValueA( l_buffer, "\\", reinterpret_cast <void **>( & l_fileInfo ), & l_length ) )
+	if ( VerQueryValueA( l_buffer, "\\", reinterpret_cast< void ** >( &l_fileInfo ), &l_length ) )
 	{
 		p_version = ToString( HIWORD( l_fileInfo->dwFileVersionMS ) );
 		p_version.push_back( '.' );
@@ -62,8 +62,8 @@ bool General::Computer::GetFileVersion( const std::wstring & p_fileName, std::ws
 {
 #if GENLIB_WINDOWS
 	VS_FIXEDFILEINFO * l_fileInfo;
-	unsigned int l_handle;
-	unsigned int l_length = GetFileVersionInfoSizeW( p_fileName.c_str(), reinterpret_cast <LPDWORD>( & l_handle ) );
+	DWORD l_handle;
+	UINT l_length = GetFileVersionInfoSizeW( p_fileName.c_str(), &l_handle );
 	p_version = L"0.0.0.0";
 
 	if ( l_length == 0 )
@@ -78,13 +78,13 @@ bool General::Computer::GetFileVersion( const std::wstring & p_fileName, std::ws
 		return false;
 	}
 
-	if ( ! GetFileVersionInfoW( p_fileName.c_str(), l_handle, l_length, l_buffer ) )
+	if ( !GetFileVersionInfoW( p_fileName.c_str(), l_handle, l_length, l_buffer ) )
 	{
 		delete [] l_buffer;
 		return false;
 	}
 
-	if ( VerQueryValueW( l_buffer, L"\\", reinterpret_cast <void **>( & l_fileInfo ), & l_length ) )
+	if ( VerQueryValueW( l_buffer, L"\\", reinterpret_cast <void **>( &l_fileInfo ), &l_length ) )
 	{
 		p_version = ToWString( HIWORD( l_fileInfo->dwFileVersionMS ) );
 		p_version.push_back( '.' );

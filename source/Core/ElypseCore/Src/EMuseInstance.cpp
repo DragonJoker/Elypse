@@ -24,7 +24,6 @@
 #include <Utils.h>
 #include <Exception.h>
 #include <PreciseTimer.h>
-#include <ThreadId.h>
 
 #include "EMuseLogs.h"
 
@@ -107,7 +106,7 @@ bool EMuseInstance::Init( unsigned int p_width, unsigned int p_height, const Str
 	}
 
 	Sleep( 50 );
-	EMUSE_LOG_MESSAGE_RELEASE( "EMUSE INSTANCE THREAD ID : " + StringConverter::toString( GENLIB_THREAD_ID() ) );
+	EMUSE_LOG_MESSAGE_RELEASE( "EMUSE INSTANCE THREAD ID : " + ToString( std::this_thread::get_id() ) );
 	return ret;
 }
 

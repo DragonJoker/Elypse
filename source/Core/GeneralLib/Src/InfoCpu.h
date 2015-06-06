@@ -192,24 +192,6 @@ namespace General
 		{
 			return ( ( ! is_amd_cpu() ) ? ( ( cpuid( 4, 0 ).eax >> 26 ) & 0x03F ) + 1 : num_logical_cores() );
 		}
-
-#if ((defined( __ICL) || defined( _MSC_VER)) && defined( WIN32))
-		/*
-				#include <windows.h>
-
-				inline int num_processors()
-				{
-					SYSTEM_INFO info;
-					GetSystemInfo(&info);
-					return info.dwNumberOfProcessors;
-				}
-		*/
-#else
-
-		//fonction sysinfo sous linux.
-		//inconnu sous mac . Pareil ?
-
-#endif
 	}
 }
 

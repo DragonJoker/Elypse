@@ -15,13 +15,11 @@ namespace General
 			ES_PROCESS
 		};
 
-		bool d_dll Execute(	const std::string & p_name, const std::string & p_path,
-							const std::string & p_params, ExecuteStyle p_style = ES_SYSTEM );
+		bool d_dll Execute(	const std::string & p_name, const std::string & p_path, const std::string & p_params, ExecuteStyle p_style = ES_SYSTEM );
 
 #ifndef __GNUG__
 
-		bool d_dll Execute(	const std::wstring & p_name, const std::wstring & p_path,
-							const std::wstring & p_params, ExecuteStyle p_style = ES_SYSTEM );
+		bool d_dll Execute(	const std::wstring & p_name, const std::wstring & p_path, const std::wstring & p_params, ExecuteStyle p_style = ES_SYSTEM );
 
 #endif
 

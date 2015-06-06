@@ -14,11 +14,11 @@
 #		undef genlib_assert
 #	endif
 
-#	define genlib_assert( X) if ( ! (X)){ GENLIB_EXCEPTION( std::string( "Assert not respected : (") + #X + std::string( ") file ") + std::string( __FILE__) + std::string( " @ L# ") + General::Utils::ToString<unsigned int>( __LINE__));}
+#	define genlib_assert( X ) assert( X )
 
 #else
 
-#	define genlib_assert( X)
+#	define genlib_assert( X )
 
 #endif
 

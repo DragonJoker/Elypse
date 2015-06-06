@@ -13,8 +13,9 @@ namespace General
 {
 	namespace Theory
 	{
-		template <class T>
-		class AutoSingleton : d_noncopyable
+		template< class T >
+		class AutoSingleton
+			: d_noncopyable
 		{
 		protected:
 			AutoSingleton() {}

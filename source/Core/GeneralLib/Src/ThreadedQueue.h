@@ -9,32 +9,30 @@ namespace General
 {
 	namespace MultiThreading
 	{
-		template <typename T>
-		class ThreadedQueue : d_noncopyable
+		template< typename T >
+		class ThreadedQueue
+			: d_noncopyable
 		{
 		private:
-			T * m_items;
+			std::vector< T > m_items;
 			unsigned short m_maxSize;
 			unsigned short m_next;
 			unsigned short m_first;
 			unsigned short m_count;
 			Mutex m_mutex;
 			Condition m_condition;
-//		Condition m_emptyCondition;
-//		Condition m_fullCondition;
 
 		public:
 			ThreadedQueue( unsigned int p_maxSize )
-				:	m_maxSize( p_maxSize ),
-					m_next( 0 ),
-					m_first( 0 ),
-					m_count( 0 )
+				: m_maxSize( p_maxSize )
+				, m_next( 0 )
+				, m_first( 0 )
+				, m_count( 0 )
+				, m_items( p_maxSize )
 			{
-				m_items = new T[p_maxSize];
 			}
 			~ThreadedQueue()
 			{
-				delete [] m_items;
 			}
 
 		public:

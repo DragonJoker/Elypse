@@ -38,7 +38,7 @@ AnimatedObject * AnimatedObjectGroup::AddEntity( Entity * p_entity )
 	}
 	else
 	{
-		m_commonAnimationsTime = General::Utils::map::intersects( l_map, m_commonAnimationsTime );
+		m_commonAnimationsTime = General::Utils::map::get_intersection( l_map, m_commonAnimationsTime );
 	}
 
 	return l_object;

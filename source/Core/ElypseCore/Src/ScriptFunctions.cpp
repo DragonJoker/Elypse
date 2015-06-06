@@ -388,7 +388,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ve3_BezierInterpolation )
 {
 	VERBOSE_STARTFUNC( "Ve3_BezierInterpolation" );
 	GET_AND_EXEC_FOUR_PARAM( Vector3, l_start, Vector3, l_middle, Vector3, l_end, Real, l_ratio );
-	Real * l_factors = Bezier<3>::GetSingletonPtr()->Get( l_ratio );
+	Real const * l_factors = Bezier<3>::GetSingletonPtr()->Get( l_ratio );
 	RETURN_AS( Vector3 ) Vector3( l_start * l_factors[0] + l_middle * l_factors[1] + l_end * l_factors[2] );
 }
 
@@ -396,13 +396,12 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ve3_BezierGetLength )
 {
 	VERBOSE_STARTFUNC( "Ve3_BezierGetLength" );
 	GET_AND_EXEC_FOUR_PARAM( Vector3, l_start, Vector3, l_middle, Vector3, l_end, int, p_num );
-	Real * l_factors = Bezier<3>::GetSingletonPtr()->Get( 0.0 );
 	Vector3 l_point = l_start;
 	Real l_length = 0.0;
 
 	for ( int i = 0 ; i < p_num; i ++ )
 	{
-		l_factors = Bezier<3>::GetSingletonPtr()->Get( ( i + 1 ) / static_cast<Real>( p_num ) );
+		Real const * l_factors = Bezier<3>::GetSingletonPtr()->Get( ( i + 1 ) / static_cast<Real>( p_num ) );
 		Vector3 l_pointB( l_start * l_factors[0] + l_middle * l_factors[1] + l_end * l_factors[2] );
 		l_length += l_point.distance( l_pointB );
 		l_point = l_pointB;

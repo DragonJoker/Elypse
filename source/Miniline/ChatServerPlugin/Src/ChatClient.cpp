@@ -155,7 +155,7 @@ namespace Chat
 		p_buffer >> l_size;
 		String l_name;
 
-		char * l_cname = p_buffer.readArray< char >( l_size );
+		char const * l_cname = p_buffer.readArray< char >( l_size );
 
 		if ( !l_cname )
 		{
@@ -170,7 +170,7 @@ namespace Chat
 			p_buffer >> l_size;
 			String l_pass;
 
-			char * l_cpass = p_buffer.readArray< char >( l_size );
+			char const * l_cpass = p_buffer.readArray< char >( l_size );
 
 			if ( !l_cpass )
 			{
@@ -437,9 +437,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msEndGame;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 		m_game.reset();
 	}
@@ -451,9 +451,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msGameStart;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -464,9 +464,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msGameAlreadyCreated;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -477,9 +477,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msGameDontExist;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -490,9 +490,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msCreateGameOK;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 		m_status = ccsInGame;
 	}
@@ -504,13 +504,13 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msJoinGame;
 		l_buffer << static_cast< int >( p_name.size() );
 		l_buffer.writeArray< char >( p_name.c_str(), p_name.size() );
 		l_buffer << p_place;
 		p_clothes.Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -521,11 +521,11 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msQuitGame;
 		l_buffer << static_cast< int >( p_name.size() );
 		l_buffer.writeArray< char >( p_name.c_str(), p_name.size() );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 		m_status = ccsNone;
 	}
@@ -537,9 +537,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msJoinGameOK << p_place;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 		m_status = ccsInGame;
 	}
@@ -585,10 +585,10 @@ namespace Chat
 
 		if ( m_status == ccsInRoom && !l_room )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msQuit;
 			m_login.Save( l_buffer );
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			DoForwardMessage( m_toSend );
 			l_room->RemoveClient( this );
 			m_room.reset();
@@ -602,10 +602,10 @@ namespace Chat
 		if ( m_status == ccsInGame && l_game )
 		{
 			std::cout << m_login.GetName() << " was in a game\n";
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msQuitGame;
 			m_login.Save( l_buffer );
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			DoForwardGameMessage( m_toSend );
 			l_game->RemovePlayer( this );
 
@@ -640,13 +640,13 @@ namespace Chat
 			return String();
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msJoin;
 		m_login.Save( l_buffer );
 		m_clothes.Save( l_buffer );
 		m_avatar.Save( l_buffer );
 		String l_result;
-		l_result.assign( l_buffer.c_str(), l_buffer.size() );
+		l_result.assign( l_buffer.data(), l_buffer.size() );
 		return l_result;
 	}
 
@@ -660,10 +660,10 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msAvatar;
 		m_clothes.Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " has ended the sending of his dresses : " << l_buffer.size() << "\n";
 	}
@@ -675,10 +675,10 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msRooms;
 		m_plugin->GetWorld()->Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -689,9 +689,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msKickUser;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -702,9 +702,9 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msJoinGameFail;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -845,9 +845,9 @@ namespace Chat
 			}
 
 			std::cout << "ChatClient " << GetName() << " connected\n";
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msConnectOK;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			m_status = ccsConnected;
 			return;
@@ -859,9 +859,9 @@ namespace Chat
 		}
 
 		std::clog << "ChatTcpClient::DoProcessConnectMessage - Not connected\n";
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msConnectFail;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 
 	}
@@ -934,10 +934,10 @@ namespace Chat
 		}
 
 		std::clog << "Sending quit to room clients\n";
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msQuit;
 		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 		l_room->RemoveClient( this );
 	}
@@ -951,11 +951,11 @@ namespace Chat
 
 		p_buffer >> m_avatar.GetPosition().x >> m_avatar.GetPosition().y >> m_avatar.GetPosition().z >> m_avatar.GetYaw();
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msUpdate;
 		m_login.Save( l_buffer );
 		l_buffer << GetPosition().x << GetPosition().y << GetPosition().z << GetYaw();
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -970,12 +970,12 @@ namespace Chat
 		int l_backward;
 		p_buffer >> m_avatar.GetPosition().x >> m_avatar.GetPosition().y >> m_avatar.GetPosition().z >> l_backward >> l_running;
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msWalk;
 		m_login.Save( l_buffer );
 		l_buffer << GetPosition().x << GetPosition().y << GetPosition().z << l_backward << l_running;
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -988,12 +988,12 @@ namespace Chat
 
 		p_buffer >> m_avatar.GetYaw();
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msTurn;
 		m_login.Save( l_buffer );
 		l_buffer << GetYaw();
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1011,13 +1011,13 @@ namespace Chat
 		l_message.assign( p_buffer.readArray< char >( l_size ), l_size );
 		std::cout << GetName() << " : " << l_message << "\n";
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msTalk;
 		m_login.Save( l_buffer );
 		l_buffer << l_size;
 		l_buffer.writeArray< char >( l_message.c_str(), l_size );
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardTalkMessage( m_toSend );
 	}
 
@@ -1030,9 +1030,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1047,7 +1047,7 @@ namespace Chat
 		l_message = l_message.substr( l_index + 1 );
 		std::cout << "DoProcessWhispMessage - " << l_distantName << " - " << l_message << "\n";
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msWhisp;
 		m_login.Save( l_buffer );;
 		l_buffer << l_size;
@@ -1072,7 +1072,7 @@ namespace Chat
 				if ( l_client->GetName() == l_distantName && l_client->GetName() != GetName() )
 				{
 					l_found = true;
-					l_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+					l_toSend.assign( l_buffer.data(), l_buffer.size() );
 
 					if ( !l_client->DoIsIgnored( GetName() ) )
 					{
@@ -1081,7 +1081,7 @@ namespace Chat
 
 					l_buffer = WriteBuffer( m_messageBuffer, MAX_MSG_LENGTH );
 					l_buffer << msWhispOK;
-					m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+					m_toSend.assign( l_buffer.data(), l_buffer.size() );
 					AsyncSend( m_toSend );
 				}
 
@@ -1096,7 +1096,7 @@ namespace Chat
 			std::cout << "WhispFail\n";
 			l_buffer = WriteBuffer( m_messageBuffer, MAX_MSG_LENGTH );
 			l_buffer << msWhispFail;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 		}
 	}
@@ -1109,10 +1109,10 @@ namespace Chat
 		}
 
 		m_avatar.Sit( false );
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msBeginWalk;
 		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1126,12 +1126,12 @@ namespace Chat
 		float l_x, l_y, l_z, l_yaw;
 		p_buffer >> l_x >> l_y >> l_z >> l_yaw;
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msEndWalk;
 		m_login.Save( l_buffer );
 		l_buffer << l_x << l_y << l_z << l_yaw;
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1143,10 +1143,10 @@ namespace Chat
 		}
 
 		m_avatar.Sit( false );
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msBeginRun;
 		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1161,11 +1161,11 @@ namespace Chat
 		int l_stillWalking;
 		p_buffer >> l_stillWalking >> l_x >> l_y >> l_z >> l_yaw;
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msEndRun;
 		m_login.Save( l_buffer );
 		l_buffer << l_x << l_y << l_z << l_yaw;
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1182,13 +1182,13 @@ namespace Chat
 		l_message.assign( p_buffer.readArray< char >( l_size ), l_size );
 		std::cout << "DoProcessEmoteMessage - " << l_message << "\n";
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msEmote;
 		m_login.Save( l_buffer );
 		l_buffer << l_size;
 		l_buffer.writeArray< char >( l_message.c_str(), l_size );
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1201,9 +1201,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1263,9 +1263,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1287,9 +1287,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1303,14 +1303,14 @@ namespace Chat
 		if ( l_name != GetName() )
 		{
 			ChatTcpClient * l_newFriend = m_plugin->GetClient( l_name );
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 
 			if ( l_newFriend == NULL )
 			{
 				std::cout << "DoProcessNewFriendMessage - Friend not found\n";
 				l_buffer << msNewFriendDoesntExist << l_size;
 				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+				m_toSend.assign( l_buffer.data(), l_buffer.size() );
 				AsyncSend( m_toSend );
 			}
 			else if ( m_friends.find( l_name ) != m_friends.end() )
@@ -1318,7 +1318,7 @@ namespace Chat
 				std::cout << "DoProcessNewFriendMessage - Friend found, already in friends\n";
 				l_buffer << msNewFriendAlreadyFriend << l_size;
 				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+				m_toSend.assign( l_buffer.data(), l_buffer.size() );
 				AsyncSend( m_toSend );
 			}
 			else
@@ -1326,7 +1326,7 @@ namespace Chat
 				std::clog << "DoProcessNewFriendMessage - Friend found\n";
 				l_buffer << msNewFriendAsk;
 				m_login.Save( l_buffer );
-				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+				m_toSend.assign( l_buffer.data(), l_buffer.size() );
 				l_newFriend->AsyncSend( m_toSend );
 			}
 		}
@@ -1341,9 +1341,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1363,20 +1363,20 @@ namespace Chat
 				return;
 			}
 
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 
 			if ( l_ignoredId == 0 )
 			{
 				l_buffer << msNewIgnoredDoesntExist << l_size;
 				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+				m_toSend.assign( l_buffer.data(), l_buffer.size() );
 				AsyncSend( m_toSend );
 			}
 			else if ( m_ignored.find( l_name ) != m_ignored.end() )
 			{
 				l_buffer << msNewIgnoredAlreadyIgnored << l_size;
 				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+				m_toSend.assign( l_buffer.data(), l_buffer.size() );
 				AsyncSend( m_toSend );
 			}
 			else
@@ -1392,7 +1392,7 @@ namespace Chat
 
 				l_buffer << msNewIgnoredDone << l_size;
 				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+				m_toSend.assign( l_buffer.data(), l_buffer.size() );
 				AsyncSend( m_toSend );
 			}
 		}
@@ -1407,16 +1407,16 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
 
 		String l_noRoom = "Non connecte";
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msUpdateFriendsList;
 		l_buffer << int( m_friends.size() );
 
@@ -1438,7 +1438,7 @@ namespace Chat
 			}
 		}
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -1451,14 +1451,14 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msUpdateIgnoredList;
 		l_buffer << static_cast< int >( m_ignored.size() );
 
@@ -1478,7 +1478,7 @@ namespace Chat
 			}
 		}
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -1491,9 +1491,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1507,10 +1507,10 @@ namespace Chat
 
 		if ( l_refused )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msNewFriendRefuse;
 			m_login.Save( l_buffer );
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			l_refused->AsyncSend( m_toSend );
 		}
 	}
@@ -1524,9 +1524,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1540,7 +1540,7 @@ namespace Chat
 
 		if ( l_accepted )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msNewFriendAccept;
 			m_login.Save( l_buffer );
 
@@ -1562,7 +1562,7 @@ namespace Chat
 				return;
 			}
 
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			l_accepted->AsyncSend( m_toSend );
 		}
 	}
@@ -1579,7 +1579,7 @@ namespace Chat
 		String l_name;
 		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
 		StrUIntIdMap l_map = m_plugin->GetGamesList( l_name );
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msRefreshGamesList;
 		l_buffer << static_cast< int >( l_map.size() );
 
@@ -1591,7 +1591,7 @@ namespace Chat
 			l_buffer.writeArray< char >( l_it->second.first.c_str(), l_it->second.first.size() ); //creator name
 		}
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 
@@ -1604,9 +1604,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1666,10 +1666,10 @@ namespace Chat
 		}
 
 		std::clog << "Sending quit to game players\n";
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msQuitGame;
 		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardGameMessage( m_toSend );
 		l_game->RemovePlayer( this );
 
@@ -1695,11 +1695,11 @@ namespace Chat
 			return;
 		}
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msGame;
 		m_login.Save( l_buffer );
-		l_buffer.writeArray< char >( p_buffer.c_str() + sizeof( MessageReceived ), p_buffer.left() );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		l_buffer.writeArray< char >( p_buffer.data() + sizeof( MessageReceived ), p_buffer.left() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardGameMessage( m_toSend );
 	}
 
@@ -1712,9 +1712,9 @@ namespace Chat
 
 		if ( IsAnonymous() )
 		{
-			WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+			m_toSend.assign( l_buffer.data(), l_buffer.size() );
 			AsyncSend( m_toSend );
 			return;
 		}
@@ -1742,11 +1742,11 @@ namespace Chat
 
 		m_avatar.Sit();
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msSitDown;
 		m_login.Save( l_buffer );
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1759,11 +1759,11 @@ namespace Chat
 
 		m_avatar.Sit( false );
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msSitUp;
 		m_login.Save( l_buffer );
 
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		DoForwardMessage( m_toSend );
 	}
 
@@ -1777,7 +1777,7 @@ namespace Chat
 		int l_size;
 		p_buffer >> l_size;
 		String l_gameName;
-		char * l_cName = p_buffer.readArray< char >( l_size );
+		char const* l_cName = p_buffer.readArray< char >( l_size );
 
 		if ( l_cName == NULL )
 		{
@@ -1788,9 +1788,9 @@ namespace Chat
 
 		unsigned int l_maxPlayers = m_plugin->GetGameMaxPLayers( l_gameName );
 
-		WriteBuffer l_buffer( m_messageBuffer, MAX_MSG_LENGTH );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msGameInfo << static_cast< int >( l_maxPlayers );
-		m_toSend.assign( l_buffer.c_str(), l_buffer.size() );
+		m_toSend.assign( l_buffer.data(), l_buffer.size() );
 		AsyncSend( m_toSend );
 	}
 

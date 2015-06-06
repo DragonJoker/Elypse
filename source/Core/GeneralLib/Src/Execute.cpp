@@ -14,10 +14,7 @@
 
 #include "StringConverter.h"
 
-bool General::Utils::Execute(	const std::string & p_name,
-								const std::string & p_path,
-								const std::string & p_params,
-								ExecuteStyle p_style )
+bool General::Utils::Execute( const std::string & p_name, const std::string & p_path, const std::string & p_params, ExecuteStyle p_style )
 {
 	if ( p_style == ES_SYSTEM )
 	{
@@ -57,16 +54,13 @@ bool General::Utils::Execute(	const std::string & p_name,
 
 #ifndef __GNUG__
 
-bool General::Utils::Execute(	const std::wstring & p_name,
-								const std::wstring & p_path,
-								const std::wstring & p_params,
-								ExecuteStyle p_style )
+bool General::Utils::Execute( const std::wstring & p_name, const std::wstring & p_path, const std::wstring & p_params, ExecuteStyle p_style )
 {
 	std::wcout << L"GeneralLib//Execute : " << p_name << " // " << p_path << " // " << p_params << std::endl;
 
 	if ( p_style == ES_SYSTEM )
 	{
-		if ( ! p_path.empty() )
+		if ( !p_path.empty() )
 		{
 			wchar_t l_oldPath[256];
 			GetCurrentDirectoryW( 255, l_oldPath );

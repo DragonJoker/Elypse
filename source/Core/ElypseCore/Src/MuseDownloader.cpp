@@ -93,7 +93,7 @@ void MuseDownloader::Execute()
 {
 	PreciseTimer l_timer;
 	EMUSE_CONSOLE_MESSAGE_DEBUG( "MuseDownloader::Execute -> curl : " + m_url );
-	CURLcode l_error = m_curlManager->OpenUrl( m_url, MusePack::CurlCallback, m_musePack );
+	CURLcode l_error = m_curlManager->OpenUrl( m_url, &MusePack::StCurlCallback, m_musePack );
 
 	if ( l_error != CURLE_OK && ! m_musePack->IsOK() )
 	{

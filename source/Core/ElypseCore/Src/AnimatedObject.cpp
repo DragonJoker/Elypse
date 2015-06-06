@@ -7,8 +7,6 @@
 #include <OgreAnimationState.h>
 #include <OgreSkeletonInstance.h>
 
-#include <SetAlgo.h>
-
 #include "EMuseLogs.h"
 
 using namespace General::Utils;

@@ -4,7 +4,6 @@
 #include "WebImage.h"
 
 #include <NeoCurl.h>
-#include <ThreadId.h>
 
 #include <OgreStringConverter.h>
 

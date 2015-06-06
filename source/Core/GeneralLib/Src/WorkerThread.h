@@ -11,22 +11,14 @@ namespace General
 	{
 		class WorkerThread
 		{
-		private:
-			Condition m_condition;
-			Mutex m_mutex;
-			bool m_stopThread;
-			Thread * m_boostThread;
-			boost::function0 <void> m_functor;
-
 		public:
 			WorkerThread()
-				:	m_stopThread( false )
+				: m_stopThread( false )
 			{
-				m_boostThread = new Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, WorkerThread, DoMainLoop ) );
+				m_boostThread = Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, WorkerThread, DoMainLoop ) );
 			}
 			~WorkerThread()
 			{
-				delete m_boostThread;
 			}
 
 		private:
@@ -41,14 +33,13 @@ namespace General
 						GENLIB_CONDITION_WAIT( m_condition, m_mutex );
 					}
 
-					if ( ! m_functor.empty() )
+					if ( m_functor )
 					{
 						m_functor();
 					}
 
 					{
 						GENLIB_AUTO_SCOPED_LOCK();
-						m_functor.clear();
 						l_stopThread = m_stopThread;
 					}
 				}
@@ -56,9 +47,9 @@ namespace General
 			}
 
 		public:
-			void Execute( const boost::function0 <void> & p_functor )
+			void Execute( const std::function< void() > & p_functor )
 			{
-				if ( ! p_functor.empty() )
+				if ( p_functor )
 				{
 					GENLIB_AUTO_SCOPED_LOCK();
 					m_functor = p_functor;
@@ -79,8 +70,15 @@ namespace General
 					m_stopThread = true;
 					GENLIB_CONDITION_NOTIFY_ONE( m_condition );
 				}
-				m_boostThread->join();
+				m_boostThread.join();
 			}
+
+		private:
+			Condition m_condition;
+			Mutex m_mutex;
+			bool m_stopThread;
+			Thread m_boostThread;
+			std::function< void() > m_functor;
 		};
 	}
 }

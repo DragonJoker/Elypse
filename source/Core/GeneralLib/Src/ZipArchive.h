@@ -38,24 +38,13 @@ namespace General
 			typedef std::map< StringType, ZipFileBase< CharType > * > ZipFileMapType;
 			typedef std::vector< ZipFileBase< CharType > > ZipFileArrayType;
 
-		protected:
-			StringType m_basename;
-			StringType m_path;
-			StringType m_fullPath;
-
-			zip * m_zip;
-
-			ZipDirectoryMapType m_directories;
-			ZipFileMapType m_files;
-			ZipDirectoryBase< CharType > * m_rootDirectory;
-
 		public:
 			ZipArchiveImpl( const StringType & p_name, const StringType & p_path )
-				:	m_basename( p_name )
-				,	m_path( p_path )
-				,	m_fullPath( p_path )
-				,	m_zip( NULL )
-				,	m_rootDirectory( new ZipDirectoryBase< CharType > ( StringType(), NULL ) )
+				: m_basename( p_name )
+				, m_path( p_path )
+				, m_fullPath( p_path )
+				, m_zip( NULL )
+				, m_rootDirectory( new ZipDirectoryBase< CharType >( StringType(), NULL ) )
 			{
 				m_fullPath.push_back( d_path_slash );
 				m_fullPath += p_name;
@@ -110,6 +99,17 @@ namespace General
 			{
 				return m_zip;
 			}
+
+		protected:
+			StringType m_basename;
+			StringType m_path;
+			StringType m_fullPath;
+
+			zip * m_zip;
+
+			ZipDirectoryMapType m_directories;
+			ZipFileMapType m_files;
+			ZipDirectoryBase< CharType > * m_rootDirectory;
 		};
 
 		template< typename CharType >

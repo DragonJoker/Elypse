@@ -75,42 +75,40 @@ namespace General
 		class MemoryBlock
 		{
 		public:
-			const char * file;
-			const char * function;
-			void * ptr;
-			unsigned int line;
-			size_t size;
-			bool isArray;
-
-		public:
 			MemoryBlock()
-				:	file( NULL ),
-					function( NULL ),
-					ptr( NULL ),
-					line( 0 ),
-					size( 0 ),
-					isArray( false )
-			{}
-			MemoryBlock(	const char * p_file, const char * p_function,
-							unsigned int p_line )
-				:	file( p_file ),
-					function( p_function ),
-					ptr( NULL ),
-					line( p_line ),
-					size( 0 ),
-					isArray( false )
-			{}
-			MemoryBlock( void * p_ptr, size_t p_size, bool p_array )
-				:	file( NULL ),
-					function( NULL ),
-					ptr( p_ptr ),
-					line( 0 ),
-					size( p_size ),
-					isArray( p_array )
-			{}
-			~MemoryBlock() {}
+				: file( NULL )
+				, function( NULL )
+				, ptr( NULL )
+				, line( 0 )
+				, size( 0 )
+				, isArray( false )
+			{
+			}
 
-		public:
+			MemoryBlock( const char * p_file, const char * p_function, unsigned int p_line )
+				: file( p_file )
+				, function( p_function )
+				, ptr( NULL )
+				, line( p_line )
+				, size( 0 )
+				, isArray( false )
+			{
+			}
+
+			MemoryBlock( void * p_ptr, size_t p_size, bool p_array )
+				: file( NULL )
+				, function( NULL )
+				, ptr( p_ptr )
+				, line( 0 )
+				, size( p_size )
+				, isArray( p_array )
+			{
+			}
+
+			~MemoryBlock()
+			{
+			}
+
 			MemoryBlock & operator =( const MemoryBlock & p_other )
 			{
 				file = p_other.file;
@@ -128,31 +126,19 @@ namespace General
 				size = 0;
 				isArray = false;
 			}
-		};
-
-		class MemoryManager : public General::Theory::AutoSingleton <MemoryManager>
-		{
-		private:
-			static unsigned int sm_initialised;
-			const char * m_logLocation;
-
-			typedef std::map	<void *, MemoryBlock>	MemoryBlockMap;
-			typedef std::vector	<MemoryBlock>			MemoryBlockArray;
 
 		public:
-			General::MultiThreading::RecursiveMutex m_mutex;
-			MemoryBlock m_lastBlock;
-			MemoryBlockMap m_memoryMap;
-			MemoryBlockArray m_failedNews;
-			MemoryBlockArray m_failedDeletes;
+			const char * file;
+			const char * function;
+			void * ptr;
+			unsigned int line;
+			size_t size;
+			bool isArray;
+		};
 
-			bool m_locked;
-			size_t m_currentMemoryAllocated;
-			size_t m_maximumMemoryAllocated;
-			size_t m_totalObjectsAllocated;
-			size_t m_totalArraysAllocated;
-			unsigned long long m_totalMemoryAllocated;
-
+		class MemoryManager
+			: public General::Theory::AutoSingleton< MemoryManager >
+		{
 		public:
 			MemoryManager( const char * p_logLocation = GENLIB_LOG_LOCATION );
 			~MemoryManager();
@@ -195,6 +181,27 @@ namespace General
 			{
 				return ( sm_initialised == 1 );
 			}
+
+		private:
+			static unsigned int sm_initialised;
+			const char * m_logLocation;
+
+			typedef std::map< void *, MemoryBlock > MemoryBlockMap;
+			typedef std::vector< MemoryBlock > MemoryBlockArray;
+
+		public:
+			General::MultiThreading::RecursiveMutex m_mutex;
+			MemoryBlock m_lastBlock;
+			MemoryBlockMap m_memoryMap;
+			MemoryBlockArray m_failedNews;
+			MemoryBlockArray m_failedDeletes;
+
+			bool m_locked;
+			size_t m_currentMemoryAllocated;
+			size_t m_maximumMemoryAllocated;
+			size_t m_totalObjectsAllocated;
+			size_t m_totalArraysAllocated;
+			unsigned long long m_totalMemoryAllocated;
 		};
 	}
 }

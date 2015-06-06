@@ -46,7 +46,6 @@
 #include <ode/collision.h>
 
 #include <PreciseTimer.h>
-#include <ThreadId.h>
 #include <Utils.h>
 #include <File.h>
 #include <NeoCurl.h>
@@ -664,9 +663,9 @@ void EMuseController::LinkInstanceTo( EMuseInstance * p_instance, const String &
 
 void EMuseController::WaitForThreadEnded()
 {
-	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended pre lock mutex : " + ToString( ThreadId::GetSelf() ) );
+	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended pre lock mutex : " + ToString( std::this_thread::get_id() ) );
 	GENLIB_AUTO_SCOPED_LOCK();
-	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended post lock mutex : " + ToString( ThreadId::GetSelf() ) );
+	EMUSE_MESSAGE_NORMAL( "EMuseController::WaitForThreadEnded : Wait for thread ended post lock mutex : " + ToString( std::this_thread::get_id() ) );
 
 	if ( !GetSingletonPtr() )
 	{

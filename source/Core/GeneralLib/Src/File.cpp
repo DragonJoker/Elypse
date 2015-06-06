@@ -53,9 +53,9 @@ bool General::Files::DirectoryCreate( const std::string & p_filename )
 
 	l_filename = l_filename.substr( 0, l_filename.find_last_of( d_path_slash ) );
 
-	if ( ! DirectoryExists( l_filename ) )
+	if ( !DirectoryExists( l_filename ) )
 	{
-		if ( ! DirectoryCreate( l_filename ) )
+		if ( !DirectoryCreate( l_filename ) )
 		{
 			return false;
 		}
@@ -125,7 +125,7 @@ bool General::Files::DirectoryDelete( const std::string & p_dirName )
 		{
 			if ( is_directory( i->status() ) )
 			{
-				if ( ! DirectoryDelete( i->path().string() ) )
+				if ( !DirectoryDelete( i->path().string() ) )
 				{
 					return false;
 				}
@@ -181,9 +181,9 @@ bool General::Files::DirectoryCreate( const std::wstring & p_filename )
 
 	l_filename = l_filename.substr( 0, l_filename.find_last_of( d_path_slash ) );
 
-	if ( ! DirectoryExists( l_filename ) )
+	if ( !DirectoryExists( l_filename ) )
 	{
-		if ( ! DirectoryCreate( l_filename ) )
+		if ( !DirectoryCreate( l_filename ) )
 		{
 			return false;
 		}
@@ -233,24 +233,22 @@ bool General::Files::DirectoryDelete( const std::wstring & p_dirName )
 
 	try
 	{
-		/*
-				wdirectory_iterator iend;
-				wdirectory_iterator i( p_dirName);
+		//wdirectory_iterator iend;
+		//wdirectory_iterator i( p_dirName);
 
-				for ( ;	i != iend ; ++ i)
-				{
-					if (is_directory( i->status()))
-					{
-						if ( ! DirectoryDelete( i->path().string()))
-						{
-							return false;
-						}
-					}
-					remove( i->path());
-				}
+		//for ( ;	i != iend ; ++ i)
+		//{
+		//	if (is_directory( i->status()))
+		//	{
+		//		if ( ! DirectoryDelete( i->path().string()))
+		//		{
+		//			return false;
+		//		}
+		//	}
+		//	remove( i->path());
+		//}
 
-				remove( p_dirName);
-		*/
+		//remove( p_dirName);
 		return true;
 	}
 	catch ( ... )

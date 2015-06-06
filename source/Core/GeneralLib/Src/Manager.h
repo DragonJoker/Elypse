@@ -21,35 +21,37 @@ namespace General
 		public:
 			typedef std::map <std::string, TObj *> TypeMap;
 			TypeMap m_objectMap;
-		protected:
 
 		public:
-			Manager() {}
+			Manager()
+			{
+			}
+
 			~Manager()
 			{
 				Clear();
 			}
 
 		private:
-			Manager( const Manager & );
-			const Manager & operator =( const Manager & );
+			Manager( const Manager & ) = delete;
+			const Manager & operator =( const Manager & ) = delete;
 
 		public:
-			void Clear() throw()
+			void __declspec(nothrow) Clear()
 			{
 				General::Utils::map::deleteAll( m_objectMap );
 			}
 
 			bool AddElement( TObj * p_element )
 			{
-				const typename TypeMap::iterator & ifind = m_objectMap.find( p_element->GetName() );
+				auto && ifind = m_objectMap.find( p_element->GetName() );
 
 				if ( ifind != m_objectMap.end() )
 				{
 					return false;
 				}
 
-				m_objectMap.insert( typename TypeMap::value_type( p_element->GetName(), p_element ) );
+				m_objectMap.insert( std::make_pair( p_element->GetName(), p_element ) );
 				return true;
 			}
 
@@ -77,7 +79,7 @@ namespace General
 
 			TObj * RemoveElement( const std::string & p_key )
 			{
-				const typename TypeMap::iterator & ifind = m_objectMap.find( p_key );
+				auto && ifind = m_objectMap.find( p_key );
 
 				if ( ifind == m_objectMap.end() )
 				{

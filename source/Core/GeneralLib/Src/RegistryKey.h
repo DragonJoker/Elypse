@@ -5,17 +5,18 @@
 #if GENLIB_WINDOWS
 #	include "RegistryManager.h"
 #	include "Macros.h"
+#	include <memory>
 
 namespace General
 {
 	namespace Computer
 	{
-		template <typename T>
+		template< typename T >
 		class RegistryKeyBaseImpl
 		{
 		};
 
-		template <typename T>
+		template< typename T >
 		class d_dll RegistryKeyBase
 		{
 		private:
@@ -23,21 +24,17 @@ namespace General
 			RegistryKeyBase( const RegistryKeyBase & );
 		};
 
-		typedef RegistryKeyBase <std::string> RegistryKey;
-		typedef RegistryKeyBase <std::wstring> RegistryWKey;
+		typedef RegistryKeyBase< std::string > RegistryKey;
+		typedef RegistryKeyBase< std::wstring > RegistryWKey;
 
-		template <>
-		class d_dll RegistryKeyBase <std::string>
+		template<>
+		class d_dll RegistryKeyBase< std::string >
 		{
-			friend class RegistryKeyBaseImpl <std::string>;
+			friend class RegistryKeyBaseImpl< std::string >;
 
 		private:
 			typedef std::string _string_t;
 
-		private:
-			RegistryKeyBaseImpl <_string_t> * m_impl;
-			bool l_exists;
-
 		public:
 			RegistryKeyBase( RegistryFolder p_folder, const _string_t & p_keyName );
 			~RegistryKeyBase();
@@ -52,21 +49,20 @@ namespace General
 			bool SetStringExpandValue( const _string_t & p_name, const _string_t & p_value );
 			const _string_t & GetName()const;
 			_string_t GetStringValue( const _string_t & p_valueName );
+
+		private:
+			std::unique_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
+			bool m_exists;
 		};
 
-
-		template <>
-		class d_dll RegistryKeyBase <std::wstring>
+		template<>
+		class d_dll RegistryKeyBase< std::wstring >
 		{
-			friend class RegistryKeyBaseImpl <std::wstring>;
+			friend class RegistryKeyBaseImpl< std::wstring >;
 
 		private:
 			typedef std::wstring _string_t;
 
-		private:
-			RegistryKeyBaseImpl <_string_t> * m_impl;
-			bool l_exists;
-
 		public:
 			RegistryKeyBase( RegistryFolder p_folder, const _string_t & p_keyName );
 			~RegistryKeyBase();
@@ -81,6 +77,10 @@ namespace General
 			bool SetStringExpandValue( const _string_t & p_name, const _string_t & p_value );
 			const _string_t & GetName()const;
 			_string_t GetStringValue( const _string_t & p_valueName );
+
+		private:
+			std::unique_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
+			bool m_exists;
 		};
 	}
 }

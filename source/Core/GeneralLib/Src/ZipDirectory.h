@@ -5,7 +5,6 @@
 #include "ZipFile.h"
 #include "STLMapMacros.h"
 #include "File.h"
-#include "Converter.h"
 
 namespace General
 {

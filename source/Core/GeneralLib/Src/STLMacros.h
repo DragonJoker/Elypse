@@ -14,25 +14,22 @@ namespace General
 		class multimap
 		{
 		public:
-			template <typename T, typename U>
-			static inline void deleteAll( std::multimap <T, U *> & p_map )
+			template< typename T, typename U >
+			static inline void deleteAll( std::multimap< T, U * > & p_map )
 			{
-				typename std::multimap <T, U *> ::iterator i = p_map.begin();
-				const typename std::multimap <T, U *> ::iterator & iend = p_map.end();
-
-				for ( ; i != iend ; ++ i )
+				for ( auto && i : p_map )
 				{
-					delete i->second;
+					delete i.second;
 				}
 
 				p_map.clear();
 			}
 
-			template <typename T, typename U>
-			static inline bool hasCouple( const std::multimap <T, U> & p_map, const T & p_key, const U & p_subkey )
+			template< typename T, typename U >
+			static inline bool hasCouple( const std::multimap< T, U > & p_map, const T & p_key, const U & p_subkey )
 			{
-				typename std::multimap <T, U> ::const_iterator i = p_map.find( p_key );
-				const typename std::multimap <T, U> ::const_iterator & iend = p_map.end();
+				auto && i = p_map.find( p_key );
+				auto && iend = p_map.cend();
 
 				while ( i != iend && i->first == p_key )
 				{
@@ -47,11 +44,11 @@ namespace General
 				return false;
 			}
 
-			template <typename T, typename U>
-			static inline unsigned int count( const std::multimap <T, U> & p_map, const T & p_key )
+			template< typename T, typename U >
+			static inline unsigned int count( const std::multimap< T, U > & p_map, const T & p_key )
 			{
-				typename std::multimap <T, U> ::const_iterator i = p_map.find( p_key );
-				const typename std::multimap <T, U> ::const_iterator & iend = p_map.end();
+				auto && i = p_map.find( p_key );
+				auto && iend = p_map.cend();
 				unsigned int l_count = 0;
 
 				while ( i != iend && i->first == p_key )
@@ -63,57 +60,18 @@ namespace General
 				return l_count;
 			}
 
-			template <typename T, typename U>
-			static inline bool has( const std::multimap <T, U> & p_map, const T & p_key )
+			template< typename T, typename U >
+			static inline bool has( const std::multimap< T, U > & p_map, const T & p_key )
 			{
-				return p_map.find( p_key ) != p_map.end();
+				return p_map.find( p_key ) != p_map.cend();
 			}
 
-			template <typename T, typename U>
-			static inline void cycle( const std::multimap <T, U *> & p_map, void( U::* p_func )( void ) )
+			template< typename T, typename U, typename Func, typename ... Params >
+			static inline void cycle( const std::multimap< T, U * > & p_map, Func p_func, Params && ... p_params )
 			{
-				typename std::multimap <T, U *> ::const_iterator i = p_map.begin();
-				const typename std::multimap <T, U *> ::const_iterator & iend = p_map.end();
-
-				for ( ; i != iend; ++ i )
+				for ( auto && i : p_map )
 				{
-					( i->second->* p_func )();
-				}
-			}
-
-			template <typename T, typename U, typename Z>
-			static inline void cycle( const std::multimap <T, U *> & p_map, void( U::* p_func )( const Z & ), const Z & p_param )
-			{
-				typename std::multimap <T, U *>::const_iterator i = p_map.begin();
-				const typename std::multimap <T, U *>::const_iterator & iend = p_map.end();
-
-				for ( ; i != iend; ++ i )
-				{
-					( i->second->* p_func )( p_param );
-				}
-			}
-
-			template <typename T, typename U, typename Z>
-			static inline void cycle( const std::multimap <T, U *> & p_map, void( U::* p_func )( Z & ), Z & p_param )
-			{
-				typename std::multimap <T, U *> ::const_iterator i = p_map.begin();
-				const typename std::multimap <T, U *> ::const_iterator & iend = p_map.end();
-
-				for ( ; i != iend; ++ i )
-				{
-					( i->second->* p_func )( p_param );
-				}
-			}
-
-			template <typename T, typename U, typename Z>
-			static inline void cycle( const std::multimap <T, U *> & p_map, void( U::* p_func )( Z ), const Z & p_param )
-			{
-				typename std::multimap <T, U *> ::const_iterator i = p_map.begin();
-				const typename std::multimap <T, U *> ::const_iterator & iend = p_map.end();
-
-				for ( ; i != iend; ++ i )
-				{
-					( i->second->* p_func )( p_param );
+					( i.second->* p_func )( p_params... );
 				}
 			}
 		};
@@ -121,21 +79,19 @@ namespace General
 		class vector
 		{
 		public:
-			template <typename T>
-			static inline void deleteAll( std::vector <T *> & p_vector )
+			template< typename T >
+			static inline void deleteAll( std::vector< T * > & p_vector )
 			{
-				size_t imax = p_vector.size();
-
-				for ( size_t i = 0 ; i < imax ; i ++ )
+				for ( auto && i : p_vector )
 				{
-					delete p_vector[i];
+					delete i;
 				}
 
 				p_vector.clear();
 			}
 
-			template <typename T>
-			static inline void eraseValue( std::vector <T> & p_vector, const T & p_key )
+			template< typename T >
+			static inline void eraseValue( std::vector< T > & p_vector, const T & p_key )
 			{
 				for ( size_t i = 0 ; i < p_vector.size() ; )
 				{
@@ -150,24 +106,14 @@ namespace General
 				}
 			}
 
-			template <typename T>
-			static inline bool has( const std::vector <T> & p_vector, const T & p_key )
+			template< typename T >
+			static inline bool has( const std::vector< T > & p_vector, const T & p_key )
 			{
-				for ( size_t i = 0 ; i < p_vector.size() ; )
-				{
-					if ( p_vector[i] == p_key )
-					{
-						return true;
-					}
-
-					++ i;
-				}
-
-				return false;
+				return std::find( p_vector.cbegin(), p_vector.cend(), p_key ) != p_vector.end();
 			}
 
-			template <typename T>
-			static inline bool find( const std::vector <T> & p_vector, const T & p_key )
+			template< typename T >
+			static inline size_t find( const std::vector< T > & p_vector, const T & p_key )
 			{
 				for ( size_t i = 0 ; i < p_vector.size() ; )
 				{
@@ -182,39 +128,12 @@ namespace General
 				return std::string::npos;
 			}
 
-			template <typename T>
-			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( void ) )
+			template< typename T, typename Func, typename ... Params >
+			static inline void cycle( const std::vector< T * > & p_vector, Func p_func, Params && ... p_params )
 			{
 				for ( auto && l_element : p_vector )
 				{
-					( l_element->* p_func )();
-				}
-			}
-
-			template <typename T, typename U>
-			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( const U & ), const U & p_param )
-			{
-				for ( auto && l_element : p_vector )
-				{
-					( l_element->* p_func )( p_param );
-				}
-			}
-
-			template <typename T, typename U>
-			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( U & ), U & p_param )
-			{
-				for ( auto && l_element : p_vector )
-				{
-					( l_element->* p_func )( p_param );
-				}
-			}
-
-			template <typename T, typename U>
-			static inline void cycle( const std::vector <T *> & p_vector, void( T::* p_func )( U ), U p_param )
-			{
-				for ( auto && l_element : p_vector )
-				{
-					( l_element->* p_func )( p_param );
+					( l_element->* p_func )( p_params... );
 				}
 			}
 		};
@@ -222,15 +141,12 @@ namespace General
 		class list
 		{
 		public:
-			template <typename T>
-			static inline void deleteAll( std::list <T *> & p_list )
+			template< typename T >
+			static inline void deleteAll( std::list< T * > & p_list )
 			{
-				typename std::list <T *> ::iterator i = p_list.begin();
-				const typename std::list <T *> ::iterator & iend = p_list.end();
-
-				for ( ; i != iend ; ++ i )
+				for ( auto && i : p_list )
 				{
-					delete( * i );
+					delete i;
 				}
 
 				p_list.clear();

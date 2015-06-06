@@ -24,7 +24,7 @@ void * operator new( size_t p_size )
 		{
 			MemoryManager::Lock();
 
-			if ( l_ptr != NULL )
+			if ( l_ptr )
 			{
 				MemoryManager::GetSingleton().AddLocation( p_size, l_ptr, false );
 			}
@@ -53,7 +53,7 @@ void * operator new[]( size_t p_size )
 		{
 			MemoryManager::Lock();
 
-			if ( l_ptr != NULL )
+			if ( l_ptr )
 			{
 				MemoryManager::GetSingleton().AddLocation( p_size, l_ptr, true );
 			}

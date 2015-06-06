@@ -22,7 +22,7 @@ PhysicsEngine::~PhysicsEngine()
 	General::Utils::map::deleteAll( m_materials );
 }
 
-void PhysicsEngine::ClearAllUniverses() d_no_throw
+void __declspec(nothrow) PhysicsEngine::ClearAllUniverses()
 {
 	General::Utils::map::deleteAll( m_universes );
 }

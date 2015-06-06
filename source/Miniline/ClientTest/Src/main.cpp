@@ -53,7 +53,7 @@ int ClientMain()
 	l_buffer.writeArray<char>( "anonymous", 9 );
 
 	std::string l_mesg;
-	l_mesg.assign( l_buffer.c_str(), l_buffer.size() );
+	l_mesg.assign( l_buffer.data(), l_buffer.size() );
 
 	int l_max = 500;
 

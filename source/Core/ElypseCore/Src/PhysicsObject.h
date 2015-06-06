@@ -3,8 +3,6 @@
 
 #include "Module_Physics.h"
 
-#include <StateQueue.h>
-
 //#include <OgreUserDefinedObject.h>
 #include <OgreAxisAlignedBox.h>
 

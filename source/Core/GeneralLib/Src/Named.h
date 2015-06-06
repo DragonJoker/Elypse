@@ -9,12 +9,9 @@ namespace General
 {
 	namespace Theory
 	{
-		template<typename T = std::string>
+		template< typename T = std::string >
 		class namedBase
 		{
-		protected:
-			T m_name;
-
 		public:
 			namedBase( const T & p_name )
 				:	m_name( p_name )
@@ -28,10 +25,13 @@ namespace General
 			{
 				return m_name;
 			}
+
+		protected:
+			T m_name;
 		};
 
-		typedef namedBase<std::string> named;
-		typedef namedBase<std::string> namedW;
+		typedef namedBase< std::string > named;
+		typedef namedBase< std::wstring > wnamed;
 	}
 }
 

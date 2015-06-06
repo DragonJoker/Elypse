@@ -5,28 +5,31 @@ namespace General
 {
 	namespace Theory
 	{
-		template <typename T>
+		template< typename T >
 		class owned_by
 		{
-		protected:
-			T * m_owner;
-
 		public:
 			owned_by( T * p_owner = NULL )
 				:	m_owner( p_owner )
 			{
 			}
-			~owned_by() {}
 
-		public:
+			~owned_by()
+			{
+			}
+
 			inline T * GetOwner()const
 			{
 				return m_owner;
 			}
+
 			inline void SetOwner( T * p_owner )
 			{
 				m_owner = p_owner;
 			}
+
+		protected:
+			T * m_owner;
 		};
 	}
 }

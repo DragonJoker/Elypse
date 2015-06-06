@@ -19,7 +19,8 @@ using namespace General::Files;
 using namespace General::Utils;
 
 CURLManager::CURLManager( bool p_autoInitialise )
-	:	m_initialised( false )
+	: m_initialised( false )
+	, m_handle( NULL )
 {
 	if ( p_autoInitialise )
 	{
@@ -36,31 +37,33 @@ void CURLManager::Close()
 {
 	if ( m_initialised )
 	{
-		if ( m_handle != NULL )
+		if ( m_handle )
 		{
 			curl_easy_cleanup( m_handle );
 		}
 
 		curl_global_cleanup();
 		m_initialised = false;
+		m_handle = NULL;
 	}
 }
 
 bool CURLManager::Initialise()
 {
+	bool l_return = false;
 #if GENLIB_WINDOWS
 
-	if ( curl_global_init( CURL_GLOBAL_WIN32 ) != 0 )
+	if ( !curl_global_init( CURL_GLOBAL_WIN32 ) )
 #else
-	if ( curl_global_init( CURL_GLOBAL_NOTHING ) != 0 )
+	if ( !curl_global_init( CURL_GLOBAL_NOTHING ) )
 #endif
 	{
-		return false;
+		m_handle = curl_easy_init();
+		m_initialised = true;
+		l_return = ( m_handle != NULL );
 	}
 
-	m_handle = curl_easy_init();
-	m_initialised = true;
-	return ( m_handle != NULL );
+	return l_return;
 }
 
 CURLcode CURLManager::SetCookieFile( const char * p_filename )
@@ -75,7 +78,7 @@ CURLcode CURLManager::SetCookieString( const char * p_filename )
 
 CURLcode CURLManager::OpenUrl( const std::string & p_url, size_t ( * p_function )( void *, size_t, size_t, void * ), void * p_data, const std::string & p_postParams )
 {
-	if ( ! m_initialised || m_handle == NULL )
+	if ( !m_initialised || !m_handle )
 	{
 		return CURLE_FAILED_INIT;
 	}
@@ -87,9 +90,9 @@ CURLcode CURLManager::OpenUrl( const std::string & p_url, size_t ( * p_function 
 
 	do
 	{
-		if ( ! p_postParams.empty() )
+		if ( !p_postParams.empty() )
 		{
-			char * l_bufferPost = CStrCopy( p_postParams );
+			l_bufferPost = CStrCopy( p_postParams );
 			l_returnValue = curl_easy_setopt( m_handle, CURLOPT_POST, 1 );
 
 			if ( l_returnValue != CURLE_OK )
@@ -119,7 +122,7 @@ CURLcode CURLManager::OpenUrl( const std::string & p_url, size_t ( * p_function 
 			break;
 		}
 
-		if ( p_data != NULL )
+		if ( p_data )
 		{
 			l_returnValue = curl_easy_setopt( m_handle, CURLOPT_WRITEDATA, p_data );
 
@@ -134,7 +137,7 @@ CURLcode CURLManager::OpenUrl( const std::string & p_url, size_t ( * p_function 
 	l_returnValue = curl_easy_perform( m_handle );
 	delete [] l_buffer;
 
-	if ( l_bufferPost != NULL )
+	if ( l_bufferPost )
 	{
 		delete [] l_bufferPost;
 	}
@@ -144,7 +147,7 @@ CURLcode CURLManager::OpenUrl( const std::string & p_url, size_t ( * p_function 
 
 CURLcode CURLManager::GetStringFromUrl( const std::string & p_url, std::string & p_contents, const std::string & p_postParams )
 {
-	return OpenUrl( p_url, & CURLManager::_getString, & p_contents, p_postParams );
+	return OpenUrl( p_url, &CURLManager::_getString, & p_contents, p_postParams );
 }
 
 CURLcode CURLManager::DownloadFile( const std::string & p_url, const std::string & p_filename, const std::string & p_postParams )

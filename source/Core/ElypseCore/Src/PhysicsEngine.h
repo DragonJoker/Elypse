@@ -23,7 +23,7 @@ namespace EMuse
 			~PhysicsEngine();
 
 		public:
-			void ClearAllUniverses() d_no_throw;
+			void __declspec(nothrow) ClearAllUniverses();
 			void Update();
 			void Render();
 

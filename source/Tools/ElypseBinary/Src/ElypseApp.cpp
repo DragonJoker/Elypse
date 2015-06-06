@@ -9,7 +9,6 @@
 
 #include <StringConverter.h>
 #include <StringUtils.h>
-#include <ThreadId.h>
 #include <File.h>
 
 #include <wx/stdpaths.h>

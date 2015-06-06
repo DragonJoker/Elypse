@@ -20,11 +20,11 @@
 
 extern "C"
 {
-	__declspec( dllimport ) void			__stdcall Sleep( unsigned long );
-	__declspec( dllimport ) unsigned int	__stdcall GetWindowsDirectoryA( char * lpBuffer, unsigned int uSize );
-	__declspec( dllimport ) void			__stdcall QueryPerformanceCounter( long long * p_perfCount );
-	__declspec( dllimport ) void			__stdcall QueryPerformanceFrequency( long long * p_perfFreq );
-	__declspec( dllimport ) int			__stdcall GetSystemMetrics( int p_code );
+	__declspec( dllimport ) void __stdcall Sleep( unsigned long );
+	__declspec( dllimport ) unsigned int __stdcall GetWindowsDirectoryA( char * lpBuffer, unsigned int uSize );
+	__declspec( dllimport ) void __stdcall QueryPerformanceCounter( long long * p_perfCount );
+	__declspec( dllimport ) void __stdcall QueryPerformanceFrequency( long long * p_perfFreq );
+	__declspec( dllimport ) int __stdcall GetSystemMetrics( int p_code );
 }
 
 #	endif

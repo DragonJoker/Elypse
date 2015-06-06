@@ -20,40 +20,31 @@ namespace General
 {
 	namespace Templates
 	{
-		class WriteBuffer
+		template< typename StorageType >
+		class TWriteBuffer
 		{
-		private:
-			char * m_buffer;
-			char * m_currentIndex;
-
-			unsigned int m_capacity;
-			unsigned int m_size;
-
 		public:
-			WriteBuffer()
-				:	m_buffer( NULL ),
-					m_currentIndex( NULL ),
-					m_capacity( 0 ),
-					m_size( 0 )
+			TWriteBuffer()
+				: m_buffer( NULL )
+				, m_currentIndex( NULL )
+				, m_capacity( 0 )
+				, m_size( 0 )
 			{
-			}
-			WriteBuffer( char * p_buffer, unsigned int p_length )
-				:	m_buffer( p_buffer ),
-					m_currentIndex( p_buffer ),
-					m_capacity( p_length ),
-					m_size( 0 )
-			{
-				memset( m_buffer, 0, p_length );
+				static_assert( sizeof( StorageType ) == 1, "TWriteBuffer template storage type must be int8_t or uint8_t" );
 			}
 
-		private:
-			inline bool _canAdd( unsigned int p_size )
+			TWriteBuffer( StorageType * p_buffer, uint32_t p_length )
+				: TWriteBuffer()
 			{
-				return ( ( m_currentIndex - m_buffer ) + p_size ) <= m_capacity;
+				setBuffer( p_buffer, p_length );
 			}
 
-		public:
-			inline void SetBuffer( char * p_buffer, unsigned int p_length )
+			inline void createBuffer( uint32_t p_length )
+			{
+				setBuffer( new StorageType[p_length], p_length );
+			}
+
+			inline void setBuffer( StorageType * p_buffer, uint32_t p_length )
 			{
 				m_buffer = p_buffer;
 				m_currentIndex = p_buffer;
@@ -62,155 +53,191 @@ namespace General
 				memset( m_buffer, 0, p_length );
 			}
 
-			inline void CreateBuffer( unsigned int p_length )
+			template< typename T >
+			inline void write( T const & p_value )
 			{
-				m_buffer = new char [p_length];
-				m_currentIndex = m_buffer;
-				m_capacity = p_length;
-				m_size = 0;
-				memset( m_buffer, 0, p_length );
+				DoAdd( reinterpret_cast< StorageType const * >( &p_value ), sizeof( T ) );
 			}
 
-			template <typename T>
-			inline void write( const T & p_value )
+			template< typename T >
+			inline void writeArray( T const * p_value, uint32_t p_count )
 			{
-				if ( _canAdd( sizeof( T ) ) )
-				{
-					memcpy( m_currentIndex, & p_value, sizeof( T ) );
-					m_currentIndex += sizeof( T );
-					m_size += sizeof( T );
-				}
+				DoAdd( reinterpret_cast< StorageType const * >( p_value ), sizeof( T ) * p_count );
+			}
+		
+			inline void write( std::string const & p_value )
+			{
+				DoAdd( reinterpret_cast< StorageType const * >( p_value.c_str() ), static_cast< uint32_t >( p_value.length() ) );
 			}
 
-			template <typename T>
-			inline void writeArray( T const * p_value, unsigned int p_numItems )
-			{
-				if ( _canAdd( sizeof( T ) * p_numItems ) )
-				{
-					memcpy( m_currentIndex, p_value, sizeof( T ) * p_numItems );
-					m_currentIndex += sizeof( T ) * p_numItems;
-					m_size += sizeof( T ) * p_numItems;
-				}
-			}
-
-			template <typename T>
-			inline WriteBuffer & operator << ( const T & p_value )
+			template< typename T >
+			inline TWriteBuffer & operator << ( T const & p_value )
 			{
 				write( p_value );
 				return *this;
 			}
 
-		public:
-			inline char * c_str()
+			inline StorageType const * data()const
 			{
 				return m_buffer;
 			}
+
 			inline unsigned int length()const
 			{
 				return m_size;
 			}
+
 			inline unsigned int size()const
 			{
 				return m_size;
 			}
+
 			inline unsigned int capacity()const
 			{
 				return m_capacity;
 			}
+
+		private:
+			inline bool DoCanAdd( uint32_t p_size )
+			{
+				return ( ( m_currentIndex - m_buffer ) + p_size ) <= m_capacity;
+			}
+
+			inline void DoAdd( StorageType const * p_buffer, uint32_t p_size )
+			{
+				if ( DoCanAdd( p_size ) )
+				{
+					memcpy( m_currentIndex, p_buffer, p_size );
+					m_currentIndex += p_size;
+					m_size += p_size;
+				}
+			}
+
+		private:
+			StorageType * m_buffer;
+			StorageType * m_currentIndex;
+			uint32_t m_capacity;
+			uint32_t m_size;
 		};
-
-		template <>
-		inline void WriteBuffer::write <std::string> ( const std::string & p_value )
+		
+		template< typename StorageType >
+		class TReadBuffer
 		{
-			writeArray( p_value.c_str(), static_cast <unsigned int>( p_value.length() ) );
-		}
-
-		class ReadBuffer
-		{
-		private:
-			char * m_buffer;
-			char * m_currentIndex;
-
-			unsigned int m_size;
-
 		public:
-			ReadBuffer()
-				:	m_buffer( NULL ),
-					m_currentIndex( NULL ),
-					m_size( 0 )
+			TReadBuffer()
+				: m_buffer( NULL )
+				, m_currentIndex( NULL )
+				, m_size( 0 )
 			{
-			}
-			ReadBuffer( char * p_buffer, unsigned int p_length )
-				:	m_buffer( p_buffer ),
-					m_currentIndex( p_buffer ),
-					m_size( p_length )
-			{
-			}
-		private:
-			inline bool _canRead( unsigned int p_size )
-			{
-				return ( ( m_currentIndex - m_buffer ) + p_size ) <= m_size;
+				static_assert( sizeof( StorageType ) == 1, "TReadBuffer template storage type must be int8_t or uint8_t" );
 			}
 
-		public:
-			inline void SetBuffer( char * p_buffer, unsigned int p_length )
+			TReadBuffer( StorageType const * p_buffer, uint32_t p_length )
+				: TReadBuffer()
+			{
+				setBuffer( p_buffer, p_length );
+			}
+
+			inline void setBuffer( StorageType const * p_buffer, uint32_t p_length )
 			{
 				m_buffer = p_buffer;
 				m_currentIndex = p_buffer;
 				m_size = p_length;
 			}
 
-			template <typename T>
+			template< typename T >
 			inline T read()
 			{
 				T l_t;
 
-				if ( _canRead( sizeof( T ) ) )
+				if ( DoCanRead( sizeof( T ) ) )
 				{
-					memcpy( & l_t, m_currentIndex, sizeof( T ) );
+					memcpy( &l_t, m_currentIndex, sizeof( T ) );
 					m_currentIndex += sizeof( T );
 				}
 
 				return l_t;
 			}
 
-			template <typename T>
-			inline T * readArray( unsigned int p_num )
+			template< typename T >
+			inline T const * readArray( uint32_t p_num )
 			{
-				if ( _canRead( sizeof( T ) * p_num ) )
+				T const * l_return = NULL;
+
+				if ( DoCanRead( sizeof( T ) * p_num ) )
 				{
+					l_return = static_cast< T const * >( m_currentIndex - sizeof( T ) * p_num );
 					m_currentIndex += sizeof( T ) * p_num;
-					return static_cast <T *>( m_currentIndex - sizeof( T ) * p_num );
 				}
 
-				return NULL;
+				return l_return;
 			}
 
 			template <typename T>
-			inline ReadBuffer & operator >> ( T & p_value )
+			inline TReadBuffer & operator >> ( T & p_value )
 			{
-				p_value = read <T> ();
+				p_value = read< T > ();
 				return * this;
 			}
 
-		public:
-			inline unsigned int length()const
+			inline uint32_t length()const
 			{
 				return m_size;
 			}
-			inline unsigned int size()const
+
+			inline uint32_t size()const
 			{
 				return m_size;
 			}
-			inline unsigned int left()const
+
+			inline uint32_t left()const
 			{
 				return m_size + uint32_t( m_buffer - m_currentIndex );
 			}
-			inline char const * c_str()const
+
+			inline StorageType const * data()const
 			{
 				return m_buffer;
 			}
+
+		private:
+			inline bool DoCanRead( uint32_t p_size )
+			{
+				return ( ( m_currentIndex - m_buffer ) + p_size ) <= m_size;
+			}
+
+		private:
+			StorageType const * m_buffer;
+			StorageType const * m_currentIndex;
+			uint32_t m_size;
 		};
+
+		typedef TWriteBuffer< char > WriteBuffer;
+		typedef TReadBuffer< char > ReadBuffer;
+
+		template< typename StorageType >
+		TWriteBuffer< StorageType > make_wbuffer( StorageType * p_buffer, uint32_t p_size )
+		{
+			return TWriteBuffer< StorageType >( p_buffer, p_size );
+		}
+
+		template< typename StorageType, size_t Size >
+		TWriteBuffer< StorageType > make_wbuffer( StorageType ( & p_buffer )[Size] )
+		{
+			return TWriteBuffer< StorageType >( p_buffer, Size );
+		}
+
+		template< typename StorageType >
+		TReadBuffer< StorageType > make_rbuffer( StorageType * p_buffer, uint32_t p_size )
+		{
+			return TReadBuffer< StorageType >( p_buffer, p_size );
+		}
+
+		template< typename StorageType, size_t Size >
+		TReadBuffer< StorageType > make_rbuffer( StorageType const ( & p_buffer )[Size] )
+		{
+			return TReadBuffer< StorageType >( p_buffer, Size );
+		}
 	}
 }
 

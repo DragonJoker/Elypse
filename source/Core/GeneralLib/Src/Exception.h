@@ -13,24 +13,20 @@ namespace General
 		class GenException : public std::exception
 		{
 		public:
-			unsigned int m_line;
-			std::string m_description;
-			const char * m_filename;
-			const char * m_functionName;
-			const char * m_typeDesc;
-
-		public:
 			GenException(	const std::string & p_description, const char * p_file,
 							const char * p_function, unsigned int p_line )
-				:	m_line( p_line ),
-					m_description( p_description ),
-					m_filename( p_file ),
-					m_functionName( p_function )
-			{}
-			virtual ~GenException() d_no_throw {}
+				: m_line( p_line )
+				, m_description( p_description )
+				, m_filename( p_file )
+				, m_functionName( p_function )
+			{
+			}
+			virtual __declspec(nothrow) ~GenException()
+			{
+			}
 
 		public:
-			inline virtual const char * what() const d_no_throw
+			inline virtual const char * what() const
 			{
 				return m_description.c_str();
 			}
@@ -50,6 +46,13 @@ namespace General
 			{
 				return m_description;
 			}
+
+		public:
+			unsigned int m_line;
+			std::string m_description;
+			const char * m_filename;
+			const char * m_functionName;
+			const char * m_typeDesc;
 		};
 	}
 }

@@ -17,13 +17,6 @@ namespace General
 	{
 		class ComputerInfo
 		{
-		private:
-			unsigned int m_numScreens;
-			unsigned int m_mainScreenX;
-			unsigned int m_mainScreenY;
-			OSVERSIONINFO m_operatingSystem;
-			MEMORYSTATUSEX m_memoryStatus;
-
 		public:
 			ComputerInfo()
 			{
@@ -70,7 +63,6 @@ namespace General
 			{
 				return General::Utils::ToString( m_operatingSystem.szCSDVersion );
 			}
-
 			inline unsigned long long GetTotalPhysicalMemory()const
 			{
 				return m_memoryStatus.ullTotalPhys >> 10;
@@ -88,6 +80,13 @@ namespace General
 				unsigned char SwapTest[2] = { 1, 0 };
 				return ( *( short * ) SwapTest == 1 );
 			}
+
+		private:
+			unsigned int m_numScreens;
+			unsigned int m_mainScreenX;
+			unsigned int m_mainScreenY;
+			OSVERSIONINFO m_operatingSystem;
+			MEMORYSTATUSEX m_memoryStatus;
 		};
 	}
 }

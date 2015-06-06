@@ -11,14 +11,11 @@ namespace General
 	{
 		class FunctionTracker
 		{
-			const char * m_file;
-			const char * m_function;
-			const unsigned int m_line;
 		public:
 			FunctionTracker( const char * p_function, const char * p_file, unsigned int p_line )
-				:	m_function( p_function ),
-					m_file( p_file ),
-					m_line( p_line )
+				: m_function( p_function )
+				, m_file( p_file )
+				, m_line( p_line )
 			{
 				std::cout << "Entered Function : " << m_function << " in " << m_file << ", line " << m_line << std::endl;
 			}
@@ -26,6 +23,11 @@ namespace General
 			{
 				std::cout << "Exited Function : " << m_function << " in " << m_file << ", line " << m_line << std::endl;
 			}
+
+		private:
+			const char * m_file;
+			const char * m_function;
+			const unsigned int m_line;
 		};
 	}
 }

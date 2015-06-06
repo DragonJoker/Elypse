@@ -11,7 +11,7 @@ namespace General
 {
 	namespace Computer
 	{
-		template <typename T>
+		template< typename T >
 		class RegistryKeyBase;
 
 		enum RegistryFolder
@@ -20,17 +20,12 @@ namespace General
 			RF_HKCU
 		};
 
-		template <typename T>
+		template< typename T >
 		class RegistryManager
 		{
 		private:
-			typedef RegistryKeyBase<T> RegistryKeyType;
-
-			RegistryFolder m_folder;
-
-			typedef std::map <T, RegistryKeyType *> RegistryMap;
-
-			RegistryMap m_registeryKeys;
+			typedef RegistryKeyBase< T > RegistryKeyType;
+			typedef std::map< T, RegistryKeyType > RegistryMap;
 
 		public:
 			RegistryManager()
@@ -39,77 +34,80 @@ namespace General
 			}
 			~RegistryManager()
 			{
-				General::Utils::map::deleteAll( m_registeryKeys );
+				m_registeryKeys.clear();
 			}
 
-		private:
-			RegistryKeyType * _getKey( const T & p_keyName )
-			{
-				return General::Utils::map::findOrNull( m_registeryKeys, p_keyName );
-			}
-
-			RegistryKeyType * _createKey( const T & p_keyName )
-			{
-				RegistryKeyType * l_key = new RegistryKeyType( m_folder, p_keyName );
-				m_registeryKeys.insert( RegistryMap::value_type( p_keyName, l_key ) );
-				return l_key;
-			}
-
-			RegistryKeyType * _getOrCreateKey( const T & p_keyName )
-			{
-				RegistryKeyType * l_key = _getKey( p_keyName );
-
-				if ( l_key == NULL )
-				{
-					l_key = _createKey( p_keyName );
-				}
-
-				return l_key;
-			}
-
-		public:
 			void SetFolder( RegistryFolder p_folder )
 			{
 				m_folder = p_folder;
-				General::Utils::map::deleteAll( m_registeryKeys );
+				m_registeryKeys.clear();
 			}
 
 			bool KeyExists( const T & p_keyName )
 			{
-				return _getOrCreateKey( p_keyName )->IsValid();
+				return DoGetOrCreateKey( p_keyName ).IsValid();
 			}
 
 			bool CreateKey( const T & p_keyName )
 			{
-				return _getOrCreateKey( p_keyName )->Create();
+				return DoGetOrCreateKey( p_keyName ).Create();
 			}
 
 			RegistryKeyType * GetKey( const T & p_keyName )
 			{
-				RegistryKeyType * l_key = _getKey( p_keyName );
+				RegistryKeyType * l_return = NULL;
+				typename RegistryMap::iterator l_it = DoGetKey( p_keyName );
 
-				if ( l_key != NULL )
+				if ( l_it != m_registeryKeys.end() )
 				{
-					l_key->Create();
-					return l_key;
+					l_return = &l_it->second;
+					l_return->Create();
+				}
+				else
+				{
+					l_it = DoCreateKey( p_keyName );
+					l_return = &l_it->second;
+
+					if ( l_return->IsValid() )
+					{
+						l_return->Create();
+					}
 				}
 
-				l_key = _createKey( p_keyName );
-
-				if ( l_key->IsValid() )
-				{
-					l_key->Create();
-					return l_key;
-				}
-
-				return NULL;
+				return l_return;
 			}
 
 			bool DeleteKey( const T & p_keyName )
 			{
-				return _getOrCreateKey( p_keyName )->Delete();
+				return DoGetOrCreateKey( p_keyName )->Delete();
+			}
+			
+		private:
+			typename RegistryMap::iterator DoGetKey( const T & p_keyName )
+			{
+				return m_registeryKeys.find( p_keyName );
 			}
 
+			typename RegistryMap::iterator DoCreateKey( const T & p_keyName )
+			{
+				return m_registeryKeys.insert( std::make_pair( p_keyName, RegistryKeyType( m_folder, p_keyName ) ) ).first;
+			}
+
+			typename RegistryMap::iterator DoGetOrCreateKey( const T & p_keyName )
+			{
+				auto && l_it = DoGetKey( p_keyName );
+
+				if ( l_it == m_registeryKeys.end() )
+				{
+					l_it = DoCreateKey( p_keyName );
+				}
+
+				return l_it;
+			}
+
+		private:
+			RegistryFolder m_folder;
+			RegistryMap m_registeryKeys;
 		};
 	}
 }

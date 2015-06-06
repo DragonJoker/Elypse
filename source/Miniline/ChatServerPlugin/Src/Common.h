@@ -14,8 +14,10 @@ namespace General
 {
 	namespace Templates
 	{
-		class WriteBuffer;
-		class ReadBuffer;
+		template< typename StorageType > class TWriteBuffer;
+		template< typename StorageType > class TReadBuffer;
+		typedef TWriteBuffer< char > WriteBuffer;
+		typedef TReadBuffer< char > ReadBuffer;
 	}
 }
 

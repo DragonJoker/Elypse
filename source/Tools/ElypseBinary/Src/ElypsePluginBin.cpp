@@ -3,8 +3,6 @@
 
 #include <OgreStringConverter.h>
 
-#include <ThreadId.h>
-
 EMusePlugin_Binary :: EMusePlugin_Binary()
 {
 }
@@ -27,9 +25,9 @@ void EMusePlugin_Binary :: LockGui()
 {
 	if ( ! wxIsMainThread() )
 	{
-//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX LOCK GUI START on thread : " + StringConverter::toString( GENLIB_THREAD_ID()));
+//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX LOCK GUI START on thread : " + ToString( std::this_thread::get_id()));
 		wxMutexGuiEnter();
-//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX LOCK GUI END on thread : " + StringConverter::toString( GENLIB_THREAD_ID()));
+//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX LOCK GUI END on thread : " + ToString( std::this_thread::get_id()));
 	}
 }
 
@@ -38,9 +36,9 @@ void EMusePlugin_Binary :: UnlockGui()
 	// 3 cookies for the first one who can tell me what this changes. except it does change a lot. Prevents a bug.
 	if ( ! wxIsMainThread() )
 	{
-//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX UNLOCK GUI START on thread : " + StringConverter::toString( GENLIB_THREAD_ID()));
+//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX UNLOCK GUI START on thread : " + ToString( std::this_thread::get_id()));
 		wxMutexGuiLeave();
-//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX UNLOCK GUI END on thread : " + StringConverter::toString( GENLIB_THREAD_ID()));
+//		EMUSE_CONSOLE_MESSAGE_RELEASE( "WX UNLOCK GUI END on thread : " + ToString( std::this_thread::get_id()));
 	}
 }
 

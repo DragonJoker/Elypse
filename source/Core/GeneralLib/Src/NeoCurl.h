@@ -5,6 +5,8 @@
 #include "Config.h"
 
 #include <string>
+#include <functional>
+
 #include <curl/curl.h>
 /*
 #if GENLIB_WINDOWS
@@ -23,10 +25,6 @@ namespace General
 	{
 		class CURLManager
 		{
-		private:
-			CURL * m_handle;
-			bool m_initialised;
-
 		public:
 			CURLManager( bool p_autoInitialise = true );
 			~CURLManager();
@@ -53,6 +51,10 @@ namespace General
 			static size_t _getString( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
 			static size_t _download( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
 			static size_t _null( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
+
+		private:
+			CURL * m_handle;
+			bool m_initialised;
 		};
 	}
 }
