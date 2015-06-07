@@ -72,7 +72,7 @@ void PhysicsSimulation::_initialiseDefaultSpaces()
 	m_staticSpace->SetInternalCollisions( false );
 }
 
-void __declspec(nothrow) PhysicsSimulation::ClearObjects( bool p_recreateDefaults )
+void __declspec( nothrow ) PhysicsSimulation::ClearObjects( bool p_recreateDefaults )
 {
 	_clearContacts();
 
@@ -89,7 +89,7 @@ void __declspec(nothrow) PhysicsSimulation::ClearObjects( bool p_recreateDefault
 	}
 }
 
-void __declspec(nothrow) PhysicsSimulation::ClearSpaces( bool p_recreateDefaults )
+void __declspec( nothrow ) PhysicsSimulation::ClearSpaces( bool p_recreateDefaults )
 {
 	General::Utils::map::deleteAll( m_spaces );
 

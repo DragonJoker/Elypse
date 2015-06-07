@@ -4,7 +4,7 @@
 #include <wx/listbox.h>
 #include <wx/textctrl.h>
 
-#include "DataWriter.h"
+#include <DataWriter.h>
 
 class MuseWriterDlg
 	: public wxDialog

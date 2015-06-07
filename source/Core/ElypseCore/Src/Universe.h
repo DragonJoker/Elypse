@@ -36,7 +36,7 @@ namespace EMuse
 		public:
 			void AddZone( Zone * p_zone );
 			void SetRenderTarget( RenderTarget * p_renderTarget );
-			void __declspec(nothrow) ClearScene();
+			void __declspec( nothrow ) ClearScene();
 
 		public:
 			inline Camera 	*		GetCamera()const

@@ -9,7 +9,17 @@
 
 wxString Troll::GUI::make_wxString( String const & p_value )
 {
-	return wxString( p_value.c_str(), wxMBConvLibc() );
+	return make_wxString( p_value.c_str() );
+}
+
+wxString Troll::GUI::make_wxString( char const * p_value )
+{
+	return wxString( p_value, wxMBConvLibc() );
+}
+
+std::string Troll::GUI::make_string( wxString const & p_in )
+{
+	return p_in.char_str().data();
 }
 
 

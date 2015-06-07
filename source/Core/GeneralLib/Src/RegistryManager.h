@@ -81,7 +81,7 @@ namespace General
 			{
 				return DoGetOrCreateKey( p_keyName )->Delete();
 			}
-			
+
 		private:
 			typename RegistryMap::iterator DoGetKey( const T & p_keyName )
 			{

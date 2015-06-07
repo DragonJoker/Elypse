@@ -11,9 +11,31 @@
 
 #include "EMuseLogs.h"
 
+namespace EMuse
+{
+	namespace Script
+	{
+		class CompileError
+			: public General::Utils::GenException
+		{
+		public:
+			CompileError( const std::string & p_description, const char * p_file, const char * p_function, unsigned int p_line )
+				: General::Utils::GenException( p_description, p_file, p_function, p_line )
+			{
+			}
+
+			virtual __declspec( nothrow ) ~CompileError()
+			{
+			}
+		};
+	}
+}
+
+#define COMPILE_EXCEPTION( p_text) throw EMuse::Script::CompileError( p_text, __FILE__, __FUNCTION__, __LINE__)
+
 #define COMPILE_ERROR_IN_BLOCK( p_desc, p_block)												\
 	_error();																					\
-	GENLIB_EXCEPTION(	"Compiler Error : [" + _getScriptFileName() + " @ L# "					\
+	COMPILE_EXCEPTION(	"Compiler Error : [" + _getScriptFileName() + " @ L# "					\
 						+ StringConverter::toString( p_block->m_lineNumBegin)					\
 						+ " ] -> " + p_desc )
 

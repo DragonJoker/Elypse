@@ -21,7 +21,7 @@ namespace General
 				, m_functionName( p_function )
 			{
 			}
-			virtual __declspec(nothrow) ~GenException()
+			virtual __declspec( nothrow ) ~GenException()
 			{
 			}
 

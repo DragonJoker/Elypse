@@ -258,12 +258,11 @@ bool General::Files::DirectoryDelete( const std::wstring & p_dirName )
 	}
 }
 
-bool General::Files::ListDirectoryFiles( General::Utils::Path const & p_folderPath, std::vector< General::Utils::Path > & p_files, bool p_recursive )
+void General::Files::ListDirectoryFiles( General::Utils::Path const & p_folderPath, std::function< void( General::Utils::Path const & ) > p_function, bool p_recursive )
 {
-	bool l_bReturn = false;
 #if defined( _WIN32 )
 	WIN32_FIND_DATAA l_findData;
-	HANDLE l_hHandle = ::FindFirstFileA( ( p_folderPath / "*.*" ).c_str(), &l_findData );
+	HANDLE l_hHandle = ::FindFirstFileA( ( p_folderPath + d_path_slash + std::string( "*.*" ) ).c_str(), &l_findData );
 	std::string l_strBuffer;
 
 	if ( l_hHandle != INVALID_HANDLE_VALUE )
@@ -272,35 +271,37 @@ bool General::Files::ListDirectoryFiles( General::Utils::Path const & p_folderPa
 
 		if ( l_strBuffer != "." && l_strBuffer != ".." )
 		{
-			p_files.push_back( l_strBuffer );
+			p_function( l_strBuffer );
 		}
 
-		l_bReturn = true;
-
-		while ( l_bReturn )
+		while ( ::FindNextFileA( l_hHandle, &l_findData ) )
 		{
-			if ( ::FindNextFileA( l_hHandle, &l_findData ) && l_findData.cFileName != l_strBuffer )
+			if ( l_findData.cFileName != l_strBuffer )
 			{
 				l_strBuffer = l_findData.cFileName;
 
-				if ( l_strBuffer != "." && l_strBuffer != ".." )
+				if ( ( l_findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY )
 				{
-					p_files.push_back( p_folderPath / l_strBuffer );
+					if ( p_recursive )
+					{
+						ListDirectoryFiles( General::Utils::Path( p_folderPath + d_path_slash + l_strBuffer ), p_function, p_recursive );
+					}
+				}
+				else
+				{
+					if ( l_strBuffer != "." && l_strBuffer != ".." )
+					{
+						p_function( p_folderPath + d_path_slash + l_strBuffer );
+					}
 				}
 			}
-			else
-			{
-				l_bReturn = false;
-			}
 		}
-
-		l_bReturn = true;
 	}
 
 #elif defined( __linux__ )
 	DIR * l_pDir;
 
-	if ( ( l_pDir = opendir( p_folderPath.c_str() ) ) == NULL )
+	if ( !( l_pDir = opendir( p_folderPath.c_str() ) ) )
 	{
 		switch ( errno )
 		{
@@ -336,29 +337,36 @@ bool General::Files::ListDirectoryFiles( General::Utils::Path const & p_folderPa
 			std::cerr << "Can't open dir : Unknown error - Directory : " << p_folderPath;
 			break;
 		}
-
-		l_bReturn = false;
 	}
 	else
 	{
+		unsigned char const l_isFile = 0x8;
 		dirent * l_pDirent;
 
 		while ( ( l_pDirent = readdir( l_pDir ) ) != NULL )
 		{
-			if ( strcmp( l_pDirent->d_name, "." ) )
+			if ( strcmp( l_pDirent->d_name, "." ) && strcmp( l_pDirent->d_name, ".." ) )
 			{
-				p_files.push_back( p_folderPath / l_pDirent->d_name );
+				if ( l_pDirent->d_type == l_isFile )
+				{
+					if ( p_recursive )
+					{
+						ListDirectoryFiles( General::Utils::Path( p_folderPath + d_path_slash + std::string( l_pDirent->d_name ) ), p_function, p_recursive );
+					}
+				}
+				else
+				{
+					p_function( p_folderPath + d_path_slash + std::string( l_pDirent->d_name ) );
+				}
 			}
 		}
 
 		closedir( l_pDir );
-		l_bReturn = true;
 	}
 
 #else
 #	error "Unsupported platform"
 #endif
-	return l_bReturn;
 }
 
 #endif

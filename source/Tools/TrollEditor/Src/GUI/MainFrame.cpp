@@ -1,5 +1,19 @@
 ﻿#include "PrecompiledHeader.h"
 
+#include <wx/aui/auibook.h>
+#include <wx/chartype.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
+#include <wx/filepicker.h>
+#include <wx/frame.h>
+#include <wx/menu.h>
+#include <wx/menuitem.h>
+#include <wx/msgdlg.h>
+#include <wx/stdpaths.h>
+#include <wx/string.h>
+#include <wx/textdlg.h>
+#include <wx/toolbar.h>
+
 #include "MainFrame.h"
 
 #include "StcTextEditor.hpp"
@@ -10,6 +24,7 @@
 #include "NewProjectFrame.h"
 #include "NewSceneFrame.h"
 #include "SceneDependenciesFrame.h"
+#include "LogListBox.h"
 #include "FunctionsTree.h"
 #include "FilesTree.h"
 #include "ObjectsTree.h"
@@ -45,6 +60,9 @@
 
 #include <File.h>
 #include <StringUtils.h>
+
+#include <ScriptEngine.h>
+#include <ScriptNode.h>
 
 using namespace Troll::Temporal;
 
@@ -150,7 +168,7 @@ namespace Troll
 
 				if ( !wxDirExists( sFrom ) )
 				{
-					wxLogError( wxT( "%s does not exist!\r\nCan not copy directory" ), sFrom.c_str() );
+					std::cerr << "Can not copy directory" << sFrom << ", it does not exist" << std::endl;
 					return false;
 				}
 
@@ -158,7 +176,7 @@ namespace Troll
 				{
 					if ( !wxFileName::Mkdir( sTo, 0777, wxPATH_MKDIR_FULL ) )
 					{
-						wxLogError( wxT( "%s could not be created!" ), sTo.c_str() );
+						std::cerr << "Could not create " << sFrom << std::endl;
 						return false;
 					}
 				}
@@ -185,7 +203,7 @@ namespace Troll
 
 						if ( !wxCopyFile( sFileFrom, sFileTo ) )
 						{
-							wxLogError( wxT( "Could not copy %s to %s !" ), sFileFrom.c_str(), sFileTo.c_str() );
+							std::cerr << "Can not copy " << sFileFrom << ", to " << sFileTo << std::endl;
 							return false;
 						}
 					}
@@ -195,6 +213,56 @@ namespace Troll
 
 				return true;
 			}
+
+			class LogStreambuf
+				: public std::streambuf
+			{
+			public:
+				LogStreambuf( wxString const & p_prefix, wxTextCtrl * p_log )
+					: m_prefix( p_prefix )
+					, m_log( p_log )
+				{
+				}
+
+				int_type overflow( int_type c = traits_type::eof() ) override
+				{
+					if ( traits_type::eq_int_type( c, traits_type::eof() ) )
+					{
+						sync();
+					}
+					else
+					{
+						m_buffer << traits_type::to_char_type( c );
+					}
+
+					return c;
+				}
+
+				int sync() override
+				{
+					if ( !m_buffer.empty() )
+					{
+						if ( m_buffer != "\n" )
+						{
+							( *m_log ) << m_prefix << wxT( " " ) << m_buffer;
+						}
+						else
+						{
+							( *m_log ) << wxT( "\n" );
+						}
+
+						m_buffer.clear();
+					}
+
+					return 0;
+				}
+
+			private:
+				wxString m_buffer;
+				wxTextCtrl * m_log;
+				std::string m_prefix;
+			};
+
 		}
 
 		MainFrame * g_mainFrame;
@@ -336,13 +404,9 @@ namespace Troll
 			m_mainPanel = new wxPanel( this );
 			m_mainPanel->SetSize( GetClientSize() );
 			m_sceneDependencies = new SceneDependenciesFrame( this );
-			m_splitterH = new wxSplitterWindow( m_mainPanel, HorizSplitter,
-												wxDefaultPosition, GetClientSize(),
-												wxBORDER_NONE | wxSP_NOBORDER | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN, wxT( "Horizontal Splitter" ) );
+			m_splitterH = new wxSplitterWindow( m_mainPanel, HorizSplitter, wxDefaultPosition, GetClientSize(), wxBORDER_NONE | wxSP_NOBORDER | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN, wxT( "Horizontal Splitter" ) );
 			m_splitterH->SetMinimumPaneSize( 24 );
-			m_splitterV = new wxSplitterWindow( m_splitterH, VerticSplitter,
-												wxDefaultPosition, GetClientSize(),
-												wxBORDER_NONE | wxSP_NOBORDER | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN, wxT( "Vertical Splitter" ) );
+			m_splitterV = new wxSplitterWindow( m_splitterH, VerticSplitter, wxDefaultPosition, GetClientSize(), wxBORDER_NONE | wxSP_NOBORDER | wxSP_LIVE_UPDATE | wxCLIP_CHILDREN, wxT( "Vertical Splitter" ) );
 			m_splitterV->SetMinimumPaneSize( 170 );
 			// listbox for code completion
 			m_listBox = new AutoCompletionListBox( m_mainPanel, ListBox, wxDefaultPosition, wxDefaultSize, m_choices );
@@ -354,14 +418,12 @@ namespace Troll
 			//files list
 			m_filesListContainer = new wxPanel( m_treeTabsContainer, FilesList, wxPoint( 0, 0 ), m_treeTabsContainer->GetClientSize() );
 			m_treeTabsContainer->InsertPage( 0, m_filesListContainer, wxT( "Fichiers" ), true );
-			m_filesList = new FilesTree( m_filesListContainer, wxDefaultPosition, m_filesListContainer->GetClientSize(),
-										 wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
+			m_filesList = new FilesTree( m_filesListContainer, wxDefaultPosition, m_filesListContainer->GetClientSize(), wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
 			m_filesList->InitProjet( wxT( "Projet" ) );
 			//functions list
 			m_functionsListContainer = new wxPanel( m_treeTabsContainer, FunctionsList, wxPoint( 0, 0 ), m_treeTabsContainer->GetClientSize() );
 			m_treeTabsContainer->InsertPage( 1, m_functionsListContainer, wxT( "Fonctions" ), false );
-			m_functionsList = new FunctionsTree( m_functionsListContainer, wxDefaultPosition, m_functionsListContainer->GetClientSize(),
-												 wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
+			m_functionsList = new FunctionsTree( m_functionsListContainer, wxDefaultPosition, m_functionsListContainer->GetClientSize(), wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
 			m_functionsList->AddFunctionsToTree();
 			TrollScriptCompiler l_compiler( "", true );
 			l_compiler.Initialise( NULL );
@@ -370,20 +432,22 @@ namespace Troll
 			// debug log
 			m_debugLogContainer = new wxPanel( m_logTabsContainer, DebugLogs, wxPoint( 0, 0 ), m_logTabsContainer->GetClientSize() );
 			m_logTabsContainer->InsertPage( 0, m_debugLogContainer, wxT( "Debug" ), true );
-			m_debugLog = new wxTextCtrl( m_debugLogContainer, wxID_ANY, wxT( "" ), wxDefaultPosition, m_debugLogContainer->GetClientSize(),
-										 wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY | wxTE_RICH );
+			m_debugLog = new wxTextCtrl( m_debugLogContainer, wxID_ANY, wxT( "" ), wxDefaultPosition, m_debugLogContainer->GetClientSize(), wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY | wxTE_RICH );
 			// compilation log
 			m_compilationLogContainer = new wxPanel( m_logTabsContainer, CompilationLogs, wxPoint( 0, 0 ), m_logTabsContainer->GetClientSize() );
 			m_logTabsContainer->InsertPage( 1, m_compilationLogContainer, wxT( "Compilation" ), false );
-			m_compilationLog = new LogCtrl( m_compilationLogContainer, wxID_ANY, wxT( "" ), wxDefaultPosition, m_compilationLogContainer->GetClientSize(),
-											wxTE_MULTILINE | wxSUNKEN_BORDER | wxTE_READONLY | wxTE_RICH );
+			m_compilationLog = new LogCtrl( m_compilationLogContainer, wxID_ANY, wxDefaultPosition, m_compilationLogContainer->GetClientSize(), wxSUNKEN_BORDER );
 			DoCreateTreeWithDefStyle();
 			//m_menuBar->Check( TreeTest_ToggleImages, false);
 			m_logDebug = new wxLogTextCtrl( m_debugLog );
-			m_logCompilation = new wxLogTextCtrl( m_compilationLog );
+			m_logCompilation = new wxLogListBox( m_compilationLog );
 			m_splitterV->SplitVertically( m_treeTabsContainer, m_mainTabsContainer, m_treesWidth );
 			m_splitterH->SplitHorizontally( m_splitterV, m_logTabsContainer, 0 - m_logsHeight );
 			DoResize();
+
+			std::cout.rdbuf( new LogStreambuf( wxT( "[--]" ), m_debugLog ) );
+			std::clog.rdbuf( new LogStreambuf( wxT( "[  ]" ), m_debugLog ) );
+			std::cerr.rdbuf( new LogStreambuf( wxT( "[EE]" ), m_debugLog ) );
 		}
 
 		MainFrame::~MainFrame()
@@ -608,7 +672,7 @@ namespace Troll
 			if ( m_splitterV != NULL && m_splitterH != NULL )
 			{
 				wxSize l_size = GetClientSize();
-				//		std::cout << "MainFrame::DoResize - Width : " << l_size.x << " - Height : " << l_size.y << "\n";
+				//std::cout << "MainFrame::DoResize - Width : " << l_size.x << " - Height : " << l_size.y << "\n";
 				m_splitterH->SetSize( l_size );
 				m_splitterH->SetSashPosition( m_splitterH->GetClientSize().y - m_logsHeight );
 				m_splitterV->SetSize( l_size.x, l_size.y - m_logsHeight );
@@ -631,18 +695,18 @@ namespace Troll
 				l_scenePath += p_scene->GetName() + wxFileName::GetPathSeparator();
 			}
 
-			DataWriter l_dataWriter( m_compilationLog );
+			DataWriter l_dataWriter;
 
 			for ( auto && l_folder : p_scene->m_dataFolders )
 			{
 				LogDebugMessage( wxT( "MainFrame::Musiner - Data Folder - " ) + l_scenePath + l_folder->FileName );
-				l_dataWriter.AddFolder( l_scenePath + l_folder->FileName, EM_BLOCK_ZIPSNDDATA );
+				l_dataWriter.AddFolder( make_string( l_scenePath + l_folder->FileName ), EM_BLOCK_ZIPSNDDATA );
 			}
 
 			for ( auto && l_file : p_scene->m_sceneFiles )
 			{
 				LogDebugMessage( wxT( "MainFrame::Musiner - Scene File - " ) + l_scenePath + l_file->FileName );
-				l_dataWriter.AddFile( l_scenePath + l_file->FileName );
+				l_dataWriter.AddFile( make_string( l_scenePath + l_file->FileName ) );
 			}
 
 			if ( p_withScripts )
@@ -650,14 +714,14 @@ namespace Troll
 				for ( auto && l_file : p_scene->m_loadScriptFiles )
 				{
 					LogDebugMessage( wxT( "MainFrame::Musiner - Load Script File - " ) + l_scenePath + l_file->FileName );
-					l_dataWriter.AddFile( l_scenePath + l_file->FileName );
+					l_dataWriter.AddFile( make_string( l_scenePath + l_file->FileName ) );
 				}
 
 
 				for ( auto && l_file : p_scene->m_unloadScriptFiles )
 				{
 					LogDebugMessage( wxT( "MainFrame::Musiner - Unload Script File - " ) + l_scenePath + l_file->FileName );
-					l_dataWriter.AddFile( l_scenePath + l_file->FileName );
+					l_dataWriter.AddFile( make_string( l_scenePath + l_file->FileName ) );
 				}
 			}
 
@@ -665,21 +729,21 @@ namespace Troll
 			{
 				LogDebugMessage( wxT( "MainFrame::Musiner - Data file - " ) + l_scenePath + l_folder->FileName );
 				ZipFolder( l_scenePath + l_folder->FileName, l_scenePath + l_folder->FileName + wxT( ".zip" ) );
-				l_dataWriter.AddFile( l_scenePath + l_folder->FileName + wxT( ".zip" ) );
+				l_dataWriter.AddFile( make_string( l_scenePath + l_folder->FileName + wxT( ".zip" ) ) );
 			}
 
 			if ( p_scene == p_project->GetMainScene() )
 			{
 				if ( p_createMain )
 				{
-					l_dataWriter.AddFile( p_mainFile );
+					l_dataWriter.AddFile( make_string( p_mainFile ) );
 				}
 
-				l_dataWriter.Write( l_projectPath + p_project->GetName() + wxT( ".muse" ) );
+				l_dataWriter.Write( make_string( l_projectPath + p_project->GetName() + wxT( ".muse" ) ) );
 			}
 			else
 			{
-				l_dataWriter.Write( l_projectPath + p_project->GetName() + wxT( "_" ) + p_scene->GetName() + wxT( ".muse" ) );
+				l_dataWriter.Write( make_string( l_projectPath + p_project->GetName() + wxT( "_" ) + p_scene->GetName() + wxT( ".muse" ) ) );
 			}
 		}
 
@@ -719,22 +783,22 @@ namespace Troll
 				TrollScene * l_scene = p_project->GetMainScene();
 				wxString l_mainFile = CreateOverlayEditorMain( p_project );
 				wxString l_path = p_project->GetPath();
-				DataWriter l_dataWriter( m_compilationLog );
+				DataWriter l_dataWriter;
 
 				for ( auto && l_file : l_scene->m_sceneFiles )
 				{
 					LogDebugMessage( wxT( "MainFrame::Musiner - TrollScene File - " ) + l_path + l_file->FileName );
-					l_dataWriter.AddFile( l_path + l_file->FileName );
+					l_dataWriter.AddFile( make_string( l_path + l_file->FileName ) );
 				}
 
 				for ( auto && l_file : l_scene->m_loadScriptFiles )
 				{
 					LogDebugMessage( wxT( "MainFrame::Musiner - Load Script File - " ) + l_path + l_file->FileName );
-					l_dataWriter.AddFile( l_path + l_file->FileName );
+					l_dataWriter.AddFile( make_string( l_path + l_file->FileName ) );
 				}
 
-				l_dataWriter.AddFile( l_mainFile );
-				l_dataWriter.Write( l_path + p_project->GetName() + wxT( ".muse" ) );
+				l_dataWriter.AddFile( make_string( l_mainFile ) );
+				l_dataWriter.Write( make_string( l_path + p_project->GetName() + wxT( ".muse" ) ) );
 			}
 		}
 
@@ -1975,18 +2039,16 @@ namespace Troll
 
 		void MainFrame::LogDebugMessage( const wxString & p_message )
 		{
-			//	std::cout << p_message << "\n";
-			wxLog::SetActiveTarget( m_logDebug );
-			wxLogMessage( p_message );
-			m_debugLog->SetSelection( m_debugLog->GetLastPosition() - 2, m_debugLog->GetLastPosition() - 1 );
+			std::clog << p_message << std::endl;
+			//wxLog::SetActiveTarget( m_logDebug );
+			//wxLogMessage( p_message );
+			//m_debugLog->SetSelection( m_debugLog->GetLastPosition() - 2, m_debugLog->GetLastPosition() - 1 );
 		}
 
 		void MainFrame::LogOutMessage( const wxString & p_message )
 		{
-			//	std::cout << p_message << "\n";
 			wxLog::SetActiveTarget( m_logCompilation );
 			wxLogMessage( p_message );
-			m_compilationLog->SetSelection( m_compilationLog->GetLastPosition() - 2, m_compilationLog->GetLastPosition() - 1 );
 		}
 
 		void MainFrame::CloseProject( bool p_closingApp )

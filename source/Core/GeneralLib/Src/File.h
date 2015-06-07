@@ -2,6 +2,7 @@
 #define ___GENERAL_FILE_H___
 
 #include <string>
+#include <functional>
 
 #include "Config.h"
 #include "Path.h"
@@ -55,7 +56,7 @@ namespace General
 			return FileExists( p_filename.c_str() );
 		}
 
-		bool ListDirectoryFiles( Utils::Path const & p_folderPath, std::vector< Utils::Path > & p_files, bool p_recursive = false );
+		void ListDirectoryFiles( Utils::Path const & p_folderPath, std::function< void( Utils::Path const & ) > p_function, bool p_recursive = false );
 	}
 }
 

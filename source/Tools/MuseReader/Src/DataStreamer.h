@@ -19,38 +19,7 @@
 #include <wx/protocol/protocol.h>
 #include <wx/stream.h>
 
-typedef enum EMBlockType
-{
-	EM_BLOCK_ZIPDATA		= 1,	/* .zip files */
-	EM_BLOCK_GZIPDATA		= 2,	/* unused */
-	EM_BLOCK_SCENE			= 3,	/* .emscene files */
-	EM_BLOCK_INTERACTIONS	= 4,	/* .emscript files */
-	EM_BLOCK_SNDDATA		= 5,	/* unused */
-	EM_BLOCK_CONFIG			= 6,	/* unused */
-	EM_BLOCK_ZIPSNDDATA		= 7,	/* .emsnd files */
-	EM_BLOCK_EMCONFIG		= 8,	/* unused */
-	EM_NB_BLOCK_TYPES		= 8,
-	EM_BLOCK_ERROR			= 9,
-}	EMBlockType;
-
-typedef enum EMSessionType
-{
-	EM_TYPE_LOCAL = 1,
-	EM_TYPE_HTTP = 2,
-	EM_TYPE_FTP = 3,
-}	EMSessionType;
-
-// The struct to stock blocks informations
-struct EM_Block
-{
-	short m_blocktype;
-	short m_namesize;
-	wxString m_name;
-	int m_blocsize;
-	wxString m_hash;
-};
-
-typedef std::vector< EM_Block > BlockList;
+#include <Module_Download.h>
 
 class CDataStreamer
 {
@@ -119,7 +88,7 @@ private:
 	int m_nbBlocks;
 	//! The output log list box
 	wxListBox * m_log;
-	BlockList m_header;
+	EMuse::Download::BlockList m_header;
 	wxString m_outFolder;
 
 private:

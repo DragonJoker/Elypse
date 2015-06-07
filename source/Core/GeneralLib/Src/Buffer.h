@@ -64,7 +64,7 @@ namespace General
 			{
 				DoAdd( reinterpret_cast< StorageType const * >( p_value ), sizeof( T ) * p_count );
 			}
-		
+
 			inline void write( std::string const & p_value )
 			{
 				DoAdd( reinterpret_cast< StorageType const * >( p_value.c_str() ), static_cast< uint32_t >( p_value.length() ) );
@@ -119,7 +119,7 @@ namespace General
 			uint32_t m_capacity;
 			uint32_t m_size;
 		};
-		
+
 		template< typename StorageType >
 		class TReadBuffer
 		{
@@ -222,7 +222,7 @@ namespace General
 		}
 
 		template< typename StorageType, size_t Size >
-		TWriteBuffer< StorageType > make_wbuffer( StorageType ( & p_buffer )[Size] )
+		TWriteBuffer< StorageType > make_wbuffer( StorageType( & p_buffer )[Size] )
 		{
 			return TWriteBuffer< StorageType >( p_buffer, Size );
 		}
@@ -234,7 +234,7 @@ namespace General
 		}
 
 		template< typename StorageType, size_t Size >
-		TReadBuffer< StorageType > make_rbuffer( StorageType const ( & p_buffer )[Size] )
+		TReadBuffer< StorageType > make_rbuffer( StorageType const( & p_buffer )[Size] )
 		{
 			return TReadBuffer< StorageType >( p_buffer, Size );
 		}

@@ -17,6 +17,8 @@
 #include <wx/protocol/http.h>
 #include <wx/wfstream.h>
 
+using namespace EMuse::Download;
+
 CDataStreamer::CDataStreamer( wxListBox * p_log )
 	: m_stream( NULL )
 	, m_protocol( NULL )
@@ -42,11 +44,11 @@ bool CDataStreamer::SetFile( wxString const & p_url )
 
 		if ( m_type == -1 )
 		{
-			m_log->AppendString( _( "Url invalide" ) );
+			m_log->AppendString( _( "Invalid URL" ) );
 		}
 		else if ( !m_type )
 		{
-			m_log->AppendString( _( "Type d'URL inconnu" ) );
+			m_log->AppendString( _( "Unknown URL format" ) );
 		}
 		else
 		{
@@ -84,7 +86,7 @@ bool CDataStreamer::SetFile( wxString const & p_url )
 bool CDataStreamer::ReadHeader()
 {
 	bool l_result = false;
-	m_log->AppendString( _( "Lecture de l'en-tête" ) );
+	m_log->AppendString( _( "Reading header" ) );
 
 	// retrieve number of bloc definitions contained in the header
 	try
@@ -101,7 +103,7 @@ bool CDataStreamer::ReadHeader()
 		}
 
 		Read( m_nbBlocks );
-		m_log->AppendString( wxString( _( "Nombre de blocs : " ) ) << m_nbBlocks );
+		m_log->AppendString( wxString( _( "Blocs count: " ) ) << m_nbBlocks );
 		int l_index = 0;
 
 		// retrieve all the blocks informations
@@ -121,7 +123,7 @@ bool CDataStreamer::ReadHeader()
 			// retrieve name size
 			int8_t l_namesize = 0;
 			Read( l_namesize );
-			m_log->AppendString( wxString( _( "  Taille du nom : " ) ) << l_namesize );
+			m_log->AppendString( wxString( _( "  Name size: " ) ) << l_namesize );
 
 			if ( l_namesize <= 0 )
 			{
@@ -131,12 +133,12 @@ bool CDataStreamer::ReadHeader()
 			// retrieve name
 			std::vector< char > l_name( l_namesize + 1, 0 );
 			Read( reinterpret_cast< uint8_t * >( l_name.data() ), l_namesize );
-			m_log->AppendString( wxString( _( "  Nom : " ) ) << wxString( l_name.data(), wxConvLibc ) );
+			m_log->AppendString( wxString( _( "  Name : " ) ) << wxString( l_name.data(), wxConvLibc ) );
 
 			// retrieve block's size
 			int l_blocksize = 0;
 			Read( l_blocksize );
-			m_log->AppendString( wxString( _( "  Taille du bloc : " ) ) << l_blocksize << _( " octets" ) );
+			m_log->AppendString( wxString( _( "  Bloc size: " ) ) << l_blocksize << _( " octets" ) );
 
 			if ( l_blocksize <= 0 )
 			{
@@ -149,7 +151,7 @@ bool CDataStreamer::ReadHeader()
 			{
 				// retrieve block's hash
 				Read( reinterpret_cast< uint8_t * >( l_hash.data() ), 32 );
-				m_log->AppendString( wxString( _( "  Hash du bloc : " ) ) << wxString( l_hash.data(), wxConvLibc ) );
+				m_log->AppendString( wxString( _( "  Bloc hash: " ) ) << wxString( l_hash.data(), wxConvLibc ) );
 			}
 
 			// write these infos into the struct deserved to it
@@ -190,7 +192,7 @@ bool CDataStreamer::GetNextBlock()
 		}
 		catch ( std::runtime_error & p_exc )
 		{
-			m_log->AppendString( _( "Erreur de lecture: " ) + wxString( p_exc.what(), wxConvLibc ) );
+			m_log->AppendString( _( "Read error: " ) + wxString( p_exc.what(), wxConvLibc ) );
 		}
 
 		m_currentBlockIndex++;

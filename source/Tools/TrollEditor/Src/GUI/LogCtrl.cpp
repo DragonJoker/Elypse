@@ -10,22 +10,21 @@
 using namespace Troll::GUI;
 using namespace Troll;
 
-BEGIN_EVENT_TABLE( LogCtrl, wxTextCtrl )
-	EVT_LEFT_DCLICK(	LogCtrl::_onDoubleClick )
+BEGIN_EVENT_TABLE( LogCtrl, wxListBox )
+	EVT_LEFT_DCLICK( LogCtrl::OnDoubleClick )
 END_EVENT_TABLE()
 
 extern MainFrame * g_mainFrame;
 
 
-LogCtrl::LogCtrl( wxWindow * parent, wxWindowID id, const wxString & value,
-				  const wxPoint & pos, const wxSize & size, long style )
-	:	wxTextCtrl( parent, id, value, pos, size, style )
+LogCtrl::LogCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size, long style )
+	: wxListBox( parent, id, pos, size, wxArrayString(), style )
 {
 }
 
 
 
-void LogCtrl::_onDoubleClick( wxMouseEvent & p_event )
+void LogCtrl::OnDoubleClick( wxMouseEvent & p_event )
 {
 	/*
 		long x;

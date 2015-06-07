@@ -169,7 +169,7 @@ namespace General
 				{
 					return l_map;
 				}
-				
+
 				auto && i = p_mapA.begin();
 				auto && j = p_mapB.begin();
 				auto && iend = p_mapA.cend();

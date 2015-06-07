@@ -78,8 +78,8 @@ namespace EMuse
 			void SetERP( Real p_erp );
 			void SetGravity( const Vector3 & p_gravity );
 
-			void __declspec(nothrow) ClearObjects( bool p_recreateDefaults = true );
-			void __declspec(nothrow) ClearSpaces( bool p_recreateDefaults = true );
+			void __declspec( nothrow ) ClearObjects( bool p_recreateDefaults = true );
+			void __declspec( nothrow ) ClearSpaces( bool p_recreateDefaults = true );
 
 			Space * CreateSpace( const String & p_name, bool p_autoUpdated );
 			bool DestroySpace( const String & p_name );

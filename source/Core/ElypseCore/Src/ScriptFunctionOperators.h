@@ -10,12 +10,18 @@ namespace EMuse
 {
 	namespace Script
 	{
-
 		template<typename T, typename U>
 		void d_fast_call Ope_SubEqual( ScriptNode * caller )
 		{
 			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
 			ReturnAs< T >( caller, *std::get< 0 >( ret ) -= *std::get< 1 >( ret ) );
+		}
+		
+		template<>
+		void d_fast_call Ope_SubEqual< int, Real >( ScriptNode * caller )
+		{
+			std::tuple< int *, Real * > ret = GetAndExecParams< int, Real >( caller );
+			ReturnAs< int >( caller, *std::get< 0 >( ret ) = int( *std::get< 0 >( ret ) - *std::get< 1 >( ret ) ) );
 		}
 
 		template<typename T, typename U>
@@ -23,6 +29,13 @@ namespace EMuse
 		{
 			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
 			ReturnAs< T >( caller, *std::get< 0 >( ret ) *= *std::get< 1 >( ret ) );
+		}
+		
+		template<>
+		void d_fast_call Ope_MulEqual< int, Real >( ScriptNode * caller )
+		{
+			std::tuple< int *, Real * > ret = GetAndExecParams< int, Real >( caller );
+			ReturnAs< int >( caller, *std::get< 0 >( ret ) = int( *std::get< 0 >( ret ) * *std::get< 1 >( ret ) ) );
 		}
 
 		template<typename T, typename U>
@@ -32,11 +45,25 @@ namespace EMuse
 			ReturnAs< T >( caller, *std::get< 0 >( ret ) += *std::get< 1 >( ret ) );
 		}
 
+		template<>
+		void d_fast_call Ope_AddEqual< int, Real >( ScriptNode * caller )
+		{
+			std::tuple< int *, Real * > ret = GetAndExecParams< int, Real >( caller );
+			ReturnAs< int >( caller, *std::get< 0 >( ret ) = int( *std::get< 0 >( ret ) + *std::get< 1 >( ret ) ) );
+		}
+
 		template<typename T, typename U>
 		void d_fast_call Ope_DivEqual( ScriptNode * caller )
 		{
 			std::tuple< T *, U * > ret = GetAndExecParams< T, U >( caller );
 			ReturnAs< T >( caller, *std::get< 0 >( ret ) /= *std::get< 1 >( ret ) );
+		}
+		
+		template<>
+		void d_fast_call Ope_DivEqual< int, Real >( ScriptNode * caller )
+		{
+			std::tuple< int *, Real * > ret = GetAndExecParams< int, Real >( caller );
+			ReturnAs< int >( caller, *std::get< 0 >( ret ) /= int( *std::get< 0 >( ret ) / *std::get< 1 >( ret ) ) );
 		}
 
 		template<typename T>

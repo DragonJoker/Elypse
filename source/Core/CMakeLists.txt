@@ -15,8 +15,8 @@ endfunction( CoreBuild )
 
 function( CoreSummary msg )
 	set( msg_tmp "\nCore :" )
-	set( msg_tmp "${msg_tmp}\n    GeneralLib         ${Cutils}" )
-	set( msg_tmp "${msg_tmp}\n    ElypseCore         ${C3D}" )
+	set( msg_tmp "${msg_tmp}\n    GeneralLib         ${GenLib}" )
+	set( msg_tmp "${msg_tmp}\n    ElypseCore         ${ElpsCore}" )
 	SET( msg "${msg}${msg_tmp}" PARENT_SCOPE )
 endfunction( CoreSummary )
 

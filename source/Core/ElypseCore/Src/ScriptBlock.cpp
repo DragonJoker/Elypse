@@ -59,7 +59,7 @@ ScriptBlock::~ScriptBlock()
 	Clear();
 }
 
-void __declspec(nothrow) ScriptBlock::Clear()
+void __declspec( nothrow ) ScriptBlock::Clear()
 {
 	for ( auto & l_child : m_childs )
 	{

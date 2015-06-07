@@ -30,9 +30,10 @@ CMuseReaderDlg::CMuseReaderDlg( wxWindow * pParent )
 	int l_width = 640;
 	int l_height = 480;
 	SetClientSize( wxSize( l_width, l_height ) );
+	int l_effWidth = l_width - ( OFFSET * 3 );
 
-	int l_leftListWidth = ( l_width / 3 ) - ( OFFSET * 3 );
-	int l_rightListWidth = ( 2 * l_width / 3 ) - ( OFFSET * 3 );
+	int l_leftListWidth = ( l_effWidth / 3 );
+	int l_rightListWidth = ( 2 * l_effWidth / 3 );
 	int l_listHeight = l_height - ( EDIT_HEIGHT * 2 ) - ( STATIC_HEIGHT * 3 ) - ( OFFSET * 3 );
 	int l_left = l_leftListWidth + OFFSET * 2;
 	int l_top = OFFSET;
@@ -142,7 +143,7 @@ void CMuseReaderDlg::OnBnClickedBtnread( wxCommandEvent & p_event )
 						m_output->AppendString( l_name );
 					}
 
-					m_log->AppendString( _( "Fichier lu" ) );
+					m_log->AppendString( _( "File read" ) );
 					m_dataStreamer->Cleanup();
 
 					m_inFile->SetLabel( wxString() );

@@ -28,7 +28,7 @@ if ( DATABASE_FOUND )
 
 	add_target(
 		${PROJECT_NAME}
-		api_dll
+		dll
 		"GeneralLib;ElypseServer"
 		"GeneralLib;${BoostLibraries};${DatabaseLibraries};ElypseServer"
 	)

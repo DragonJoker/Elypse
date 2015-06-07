@@ -12,11 +12,11 @@
 #include <string>
 
 #include <Singleton.h>
+#include <DataWriter.h>
 #include <Module_Script.h>
 
 #include "Popup.h"
 #include "NewListbox.h"
-#include "Project/DataWriter.h"
 #include "Project/Temporal/Module_Temporal.h"
 #include "Script/TrollScriptCompiler.h"
 
@@ -172,8 +172,8 @@ namespace Troll
 			Troll::Project * m_currentProject;
 			Troll::TrollScene * m_selectedScene;
 
-			wxLogTextCtrl	* m_logDebug;
-			wxLogTextCtrl	* m_logCompilation;
+			wxLog * m_logDebug;
+			wxLog * m_logCompilation;
 
 			Troll::TrollObject * m_viewedObject;
 
@@ -189,26 +189,25 @@ namespace Troll
 		public:
 			int m_treesWidth;
 
-			wxMenuItem		*	 m_menuTestProject;
-			AutoCompletionListBox		*	 m_listBox;
-			wxPanel			*	 m_mainPanel;
-			wxNotebook		*	 m_treeTabsContainer;
-			wxPanel			*	 m_filesListContainer;
-			FilesTree		*	 m_filesList;
-			wxPanel			*	 m_functionsListContainer;
-			FunctionsTree		* m_functionsList;
-			wxPanel			*	 m_objectsListContainer;
-			ObjectsTree		*	 m_objectsList;
-			wxScrolledWindow	* m_objectInfosContainer;
-			wxListBox		*	 m_objectInfos;
+			wxMenuItem * m_menuTestProject;
+			AutoCompletionListBox * m_listBox;
+			wxPanel * m_mainPanel;
+			wxNotebook * m_treeTabsContainer;
+			wxPanel * m_filesListContainer;
+			FilesTree * m_filesList;
+			wxPanel * m_functionsListContainer;
+			FunctionsTree * m_functionsList;
+			wxPanel  * m_objectsListContainer;
+			ObjectsTree  * m_objectsList;
+			wxScrolledWindow * m_objectInfosContainer;
+			wxListBox * m_objectInfos;
 
-			wxAuiNotebook		* m_mainTabsContainer;
-//		TextPanel		* m_editText;
-			wxStcTextEditor *	m_editText;
-			wxPanel		*	 m_mainPanelContainer;
-			wxWindow		* m_elypseContainer;
-			ElypseCtrl		* m_elypseCtrl;
-			bool			m_isFrame;
+			wxAuiNotebook * m_mainTabsContainer;
+			wxStcTextEditor * m_editText;
+			wxPanel * m_mainPanelContainer;
+			wxWindow * m_elypseContainer;
+			ElypseCtrl * m_elypseCtrl;
+			bool m_isFrame;
 
 			wxNotebook	* m_logTabsContainer;
 			wxPanel		* m_debugLogContainer;

@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ___PRECOMPILED_HEADER_H___
 #define ___PRECOMPILED_HEADER_H___
 

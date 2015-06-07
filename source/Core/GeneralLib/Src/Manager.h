@@ -37,7 +37,7 @@ namespace General
 			const Manager & operator =( const Manager & ) = delete;
 
 		public:
-			void __declspec(nothrow) Clear()
+			void __declspec( nothrow ) Clear()
 			{
 				General::Utils::map::deleteAll( m_objectMap );
 			}

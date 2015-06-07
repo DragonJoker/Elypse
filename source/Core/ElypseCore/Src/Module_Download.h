@@ -56,6 +56,40 @@ namespace EMuse
 			HEADERCOMPLETE		= 5,
 			HEADERERROR			= 6
 		};
+
+		static const std::string  DataTypeExtension[] =
+		{
+			"",
+			".zip",			// EM_BLOCK_ZIPDATA			= 1,	/* .zip files */
+			".gzip",		// EM_BLOCK_GZIPDATA		= 2,	/* unused */
+			".emscene",		// EM_BLOCK_SCENE			= 3,	/* .emscene files */
+			".emscript",	// EM_BLOCK_INTERACTIONS	= 4,	/* .emscript files */
+			".snd",			// EM_BLOCK_SNDDATA			= 5,	/* unused */
+			".cfg",			// EM_BLOCK_CONFIG			= 6,	/* unused */
+			".emsnd",		// EM_BLOCK_ZIPSNDDATA		= 7,	/* .emsnd files */
+			".emcfg",		// EM_BLOCK_EMCONFIG		= 8,	/* unused */
+		};
+
+		struct EM_Block
+		{
+			uint8_t m_blocktype;
+			uint8_t m_namesize;
+			std::string m_name;
+			uint32_t m_blocsize;
+			std::string m_completeUrl;
+			std::string m_hash;
+		};
+
+		struct EM_ZipBlock
+		{
+			uint32_t BlockSize;
+			uint16_t NameSize;
+			std::string Name;
+			std::string CompleteURL;
+		};
+
+		typedef std::vector< EM_Block > BlockList;
+		typedef std::vector< EM_ZipBlock > ZipBlockList;
 	}
 }
 

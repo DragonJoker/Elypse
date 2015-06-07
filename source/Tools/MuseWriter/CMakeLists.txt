@@ -1,7 +1,5 @@
 project( MuseWriter )
 
-option( BUILD_${PROJECT_NAME} "Build ${PROJECT_NAME}" TRUE )
-
 add_definitions( -D_CRT_SECURE_NO_WARNINGS )
 
 set( ${PROJECT_NAME}_VERSION_MAJOR	0 )

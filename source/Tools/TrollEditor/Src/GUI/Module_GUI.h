@@ -77,6 +77,8 @@ namespace Troll
 		class SceneDependenciesFrame;
 
 		wxString make_wxString( String const & p_value );
+		wxString make_wxString( char const * p_value );
+		std::string make_string( wxString const & p_in );
 		float GetReal( const wxString & p_value, float & p_res );
 		int GetInt( const wxString & p_value, int & p_res );
 		float GetReal( const String & p_value, float & p_res );

@@ -34,6 +34,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <functional>
 #include <iostream>
 #include <set>
 #include <list>
@@ -45,7 +46,7 @@
 
 #include <OgrePrerequisites.h>
 
-#include "EMuse.h"
+#include <EMuse.h>
 
 #include <OgreAnimation.h>
 #include <OgreAnimationState.h>

@@ -36,7 +36,7 @@ namespace EMuse
 			void CollideShape( BoundingShape * p_collidesWith );
 			void CollideObject( PhysicsObject * p_collidesWith );
 
-			void __declspec(nothrow) Clear();
+			void __declspec( nothrow ) Clear();
 
 			void Render( Real l_factor );
 			void ApplyDamping();

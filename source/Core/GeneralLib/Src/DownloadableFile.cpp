@@ -110,7 +110,7 @@ void DownloadableFile::_getHash()
 		{
 			std::string l_hash;
 			d_coucou;
-			l_hash = MD5::HashFile( ToString(l_it + m_name ) );
+			l_hash = MD5::HashFile( ToString( l_it + m_name ) );
 			d_coucou;
 
 			if ( l_hash != m_hash )

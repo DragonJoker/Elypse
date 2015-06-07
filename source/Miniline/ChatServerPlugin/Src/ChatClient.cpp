@@ -1777,7 +1777,7 @@ namespace Chat
 		int l_size;
 		p_buffer >> l_size;
 		String l_gameName;
-		char const* l_cName = p_buffer.readArray< char >( l_size );
+		char const * l_cName = p_buffer.readArray< char >( l_size );
 
 		if ( l_cName == NULL )
 		{

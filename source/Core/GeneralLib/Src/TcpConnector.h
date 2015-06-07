@@ -2,6 +2,7 @@
 #define ___GENERAL_TCP_CONNECTOR_H___
 
 #include <string>
+#include <iostream>
 
 #include "Exception.h"
 #include "StringConverter.h"

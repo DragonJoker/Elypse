@@ -24,7 +24,7 @@ EMGui::~EMGui()
 	ClearAll();
 }
 
-void __declspec(nothrow) EMGui::ClearAll()
+void __declspec( nothrow ) EMGui::ClearAll()
 {
 	m_currentMouseOverOverlay = NULL;
 	m_currentClickedOverlay = NULL;

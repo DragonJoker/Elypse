@@ -59,7 +59,7 @@ namespace General
 
 		private:
 			T_floatingType m_samples[tp_class * ( tp_numSamples + 1 )];
-			Pascal< tp_class - 1 > m_pascal;
+			Pascal < tp_class - 1 > m_pascal;
 		};
 	}
 }

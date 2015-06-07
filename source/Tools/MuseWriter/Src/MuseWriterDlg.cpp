@@ -129,9 +129,9 @@ MuseWriterDlg::MuseWriterDlg()
 
 	l_left = l_width - OFFSET - BUTTON_SIZE.x;
 	l_top = l_height - ( OFFSET + BUTTON_SIZE.y ) * 2;
-	new wxButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
-	l_top += OFFSET + BUTTON_SIZE.y;
 	new wxButton( this, eIDC_BTNOK, _( "Generate" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	l_top += OFFSET + BUTTON_SIZE.y;
+	new wxButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 }
 
 MuseWriterDlg::~MuseWriterDlg()
@@ -198,6 +198,8 @@ bool MuseWriterDlg::DoWrite()
 
 void MuseWriterDlg::DoUpdateFileList()
 {
+	m_files->Clear();
+
 	for ( auto && l_file : m_dataWriter.GetFileList() )
 	{
 		m_files->AppendString( make_wxString( l_file.substr( l_file.find_last_of( d_path_slash ) + 1 ) ) );

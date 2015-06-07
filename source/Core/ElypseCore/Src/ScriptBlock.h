@@ -34,7 +34,7 @@ namespace EMuse
 
 		public:
 			bool Parse();
-			void __declspec(nothrow) Clear();
+			void __declspec( nothrow ) Clear();
 			virtual ScriptBlock * _initialise(	ScriptCompiler * p_compiler, BlockType p_type,
 												unsigned int p_lineNum, unsigned int p_depth,
 												ScriptBlock * p_parent );
