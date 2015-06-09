@@ -10,7 +10,7 @@ add_target(
 	${PROJECT_NAME}
 	bin
 	"GeneralLib;ElypseCore"
-	"ElypseCore;${ElypseCoreLibraries};${BinariesLibraries}"
+	"GeneralLib;ElypseCore;${ElypseCoreLibraries};${BinariesLibraries}"
 	"stdafx.h"
 	"stdafx.cpp"
 )

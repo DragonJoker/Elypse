@@ -25,7 +25,7 @@ Space::~Space()
 	dSpaceDestroy( m_space );
 }
 
-void __declspec( nothrow ) Space::Clear()
+void Space::Clear() noexcept
 {
 	dSpaceClean( m_space );
 	m_objects.clear();

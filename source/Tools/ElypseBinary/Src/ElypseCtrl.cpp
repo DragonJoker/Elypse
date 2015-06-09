@@ -311,7 +311,7 @@ const String ElypseCtrl :: GetWHandle()
 #elif defined( __WXGTK__)
 
 	gtk_widget_set_double_buffered( m_wxwindow, FALSE );
-	GdkWindow * l_gdkWin = GTK_PIZZA( m_wxwindow )->bin_window;
+	GdkWindow * l_gdkWin = GTK_CHECK_CAST( m_wxwindow, gtk_pizza_get_type (), GtkPizza )->bin_window;
 	Display * l_display = GDK_WINDOW_XDISPLAY( l_gdkWin );
 	Window l_wid = GDK_WINDOW_XWINDOW( l_gdkWin );
 

@@ -24,7 +24,7 @@ namespace EMuse
 			{
 			}
 
-			virtual __declspec( nothrow ) ~CompileError()
+			virtual ~CompileError() noexcept
 			{
 			}
 		};

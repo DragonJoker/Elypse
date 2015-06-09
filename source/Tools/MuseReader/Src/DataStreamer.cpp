@@ -155,7 +155,7 @@ bool CDataStreamer::ReadHeader()
 			}
 
 			// write these infos into the struct deserved to it
-			EM_Block block = { l_blockType, l_namesize, wxString( l_name.data(), wxConvLibc ), l_blocksize, wxString( l_hash.data(), wxConvLibc ) };
+			EM_Block block = { uint8_t( l_blockType ), uint8_t( l_namesize ), std::string( l_name.data() ), uint32_t( l_blocksize ), std::string( l_hash.data() ) };
 
 			// put this block in the list of blocks
 			m_header.push_back( block );

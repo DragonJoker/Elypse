@@ -15,7 +15,6 @@ void start()
 	while ( true )
 	{
 		g_service->run();
-		Sleep( 100 );
 	}
 }
 
@@ -67,32 +66,15 @@ int ClientMain()
 			l_count++;
 
 			l_client = new ElypseTcpClient( g_service );
-			//l_client->AsyncConnect( "192.168.0.115", 48621);
-			l_client->AsyncConnect( "ns368997.ovh.nettail ps -ef", 48621 );
-			//l_client->Run();
-			//Sleep( 100);
-
-			//if (l_client->IsConnected())
-			//{
-			//	l_client->AsyncSend( l_mesg);
-			//}
-			//else
-			//{
-			//	l_client->StoreMessage( l_mesg);
-			//}
-
+			l_client->AsyncConnect( "127.0.0.1", 48621);
 			l_clients.push_back( l_client );
-
 		}
-
-
-		Sleep( 1000 );
 
 		for ( int i = 0 ; i < l_max ; i++ )
 		{
 			if ( l_clients[i]->IsConnected() )
 			{
-				//std::cout << "client " << i << " sends connect message\n";
+				std::cout << "client " << i << " sends connect message\n";
 				l_clients[i]->AsyncSend( l_mesg );
 			}
 			else
@@ -101,19 +83,12 @@ int ClientMain()
 			}
 		}
 
-
-		Sleep( 1000 );
-
 		for ( int i = 0 ; i < l_max ; i++ )
 		{
 			std::cout << "deleting client " << i << "\n";
-			//l_service = l_clients[i]->GetService();
-			//	delete l_clients[i];
 			l_clients[i]->Stop();
-			//delete l_service;
 		}
 
-		Sleep( 100 );
 		l_clients.clear();
 	}
 
@@ -149,7 +124,6 @@ int main( int argc, char * argv[] )
 			}
 
 			l_return = EXIT_SUCCESS;
-			//Sleep( 10000 );
 		}
 		catch ( std::exception & e )
 		{

@@ -20,23 +20,17 @@ else()
 endif ( NOT WIN32 )
 
 if ( NOT WIN32 )
-	include_directories( ${FREETYPE_INCLUDE_DIR_freetype2} )
-	include_directories( ${FREETYPE_INCLUDE_DIR_ft2build} )
-	include_directories( ${Atkmm_INCLUDE_DIR} )
-	include_directories( ${GTKmm_INCLUDE_DIR} ) 
-	include_directories( ${GTKmmConfig_INCLUDE_DIR} )
-	include_directories( ${GDKmm_INCLUDE_DIR} )
-	include_directories( ${GDKmmConfig_INCLUDE_DIR} )
-	include_directories( ${Glibmm_INCLUDE_DIR} )
-	include_directories( ${GlibmmConfig_INCLUDE_DIR} )
-	include_directories( ${GIOmm_INCLUDE_DIR} )
-	include_directories( ${Cairomm_INCLUDE_DIR} )
-	include_directories( ${Pangomm_INCLUDE_DIR} )
-	include_directories( ${PangommConfig_INCLUDE_DIR} )
-	include_directories( ${SigC++_INCLUDE_DIR} )
-	include_directories( ${SigC++Config_INCLUDE_DIR} )
+	include_directories( ${FREETYPE_INCLUDE_DIRS} )
+	include_directories( ${Atkmm_INCLUDE_DIRS} )
+	include_directories( ${GTKmm_INCLUDE_DIRS} ) 
+	include_directories( ${GDKmm_INCLUDE_DIRS} )
+	include_directories( ${Glibmm_INCLUDE_DIRS} )
+	include_directories( ${GIOmm_INCLUDE_DIRS} )
+	include_directories( ${Cairomm_INCLUDE_DIRS} )
+	include_directories( ${Pangomm_INCLUDE_DIRS} )
+	include_directories( ${SigC++_INCLUDE_DIRS} )
 	include_directories( ${GSTREAMER_INCLUDE_DIR} )
-	include_directories( ${LIBXML_INCLUDE_DIR} )
+	include_directories( ${LIBXML_INCLUDE_DIRS} )
 else ()
 	if ( DSHOW_FOUND )
 		message( STATUS "+ Found DirectShow" )
@@ -149,7 +143,7 @@ add_target(
 	${PROJECT_NAME}
 	api_dll
 	"GeneralLib"
-	"${ElypseCoreLibraries};${ExternalLibs}"
+	"GeneralLib;${ElypseCoreLibraries};${ExternalLibs}"
 	"PrecompiledHeader.h"
 	"PrecompiledHeader.cpp"
 )

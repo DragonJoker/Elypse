@@ -305,7 +305,7 @@ namespace EMuse
 				std::string l_fileName = GetName( l_file );
 				Path l_outFile = p_outFolder + d_path_slash + l_fileName + ".zip";
 				int l_size = CompressFile( l_file, l_outFile );
-				EM_ZipBlock l_block = { l_size, static_cast< uint32_t >( l_fileName.size() ), l_fileName, l_outFile };
+				EM_ZipBlock l_block = { uint32_t( l_size ), uint16_t( l_fileName.size() ), l_fileName, l_outFile };
 				l_zipHeader.push_back( l_block );
 			}
 

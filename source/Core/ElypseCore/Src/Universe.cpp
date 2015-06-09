@@ -58,7 +58,7 @@ void Universe::SetRenderTarget( RenderTarget * p_rt )
 	m_renderTarget->update();
 }
 
-void __declspec( nothrow ) Universe::ClearScene()
+void Universe::ClearScene() noexcept
 {
 	m_manager->clearScene();
 }

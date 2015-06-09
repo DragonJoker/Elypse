@@ -21,12 +21,12 @@ namespace General
 				, m_functionName( p_function )
 			{
 			}
-			virtual __declspec( nothrow ) ~GenException()
+			virtual ~GenException() noexcept
 			{
 			}
 
 		public:
-			inline virtual const char * what() const
+			inline virtual const char * what() const noexcept
 			{
 				return m_description.c_str();
 			}

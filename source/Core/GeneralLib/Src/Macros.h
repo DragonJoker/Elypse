@@ -118,6 +118,7 @@
 #	define d_nonnull( X)				__attribute__( ( nonnull( X)))
 #	define d_critical					__attribute__( ( hot))
 #	define d_unlikely					__attribute__( ( cold))
+#	define d_no_throw
 #elif GENLIB_MACOS
 #	define d_single_inheritance
 #	define d_multiple_inheritance
@@ -141,6 +142,7 @@
 #	define d_nonnull( X)				__attribute__( ( nonnull( X)))
 #	define d_critical					__attribute__( ( hot))
 #	define d_unlikely					__attribute__( ( cold))
+#	define d_no_throw
 #else
 #	error Could not configure macros, compiler not recognized. @ GeneralLib/Macros.h
 #endif

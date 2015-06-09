@@ -17,9 +17,6 @@
 #	ifdef __WXGTK__
 #		include <gdk/gdk.h>
 #		include <gtk/gtk.h> // just this should suffice as it should include gdk.h itself
-/* Seems to be needed under Linux */
-//#		include <wx/gtk/win_gtk.h>
-//#		include "wx/gtk/private/win_gtk.h"
 #		include <gdk/gdkx.h>
 #		include <GL/glx.h>
 #		if  wxCHECK_VERSION(2, 9, 0)

@@ -8,7 +8,7 @@ add_target(
 	${PROJECT_NAME}
 	bin
 	""
-	"${Gtk2Libraries};${wxWidgetsLibraries}"
+	"${Gtk2Libraries};${wxWidgetsLibraries};${BoostLibraries}"
 	"stdafx.h"
 	"stdafx.cpp"
 )

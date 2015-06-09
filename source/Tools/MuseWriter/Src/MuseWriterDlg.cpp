@@ -116,14 +116,14 @@ MuseWriterDlg::MuseWriterDlg()
 	l_top += OFFSET + BUTTON_SIZE.y;
 	new wxStaticText( this, wxID_ANY, _( "Config file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
-	m_editCfg = new wxTextCtrl( this, eIDC_EDITCFGFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ), ES_AUTOHSCROLL );
+	m_editCfg = new wxTextCtrl( this, eIDC_EDITCFGFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ) );
 	l_left += l_rightListWidth;
 	new wxButton( this, eIDC_BTNCFGFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 	l_left = OFFSET;
 	l_top += BUTTON_SIZE.y;
 	new wxStaticText( this, wxID_ANY, _( "Output file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
-	m_editOut = new wxTextCtrl( this, eIDC_EDITOUTFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ), ES_AUTOHSCROLL );
+	m_editOut = new wxTextCtrl( this, eIDC_EDITOUTFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ) );
 	l_left += l_rightListWidth;
 	new wxButton( this, eIDC_BTNOUTFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 

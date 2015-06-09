@@ -129,7 +129,9 @@ int main( int p_argc, char ** p_argv )
 
 		if ( !l_library.Open( l_pluginFullPath ) )
 		{
-			throw std::runtime_error( "Error encountered while loading plugin [" + l_pluginName + "] error: " + std::to_string( dlerror() ) );
+			std::stringstream l_error;
+			l_error << "Error encountered while loading plugin [" << l_pluginName << "] error: " << dlerror();
+			throw std::runtime_error( l_error.str() );
 		}
 
 		PluginFactoryFct l_pluginFactory;
@@ -137,7 +139,9 @@ int main( int p_argc, char ** p_argv )
 
 		if ( !l_pluginFactory )
 		{
-			throw std::runtime_error( "Error encountered while loading plugin factory [" + l_pluginName + "] error: " + std::to_string( dlerror() ) );
+			std::stringstream l_error;
+			l_error << "Error encountered while loading plugin factory [" << l_pluginName << "] error: " << dlerror();
+			throw std::runtime_error( l_error.str() );
 		}
 
 		PluginDestroyerFct l_pluginDestroyer;
@@ -145,7 +149,9 @@ int main( int p_argc, char ** p_argv )
 
 		if ( !l_pluginDestroyer )
 		{
-			throw std::runtime_error( "Error encountered while loading plugin destroyer [" + l_pluginName + "] error: " + std::to_string( dlerror() ) );
+			std::stringstream l_error;
+			l_error << "Error encountered while loading plugin destroyer [" << l_pluginName << "] error: " << dlerror();
+			throw std::runtime_error( l_error.str() );
 		}
 
 		String l_pluginFolder = l_pluginFullPath.GetPath();

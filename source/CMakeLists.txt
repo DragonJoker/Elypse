@@ -52,7 +52,7 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	if ( MSVC )
 		find_package( Boost 1.55 REQUIRED date_time filesystem system)
 	else ()
-		find_package( Boost 1.57 REQUIRED date_time filesystem system)
+		find_package( Boost 1.55 REQUIRED date_time filesystem system)
 	endif ()
 	find_package( CURL )
 	find_package( Ogre )
@@ -141,6 +141,10 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 			set(BoostLibraries "${Lib}")
 		endif()
 	ENDFOREACH()
+	
+	if ( NOT WIN32 )
+		set(BoostLibraries "${BoostLibraries}|pthread")
+	endif ()
 
 	#Zlib Libs
 	set( ZlibLibraries "")
@@ -164,7 +168,7 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 
 	#Gtk2 Libs
 	set( Gtk2Libraries "" )
-	FOREACH( Lib ${GTK2_LIBRARY} )
+	FOREACH( Lib ${GTK2_LIBRARIES} )
 		if ( Gtk2Libraries )
 			set( Gtk2Libraries "${Gtk2Libraries}|${Lib}" )
 		else()
@@ -212,11 +216,16 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 		endif()
 	endforeach()
 
-	set( ElypseCoreLibraries
+	set( GeneralLibLibraries
 		${BoostLibraries}
 		${ZlibLibraries}
 		${LibZipLibraries}
 		${CurlLibraries}
+		${CMAKE_DL_LIBS}
+	)
+
+	set( ElypseCoreLibraries
+	  ${GeneralLibLibraries}
 		${FmodLibraries}
 		${OgreLibraries}
 		${OdeLibraries}
@@ -225,7 +234,6 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 		${XmlLibraries}
 		${Gtk2Libraries}
 		${X11Libraries}
-		GeneralLib
 	)
 
 	if( MSVC )
