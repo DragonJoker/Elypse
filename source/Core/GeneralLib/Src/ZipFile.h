@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___ZIP_FILE_H___
 #define ___ZIP_FILE_H___
 
@@ -26,11 +43,11 @@ namespace General
 
 		public:
 			ZipFileImpl( const StringType & p_name, const StringType & p_fullname, ZipDirectoryBase< CharType > * p_directory )
-				:	m_name( p_name )
-				,	m_fullname( p_fullname )
-				,	m_directory( p_directory )
-				,	m_uncompressedSize( 0 )
-				,	m_compressedSize( 0 )
+				: m_name( p_name )
+				, m_fullname( p_fullname )
+				, m_directory( p_directory )
+				, m_uncompressedSize( 0 )
+				, m_compressedSize( 0 )
 			{}
 			void SetSize( uint64_t p_compSize, uint64_t p_uncompSize )
 			{
@@ -68,8 +85,8 @@ namespace General
 
 		public:
 			ZipFileBase( uint64_t p_index, const StringType & p_name, const StringType & p_fullname, ZipDirectoryBase< CharType > * p_directory )
-				:	ZipFileImpl< CharType > ( p_name, p_fullname, p_directory )
-				,	m_index( p_index )
+				: ZipFileImpl< CharType > ( p_name, p_fullname, p_directory )
+				, m_index( p_index )
 			{
 			}
 		public:

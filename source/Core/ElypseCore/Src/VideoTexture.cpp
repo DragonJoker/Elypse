@@ -1,21 +1,27 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Sylvain DOREMUS
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company :	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		VideoTexture.h - VideoTexture.cpp
-
-	Desc :		Class used to put a video in a texture.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "VideoObject.h"
 #include "VideoTexture.h"
 #include "VideoImplementation.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <OgreRoot.h>
 #include <OgreLog.h>
@@ -28,7 +34,7 @@
 using namespace Ogre;
 
 VideoTexture::VideoTexture( VideoObject * p_owner )
-	:	owned_by <VideoObject>	( p_owner ),
+	: owned_by <VideoObject>	( p_owner ),
 		 m_bufferChange( false ),
 		 m_bufferSize( m_owner->m_width * m_owner->m_height * 4 ),
 		 m_tmpBuffer( new unsigned char[m_bufferSize] )
@@ -52,7 +58,7 @@ void VideoTexture::_createTexture( const String & p_materialName, const String &
 {
 	TextureUnitState * l_texUnitState;
 	MaterialPtr l_pMaterial = MaterialManager::getSingleton().getByName( p_materialName );
-	m_texture = TextureManager::getSingleton().createManual(	p_materialName,
+	m_texture = TextureManager::getSingleton().createManual( p_materialName,
 				p_groupName,
 				TEX_TYPE_2D,
 				m_owner->m_width,

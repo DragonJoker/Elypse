@@ -1,13 +1,21 @@
-Dames
-D:\prog\EMuseTools\TrollEditor\Test\M6\Dames\
-Colour
-white
-Scene
-Dames
-SceneFiles
-D:\prog\EMuseTools\TrollEditor\Test\M6\Dames\dame-HUD.emscene
-D:\prog\EMuseTools\TrollEditor\Test\M6\Dames\dame.emscene
-LoadScriptFiles
-D:\prog\EMuseTools\TrollEditor\Test\M6\Dames\dame.emscript
-DataFiles
-D:\prog\EMuseTools\TrollEditor\Test\M6\Dames\data-dame.zip
+project Dames
+{
+	resolution		640 480
+	colour			1 1 1
+	scene Dames
+	{
+		scene_files
+		{
+			dame-HUD.emscene
+			dame.emscene
+		}
+		load_script_files
+		{
+			dame.emscript
+		}
+		data_files_3d
+		{
+			data-dame
+		}
+	}
+}

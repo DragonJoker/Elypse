@@ -1,0 +1,47 @@
+project Flipper
+{
+	resolution		640 480
+	colour			1 1 1
+	scene Flipper
+	{
+		scene_files
+		{
+			Flipper.emscene
+			Interface.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Flipper
+			Interface
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			KazuSplash
+		}
+	}
+	scene KazuSplash
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+	}
+}

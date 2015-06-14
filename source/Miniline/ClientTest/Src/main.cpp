@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "Client.h"
 #include "Server.h"
 
@@ -15,7 +32,6 @@ void start()
 	while ( true )
 	{
 		g_service->run();
-		Sleep( 100 );
 	}
 }
 
@@ -67,32 +83,15 @@ int ClientMain()
 			l_count++;
 
 			l_client = new ElypseTcpClient( g_service );
-			//l_client->AsyncConnect( "192.168.0.115", 48621);
-			l_client->AsyncConnect( "ns368997.ovh.nettail ps -ef", 48621 );
-			//l_client->Run();
-			//Sleep( 100);
-
-			//if (l_client->IsConnected())
-			//{
-			//	l_client->AsyncSend( l_mesg);
-			//}
-			//else
-			//{
-			//	l_client->StoreMessage( l_mesg);
-			//}
-
+			l_client->AsyncConnect( "127.0.0.1", 48621);
 			l_clients.push_back( l_client );
-
 		}
-
-
-		Sleep( 1000 );
 
 		for ( int i = 0 ; i < l_max ; i++ )
 		{
 			if ( l_clients[i]->IsConnected() )
 			{
-				//std::cout << "client " << i << " sends connect message\n";
+				std::cout << "client " << i << " sends connect message\n";
 				l_clients[i]->AsyncSend( l_mesg );
 			}
 			else
@@ -101,19 +100,12 @@ int ClientMain()
 			}
 		}
 
-
-		Sleep( 1000 );
-
 		for ( int i = 0 ; i < l_max ; i++ )
 		{
 			std::cout << "deleting client " << i << "\n";
-			//l_service = l_clients[i]->GetService();
-			//	delete l_clients[i];
 			l_clients[i]->Stop();
-			//delete l_service;
 		}
 
-		Sleep( 100 );
 		l_clients.clear();
 	}
 
@@ -149,7 +141,6 @@ int main( int argc, char * argv[] )
 			}
 
 			l_return = EXIT_SUCCESS;
-			//Sleep( 10000 );
 		}
 		catch ( std::exception & e )
 		{

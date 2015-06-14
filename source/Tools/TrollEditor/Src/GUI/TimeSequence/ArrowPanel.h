@@ -1,49 +1,59 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___Troll_ArrowPanel___
 #define ___Troll_ArrowPanel___
 
+#include "Module_Time.h"
+
 #include <wx/panel.h>
 
-#include "GUI/Module_GUI.h"
-
-namespace Troll
+BEGIN_TROLL_GUI_TIME_NAMESPACE
 {
-	namespace GUI
+	class ArrowPanel
+		: public wxPanel
 	{
-		class ArrowPanel
-			: public wxPanel
+	public:
+		ArrowPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
+		~ArrowPanel();
+
+		inline void SetBoundPanel( wxPanel * p_panel )
 		{
-		private:
-			bool m_mouseLeftDown;
-			wxPanel * m_boundPanel;
+			m_boundPanel = p_panel;
+		}
+		inline void SetMouseLeftDown( bool p_leftDown )
+		{
+			m_mouseLeftDown = p_leftDown;
+		}
 
-		public:
-			ArrowPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition,
-						const wxSize & p_size = wxDefaultSize );
-			~ArrowPanel();
+	private:
+		DECLARE_EVENT_TABLE()
+		void OnPaint( wxPaintEvent & p_event );
+		void OnMouseLeftDown( wxMouseEvent & p_event );
+		void OnMouseLeftUp( wxMouseEvent & p_event );
+		void OnMouseMove( wxMouseEvent & p_event );
+		void OnMouseLeave( wxMouseEvent & p_event );
+		void OnKillFocus( wxFocusEvent & p_event );
 
-		public:
-			inline void SetBoundPanel( wxPanel * p_panel )
-			{
-				m_boundPanel = p_panel;
-			}
-			inline void SetMouseLeftDown( bool p_leftDown )
-			{
-				m_mouseLeftDown = p_leftDown;
-			}
-
-		private:
-			void _onPaint( wxPaintEvent & p_event );
-			void _onMouseLeftDown( wxMouseEvent & p_event );
-			void _onMouseLeftUp( wxMouseEvent & p_event );
-			void _onMouseMove( wxMouseEvent & p_event );
-			void _onMouseLeave( wxMouseEvent & p_event );
-			void _onKillFocus( wxFocusEvent & p_event );
-
-			DECLARE_EVENT_TABLE()
-		};
-	}
+	private:
+		bool m_mouseLeftDown;
+		wxPanel * m_boundPanel;
+	};
 }
+END_TROLL_GUI_TIME_NAMESPACE
 
 #endif
-

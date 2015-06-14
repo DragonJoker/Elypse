@@ -1,0 +1,49 @@
+project Bassine-Jump
+{
+	resolution		640 480
+	colour			0 0 0
+	scene KazuSplash
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+	}
+	scene Bassine-Jump
+	{
+		scene_files
+		{
+			Menu.emscene
+			Bassine-Jump.emscene
+			InGame.emscene
+			Scores.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Bassine-Jump.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Interfaces
+			Bassine-Jump
+		}
+		data_files_other
+		{
+			Sons
+		}
+		dependencies
+		{
+			KazuSplash
+		}
+	}
+}

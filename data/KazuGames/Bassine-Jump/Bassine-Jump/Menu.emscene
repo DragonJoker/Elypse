@@ -1,0 +1,180 @@
+overlay Commandes
+{
+	class MinigameFrame
+	position -25% -50%
+	size 50% 100%
+	align center center
+	border_size 32.0 32.0 32.0 32.0
+
+	element Commandes/Retour
+	{
+		class PanelZone
+		position 25% 87.5%
+		size 50.00% 10.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Commandes/Text
+	{
+		class MinigameText
+		position 10% 12.5%
+		size 80% 50%
+		font_size 24.0
+		text Les commandes utilisees sont les touches directionnelles du clavier.||Fleche bas pour freiner votre chute, fleche haut pour reprendre la chute libre plus rapidement.||Fleche droite et gauche pour se deplacer, respectivement a droite et a gauche.
+	}
+
+	element Commandes/Title
+	{
+		class MinigameText
+		position 0% 2.5%
+		size 100% 5%
+		font_size 40
+		text Commandes
+		text_align center
+	}
+}
+
+overlay Regles
+{
+	class MinigameFrame
+	position 25% 0%
+	size 50% 100%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Regles/Retour
+	{
+		class PanelZone
+		position 25% 87.5%
+		size 50.00% 10.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+
+	element Regles/Text1
+	{
+		class MinigameText
+		position 10% 12.5%
+		size 80% 50%
+		font_size 24.00
+		text Eviter les balcons durant la chute et plonger dans la bassine.||Vous gagnez des points constamment en fonction de votre vitesse de chute et de votre inclinaison.||Vous gagnez aussi des points plus vous passez vite au niveau des balcons.
+	}
+
+	element Regles/Title
+	{
+		class MinigameText
+		position 0% 2.5%
+		size 100% 5%
+		font_size 40.00
+		text Regles
+		text_align center
+	}
+}
+
+overlay Options
+{
+	class MinigameFrame
+	position 25.00% 25%
+	size 50.00% 50%
+	border_size 32.0 32.0 32.0 32.0
+
+	element Options/Title
+	{
+		class MinigameText
+		position 40.00% 5%
+		size 70% 25%
+		font_size 40.0
+		text Options
+	}
+
+	element Options/Music
+	{
+		class MinigameText
+		position 20.00% 25.00%
+		size 0.12% 1.14%
+		font_size 24.00
+		text Musique
+	}
+
+	element Options/MusicOnOff
+	{
+		class PanelZone
+		position 20.00% 40.00%
+		size 25% 25%
+		material On
+	}
+
+	element Options/RegletteMusic
+	{
+		class PanelZone
+		position 25.00% 35.00%
+		size 60% 15%
+		material Reglette
+
+		element Options/Music/TicContainer
+		{
+			class PanelZone
+			position 7% 0%
+			size 85% 100%
+			material Base/Invisible
+
+			element Options/TicMusic
+			{
+				class PanelZone
+				position 80.00% 0.00%
+				size 20.00% 100.00%
+				material Tic
+			}
+		}
+	}
+
+	element Options/Sound
+	{
+		class MinigameText
+		position 20.00% 50%
+		size 0.12% 1.14%
+		font_size 24.00
+		text Sons
+	}
+
+	element Options/SoundOnOff
+	{
+		class PanelZone
+		position 20.00% 65%
+		size 25% 25%
+		material On
+	}
+
+	element Options/RegletteSound
+	{
+		class PanelZone
+		position 25.00% 60%
+		size 60% 15%
+		material Reglette
+
+		element Options/Sound/TicContainer
+		{
+			class PanelZone
+			position 7% 0%
+			size 85% 100%
+			material Base/Invisible
+
+			element Options/TicSound
+			{
+				class PanelZone
+				position 80.00% 0.00%
+				size 20.00% 100.00%
+				material Tic
+			}
+		}
+	}
+
+	element Options/Retour
+	{
+		class PanelZone
+		position 25.00% 75.00%
+		size 50.00% 20.00%
+		material Retour
+		mouse_over_material RetourMO
+	}
+}

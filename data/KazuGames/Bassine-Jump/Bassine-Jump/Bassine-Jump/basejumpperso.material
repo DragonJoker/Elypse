@@ -1,0 +1,170 @@
+
+material basejumpperso/10- Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.105882 0.105882 0.105882 1
+			diffuse 0.105882 0.105882 0.105882 1
+			specular 0.702 0.702 0.702 1 23
+		}
+
+	}
+
+}
+
+material basejumpperso/bouche
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material basejumpperso/chaussure
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.054902 0.054902 0.054902 1
+			diffuse 0.054902 0.054902 0.054902 1
+			specular 0.657 0.657 0.657 1 33
+		}
+
+	}
+
+}
+
+material basejumpperso/iris
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.152941 0 0 1
+			diffuse 0.152941 0 0 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}
+
+material basejumpperso/metal_romain
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.243137 0.243137 0.243137 1
+			diffuse 0.243137 0.243137 0.243137 1
+			specular 0.891 0.891 0.891 1 11
+		}
+
+	}
+
+}
+
+material basejumpperso/noir_romain
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0.936 0.936 0.936 1 52
+		}
+
+	}
+
+}
+
+material basejumpperso/oeil
+{
+	technique
+	{
+		pass
+		{
+			specular 0.666 0.666 0.666 1 46
+		}
+
+	}
+
+}
+
+material basejumpperso/pantalon
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0705882 0 0 1
+			diffuse 0.0705882 0 0 1
+			specular 0.243 0.243 0.243 1 10
+		}
+
+	}
+
+}
+
+material basejumpperso/peau
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture corps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material basejumpperso/rouge_romain
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.658824 0 0 1
+			diffuse 0.658824 0 0 1
+			specular 0.45 0.45 0.45 1 10
+			cull_hardware none
+			cull_software none
+		}
+
+	}
+
+}
+
+material basejumpperso/tshirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0.27 0.27 0.27 1 18
+		}
+
+	}
+
+}

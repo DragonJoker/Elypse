@@ -7,6 +7,7 @@ scene TombeauRider
 	data_file Interface.zip
 	scene_file Interface.emscene
 	scene_file Game.emscene
+	load_script_file Network.emscript
 	load_script_file Scores.emscript
 	load_script_file Game.emscript
 	load_script_file Interface.emscript

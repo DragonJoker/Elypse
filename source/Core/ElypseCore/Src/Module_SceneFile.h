@@ -1,17 +1,27 @@
-/*****************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author : Marc BILLON
-	Compagny : FDSSoftMedia - Copyright 2007
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-*****************************************************************************/
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___MODULE_SCENE_FILE_H___
 #define ___MODULE_SCENE_FILE_H___
 
-#include "EMuse.h"
+#include "Elypse.h"
 #include "Module_Main.h"
 
-namespace EMuse
+namespace Elypse
 {
 	namespace SceneFile
 	{
@@ -61,12 +71,12 @@ namespace EMuse
 
 #define DECLARE_SCENE_FILE_PARSER( X) bool d_dll_export X( String & p_params, Context * p_context);
 #define DECLARE_SCENE_FILE_PARSER_NO_EXPORT( X) bool X( String & p_params, Context * p_context);
-#define DEFINE_SCENE_FILE_PARSER( X) bool EMuse::SceneFile::X( String & p_params, Context * p_context)
+#define DEFINE_SCENE_FILE_PARSER( X) bool Elypse::SceneFile::X( String & p_params, Context * p_context)
 #define PARSING_ERROR( p_error) SceneFileParser::parsingError( p_context, p_error)
 #define PARSING_ERROR2( p_error) SceneFileParser::parsingError( p_context, /* String( "Parsing Error (") + String(__FUNCTION__).substr( 18, 1000) + String(") -> ") + */ p_error)
 	}
 }
 
-using namespace EMuse::SceneFile;
+using namespace Elypse::SceneFile;
 
 #endif

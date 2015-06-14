@@ -1,138 +1,123 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef _Project_H_
 #define _Project_H_
 
-#include <wx/txtstrm.h>
-#include <wx/wfstream.h>
-#include <wx/treebase.h>
-#include "GUI/Module_GUI.h"
 #include "Module_Project.h"
 
-class wxColour;
-class wxImage;
-namespace Troll
+#include "GUI/TrollEditorGuiPrerequisites.h"
+
+BEGIN_TROLL_PROJECT_NAMESPACE
 {
 	class Project
+		: public std::enable_shared_from_this< Project >
 	{
-	private:
-		wxString m_name;
-		wxString m_projectPath;
-		BackgroundType m_bgType;
-		wxString m_bgString;
-		wxColour * m_bgColour;
-		wxImage * m_bgImage;
-		bool m_shadows;
-		AntiAliasing m_antiAliasing;
-		bool m_showDebug;
-		bool m_showFPS;
-		wxString m_startupScript;
-
-		TrollScene * m_mainScene;
-		SceneMap m_scenes;
-		bool m_saved;
-		bool m_modified;
-		wxString m_projectFileName;
-		wxSize m_resolution;
-
 	public:
 		Project();
-		Project( const wxString & p_projectName, const wxString & p_mainSceneName, const wxString & p_path,
-				 BackgroundType p_backgroundType, const wxString & p_background, bool p_shadows,
-				 AntiAliasing p_aa, const wxSize & p_resolution );
+		Project( const wxString & p_projectName, const wxString & p_mainSceneName, const wxString & p_path, BackgroundType p_backgroundType, const wxString & p_background, bool p_shadows, AntiAliasing p_aa, const wxSize & p_resolution );
 		~Project();
 
 		void FlushObjects();
 
-		TrollScene * GetScene( const wxString & p_sceneName );
-		TrollScene * GetScene( const wxTreeItemId & p_item );
+		Scene * GetScene( const wxString & p_sceneName );
+		Scene * GetScene( const wxTreeItemId & p_item );
 		void RemoveScene( const wxString & p_sceneName );
-		void RemoveScene( TrollScene * p_scene );
-		TrollScene * CreateScene( wxString const & p_strName );
-		void AddScene( TrollScene * p_scene );
+		void RemoveScene( Scene * p_scene );
+		Scene * CreateScene( wxString const & p_strName );
+		void AddScene( Scene * p_scene );
 		void Save( wxTextOutputStream * p_stream );
 		void Load( const wxString & p_path, GUI::FilesTree * p_tree );
-		void Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, const wxString & p_path, Troll::GUI::FilesTree * p_tree = NULL );
+		void Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, const wxString & p_path, GUI::FilesTree * p_tree = NULL );
 		void Write();
 
 		void SetBackgroundImage( const wxString & p_img );
 		void SetBackgroundColour( const wxString & p_colour );
 
-		bool FindFileInScenes( const wxString & p_fileName, TrollFile *& p_file, TrollScene *& p_scene );
+		bool FindFileInScenes( const wxString & p_fileName, File *& p_file, Scene *& p_scene );
 
-	private:
-		void _fillSceneDependencies( TrollScene * p_scene );
-		void _buildColour( const wxString & p_infos );
-
-	public:
-		inline TrollScene 	*	GetMainScene()const
+		inline Scene * GetMainScene()const
 		{
 			return m_mainScene;
 		}
-		inline SceneMap			GetScenes()const
+		inline SceneMap GetScenes()const
 		{
 			return m_scenes;
 		}
-		inline const wxString &	GetPath()const
+		inline const wxString & GetPath()const
 		{
 			return m_projectPath;
 		}
-		inline const wxString &	GetBackground()const
+		inline const wxString & GetBackground()const
 		{
 			return m_bgString;
 		}
-		inline BackgroundType	GetBackgroundType()const
+		inline BackgroundType GetBackgroundType()const
 		{
 			return m_bgType;
 		}
-		inline wxColour 	*	GetBackgroundColour()const
+		inline wxColour const & GetBackgroundColour()const
 		{
 			return m_bgColour;
 		}
-		inline wxImage 	*	GetBackgroundImage()const
+		inline wxImage const & GetBackgroundImage()const
 		{
 			return m_bgImage;
 		}
-		inline const wxString &	GetName()const
+		inline const wxString & GetName()const
 		{
 			return m_name;
 		}
-		inline bool				IsSaved()const
+		inline bool IsSaved()const
 		{
 			return m_saved;
 		}
-		inline bool				IsModified()const
+		inline bool IsModified()const
 		{
 			return m_modified;
 		}
-		inline const wxString &	GetProjectFileName()const
+		inline const wxString & GetProjectFileName()const
 		{
 			return m_projectFileName;
 		}
-		inline AntiAliasing		GetFSAA()const
+		inline AntiAliasing GetFSAA()const
 		{
 			return m_antiAliasing;
 		}
-		inline bool				GetShadows()const
+		inline bool GetShadows()const
 		{
 			return m_shadows;
 		}
-		inline const wxSize &	GetResolution()const
+		inline const wxSize & GetResolution()const
 		{
 			return m_resolution;
 		}
-		inline const wxString &	GetStartupScript()const
+		inline const wxString & GetStartupScript()const
 		{
 			return m_startupScript;
 		}
-		inline bool				GetShowDebug()const
+		inline bool GetShowDebug()const
 		{
 			return m_showDebug;
 		}
-		inline bool				GetShowFPS()const
+		inline bool GetShowFPS()const
 		{
 			return m_showFPS;
 		}
-
 		inline void SetSaved( bool p_saved )
 		{
 			m_saved = p_saved;
@@ -173,17 +158,15 @@ namespace Troll
 		{
 			m_resolution = p_res;
 		}
-		inline void	SetBackgroundColour( wxColour * p_colour )
-		{
-			m_bgColour = p_colour;
-		}
 		inline void	SetBackgroundColour( wxColour const & p_colour )
 		{
-			*m_bgColour = p_colour;
+			m_bgColour = p_colour;
+			m_bgType = bgColour;
 		}
-		inline void SetBackgroundImage( wxImage * p_image )
+		inline void SetBackgroundImage( wxImage const & p_image )
 		{
 			m_bgImage = p_image;
+			m_bgType = bgImage;
 		}
 		inline void	SetStartupScript( const wxString & p_ss )
 		{
@@ -197,8 +180,33 @@ namespace Troll
 		{
 			m_showFPS = p_sf;
 		}
+
+	private:
+		void _fillSceneDependencies( Scene * p_scene );
+		void _buildColour( const wxString & p_infos );
+
+	private:
+		wxString m_name;
+		wxString m_projectPath;
+		BackgroundType m_bgType;
+		wxString m_bgString;
+		wxColour m_bgColour;
+		wxImage m_bgImage;
+		bool m_shadows;
+		AntiAliasing m_antiAliasing;
+		bool m_showDebug;
+		bool m_showFPS;
+		wxString m_startupScript;
+
+		Scene * m_mainScene;
+		SceneMap m_scenes;
+		bool m_saved;
+		bool m_modified;
+		wxString m_projectFileName;
+		wxSize m_resolution;
 	};
 }
+END_TROLL_PROJECT_NAMESPACE
 
 #endif
 

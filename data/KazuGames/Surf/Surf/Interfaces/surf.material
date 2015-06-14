@@ -1,0 +1,71 @@
+material BarreRouge
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture barre_rouge.jpg
+			}
+		}
+	}
+}
+
+material BarreVerte
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+
+			texture_unit
+			{
+				tex_address_mode clamp
+				texture barre_verte.jpg
+			}
+		}
+	}
+}
+
+material Vie
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture vie.png
+			}
+		}
+	}
+}
+
+material Title
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture surf.png
+			}
+		}
+	}
+}

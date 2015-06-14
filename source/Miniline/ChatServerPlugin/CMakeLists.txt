@@ -1,14 +1,11 @@
 project( ChatServerPlugin )
 
-if (NOT MINGW)
-	set( Boost_USE_STATIC_LIBS ON)
-	set( BOOST_THREAD_USE_LIB ON)
-endif()
-
 set( ${PROJECT_NAME}_VERSION_MAJOR	1 )
 set( ${PROJECT_NAME}_VERSION_MINOR	0 )
 set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 
+find_package( Boost 1.55 REQUIRED locale )
+find_package( MySQL )
 find_package( Database )
 
 if ( DATABASE_FOUND )
@@ -39,6 +36,12 @@ if ( DATABASE_FOUND )
 
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_RELEASE} Release )
+	copy_dll( ${PROJECT_NAME} ${MYSQL_CLIENT_LIBRARY} Debug )
+	copy_dll( ${PROJECT_NAME} ${MYSQL_CLIENT_LIBRARY} Release )
+	copy_dll( ${PROJECT_NAME} ${MYSQL_CPP_LIBRARY_DYNAMIC_DEBUG} Debug )
+	copy_dll( ${PROJECT_NAME} ${MYSQL_CPP_LIBRARY_DYNAMIC_RELEASE} Release )
+	copy_dll( ${PROJECT_NAME} ${Boost_LOCALE_LIBRARY_DEBUG} Debug )
+	copy_dll( ${PROJECT_NAME} ${Boost_LOCALE_LIBRARY_RELEASE} Release )
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/DatabasePluginMySqld.lib Debug )
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/DatabasePluginMySql.lib  Release )
 else ()

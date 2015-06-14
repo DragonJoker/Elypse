@@ -1,103 +1,107 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___OverlayProperties___
 #define ___OverlayProperties___
 
-#include "Project/2D/Module_2D.h"
 #include "ObjectProperties.h"
 
-namespace Troll
+BEGIN_TROLL_GUI_PROPERTIES_NAMESPACE
 {
-	namespace GUI
+	class OverlayProperties
+		: public ObjectProperties
 	{
-		class OverlayProperties
-			: public ObjectProperties
-		{
-		public:
-			Objects2D::TrollOverlay * m_overlay;
-			wxStaticText * m_overlayName;
-//		wxTextCtrl * m_overlayName;
-			wxTextCtrl * m_baseMaterialName;
-			wxTextCtrl * m_mouseOverMaterialName;
-			wxTextCtrl * m_clickedMaterialName;
-			wxComboBox * m_verticalAlign;
-			wxComboBox * m_horizontalAlign;
-			wxTextCtrl * m_top;
-			wxTextCtrl * m_left;
-			wxTextCtrl * m_width;
-			wxTextCtrl * m_height;
-			wxComboBox * m_visibility;
-			wxComboBox * m_video;
+	public:
+		OverlayProperties( TROLL_PROJECT_2D_NAMESPACE::TrollOverlay * p_overlay, wxWindow * parent, const wxPoint & pos = wxDefaultPosition, const wxSize & size = wxDefaultSize, long style = wxBORDER_NONE );
+		~OverlayProperties();
 
-			//Border
-			wxTextCtrl * m_borderMaterialName;
-			wxTextCtrl * m_borderTop;
-			wxTextCtrl * m_borderBottom;
-			wxTextCtrl * m_borderLeft;
-			wxTextCtrl * m_borderRight;
+		virtual void UpdateProperties();
 
-			//Text
-			wxTextCtrl * m_caption;
-			wxTextCtrl * m_fontName;
-			wxTextCtrl * m_fontSize;
-			wxComboBox * m_textVerticalAlign;
-			wxComboBox * m_textHorizontalAlign;
-			wxTextCtrl * m_redTextValue;
-			wxTextCtrl * m_greenTextValue;
-			wxTextCtrl * m_blueTextValue;
-			wxTextCtrl * m_alphaTextValue;
+	private:
+		void _buildTextProperties( wxPoint & p_position );
+		void _buildBorderProperties( wxPoint & p_position );
 
-			OverlayProperties( Objects2D::TrollOverlay * p_overlay, wxWindow * parent,
-							   const wxPoint & pos = wxDefaultPosition, const wxSize & size = wxDefaultSize,
-							   long style = wxBORDER_NONE );
-			~OverlayProperties();
+		void _updateTextProperties();
+		void _updateBorderProperties();
 
-			virtual void UpdateProperties();
+		void _getVideosNames( wxArrayString & p_names );
+		
+		DECLARE_EVENT_TABLE()
+		void OnEditName( wxCommandEvent & p_event );
+		void OnEditBaseMaterialName( wxCommandEvent & p_event );
+		void OnEditMouseOverMaterialName( wxCommandEvent & p_event );
+		void OnEditClickedMaterialName( wxCommandEvent & p_event );
+		void OnSelectVerticalAlign( wxCommandEvent & p_event );
+		void OnSelectHorizontalAlign( wxCommandEvent & p_event );
+		void OnEditTop( wxCommandEvent & p_event );
+		void OnEditLeft( wxCommandEvent & p_event );
+		void OnEditWidth( wxCommandEvent & p_event );
+		void OnEditHeight( wxCommandEvent & p_event );
+		void OnEditBorderMaterial( wxCommandEvent & p_event );
+		void OnEditBorderTop( wxCommandEvent & p_event );
+		void OnEditBorderBottom( wxCommandEvent & p_event );
+		void OnEditBorderLeft( wxCommandEvent & p_event );
+		void OnEditBorderRight( wxCommandEvent & p_event );
+		void OnEditCaption( wxCommandEvent & p_event );
+		void OnEditFontName( wxCommandEvent & p_event );
+		void OnEditFontSize( wxCommandEvent & p_event );
+		void OnEditTextRedValue( wxCommandEvent & p_event );
+		void OnEditTextGreenValue( wxCommandEvent & p_event );
+		void OnEditTextBlueValue( wxCommandEvent & p_event );
+		void OnEditTextAlphaValue( wxCommandEvent & p_event );
+		void OnSelectTextVerticalAlign( wxCommandEvent & p_event );
+		void OnSelectTextHorizontalAlign( wxCommandEvent & p_event );
+		void OnSelectVisibility( wxCommandEvent & p_event );
+		void OnSelectVideo( wxCommandEvent & p_event );
 
-		private:
-			void _buildTextProperties( wxPoint & p_position );
-			void _buildBorderProperties( wxPoint & p_position );
+	private:
+		TROLL_PROJECT_2D_NAMESPACE::TrollOverlay * m_overlay;
+		wxStaticText * m_overlayName;
+		wxTextCtrl * m_baseMaterialName;
+		wxTextCtrl * m_mouseOverMaterialName;
+		wxTextCtrl * m_clickedMaterialName;
+		wxComboBox * m_verticalAlign;
+		wxComboBox * m_horizontalAlign;
+		wxTextCtrl * m_top;
+		wxTextCtrl * m_left;
+		wxTextCtrl * m_width;
+		wxTextCtrl * m_height;
+		wxComboBox * m_visibility;
+		wxComboBox * m_video;
 
-			void _updateTextProperties();
-			void _updateBorderProperties();
+		//Border
+		wxTextCtrl * m_borderMaterialName;
+		wxTextCtrl * m_borderTop;
+		wxTextCtrl * m_borderBottom;
+		wxTextCtrl * m_borderLeft;
+		wxTextCtrl * m_borderRight;
 
-			void _getVideosNames( wxArrayString & p_names );
-
-			void _onEditName( wxCommandEvent & p_event );
-			void _onEditBaseMaterialName( wxCommandEvent & p_event );
-			void _onEditMouseOverMaterialName( wxCommandEvent & p_event );
-			void _onEditClickedMaterialName( wxCommandEvent & p_event );
-			void _onSelectVerticalAlign( wxCommandEvent & p_event );
-			void _onSelectHorizontalAlign( wxCommandEvent & p_event );
-			void _onEditTop( wxCommandEvent & p_event );
-			void _onEditLeft( wxCommandEvent & p_event );
-			void _onEditWidth( wxCommandEvent & p_event );
-			void _onEditHeight( wxCommandEvent & p_event );
-
-			void _onEditBorderMaterial( wxCommandEvent & p_event );
-			void _onEditBorderTop( wxCommandEvent & p_event );
-			void _onEditBorderBottom( wxCommandEvent & p_event );
-			void _onEditBorderLeft( wxCommandEvent & p_event );
-			void _onEditBorderRight( wxCommandEvent & p_event );
-
-			void _onEditCaption( wxCommandEvent & p_event );
-			void _onEditFontName( wxCommandEvent & p_event );
-			void _onEditFontSize( wxCommandEvent & p_event );
-			void _onEditTextRedValue( wxCommandEvent & p_event );
-			void _onEditTextGreenValue( wxCommandEvent & p_event );
-			void _onEditTextBlueValue( wxCommandEvent & p_event );
-			void _onEditTextAlphaValue( wxCommandEvent & p_event );
-
-			void _onSelectTextVerticalAlign( wxCommandEvent & p_event );
-			void _onSelectTextHorizontalAlign( wxCommandEvent & p_event );
-			void _onSelectVisibility( wxCommandEvent & p_event );
-
-			void _onSelectVideo( wxCommandEvent & p_event );
-
-		public:
-			DECLARE_EVENT_TABLE()
-		};
-	}
+		//Text
+		wxTextCtrl * m_caption;
+		wxTextCtrl * m_fontName;
+		wxTextCtrl * m_fontSize;
+		wxComboBox * m_textVerticalAlign;
+		wxComboBox * m_textHorizontalAlign;
+		wxTextCtrl * m_redTextValue;
+		wxTextCtrl * m_greenTextValue;
+		wxTextCtrl * m_blueTextValue;
+		wxTextCtrl * m_alphaTextValue;
+	};
 }
+END_TROLL_GUI_PROPERTIES_NAMESPACE
 
 #endif
-

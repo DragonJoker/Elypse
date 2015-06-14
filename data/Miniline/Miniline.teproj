@@ -5,7 +5,7 @@ project Miniline
 	show_debug		false
 	show_fps		false
 	startup_script	string l_login;string l_pass;
-	scene Common
+	scene Miniline
 	{
 		scene_files
 		{
@@ -33,7 +33,7 @@ project Miniline
 		}
 		dependencies
 		{
-			Common
+			Miniline
 		}
 	}
 	scene Chat
@@ -85,7 +85,7 @@ project Miniline
 		}
 		dependencies
 		{
-			Common
+			Miniline
 			Perso
 		}
 	}

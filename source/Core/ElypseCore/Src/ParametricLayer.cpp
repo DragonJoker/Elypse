@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ParametricLayer.h"
@@ -13,10 +30,10 @@
  2 3
 */
 
-ParametricLayer::ParametricLayer(	Vector3 * p_controlPoints, unsigned int p_resolution,
+ParametricLayer::ParametricLayer( Vector3 * p_controlPoints, unsigned int p_resolution,
 									ParametricLayer * p_parent, unsigned int p_quadrant,
 									unsigned int p_depth )
-	:	m_controlPoints( p_controlPoints ),
+	: m_controlPoints( p_controlPoints ),
 		m_parent( p_parent ),
 		m_depth( p_depth ),
 		m_resolution( p_resolution ),
@@ -330,7 +347,7 @@ void ParametricLayer::CalculateQuadrant( unsigned int p_quadrant )
 		{
 			l = l_shiftY + 4 * j;
 			l_fpointer = l_tempPoints;
-			l_allPoints[ i * m_resolution + j ].x =  l_tempPoints[0] * m_precalcY[ l ]
+			l_allPoints[ i * m_resolution + j ].x = l_tempPoints[0] * m_precalcY[ l ]
 					+ l_tempPoints[1] * m_precalcY[ l + 1 ]
 					+ l_tempPoints[2] * m_precalcY[ l + 2 ]
 					+ l_tempPoints[3] * m_precalcY[ l + 3 ];

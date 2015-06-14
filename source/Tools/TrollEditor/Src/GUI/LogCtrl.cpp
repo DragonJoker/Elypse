@@ -1,63 +1,77 @@
-#include "PrecompiledHeader.h"
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-#include "LogCtrl.h"
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-#include "MainFrame.h"
-#include "TextPanel.h"
-#include "TextCtrl.h"
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
+#include "TrollEditorPch.h"
+
+#include "GUI/LogCtrl.h"
+
+#include "GUI/MainFrame.h"
+#include "GUI/FilesTree.h"
+#include "GUI/StcTextEditor.hpp"
+
 #include "Project/Scene.h"
 
-using namespace Troll::GUI;
-using namespace Troll;
+#include <StringUtils.h>
 
-BEGIN_EVENT_TABLE( LogCtrl, wxListBox )
-	EVT_LEFT_DCLICK( LogCtrl::OnDoubleClick )
-END_EVENT_TABLE()
+#include <regex>
 
-extern MainFrame * g_mainFrame;
-
-
-LogCtrl::LogCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size, long style )
-	: wxListBox( parent, id, pos, size, wxArrayString(), style )
+BEGIN_TROLL_GUI_NAMESPACE
 {
-}
+	BEGIN_EVENT_TABLE( LogCtrl, wxListBox )
+		EVT_LEFT_DCLICK( LogCtrl::OnDoubleClick )
+	END_EVENT_TABLE()
 
+	LogCtrl::LogCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size, long style )
+		: wxListBox( parent, id, pos, size, wxArrayString(), style )
+	{
+	}
 
+	void LogCtrl::OnDoubleClick( wxMouseEvent & p_event )
+	{
+		int l_selection = GetSelection();
 
-void LogCtrl::OnDoubleClick( wxMouseEvent & p_event )
-{
-	/*
-		long x;
-		long y;
-		PositionToXY( GetInsertionPoint(), & x, & y);
-		wxString txt = GetLineText( y);
-		TrollFile * l_file ;
-
-		if(txt.Contains( ".emscript"))
+		if ( l_selection >= 0 )
 		{
-			size_t csize = txt.find( "[");
-			size_t fsize = txt.find( ".emscript");
-			txt = txt.substr( csize + 1, (fsize - csize + 8) );
-			std::cout << "LogCtrl::_onDoubleClick - " << txt << "\n";
+			std::string l_line = make_string( GetString( l_selection ) );
+			const std::regex l_regexCompileError( "[^[]*\\[[^\\\\]*[\\\\]*([^@]*)@ L# ([0-9]*) \\][^\n]*" );
+			std::smatch l_results;
+			std::regex_match( l_line, l_results, l_regexCompileError );
+			TROLL_PROJECT_NAMESPACE::File * l_file = NULL;
+			int l_lineIndex = 1;
 
-			l_file = g_mainFrame->m_filesList->GetSelectedScene()->GetFile( g_mainFrame->m_filesList->GetItemByName( txt));
+			if ( l_results.size() == 3 )
+			{
+				std::string l_fileName = l_results[1].str();
+				General::Utils::string::trim( l_fileName );
+				l_lineIndex = atol( l_results[2].str().c_str() );
+				l_file = GUI::MainFrame::GetInstance()->GetFile( make_wxString( l_fileName ) );
+			}
 
+			if ( l_file )
+			{
+				GUI::MainFrame::GetInstance()->SelectFileTab( l_file->IdOnglet );
+				std::clog << "LogCtrl::OnDoubleClick - " << l_file->IdOnglet << "\n";
+				wxStcTextEditor * l_edit = l_file->EditPanel;
+				l_edit->SetFocus();
+				l_edit->GotoLine( l_lineIndex - 1 );
+			}
 		}
 
-		txt = GetLineText( y);
-		if (txt.Contains( "L#"))
-		{
-			size_t csize = txt.find( "L#");
-			size_t fsize = txt.find( "]");
-			txt = txt.substr( csize + 3, (fsize - csize - 4) );
-
-			g_mainFrame->m_mainTabsContainer->SetSelection( l_file->IdOnglet);
-			std::cout << "LogCtrl::_onDoubleClick - " << l_file->IdOnglet << "\n";
-			l_file->EditPanel->SetFocus();
-			l_file->EditPanel->GetText()->SetInsertionPoint( l_file->EditPanel->GetText()->XYToPosition( 0, atol( txt) - 1));
-		}
-	*/
-	p_event.Skip();
+		p_event.Skip();
+	}
 }
-
-
+END_TROLL_GUI_NAMESPACE

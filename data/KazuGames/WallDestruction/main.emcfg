@@ -1,0 +1,23 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene kazu
+{
+	muse_file kazu.muse
+	data_file kazu.zip
+	scene_file kazu.emscene
+	load_script_file kazu.emscript
+}
+
+scene WallDestruction
+{
+	muse_file WallDestruction.muse
+	data_file WallDestruction.zip
+	data_file Interface.zip
+	scene_file Interface.emscene
+	scene_file Wall.emscene
+	load_script_file Scores.emscript
+	load_script_file Wall.emscript
+	load_script_file Interface.emscript
+}
+
+start_scene WallDestruction

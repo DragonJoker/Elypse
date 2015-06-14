@@ -1,0 +1,23 @@
+project Demeyere
+{
+	resolution		640 480
+	colour			0 0 0
+	show_debug		true
+	show_fps		true
+	scene demeyere
+	{
+		scene_files
+		{
+			demo-demeyere.emscene
+			demo-demeyere-hud.emscene
+		}
+		load_script_files
+		{
+			demo-demeyere.emscript
+		}
+		data_files_3d
+		{
+			demo-demeyere
+		}
+	}
+}

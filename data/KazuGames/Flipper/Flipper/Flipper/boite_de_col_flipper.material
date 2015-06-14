@@ -1,0 +1,12 @@
+
+material boite_de_col_flipper/Default
+{
+	technique
+	{
+		pass
+		{
+		}
+
+	}
+
+}

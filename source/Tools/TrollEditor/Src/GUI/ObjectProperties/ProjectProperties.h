@@ -1,52 +1,63 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___ProjectProperties___
 #define ___ProjectProperties___
 
-#include <wx/frame.h>
+#include "Module_Properties.h"
 
-#include "GUI/Module_GUI.h"
-#include "Project/Module_Project.h"
+#include <wx/dialog.h>
 
-namespace Troll
+BEGIN_TROLL_GUI_PROPERTIES_NAMESPACE
 {
-	namespace GUI
+	class ProjectProperties
+		: public wxDialog
 	{
-		class ProjectProperties
-			: public wxFrame
-		{
-		protected:
-			Project * m_project;
+	public:
+		ProjectProperties( TROLL_PROJECT_NAMESPACE::Project & p_project, wxWindow * parent, const wxPoint & pos = wxDefaultPosition );
+		~ProjectProperties();
 
-			wxStaticText * m_projectName;
-			wxComboBox * m_backgroundType;
-			wxButton * m_background;
-			wxCheckBox * m_shadows;
-			wxComboBox * m_fsaa;
-			wxCheckBox * m_showDebugConsole;
-			wxCheckBox * m_showFPS;
-			wxTextCtrl * m_startupScript;
-			wxButton * m_back;
+		void UpdateProperties();
 
-		public:
-			ProjectProperties( Project * p_project, wxWindow * parent, const wxPoint & pos = wxDefaultPosition );
-			~ProjectProperties();
+	private:
+		DECLARE_EVENT_TABLE()
+		void OnSelectBackgroundType( wxCommandEvent & p_event );
+		void OnBackground( wxCommandEvent & p_event );
+		void OnShadowsChange( wxCommandEvent & p_event );
+		void OnSelectFSAA( wxCommandEvent & p_event );
+		void OnShowConsoleChange( wxCommandEvent & p_event );
+		void OnShowFPSChange( wxCommandEvent & p_event );
+		void OnStartupScriptChange( wxCommandEvent & p_event );
+		void OnBack( wxCommandEvent & p_event );
 
-			void UpdateProperties();
+	protected:
+		TROLL_PROJECT_NAMESPACE::Project & m_project;
 
-		private:
-			void _onSelectBackgroundType( wxCommandEvent & p_event );
-			void _onBackground( wxCommandEvent & p_event );
-			void _onShadowsChange( wxCommandEvent & p_event );
-			void _onSelectFSAA( wxCommandEvent & p_event );
-			void _onShowConsoleChange( wxCommandEvent & p_event );
-			void _onShowFPSChange( wxCommandEvent & p_event );
-			void _onStartupScriptChange( wxCommandEvent & p_event );
-			void _onBack( wxCommandEvent & p_event );
-
-			DECLARE_EVENT_TABLE()
-		};
-	}
+		wxStaticText * m_projectName;
+		wxComboBox * m_backgroundType;
+		wxButton * m_background;
+		wxCheckBox * m_shadows;
+		wxComboBox * m_fsaa;
+		wxCheckBox * m_showDebugConsole;
+		wxCheckBox * m_showFPS;
+		wxTextCtrl * m_startupScript;
+		wxButton * m_back;
+	};
 }
+END_TROLL_GUI_PROPERTIES_NAMESPACE
 
 #endif
-

@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptFunctions.h"
@@ -955,7 +972,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( ScN_Ungroup )
 	GET_AND_EXEC_PARAM(l_sNode,0);
 	SceneNode * a, *b;
 	b = l_sNode->m_node;
-	if(b!=NULL)
+	if(b!= NULL)
 	{
 		a = b->getParentSceneNode();
 
@@ -986,7 +1003,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( ScN_UngroupAll )
 	SceneNode * a, *b;
 	b = l_sNode->m_node;
 
-	if(b!=NULL)
+	if(b!= NULL)
 	{
 		while(b->numChildren()>0)
 		{
@@ -1025,7 +1042,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( ScN_Recenter )
 	b = l_sNode->m_node;
 	Vector3 position;
 
-	if(b!=NULL)
+	if(b!= NULL)
 	{
 		position = Vector3::ZERO;
 		Node::ChildNodeIterator iter = b->getChildIterator();

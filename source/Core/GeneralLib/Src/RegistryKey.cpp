@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "RegistryKey.h"
 
 #if GENLIB_WINDOWS
@@ -20,7 +37,7 @@ namespace General
 		{
 		public:
 			RegistryKeyBaseImplBase( RegistryFolder p_folder, const T & p_name )
-				:	m_folder( p_folder == RF_HKLM ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER ),
+				: m_folder( p_folder == RF_HKLM ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER ),
 					m_name( p_name ),
 					m_created( false )
 			{
@@ -51,7 +68,7 @@ namespace General
 		{
 		public:
 			RegistryKeyBaseImpl( RegistryFolder p_folder, const std::string & p_name )
-				:	RegistryKeyBaseImplBase( p_folder, p_name )
+				: RegistryKeyBaseImplBase( p_folder, p_name )
 			{
 			}
 
@@ -62,7 +79,7 @@ namespace General
 
 			bool Open()
 			{
-				m_created = RegOpenKeyExA( m_folder, m_name.c_str(), 0L,  KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
+				m_created = RegOpenKeyExA( m_folder, m_name.c_str(), 0L, KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
 				return m_created;
 			}
 
@@ -143,7 +160,7 @@ namespace General
 
 			bool Open()
 			{
-				m_created = RegOpenKeyExW( m_folder, m_name.c_str(), 0L,  KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
+				m_created = RegOpenKeyExW( m_folder, m_name.c_str(), 0L, KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
 				return m_created;
 			}
 

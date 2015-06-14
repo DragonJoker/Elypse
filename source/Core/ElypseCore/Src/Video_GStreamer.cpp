@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "Video_GStreamer.h"
@@ -10,12 +27,12 @@
 
 #include "VideoFactory_GStreamer.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <StringConverter.h>
 
 VideoImpl_GStreamer::VideoImpl_GStreamer( VideoObject * p_owner )
-	:	VideoImplementation( p_owner ),
+	: VideoImplementation( p_owner ),
 		m_videoLinked( false ),
 		m_pipeline( NULL ),
 		m_videoCaps( NULL )
@@ -171,7 +188,7 @@ void VideoImpl_GStreamer::Initialise( const Url & p_mediaUrl )
 		GENLIB_EXCEPTION( "Something went wrong in creating pipeline element, check your gstreamer plugins versions please..." );
 	}
 
-	gst_bin_add_many(	GST_BIN( m_pipeline ),
+	gst_bin_add_many( GST_BIN( m_pipeline ),
 						m_fileSrc, m_typeFind,
 						m_audioQueue, m_audioConverter, m_audioSink, NULL );
 	m_binEltSet.insert( m_pipeline );
@@ -346,7 +363,7 @@ void VideoImpl_GStreamer::_tryToPlug( GstPad * p_pad, const GstCaps * p_caps )
 			g_object_set( G_OBJECT( m_videoSink ), "signal-handoffs", TRUE, "sync", TRUE, "can-activate-pull", TRUE, NULL );
 			g_signal_connect( m_videoSink, "handoff", G_CALLBACK( VideoImpl_GStreamer::_handoffCB ), this );
 			gst_caps_unref( l_videoScalerCaps );
-			gst_bin_add_many(	GST_BIN( m_pipeline ),
+			gst_bin_add_many( GST_BIN( m_pipeline ),
 								m_videoQueue, m_videoConverter, m_videoScaler, m_videoScaleFilter, m_videoSink, NULL );
 			gst_element_link_many( m_videoQueue, m_videoConverter, m_videoScaler, m_videoScaleFilter, m_videoSink, NULL );
 			m_binEltSet.insert( m_videoQueue );

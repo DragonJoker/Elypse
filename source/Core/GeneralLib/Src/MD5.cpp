@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "MD5.h"
 #include <cstring>
 #include <cstdio>
@@ -101,7 +118,7 @@
 #define MD5_T64  0xeb86d391 //Transformation Constant 64
 
 //Null data (except for first BYTE) used to finalise the checksum calculation
-static unsigned char PADDING[64] =
+static unsigned char PADDING[64] = 
 {
 	0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -331,7 +348,7 @@ void MD5::DWordToByte( unsigned char * p_output, unsigned long * p_input, unsign
 
 	for ( ; j < p_len; i++, j += 4 )
 	{
-		p_output[j]		= static_cast< unsigned char >( p_input[i] & 0xff );
+		p_output[j] = static_cast< unsigned char >( p_input[i] & 0xff );
 		p_output[j + 1] = static_cast< unsigned char >( ( p_input[i] >> 8 ) & 0xff );
 		p_output[j + 2] = static_cast< unsigned char >( ( p_input[i] >> 16 ) & 0xff );
 		p_output[j + 3] = static_cast< unsigned char >( ( p_input[i] >> 24 ) & 0xff );

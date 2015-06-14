@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "SoundManager.h"
@@ -5,7 +22,7 @@
 #include "SoundPlaylist.h"
 #include "SoundInstance.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <OgreEntity.h>
 #include <OgreLog.h>
@@ -14,7 +31,7 @@
 GENLIB_INIT_SINGLETON( SoundManager );
 
 SoundManager::SoundManager( const String  & p_basePath )
-	:	m_basePath( p_basePath ),
+	: m_basePath( p_basePath ),
 		m_musicVolume( 0.0 ),
 		m_SFXVolume( 0.0 ),
 		m_musicMuted( false ),
@@ -68,7 +85,7 @@ SoundManager::SoundManager( const String  & p_basePath )
 	}
 
 #if ELYPSE_LINUX
-	FMOD_OUTPUTTYPE l_outputMode[5] =
+	FMOD_OUTPUTTYPE l_outputMode[5] = 
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
 		FMOD_OUTPUTTYPE_ALSA,
@@ -89,7 +106,7 @@ SoundManager::SoundManager( const String  & p_basePath )
 	}
 
 #elif ELYPSE_WINDOWS
-	FMOD_OUTPUTTYPE l_outputMode[7] =
+	FMOD_OUTPUTTYPE l_outputMode[7] = 
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
 		FMOD_OUTPUTTYPE_DSOUND,
@@ -155,7 +172,7 @@ void SoundManager::AddPlaylist( SoundPlaylist * p_playlist )
 		return;
 	}
 
-	m_playlists.insert( SoundPlaylistMap::value_type( p_playlist->GetName(), p_playlist ) );
+	m_playlists.insert( std::make_pair( p_playlist->GetName(), p_playlist ) );
 }
 
 SoundObject * SoundManager::CreateSound( const String & p_name )
@@ -174,7 +191,7 @@ SoundObject * SoundManager::CreateSound( const String & p_name )
 	}
 
 	l_sound = new SoundObject( p_name );
-	m_sounds.insert( SoundObjectMap::value_type( p_name, l_sound ) );
+	m_sounds.insert( std::make_pair( p_name, l_sound ) );
 	return l_sound;
 }
 
@@ -211,7 +228,7 @@ void SoundManager::RegisterInstance( SoundInstance * p_instance )
 
 	if ( ifind == m_nodeInstances.end() )
 	{
-		ifind = m_nodeInstances.insert( SoundNodeMap::value_type( l_node->getName(), SoundInstanceSet() ) ).first;
+		ifind = m_nodeInstances.insert( std::make_pair( l_node->getName(), SoundInstanceSet() ) ).first;
 	}
 
 	ifind->second.insert( p_instance );
@@ -273,7 +290,7 @@ void SoundManager::SetVolumePercent( const String & p_nodeName, Real p_percent )
 bool SoundManager::IsSoundObject( const String &  p_name)
 {
 	SoundObjectMap::iterator l_it = m_objectList.begin();
-	const SoundObjectMap::iterator & l_end =m_objectList.end();
+	const SoundObjectMap::iterator & l_end = m_objectList.end();
 
 	for( ; l_it != l_end ; ++l_it)
 	{
@@ -385,7 +402,7 @@ void SoundManager::Mute( bool p_mute, SoundType p_type )
 	}
 }
 
-void SoundManager::Update(	const Vector3 & p_position,
+void SoundManager::Update( const Vector3 & p_position,
 							const Real * p_up,
 							const Real * p_forward,
 							Real p_updateTime )
@@ -502,11 +519,11 @@ const String SoundManager::OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
 	case FMOD_OUTPUTTYPE_PSP:
 		return "PSP";
 #if defined( _WIN32 )
-//		case FMOD_OUTPUTTYPE_OPENAL:		return "OpenAL";
-//		case FMOD_OUTPUTTYPE_SOUNDMANAGER:	return "Sound Manager";
-//		case FMOD_OUTPUTTYPE_XBOX:			return "XBox";
-//		case FMOD_OUTPUTTYPE_PS2:			return "Playstation 2";
-//		case FMOD_OUTPUTTYPE_GC:			return "GameCube";
+//		case FMOD_OUTPUTTYPE_OPENAL: return "OpenAL";
+//		case FMOD_OUTPUTTYPE_SOUNDMANAGER: return "Sound Manager";
+//		case FMOD_OUTPUTTYPE_XBOX: return "XBox";
+//		case FMOD_OUTPUTTYPE_PS2: return "Playstation 2";
+//		case FMOD_OUTPUTTYPE_GC: return "GameCube";
 #endif
 
 	case FMOD_OUTPUTTYPE_UNKNOWN:

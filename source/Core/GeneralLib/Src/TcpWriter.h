@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___GENERAL_TCP_WRITER_H___
 #define ___GENERAL_TCP_WRITER_H___
 
@@ -31,7 +48,7 @@ namespace General
 
 		public:
 			TcpWriterBase( boost::asio::ip::tcp::socket & p_socket, boost::asio::io_service & p_service )
-				:	m_socket( p_socket ),
+				: m_socket( p_socket ),
 					m_service( p_service ),
 					m_noSend( false )
 			{
@@ -69,9 +86,9 @@ namespace General
 				m_buffer.data()[1] = static_cast< unsigned char >( l_length >> 8 );
 				//memcpy( m_buffer.data(), &l_length, c_headerLength);
 				memcpy( m_buffer.data() + c_headerLength, m_messages.front().c_str(), m_messages.front().size() );
-				boost::asio::async_write(	m_socket,
+				boost::asio::async_write( m_socket,
 											boost::asio::buffer( m_buffer.data(), l_length + c_headerLength ),
-											boost::bind(	& TcpWriterBase::DoEndWrite,
+											boost::bind( & TcpWriterBase::DoEndWrite,
 													this,
 													boost::asio::placeholders::error ) );
 			}
@@ -135,7 +152,7 @@ namespace General
 		{
 		public:
 			TcpWriter( boost::asio::ip::tcp::socket & p_socket, boost::asio::io_service & p_service )
-				:	TcpWriterBase( p_socket, p_service )
+				: TcpWriterBase( p_socket, p_service )
 			{
 			}
 			virtual ~TcpWriter()

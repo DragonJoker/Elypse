@@ -1,0 +1,421 @@
+bool l_inGame;
+bool l_paused;
+bool l_music;
+bool l_sound;
+bool l_shift;
+bool l_alt;
+bool l_sequenceCompleted;
+bool l_errorInLevel;
+bool l_finished;
+bool l_titleShown;
+
+int i;
+int l_nbLife;
+int l_level;
+int l_figure;
+int l_sequenceLength;
+int l_nbExecs;
+int c_nbLifeMax;
+
+real l_timeLevel;
+real l_nbSamples;
+real l_musicVol;
+real l_soundVol;
+real l_ticPos;
+real c_relativeRegletteWidth;
+
+string l_sequence;
+
+overlay l_ticMusic;
+overlay l_ticSound;
+overlay l_greenTime;
+overlay l_redTime;
+overlay l_menuJouer;
+
+camera l_rootCamera;
+
+animation_group c_surfAnim;
+
+void PauseGame()
+{
+	l_paused = true;
+	Timer_PauseAll();
+
+	OverlayElement_GetByName( "Menu/Continuer")->Show();
+	OverlayElement_GetByName( "Menu/Jouer")->Hide();
+	Overlay_Hide( "InGame/BottomLeft");
+	Overlay_Hide( "InGame/TopLeft");
+	Overlay_Show( "Menu");
+};
+
+void ContinueGame()
+{
+	l_paused = false;
+	Timer_PlayAll();
+
+	Overlay_Show( "InGame/BottomLeft");
+	Overlay_Show( "InGame/TopLeft");
+	Overlay_Hide( "Menu");
+};
+
+void EndGame()
+{
+	Overlay_Hide( "InGame/Result");
+	Overlay_Hide( "InGame/SubmitScore");
+	Overlay_Hide( "Zcore");
+	CheckClearToGo();
+	if (g_clearToGo)
+	{
+		Overlay_Show( "Menu");
+		Overlay_Hide( "InGame/TopLeft");
+		OverlayElement_GetByName( "Menu/Jouer")->Hide();
+		OverlayElement_GetByName( "Menu/Continuer")->Hide();
+		OverlayElement_GetByName( "Menu/Recommencer")->Show();
+		OverlayElement_GetByName( "Menu/Recommencer/Cout")->Show();
+		if (g_free)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "(gratuit)");
+		}
+		elseif (g_freeLimited)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "(gratuit, " + l_infos + " parties)");
+		}
+		elseif (g_priced)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "(payant : " + l_infos + " credits)");
+		}
+		elseif (g_abonne)
+		{
+			OverlayElement_GetByName( "Menu/Recommencer/Cout")->SetCaption( "(abonne)");
+		};
+		Overlay_Hide( "MenuInGame");
+	}
+	else
+	{
+		Overlay_Hide( "Menu");
+		Overlay_Hide( "InGame/BottomLeft");
+		Overlay_Hide( "InGame/TopLeft");
+		if ( ! c_modeInstant)
+		{
+			string l_endCaption;
+			l_endCaption->clear();
+			real l_lineWidth;
+			l_lineWidth = 0.0;
+			Echo( "End - not instant - " + l_infos);
+			if (l_infos == "no more free")
+			{
+				Echo( "End - not instant - not free");
+				l_endCaption = "Vous n'avez plus de partie gratuite disponible.";
+				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+			}
+			else
+			{
+				Echo( "End - not instant - no money");
+				l_endCaption = "Une partie de ce jeu coute " + l_infos + " credits.";
+				l_lineWidth = GetLineWidth( l_endCaption, "Minigame", 40.0);
+				l_endCaption += endl + "Vous ne disposez pas de ce montant";
+			};
+			OverlayElement_GetByName( "FinMiniGame")->SetCaption( l_endCaption);
+			OverlayElement_GetByName( "FinMiniGame")->SetLeft( (GENERAL_SCREEN_WIDTH - l_lineWidth) / 2.0);
+			Overlay_Show( "FinMiniGame");
+		};
+	};
+};
+
+void StopGame()
+{
+	l_inGame = false;
+	l_finished = true;
+	Timer_KillAll();
+	l_figure = 7;
+};
+
+void DisplayInterfaceInGame()
+{
+	Overlay_Show( "InGame/BottomCenter");
+	Overlay_Show( "InGame/BottomLeft");
+	Overlay_Show( "InGame/TopLeft");
+	Overlay_Show( "InGame/Center");
+	Overlay_Hide( "InGame/Result");
+	Overlay_Hide( "InGame/SubmitScore");
+
+	OverlayElement_GetByName( "InGame/TopLeft/Score")->SetCaption( "Score : " + itoa( g_score));
+	OverlayElement_GetByName( "InGame/TopLeft/Level")->SetCaption( "Niveau " + itoa( l_level) + " / Figure " + itoa( l_figure));
+	OverlayElement_GetByName( "InGame/Center/TypeBox")->SetCaption( l_sequence);
+
+	for (i = 0 ; i < c_nbLifeMax ; i ++)
+	{
+		if (i < l_nbLife)
+		{
+			OverlayElement_GetByName( "InGame/BottomCenter/Vie" + itoa( i))->Show();
+		}
+		else
+		{
+			OverlayElement_GetByName( "InGame/BottomCenter/Vie" + itoa( i))->Hide();
+		};
+	};
+
+	l_greenTime->SetWidth( 1.0);
+	l_redTime->SetWidth( 0.0);
+};
+
+void SetSequence()
+{
+	l_errorInLevel = false;
+	l_sequenceCompleted = false;
+
+	if (l_level == 1)
+	{
+		if (l_figure == 1)
+		{
+			l_sequence = "surfer";
+		}
+		elseif (l_figure == 2)
+		{
+			l_sequence = "c'est";
+		}
+		elseif (l_figure == 3)
+		{
+			l_sequence = "trop";
+		}
+		elseif (l_figure == 4)
+		{
+			l_sequence = "bien";
+		}
+		elseif (l_figure == 5)
+		{
+			l_sequence = "non?";
+		};
+	}
+	elseif (l_level == 2)
+	{
+		if (l_figure == 1)
+		{
+			l_sequence = "mais";
+		}
+		elseif (l_figure == 2)
+		{
+			l_sequence = "il faut";
+		}
+		elseif (l_figure == 3)
+		{
+			l_sequence = "aimer";
+		}
+
+		elseif (l_figure == 4)
+		{
+			l_sequence = "boire";
+		}
+		elseif (l_figure == 5)
+		{
+			l_sequence = "la tasse";
+		};
+	}
+	elseif (l_level == 3)
+	{
+		if (l_figure == 1)
+		{
+			l_sequence = "de plus";
+		}
+		elseif (l_figure == 2)
+		{
+			l_sequence = "il vaut";
+		}
+		elseif (l_figure == 3)
+		{
+			l_sequence = "mieux savoir";
+		}
+
+		elseif (l_figure == 4)
+		{
+			l_sequence = "nager, sinon";
+		}
+		elseif (l_figure == 5)
+		{
+			l_sequence = "tu te noies";
+		};
+	}
+	elseif (l_level == 4)
+	{
+		if (l_figure == 1)
+		{
+			l_sequence = "et comme";
+		}
+		elseif (l_figure == 2)
+		{
+			l_sequence = "tu n'es pas";
+		}
+		elseif (l_figure == 3)
+		{
+			l_sequence = "sur de rester";
+		}
+
+		elseif (l_figure == 4)
+		{
+			l_sequence = "sur la planche";
+		}
+		elseif (l_figure == 5)
+		{
+			l_sequence = "accroches-toi";
+		};
+	}
+	else
+	{
+		l_sequence = "trop top le surf!!";
+	};
+};
+
+void SetTimeLevel()
+{
+	if (l_figure == 7)
+	{
+		l_level = 1;
+		l_figure = 1;
+		l_nbLife = 3;
+		g_score = 0;
+	};
+
+	if (l_level == 1 || l_level == 2)
+	{
+		l_timeLevel = 5.0;
+		l_nbSamples = 150.0;
+	}
+	elseif (l_level == 3 && l_figure <= 3)
+	{
+		l_timeLevel = 4.0;
+		l_nbSamples = 120.0;
+	}
+	elseif (l_level == 3)
+	{
+		l_timeLevel = 3.0;
+		l_nbSamples = 90.0;
+	}
+	elseif (l_level == 4)
+	{
+		l_timeLevel = 3.0;
+		l_nbSamples = 90.0;
+	}
+	elseif (l_level == 5)
+	{
+		l_timeLevel = 2.5;
+		l_nbSamples = 75.0;
+	};
+};
+
+void BeginGame()
+{
+	SetTimeLevel();
+	SetSequence();
+	DisplayInterfaceInGame();
+
+	timer( "Surfing", TIMERTYPE_REPEAT, l_timeLevel / l_nbSamples)
+	{
+		l_nbExecs = CURRENTTIMER_NUMEXECS;
+
+		if (CURRENTTIMER_NUMEXECS <= rtoi( l_nbSamples / 2.0))
+		{
+			l_greenTime->SetWidth( CURRENTTIMER_NUMEXECS * 256.0 / l_nbSamples);
+		}
+		else
+		{
+			l_redTime->SetWidth( (CURRENTTIMER_NUMEXECS - (l_nbSamples / 2.0)) * 256.0 / l_nbSamples);
+		};
+
+		if (CURRENTTIMER_NUMEXECS == rtoi( l_nbSamples))
+		{
+			Timer_Kill( "Surfing");
+
+			c_surfAnim->StopAllAnimations();
+
+			if ( ! l_sequenceCompleted)
+			{
+				c_surfAnim->StartAnimation( "tombe");
+				Overlay_Hide( "InGame/TopLeft");
+
+				if (l_nbLife > 0)
+				{
+					l_menuJouer->SetCaption( "Recommencer la figure");
+					l_nbLife --;
+					l_errorInLevel = true;
+					Overlay_Show( "Menu");
+				}
+				else
+				{
+					l_finished = true;
+					OverlayElement_GetByName( "InGame/Result")->SetMaterial( "Perdu");
+					Overlay_Show( "InGame/Result");
+
+					_submitHighscore();
+					l_inGame = false;
+					Overlay_Hide( "Menu");
+					timer( "EndGameAndCheckRS", TIMERTYPE_ONCE, 2.0)
+					{
+						EndGame();
+					};
+				};
+
+				Overlay_Hide( "InGame/BottomLeft");
+			};
+		};
+	};
+};
+
+void Initialise()
+{
+	l_finished = false;
+	l_inGame = true;
+	l_paused = false;
+	l_sound = true;
+	l_music = true;
+	l_shift = false;
+	l_alt = false;
+	l_titleShown = true;
+
+	l_musicVol = 1.0;
+	l_soundVol = 1.0;
+	l_ticPos = 1.0;
+
+	c_nbLifeMax = 5;
+
+	l_level = 1;
+	l_figure = 1;
+	g_score = 0;
+	l_nbLife = 3;
+	l_sequence = "";
+
+	l_rootCamera = Camera_GetByName( "RootCamera");
+	l_ticMusic = OverlayElement_GetByName( "Options/TicMusic");
+	l_ticSound = OverlayElement_GetByName( "Options/TicSound");
+	l_greenTime = OverlayElement_GetByName( "InGame/Center/GreenTime");
+	l_redTime = OverlayElement_GetByName( "InGame/Center/RedTime");
+	l_menuJouer = OverlayElement_GetByName( "Menu/Jouer");
+
+	l_rootCamera->GetParent()->Pitch( -15.0);
+	l_rootCamera->SetPosition( l_rootCamera->GetPosition() * ( 3000.0 / V3_GetLength( l_rootCamera->GetPosition())));
+
+	c_surfAnim = AnimationGroup_GetByName( "SurfAnim");
+	c_surfAnim->StartAnimation( "stand");
+
+	c_relativeRegletteWidth = OverlayElement_GetByName( "Options/RegletteMusic")->GetWidth() - l_ticMusic->GetWidth();
+
+	Overlay_Hide( "Commandes");
+	Overlay_Hide( "Options");
+	Overlay_Hide( "Regles");
+	Overlay_Hide( "Start");
+	Overlay_Hide( "Zcore");
+	Overlay_Hide( "InGame/Result");
+	Overlay_Hide( "InGame/SubmitScore");
+	Overlay_Hide( "InGame/TopLeft");
+	Overlay_Hide( "InGame/BottomLeft");
+	Overlay_Hide( "InGame/BottomCenter");
+	Overlay_Hide( "InGame/Center");
+	OverlayElement_GetByName( "Menu/Recommencer")->Hide();
+	OverlayElement_GetByName( "Menu/Recommencer/Cout")->Hide();
+	OverlayElement_GetByName( "Menu/Continuer")->Hide();
+
+	Sound_Play_Global( "Ambiance");
+
+	OverlayElement_GetByName( "Options/MusicOnOff")->Hide();
+	OverlayElement_GetByName( "Options/SoundOnOff")->Hide();
+	Overlay_Hide( "FinMiniGame");
+};

@@ -1,18 +1,28 @@
-/*****************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author : Marc BILLON
-	Compagny : FDSSoftMedia - Copyright 2007
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-*****************************************************************************/
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___MODULE_SCRIPT_H___
 #define ___MODULE_SCRIPT_H___
 
-#include "EMuse.h"
+#include "Elypse.h"
 #include <queue>
 #include <cstdint>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Script
 	{
@@ -48,7 +58,7 @@ namespace EMuse
 			EMVT_INTMAP,
 			EMVT_REALMAP,
 			EMVT_STRINGMAP,
-			EMVT_ITER,			//Placeholder before specialisation, used for variable declaration. Do not use as a param
+			EMVT_ITER, //Placeholder before specialisation, used for variable declaration. Do not use as a param
 			EMVT_IMITER,
 			EMVT_RMITER,
 			EMVT_SMITER,
@@ -65,10 +75,10 @@ namespace EMuse
 
 		enum KeyboardBindType
 		{
-			KBT_KEY_DOWN			= 0,
-			KBT_KEY_UP				= 1,
-			KBT_KEY_PRESSED			= 2,
-			KBT_KEY_REPEAT			= 3
+			KBT_KEY_DOWN = 0,
+			KBT_KEY_UP = 1,
+			KBT_KEY_PRESSED = 2,
+			KBT_KEY_REPEAT = 3
 		};
 
 		enum OperatorLevel
@@ -93,29 +103,29 @@ namespace EMuse
 
 		enum ScriptTimerType
 		{
-			EMTT_ONCE		= 0,
-			EMTT_REPEAT		= 1,
-			EMTT_CONTINUOUS	= 2,
-			EMTT_PERMANENT	= 3
+			EMTT_ONCE = 0,
+			EMTT_REPEAT = 1,
+			EMTT_CONTINUOUS = 2,
+			EMTT_PERMANENT = 3
 		};
 
 		enum BlockType
 		{
-			BT_SEPARATOR		= 0x0001,
-			BT_STRING			= 0x0002,
-			BT_NUMERAL			= 0x0004,
-			BT_OPERATOR			= 0x0008,
-			BT_PARENTHESIS		= 0x0010,
-			BT_BRACKETS			= 0x0020,
-			BT_BRACES			= 0x0040,
-			BT_SIMPLEQUOTE		= 0x0080,
-			BT_DOUBLEQUOTE		= 0x0100,
-			BT_INITIAL			= 0x0200,
-			BT_VARIABLE_TYPE	= 0x0400,
-			BT_IF_ELSE			= 0x0800,
-			BT_STRUCT			= 0x1000,
-			BT_TYPEDEF			= 0x2000,
-			BT_RETURN			= 0x4000
+			BT_SEPARATOR = 0x0001,
+			BT_STRING = 0x0002,
+			BT_NUMERAL = 0x0004,
+			BT_OPERATOR = 0x0008,
+			BT_PARENTHESIS = 0x0010,
+			BT_BRACKETS = 0x0020,
+			BT_BRACES = 0x0040,
+			BT_SIMPLEQUOTE = 0x0080,
+			BT_DOUBLEQUOTE = 0x0100,
+			BT_INITIAL = 0x0200,
+			BT_VARIABLE_TYPE = 0x0400,
+			BT_IF_ELSE = 0x0800,
+			BT_STRUCT = 0x1000,
+			BT_TYPEDEF = 0x2000,
+			BT_RETURN = 0x4000
 		};
 
 		enum BlockSubType
@@ -187,6 +197,6 @@ namespace EMuse
 	}
 }
 
-using namespace EMuse::Script;
+using namespace Elypse::Script;
 
 #endif

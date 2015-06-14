@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___MACROS_H___
 #define ___MACROS_H___
 
@@ -30,7 +47,7 @@
 								d_interface tells the compiler that this class is a pure interface : public pure virtual functions only.
 
 	d_hint : [compile] d_hint(0) tells the compiler that the code following is to be removed, since it won't be reached ever.
-	d_aligned : [memory] used to memory-align a class or struct :  class blah d_align(8){};
+	d_aligned : [memory] used to memory-align a class or struct : class blah d_align(8){};
 
 	d_unique_global : [linker] with this, a global variable can be defined in multiple files.The linker will only keep one and not generate an error.
 
@@ -95,6 +112,7 @@
 #	define d_nonnull( X)				__attribute__( ( nonnull( X)))
 #	define d_critical					__attribute__( ( hot))
 #	define d_unlikely					__attribute__( ( cold))
+#	define d_no_throw					throw()
 #elif GENLIB_LINUX
 #	define d_single_inheritance
 #	define d_multiple_inheritance
@@ -118,6 +136,7 @@
 #	define d_nonnull( X)				__attribute__( ( nonnull( X)))
 #	define d_critical					__attribute__( ( hot))
 #	define d_unlikely					__attribute__( ( cold))
+#	define d_no_throw					noexcept
 #elif GENLIB_MACOS
 #	define d_single_inheritance
 #	define d_multiple_inheritance
@@ -141,6 +160,7 @@
 #	define d_nonnull( X)				__attribute__( ( nonnull( X)))
 #	define d_critical					__attribute__( ( hot))
 #	define d_unlikely					__attribute__( ( cold))
+#	define d_no_throw					noexcept
 #else
 #	error Could not configure macros, compiler not recognized. @ GeneralLib/Macros.h
 #endif

@@ -112,7 +112,7 @@ void LoseGame()
 
 void WinGame()
 {
-//	Echo( "Gagne");
+	//Echo( "Gagne");
 	OverlayElement_GetByName( "Fin/Fin")->SetMaterial( "Gagne");
 	Overlay_Show( "Fin");
 	OverlayElement_GetByName( "Fin/Score")->Hide();

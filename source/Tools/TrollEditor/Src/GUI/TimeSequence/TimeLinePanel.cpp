@@ -1,5 +1,21 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-#include "PrecompiledHeader.h"
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
+#include "TrollEditorPch.h"
 
 #include "TimeLinePanel.h"
 
@@ -10,133 +26,110 @@
 #include "Project/Temporal/Sequence.h"
 #include "GUI/MainFrame.h"
 
-using namespace Troll;
-using namespace Troll::Temporal;
-using namespace Troll::GUI;
-
-extern MainFrame * g_mainFrame;
-
-BEGIN_EVENT_TABLE( TimeLinePanel, wxPanel )
-END_EVENT_TABLE()
-
-
-TimeLinePanel::TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position,
-							  const wxSize & p_size )
-	:	wxPanel( p_parent, p_id, p_position, p_size ),
-		m_totalWidth( p_size.x ),
-		m_totalHeight( p_size.y ),
-		m_currentTop( 0 ),
-		m_currentLeft( 0 ),
-		m_displayedSequences( 0 )
+BEGIN_TROLL_GUI_TIME_NAMESPACE
 {
-	SequencePanel * l_sequencePanel;
+	BEGIN_EVENT_TABLE( TimeLinePanel, wxPanel )
+	END_EVENT_TABLE()
 
-	for ( unsigned int i = 0 ; i < 20 ; i++ )
+	TimeLinePanel::TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
+		: wxPanel( p_parent, p_id, p_position, p_size )
+		, m_totalWidth( p_size.x )
+		, m_totalHeight( p_size.y )
+		, m_currentTop( 0 )
+		, m_currentLeft( 0 )
+		, m_displayedSequences( 0 )
 	{
-		l_sequencePanel = new SequencePanel( this, wxID_ANY, wxPoint( 0, 0 ), wxSize( 200, 20 ) );
-		l_sequencePanel->Hide();
-		m_sequences.push_back( l_sequencePanel );
+		SequencePanel * l_sequencePanel;
+
+		for ( unsigned int i = 0 ; i < 20 ; i++ )
+		{
+			l_sequencePanel = new SequencePanel( this, wxID_ANY, wxPoint( 0, 0 ), wxSize( 200, 20 ) );
+			l_sequencePanel->Hide();
+			m_sequences.push_back( l_sequencePanel );
+		}
+
+		SetBackgroundColour( wxColour( 255, 255, 255 ) );
 	}
 
-	SetBackgroundColour( wxColour( 255, 255, 255 ) );
-}
-
-
-
-TimeLinePanel::~TimeLinePanel()
-{
-}
-
-
-
-void TimeLinePanel::UpdateSequence( TrollSequence * p_sequence )
-{
-	TrollSequenceStrMap::iterator l_it = m_alreadyAddedSequences.find( p_sequence->TrollObject::GetName() );
-
-	if ( l_it != m_alreadyAddedSequences.end() )
+	TimeLinePanel::~TimeLinePanel()
 	{
-		wxPoint l_position( int( p_sequence->GetStartTime() * 100 ), p_sequence->GetLinePanel()->GetPosition().y );
-		wxSize l_size( int( p_sequence->GetTotalLength() * 100 ), 80 );
-		l_it = m_alreadyAddedSequences.begin();
-		m_totalWidth = 0;
+	}
+
+	void TimeLinePanel::UpdateSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence )
+	{
+		auto && l_it = m_alreadyAddedSequences.find( p_sequence->Object::GetObjectName() );
+
+		if ( l_it != m_alreadyAddedSequences.end() )
+		{
+			wxPoint l_position( int( p_sequence->GetStartTime() * 100 ), p_sequence->GetLinePanel()->GetPosition().y );
+			wxSize l_size( int( p_sequence->GetTotalLength() * 100 ), 80 );
+			l_it = m_alreadyAddedSequences.begin();
+			m_totalWidth = 0;
+
+			for ( ; l_it != m_alreadyAddedSequences.end() ; ++l_it )
+			{
+				m_totalWidth = max <int>( m_totalWidth, l_it->second->GetLinePanel()->GetPosition().x + l_it->second->GetLinePanel()->GetSize().x );
+			}
+
+			GUI::MainFrame::GetInstance()->UpdateSequence( m_totalWidth, m_totalHeight );
+		}
+	}
+
+	void TimeLinePanel::UpdateSequences( float p_time )
+	{
+		auto && l_it = m_alreadyAddedSequences.begin();
 
 		for ( ; l_it != m_alreadyAddedSequences.end() ; ++l_it )
 		{
-			m_totalWidth = max <int>( m_totalWidth, l_it->second->GetLinePanel()->GetPosition().x + l_it->second->GetLinePanel()->GetSize().x );
+			l_it->second->Update( p_time );
+		}
+	}
+
+	LinePanel * TimeLinePanel::GetSequencePanel( const wxString & p_name )
+	{
+		auto && l_it = m_alreadyAddedSequences.find( p_name );
+
+		if ( l_it != m_alreadyAddedSequences.end() )
+		{
+			return l_it->second->GetLinePanel();
 		}
 
-		float l_first = g_mainFrame->m_timePanel->GetFirst();
-		g_mainFrame->m_timeLineContainer->Scroll( 0, 0 );
-		SetSize( m_totalWidth + 20, m_totalHeight );
-		int l_verticalScroll = g_mainFrame->m_timeLineContainer->GetScrollPos( wxVERTICAL );
-//		std::cout << "TimeLinePanel::UpdateSequence - " << l_verticalScroll << "\n";
-		g_mainFrame->m_timeLineContainer->SetScrollbars( 20, 20, ( m_totalWidth + 20 ) / 20, m_totalHeight / 20, 0, 0 );
-		g_mainFrame->m_timeLineContainer->Scroll( int( l_first >= 0.1 ? l_first * 5 + 1 : l_first * 5 ), l_verticalScroll );
-	}
-}
-
-
-
-void TimeLinePanel::UpdateSequences( float p_time )
-{
-	TrollSequenceStrMap::iterator l_it = m_alreadyAddedSequences.begin();
-
-	for ( ; l_it != m_alreadyAddedSequences.end() ; ++l_it )
-	{
-		l_it->second->Update( p_time );
-	}
-}
-
-
-
-LinePanel * TimeLinePanel::GetSequencePanel( const wxString & p_name )
-{
-	TrollSequenceStrMap::iterator l_it = m_alreadyAddedSequences.find( p_name );
-
-	if ( l_it != m_alreadyAddedSequences.end() )
-	{
-		return l_it->second->GetLinePanel();
-	}
-
-	return NULL;
-}
-
-
-
-TrollSequence * TimeLinePanel::AddSequence( TrollSequence * p_sequence )
-{
-	if ( m_displayedSequences >= 20 )
-	{
 		return NULL;
 	}
 
-	if ( m_alreadyAddedSequences.find( p_sequence->TrollObject::GetName() ) == m_alreadyAddedSequences.end() )
+	TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * TimeLinePanel::AddSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence )
 	{
-//		std::cout << "TimeLinePanel::AddSequence - left : " << m_currentLeft << " - top : " << m_currentTop << " - width : " << l_size.x << " - height : " << l_size.y << "\n";
-		SequencePanel * l_sequencePanel = m_sequences[m_displayedSequences++];
-		l_sequencePanel->SetSequence( p_sequence );
-		l_sequencePanel->SetPosition( wxPoint( m_currentLeft, m_currentTop ) );
-		wxSize l_size = l_sequencePanel->GetSize();
-		m_alreadyAddedSequences.insert( TrollSequenceStrMap::value_type( p_sequence->TrollObject::GetName(), p_sequence ) );
-//		m_currentLeft += l_size.x;
-		m_currentTop += l_size.y;
-
-		if ( m_currentLeft + l_size.x > m_totalWidth )
+		if ( m_displayedSequences >= 20 )
 		{
-			m_totalWidth = m_currentLeft + l_size.x;
+			return NULL;
 		}
 
-		if ( m_currentTop > m_totalHeight )
+		if ( m_alreadyAddedSequences.find( p_sequence->GetObjectName() ) == m_alreadyAddedSequences.end() )
 		{
-			m_totalHeight = m_currentTop;
+			SequencePanel * l_sequencePanel = m_sequences[m_displayedSequences++];
+			l_sequencePanel->SetSequence( p_sequence );
+			l_sequencePanel->SetPosition( wxPoint( m_currentLeft, m_currentTop ) );
+			wxSize l_size = l_sequencePanel->GetSize();
+			m_alreadyAddedSequences.insert( std::make_pair( p_sequence->GetObjectName(), p_sequence ) );
+			//m_currentLeft += l_size.x;
+			m_currentTop += l_size.y;
+
+			if ( m_currentLeft + l_size.x > m_totalWidth )
+			{
+				m_totalWidth = m_currentLeft + l_size.x;
+			}
+
+			if ( m_currentTop > m_totalHeight )
+			{
+				m_totalHeight = m_currentTop;
+			}
+
+			std::cout << "TimeLinePanel::AddSequence - Total width : " << m_totalWidth << " - Total Height : " << m_totalHeight << "\n";
+			SetSize( m_totalWidth + 20, m_totalHeight );
+			return p_sequence;
 		}
 
-		std::cout << "TimeLinePanel::AddSequence - Total width : " << m_totalWidth << " - Total Height : " << m_totalHeight << "\n";
-		SetSize( m_totalWidth + 20, m_totalHeight );
-		return p_sequence;
+		return m_alreadyAddedSequences.find( p_sequence->GetObjectName() )->second;
 	}
-
-	return m_alreadyAddedSequences.find( p_sequence->TrollObject::GetName() )->second;
 }
-
-
+END_TROLL_GUI_TIME_NAMESPACE

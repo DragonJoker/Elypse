@@ -1,214 +1,204 @@
-#include "PrecompiledHeader.h"
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-#include "ElypseFrame.h"
-#include "ElypseCtrl.h"
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-using namespace Troll;
-using namespace Troll::Main;
-using namespace Troll::GUI;
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-BEGIN_EVENT_TABLE( ElypseFrame, wxFrame )
-	EVT_SET_FOCUS(	ElypseFrame::OnSetFocus )
-	EVT_KILL_FOCUS(	ElypseFrame::OnKillFocus )
-	EVT_SHOW(	ElypseFrame::OnShow )
-	EVT_ACTIVATE(	ElypseFrame::OnActivate )
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
+#include "TrollEditorPch.h"
 
-	EVT_ICONIZE(	ElypseFrame::_onIconise )
-	EVT_LEFT_DOWN(	ElypseFrame::_onMouseLeftDown )
-	EVT_LEFT_UP(	ElypseFrame::_onMouseLeftUp )
-	EVT_MIDDLE_DOWN(	ElypseFrame::_onMouseMiddleDown )
-	EVT_MIDDLE_UP(	ElypseFrame::_onMouseMiddleUp )
-	EVT_RIGHT_DOWN(	ElypseFrame::_onMouseRightDown )
-	EVT_RIGHT_UP(	ElypseFrame::_onMouseRightUp )
-	EVT_LEFT_DCLICK(	ElypseFrame::_onMouseLeftDown )
-	EVT_MIDDLE_DCLICK(	ElypseFrame::_onMouseMiddleDown )
-	EVT_RIGHT_DCLICK(	ElypseFrame::_onMouseRightDown )
-	EVT_MOUSEWHEEL(	ElypseFrame::_onMouseWheel )
-	EVT_MOTION(	ElypseFrame::_onMouseMove )
-	EVT_KEY_DOWN(	ElypseFrame::_onKeyDown )
-	EVT_KEY_UP(	ElypseFrame::_onKeyUp )
-	EVT_CHAR(	ElypseFrame::_onChar )
-	EVT_ENTER_WINDOW(	ElypseFrame::_onMouseEnter )
-	EVT_LEAVE_WINDOW(	ElypseFrame::_onMouseLeave )
-END_EVENT_TABLE()
+#include "GUI/ElypseFrame.h"
+#include "GUI/ElypseCtrl.h"
 
-
-void ElypseFrame::OnSetFocus( wxFocusEvent & p_event )
+BEGIN_TROLL_GUI_NAMESPACE
 {
-	if ( m_elypseCtrl != NULL )
+	BEGIN_EVENT_TABLE( ElypseFrame, wxFrame )
+		EVT_SET_FOCUS( ElypseFrame::OnSetFocus )
+		EVT_KILL_FOCUS( ElypseFrame::OnKillFocus )
+		EVT_SHOW( ElypseFrame::OnShow )
+		EVT_ACTIVATE( ElypseFrame::OnActivate )
+		EVT_ICONIZE( ElypseFrame::OnIconise )
+		EVT_LEFT_DOWN( ElypseFrame::OnMouseLeftDown )
+		EVT_LEFT_UP( ElypseFrame::OnMouseLeftUp )
+		EVT_MIDDLE_DOWN( ElypseFrame::OnMouseMiddleDown )
+		EVT_MIDDLE_UP( ElypseFrame::OnMouseMiddleUp )
+		EVT_RIGHT_DOWN( ElypseFrame::OnMouseRightDown )
+		EVT_RIGHT_UP( ElypseFrame::OnMouseRightUp )
+		EVT_LEFT_DCLICK( ElypseFrame::OnMouseLeftDown )
+		EVT_MIDDLE_DCLICK( ElypseFrame::OnMouseMiddleDown )
+		EVT_RIGHT_DCLICK( ElypseFrame::OnMouseRightDown )
+		EVT_MOUSEWHEEL( ElypseFrame::OnMouseWheel )
+		EVT_MOTION( ElypseFrame::OnMouseMove )
+		EVT_KEY_DOWN( ElypseFrame::OnKeyDown )
+		EVT_KEY_UP( ElypseFrame::OnKeyUp )
+		EVT_CHAR( ElypseFrame::OnChar )
+		EVT_ENTER_WINDOW( ElypseFrame::OnMouseEnter )
+		EVT_LEAVE_WINDOW( ElypseFrame::OnMouseLeave )
+	END_EVENT_TABLE()
+	
+	ElypseFrame::ElypseFrame( wxWindow * p_parent, const wxPoint & p_position, const wxSize & p_size )
+		: wxFrame( p_parent, wxID_ANY, _( "Elypse Window" ), p_position, p_size, wxWANTS_CHARS | wxSYSTEM_MENU | wxCAPTION )
+		, m_elypseCtrl( NULL )
 	{
-		m_elypseCtrl->OnSetFocus( p_event );
+		SetClientSize( p_size );
+	}
+
+	ElypseFrame::~ElypseFrame()
+	{
+	}
+
+	void ElypseFrame::OnSetFocus( wxFocusEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnSetFocus( p_event );
+		}
+	}
+
+	void ElypseFrame::OnKillFocus( wxFocusEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnKillFocus( p_event );
+		}
+	}
+
+	void ElypseFrame::OnShow( wxShowEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnShow( p_event );
+		}
+	}
+
+	void ElypseFrame::OnActivate( wxActivateEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnActivate( p_event );
+		}
+	}
+
+	void ElypseFrame::OnIconise( wxIconizeEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnIconise( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseLeftDown( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnButtonLeftDown( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseLeftUp( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnButtonLeftUp( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseMiddleDown( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnButtonMiddleDown( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseMiddleUp( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnButtonMiddleUp( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseRightDown( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnButtonRightDown( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseRightUp( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnButtonRightUp( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseWheel( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnMouseWheel( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseMove( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnMouseMove( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseEnter( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnMouseEnter( p_event );
+		}
+	}
+
+	void ElypseFrame::OnMouseLeave( wxMouseEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnMouseLeave( p_event );
+		}
+	}
+
+	void ElypseFrame::OnKeyDown( wxKeyEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnKeyDown( p_event );
+		}
+	}
+
+	void ElypseFrame::OnKeyUp( wxKeyEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnKeyUp( p_event );
+		}
+	}
+
+	void ElypseFrame::OnChar( wxKeyEvent & p_event )
+	{
+		if ( m_elypseCtrl != NULL )
+		{
+			m_elypseCtrl->OnChar( p_event );
+		}
 	}
 }
-
-
-
-void ElypseFrame::OnKillFocus( wxFocusEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnKillFocus( p_event );
-	}
-}
-
-
-
-void ElypseFrame::OnShow( wxShowEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnShow( p_event );
-	}
-}
-
-
-
-void ElypseFrame::OnActivate( wxActivateEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnActivate( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onIconise( wxIconizeEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnIconise( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseLeftDown( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnButtonLeftDown( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseLeftUp( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnButtonLeftUp( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseMiddleDown( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnButtonMiddleDown( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseMiddleUp( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnButtonMiddleUp( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseRightDown( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnButtonRightDown( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseRightUp( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnButtonRightUp( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseWheel( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnMouseWheel( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseMove( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnMouseMove( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseEnter( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnMouseEnter( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onMouseLeave( wxMouseEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnMouseLeave( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onKeyDown( wxKeyEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnKeyDown( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onKeyUp( wxKeyEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnKeyUp( p_event );
-	}
-}
-
-
-
-void ElypseFrame::_onChar( wxKeyEvent & p_event )
-{
-	if ( m_elypseCtrl != NULL )
-	{
-		m_elypseCtrl->OnChar( p_event );
-	}
-}
-
-
+END_TROLL_GUI_NAMESPACE

@@ -1,7 +1,24 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "NetworkManager.h"
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <boost/exception/diagnostic_information.hpp>
 
@@ -128,7 +145,7 @@ bool ElypseTcpClient::CallbackConnectorError( const boost::system::error_code & 
 }
 
 NetworkManager::NetworkManager()
-	:	m_stop( false )
+	: m_stop( false )
 {
 }
 
@@ -159,7 +176,7 @@ bool NetworkManager::CreateClient( const String & p_name )
 
 	asio::io_service * l_service = new asio::io_service();
 	ElypseTcpClient * l_client = new ElypseTcpClient( p_name, l_service, this );
-	m_clients.insert( ElypseTcpClientStrMap::value_type( p_name, l_client ) );
+	m_clients.insert( std::make_pair( p_name, l_client ) );
 	return true;
 }
 

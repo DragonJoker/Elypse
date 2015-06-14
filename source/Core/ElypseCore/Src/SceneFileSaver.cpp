@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Marc BILLON
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company:	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		SceneFileSaver.h - SceneFileSaver.cpp
-
-	Desc :		Class used to save the current scene to a file.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "SoundObject.h"
@@ -35,7 +41,7 @@
 using namespace Ogre;
 
 SceneFileSaver::SceneFileSaver( SceneManager * p_manager, ScriptEngine * p_engine, EMGui * p_gui )
-	:	m_sceneManager( p_manager ),
+	: m_sceneManager( p_manager ),
 		m_scriptEngine( p_engine ),
 		m_gui( p_gui )
 {
@@ -157,14 +163,14 @@ void SceneFileSaver::_writeSceneNodes( SceneNode * p_node )
 
 		if (l_object)
 		{
-			m_buffer+="\tsound\n\t{\n";
-			m_buffer+="\t\tname "+l_object->GetName()+"\n";
+			m_buffer+= "\tsound\n\t{\n";
+			m_buffer+= "\t\tname "+l_object->GetName()+"\n";
 			SoundInstance * l_me = l_object->m_instances.find( start->getName() )->second;
 			if( l_me->IsLooped() )
 			{
-				m_buffer+="\t\tlooped true\n";
+				m_buffer+= "\t\tlooped true\n";
 			}
-			m_buffer+="\t}\n";
+			m_buffer+= "\t}\n";
 		}
 		*/
 		m_buffer << "}" << std::endl;
@@ -310,45 +316,45 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 	{
 		String l_name = over->getName();
 		l_name.erase(l_name.end()-1);
-		m_buffer+=NTabs(depth)+"element "+l_name+String("\n")+NTabs(depth)+String("{\n");
+		m_buffer+= NTabs(depth)+"element "+l_name+String("\n")+NTabs(depth)+String("{\n");
 	}
 	tem = over->getSourceTemplate();
-	m_buffer+=NTabs(depth)+"\tclass "+tem->getName()+String("\n");
+	m_buffer+= NTabs(depth)+"\tclass "+tem->getName()+String("\n");
 	if( ( over->getHorizontalAlignment() != tem->getHorizontalAlignment() ) || ( over->getVerticalAlignment() != tem->getVerticalAlignment() ) )
 	{
-		m_buffer+=NTabs(depth+1) + "align ";
+		m_buffer+= NTabs(depth+1) + "align ";
 		if( over->getVerticalAlignment() == GVA_TOP )
 		{
-			m_buffer+="top ";
+			m_buffer+= "top ";
 		}else
 		if( over->getVerticalAlignment() == GVA_CENTER )
 		{
-			m_buffer+="center ";
+			m_buffer+= "center ";
 		}else
 		if( over->getVerticalAlignment() == GVA_BOTTOM )
 		{
-			m_buffer+="bottom ";
+			m_buffer+= "bottom ";
 		}
 
 		if( over->getHorizontalAlignment() == GHA_LEFT )
 		{
-			m_buffer+="left ";
+			m_buffer+= "left ";
 		}else
 		if( over->getHorizontalAlignment() == GHA_CENTER )
 		{
-			m_buffer+="center ";
+			m_buffer+= "center ";
 		}else
 		if( over->getHorizontalAlignment() == GHA_RIGHT )
 		{
-			m_buffer+="right ";
+			m_buffer+= "right ";
 		}
 
-		m_buffer+="\n";
+		m_buffer+= "\n";
 	}
 
 	if(tem->getMaterialName() != over->getMaterialName())
 	{
-		m_buffer+=NTabs(depth)+"\tmaterial "+over->getMaterialName()+String("\n");
+		m_buffer+= NTabs(depth)+"\tmaterial "+over->getMaterialName()+String("\n");
 	}
 
 
@@ -366,8 +372,8 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 		y = over->getTop()*100.0;
 		y /= 768.0;
 	}
-	m_buffer+=NTabs(depth)+"\tposition " + StringConverter::toString(x,4) + String("% ") + StringConverter::toString(y,4)  + String("%\n");
-//	m_buffer+=NTabs(depth)+"\tposition " + StringConverter::toString(over->getLeft()) + String(" ") + StringConverter::toString(over->getTop())  + String("\n");
+	m_buffer+= NTabs(depth)+"\tposition " + StringConverter::toString(x,4) + String("% ") + StringConverter::toString(y,4)  + String("%\n");
+//	m_buffer+= NTabs(depth)+"\tposition " + StringConverter::toString(over->getLeft()) + String(" ") + StringConverter::toString(over->getTop())  + String("\n");
 
 	if(depth>0)
 	{
@@ -383,7 +389,7 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 		y = over->getHeight()*100.0;
 		y /= 768.0;
 	}
-	m_buffer+=NTabs(depth)+"\tsize " + StringConverter::toString(x,4) + String("% ") + StringConverter::toString(y,4)  + String("%\n");
+	m_buffer+= NTabs(depth)+"\tsize " + StringConverter::toString(x,4) + String("% ") + StringConverter::toString(y,4)  + String("%\n");
 
 	if(over->getTypeName() == "BorderPanel")
 	{
@@ -391,7 +397,7 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 		templateBorderPanel = (BorderPanelOverlayElement*)tem;
 		if(borderPanel->getBorderMaterialName() != templateBorderPanel->getBorderMaterialName())
 		{
-			m_buffer+=NTabs(depth)+"\tborder_material "+borderPanel->getBorderMaterialName()+String("\n");
+			m_buffer+= NTabs(depth)+"\tborder_material "+borderPanel->getBorderMaterialName()+String("\n");
 		}
 
 		if(borderPanel->getBottomBorderSize() != templateBorderPanel->getBottomBorderSize() ||
@@ -399,7 +405,7 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 			borderPanel->getLeftBorderSize() != templateBorderPanel->getLeftBorderSize() ||
 			borderPanel->getRightBorderSize() != templateBorderPanel->getRightBorderSize())
 		{
-			m_buffer+=NTabs(depth)+"\tborder_size " + StringConverter::toString(borderPanel->getLeftBorderSize()) + String(" ") + StringConverter::toString(borderPanel->getRightBorderSize()) + String(" ") + StringConverter::toString(borderPanel->getTopBorderSize()) + String(" ") + StringConverter::toString(borderPanel->getBottomBorderSize()) + String("\n");
+			m_buffer+= NTabs(depth)+"\tborder_size " + StringConverter::toString(borderPanel->getLeftBorderSize()) + String(" ") + StringConverter::toString(borderPanel->getRightBorderSize()) + String(" ") + StringConverter::toString(borderPanel->getTopBorderSize()) + String(" ") + StringConverter::toString(borderPanel->getBottomBorderSize()) + String("\n");
 		}
 	}
 
@@ -410,15 +416,15 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 
 		if(textPanel->getCaption() != templateTextPanel->getCaption())
 		{
-			m_buffer+=NTabs(depth)+"\ttext "+textPanel->getCaption().asUTF8()+String("\n");
+			m_buffer+= NTabs(depth)+"\ttext "+textPanel->getCaption().asUTF8()+String("\n");
 		}
 		if(textPanel->getFontName() != templateTextPanel->getFontName())
 		{
-			m_buffer+=NTabs(depth)+"\tfont_name "+textPanel->getFontName()+String("\n");
+			m_buffer+= NTabs(depth)+"\tfont_name "+textPanel->getFontName()+String("\n");
 		}
 		if(textPanel->getColour() != templateTextPanel->getColour())
 		{
-			m_buffer+=NTabs(depth)+"\ttext_colour "+StringConverter::toString(textPanel->getColour())+String("\n");
+			m_buffer+= NTabs(depth)+"\ttext_colour "+StringConverter::toString(textPanel->getColour())+String("\n");
 		}
 	}
 
@@ -427,7 +433,7 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 	{
 		if( l_EMOE->HasMouseOverMaterial() )
 		{
-			m_buffer+=NTabs(depth+1)+"mouse_over_material "+l_EMOE->GetMouseOverMaterial()+String("\n");
+			m_buffer+= NTabs(depth+1)+"mouse_over_material "+l_EMOE->GetMouseOverMaterial()+String("\n");
 		}
 	}
 
@@ -439,14 +445,14 @@ void SceneFileSaver::_writeOverlays( OverlayElement * over, int depth)
 
 		while(iter.hasMoreElements())
 		{
-			o=iter.getNext();
+			o = iter.getNext();
 			_writeOverlays(o,depth+1);
 		}
 	}
 
 	if(depth>0)
 	{
-		m_buffer+=NTabs(depth)+"}\n";
+		m_buffer+= NTabs(depth)+"}\n";
 	}
 }
 
@@ -456,11 +462,11 @@ void SceneFileSaver::_writeAllOverlays()
 	const OverlayGroupMap & l_overList = m_gui->GetAllOverlays();
 	OverlayGroupMap::const_iterator iter = l_overList.begin();
 
-	while(iter!=l_overList.end())
+	while(iter!= l_overList.end())
 	{
 		String l_name = (iter->second)->GetOverlay()->getName();
 		l_name.erase(l_name.end()-1);
-		m_buffer+="\noverlay "+l_name+"\n{\n";
+		m_buffer+= "\noverlay "+l_name+"\n{\n";
 
 		Overlay::Overlay2DElementsIterator iter2 = (iter->second)->GetOverlay()->get2DElementsIterator();
 		while(iter2.hasMoreElements())
@@ -468,7 +474,7 @@ void SceneFileSaver::_writeAllOverlays()
 			_writeOverlays((OverlayElement*)iter2.getNext(),0);
 		}
 
-		m_buffer+="}\n\n";
+		m_buffer+= "}\n\n";
 		++iter;
 	}
 }
@@ -489,11 +495,11 @@ void SceneFileSaver::_writeSounds()
 		m_buffer << "{" << std::endl;
 		m_buffer << "	url " << l_object->GetSoundURL() << std::endl;
 		m_buffer << "	url " << l_object->GetSoundURL() << std::endl;
-		m_buffer+="\ttype "+StringConverter::toString(l_object->GetSoundType())+"\n";
-		m_buffer+="\tglobal "+StringConverter::toString( l_object->IsGlobal( ) )+"\n";
-		if( l_object->IsLooped( ) )
+		m_buffer+= "\ttype "+StringConverter::toString(l_object->GetSoundType())+"\n";
+		m_buffer+= "\tglobal "+StringConverter::toString( l_object->IsGlobal() )+"\n";
+		if( l_object->IsLooped() )
 		{
-			m_buffer+="\tlooped true\n";
+			m_buffer+= "\tlooped true\n";
 		}
 		m_buffer << "}" << std::endl;
 		m_buffer << std::endl;
@@ -533,12 +539,12 @@ void SceneFileSaver::SaveAll( const String & p_filename )
 	_writeObjects();
 	_writeLights();
 	_writeCameras();
-//	m_buffer +="\n//Code\n\n";
+//	m_buffer += "\n//Code\n\n";
 //	_writeCode();
 //	_writeAllOverlays();
 	/*	if(m_engine->m_gui->m_overlays.size())
 		{
-			m_buffer +="\n//Overlays\n\n";
+			m_buffer += "\n//Overlays\n\n";
 
 		}
 	*/

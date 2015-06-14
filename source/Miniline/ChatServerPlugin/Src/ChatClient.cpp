@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "ChatClient.h"
 #include "ChatPlugin.h"
 #include "ChatGame.h"
@@ -291,7 +308,8 @@ namespace Chat
 
 		if ( CheckValid( ccsNone ) )
 		{
-			std::swap( m_clothes, Clothes() );
+			Clothes l_clothes;
+			std::swap( m_clothes, l_clothes );
 			m_clothes.Load( p_buffer );
 			m_avatar.Work();
 			DoGetDatabase()->SaveClothes( m_clothes, GetId() );
@@ -772,7 +790,8 @@ namespace Chat
 				m_plugin->AddClient( this );
 				m_avatar.Work();
 
-				std::swap( m_clothes, Clothes() );
+				Clothes l_clothes;
+				std::swap( m_clothes, l_clothes );
 
 				if ( !DoGetDatabase()->LoadClothes( m_clothes, GetId() ) )
 				{
@@ -814,7 +833,8 @@ namespace Chat
 				std::map <int, Dress *>::iterator l_it;
 				size_t l_size;
 				size_t l_sex = GetRandom( 2 );
-				std::swap( m_clothes, Clothes() );
+				Clothes l_clothes;
+				std::swap( m_clothes, l_clothes );
 				m_clothes.m_sex = l_sex;
 
 				for ( int i = 1 ; i <= DoGetDatabase()->GetNumDressSlots() ; i++ )
@@ -1381,7 +1401,7 @@ namespace Chat
 			}
 			else
 			{
-				m_ignored.insert( ClientIdStrMap::value_type( l_name, l_ignoredId ) );
+				m_ignored.insert( std::make_pair( l_name, l_ignoredId ) );
 				m_avatar.Work();
 				DoGetDatabase()->AddIgnored( m_login.GetId(), l_ignoredId );
 

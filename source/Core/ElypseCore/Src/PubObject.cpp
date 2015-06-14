@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "PubManager.h"
@@ -7,15 +24,15 @@
 #include "WebImageManager.h"
 #include "WebImage.h"
 
-#include "EMusePlugin.h"
+#include "ElypsePlugin.h"
 
 #include <OgreEntity.h>
 #include <OgreStringConverter.h>
 #include <NeoCurl.h>
 #include <StringUtils.h>
 
-PubObject::PubObject(	const String & p_name, EMusePlugin * p_plugin )
-	:	named( p_name ),
+PubObject::PubObject( const String & p_name, ElypsePlugin * p_plugin )
+	: named( p_name ),
 		m_plugin( p_plugin ),
 		m_image( NULL )
 {
@@ -61,7 +78,7 @@ void PubObject::_retrieveUrl()
 	CURLManager * l_curl = WebImageManager::GetSingletonPtr()->GetCurl();
 	String l_contents;
 	l_curl->GetStringFromUrl( m_imageURL, l_contents );
-	size_t l_index = l_contents.find( "href=\"" );
+	size_t l_index = l_contents.find( "href = \"" );
 
 	if ( l_index != String::npos )
 	{
@@ -70,7 +87,7 @@ void PubObject::_retrieveUrl()
 		m_linkURL = l_temp.substr( 0, l_index2 );
 	}
 
-	l_index = l_contents.find( "src=\"" );
+	l_index = l_contents.find( "src = \"" );
 
 	if ( l_index != String::npos )
 	{

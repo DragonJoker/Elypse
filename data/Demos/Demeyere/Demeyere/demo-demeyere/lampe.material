@@ -1,0 +1,66 @@
+
+material lampe/bois
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.87451 0.815686 0.72549 1
+			diffuse 0.87451 0.815686 0.72549 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture lampeCompleteMap.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material lampe/lampe
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture lampeCompleteMap.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}
+
+material lampe/metal
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.643137 0.643137 0.643137 1
+			diffuse 0.643137 0.643137 0.643137 1
+			specular 0.225 0.225 0.225 1 11
+
+			texture_unit
+			{
+				texture lampeCompleteMap.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+
+	}
+
+}

@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "MuseFile.h"
@@ -5,15 +22,15 @@
 #include "ConfigFile.h"
 
 #include "MuseDownloader.h"
-#include "EMuseController.h"
-#include "EMuseLoadingBar.h"
+#include "ElypseController.h"
+#include "ElypseLoadingBar.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <Utils.h>
 
 MuseFile::MuseFile( const String & p_name )
-	:	named( p_name )
+	: named( p_name )
 {
 	m_downloader = new MuseDownloader( this, p_name );
 }
@@ -31,7 +48,7 @@ bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
 
 	if ( p_useLoadingBar )
 	{
-		EMuseController::GetSingletonPtr()->GetLoadingBar()->StartDownloadOfFile();
+		ElypseController::GetSingletonPtr()->GetLoadingBar()->StartDownloadOfFile();
 	}
 
 	while ( ! m_downloader->IsInitialised() )
@@ -50,7 +67,7 @@ bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
 	{
 		if ( p_useLoadingBar )
 		{
-			EMuseController::GetSingletonPtr()->GetLoadingBar()->EndDownloadOfFile();
+			ElypseController::GetSingletonPtr()->GetLoadingBar()->EndDownloadOfFile();
 		}
 
 		EMUSE_LOG_MESSAGE_RELEASE( "MuseFile::WaitForFile - File " + p_filename + " not found within package " + m_name );
@@ -63,17 +80,17 @@ bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
 
 		if ( p_useLoadingBar )
 		{
-			EMuseController::GetSingletonPtr()->GetLoadingBar()->setPercent( m_downloader->GetPercent(), m_downloader->GetDownloadSpeed() );
+			ElypseController::GetSingletonPtr()->GetLoadingBar()->setPercent( m_downloader->GetPercent(), m_downloader->GetDownloadSpeed() );
 		}
 	}
 
-	EMuseController::GetSingletonPtr()->GetLoadingBar()->EndDownloadOfFile();
+	ElypseController::GetSingletonPtr()->GetLoadingBar()->EndDownloadOfFile();
 	return true;
 }
 
 Path MuseFile::GetCompletePath()const
 {
-	return EMuseController::GetSingletonPtr()->GetInstallPath() / "rsc" / m_downloader->GetPath();
+	return ElypseController::GetSingletonPtr()->GetInstallPath() / "rsc" / m_downloader->GetPath();
 }
 
 DataFile * MuseFile::GetDataFile( const String & p_filename )

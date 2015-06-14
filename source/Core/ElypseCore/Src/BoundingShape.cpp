@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "BoundingShape.h"
@@ -9,7 +26,7 @@
 #include <ode/objects.h>
 
 BoundingShape::BoundingShape( BoundingShapeClass p_class )
-	:	m_class( p_class ),
+	: m_class( p_class ),
 		m_enabled( true ),
 		m_maxContacts( 0 ),
 		m_geom( NULL ),
@@ -159,7 +176,7 @@ bool BoundingShape::Collide( BoundingShape * p_collideWith )
 		if ( l_bodyA != NULL || l_bodyB != NULL )
 		{
 			l_matA->SetContactProperties( l_matB, &m_contacts[i] );
-			dJointAttach( dJointCreateContact( l_world, l_group, & m_contacts[i] ),  l_bodyA, l_bodyB );
+			dJointAttach( dJointCreateContact( l_world, l_group, & m_contacts[i] ), l_bodyA, l_bodyB );
 		}
 
 		l_v3 += m_contacts[0].geom.depth * Vector3( m_contacts[0].geom.normal );

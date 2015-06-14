@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "PhysicsSimulation.h"
@@ -20,20 +37,20 @@ namespace
 }
 
 PhysicsSimulation::PhysicsSimulation( const String & p_name )
-	:	named( p_name	)
-	,	m_dynamicSpace( NULL	)
-	,	m_phantomSpace( NULL	)
-	,	m_staticSpace( NULL	)
-	,	m_scriptPerFrame( NULL	)
-	,	m_mode( Step_Quick	)
-	,	m_erp( Real( 1.0 )	)
-	,	m_cfm( Real( 0.0 )	)
-	,	m_steptime( Real( 0.01 )	)
-	,	m_timescale( Real( 1.0 )	)
-	,	m_steptimeLimit( 0.05	)
-	,	m_accumulatedTime( 0.0	)
-	,	m_autoUpdated( false	)
-	,	m_enabled( true	)
+	: named( p_name )
+	, m_dynamicSpace( NULL )
+	, m_phantomSpace( NULL )
+	, m_staticSpace( NULL )
+	, m_scriptPerFrame( NULL )
+	, m_mode( Step_Quick )
+	, m_erp( Real( 1.0 ) )
+	, m_cfm( Real( 0.0 ) )
+	, m_steptime( Real( 0.01 ) )
+	, m_timescale( Real( 1.0 ) )
+	, m_steptimeLimit( 0.05 )
+	, m_accumulatedTime( 0.0 )
+	, m_autoUpdated( false )
+	, m_enabled( true )
 {
 	m_defaultMaterial = new PhysicsMaterial( "Default" );
 	m_world = dWorldCreate();
@@ -72,7 +89,7 @@ void PhysicsSimulation::_initialiseDefaultSpaces()
 	m_staticSpace->SetInternalCollisions( false );
 }
 
-void __declspec( nothrow ) PhysicsSimulation::ClearObjects( bool p_recreateDefaults )
+void PhysicsSimulation::ClearObjects( bool p_recreateDefaults ) d_no_throw
 {
 	_clearContacts();
 
@@ -89,7 +106,7 @@ void __declspec( nothrow ) PhysicsSimulation::ClearObjects( bool p_recreateDefau
 	}
 }
 
-void __declspec( nothrow ) PhysicsSimulation::ClearSpaces( bool p_recreateDefaults )
+void PhysicsSimulation::ClearSpaces( bool p_recreateDefaults ) d_no_throw
 {
 	General::Utils::map::deleteAll( m_spaces );
 
@@ -156,7 +173,7 @@ PhysicsObject * PhysicsSimulation::CreateObject( Entity * p_entity, bool p_stati
 		l_object->SetPhantom( true );
 	}
 
-	m_objects.insert( PhysicsObjectMap::value_type( p_entity->getName(), l_object ) );
+	m_objects.insert( std::make_pair( p_entity->getName(), l_object ) );
 	l_object->SetMaterial( m_defaultMaterial );
 	l_object->SetOwner( this );
 	return l_object;
@@ -217,7 +234,7 @@ void PhysicsSimulation::_step( Real p_deltaTime )
 	case Step_Quick:
 		dWorldQuickStep( m_world, p_deltaTime );
 		break;
-//		case Step_Fast1:	dWorldStepFast1( m_world, p_deltaTime, c_fastStepIterationCount);break;
+//		case Step_Fast1: dWorldStepFast1( m_world, p_deltaTime, c_fastStepIterationCount);break;
 	}
 
 	General::Utils::map::cycle( m_spaces, & Space::UpdateState );
@@ -244,7 +261,7 @@ Space * PhysicsSimulation::CreateSpace( const String & p_name, bool p_autoUpdate
 	}
 
 	Space * l_space = new Space( p_name, this, p_autoUpdated );
-	m_spaces.insert( SpaceMap::value_type( p_name, l_space ) );
+	m_spaces.insert( std::make_pair( p_name, l_space ) );
 	return l_space;
 }
 
@@ -299,7 +316,7 @@ DistanceMap PhysicsSimulation::Raytrace( const Ray & p_ray, bool p_collideDynami
 			l_min = min( l_min, i->second[j].distance( m_rayInstance->GetOrigin() ) );
 		}
 
-		l_tempMap.insert( DistanceMap::value_type( l_min, i->first ) );
+		l_tempMap.insert( std::make_pair( l_min, i->first ) );
 	}
 
 	return l_tempMap;
@@ -317,7 +334,7 @@ PhysicsObject * PhysicsSimulation::CloneObject( PhysicsObject * p_object, const 
 	if ( l_object != NULL )
 	{
 		p_newSpace->AddObject( l_object );
-		m_objects.insert( PhysicsObjectMap::value_type( p_clonedName, l_object ) );
+		m_objects.insert( std::make_pair( p_clonedName, l_object ) );
 	}
 
 	return l_object;

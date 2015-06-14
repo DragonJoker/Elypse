@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___GENERAL_TCP_READER_H___
 #define ___GENERAL_TCP_READER_H___
 
@@ -33,7 +50,7 @@ namespace General
 
 		public:
 			TcpReaderBase( boost::asio::ip::tcp::socket & p_socket, boost::asio::io_service & p_service )
-				:	m_socket( p_socket ),
+				: m_socket( p_socket ),
 					m_service( p_service )
 			{
 			}
@@ -47,8 +64,8 @@ namespace General
 
 			void DoStartReadHeader()
 			{
-				boost::asio::async_read(	m_socket, boost::asio::buffer( m_headerBuffer, c_headerLength ),
-											boost::bind(	& TcpReaderBase::CallbackEndHeader,
+				boost::asio::async_read( m_socket, boost::asio::buffer( m_headerBuffer, c_headerLength ),
+											boost::bind( & TcpReaderBase::CallbackEndHeader,
 													this,
 													boost::asio::placeholders::error ) );
 			}
@@ -56,8 +73,8 @@ namespace General
 			void DoStartReadBody( unsigned short p_messageLength )
 			{
 				m_messageLength = p_messageLength;
-				boost::asio::async_read(	m_socket, boost::asio::buffer( m_bodyBuffer, p_messageLength ),
-											boost::bind(	& TcpReaderBase::CallbackEndBody,
+				boost::asio::async_read( m_socket, boost::asio::buffer( m_bodyBuffer, p_messageLength ),
+											boost::bind( & TcpReaderBase::CallbackEndBody,
 													this,
 													boost::asio::placeholders::error ) );
 			}
@@ -121,7 +138,7 @@ namespace General
 
 		public:
 			TcpQueuedReader( boost::asio::ip::tcp::socket & p_socket, boost::asio::io_service & p_service )
-				:	TcpReaderBase( p_socket, p_service )
+				: TcpReaderBase( p_socket, p_service )
 			{
 			}
 			virtual ~TcpQueuedReader()

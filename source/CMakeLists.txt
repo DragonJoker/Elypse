@@ -49,17 +49,18 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 		set( BOOST_THREAD_USE_LIB ON)
 	endif()
 
-	if ( MSVC )
-		find_package( Boost 1.55 REQUIRED date_time filesystem system)
-	else ()
-		find_package( Boost 1.57 REQUIRED date_time filesystem system)
-	endif ()
+	find_package( Boost 1.55 REQUIRED date_time filesystem system )
 	find_package( CURL )
-	find_package( Ogre )
+	if ( WIN32 )
+		find_package( Ogre COMPONENTS OgreMain Plugin_CgProgramManager Plugin_ParticleFX RenderSystem_Direct3D9 )
+	else ()
+		find_package( Ogre COMPONENTS OgreMain Plugin_ParticleFX RenderSystem_GL )
+	endif ()
 	find_package( ODE )
 	find_package( Fmod )
 	find_package( ZLIB 1.2.7 )
 	find_package( LibZip )
+	find_package( Freetype )
 
 	if ( NOT WIN32 )
 		find_package( GTK2 )
@@ -88,7 +89,7 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 		include_directories( ${LIBZIP_INCLUDE_DIRS} )
 	endif()
 	if ( OGRE_FOUND )
-		message( STATUS "+ Found Ogre" )
+		message( STATUS "+ Found Ogre (version ${Ogre_VERSION})" )
 		include_directories( ${Ogre_INCLUDE_DIR} )
 		include_directories( ${Ogre_INCLUDE_DIRS} )
 	endif ()
@@ -108,15 +109,19 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	#--------------------------------------------------------------------------------------------------
 	#	Adding libraries dirs to link search path
 	#--------------------------------------------------------------------------------------------------
-	link_directories( ${LIBRARY_OUTPUT_PATH} )
-	link_directories( ${Boost_LIBRARY_DIRS} )
-	link_directories( ${ZZip_LIBRARY_DIR} )
-	#link_directories( ${Ogre_LIBRARY_DIR} )
-	link_directories( ${ODE_LIBRARY_DIR} )
-	link_directories( ${Fmod_LIBRARY_DIR} )
+	link_directories(
+		${LIBRARY_OUTPUT_PATH}
+		${Boost_LIBRARY_DIRS}
+		${ZZip_LIBRARY_DIR}
+		#${Ogre_LIBRARY_DIR}
+		${ODE_LIBRARY_DIR}
+		${Fmod_LIBRARY_DIR}
+	)
 	if ( NOT WIN32 )
-		link_directories( ${GSTREAMER_LIBRARY_DIR} )
-		link_directories( ${LIBXML_LIBRARY_DIR} )
+		link_directories(
+			${GSTREAMER_LIBRARY_DIR}
+			${LIBXML_LIBRARY_DIR}
+		)
 	endif ()
 
 	#--------------------------------------------------------------------------------------------------
@@ -141,6 +146,10 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 			set(BoostLibraries "${Lib}")
 		endif()
 	ENDFOREACH()
+	
+	if ( NOT WIN32 )
+		set(BoostLibraries "${BoostLibraries}|pthread")
+	endif ()
 
 	#Zlib Libs
 	set( ZlibLibraries "")
@@ -164,7 +173,7 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 
 	#Gtk2 Libs
 	set( Gtk2Libraries "" )
-	FOREACH( Lib ${GTK2_LIBRARY} )
+	FOREACH( Lib ${GTK2_LIBRARIES} )
 		if ( Gtk2Libraries )
 			set( Gtk2Libraries "${Gtk2Libraries}|${Lib}" )
 		else()
@@ -212,11 +221,16 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 		endif()
 	endforeach()
 
-	set( ElypseCoreLibraries
+	set( GeneralLibLibraries
 		${BoostLibraries}
 		${ZlibLibraries}
 		${LibZipLibraries}
 		${CurlLibraries}
+		${CMAKE_DL_LIBS}
+	)
+
+	set( ElypseCoreLibraries
+		${GeneralLibLibraries}
 		${FmodLibraries}
 		${OgreLibraries}
 		${OdeLibraries}
@@ -225,7 +239,6 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 		${XmlLibraries}
 		${Gtk2Libraries}
 		${X11Libraries}
-		GeneralLib
 	)
 
 	if( MSVC )
@@ -255,8 +268,7 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	endmacro()
 
 	if( Boost_FOUND AND OGRE_FOUND AND ODE_FOUND AND ZLIB_FOUND AND LIBZIP_FOUND AND CURL_FOUND AND FMOD_FOUND )
-		include_directories( Core/GeneralLib/Src )
-		include_directories( Core/ElypseCore/Src )
+		include_directories( ${CMAKE_SOURCE_DIR}/Core/GeneralLib/Src )
 		
 		add_subdirectory( Core )
 		#add_subdirectory( Plugins )

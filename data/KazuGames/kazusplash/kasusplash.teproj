@@ -1,8 +1,8 @@
-project kasusplash
+project KazuSplash
 {
 	resolution	640 480
 	colour		1 1 1
-	scene KazuSplash
+	scene kazu
 	{
 		scene_files
 		{

@@ -1,59 +1,67 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___Troll_PonctualEventPanel___
 #define ___Troll_PonctualEventPanel___
 
+#include "Module_Time.h"
+
 #include <wx/panel.h>
 
-#include "GUI/Module_GUI.h"
-#include "Project/Temporal/Module_Temporal.h"
-
-namespace Troll
+BEGIN_TROLL_GUI_TIME_NAMESPACE
 {
-	namespace GUI
+	class PonctualEventPanel
+		: public wxPanel
 	{
-		class PonctualEventPanel
-			: public wxPanel
+	public:
+		PonctualEventPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition,const wxSize & p_size = wxDefaultSize );
+		~PonctualEventPanel();
+
+		void SetPonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event, Real p_time );
+		void Replace( bool p_init = false );
+		void SetTop( int p_top );
+
+		void SetMouseLeftDown( bool p_leftDown )
 		{
-		protected:
-			Temporal::TrollPonctualEvent * m_event;
-			ArrowPanel * m_arrow;
-			Real m_time;
-			bool m_mouseLeftDown;
-			int m_top;
+			m_mouseLeftDown = p_leftDown;
+		}
 
-		public:
-			PonctualEventPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition,
-								const wxSize & p_size = wxDefaultSize );
-			~PonctualEventPanel();
+	private:
+		void _release( bool p_timeChanged );
+		void _showContextMenu( const wxPoint & p_pos );
+		
+		DECLARE_EVENT_TABLE()
+		void OnLeftMouseDown( wxMouseEvent & p_event );
+		void OnLeftMouseUp( wxMouseEvent & p_event );
+		void OnRightMouseUp( wxMouseEvent & p_event );
+		void OnMouseEnter( wxMouseEvent & p_event );
+		void OnMouseMove( wxMouseEvent & p_event );
+		void OnMouseLeave( wxMouseEvent & p_event );
+		void OnDeleteEvent( wxCommandEvent & p_event );
+		void OnKillFocus( wxFocusEvent & p_event );
 
-			void SetPonctualEvent( Temporal::TrollPonctualEvent * p_event, Real p_time );
-
-			void Replace( bool p_init = false );
-
-			void SetTop( int p_top );
-
-		public:
-			void SetMouseLeftDown( bool p_leftDown )
-			{
-				m_mouseLeftDown = p_leftDown;
-			}
-
-		private:
-			void _release( bool p_timeChanged );
-			void _showContextMenu( const wxPoint & p_pos );
-
-			void _onLeftMouseDown( wxMouseEvent & p_event );
-			void _onLeftMouseUp( wxMouseEvent & p_event );
-			void _onRightMouseUp( wxMouseEvent & p_event );
-			void _onMouseEnter( wxMouseEvent & p_event );
-			void _onMouseMove( wxMouseEvent & p_event );
-			void _onMouseLeave( wxMouseEvent & p_event );
-			void _onDeleteEvent( wxCommandEvent & p_event );
-			void _onKillFocus( wxFocusEvent & p_event );
-			DECLARE_EVENT_TABLE()
-		};
-	}
+	protected:
+		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * m_event;
+		ArrowPanel * m_arrow;
+		Real m_time;
+		bool m_mouseLeftDown;
+		int m_top;
+	};
 }
+END_TROLL_GUI_TIME_NAMESPACE
 
 #endif
-

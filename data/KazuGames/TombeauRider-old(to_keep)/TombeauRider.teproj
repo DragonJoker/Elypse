@@ -1,0 +1,30 @@
+project TombeauRider
+{
+	resolution		640 480
+	colour			0 0 0
+	show_debug		false
+	show_fps		false
+	scene TombeauRider
+	{
+		scene_files
+		{
+			Interface.emscene
+			Game.emscene
+		}
+		load_script_files
+		{
+			Scores.emscript
+			Game.emscript
+			Interface.emscript
+		}
+		data_files_3d
+		{
+			Game
+			Interface
+		}
+		data_files_other
+		{
+			Sons
+		}
+	}
+}

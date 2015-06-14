@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___VIDEO_DIRECTSHOW_H___
 #define ___VIDEO_DIRECTSHOW_H___
 
@@ -17,18 +34,18 @@ struct IPin;
 
 #include <Thread.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Media
 	{
 		enum DShowVideoFormat
 		{
-			EM_DS_VIDEO_NONE	= 0,
-			EM_DS_VIDEO_FLV		= 1,
-			EM_DS_VIDEO_REAL	= 2,
-			EM_DS_VIDEO_WMV		= 3,
-			EM_DS_VIDEO_AVI		= 4,
-			EM_DS_VIDEO_MPEG1	= 5
+			EM_DS_VIDEO_NONE = 0,
+			EM_DS_VIDEO_FLV = 1,
+			EM_DS_VIDEO_REAL = 2,
+			EM_DS_VIDEO_WMV = 3,
+			EM_DS_VIDEO_AVI = 4,
+			EM_DS_VIDEO_MPEG1 = 5
 		};
 
 
@@ -115,8 +132,8 @@ namespace EMuse
 			DShowVideoFormat _getVideoType( const String & p_mediaName );
 
 		public:
-			bool _connectPins( IBaseFilter * p_outputFilter,	unsigned int p_outputNum,
-							   IBaseFilter * p_inputFilter,	unsigned int p_inputNum );
+			bool _connectPins( IBaseFilter * p_outputFilter, unsigned int p_outputNum,
+							   IBaseFilter * p_inputFilter, unsigned int p_inputNum );
 			void _findPin( IBaseFilter * p_baseFilter, int p_direction, int p_pinNumber, IPin ** p_destPin );
 		};
 	}

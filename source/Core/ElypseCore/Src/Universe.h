@@ -1,10 +1,20 @@
-/*****************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author : Marc BILLON
-	Compagny : FDSSoftMedia - Copyright 2007
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-*****************************************************************************/
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___UNIVERSE_H___
 #define ___UNIVERSE_H___
 
@@ -12,7 +22,7 @@
 
 #include <Manager.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Scene
 	{
@@ -36,22 +46,21 @@ namespace EMuse
 		public:
 			void AddZone( Zone * p_zone );
 			void SetRenderTarget( RenderTarget * p_renderTarget );
-			void __declspec( nothrow ) ClearScene();
+			void ClearScene() d_no_throw;
 
 		public:
-			inline Camera 	*		GetCamera()const
+			inline Camera * GetCamera()const
 			{
 				return m_camera;
 			}
-			inline Viewport 	*	GetViewport()const
+			inline Viewport * GetViewport()const
 			{
 				return m_viewport;
 			}
-			inline SceneManager *	GetManager()const
+			inline SceneManager * GetManager()const
 			{
 				return m_manager;
 			}
-			//inline PathMap * GetPathMap()const					{ return m_pathMap; }
 			inline Zone * GetZone( const String & p_zoneName )const
 			{
 				return General::Utils::map::findOrNull( m_zones, p_zoneName );
@@ -63,7 +72,7 @@ namespace EMuse
 			String m_instanceKey;
 		public:
 			UniverseManager( const String & p_instanceKey )
-				:	m_instanceKey( p_instanceKey )
+				: m_instanceKey( p_instanceKey )
 			{
 			}
 			~UniverseManager()

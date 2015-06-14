@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___BASE_EVENT_H___
 #define ___BASE_EVENT_H___
 
@@ -5,7 +22,7 @@
 #include "BaseFrame.h"
 #include "Interpolators.h"
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Sequences
 	{
@@ -47,7 +64,7 @@ namespace EMuse
 
 		public:
 			BaseContinuousEvent( SequenceTrackType p_type )
-				:	m_target( NULL ),
+				: m_target( NULL ),
 					m_type( p_type ),
 					m_length( 0.0 ),
 					m_currentTime( 0.0 ),
@@ -107,7 +124,7 @@ namespace EMuse
 
 		public:
 			BaseContinuousV3Event()
-				:	BaseContinuousEvent( VECTOR3 )
+				: BaseContinuousEvent( VECTOR3 )
 			{}
 			~BaseContinuousV3Event() {}
 
@@ -125,7 +142,7 @@ namespace EMuse
 					m_startTime = p_time;
 				}
 
-				m_frames.insert( BaseVector3FrameMap::value_type( p_time - m_startTime, BaseVector3Frame( p_time - m_startTime, p_vector3 ) ) );
+				m_frames.insert( std::make_pair( p_time - m_startTime, BaseVector3Frame( p_time - m_startTime, p_vector3 ) ) );
 			}
 
 			virtual void CalcLength()
@@ -142,7 +159,7 @@ namespace EMuse
 
 				while ( l_it != m_frames.end() )
 				{
-					l_newMap.insert( BaseVector3FrameMap::value_type( l_it->first + l_diff, l_it->second ) );
+					l_newMap.insert( std::make_pair( l_it->first + l_diff, l_it->second ) );
 					++l_it;
 				}
 
@@ -169,7 +186,7 @@ namespace EMuse
 
 		public:
 			BaseContinuousQEvent()
-				:	BaseContinuousEvent( QUATERNION )
+				: BaseContinuousEvent( QUATERNION )
 			{}
 			~BaseContinuousQEvent() {}
 
@@ -187,7 +204,7 @@ namespace EMuse
 					m_startTime = p_time;
 				}
 
-				m_frames.insert( BaseQuaternionFrameMap::value_type( p_time - m_startTime, BaseQuaternionFrame( p_time - m_startTime, p_orientation ) ) );
+				m_frames.insert( std::make_pair( p_time - m_startTime, BaseQuaternionFrame( p_time - m_startTime, p_orientation ) ) );
 			}
 
 			virtual void CalcLength()
@@ -204,7 +221,7 @@ namespace EMuse
 
 				while ( l_it != m_frames.end() )
 				{
-					l_newMap.insert( BaseQuaternionFrameMap::value_type( l_it->first + l_diff, l_it->second ) );
+					l_newMap.insert( std::make_pair( l_it->first + l_diff, l_it->second ) );
 					++l_it;
 				}
 
@@ -231,7 +248,7 @@ namespace EMuse
 
 		public:
 			BaseContinuousREvent()
-				:	BaseContinuousEvent( REAL )
+				: BaseContinuousEvent( REAL )
 			{}
 			~BaseContinuousREvent() {}
 
@@ -249,7 +266,7 @@ namespace EMuse
 					m_startTime = p_time;
 				}
 
-				m_frames.insert( BaseRealFrameMap::value_type( p_time - m_startTime, BaseRealFrame( p_time - m_startTime, p_real ) ) );
+				m_frames.insert( std::make_pair( p_time - m_startTime, BaseRealFrame( p_time - m_startTime, p_real ) ) );
 			}
 
 			virtual void CalcLength()
@@ -266,7 +283,7 @@ namespace EMuse
 
 				while ( l_it != m_frames.end() )
 				{
-					l_newMap.insert( BaseRealFrameMap::value_type( l_it->first + l_diff, l_it->second ) );
+					l_newMap.insert( std::make_pair( l_it->first + l_diff, l_it->second ) );
 					++l_it;
 				}
 

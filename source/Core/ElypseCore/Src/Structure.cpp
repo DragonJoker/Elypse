@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 #include "Structure.h"
 #include "VariableType.h"
@@ -8,7 +25,7 @@
 
 
 Structure::Structure( const String & p_name )
-	:	named( p_name )
+	: named( p_name )
 {
 	m_type = new VariableType( EMVT_STRUCT, NULL, NULL );
 	m_type->m_struct = this;
@@ -29,14 +46,14 @@ void Structure::AddMember( const String & p_name, VariableType * p_type )
 
 void Structure::AddFunction( UserFunction * p_function )
 {
-	m_classFunctions.insert( UserFunctionMap::value_type( p_function->GetName(), p_function ) );
+	m_classFunctions.insert( std::make_pair( p_function->GetName(), p_function ) );
 	p_function->m_params.push_back( m_type );
 	ScriptNode * l_node = ScriptCompiler::GetSingletonPtr()->CreateScriptNode();
 	l_node->SetType( m_type );
 	l_node->Use();
 	l_node->CopyValue_Ref( NULL );
 	p_function->m_paramNodes.push_back( l_node );
-	p_function->m_localVars.insert( ScriptNodeMap::value_type( "this", l_node ) );
+	p_function->m_localVars.insert( std::make_pair( "this", l_node ) );
 }
 
 String Structure::GetDesc() const
@@ -70,7 +87,7 @@ unsigned int Structure::FindMember( const String & p_name )const
 }
 
 StructInstance::StructInstance( VariableType * p_def )
-	:	m_definition( p_def )
+	: m_definition( p_def )
 {
 	for ( auto & l_type : m_definition->m_subTypes )
 	{

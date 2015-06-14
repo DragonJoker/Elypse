@@ -1,21 +1,27 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Marc BILLON
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company:	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		ScriptTimer.h - ScriptTimer.cpp
-
-	Desc :		Class used to execute any kind of scripted operations after a specific time or time interval
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptTimer.h"
 #include "ScriptNode.h"
 
 ScriptTimer::ScriptTimer( const String & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction )
-	:	named( p_name ),
+	: named( p_name ),
 		m_action( p_code ),
 		m_finalAction( p_finalAction ),
 		m_type( p_type ),

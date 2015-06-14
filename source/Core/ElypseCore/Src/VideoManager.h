@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___VIDEOMANAGER_H___
 #define ___VIDEOMANAGER_H___
 
@@ -8,7 +25,7 @@
 
 #include <PreciseTimer.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Media
 	{
@@ -31,7 +48,7 @@ namespace EMuse
 			~VideoManager();
 
 		public:
-			VideoObject * CreateVideoObject( const String & p_name, EMusePlugin * p_plugin );
+			VideoObject * CreateVideoObject( const String & p_name, ElypsePlugin * p_plugin );
 			bool IsVideo( const String & p_entityName );
 			void Cleanup();
 			void StartAll();
@@ -39,7 +56,7 @@ namespace EMuse
 			void PauseAll();
 			void SetVolume( int p_volume );
 			void Mute( bool p_muted );
-			//void UpdateVolume( const Vector3 & p_position,  Radian p_orientation);
+			//void UpdateVolume( const Vector3 & p_position, Radian p_orientation);
 			//void ReleaseAllZone( const String & p_zoneName);
 			void DeleteVideoObject( const String & p_name );
 

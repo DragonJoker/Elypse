@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___SCRIPT_NODE_VALUE_H___
 #define ___SCRIPT_NODE_VALUE_H___
 
@@ -15,7 +32,7 @@
 
 #include <Macros.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Script
 	{
@@ -29,7 +46,7 @@ namespace EMuse
 
 		public:
 			NodeValueBase( VariableBaseType p_type )
-				:	m_type( p_type )
+				: m_type( p_type )
 			{}
 			virtual ~NodeValueBase() {};
 
@@ -63,7 +80,7 @@ namespace EMuse
 
 		public:
 			NodeValue()
-				:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType ) )
+				: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType ) )
 			{}
 
 			virtual ~NodeValue() {}
@@ -98,44 +115,44 @@ namespace EMuse
 		enum {NType = p_nodeType};										\
 	};
 
-		EMUSE_BIND_NODE_VALUE(	int,							EMVT_INT );
-		EMUSE_BIND_NODE_VALUE(	Real,							EMVT_REAL );
+		EMUSE_BIND_NODE_VALUE( int, EMVT_INT );
+		EMUSE_BIND_NODE_VALUE( Real, EMVT_REAL );
 
-		EMUSE_BIND_NODE_VALUE(	bool,							EMVT_BOOL );
-		EMUSE_BIND_NODE_VALUE(	Vector3,						EMVT_VECTOR3 );
-		EMUSE_BIND_NODE_VALUE(	ColourValue,					EMVT_COLOUR );
-		EMUSE_BIND_NODE_VALUE(	Quaternion,						EMVT_QUATERNION );
+		EMUSE_BIND_NODE_VALUE( bool, EMVT_BOOL );
+		EMUSE_BIND_NODE_VALUE( Vector3, EMVT_VECTOR3 );
+		EMUSE_BIND_NODE_VALUE( ColourValue, EMVT_COLOUR );
+		EMUSE_BIND_NODE_VALUE( Quaternion, EMVT_QUATERNION );
 
-		EMUSE_BIND_NODE_VALUE(	char,							EMVT_CHAR );
-		EMUSE_BIND_NODE_VALUE(	String,							EMVT_STRING );
+		EMUSE_BIND_NODE_VALUE( char, EMVT_CHAR );
+		EMUSE_BIND_NODE_VALUE( String, EMVT_STRING );
 
-		EMUSE_BIND_NODE_VALUE(	Entity *,						EMVT_ENTITY );
-		EMUSE_BIND_NODE_VALUE(	Light *,						EMVT_LIGHT );
-		EMUSE_BIND_NODE_VALUE(	Camera *,						EMVT_CAMERA );
-		EMUSE_BIND_NODE_VALUE(	SceneNode *,					EMVT_NODE );
-		EMUSE_BIND_NODE_VALUE(	Material *,						EMVT_OBJ_MAT );
+		EMUSE_BIND_NODE_VALUE( Entity *, EMVT_ENTITY );
+		EMUSE_BIND_NODE_VALUE( Light *, EMVT_LIGHT );
+		EMUSE_BIND_NODE_VALUE( Camera *, EMVT_CAMERA );
+		EMUSE_BIND_NODE_VALUE( SceneNode *, EMVT_NODE );
+		EMUSE_BIND_NODE_VALUE( Material *, EMVT_OBJ_MAT );
 
-		EMUSE_BIND_NODE_VALUE(	EMOverlay *,					EMVT_OVERLAY );
-		EMUSE_BIND_NODE_VALUE(	AnimatedObjectGroup *,			EMVT_ANI_GRP );
-		EMUSE_BIND_NODE_VALUE(	PhysicsMaterial *,				EMVT_PHY_MAT );
-		EMUSE_BIND_NODE_VALUE(	AnimatedObject *,				EMVT_ANI_OBJ );
-		EMUSE_BIND_NODE_VALUE(	EMAnimation *,					EMVT_ANIMATION );
-		EMUSE_BIND_NODE_VALUE(	PhysicsObject *,				EMVT_PHY_OBJ );
-		EMUSE_BIND_NODE_VALUE(	ScriptTimer *,					EMVT_TIMER );
-		EMUSE_BIND_NODE_VALUE(	CamTex *,						EMVT_CAMTEX );
-		EMUSE_BIND_NODE_VALUE(	ObjectMaterial *,				EMVT_OBJ_MAT );
+		EMUSE_BIND_NODE_VALUE( EMOverlay *, EMVT_OVERLAY );
+		EMUSE_BIND_NODE_VALUE( AnimatedObjectGroup *, EMVT_ANI_GRP );
+		EMUSE_BIND_NODE_VALUE( PhysicsMaterial *, EMVT_PHY_MAT );
+		EMUSE_BIND_NODE_VALUE( AnimatedObject *, EMVT_ANI_OBJ );
+		EMUSE_BIND_NODE_VALUE( EMAnimation *, EMVT_ANIMATION );
+		EMUSE_BIND_NODE_VALUE( PhysicsObject *, EMVT_PHY_OBJ );
+		EMUSE_BIND_NODE_VALUE( ScriptTimer *, EMVT_TIMER );
+		EMUSE_BIND_NODE_VALUE( CamTex *, EMVT_CAMTEX );
+		EMUSE_BIND_NODE_VALUE( ObjectMaterial *, EMVT_OBJ_MAT );
 
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseArray,				EMVT_ARRAY );
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseIMap,				EMVT_INTMAP );
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseMap,				EMVT_STRINGMAP );
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseRMap,				EMVT_REALMAP );
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseIMap::iterator,	EMVT_IMITER );
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseMap::iterator,		EMVT_SMITER );
-		EMUSE_BIND_NODE_VALUE(	NodeValueBaseRMap::iterator,	EMVT_RMITER );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseArray, EMVT_ARRAY );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseIMap, EMVT_INTMAP );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseMap, EMVT_STRINGMAP );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseRMap, EMVT_REALMAP );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseIMap::iterator, EMVT_IMITER );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseMap::iterator, EMVT_SMITER );
+		EMUSE_BIND_NODE_VALUE( NodeValueBaseRMap::iterator, EMVT_RMITER );
 
-		EMUSE_BIND_NODE_VALUE(	NodeValueBasePair,				EMVT_PAIR );
+		EMUSE_BIND_NODE_VALUE( NodeValueBasePair, EMVT_PAIR );
 
-		EMUSE_BIND_NODE_VALUE(	StructInstance *,				EMVT_STRUCT );
+		EMUSE_BIND_NODE_VALUE( StructInstance *, EMVT_STRUCT );
 
 
 

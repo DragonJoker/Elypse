@@ -1,0 +1,30 @@
+string l_namesAndScores;
+string l_names;
+string l_scores;
+int g_score;
+
+int l_index;
+
+string c_highscorePage = "http://www.kazugame.com/score.php";
+string l_gameName = "Bassine-Jump";
+//Oin !!
+
+void _retrieveHighScores()
+{
+	l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + l_gameName, EMPTY_STRING);
+	l_index = strFind( l_namesAndScores, "<br>");
+
+	l_names = substr( l_namesAndScores, 0, l_index);
+	l_scores = substr( l_namesAndScores, l_index + 4, strlen( l_namesAndScores));
+
+	l_names = l_names->replace( "|", endl);
+	l_scores = str_replace( l_scores, "|", endl);
+
+	OverlayElement_GetByName( "Zcore/Names")->SetCaption( l_names);
+	OverlayElement_GetByName( "Zcore/Scores")->SetCaption( l_scores);
+};
+
+void _submitHighscore()
+{
+		l_namesAndScores = StringFromUrl( c_highscorePage + "?submit", "score=" + itoa( g_score) + "&name=" + l_gameName);
+};

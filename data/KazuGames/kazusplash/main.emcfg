@@ -1,11 +1,11 @@
 background_colour 1.000000 1.000000 1.000000 1.000000
 
-scene KazuSplash
+scene kazu
 {
-	muse_file kasusplash.muse
+	muse_file KazuSplash.muse
 	data_file kazu.zip.zip
 	scene_file kazu.emscene
 	load_script_file kazu.emscript
 }
 
-start_scene KazuSplash
+start_scene kazu

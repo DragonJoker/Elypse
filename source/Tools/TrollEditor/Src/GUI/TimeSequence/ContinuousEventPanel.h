@@ -1,53 +1,64 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___Troll_ContinuousEventPanel___
 #define ___Troll_ContinuousEventPanel___
 
+#include "Module_Time.h"
+
 #include <wx/panel.h>
 
-#include "GUI/Module_GUI.h"
-#include "Project/Temporal/Module_Temporal.h"
-
-namespace Troll
+BEGIN_TROLL_GUI_TIME_NAMESPACE
 {
-	namespace GUI
+	class ContinuousEventPanel
+		: public wxPanel
 	{
-		class ContinuousEventPanel
-			: public wxPanel
-		{
-		protected:
-			Temporal::TrollContinuousEvent * m_event;
-			ArrowPanel * m_arrow;
-			Real m_time;
-			bool m_mouseLeftDown;
-			bool m_hasMoved;
-			int m_top;
+	public:
+		ContinuousEventPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
+		~ContinuousEventPanel();
 
-		public:
-			ContinuousEventPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition,
-								  const wxSize & p_size = wxDefaultSize );
-			~ContinuousEventPanel();
+		void SetContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
+		void Replace( bool p_init = false );
+		void SetTop( int p_top );
 
-			void SetContinuousEvent( Temporal::TrollContinuousEvent * p_event );
-			void Replace( bool p_init = false );
-			void SetTop( int p_top );
+	private:
+		void _showContextMenu( const wxPoint & p_pos );
+		void _release( bool p_timeChanged );
+		
+		DECLARE_EVENT_TABLE()
+		void OnLeftMouseDown( wxMouseEvent & p_event );
+		void OnLeftMouseUp( wxMouseEvent & p_event );
+		void OnRightMouseUp( wxMouseEvent & p_event );
+		void OnMouseEnter( wxMouseEvent & p_event );
+		void OnMouseLeave( wxMouseEvent & p_event );
+		void OnMouseMove( wxMouseEvent & p_event );
+		void OnNewFrame( wxCommandEvent & p_event );
+		void OnDeleteEvent( wxCommandEvent & p_event );
+		void OnKillFocus( wxFocusEvent & p_event );
 
-		private:
-			void _showContextMenu( const wxPoint & p_pos );
-			void _release( bool p_timeChanged );
-
-			void _onLeftMouseDown( wxMouseEvent & p_event );
-			void _onLeftMouseUp( wxMouseEvent & p_event );
-			void _onRightMouseUp( wxMouseEvent & p_event );
-			void _onMouseEnter( wxMouseEvent & p_event );
-			void _onMouseLeave( wxMouseEvent & p_event );
-			void _onMouseMove( wxMouseEvent & p_event );
-			void _onNewFrame( wxCommandEvent & p_event );
-			void _onDeleteEvent( wxCommandEvent & p_event );
-			void _onKillFocus( wxFocusEvent & p_event );
-			DECLARE_EVENT_TABLE()
-		};
-	}
+	protected:
+		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * m_event;
+		ArrowPanel * m_arrow;
+		Real m_time;
+		bool m_mouseLeftDown;
+		bool m_hasMoved;
+		int m_top;
+	};
 }
+END_TROLL_GUI_TIME_NAMESPACE
 
 #endif
-

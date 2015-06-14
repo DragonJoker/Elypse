@@ -1,13 +1,30 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "DownloadManager.h"
 
 #include "MuseFile.h"
 #include "MuseDownloader.h"
-#include "EMuseLoadingBar.h"
+#include "ElypseLoadingBar.h"
 
-DownloadManager::DownloadManager( const Path & p_installPath, EMuseLoadingBar * p_bar, bool p_download )
-	:	m_loadingBar( p_bar ),
+DownloadManager::DownloadManager( const Path & p_installPath, ElypseLoadingBar * p_bar, bool p_download )
+	: m_loadingBar( p_bar ),
 		m_installPath( p_installPath ),
 		m_downloadFiles( p_download )
 {
@@ -39,7 +56,7 @@ MuseFile * DownloadManager::StartDownloadFile( const Url & p_url, bool p_downloa
 			l_file->GetDownloader()->StartDownload();
 		}
 
-		m_museFiles.insert( MuseFileMap::value_type( l_filename, l_file ) );
+		m_museFiles.insert( std::make_pair( l_filename, l_file ) );
 		return l_file;
 	}
 

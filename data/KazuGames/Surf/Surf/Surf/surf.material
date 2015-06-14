@@ -1,0 +1,204 @@
+
+material surf/19 - Default
+{
+	technique
+	{
+		pass
+		{
+			specular 0 0 0 1 10
+		}
+	}
+}
+
+material surf/21 - Default
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0.35 0.35 0.35 1 10
+			depth_write off
+			scene_blend alpha_blend
+
+			texture_unit
+			{
+				texture eau.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				alpha_op_ex source1 src_manual src_current 0.90
+				scroll_anim 0.15 0.04
+			}
+
+			texture_unit
+			{
+				texture eau.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+				alpha_op_ex source1 src_manual src_current 0.90
+				scroll_anim 0.085 -0.04
+			}
+		}
+	}
+}
+
+material surf/Material #67
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+	}
+}
+
+material surf/bleu_mage
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0117647 0.0117647 0.580392 1
+			diffuse 0.0117647 0.0117647 0.580392 1
+			specular 0.558 0.558 0.558 1 10
+		}
+	}
+}
+
+material surf/bouche
+{
+	technique
+	{
+		pass
+		{
+			ambient 0 0 0 1
+			diffuse 0 0 0 1
+			specular 0 0 0 1 10
+		}
+	}
+}
+
+material surf/chaussure
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0156863 0 0.301961 1
+			diffuse 0.0156863 0 0.301961 1
+			specular 0.657 0.657 0.657 1 33
+
+			texture_unit
+			{
+				texture corps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material surf/dore_mage
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0.729412 0 1
+			diffuse 1 0.729412 0 1
+			specular 1.44 1.44 1.44 1 6
+		}
+	}
+}
+
+material surf/iris
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.152941 0 0 1
+			diffuse 0.152941 0 0 1
+			specular 0 0 0 1 10
+		}
+	}
+}
+
+material surf/oeil
+{
+	technique
+	{
+		pass
+		{
+			specular 0.666 0.666 0.666 1 46
+		}
+	}
+}
+
+material surf/pantalon
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.0313726 0 0.690196 1
+			diffuse 0.0313726 0 0.690196 1
+			specular 1.233 1.233 1.233 1 26
+
+			texture_unit
+			{
+				texture corps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material surf/peau
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.588235 0.588235 0.588235 1
+			specular 0 0 0 1 10
+
+			texture_unit
+			{
+				texture corps.jpg
+				max_anisotropy 8
+				filtering anisotropic anisotropic linear
+			}
+		}
+	}
+}
+
+material surf/poils
+{
+	technique
+	{
+		pass
+		{
+			ambient 1 0.847059 0 1
+			diffuse 1 0.847059 0 1
+			specular 0.378 0.378 0.378 1 53
+		}
+	}
+}
+
+material surf/tshirt
+{
+	technique
+	{
+		pass
+		{
+			specular 0.27 0.27 0.27 1 18
+		}
+	}
+}

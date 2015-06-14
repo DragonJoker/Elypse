@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptFunctions.h"
@@ -9,8 +26,8 @@
 #include "MapIterator.h"
 
 #include "Context.h"
-#include "EMuseInstance.h"
-#include "EMuseFrameListener.h"
+#include "ElypseInstance.h"
+#include "ElypseFrameListener.h"
 
 #include "MuseFile.h"
 
@@ -20,7 +37,7 @@
 
 #include "SceneFileParser.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
@@ -89,7 +106,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_IfBlock )
 			}
 			catch ( GenException & p_exception )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
+				EMUSE_MESSAGE_RELEASE( "ElypseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 			}
 		}
 
@@ -137,7 +154,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_WhileLoop )
 			}
 			catch ( GenException & p_exception )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
+				EMUSE_MESSAGE_RELEASE( "ElypseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 			}
 		}
 
@@ -165,7 +182,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_WhileLoop )
 			}
 			catch ( GenException & p_exception )
 			{
-				EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
+				EMUSE_MESSAGE_RELEASE( "ElypseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 			}
 
 			l_condition = cond->get<bool>();
@@ -239,7 +256,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_ForLoop )
 	}
 	catch ( GenException & p_exception )
 	{
-		EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
+		EMUSE_MESSAGE_RELEASE( "ElypseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 	}
 }
 
@@ -315,7 +332,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_MultiLineFunction )
 		}
 		catch ( GenException & p_exception )
 		{
-			EMUSE_MESSAGE_RELEASE( "EMuseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
+			EMUSE_MESSAGE_RELEASE( "ElypseInstance::Initialise, exception (General) --> " + p_exception.GetDescription() );
 		}
 
 		if ( ScriptEngine::GetContext()->m_breakOne || ScriptEngine::GetContext()->m_return || ScriptEngine::GetContext()->m_continue )
@@ -397,7 +414,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_ReturnNull )
 	ScriptEngine::GetContext()->m_return = true;
 }
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Script
 	{
@@ -1203,7 +1220,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Int_Add )
 
 	if ( l_node->m_value != NULL )
 	{
-		p_map.insert( NodeValueBaseIMap::value_type( p_key, l_node->m_value->clone() ) );
+		p_map.insert( std::make_pair( p_key, l_node->m_value->clone() ) );
 	}
 }
 
@@ -1211,7 +1228,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Int_AddDef )
 {
 	GET_AND_EXEC_TWO_PARAM( NodeValueBaseIMap, p_map, int, p_key );
 	NodeValueBase * l_node = ScriptNode::CreateNodeValue( caller->m_childs[0]->m_type->GetSubType( 0 ) );
-	p_map.insert( NodeValueBaseIMap::value_type( p_key, l_node ) );
+	p_map.insert( std::make_pair( p_key, l_node ) );
 	caller->CopyValue_Ref( l_node );
 }
 
@@ -1227,7 +1244,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_Real_Add )
 
 	if ( l_node->m_value != NULL )
 	{
-		p_map.insert( NodeValueBaseRMap::value_type( p_key, l_node->m_value->clone() ) );
+		p_map.insert( std::make_pair( p_key, l_node->m_value->clone() ) );
 	}
 }
 
@@ -1251,7 +1268,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_String_Add )
 
 	if ( l_node->m_value != NULL )
 	{
-		p_map.insert( NodeValueBaseMap::value_type( p_key, l_node->m_value->clone() ) );
+		p_map.insert( std::make_pair( p_key, l_node->m_value->clone() ) );
 	}
 }
 
@@ -1259,7 +1276,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Map_String_AddDef )
 {
 	GET_AND_EXEC_TWO_PARAM( NodeValueBaseMap, p_map, String, p_key );
 	NodeValueBase * l_node = ScriptNode::CreateNodeValue( caller->m_childs[0]->m_type->GetSubType( 0 ) );
-	p_map.insert( NodeValueBaseMap::value_type( p_key, l_node ) );
+	p_map.insert( std::make_pair( p_key, l_node ) );
 	caller->CopyValue_Ref( l_node );
 }
 

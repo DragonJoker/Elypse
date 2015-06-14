@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Sylvain DOREMUS
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company :	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		DataWriter.h - DataWriter.cpp
-
-	Desc :		Class used to write the datas used in EMuse.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___DataWriter_H___
 #define ___DataWriter_H___
 
@@ -17,7 +23,7 @@
 #include "Module_Download.h"
 
 // The struct to stock blocks informations*
-namespace EMuse
+namespace Elypse
 {
 	namespace Download
 	{
@@ -38,8 +44,8 @@ namespace EMuse
 			~DataWriter();
 			/**
 				Adds a file to the list of files, without compressing it
-					@params :	p_file : [in]	the file to add to the list
-					@params :	p_eType : [in]	the block type
+					@params : p_file : [in]	the file to add to the list
+					@params : p_eType : [in]	the block type
 			*/
 			bool AddFile( const std::string  & p_file, DataBlockType p_eType = EM_NB_BLOCK_TYPES );
 			bool DelFile( uint32_t p_index );
@@ -47,8 +53,8 @@ namespace EMuse
 			bool UpFile( uint32_t p_index );
 			/**
 				Compress the folder p_folder and add it's filename to the list of files
-					@params :	p_folder : [in]	the folder to compress
-					@return :	true if compression was successful
+					@params : p_folder : [in]	the folder to compress
+					@return : true if compression was successful
 								false if not
 			*/
 			bool AddFolder( const std::string  & p_folder, DataBlockType p_eType );
@@ -57,9 +63,9 @@ namespace EMuse
 			bool CompressFolder( const Path  & p_outFolder, const Path & p_outPath, DataBlockType p_eType );
 			/**
 				Writes the final file using p_filename as the file name ( ;) )
-					@params :	p_filename :[in/out]the name of the final file, mustn't contain extenxion
+					@params : p_filename :[in/out]the name of the final file, mustn't contain extenxion
 													(added by this function)
-					@return :	true if successful
+					@return : true if successful
 								false if not
 			*/
 			bool Write( const std::string  & p_filename );

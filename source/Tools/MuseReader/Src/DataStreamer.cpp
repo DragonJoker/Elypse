@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Sylvain DOREMUS
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company :	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		DataStreamer.h - DataStreamer.cpp
-
-	Desc :		Class used to stream the datas used in EMuse.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "stdafx.h"
 #include "DataStreamer.h"
 
@@ -17,7 +23,9 @@
 #include <wx/protocol/http.h>
 #include <wx/wfstream.h>
 
-using namespace EMuse::Download;
+#include <regex>
+
+using namespace Elypse::Download;
 
 CDataStreamer::CDataStreamer( wxListBox * p_log )
 	: m_stream( NULL )
@@ -46,7 +54,7 @@ bool CDataStreamer::SetFile( wxString const & p_url )
 		{
 			m_log->AppendString( _( "Invalid URL" ) );
 		}
-		else if ( !m_type )
+		else if ( m_type == EM_TYPE_UNKNOWN )
 		{
 			m_log->AppendString( _( "Unknown URL format" ) );
 		}
@@ -93,7 +101,7 @@ bool CDataStreamer::ReadHeader()
 	{
 		std::vector< char > l_magic( 9 );
 		Read( reinterpret_cast< uint8_t * >( l_magic.data() ), 8 );
-		m_log->AppendString( wxString( _( "  Magic : " ) ) << wxString( l_magic.data(), wxConvLibc ) );
+		m_log->AppendString( _( "  Magic : " ) + make_wxString( l_magic.data() ) );
 
 		int l_version = 1;
 
@@ -133,7 +141,7 @@ bool CDataStreamer::ReadHeader()
 			// retrieve name
 			std::vector< char > l_name( l_namesize + 1, 0 );
 			Read( reinterpret_cast< uint8_t * >( l_name.data() ), l_namesize );
-			m_log->AppendString( wxString( _( "  Name : " ) ) << wxString( l_name.data(), wxConvLibc ) );
+			m_log->AppendString( wxString( _( "  Name : " ) ) << make_wxString( l_name.data() ) );
 
 			// retrieve block's size
 			int l_blocksize = 0;
@@ -151,11 +159,11 @@ bool CDataStreamer::ReadHeader()
 			{
 				// retrieve block's hash
 				Read( reinterpret_cast< uint8_t * >( l_hash.data() ), 32 );
-				m_log->AppendString( wxString( _( "  Bloc hash: " ) ) << wxString( l_hash.data(), wxConvLibc ) );
+				m_log->AppendString( wxString( _( "  Bloc hash: " ) ) << make_wxString( l_hash.data() ) );
 			}
 
 			// write these infos into the struct deserved to it
-			EM_Block block = { l_blockType, l_namesize, wxString( l_name.data(), wxConvLibc ), l_blocksize, wxString( l_hash.data(), wxConvLibc ) };
+			EM_Block block = { uint8_t( l_blockType ), uint8_t( l_namesize ), std::string( l_name.data() ), uint32_t( l_blocksize ), std::string( l_hash.data() ) };
 
 			// put this block in the list of blocks
 			m_header.push_back( block );
@@ -166,7 +174,7 @@ bool CDataStreamer::ReadHeader()
 	}
 	catch ( std::runtime_error & p_exc )
 	{
-		m_log->AppendString( _( "Erreur de lecture: " ) + wxString( p_exc.what(), wxConvLibc ) );
+		m_log->AppendString( _( "Erreur de lecture: " ) + make_wxString( p_exc.what() ) );
 	}
 
 	return l_result;
@@ -179,7 +187,7 @@ bool CDataStreamer::GetNextBlock()
 	if ( m_currentBlockIndex < int( m_header.size() ) )
 	{
 		EM_Block & l_block = m_header[m_currentBlockIndex];
-		wxString l_path =  m_outFolder + wxFileName::GetPathSeparator() + l_block.m_name;
+		wxString l_path = m_outFolder + wxFileName::GetPathSeparator() + make_wxString( l_block.m_name );
 
 		try
 		{
@@ -192,7 +200,7 @@ bool CDataStreamer::GetNextBlock()
 		}
 		catch ( std::runtime_error & p_exc )
 		{
-			m_log->AppendString( _( "Read error: " ) + wxString( p_exc.what(), wxConvLibc ) );
+			m_log->AppendString( _( "Read error: " ) + make_wxString( p_exc.what() ) );
 		}
 
 		m_currentBlockIndex++;
@@ -234,25 +242,10 @@ int CDataStreamer::GetType( wxString const & p_url )
 
 	if ( p_url.size() > 6 )
 	{
-		wxString l_buf = p_url.substr( 0, 3 );
+		std::string l_buf = make_string( p_url.substr( 0, 3 ) );
+		const std::regex l_regexDisk( "[a-zA-Z]:\\\\" );
 
-		if ( l_buf == wxT( "fil" ) || l_buf[0] == wxT( '/' )
-				|| l_buf == wxT( "c:\\" ) || l_buf == wxT( "d:\\" ) || l_buf == wxT( "e:\\" )
-				|| l_buf == wxT( "f:\\" ) || l_buf == wxT( "g:\\" ) || l_buf == wxT( "h:\\" )
-				|| l_buf == wxT( "i:\\" ) || l_buf == wxT( "j:\\" ) || l_buf == wxT( "k:\\" )
-				|| l_buf == wxT( "l:\\" ) || l_buf == wxT( "m:\\" ) || l_buf == wxT( "n:\\" )
-				|| l_buf == wxT( "o:\\" ) || l_buf == wxT( "p:\\" ) || l_buf == wxT( "q:\\" )
-				|| l_buf == wxT( "r:\\" ) || l_buf == wxT( "s:\\" ) || l_buf == wxT( "t:\\" )
-				|| l_buf == wxT( "u:\\" ) || l_buf == wxT( "v:\\" ) || l_buf == wxT( "w:\\" )
-				|| l_buf == wxT( "x:\\" ) || l_buf == wxT( "y:\\" ) || l_buf == wxT( "z:\\" )
-				|| l_buf == wxT( "C:\\" ) || l_buf == wxT( "D:\\" ) || l_buf == wxT( "E:\\" )
-				|| l_buf == wxT( "F:\\" ) || l_buf == wxT( "G:\\" ) || l_buf == wxT( "H:\\" )
-				|| l_buf == wxT( "I:\\" ) || l_buf == wxT( "J:\\" ) || l_buf == wxT( "K:\\" )
-				|| l_buf == wxT( "L:\\" ) || l_buf == wxT( "M:\\" ) || l_buf == wxT( "N:\\" )
-				|| l_buf == wxT( "O:\\" ) || l_buf == wxT( "P:\\" ) || l_buf == wxT( "Q:\\" )
-				|| l_buf == wxT( "R:\\" ) || l_buf == wxT( "S:\\" ) || l_buf == wxT( "T:\\" )
-				|| l_buf == wxT( "U:\\" ) || l_buf == wxT( "V:\\" ) || l_buf == wxT( "W:\\" )
-				|| l_buf == wxT( "X:\\" ) || l_buf == wxT( "Y:\\" ) || l_buf == wxT( "Z:\\" ) )
+		if ( l_buf == wxT( "fil" ) || l_buf[0] == wxT( '/' ) || std::regex_search( l_buf, l_regexDisk ) )
 		{
 			l_return = EM_TYPE_LOCAL;
 		}
@@ -266,7 +259,7 @@ int CDataStreamer::GetType( wxString const & p_url )
 		}
 		else
 		{
-			l_return = 0;
+			l_return = EM_TYPE_UNKNOWN;
 		}
 	}
 
@@ -289,7 +282,7 @@ void CDataStreamer::CleanupStream()
 
 wxString CDataStreamer::GetFileName( int p_index )
 {
-	return m_header[p_index].m_name;
+	return make_wxString( m_header[p_index].m_name );
 }
 
 //********************************************************************************************************************

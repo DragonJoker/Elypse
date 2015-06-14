@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "Universe.h"
@@ -9,18 +26,18 @@
 #include <OgreRoot.h>
 #include <OgreCamera.h>
 
-#include "EMuseController.h"
+#include "ElypseController.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 Universe::Universe( const String & p_universeName, const String & p_instanceKey )
-	:	named( p_universeName ),
+	: named( p_universeName ),
 		m_manager( NULL ),
 		m_renderTarget( NULL ),
 		m_viewport( NULL )
 {
 	genlib_assert( ! m_name.empty() );
-	m_manager = EMuseController::GetSingletonPtr()->CreateSceneManager( "EMusePlayer" + p_instanceKey );
+	m_manager = ElypseController::GetSingletonPtr()->CreateSceneManager( "ElypsePlayer" + p_instanceKey );
 	genlib_assert( m_manager != NULL );
 	m_camera = m_manager->createCamera( "RootCamera" );
 	genlib_assert( m_camera != NULL );
@@ -42,7 +59,7 @@ void Universe::AddZone( Zone * p_zone )
 
 	if ( ! General::Utils::map::has( m_zones, p_zone->GetName() ) )
 	{
-		m_zones.insert( ZoneMap::value_type( p_zone->GetName(), p_zone ) );
+		m_zones.insert( std::make_pair( p_zone->GetName(), p_zone ) );
 	}
 }
 
@@ -58,7 +75,7 @@ void Universe::SetRenderTarget( RenderTarget * p_rt )
 	m_renderTarget->update();
 }
 
-void __declspec( nothrow ) Universe::ClearScene()
+void Universe::ClearScene() d_no_throw
 {
 	m_manager->clearScene();
 }

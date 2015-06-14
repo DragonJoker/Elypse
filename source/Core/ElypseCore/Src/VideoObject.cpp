@@ -1,6 +1,23 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include "VideoObject.h"
 
@@ -13,10 +30,10 @@
 
 #include <NeoCurl.h>
 
-#include "EMusePlugin.h"
+#include "ElypsePlugin.h"
 
-VideoObject::VideoObject( const String & p_name, EMusePlugin * p_plugin )
-	:	named( p_name ),
+VideoObject::VideoObject( const String & p_name, ElypsePlugin * p_plugin )
+	: named( p_name ),
 		m_isFinished( false ),
 		m_isPlaying( false ),
 		m_looped( false ),
@@ -63,7 +80,7 @@ VideoOverlay * VideoObject::CreateOverlay( EMOverlay * p_overlay )
 	}
 
 	l_vidOverlay = new VideoOverlay( this, p_overlay );
-	m_overlayMap.insert( VideoOverlayMap::value_type( p_overlay, l_vidOverlay ) );
+	m_overlayMap.insert( std::make_pair( p_overlay, l_vidOverlay ) );
 	return l_vidOverlay;
 }
 
@@ -77,7 +94,7 @@ VideoInstance * VideoObject::CreateInstance( Entity * p_entity )
 	}
 
 	l_vidInstance = new VideoInstance( this, p_entity );
-	m_instanceMap.insert( VideoInstanceMap::value_type( p_entity, l_vidInstance ) );
+	m_instanceMap.insert( std::make_pair( p_entity, l_vidInstance ) );
 	return l_vidInstance;
 }
 

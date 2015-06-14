@@ -1,0 +1,15 @@
+
+material plane_bottes
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.588235 0.588235 0.588235 1
+			diffuse 0.996078 0.996078 0.996078 1
+			specular 0 0 0 1 10
+		}
+
+	}
+
+}

@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "ChatDatabase.h"
 #include "ChatWorld.h"
 #include "ChatClient.h"
@@ -90,7 +107,8 @@ ChatDatabase::ChatDatabase( String const & p_path )
 	Database::CPluginManager::Instance().LoadPlugin( l_modulePath + MYSQL_PLUGIN );
 	m_manager = Database::CFactoryManager::Instance().CreateInstance( DATABASE_MYSQL_TYPE );
 
-	std::swap( m_configInfo,  ConfigInfo() );
+	ConfigInfo l_infos;
+	std::swap( m_configInfo, l_infos );
 
 	//m_configInfo.DBName = "kazugame_prod";
 	//m_configInfo.DBUser = "miniline";
@@ -211,7 +229,7 @@ bool ChatDatabase::Update()
 		if ( l_slotsIt == m_allDresses.end() )
 		{
 			std::map <int, std::vector <int> > l_map;
-			m_allDresses.insert( std::map <int, std::map <int, std::vector <int> > >::value_type( l_dressSex, l_map ) );
+			m_allDresses.insert( std::make_pair( l_dressSex, l_map ) );
 			l_slotsIt = m_allDresses.find( l_dressSex );
 		}
 
@@ -220,7 +238,7 @@ bool ChatDatabase::Update()
 		if ( l_slotsIt->second.find( l_slotId ) == l_slotsIt->second.end() )
 		{
 			std::vector <int> l_array;
-			l_slotsIt->second.insert( std::map <int, std::vector <int> >::value_type( l_slotId, l_array ) );
+			l_slotsIt->second.insert( std::make_pair( l_slotId, l_array ) );
 			l_dressesIt = l_slotsIt->second.find( l_slotId );
 		}
 
@@ -254,7 +272,7 @@ bool ChatDatabase::Update()
 		if ( l_slotsIt == m_allTattoos.end() )
 		{
 			std::map <int, std::vector <int> > l_map;
-			m_allTattoos.insert( std::map <int, std::map <int, std::vector <int> > >::value_type( l_tattooSex, l_map ) );
+			m_allTattoos.insert( std::make_pair( l_tattooSex, l_map ) );
 			l_slotsIt = m_allTattoos.find( l_tattooSex );
 		}
 
@@ -263,7 +281,7 @@ bool ChatDatabase::Update()
 		if ( l_slotsIt->second.find( l_slotId ) == l_slotsIt->second.end() )
 		{
 			std::vector <int> l_array;
-			l_slotsIt->second.insert( std::map <int, std::vector <int> >::value_type( l_slotId, l_array ) );
+			l_slotsIt->second.insert( std::make_pair( l_slotId, l_array ) );
 			l_tattoosIt = l_slotsIt->second.find( l_slotId );
 		}
 
@@ -560,7 +578,7 @@ bool ChatDatabase::LoadGames( StrUIntIdMap & p_names )
 			if ( p_names.find( l_gameId ) == p_names.end() )
 			{
 				std::cout << l_gameId << " - " << l_gameName << " - " << l_maxPlayers << "\n";
-				p_names.insert( StrUIntIdMap::value_type( l_gameId, StrUIntPair( l_gameName, l_maxPlayers ) ) );
+				p_names.insert( std::make_pair( l_gameId, std::make_pair( l_gameName, l_maxPlayers ) ) );
 			}
 		}
 

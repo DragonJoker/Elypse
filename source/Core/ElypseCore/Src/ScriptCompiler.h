@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___SCRIPT_COMPILER_H___
 #define ___SCRIPT_COMPILER_H___
 
@@ -14,7 +31,7 @@ using std::ifstream;
 
 #include <Path.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Script
 	{
@@ -81,11 +98,11 @@ namespace EMuse
 			void 					_initialiseFunctionMap();
 			void 					_initialiseOperatorMap();
 
-			virtual void			_creaFunc(	const String & p_functionName,
+			virtual void			_creaFunc( const String & p_functionName,
 												RawFunction * p_function, VariableBaseType p_returnValue, ... );
-			virtual void			_classFunc(	const String & p_functionName,
+			virtual void			_classFunc( const String & p_functionName,
 												RawFunction * p_function, VariableBaseType p_returnValue, ... );
-			virtual void			_createOperator(	const String & p_name,
+			virtual void			_createOperator( const String & p_name,
 					RawFunction * p_func, VariableBaseType p_returnType,
 					VariableBaseType p_left, VariableBaseType p_right );
 
@@ -100,22 +117,22 @@ namespace EMuse
 
 		protected:
 
-			ScriptNode  	*		_compileSentence(	ScriptBlockArray & p_blockArray );
+			ScriptNode  	*		_compileSentence( ScriptBlockArray & p_blockArray );
 
-			ScriptNode  	*		_compileFunctionUse(	ScriptBlockArray & p_blockArray );
-			ScriptNode  	*		_compileOperatedSentence(	ScriptBlockArray & p_blockArray );
-			ScriptNode  	*		_compileBrakets(	ScriptBlockArray & p_blockArray );
-			void					_compileStructDeclatation(	ScriptBlockArray & p_blockArray );
+			ScriptNode  	*		_compileFunctionUse( ScriptBlockArray & p_blockArray );
+			ScriptNode  	*		_compileOperatedSentence( ScriptBlockArray & p_blockArray );
+			ScriptNode  	*		_compileBrakets( ScriptBlockArray & p_blockArray );
+			void					_compileStructDeclatation( ScriptBlockArray & p_blockArray );
 			void					_addStructMember( Structure * p_struct, ScriptBlockArray & p_blockArray );
 			void					_declareStruct( ScriptBlockArray & p_blockArray );
 
-			ScriptNode  	*		_compileIfThenElse(	ScriptBlockArray & p_blockArray );
+			ScriptNode  	*		_compileIfThenElse( ScriptBlockArray & p_blockArray );
 
 			ScriptNode 	*		_compileReturn( ScriptBlockArray & p_childs );
 
-			ScriptNode  	*		_compileFuncParams(	ScriptBlockArray & p_blockArray, Function * p_functionNode, ScriptNode * p_node = NULL );
+			ScriptNode  	*		_compileFuncParams( ScriptBlockArray & p_blockArray, Function * p_functionNode, ScriptNode * p_node = NULL );
 
-			ScriptNode 	*		_compileUserFunctionUse(	ScriptBlockArray & p_blockArray, UserFunction * p_userFunction );
+			ScriptNode 	*		_compileUserFunctionUse( ScriptBlockArray & p_blockArray, UserFunction * p_userFunction );
 
 			ScriptBlock 	*		_getHighestOperator( ScriptBlockArray & p_blockArray );
 			UserFunction 	*		_compileUserFunction( ScriptBlockArray & p_blockArray, bool p_predeclareOnly );

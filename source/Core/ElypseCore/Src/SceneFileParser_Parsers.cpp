@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "SoundObject.h"
@@ -43,9 +60,9 @@
 #include "Zone.h"
 #include "Portal.h"
 
-#include "EMuseController.h"
-#include "EMuseLoadingBar.h"
-#include "EMuseInstance.h"
+#include "ElypseController.h"
+#include "ElypseLoadingBar.h"
+#include "ElypseInstance.h"
 #include "Context.h"
 
 #include "AnimatedObjectGroup.h"
@@ -81,19 +98,19 @@
 #include "SequenceManager.h"
 #include "BaseEvent.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <Manager.h>
 #include <File.h>
 #include <StringConverter.h>
 #include <StringUtils.h>
 
-void EMuse::SceneFile::SceneFileParser::parsingError( Context * p_context, const String & l_error )
+void Elypse::SceneFile::SceneFileParser::parsingError( Context * p_context, const String & l_error )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "Line #" + StringConverter::toString( p_context->lineNo ) + " / " + l_error );
 }
 
-Vector3 EMuse::SceneFile::SceneFileParser::Parser_Vector3Value( const String & p_params )
+Vector3 Elypse::SceneFile::SceneFileParser::Parser_Vector3Value( const String & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -108,7 +125,7 @@ Vector3 EMuse::SceneFile::SceneFileParser::Parser_Vector3Value( const String & p
 					StringConverter::parseReal( l_split[2] ) );
 }
 
-Vector4 EMuse::SceneFile::SceneFileParser::Parser_Vector4Value( const String & p_params )
+Vector4 Elypse::SceneFile::SceneFileParser::Parser_Vector4Value( const String & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -124,7 +141,7 @@ Vector4 EMuse::SceneFile::SceneFileParser::Parser_Vector4Value( const String & p
 					StringConverter::parseReal( l_split[3] ) );
 }
 
-ColourValue EMuse::SceneFile::SceneFileParser::Parser_ColourValue( const String & p_params )
+ColourValue Elypse::SceneFile::SceneFileParser::Parser_ColourValue( const String & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -546,8 +563,8 @@ DEFINE_SCENE_FILE_PARSER( Parser_RootParticleSystem )
 
 DEFINE_SCENE_FILE_PARSER( Parser_RootLoadingBar )
 {
-	EMuseController::GetSingletonPtr()->GetLoadingBar()->SetLoadingBarGroupName( p_params );
-	EMuseController::GetSingletonPtr()->GetLoadingBar()->SetLoadingBarOverlayName( OverlayManager::getSingletonPtr()->getOverlayElement( p_params + p_context->instanceNum )->getParent()->getName() );
+	ElypseController::GetSingletonPtr()->GetLoadingBar()->SetLoadingBarGroupName( p_params );
+	ElypseController::GetSingletonPtr()->GetLoadingBar()->SetLoadingBarOverlayName( OverlayManager::getSingletonPtr()->getOverlayElement( p_params + p_context->instanceNum )->getParent()->getName() );
 	return false;
 }
 
@@ -2958,7 +2975,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneFile )
 			PARSING_ERROR( "Parsing Error : Parser_SceneFile -> wrong syntax for this directive" );
 		}
 
-		MuseFile * l_mFile = EMuseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
+		MuseFile * l_mFile = ElypseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
 
 		if ( l_mFile != NULL )
 		{
@@ -3002,7 +3019,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneDataFile )
 			PARSING_ERROR( "Parsing Error : Parser_SceneDataFile -> wrong syntax for this directive" );
 		}
 
-		MuseFile * l_mFile = EMuseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
+		MuseFile * l_mFile = ElypseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
 
 		if ( l_mFile != NULL )
 		{
@@ -3045,7 +3062,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneLoadScriptFile )
 			PARSING_ERROR( "Parsing Error : Parser_SceneLoadScriptFile -> wrong syntax for this directive" );
 		}
 
-		MuseFile * l_mFile = EMuseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
+		MuseFile * l_mFile = ElypseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
 
 		if ( l_mFile != NULL )
 		{
@@ -3088,7 +3105,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneUnloadScriptFile )
 			PARSING_ERROR( "Parsing Error : Parser_SceneUnloadScriptFile -> wrong syntax for this directive" );
 		}
 
-		MuseFile * l_mFile = EMuseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
+		MuseFile * l_mFile = ElypseController::GetSingletonPtr()->GetDownloadManager()->GetMuseFile( l_musepackName );
 
 		if ( l_mFile != NULL )
 		{

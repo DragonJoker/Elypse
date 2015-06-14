@@ -1,53 +1,63 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___Troll_LinePanel___
 #define ___Troll_LinePanel___
 
+#include "Module_Time.h"
+
 #include <wx/panel.h>
 
-#include "GUI/Module_GUI.h"
-#include "Project/Temporal/Module_Temporal.h"
-
-namespace Troll
+BEGIN_TROLL_GUI_TIME_NAMESPACE
 {
-	namespace GUI
+	class LinePanel
+		: public wxPanel
 	{
-		class LinePanel
-			: public wxPanel
+	public:
+		LinePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
+		~LinePanel();
+
+		void Replace();
+
+		void SetSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence );
+		void AddPonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event, Real p_time );
+		void AddContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
+
+		inline TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * GetSequence()const
 		{
-		private:
-			Temporal::TrollSequence * m_sequence;
-			int m_currentLeft;
+			return m_sequence;
+		}
 
-		public:
-			LinePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition,
-					   const wxSize & p_size = wxDefaultSize );
-			~LinePanel();
+	private:
+		void _showContextMenu( const wxPoint & p_pos );
 
-			void Replace();
+		DECLARE_EVENT_TABLE()
+		void OnAddPonctualEvent( wxCommandEvent & p_event );
+		void OnAddContinuousEvent( wxCommandEvent & p_event );
+		void OnLeftMouseUp( wxMouseEvent & p_event );
+		void OnRightMouseUp( wxMouseEvent & p_event );
+		void OnMouseEnter( wxMouseEvent & p_event );
+		void OnMouseLeave( wxMouseEvent & p_event );
 
-			void SetSequence( Temporal::TrollSequence * p_sequence );
-			void AddPonctualEvent( Temporal::TrollPonctualEvent * p_event, Real p_time );
-			void AddContinuousEvent( Temporal::TrollContinuousEvent * p_event );
-
-		public:
-			inline Temporal::TrollSequence * GetSequence()const
-			{
-				return m_sequence;
-			}
-
-		private:
-			void _showContextMenu( const wxPoint & p_pos );
-
-			void _onAddPonctualEvent( wxCommandEvent & p_event );
-			void _onAddContinuousEvent( wxCommandEvent & p_event );
-			void _onLeftMouseUp( wxMouseEvent & p_event );
-			void _onRightMouseUp( wxMouseEvent & p_event );
-			void _onMouseEnter( wxMouseEvent & p_event );
-			void _onMouseLeave( wxMouseEvent & p_event );
-			DECLARE_EVENT_TABLE()
-		};
-	}
+	private:
+		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * m_sequence;
+		int m_currentLeft;
+	};
 }
+END_TROLL_GUI_TIME_NAMESPACE
 
 #endif
-

@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "stdafx.h"
 
 #include "MuseWriter.h"
@@ -116,14 +133,14 @@ MuseWriterDlg::MuseWriterDlg()
 	l_top += OFFSET + BUTTON_SIZE.y;
 	new wxStaticText( this, wxID_ANY, _( "Config file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
-	m_editCfg = new wxTextCtrl( this, eIDC_EDITCFGFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ), ES_AUTOHSCROLL );
+	m_editCfg = new wxTextCtrl( this, eIDC_EDITCFGFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ) );
 	l_left += l_rightListWidth;
 	new wxButton( this, eIDC_BTNCFGFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 	l_left = OFFSET;
 	l_top += BUTTON_SIZE.y;
 	new wxStaticText( this, wxID_ANY, _( "Output file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
 	l_top += STATIC_HEIGHT;
-	m_editOut = new wxTextCtrl( this, eIDC_EDITOUTFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ), ES_AUTOHSCROLL );
+	m_editOut = new wxTextCtrl( this, eIDC_EDITOUTFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ) );
 	l_left += l_rightListWidth;
 	new wxButton( this, eIDC_BTNOUTFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
 
@@ -161,15 +178,15 @@ void MuseWriterDlg::AddFile( wxString const & p_file )
 
 void MuseWriterDlg::AddGfxFolder( wxString const & p_file )
 {
-	DoAddFolder( p_file, EMuse::Download::EM_BLOCK_ZIPDATA );
+	DoAddFolder( p_file, Elypse::Download::EM_BLOCK_ZIPDATA );
 }
 
 void MuseWriterDlg::AddSndFolder( wxString const & p_file )
 {
-	DoAddFolder( p_file, EMuse::Download::EM_BLOCK_SNDDATA );
+	DoAddFolder( p_file, Elypse::Download::EM_BLOCK_SNDDATA );
 }
 
-void MuseWriterDlg::DoAddFolder( wxString const & p_file, EMuse::Download::DataBlockType p_type )
+void MuseWriterDlg::DoAddFolder( wxString const & p_file, Elypse::Download::DataBlockType p_type )
 {
 	wxString l_log;
 

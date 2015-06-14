@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptCompiler.h"
@@ -9,7 +26,7 @@
 
 #include <Exception.h>
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #define COMPILE_ERROR( p_desc )	m_compiler->_error();												\
 								EMUSE_MESSAGE_RELEASE( "Compiler Error : [" + m_compiler->_getScriptFileName()		\
@@ -26,7 +43,7 @@
 #define COMPILE_WARNING_IN_BLOCK( p_desc , p_block )  m_compiler->_warning();EMUSE_MESSAGE_RELEASE( "Compiler Warning [ "+m_compiler->_getScriptFileName()+" @ L# "+ StringConverter::toString( p_block->m_lineNumBegin ) + " ] -> " + p_desc );
 
 ScriptBlock::ScriptBlock()
-	:	m_parent( NULL ),
+	: m_parent( NULL ),
 		m_compiledScript( NULL ),
 		m_compiler( NULL ),
 		m_type( BT_INITIAL ),
@@ -59,7 +76,7 @@ ScriptBlock::~ScriptBlock()
 	Clear();
 }
 
-void __declspec( nothrow ) ScriptBlock::Clear()
+void ScriptBlock::Clear() d_no_throw
 {
 	for ( auto & l_child : m_childs )
 	{
@@ -481,7 +498,7 @@ bool ScriptBlock::_parseBraces()
 	VERBOSE_COMPILATOR( "_parseBraces" );
 	ScriptNodeArray l_nodeArray;
 	ScriptBlockArray l_ifArray;
-	unsigned int l_lineNum =  m_compiler->_getCurrentLine();
+	unsigned int l_lineNum = m_compiler->_getCurrentLine();
 
 	while ( ! m_compiler->_eof() )
 	{

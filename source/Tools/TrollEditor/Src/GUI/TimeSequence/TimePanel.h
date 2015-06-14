@@ -1,89 +1,79 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___Troll_TimePanel___
 #define ___Troll_TimePanel___
 
+#include "Module_Time.h"
+
 #include <wx/panel.h>
 
-#include "GUI/Module_GUI.h"
-
-namespace Troll
+BEGIN_TROLL_GUI_TIME_NAMESPACE
 {
-	namespace GUI
+	class TimePanel
+		: public wxPanel
 	{
-		class TimePanel;
+	public:
+		TimePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
+		~TimePanel();
 
-		class TimeTick
-			: public wxPanel
+		void IncrementTickPosition( int p_left );
+		void UpdateTick( int p_left, bool p_updateSequence = false );
+
+		inline void SetFirst( float p_first )
 		{
-		protected:
-			TimePanel * m_panel;
-
-		public:
-			TimeTick( wxWindow * p_parent, wxWindowID p_id = wxID_ANY,
-					  const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-
-		private:
-			void _onLeftMouseDown( wxMouseEvent & p_event );
-			void _onLeftMouseUp( wxMouseEvent & p_event );
-
-			DECLARE_EVENT_TABLE()
-		};
-
-		class TimePanel
-			: public wxPanel
+			m_first = p_first;
+			Refresh();
+		}
+		inline void IncrementFirst( float p_inc )
 		{
-		protected:
-			int m_totalWidth;
-			float m_scale;
-			float m_first;
-			TimeTick * m_tick;
-			float m_currentTime;
-			bool m_leftDown;
+			m_first += p_inc;
+			Refresh();
+		}
+		inline void DecrementFirst( float p_dec )
+		{
+			m_first -= p_dec;
+			Refresh();
+		}
+		inline void SetLeftDown( bool p_down )
+		{
+			m_leftDown = p_down;
+		}
+		inline float GetFirst()const
+		{
+			return m_first;
+		}
 
-		public:
-			TimePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition,
-					   const wxSize & p_size = wxDefaultSize );
-			~TimePanel();
+	private:
+		DECLARE_EVENT_TABLE()
+		void OnPaint( wxPaintEvent & p_event );
+		void OnLeftMouseDown( wxMouseEvent & p_event );
+		void OnLeftMouseUp( wxMouseEvent & p_event );
+		void OnMouseMove( wxMouseEvent & p_event );
 
-			void IncrementTickPosition( int p_left );
-			void UpdateTick( int p_left, bool p_updateSequence = false );
-
-		public:
-			inline void SetFirst( float p_first )
-			{
-				m_first = p_first;
-				Refresh();
-			}
-			inline void IncrementFirst( float p_inc )
-			{
-				m_first += p_inc;
-				Refresh();
-			}
-			inline void DecrementFirst( float p_dec )
-			{
-				m_first -= p_dec;
-				Refresh();
-			}
-			inline void SetLeftDown( bool p_down )
-			{
-				m_leftDown = p_down;
-			}
-
-			inline float GetFirst()const
-			{
-				return m_first;
-			}
-
-		private:
-			void _onPaint( wxPaintEvent & p_event );
-			void _onLeftMouseDown( wxMouseEvent & p_event );
-			void _onLeftMouseUp( wxMouseEvent & p_event );
-			void _onMouseMove( wxMouseEvent & p_event );
-
-			DECLARE_EVENT_TABLE()
-		};
-	}
+	protected:
+		int m_totalWidth;
+		float m_scale;
+		float m_first;
+		TimeTick * m_tick;
+		float m_currentTime;
+		bool m_leftDown;
+	};
 }
+END_TROLL_GUI_TIME_NAMESPACE
 
 #endif
-

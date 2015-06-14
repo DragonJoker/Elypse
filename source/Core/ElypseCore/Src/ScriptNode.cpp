@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Marc BILLON
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company:	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		ScriptNode.h - ScriptNode.cpp
-
-	Desc :		A node in the script tree. Can be a function or a value.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptNode.h"
@@ -16,12 +22,12 @@
 #include "VariableType.h"
 #include "Structure.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 unsigned int ScriptNode::sm_numNodes = 0;
 
 ScriptNode::ScriptNode( ConfigFile * p_file, unsigned int p_lineNum )
-	:	m_value( NULL ),
+	: m_value( NULL ),
 		m_function( NULL ),
 		m_file( p_file ),
 		m_userFunction( NULL ),
@@ -67,7 +73,7 @@ void ScriptNode::_delete()
 	m_childs.clear();
 }
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Script
 	{
@@ -97,7 +103,7 @@ namespace EMuse
 
 			for ( ; i != iend; ++ i )
 			{
-				m_value.insert( NodeValueBaseIMap::value_type( i->first, i->second->clone() ) );
+				m_value.insert( std::make_pair( i->first, i->second->clone() ) );
 			}
 		}
 
@@ -110,7 +116,7 @@ namespace EMuse
 
 			for ( ; i != iend; ++ i )
 			{
-				m_value.insert( NodeValueBaseRMap::value_type( i->first, i->second->clone() ) );
+				m_value.insert( std::make_pair( i->first, i->second->clone() ) );
 			}
 		}
 
@@ -123,7 +129,7 @@ namespace EMuse
 
 			for ( ; i != iend; ++ i )
 			{
-				m_value.insert( NodeValueBaseMap::value_type( i->first, i->second->clone() ) );
+				m_value.insert( std::make_pair( i->first, i->second->clone() ) );
 			}
 		}
 
@@ -177,7 +183,7 @@ namespace EMuse
 	}
 }
 /*
-namespace EMuse
+namespace Elypse
 { namespace Script
 {
 	template<>
@@ -189,7 +195,7 @@ namespace EMuse
 
 	public:
 		NodeValue()
-			:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
+			: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
 		{}
 
 		virtual ~NodeValue()
@@ -233,7 +239,7 @@ namespace EMuse
 
 	public:
 		NodeValue()
-			:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
+			: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
 		{}
 
 		virtual ~NodeValue()
@@ -258,7 +264,7 @@ namespace EMuse
 
 			for ( ; i != iend; ++ i)
 			{
-				m_value.insert( value_type::value_type( i->first, i->second->clone()));
+				m_value.insert( std::make_pair( i->first, i->second->clone()));
 			}
 		}
 
@@ -280,7 +286,7 @@ namespace EMuse
 
 	public:
 		NodeValue()
-			:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
+			: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
 		{}
 
 		virtual ~NodeValue()
@@ -305,7 +311,7 @@ namespace EMuse
 
 			for ( ; i != iend; ++ i)
 			{
-				m_value.insert( value_type::value_type( i->first, i->second->clone()));
+				m_value.insert( std::make_pair( i->first, i->second->clone()));
 			}
 		}
 
@@ -327,7 +333,7 @@ namespace EMuse
 
 	public:
 		NodeValue()
-			:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
+			: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
 		{}
 
 		virtual ~NodeValue()
@@ -352,7 +358,7 @@ namespace EMuse
 
 			for ( ; i != iend; ++ i)
 			{
-				m_value.insert( value_type::value_type( i->first, i->second->clone()));
+				m_value.insert( std::make_pair( i->first, i->second->clone()));
 			}
 		}
 
@@ -374,7 +380,7 @@ namespace EMuse
 
 	public:
 		NodeValue()
-			:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
+			: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
 		{}
 
 		virtual ~NodeValue() {}
@@ -426,7 +432,7 @@ namespace EMuse
 
 	public:
 		NodeValue()
-			:	NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
+			: NodeValueBase( static_cast<VariableBaseType>( NodeTypeBinding<value_type>::NType))
 		{}
 
 		virtual ~NodeValue() {}

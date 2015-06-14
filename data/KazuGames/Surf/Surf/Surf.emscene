@@ -1,0 +1,402 @@
+ambient_light 1.0 1.0 1.0 1.0
+
+// SOUNDS
+
+sound Ambiance
+{
+	url ./Sons/Ambiance.mp3
+	type music
+	global true
+	attenuation 0.0
+	looped true
+}
+
+// SCENE NODES
+
+scene_node SurfNode
+{
+	position 0.0 350.0 0.0
+}
+
+scene_node CameraNode
+{
+	parent SurfNode
+}
+
+scene_node SkyNode
+{
+	position 0.0 0.0 0.0
+	scale 3 3 3
+}
+
+scene_node SeaNode
+{
+	scale 5 5 5
+}
+
+// OBJECTS
+
+object Surf
+{
+	mesh surf.mesh
+	attach_to SurfNode
+}
+
+object Character
+{
+	mesh corps.mesh
+	attach_to SurfNode
+}
+
+object OeilD
+{
+	mesh oeild.mesh
+	attach_to SurfNode
+}
+
+object OeilG
+{
+	mesh oeilg.mesh
+	attach_to SurfNode
+}
+
+object Pieds
+{
+	mesh pieds.mesh
+	attach_to SurfNode
+}
+
+object Hair
+{
+	mesh queuedechev.mesh
+	attach_to SurfNode
+}
+
+object Wave
+{
+	mesh vague.mesh
+	attach_to SurfNode
+}
+
+object Plage
+{
+	mesh plage.mesh
+	attach_to SeaNode
+}
+
+object Sky
+{
+	mesh ciel.mesh
+	attach_to SkyNode
+}
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction -0.50 -0.71 -0.50
+	diffuse 0.90 0.90 0.90 1.00
+	specular 0.70 0.70 0.70 1.00
+}
+
+light light_02
+{
+	type directional
+	direction 0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_03
+{
+	type directional
+	direction 0.50 -0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_04
+{
+	type directional
+	direction -0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+// CAMERAS
+
+camera RootCamera
+{
+	position 0.0 0.0 1.0
+	attach_to CameraNode
+}
+
+animation_group SurfAnim
+{
+	add_object Character
+	{
+		animation stand
+		{
+			looped true
+		}
+
+		animation tombe
+		{
+			looped false
+		}
+
+		animation Fig1
+		{
+			looped false
+		}
+
+		animation fig2
+		{
+			looped false
+		}
+
+		animation fig3
+		{
+			looped false
+		}
+
+		animation Fig4
+		{
+			looped false
+		}
+
+		animation fig5
+		{
+			looped false
+		}
+
+		animation fig6
+		{
+			looped false
+		}
+	}
+
+	add_object OeilD
+	{
+		animation stand
+		{
+			looped true
+		}
+
+		animation tombe
+		{
+			looped false
+		}
+
+		animation Fig1
+		{
+			looped false
+		}
+
+		animation fig2
+		{
+			looped false
+		}
+
+		animation fig3
+		{
+			looped false
+		}
+
+		animation Fig4
+		{
+			looped false
+		}
+
+		animation fig5
+		{
+			looped false
+		}
+
+		animation fig6
+		{
+			looped false
+		}
+	}
+
+	add_object OeilG
+	{
+		animation stand
+		{
+			looped true
+		}
+
+		animation tombe
+		{
+			looped false
+		}
+
+		animation Fig1
+		{
+			looped false
+		}
+
+		animation fig2
+		{
+			looped false
+		}
+
+		animation fig3
+		{
+			looped false
+		}
+
+		animation Fig4
+		{
+			looped false
+		}
+
+		animation fig5
+		{
+			looped false
+		}
+
+		animation fig6
+		{
+			looped false
+		}
+	}
+
+	add_object Hair
+	{
+		animation stand
+		{
+			looped true
+		}
+
+		animation tombe
+		{
+			looped false
+		}
+
+		animation Fig1
+		{
+			looped false
+		}
+
+		animation fig2
+		{
+			looped false
+		}
+
+		animation fig3
+		{
+			looped false
+		}
+
+		animation Fig4
+		{
+			looped false
+		}
+
+		animation fig5
+		{
+			looped false
+		}
+
+		animation fig6
+		{
+			looped false
+		}
+	}
+
+	add_object Pieds
+	{
+		animation stand
+		{
+			looped true
+		}
+
+		animation tombe
+		{
+			looped false
+		}
+
+		animation Fig1
+		{
+			looped false
+		}
+
+		animation fig2
+		{
+			looped false
+		}
+
+		animation fig3
+		{
+			looped false
+		}
+
+		animation Fig4
+		{
+			looped false
+		}
+
+		animation fig5
+		{
+			looped false
+		}
+
+		animation fig6
+		{
+			looped false
+		}
+	}
+
+	add_object Surf
+	{
+		animation stand
+		{
+			looped true
+		}
+
+		animation tombe
+		{
+			looped false
+		}
+
+		animation Fig1
+		{
+			looped false
+		}
+
+		animation fig2
+		{
+			looped false
+		}
+
+		animation fig3
+		{
+			looped false
+		}
+
+		animation Fig4
+		{
+			looped false
+		}
+
+		animation fig5
+		{
+			looped false
+		}
+
+		animation fig6
+		{
+			looped false
+		}
+	}
+
+	chain_animations Fig1 stand
+	chain_animations fig2 stand
+	chain_animations fig3 stand
+	chain_animations Fig4 stand
+	chain_animations fig5 stand
+	chain_animations fig6 stand
+	chain_animations tombe stand
+}

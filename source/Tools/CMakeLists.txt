@@ -4,6 +4,7 @@ option( BUILD_TOOLS_MUSE_WRITER "Build MuseWriter" TRUE )
 option( BUILD_TOOLS_TROLL_EDITOR "Build TrollEditor" TRUE )
 
 function( ToolsInit )
+	set( GuiCommon "no (Not wanted)" PARENT_SCOPE )
 	set( ElpsBinry "no (Not wanted)" PARENT_SCOPE )
 	set( MuseReadr "no (Not wanted)" PARENT_SCOPE )
 	set( MuseWritr "no (Not wanted)" PARENT_SCOPE )
@@ -58,6 +59,12 @@ function( ToolsBuild )
 			${OpenGlLibraries}
 		)
 		
+		if ( BUILD_TOOLS_ELYPSE_BINARY OR BUILD_TOOLS_MUSE_READER OR BUILD_TOOLS_MUSE_WRITER OR BUILD_TOOLS_TROLL_EDITOR )
+			set( Build ${GuiCommon} )
+			add_subdirectory( Tools/GuiCommon )
+			set( GuiCommon ${Build} PARENT_SCOPE )
+		endif ()
+		
 		if ( BUILD_TOOLS_ELYPSE_BINARY )
 			set( Build ${ElpsBinry} )
 			add_subdirectory( Tools/ElypseBinary )
@@ -82,40 +89,30 @@ function( ToolsBuild )
 			set( TrollEdtr ${Build} PARENT_SCOPE )
 		endif ()
 	else()
-		set( ElpsBinry "No (missing: " )
-		set( MuseReadr "No (missing: " )
-		set( TrollEdtr "No (missing: " )
+		set( _TXT "No (missing: " )
 		set( SEP "" )
 		if ( NOT wxWidgets_FOUND )
-			set( ElpsBinry "${SEP}${ElpsBinry}wxWidgets library " )
-			set( MuseReadr "${SEP}${MuseReadr}wxWidgets library " )
-			set( TrollEdtr "${SEP}${MuseWritr}wxWidgets library " )
-			set( TrollEdtr "${SEP}${TrollEdtr}wxWidgets library " )
+			set( _TXT "${SEP}${_TXT}wxWidgets library " )
 			set( SEP ", " )
 		endif()
 		if ( NOT GTK_FOUND )
-			set( ElpsBinry "${SEP}${ElpsBinry}GTK library" )
-			set( MuseReadr "${SEP}${MuseReadr}GTK library" )
-			set( MuseReadr "${SEP}${MuseWritr}GTK library" )
-			set( TrollEdtr "${SEP}${TrollEdtr}GTK library" )
+			set( _TXT "${SEP}${_TXT}GTK library" )
 			set( SEP ", " )
 		endif()
 		if ( NOT OPENGL_FOUND )
-			set( ElpsBinry "${SEP}${ElpsBinry}OpenGL library" )
-			set( MuseReadr "${SEP}${MuseReadr}OpenGL library" )
-			set( MuseReadr "${SEP}${MuseWritr}OpenGL library" )
-			set( TrollEdtr "${SEP}${TrollEdtr}OpenGL library" )
+			set( _TXT "${SEP}${_TXT}OpenGL library" )
 			set( SEP ", " )
 		endif()
-		set( ElpsBinry "${ElpsBinry})" )
-		set( MuseReadr "${MuseReadr})" )
-		set( MuseReadr "${MuseWritr})" )
-		set( TrollEdtr "${TrollEdtr})" )
+		set( GuiCommon "${_TXT})" )
+		set( ElpsBinry "${_TXT})" )
+		set( MuseReadr "${_TXT})" )
+		set( TrollEdtr "${_TXT})" )
 	endif ()
 endfunction( ToolsBuild )
 
 function( ToolsSummary msg )
 	set( msg_tmp "\nTools :" )
+	set( msg_tmp "${msg_tmp}\n    GuiCommon          ${GuiCommon}" )
 	set( msg_tmp "${msg_tmp}\n    ElypseBinary       ${ElpsBinry}" )
 	set( msg_tmp "${msg_tmp}\n    MuseReader         ${MuseReadr}" )
 	set( msg_tmp "${msg_tmp}\n    MuseWriter         ${MuseWritr}" )
@@ -157,6 +154,20 @@ function( ToolsSetup )
 		DESCRIPTION "Application used to create new scenes"
 		GROUP Tools
 		DEPENDS ElypseCore
+		INSTALL_TYPES Developer Full
+	)
+	cpack_add_component( GuiCommon
+		DISPLAY_NAME "Common Elypse/wxWigets library"
+		DESCRIPTION "Used to develop wxWidgets applications using Elypse"
+		GROUP Tools
+		DEPENDS ElypseCore
+		INSTALL_TYPES Developer Full
+	)
+	cpack_add_component( GuiCommon_dev
+		DISPLAY_NAME "Common Elypse/wxWigets library SDK"
+		DESCRIPTION "Used to develop wxWidgets applications using Elypse"
+		GROUP Development
+		DEPENDS GuiCommon
 		INSTALL_TYPES Developer Full
 	)
 endfunction( ToolsSetup )

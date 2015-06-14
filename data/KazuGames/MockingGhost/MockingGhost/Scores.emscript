@@ -22,7 +22,7 @@ void _retrieveHighScores()
 	if ( ! c_modeInstant)
 	{
 		l_namesAndScores = StringFromUrl( c_highscorePage + "?name=" + l_gameName, EMPTY_STRING);
-	
+
 		l_index = strFind( l_namesAndScores, "<br>");
 	
 		l_names = substr( l_namesAndScores, 0, l_index);

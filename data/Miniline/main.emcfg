@@ -41,7 +41,7 @@ scene RoomSelection
 	load_script_file room-selection.emscript
 }
 
-scene Common
+scene Miniline
 {
 	muse_file Miniline.muse
 	data_file data-common.zip
@@ -50,4 +50,4 @@ scene Common
 	load_script_file common.emscript
 }
 
-start_scene Common
+start_scene Miniline

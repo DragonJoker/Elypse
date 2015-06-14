@@ -1,12 +1,20 @@
-//
-// chat_client.cpp
-// ~~~~~~~~~~~~~~~
-//
-// Copyright (c) 2003-2008 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 
 #include "Client.h"
 #include <FunctionTracker.h>
@@ -19,7 +27,7 @@ namespace Elypse
 {
 	namespace Network
 	{
-		ElypseTcpClient :: ElypseTcpClient( asio::io_service * p_service )
+		ElypseTcpClient::ElypseTcpClient( asio::io_service * p_service )
 			: General::Network::TcpConnectorBase( *p_service )
 			, General::Network::TcpReaderBase( General::Network::TcpConnectorBase::m_socket, *p_service )
 			, General::Network::TcpWriterBase( General::Network::TcpConnectorBase::m_socket, *p_service )
@@ -30,7 +38,7 @@ namespace Elypse
 		{
 		}
 
-		ElypseTcpClient :: ~ElypseTcpClient()
+		ElypseTcpClient::~ElypseTcpClient()
 		{
 			std::cout << "~ElypseTcpClient : " << std::endl;
 			//TcpConnectorBase::m_socket.close();
@@ -63,7 +71,7 @@ namespace Elypse
 			}
 		};
 
-		void ElypseTcpClient :: Stop()
+		void ElypseTcpClient::Stop()
 		{
 			if ( ! m_stopped )
 			{
@@ -75,13 +83,13 @@ namespace Elypse
 			}
 		}
 
-		void ElypseTcpClient :: StopClient()
+		void ElypseTcpClient::StopClient()
 		{
 			TcpConnectorBase::m_socket.close();
 			m_toDelete = true;
 		}
 
-		void ElypseTcpClient :: DoMainLoop()
+		void ElypseTcpClient::DoMainLoop()
 		{
 			try
 			{
@@ -90,16 +98,16 @@ namespace Elypse
 			catch ( exception & p_exc )
 			{
 #if BOOST_VERSION > 103600
-				std::cout << "ERROR : NetworkManager :: DoMainLoop - [" + diagnostic_information( p_exc ) + "]\n";
+				std::cout << "ERROR : NetworkManager::DoMainLoop - [" + diagnostic_information( p_exc ) + "]\n";
 #else
-				std::cout << "ERROR : NetworkManager :: DoMainLoop - [" << p_exc.diagnostic_information() << "]\n";
+				std::cout << "ERROR : NetworkManager::DoMainLoop - [" << p_exc.diagnostic_information() << "]\n";
 #endif
 			}
 		}
 
-		//void ElypseTcpClient :: CallbackResolve( const boost::system::error_code & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
+		//void ElypseTcpClient::CallbackResolve( const boost::system::error_code & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
 		//{
-		//	std::cout << "ElypseTcpClient :: CallbackResolve - CallbackConnect\n";
+		//	std::cout << "ElypseTcpClient::CallbackResolve - CallbackConnect\n";
 		//	if (_checkOk()){ d_coucou; return;}
 		//	if (p_err && ! CallbackError( p_err))
 		//	{
@@ -116,13 +124,13 @@ namespace Elypse
 		//	}
 		//	catch ( std::exception & p_exc )
 		//	{
-		//		std::cout << "ElypseTcpClient :: CallbackResolve - CallbackConnect - Uncaught exception : " << p_exc.what() << "\n";
+		//		std::cout << "ElypseTcpClient::CallbackResolve - CallbackConnect - Uncaught exception : " << p_exc.what() << "\n";
 		//		//AsyncConnect( m_host, m_port);
 		//	}
-		//	//std::cout << "ElypseTcpClient :: CallbackResolve - CallbackConnect - End\n";
+		//	//std::cout << "ElypseTcpClient::CallbackResolve - CallbackConnect - End\n";
 		//}
 
-		//void ElypseTcpClient :: CallbackConnect( const boost::system::error_code & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
+		//void ElypseTcpClient::CallbackConnect( const boost::system::error_code & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
 		//{
 		//	if ( ! p_err)
 		//	{
@@ -150,9 +158,9 @@ namespace Elypse
 		//	}
 		//}
 
-		void ElypseTcpClient :: CallbackFinishConnect()
+		void ElypseTcpClient::CallbackFinishConnect()
 		{
-			std::cout << "ElypseTcpClient :: CallbackFinishConnect\n";
+			std::cout << "ElypseTcpClient::CallbackFinishConnect\n";
 			//if (_checkOk()) return;
 			m_connected = true;
 
@@ -160,13 +168,13 @@ namespace Elypse
 			StartAsyncRead();
 		}
 
-		void ElypseTcpClient :: CallbackReceivedMessage( const std::string & p_message )
+		void ElypseTcpClient::CallbackReceivedMessage( const std::string & p_message )
 		{
 			//if (_checkOk()){ d_coucou; return;}
 			//std::cout << "Received a message\n";
 		}
 
-		bool ElypseTcpClient :: CallbackWriterError( const boost::system::error_code & p_err )
+		bool ElypseTcpClient::CallbackWriterError( const boost::system::error_code & p_err )
 		{
 			Stop();
 
@@ -177,18 +185,18 @@ namespace Elypse
 			//	std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
 			//	l_endPoint = TcpConnectorBase::m_socket.local_endpoint();
 			//	std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-			//	std::cout << "ElypseTcpClient :: CallbackWriterError : [" << l_remoteAddr << "]-[" << l_localAddr << "]\n";
+			//	std::cout << "ElypseTcpClient::CallbackWriterError : [" << l_remoteAddr << "]-[" << l_localAddr << "]\n";
 			//}
 			//catch (...)
 			//{
-			//	std::cout << "ElypseTcpClient :: CallbackWriterError : not connected" << std::endl;;
+			//	std::cout << "ElypseTcpClient::CallbackWriterError : not connected" << std::endl;;
 			//}
 
 			m_connected = false;
 			return true;
 		}
 
-		bool ElypseTcpClient :: CallbackReaderError( const boost::system::error_code & p_err )
+		bool ElypseTcpClient::CallbackReaderError( const boost::system::error_code & p_err )
 		{
 			m_service->post( SocketKiller( this ) ); //boost::bind( & ElypseTcpClient::Suicide, this));
 			//Stop();
@@ -202,19 +210,19 @@ namespace Elypse
 			//		std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
 			//		l_endPoint = TcpConnectorBase::m_socket.local_endpoint();
 			//		std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-			//		std::cout << "ElypseTcpClient :: CallbackReaderError : [" << l_remoteAddr << "]-[" << l_localAddr << "]\n";
+			//		std::cout << "ElypseTcpClient::CallbackReaderError : [" << l_remoteAddr << "]-[" << l_localAddr << "]\n";
 			//	}
 			//}
 			//catch (...)
 			//{
-			//	std::cout << "ElypseTcpClient :: CallbackReaderError : not connected" << std::endl;;
+			//	std::cout << "ElypseTcpClient::CallbackReaderError : not connected" << std::endl;;
 			//}
 
 			m_connected = false;
 			return true;
 		}
 
-		bool ElypseTcpClient :: CallbackConnectorError( const boost::system::error_code & p_err )
+		bool ElypseTcpClient::CallbackConnectorError( const boost::system::error_code & p_err )
 		{
 			Stop();
 
@@ -225,11 +233,11 @@ namespace Elypse
 			//	std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
 			//	l_endPoint = TcpConnectorBase::m_socket.local_endpoint();
 			//	std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-			//	std::cout << "ElypseTcpClient :: CallbackError : [" << l_remoteAddr << "]-[" << l_localAddr << "]\n";
+			//	std::cout << "ElypseTcpClient::CallbackError : [" << l_remoteAddr << "]-[" << l_localAddr << "]\n";
 			//}
 			//catch (...)
 			//{
-			//	std::cout << "ElypseTcpClient :: CallbackError : not connected" << std::endl;;
+			//	std::cout << "ElypseTcpClient::CallbackError : not connected" << std::endl;;
 			//}
 
 			m_connected = false;

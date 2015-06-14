@@ -1,20 +1,24 @@
 project( ElypseBinary )
 
+add_definitions( -D_CRT_SECURE_NO_WARNINGS )
+
 set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
 set( ${PROJECT_NAME}_VERSION_MINOR	9 )
 set( ${PROJECT_NAME}_VERSION_BUILD	4 )
 
-include_directories( ${CMAKE_SOURCE_DIR}/Core/GeneralLib/Src )
-include_directories( ${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Src )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Data )
-include_directories( ${Ogre_INCLUDE_DIRS} )
+include_directories(
+	${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src
+	${CMAKE_SOURCE_DIR}/Tools/GuiCommon/Src
+	${CMAKE_CURRENT_SOURCE_DIR}/Src
+)
 
 add_target(
 	${PROJECT_NAME}
 	bin
-	"ElypseCore"
-	"ElypseCore;${ElypseCoreLibraries};${BinariesLibraries}"
+	"GeneralLib;ElypseCore;GuiCommon"
+	"GeneralLib;ElypseCore;GuiCommon;${ElypseCoreLibraries};${BinariesLibraries}"
+	"ElypseBinaryPch.h"
+	"ElypseBinaryPch.cpp"
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Tools" )

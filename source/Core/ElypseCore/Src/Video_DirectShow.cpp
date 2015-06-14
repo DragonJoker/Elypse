@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "Video_DirectShow.h"
@@ -24,7 +41,7 @@
 #include <Thread.h>
 #include <Utils.h>
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 template< class T > void SafeRelease( T *& p_pReleasable )
 {
@@ -36,27 +53,27 @@ template< class T > void SafeRelease( T *& p_pReleasable )
 }
 
 VideoImpl_DirectShow::VideoImpl_DirectShow( VideoObject * p_owner )
-	:	VideoImplementation( p_owner	)
-	,	m_mediaControl( NULL	)
-	,	m_audio( NULL	)
-	,	m_mediaSeeking( NULL	)
-	,	m_mediaEvent( NULL	)
-	,	m_mediaEventEx( NULL	)
-	,	m_sampleGrabber( NULL	)
-	,	m_filterGraph( NULL	)
-	,	m_buffer( NULL	)
-	,	m_bufferLength( 0	)
-	,	m_buffer2( NULL	)
-	,	m_vidWidth( 0	)
-	,	m_vidHeight( 0	)
-	,	m_ready( false	)
-	,	m_infiniteStream( false	)
-	,	m_status( EM_STATUS_NONE	)
-	,	m_thread( NULL	)
-	,	m_maxVolume( 0	)
-	,	m_currentVolume( 0	)
-	,	m_volumePercent( 1.0	)
-	,	m_muted( false	)
+	: VideoImplementation( p_owner )
+	, m_mediaControl( NULL )
+	, m_audio( NULL )
+	, m_mediaSeeking( NULL )
+	, m_mediaEvent( NULL )
+	, m_mediaEventEx( NULL )
+	, m_sampleGrabber( NULL )
+	, m_filterGraph( NULL )
+	, m_buffer( NULL )
+	, m_bufferLength( 0 )
+	, m_buffer2( NULL )
+	, m_vidWidth( 0 )
+	, m_vidHeight( 0 )
+	, m_ready( false )
+	, m_infiniteStream( false )
+	, m_status( EM_STATUS_NONE )
+	, m_thread( NULL )
+	, m_maxVolume( 0 )
+	, m_currentVolume( 0 )
+	, m_volumePercent( 1.0 )
+	, m_muted( false )
 {
 //	CoInitialize(NULL);
 }
@@ -87,11 +104,11 @@ void VideoImpl_DirectShow::_cleanup()
 		m_mediaControl->Stop();
 	}
 
-	SafeRelease( m_filterGraph	);
-	SafeRelease( m_mediaControl	);
-	SafeRelease( m_sampleGrabber	);
-	SafeRelease( m_audio	);
-	SafeRelease( m_mediaSeeking	);
+	SafeRelease( m_filterGraph );
+	SafeRelease( m_mediaControl );
+	SafeRelease( m_sampleGrabber );
+	SafeRelease( m_audio );
+	SafeRelease( m_mediaSeeking );
 
 	if ( m_buffer != NULL )
 	{
@@ -106,8 +123,8 @@ void VideoImpl_DirectShow::_cleanup()
 	}
 }
 
-bool VideoImpl_DirectShow::_connectPins( IBaseFilter * p_outputFilter,	unsigned int p_outputNum,
-		IBaseFilter * p_inputFilter,	unsigned int p_inputNum )
+bool VideoImpl_DirectShow::_connectPins( IBaseFilter * p_outputFilter, unsigned int p_outputNum,
+		IBaseFilter * p_inputFilter, unsigned int p_inputNum )
 {
 	genlib_assert( p_inputFilter != NULL );
 	genlib_assert( p_outputFilter != NULL );
@@ -292,11 +309,11 @@ bool VideoImpl_DirectShow::_initialiseInstances( const String & p_url )
 //	l_graphBuilder.CoCreateInstance( CLSID_CaptureGraphBuilder2);
 //	l_filterGraph.CoCreateInstance( CLSID_FilterGraph);
 	m_filterGraph = l_filterGraph;
-	m_filterGraph->QueryInterface( IID_IMediaControl,	reinterpret_cast <void **>( & m_mediaControl ) );
-	m_filterGraph->QueryInterface( IID_IMediaSeeking,	reinterpret_cast <void **>( & m_mediaSeeking ) );
-	m_filterGraph->QueryInterface( IID_IMediaEvent,		reinterpret_cast <void **>( & m_mediaEvent ) );
-	m_filterGraph->QueryInterface( IID_IMediaEventEx,	reinterpret_cast <void **>( & m_mediaEventEx ) );
-	m_filterGraph->QueryInterface( IID_IBasicAudio,		reinterpret_cast <void **>( & m_audio ) );
+	m_filterGraph->QueryInterface( IID_IMediaControl, reinterpret_cast <void **>( & m_mediaControl ) );
+	m_filterGraph->QueryInterface( IID_IMediaSeeking, reinterpret_cast <void **>( & m_mediaSeeking ) );
+	m_filterGraph->QueryInterface( IID_IMediaEvent, reinterpret_cast <void **>( & m_mediaEvent ) );
+	m_filterGraph->QueryInterface( IID_IMediaEventEx, reinterpret_cast <void **>( & m_mediaEventEx ) );
+	m_filterGraph->QueryInterface( IID_IBasicAudio, reinterpret_cast <void **>( & m_audio ) );
 	l_graphBuilder->SetFiltergraph( m_filterGraph );
 	return true;
 }
@@ -585,7 +602,7 @@ bool VideoImpl_DirectShow::_grabFrame()
 			}
 			else
 			{
-				l_sourceLine =	m_buffer
+				l_sourceLine = m_buffer
 								+ m_vidPitch * ( m_vidHeight - 1 )
 								- ( ( int )( i * m_verticScale ) ) * m_vidPitch;
 			}

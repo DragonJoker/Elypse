@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Marc BILLON
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company:	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		ScriptFunctions.h - ScriptFunctions.cpp
-
-	Desc :		Not a class. These 2 files contains all the base functions that can be called directly by the script.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptFunctions.h"
@@ -49,9 +55,9 @@
 
 #include <time.h>
 
-#include "EMuseInstance.h"
-#include "EMuseFrameListener.h"
-#include "EMusePlugin.h"
+#include "ElypseInstance.h"
+#include "ElypseFrameListener.h"
+#include "ElypsePlugin.h"
 
 #include "SoundManager.h"
 #include "SoundPlaylist.h"
@@ -99,7 +105,7 @@
 #include "BoundingMesh.h"
 #include "SimpleBoundingShapes.h"
 
-#include "EMusePlugin.h"
+#include "ElypsePlugin.h"
 #include "Context.h"
 
 #include "NetworkManager.h"
@@ -113,7 +119,7 @@
 #include <MD5.h>
 #include <StringUtils.h>
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #pragma warning( disable:4996 )
 
@@ -632,7 +638,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_Translation )
 		return;
 	}
 
-	p_overlay->GetOgreOverlayElement()->setPosition(	p_overlay->GetOgreOverlayElement()->getLeft() + p_x / ScriptEngine::GetContext()->mainViewport->getActualWidth(),
+	p_overlay->GetOgreOverlayElement()->setPosition( p_overlay->GetOgreOverlayElement()->getLeft() + p_x / ScriptEngine::GetContext()->mainViewport->getActualWidth(),
 			p_overlay->GetOgreOverlayElement()->getTop() + p_y / ScriptEngine::GetContext()->mainViewport->getActualHeight() );
 }
 
@@ -993,7 +999,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_GetPosition )
 
 	if ( l_overlay != NULL )
 	{
-		RETURN_AS( Vector3 ) Vector3(	l_overlay->GetOgreOverlayElement()->_getLeft() * ScriptEngine::GetContext()->mainViewport->getActualWidth(),
+		RETURN_AS( Vector3 ) Vector3( l_overlay->GetOgreOverlayElement()->_getLeft() * ScriptEngine::GetContext()->mainViewport->getActualWidth(),
 										l_overlay->GetOgreOverlayElement()->_getTop() * ScriptEngine::GetContext()->mainViewport->getActualHeight(),
 										0.0 );
 	}
@@ -1043,7 +1049,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_GetAbsolutePosition )
 
 	if ( l_overlay != NULL )
 	{
-		RETURN_AS( Vector3 ) Vector3(	l_overlay->GetOgreOverlayElement()->_getDerivedLeft() * ScriptEngine::GetContext()->mainViewport->getActualWidth(),
+		RETURN_AS( Vector3 ) Vector3( l_overlay->GetOgreOverlayElement()->_getDerivedLeft() * ScriptEngine::GetContext()->mainViewport->getActualWidth(),
 										l_overlay->GetOgreOverlayElement()->_getDerivedTop() * ScriptEngine::GetContext()->mainViewport->getActualHeight(),
 										0.0 );
 	}
@@ -1231,12 +1237,12 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_TextureLookUp )
 
 	cv = new ColourValue;
 
-	texturePixBuff =((Ogre::TexturePtr)TextureManager::getSingletonPtr()->getByName(over->getTechnique()->getPass(0)->getTextureUnitState(0)->getTextureName()))->getBuffer();
+	texturePixBuff = ((Ogre::TexturePtr)TextureManager::getSingletonPtr()->getByName(over->getTechnique()->getPass(0)->getTextureUnitState(0)->getTextureName()))->getBuffer();
 
 	width = texturePixBuff->getWidth();
 	height = texturePixBuff->getHeight();
 	box = Box(0, 0, width, height);
-	if(x>=0 && x<1 && y>=0 && y<1)
+	if(x>= 0 && x<1 && y>= 0 && y<1)
 	{
 	getBox = Box(x*(width-1), y*(height-1), x*(width-1), y*(height-1));
 
@@ -2463,7 +2469,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_ImportMesh )
 	CFileDialog FileOpenDialog( TRUE, NULL, NULL,
 								OFN_ALLOWMULTISELECT | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST,
 								"Mesh Files (*.mesh)|*.mesh|", NULL );
-	FileOpenDialog.m_ofn.lpstrInitialDir = l_dir.c_str();//"C:\\Program Files\\FDSSoftMedia\\EMuse\\rsc\\";
+	FileOpenDialog.m_ofn.lpstrInitialDir = l_dir.c_str();//"C:\\Program Files\\FDSSoftMedia\\Elypse\\rsc\\";
 
 	if ( FileOpenDialog.DoModal() == IDOK )
 	{
@@ -2600,7 +2606,7 @@ bool Local_ScriptNode_Find( ScriptNode2 * p_code, ScriptNode2 * p_find)
 {
 	bool ret = false;
 	size_t i;
-	for(i=0;i<p_code->m_numChilds;i++)
+	for(i = 0;i<p_code->m_numChilds;i++)
 	{
 		if( p_code->m_childs[i] == p_find )
 		{
@@ -4129,7 +4135,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetLightByName )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetSceneNodeByName )
 {
 	VERBOSE_STARTFUNC( "Universe_GetSceneNodeByName" );
-	GET_AND_EXEC_TWO_PARAM( String, l_uniName , String,  l_nodeName );
+	GET_AND_EXEC_TWO_PARAM( String, l_uniName , String, l_nodeName );
 	Universe * l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
 
 	if ( l_uni != NULL )

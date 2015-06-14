@@ -1,10 +1,27 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___CLASS_NAME_H___
 #define ___CLASS_NAME_H___
 
 #if 0
-#include "EMuse.h"
+#include "Elypse.h"
 
-using namespace EMuse;
+using namespace Elypse;
 
 using std::min;
 using std::max;
@@ -25,10 +42,10 @@ namespace Program
 
 		enum TypeMachin
 		{
-			TM_BIDULE_ONE	= 0x01,
-			TM_BIDULE_TWO	= 0x02,
-			TM_BIDULE_THREE	= 0x03,
-			TM_BIDULE_FOUR	= 0x04
+			TM_BIDULE_ONE = 0x01,
+			TM_BIDULE_TWO = 0x02,
+			TM_BIDULE_THREE = 0x03,
+			TM_BIDULE_FOUR = 0x04
 		};
 
 		struct BlahStructure

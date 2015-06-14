@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Sylvain DOREMUS
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company :	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		DownloadManager.h - DownloadManager.cpp
-
-	Desc :		Class used to download the datas used for a 3D scene.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___CMuseDownloader_H___
 #define ___CMuseDownloader_H___
 
@@ -17,7 +23,7 @@
 
 #include <Thread.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Download
 	{
@@ -39,7 +45,7 @@ namespace EMuse
 			General::Utils::Path m_installPath;
 
 		public:
-			MuseDownloader(	MuseFile * p_owner, const Path & p_basePath );
+			MuseDownloader( MuseFile * p_owner, const Path & p_basePath );
 			~MuseDownloader();
 
 		public:

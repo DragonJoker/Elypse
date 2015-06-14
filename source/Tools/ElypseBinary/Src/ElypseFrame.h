@@ -1,42 +1,44 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___ELYPSE_FRAME_H___
 #define ___ELYPSE_FRAME_H___
 
-#include "Module_Binary.h"
+#include "ElypseBinaryPrerequisites.h"
 
-#include "ElypseApp.h"
-
-namespace EMuse
+BEGIN_ELYPSE_BINARY_NAMESPACE
 {
-	namespace Binary
+	class ElypseFrame
+		: public wxFrame
 	{
-		class ElypseFrame : public wxFrame
+	public:
+		ElypseFrame( const wxString & p_title, const wxSize & p_size )
+			: wxFrame( NULL, -1, p_title, wxPoint( 0, 0 ), p_size, wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX )
 		{
-		private:
-			ElypseApp * m_app;
+			Centre();
+			Show();
+			Update();
+		}
 
-		public:
-			ElypseFrame( ElypseApp * p_app, const wxString & p_title, const wxSize & p_size )
-				:	wxFrame(	reinterpret_cast <wxFrame *>( NULL ), -1, p_title, wxPoint( 0, 0 ), p_size,
-								wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX ),
-				m_app( p_app )
-			{
-				Centre();
-				Show();
-				Update();
-			}
-			~ElypseFrame()
-			{
-			}
-
-//		DECLARE_EVENT_TABLE()
-
-			void OnClose( wxCloseEvent & p_event )
-			{
-//			p_event.Veto();
-//			m_app->Close();
-			}
-		};
-	}
+		virtual ~ElypseFrame()
+		{
+		}
+	};
 }
+END_ELYPSE_BINARY_NAMESPACE
 
 #endif

@@ -1,0 +1,256 @@
+ambient_light 1.0 1.0 1.0 1.0
+
+// Sounds
+
+sound Ambiance
+{
+	url ./Sons/Ambiance.mp3
+	type music
+	global true
+	attenuation 0.0
+	looped true
+}
+
+// SCENE NODES
+
+scene_node PersoNode
+{
+	position 145.0 0.0 500.0
+}
+
+scene_node CameraNode
+{
+	parent PersoNode
+}
+
+scene_node BassineNode
+{
+	position 0.0 0.0 0.0
+}
+
+scene_node BuildingNode
+{
+	position 0.0 0.0 0.0
+}
+
+// OBJECTS
+
+object Building01
+{
+	mesh immeuble01.mesh
+	attach_to BuildingNode
+}
+
+object SkyDome
+{
+	mesh urbain_dome.mesh
+	attach_to BuildingNode
+}
+
+object Floor
+{
+	mesh urbain_sol.mesh
+	attach_to BuildingNode
+}
+
+object Character
+{
+	mesh corps.mesh
+	attach_to PersoNode
+}
+
+object OeilD
+{
+	mesh oeild.mesh
+	attach_to PersoNode
+}
+
+object OeilG
+{
+	mesh oeilg.mesh
+	attach_to PersoNode
+}
+
+object Blouzon
+{
+	mesh blouzon.mesh
+	attach_to PersoNode
+}
+
+object Hair
+{
+	mesh casquejoe.mesh
+	attach_to PersoNode
+}
+
+object Bassine
+{
+	mesh bassine.mesh
+	attach_to BassineNode
+}
+
+// LIGHTS
+
+light light_01
+{
+	type directional
+	direction -0.50 -0.71 -0.50
+	diffuse 0.90 0.90 0.90 1.00
+	specular 0.70 0.70 0.70 1.00
+}
+
+light light_02
+{
+	type directional
+	direction 0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_03
+{
+	type directional
+	direction 0.50 -0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+light light_04
+{
+	type directional
+	direction -0.50 0.71 -0.50
+	diffuse 0.10 0.10 0.10 1.00
+	specular 0.10 0.10 0.10 1.00
+}
+
+// CAMERAS
+
+camera RootCamera
+{
+	position 0.0 0.0 4000.0
+	attach_to CameraNode
+}
+
+// ANIMATIONS
+
+animation_group Perso
+{
+	add_object Character
+	{
+		animation Stand
+		{
+			looped true
+		}
+
+		animation intro
+		{
+			looped false
+		}
+
+		animation move
+		{
+			looped true
+		}
+
+		animation crash
+		{
+			looped false
+		}
+	}
+
+	add_object OeilG
+	{
+		animation Stand
+		{
+			looped true
+		}
+
+		animation intro
+		{
+			looped false
+		}
+
+		animation move
+		{
+			looped true
+		}
+
+		animation crash
+		{
+			looped false
+		}
+	}
+
+	add_object OeilD
+	{
+		animation Stand
+		{
+			looped true
+		}
+
+		animation intro
+		{
+			looped false
+		}
+
+		animation move
+		{
+			looped true
+		}
+
+		animation crash
+		{
+			looped false
+		}
+	}
+
+	add_object Blouzon
+	{
+		animation Stand
+		{
+			looped true
+		}
+
+		animation intro
+		{
+			looped false
+		}
+
+		animation move
+		{
+			looped true
+		}
+
+		animation crash
+		{
+			looped false
+		}
+	}
+
+	add_object Hair
+	{
+		animation Stand
+		{
+			looped true
+		}
+
+		animation intro
+		{
+			looped false
+		}
+
+		animation move
+		{
+			looped true
+		}
+
+		animation crash
+		{
+			looped false
+		}
+	}
+
+	chain_animations Stand intro
+	chain_animations intro move
+	chain_animations move crash
+}

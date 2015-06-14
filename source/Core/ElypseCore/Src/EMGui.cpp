@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "EMGui.h"
@@ -11,7 +28,7 @@
 #include <OgreFontManager.h>
 
 EMGui::EMGui( const String & p_instanceKey, Real p_aspect )
-	:	m_currentClickedOverlay( NULL ),
+	: m_currentClickedOverlay( NULL ),
 		m_currentMouseOverOverlay( NULL ),
 		m_topmostOverlay( NULL ),
 		m_instanceKey( p_instanceKey ),
@@ -24,7 +41,7 @@ EMGui::~EMGui()
 	ClearAll();
 }
 
-void __declspec( nothrow ) EMGui::ClearAll()
+void EMGui::ClearAll() d_no_throw
 {
 	m_currentMouseOverOverlay = NULL;
 	m_currentClickedOverlay = NULL;
@@ -132,7 +149,7 @@ void EMGui::SetAllOverlaysVisibility( bool p_show )const
 void EMGui::AddElement( EMOverlay * p_element )
 {
 	genlib_assert( p_element != NULL );
-	m_overlays.insert( EMOverlayMap::value_type( p_element->GetName(), p_element ) );
+	m_overlays.insert( std::make_pair( p_element->GetName(), p_element ) );
 }
 
 void EMGui::RemoveOverlay( const String & p_overlayName )

@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "VariableType.h"
@@ -20,51 +37,51 @@ VariableTypeManager::~VariableTypeManager()
 
 void VariableTypeManager::_populateBaseTypeNames()
 {
-	m_baseTypeNames[EMVT_NULL]				 = "void";
-	m_baseTypeNames[EMVT_INT]				 = "int";
-	m_baseTypeNames[EMVT_REAL]				 = "real";
-	m_baseTypeNames[EMVT_BOOL]				 = "boolean";
-	m_baseTypeNames[EMVT_VECTOR3]			 = "vector3";
-	m_baseTypeNames[EMVT_COLOUR]			 = "colour";
-	m_baseTypeNames[EMVT_QUATERNION]		 = "quaternion";
-	m_baseTypeNames[EMVT_CHAR]				 = "char";
-	m_baseTypeNames[EMVT_STRING]			 = "string";
-	m_baseTypeNames[EMVT_ENTITY]			 = "entity";
-	m_baseTypeNames[EMVT_LIGHT]				 = "light";
-	m_baseTypeNames[EMVT_CAMERA]			 = "camera";
-	m_baseTypeNames[EMVT_NODE]				 = "scene_node";
-	m_baseTypeNames[EMVT_OVERLAY]			 = "overlay";
-	m_baseTypeNames[EMVT_ANI_GRP]			 = "animation_group";
-	m_baseTypeNames[EMVT_ANI_OBJ]			 = "animated_object";
-	m_baseTypeNames[EMVT_ANIMATION]			 = "animation";
-	m_baseTypeNames[EMVT_PHY_OBJ]			 = "physics_object";
-	m_baseTypeNames[EMVT_TIMER]				 = "timer";
-	m_baseTypeNames[EMVT_CAMTEX]			 = "camtex";
-	m_baseTypeNames[EMVT_PHY_MAT]			 = "physic_material";
-	m_baseTypeNames[EMVT_OBJ_MAT]			 = "material";
-	m_baseTypeNames[EMVT_ARRAY]				 = "array";
-	m_baseTypeNames[EMVT_MAP]				 = "map";
-	m_baseTypeNames[EMVT_INTMAP]			 = "int_map";
-	m_baseTypeNames[EMVT_STRINGMAP]			 = "string_map";
-	m_baseTypeNames[EMVT_REALMAP]			 = "real_map";
-	m_baseTypeNames[EMVT_ITER]				 = "iterator";
-	m_baseTypeNames[EMVT_SMITER]			 = "iterator";
-	m_baseTypeNames[EMVT_RMITER]			 = "iterator";
-	m_baseTypeNames[EMVT_IMITER]			 = "iterator";
-	m_baseTypeNames[EMVT_PAIR]				 = "pair";
-	m_baseTypeNames[EMVT_CODE]				 = "code";
-	m_baseTypeNames[EMVT_NULLVALUE]			 = "NULL";
-	m_baseTypeNames[EMVT_STRUCT]			 = "struct";
-	m_baseTypeNames[EMVT_SUB1]				 = "*SUB1*";
-	m_baseTypeNames[EMVT_SUB2]				 = "*SUB2*";
-//	m_baseTypeNames[EMVT_SUB3]				 = "SUB3";
+	m_baseTypeNames[EMVT_NULL] = "void";
+	m_baseTypeNames[EMVT_INT] = "int";
+	m_baseTypeNames[EMVT_REAL] = "real";
+	m_baseTypeNames[EMVT_BOOL] = "boolean";
+	m_baseTypeNames[EMVT_VECTOR3] = "vector3";
+	m_baseTypeNames[EMVT_COLOUR] = "colour";
+	m_baseTypeNames[EMVT_QUATERNION] = "quaternion";
+	m_baseTypeNames[EMVT_CHAR] = "char";
+	m_baseTypeNames[EMVT_STRING] = "string";
+	m_baseTypeNames[EMVT_ENTITY] = "entity";
+	m_baseTypeNames[EMVT_LIGHT] = "light";
+	m_baseTypeNames[EMVT_CAMERA] = "camera";
+	m_baseTypeNames[EMVT_NODE] = "scene_node";
+	m_baseTypeNames[EMVT_OVERLAY] = "overlay";
+	m_baseTypeNames[EMVT_ANI_GRP] = "animation_group";
+	m_baseTypeNames[EMVT_ANI_OBJ] = "animated_object";
+	m_baseTypeNames[EMVT_ANIMATION] = "animation";
+	m_baseTypeNames[EMVT_PHY_OBJ] = "physics_object";
+	m_baseTypeNames[EMVT_TIMER] = "timer";
+	m_baseTypeNames[EMVT_CAMTEX] = "camtex";
+	m_baseTypeNames[EMVT_PHY_MAT] = "physic_material";
+	m_baseTypeNames[EMVT_OBJ_MAT] = "material";
+	m_baseTypeNames[EMVT_ARRAY] = "array";
+	m_baseTypeNames[EMVT_MAP] = "map";
+	m_baseTypeNames[EMVT_INTMAP] = "int_map";
+	m_baseTypeNames[EMVT_STRINGMAP] = "string_map";
+	m_baseTypeNames[EMVT_REALMAP] = "real_map";
+	m_baseTypeNames[EMVT_ITER] = "iterator";
+	m_baseTypeNames[EMVT_SMITER] = "iterator";
+	m_baseTypeNames[EMVT_RMITER] = "iterator";
+	m_baseTypeNames[EMVT_IMITER] = "iterator";
+	m_baseTypeNames[EMVT_PAIR] = "pair";
+	m_baseTypeNames[EMVT_CODE] = "code";
+	m_baseTypeNames[EMVT_NULLVALUE] = "NULL";
+	m_baseTypeNames[EMVT_STRUCT] = "struct";
+	m_baseTypeNames[EMVT_SUB1] = "*SUB1*";
+	m_baseTypeNames[EMVT_SUB2] = "*SUB2*";
+//	m_baseTypeNames[EMVT_SUB3] = "SUB3";
 }
 
 VariableType * VariableTypeManager::_add( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2, const String & p_hash )
 {
 	VariableType * l_type = new VariableType( p_type, p_subType1, p_subType2 );
 	const String & l_hash = ( p_hash.empty() ? _hash( p_type, p_subType1, p_subType2 ) : p_hash );
-	m_types.insert( TypeMap::value_type( l_hash, l_type ) );
+	m_types.insert( std::make_pair( l_hash, l_type ) );
 	return l_type;
 }
 

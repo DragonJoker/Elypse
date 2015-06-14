@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___CONFIG_FILE_H___
 #define ___CONFIG_FILE_H___
 
@@ -9,40 +26,37 @@
 #include <Condition.h>
 #include <Path.h>
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Data
 	{
-		class d_dll_export ConfigFile : public General::Theory::named, public General::Theory::owned_by<MuseFile>, d_noncopyable
+		class d_dll_export ConfigFile
+			: public General::Theory::named
+			, public General::Theory::owned_by< MuseFile >
+			, d_noncopyable
 		{
-		protected:
-			unsigned int m_useCount;
-
-			bool m_downloaded;
-
-			General::MultiThreading::Mutex m_mutex;
 		public:
+			ConfigFile();
 			ConfigFile( const String & p_name, MuseFile * p_owner );
 			~ConfigFile();
 
-		protected:
-			void _load();
-
-		public:
 			void Use();
 			void Release();
 			void DownloadFinished();
-//		bool IsParsed();
-//		void SetParsed( bool p_parsed);
-//		void SetCompiled( ScriptNode * p_compiledScriptNode);
-//		void ReleaseScript() d_no_throw;
-			String GetDescriptiveName()const ;
+			String GetDescriptiveName()const;
 
-		public:
-			inline bool							IsDownloaded()const
+			inline bool IsDownloaded()const
 			{
 				return m_downloaded;
 			}
+
+		protected:
+			void DoLoad();
+
+		protected:
+			unsigned int m_useCount;
+			bool m_downloaded;
+			General::MultiThreading::Mutex m_mutex;
 		};
 	}
 }

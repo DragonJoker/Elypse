@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptEngine.h"
@@ -9,44 +26,23 @@
 #include "ScriptFunctions.h"
 #include "VariableType.h"
 
-#include "EMuseLogs.h"
-
-namespace EMuse
-{
-	namespace Script
-	{
-		class CompileError
-			: public General::Utils::GenException
-		{
-		public:
-			CompileError( const std::string & p_description, const char * p_file, const char * p_function, unsigned int p_line )
-				: General::Utils::GenException( p_description, p_file, p_function, p_line )
-			{
-			}
-
-			virtual __declspec( nothrow ) ~CompileError()
-			{
-			}
-		};
-	}
-}
-
-#define COMPILE_EXCEPTION( p_text) throw EMuse::Script::CompileError( p_text, __FILE__, __FUNCTION__, __LINE__)
+#include "ElypseLogs.h"
+#include "CompileException.h"
 
 #define COMPILE_ERROR_IN_BLOCK( p_desc, p_block)												\
 	_error();																					\
-	COMPILE_EXCEPTION(	"Compiler Error : [" + _getScriptFileName() + " @ L# "					\
+	COMPILE_EXCEPTION( "Compiler Error : [" + _getScriptFileName() + " @ L# "					\
 						+ StringConverter::toString( p_block->m_lineNumBegin)					\
 						+ " ] -> " + p_desc )
 
 #define COMPILE_WARNING_IN_BLOCK( p_desc, p_block)												\
 	_warning();																					\
-	_log(	"Compiler Warning [ " + _getScriptFileName()						\
+	_log( "Compiler Warning [ " + _getScriptFileName()						\
 							+ " @ L# " + StringConverter::toString( p_block->m_lineNumBegin)	\
 							+ " ] -> " + p_desc );												\
  
 
-UserFunction * EMuse::Script::ScriptCompiler::_compileUserFunction( ScriptBlockArray & p_childs, bool p_predeclareOnly )
+UserFunction * Elypse::Script::ScriptCompiler::_compileUserFunction( ScriptBlockArray & p_childs, bool p_predeclareOnly )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileUserFunction" );
 //	_printBlockArray( "_compileUserFunction", p_childs);
@@ -144,7 +140,7 @@ UserFunction * EMuse::Script::ScriptCompiler::_compileUserFunction( ScriptBlockA
 	return l_function;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileSentence( ScriptBlockArray & p_childs )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileSentence( ScriptBlockArray & p_childs )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileSentence" );
 
@@ -261,20 +257,20 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileSentence( ScriptBlockArray &
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileFunctionUse( ScriptBlockArray & p_blockArray )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileFunctionUse( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileFunctionUse" );
 	ScriptNode * l_functionUseNode = NULL;
 
 	if ( p_blockArray.size() < 2 )
 	{
-		COMPILE_ERROR_IN_BLOCK( "Unknown error, bad parameters for function _compileFunctionUse", p_blockArray[0] );
+		COMPILE_ERROR_IN_BLOCK( "Unknown error, wrong number of parameters for function _compileFunctionUse", p_blockArray[0] );
 		return NULL;
 	}
 
 	if ( p_blockArray[0]->m_type != BT_STRING || p_blockArray[1]->m_type != BT_PARENTHESIS )
 	{
-		COMPILE_ERROR_IN_BLOCK( "Unknown error, bad parameters 2 for function _compileFunctionUse", p_blockArray[0] );
+		COMPILE_ERROR_IN_BLOCK( "Unknown error, bad parameters type for function _compileFunctionUse", p_blockArray[0] );
 		return NULL;
 	}
 
@@ -299,7 +295,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileFunctionUse( ScriptBlockArra
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBlockArray & p_blockArray )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileOperatedSentence" );
 
@@ -425,7 +421,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBloc
 
 			COMPILE_ERROR_IN_BLOCK( "Trying to use an empty / undeclared function", p_blockArray[0] );
 			return NULL;
-//			return _compileUserFunctionUse( );
+//			return _compileUserFunctionUse();
 		}
 
 		Function * l_function = _getClassFunction( l_leftNode->GetType(), l_rightOperands[0]->m_contents );
@@ -460,7 +456,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBloc
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileBrakets( ScriptBlockArray & p_blockArray )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileBrakets( ScriptBlockArray & p_blockArray )
 {
 	if ( p_blockArray.size() == 1 )
 	{
@@ -470,7 +466,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileBrakets( ScriptBlockArray & 
 	return NULL;
 }
 
-ScriptBlock * EMuse::Script::ScriptCompiler::_getHighestOperator( ScriptBlockArray & p_blockArray )
+ScriptBlock * Elypse::Script::ScriptCompiler::_getHighestOperator( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getHighestOperator" );
 	OperatorLevel l_level = SO_NONE;
@@ -496,7 +492,7 @@ ScriptBlock * EMuse::Script::ScriptCompiler::_getHighestOperator( ScriptBlockArr
 	return l_block;
 }
 
-void EMuse::Script::ScriptCompiler::_compileFuncParamsWithinParenthesis( const ScriptBlockArray & p_blockArray, ScriptNodeArray & p_compiledNodes )
+void Elypse::Script::ScriptCompiler::_compileFuncParamsWithinParenthesis( const ScriptBlockArray & p_blockArray, ScriptNodeArray & p_compiledNodes )
 {
 	ScriptBlockArray l_currentArray;
 	size_t i = 0;
@@ -527,7 +523,7 @@ void EMuse::Script::ScriptCompiler::_compileFuncParamsWithinParenthesis( const S
 	}
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArray & p_blockArray, Function * p_function , ScriptNode * p_classInstance )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArray & p_blockArray, Function * p_function , ScriptNode * p_classInstance )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileFunctionParameters" );
 //	_printBlockArray( "_compileFunctionParameters for ( " + p_function->GetName() + " )", p_blockArray);
@@ -619,7 +615,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArray
 	return l_finalNode;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileUserFunctionUse( ScriptBlockArray & p_blockArray, UserFunction * p_userFunction )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileUserFunctionUse( ScriptBlockArray & p_blockArray, UserFunction * p_userFunction )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileUserFunctionUse" );
 
@@ -674,7 +670,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileUserFunctionUse( ScriptBlock
 	return NULL;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileIfThenElse( ScriptBlockArray & p_blockArray )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileIfThenElse( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileIfThenElse" );
 	ScriptBlockArray l_array = p_blockArray;
@@ -791,7 +787,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileIfThenElse( ScriptBlockArray
 	return l_finalNode;
 }
 
-void EMuse::Script::ScriptCompiler::_declareVariable( ScriptBlockArray & p_childs )
+void Elypse::Script::ScriptCompiler::_declareVariable( ScriptBlockArray & p_childs )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareVariable" );
 	ScriptBlockArray l_array;
@@ -827,7 +823,7 @@ void EMuse::Script::ScriptCompiler::_declareVariable( ScriptBlockArray & p_child
 	}
 }
 
-void EMuse::Script::ScriptCompiler::_declareVariableDetail( VariableType * p_type, ScriptBlockArray & p_array )
+void Elypse::Script::ScriptCompiler::_declareVariableDetail( VariableType * p_type, ScriptBlockArray & p_array )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareVariableDetail" );
 	genlib_assert( p_array.size() > 0 );
@@ -885,7 +881,7 @@ void EMuse::Script::ScriptCompiler::_declareVariableDetail( VariableType * p_typ
 	}
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_getOperator( ScriptBlock * p_operator, ScriptNode * p_leftOperand, ScriptNode * p_rightOperand )
+ScriptNode * Elypse::Script::ScriptCompiler::_getOperator( ScriptBlock * p_operator, ScriptNode * p_leftOperand, ScriptNode * p_rightOperand )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getOperator" );
 	ScriptNode * l_returnValue = NULL;
@@ -985,9 +981,9 @@ ScriptNode * EMuse::Script::ScriptCompiler::_getOperator( ScriptBlock * p_operat
 	}
 
 	if ( p_leftOperand != NULL && p_rightOperand != NULL
-			&&	p_leftOperand->GetType()->GetBase() == 	p_rightOperand->GetType()->GetBase()
-			&&	p_leftOperand->GetType() !=	p_rightOperand->GetType()
-	   )
+			&&	p_leftOperand->GetType()->GetBase() == p_rightOperand->GetType()->GetBase()
+			&&	p_leftOperand->GetType() != p_rightOperand->GetType()
+ )
 	{
 		String l_error;
 		l_error = "Problematic parameters for operator " + p_operator->m_contents + " : ";
@@ -999,7 +995,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_getOperator( ScriptBlock * p_operat
 	return l_returnValue;
 }
 
-VariableType * EMuse::Script::ScriptCompiler::_getVariableType( ScriptBlockArray & p_blockArray )
+VariableType * Elypse::Script::ScriptCompiler::_getVariableType( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getVariableType" );
 
@@ -1022,7 +1018,7 @@ VariableType * EMuse::Script::ScriptCompiler::_getVariableType( ScriptBlockArray
 	return _getVariableTypeRecus( l_array, l_index );
 }
 
-VariableType * EMuse::Script::ScriptCompiler::_getVariableTypeRecus( ScriptBlockArray & p_blockArray, unsigned int & p_recursIndex )
+VariableType * Elypse::Script::ScriptCompiler::_getVariableTypeRecus( ScriptBlockArray & p_blockArray, unsigned int & p_recursIndex )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getVariableTypeRecus" );
 
@@ -1114,7 +1110,7 @@ VariableType * EMuse::Script::ScriptCompiler::_getVariableTypeRecus( ScriptBlock
 	return l_type;
 }
 
-void EMuse::Script::ScriptCompiler::_compileStructDeclatation( ScriptBlockArray & p_blockArray )
+void Elypse::Script::ScriptCompiler::_compileStructDeclatation( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileStructDeclatation" );
 //	_printBlockArray( "_compileStructDeclatation", p_blockArray);
@@ -1157,11 +1153,11 @@ void EMuse::Script::ScriptCompiler::_compileStructDeclatation( ScriptBlockArray 
 		//Error, missing ; somewhere within that shit;
 	}
 
-	m_typedefs.insert( VariableTypeMap::value_type( l_name, l_struct->GetType() ) );
-	m_structures.insert( StructureMap::value_type( l_name, l_struct ) );
+	m_typedefs.insert( std::make_pair( l_name, l_struct->GetType() ) );
+	m_structures.insert( std::make_pair( l_name, l_struct ) );
 }
 
-void EMuse::Script::ScriptCompiler::_addStructMember( Structure * p_struct, ScriptBlockArray & p_blockArray )
+void Elypse::Script::ScriptCompiler::_addStructMember( Structure * p_struct, ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_addStructMember" );
 	ScriptBlockArray l_array;
@@ -1184,7 +1180,7 @@ void EMuse::Script::ScriptCompiler::_addStructMember( Structure * p_struct, Scri
 	p_struct->AddMember( p_blockArray[l_current]->m_contents, l_type );
 }
 
-void EMuse::Script::ScriptCompiler::_typedef( ScriptBlockArray & p_blockArray )
+void Elypse::Script::ScriptCompiler::_typedef( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_typedef" );
 
@@ -1196,10 +1192,10 @@ void EMuse::Script::ScriptCompiler::_typedef( ScriptBlockArray & p_blockArray )
 	const String & l_name = p_blockArray[p_blockArray.size() - 1]->m_contents;
 	ScriptBlockArray l_array( p_blockArray.begin() + 1, p_blockArray.begin() + p_blockArray.size() - 2 );
 	VariableType * l_type = _getVariableType( l_array );
-	m_typedefs.insert( VariableTypeMap::value_type( l_name, l_type ) );
+	m_typedefs.insert( std::make_pair( l_name, l_type ) );
 }
 
-ScriptNode  * EMuse::Script::ScriptCompiler::_compileStructMember( ScriptBlockArray & p_left, ScriptBlockArray & p_right, ScriptBlock * p_block )
+ScriptNode  * Elypse::Script::ScriptCompiler::_compileStructMember( ScriptBlockArray & p_left, ScriptBlockArray & p_right, ScriptBlock * p_block )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileStructMember" );
 //	_printBlockArray( "_compileStructMember - Left", p_left);
@@ -1249,7 +1245,7 @@ ScriptNode  * EMuse::Script::ScriptCompiler::_compileStructMember( ScriptBlockAr
 	return l_finalNode;
 }
 
-ScriptNode * EMuse::Script::ScriptCompiler::_compileReturn( ScriptBlockArray & p_childs )
+ScriptNode * Elypse::Script::ScriptCompiler::_compileReturn( ScriptBlockArray & p_childs )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileReturn" );
 
@@ -1290,7 +1286,7 @@ ScriptNode * EMuse::Script::ScriptCompiler::_compileReturn( ScriptBlockArray & p
 	return l_finalNode;
 }
 
-VariableType * EMuse::Script::ScriptCompiler::_substituteVarType( VariableType * p_base, VariableType * p_type )
+VariableType * Elypse::Script::ScriptCompiler::_substituteVarType( VariableType * p_base, VariableType * p_type )
 {
 	if ( p_type != NULL )
 	{
@@ -1331,7 +1327,7 @@ VariableType * EMuse::Script::ScriptCompiler::_substituteVarType( VariableType *
 	return p_base;
 }
 
-void EMuse::Script::ScriptCompiler::_declareStruct( ScriptBlockArray & p_blockArray )
+void Elypse::Script::ScriptCompiler::_declareStruct( ScriptBlockArray & p_blockArray )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareStruct" );
 
@@ -1347,14 +1343,14 @@ void EMuse::Script::ScriptCompiler::_declareStruct( ScriptBlockArray & p_blockAr
 	if ( l_struct == NULL )
 	{
 		l_struct = new Structure( l_name );
-		m_structures.insert( StructureMap::value_type( l_name, l_struct ) );
-		m_typedefs.insert( VariableTypeMap::value_type( l_name, l_struct->GetType() ) );
+		m_structures.insert( std::make_pair( l_name, l_struct ) );
+		m_typedefs.insert( std::make_pair( l_name, l_struct->GetType() ) );
 	}
 
 	m_currentStructure = l_struct;
 }
 
-void EMuse::Script::ScriptCompiler::_printBlockArray( const String & p_where, const ScriptBlockArray & p_childs )
+void Elypse::Script::ScriptCompiler::_printBlockArray( const String & p_where, const ScriptBlockArray & p_childs )
 {
 	std::cout << p_where << " : " << p_childs.size() << "\n{" << std::endl;
 	size_t i = 0;

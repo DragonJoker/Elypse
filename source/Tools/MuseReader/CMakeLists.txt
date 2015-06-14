@@ -1,14 +1,22 @@
 project( MuseReader )
 
-set( ${PROJECT_NAME}_VERSION_MAJOR	0 )
-set( ${PROJECT_NAME}_VERSION_MINOR	9 )
-set( ${PROJECT_NAME}_VERSION_BUILD	4 )
+add_definitions( -D_CRT_SECURE_NO_WARNINGS )
+
+set( ${PROJECT_NAME}_VERSION_MAJOR	1 )
+set( ${PROJECT_NAME}_VERSION_MINOR	0 )
+set( ${PROJECT_NAME}_VERSION_BUILD	0 )
+
+include_directories(
+	${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src
+	${CMAKE_SOURCE_DIR}/Tools/GuiCommon/Src
+	${CMAKE_CURRENT_SOURCE_DIR}/Src
+)
 
 add_target(
 	${PROJECT_NAME}
 	bin
-	""
-	"${Gtk2Libraries};${wxWidgetsLibraries}"
+	"GeneralLib;ElypseCore;GuiCommon"
+	"GeneralLib;ElypseCore;GuiCommon;${Gtk2Libraries};${wxWidgetsLibraries};${BoostLibraries}"
 	"stdafx.h"
 	"stdafx.cpp"
 )

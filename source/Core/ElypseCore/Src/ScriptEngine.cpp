@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Marc BILLON
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company:	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		ScriptEngine.h - ScriptEngine.cpp
-
-	Desc :		The main class that reads, compiles, and executes the EMuseScript entries(files or direct text)
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "ScriptEngine.h"
@@ -22,9 +28,9 @@
 #include "Zone.h"
 #include "Universe.h"
 #include "SceneFileParser.h"
-#include "EMuseLoadingBar.h"
+#include "ElypseLoadingBar.h"
 #include "Context.h"
-#include "EMuseInstance.h"
+#include "ElypseInstance.h"
 #include "ConfigFile.h"
 
 #include <OgreLog.h>
@@ -33,15 +39,20 @@
 #include <Exception.h>
 #include <Utils.h>
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 Context * ScriptEngine::sm_context = NULL;
 
-ScriptEngine::ScriptEngine( const Path & p_path,  EMuseLoadingBar * p_loadingBar )
-	:	m_path( p_path ),
-		m_loadingBar( p_loadingBar )
+ScriptEngine::ScriptEngine( ScriptCompiler * p_compiler, const Path & p_path, ElypseLoadingBar * p_loadingBar )
+	: m_path( p_path )
+	, m_loadingBar( p_loadingBar )
+	, m_compiler( p_compiler )
 {
-	m_compiler = new ScriptCompiler( p_path );
+}
+
+ScriptEngine::ScriptEngine( const Path & p_path, ElypseLoadingBar * p_loadingBar )
+	: ScriptEngine( new ScriptCompiler( p_path ), p_path, p_loadingBar )
+{
 }
 
 ScriptEngine::~ScriptEngine()

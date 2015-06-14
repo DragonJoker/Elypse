@@ -1,14 +1,20 @@
-/*********************************************************************************************************************
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
-	Author :	Sylvain DOREMUS
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
 
-	Company :	ForDev Studio - Copyright 2006
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-	Files :		DataWriter.h - DataWriter.cpp
-
-	Desc :		Class used to write the datas used in EMuse.
-
-*********************************************************************************************************************/
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "DataWriter.h"
@@ -23,7 +29,7 @@
 
 #pragma warning( disable:4996 )
 
-namespace EMuse
+namespace Elypse
 {
 	namespace Download
 	{
@@ -305,7 +311,7 @@ namespace EMuse
 				std::string l_fileName = GetName( l_file );
 				Path l_outFile = p_outFolder + d_path_slash + l_fileName + ".zip";
 				int l_size = CompressFile( l_file, l_outFile );
-				EM_ZipBlock l_block = { l_size, static_cast< uint32_t >( l_fileName.size() ), l_fileName, l_outFile };
+				EM_ZipBlock l_block = { uint32_t( l_size ), uint16_t( l_fileName.size() ), l_fileName, l_outFile };
 				l_zipHeader.push_back( l_block );
 			}
 

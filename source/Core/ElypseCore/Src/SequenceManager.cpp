@@ -1,3 +1,20 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "SequenceManager.h"
@@ -8,7 +25,7 @@
 #include "EventFactory.h"
 
 #include "Context.h"
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 SequenceManager::SequenceManager()
 {
@@ -79,17 +96,17 @@ StringArray SequenceManager::GetAvailableContinuousEvents()
 
 void SequenceManager::RegisterInterpolator( const String & p_name, Vector3_Interpolator * p_interpolator )
 {
-	m_interpolators_V3.insert( V3InterpolatorMap::value_type( p_name, p_interpolator ) );
+	m_interpolators_V3.insert( std::make_pair( p_name, p_interpolator ) );
 }
 
 void SequenceManager::RegisterInterpolator( const String & p_name, Quaternion_Interpolator * p_interpolator )
 {
-	m_interpolators_Q.insert( QInterpolatorMap::value_type( p_name, p_interpolator ) );
+	m_interpolators_Q.insert( std::make_pair( p_name, p_interpolator ) );
 }
 
 void SequenceManager::RegisterInterpolator( const String & p_name, Real_Interpolator * p_interpolator )
 {
-	m_interpolators_R.insert( RInterpolatorMap::value_type( p_name, p_interpolator ) );
+	m_interpolators_R.insert( std::make_pair( p_name, p_interpolator ) );
 }
 
 void SequenceManager::RegisterFactory( const String & p_name, BaseContinuousEventFactory * p_factory )
@@ -99,7 +116,7 @@ void SequenceManager::RegisterFactory( const String & p_name, BaseContinuousEven
 		General::Utils::map::deleteValue( m_continuousEventFactories, p_name );
 	}
 
-	m_continuousEventFactories.insert( BaseContinuousEventFactoryMap::value_type( p_name, p_factory ) );
+	m_continuousEventFactories.insert( std::make_pair( p_name, p_factory ) );
 }
 
 void SequenceManager::RegisterFactory( const String & p_name, BasePonctualEventFactory * p_factory )
@@ -109,7 +126,7 @@ void SequenceManager::RegisterFactory( const String & p_name, BasePonctualEventF
 		General::Utils::map::deleteValue( m_ponctualEventFactories, p_name );
 	}
 
-	m_ponctualEventFactories.insert( BasePonctualEventFactoryMap::value_type( p_name, p_factory ) );
+	m_ponctualEventFactories.insert( std::make_pair( p_name, p_factory ) );
 }
 
 Vector3_Interpolator * SequenceManager::GetInterpolator_V3( const String & p_name )

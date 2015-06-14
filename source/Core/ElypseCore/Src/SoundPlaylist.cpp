@@ -1,10 +1,27 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #include "PrecompiledHeader.h"
 
 #include "SoundPlaylist.h"
 #include "SoundObject.h"
 #include "SoundInstance.h"
 
-#include "EMuseLogs.h"
+#include "ElypseLogs.h"
 
 #include <OgreLog.h>
 #include <OgreMath.h>
@@ -13,7 +30,7 @@
 #include <OgreStringConverter.h>
 
 SoundPlaylist::SoundPlaylist( const String & p_name, Real p_SFXVolume, Real p_musicVolume, const String & p_zoneName )
-	:	m_name( p_name ),
+	: m_name( p_name ),
 		m_zoneName( p_zoneName ),
 		m_timerType( TT_Fixed ),
 		m_random( false ),
@@ -46,7 +63,7 @@ void SoundPlaylist::AddSoundObject( SoundObject * p_soundObject )
 	}
 
 	_logMessage( "SoundPlaylist::AddSoundObject - " + p_soundObject->GetName() + " to playlist " + m_name );
-	m_objectList.insert( SoundObjectMap::value_type( p_soundObject->GetName(), p_soundObject ) );
+	m_objectList.insert( std::make_pair( p_soundObject->GetName(), p_soundObject ) );
 	m_positions.push_back( p_soundObject );
 
 	if ( m_type == EM_NONE )

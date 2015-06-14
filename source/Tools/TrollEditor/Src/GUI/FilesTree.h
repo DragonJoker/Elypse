@@ -1,111 +1,119 @@
+/*
+This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
 
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with
+the program; if not, write to the Free Software Foundation, Inc., 59 Temple
+Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+http://www.gnu.org/copyleft/lesser.txt.
+*/
 #ifndef ___Troll_FilesTree___
 #define ___Troll_FilesTree___
 
+#include "GUI/TrollEditorGuiPrerequisites.h"
+
 #include <wx/treectrl.h>
 
-#include "Module_GUI.h"
-#include "TreeItemData.h"
+#include "Project/Module_Project.h"
+#include "GUI/TreeItemData.h"
 
-namespace Troll
+BEGIN_TROLL_GUI_NAMESPACE
 {
-	class TrollScene;
-
-	namespace GUI
+	enum FilesTreeIDs
 	{
-		enum FilesTreeIDs
+		FilesTreeIcon_File = 0,
+		FilesTreeIcon_FileSelected = 1,
+		FilesTreeIcon_Folder = 2,
+		FilesTreeIcon_FolderSelected = 3,
+		FilesTreeIcon_FolderOpened = 4,
+		FilesTreeIcon_ClassFunction = 5,
+
+		TreeFichier_Ctrl = 1001,
+	};
+
+	struct SceneItem
+	{
+		TROLL_PROJECT_NAMESPACE::Scene * Trollscene;
+		wxTreeItemId TreeItem;
+	};
+
+	class FilesTree : public wxTreeCtrl
+	{
+	public:
+		FilesTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style );
+		~FilesTree();
+
+		void Cleanup();
+
+		void CreateImageList( int size = 16 );
+
+		void InitProject( const wxString & p_projectName );
+		wxTreeItemId AddSceneToProject( TROLL_PROJECT_NAMESPACE::Scene * p_scene );
+		wxTreeItemId AddFolderToScene( const wxString & p_sceneName, const wxString & p_folderName );
+		wxTreeItemId AddFileToFolder( const wxTreeItemId & p_item, const wxString & idFile, TETreeItemType p_type, bool p_exists );
+		void ShowContextMenuFichier( const wxPoint & pos, TETreeItemData * p_item );
+		wxTreeItemId AddExistingFileToProjet( const wxTreeItemId & item, TETreeItemType p_type, const wxString idFile );
+
+		wxTreeItemId GetFolderId( const wxString & p_name );
+		wxTreeItemId GetItemByName( const wxString & p_name );
+
+		inline int GetImageSize()const
 		{
-			FilesTreeIcon_File				= 0,
-			FilesTreeIcon_FileSelected		= 1,
-			FilesTreeIcon_Folder			= 2,
-			FilesTreeIcon_FolderSelected	= 3,
-			FilesTreeIcon_FolderOpened		= 4,
-			FilesTreeIcon_ClassFunction		= 5,
-
-			TreeFichier_Ctrl = 1001,
-		};
-
-		struct SceneItem
+			return m_imageSize;
+		}
+		inline const wxTreeItemId &	GetSelected()const
 		{
-			TrollScene * Trollscene;
-			wxTreeItemId TreeItem;
-		};
-
-		class FilesTree : public wxTreeCtrl
+			return m_selectedItem;
+		}
+		inline TROLL_PROJECT_NAMESPACE::Scene * GetSelectedScene()const
 		{
-		private:
-			int	m_imageSize;
-			TreeItemMap m_scenes;
-			wxTreeItemId m_idParent;
-			wxTreeItemId m_rootId;
-			wxTreeItemId m_rootProjetId;
-			wxTreeItemId m_selectedItem;
-			wxString m_itemName;
-			wxString m_itemPath;
-			TrollScene * m_selectedScene;
+			return m_selectedScene;
+		}
 
-			TreeItemIdMap m_folders;
-			MapTypeFile m_mapFile;
+		inline void SetSelected( const wxTreeItemId & p_item )
+		{
+			m_selectedItem = p_item;
+		}
 
-		public:
-			FilesTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style );
-			~FilesTree();
+	protected:
+		inline bool _isTestItem( const wxTreeItemId & item )
+		{
+			return GetItemParent( item ) == GetRootItem() &&  ! GetPrevSibling( item );
+		}
 
-			void Cleanup();
+	private:
+		void _logEvent( const wxChar * name, const wxTreeEvent & p_event );
+		DECLARE_EVENT_TABLE()
+		void OnItemClic( wxTreeEvent & p_event );
+		void OnFichierRClick( wxTreeEvent & p_event );
+		void OnFileActivated( wxTreeEvent & p_event );
+		void OnBeginLabelEdit( wxTreeEvent & p_event );
+		void OnEndLabelEdit( wxTreeEvent & p_event );
 
-			void CreateImageList( int size = 16 );
+	private:
+		int	m_imageSize;
+		TreeItemMap m_scenes;
+		wxTreeItemId m_idParent;
+		wxTreeItemId m_rootId;
+		wxTreeItemId m_rootProjetId;
+		wxTreeItemId m_selectedItem;
+		wxString m_itemName;
+		wxString m_itemPath;
+		TROLL_PROJECT_NAMESPACE::Scene * m_selectedScene;
 
-			void InitProjet( const wxString & p_projectName );
-			wxTreeItemId AddSceneToProject( TrollScene * p_scene );
-			wxTreeItemId AddFolderToScene( const wxString & p_sceneName, const wxString & p_folderName );
-			wxTreeItemId AddFileToFolder( const wxTreeItemId & p_item, const wxString & idFile, TETreeItemType p_type, bool p_exists );
-			void ShowContextMenuFichier( const wxPoint & pos, TETreeItemData * p_item );
-			wxTreeItemId AddExistingFileToProjet( const wxTreeItemId & item, TETreeItemType p_type, const wxString idFile );
-
-			wxTreeItemId GetFolderId( const wxString & p_name );
-			wxTreeItemId GetItemByName( const wxString & p_name );
-
-		private:
-			void _logEvent( const wxChar * name, const wxTreeEvent & p_event );
-
-		private:
-			void _onItemClic( wxTreeEvent & p_event );
-			void _onFichierRClick( wxTreeEvent & p_event );
-			void _onFileActivated( wxTreeEvent & p_event );
-			void _onBeginLabelEdit( wxTreeEvent & p_event );
-			void _onEndLabelEdit( wxTreeEvent & p_event );
-
-
-		protected:
-			inline bool _isTestItem( const wxTreeItemId & item )
-			{
-				return GetItemParent( item ) == GetRootItem() &&  ! GetPrevSibling( item );
-			}
-
-		public:
-			inline int					GetImageSize()const
-			{
-				return m_imageSize;
-			}
-			inline const wxTreeItemId &	GetSelected()const
-			{
-				return m_selectedItem;
-			}
-			inline TrollScene 	*		GetSelectedScene()const
-			{
-				return m_selectedScene;
-			}
-
-			inline void SetSelected( const wxTreeItemId & p_item )
-			{
-				m_selectedItem = p_item;
-			}
-
-		private:
-			DECLARE_EVENT_TABLE()
-		};
-	}
+		TreeItemIdMap m_folders;
+		MapTypeFile m_mapFile;
+	};
 }
+END_TROLL_GUI_NAMESPACE
 
 #endif
 
