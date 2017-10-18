@@ -38,7 +38,7 @@ namespace General
 			return p_number * y;
 		}
 
-		inline unsigned int NextPowOfTwo( unsigned int x )
+		inline uint32_t NextPowOfTwo( uint32_t x )
 		{
 			-- x;
 			x |= ( x >> 1 );
@@ -58,14 +58,14 @@ namespace General
 
 		inline double FastAbs( double p_float )
 		{
-			long long * j = reinterpret_cast <long long *>( & p_float );
+			int64_t * j = reinterpret_cast <int64_t *>( & p_float );
 			( * j ) = ( * j ) & 0x7FFFFFFFFFFFFFFFLL;
 			return ( * ( reinterpret_cast <double *>( j ) ) );
 		}
 
-		inline unsigned int uabs( int p_value )
+		inline uint32_t uabs( int p_value )
 		{
-			return static_cast <unsigned int>( p_value & 0x7FFFFFFF );
+			return static_cast <uint32_t>( p_value & 0x7FFFFFFF );
 		}
 
 		template< typename T >

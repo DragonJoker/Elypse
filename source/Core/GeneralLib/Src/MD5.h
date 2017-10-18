@@ -36,10 +36,10 @@ namespace General
 			MD5();
 			~MD5() {};
 		public:
-			static std::string Hash( const std::string & p_string );
-			static std::string Hash( const unsigned char * p_buffer, unsigned int p_len );
+			static std::string Hash( std::string const & p_string );
+			static std::string Hash( const unsigned char * p_buffer, uint32_t p_len );
 			static std::string HashFile( FILE * p_file );
-			static std::string HashFile( const std::string & p_filePath );
+			static std::string HashFile( std::string const & p_filePath );
 
 		private:
 			void _transform( const unsigned char p_block[64] );
@@ -60,8 +60,8 @@ namespace General
 			inline void II( unsigned long & A,
 							unsigned long B, unsigned long C, unsigned long D,
 							unsigned long X, unsigned long S, unsigned long T );
-			void DWordToByte( unsigned char * p_output, unsigned long * p_input, unsigned int p_len );
-			void ByteToDWord( unsigned long * p_output, const unsigned char * p_input, unsigned int p_len );
+			void DWordToByte( unsigned char * p_output, unsigned long * p_input, uint32_t p_len );
+			void ByteToDWord( unsigned long * p_output, const unsigned char * p_input, uint32_t p_len );
 
 		};
 	}

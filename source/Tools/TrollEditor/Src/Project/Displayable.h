@@ -21,39 +21,41 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Module_Project.h"
 
 #include <wx/treebase.h>
+#include <wx/propgrid/propgrid.h>
 
-#include "GUI/ObjectProperties/Module_Properties.h"
+#include "GUI/Properties/Module_Properties.h"
 
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	class Displayable
+	namespace ProjectComponents
 	{
-	public:
-		Displayable();
-		virtual ~Displayable();
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width ) = 0;
-		virtual void ShowProperties();
-		virtual void HideProperties();
-
-		inline wxTreeItemId	GetTreeItemId()const
+		class Displayable
 		{
-			return m_treeItemID;
-		}
-		inline wxPanel * GetPanel()const
-		{
-			return reinterpret_cast <wxPanel *>( m_propertiesPanel );
-		}
-		inline void SetTreeItemId( wxTreeItemId p_id )
-		{
-			m_treeItemID = p_id;
-		}
+		public:
+			Displayable();
+			virtual ~Displayable();
 
-	protected:
-		TROLL_GUI_PROPERTIES_NAMESPACE::ObjectProperties * m_propertiesPanel;
-		wxTreeItemId m_treeItemID;
-	};
+			GUI::Properties::ObjectProperty * CreateProperties( wxPropertyGrid * p_grid );
+			void HideProperties();
+
+			inline wxTreeItemId	GetTreeItemId()const
+			{
+				return m_treeItemID;
+			}
+
+			inline void SetTreeItemId( wxTreeItemId p_id )
+			{
+				m_treeItemID = p_id;
+			}
+
+		private:
+			virtual GUI::Properties::ObjectProperty * DoCreateProperties() = 0;
+
+		protected:
+			GUI::Properties::ObjectProperty * m_properties{ nullptr };
+			wxTreeItemId m_treeItemID{ 0 };
+		};
+	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

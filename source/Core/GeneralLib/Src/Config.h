@@ -33,50 +33,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #	define GENLIB_WINDOWS 0
 #endif
 
-#if defined( _MSC_VER)
-#	if _MSC_VER >= 1800
-#		define GENLIB_HAS_STDTHREAD					1
-#		define GENLIB_HAS_STDFUNCTIONAL				1
-#		define GENLIB_HAS_TR1FUNCTIONAL				1
-#	elif _MSC_VER >= 1700
-#		define GENLIB_HAS_STDTHREAD					1
-#		define GENLIB_HAS_STDFUNCTIONAL				1
-#		define GENLIB_HAS_TR1FUNCTIONAL				1
-#	elif _MSC_VER >= 1600
-#		define GENLIB_HAS_STDTHREAD					0
-#		define GENLIB_HAS_STDFUNCTIONAL				0
-#		define GENLIB_HAS_TR1FUNCTIONAL				1
-#	elif _MSC_VER > 1500
-#		define GENLIB_HAS_STDTHREAD					0
-#		define GENLIB_HAS_STDFUNCTIONAL				0
-#		define GENLIB_HAS_TR1FUNCTIONAL				0
-#	else
-#		define GENLIB_HAS_STDTHREAD					0
-#		define GENLIB_HAS_STDFUNCTIONAL				0
-#		define GENLIB_HAS_TR1FUNCTIONAL				0
-#	endif
-#elif defined( __GNUG__)
-#	define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#	if GCC_VERSION >= 40600
-#		if defined( _WIN32 )
-#			define GENLIB_HAS_STDTHREAD				0
-#			define GENLIB_HAS_STDFUNCTIONAL			1
-#			define GENLIB_HAS_TR1FUNCTIONAL			1
-#		else
-#			define GENLIB_HAS_STDTHREAD				1
-#			define GENLIB_HAS_STDFUNCTIONAL			1
-#			define GENLIB_HAS_TR1FUNCTIONAL			1
-#		endif
-#	elif GCC_VERSION >= 40300
-#		define GENLIB_HAS_STDTHREAD					0
-#		define GENLIB_HAS_STDFUNCTIONAL				0
-#		define GENLIB_HAS_TR1FUNCTIONAL				1
-#	else
-#		define GENLIB_HAS_STDTHREAD					0
-#		define GENLIB_HAS_STDFUNCTIONAL				0
-#		define GENLIB_HAS_TR1FUNCTIONAL				0
-#	endif
-#else
+#if !defined( _MSC_VER) && !defined( __GNUG__)
 #	error "Yet unsupported compiler"
 #endif
 

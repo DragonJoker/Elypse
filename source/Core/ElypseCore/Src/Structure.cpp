@@ -24,7 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Function.h"
 
 
-Structure::Structure( const String & p_name )
+Structure::Structure( String const & p_name )
 	: named( p_name )
 {
 	m_type = new VariableType( EMVT_STRUCT, NULL, NULL );
@@ -38,7 +38,7 @@ Structure::~Structure()
 	delete m_type;
 }
 
-void Structure::AddMember( const String & p_name, VariableType * p_type )
+void Structure::AddMember( String const & p_name, VariableType * p_type )
 {
 	m_members.push_back( new StructRow( p_name, p_type ) );
 	m_type->AddSubType( p_type );
@@ -69,9 +69,9 @@ String Structure::GetDesc() const
 	return l_desc;
 }
 
-unsigned int Structure::FindMember( const String & p_name )const
+uint32_t Structure::FindMember( String const & p_name )const
 {
-	unsigned int i = 0;
+	uint32_t i = 0;
 
 	for ( auto & l_member : m_members )
 	{

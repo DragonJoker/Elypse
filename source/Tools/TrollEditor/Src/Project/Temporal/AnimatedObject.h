@@ -20,36 +20,43 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "TemporalObject.h"
 
-BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE
+namespace Troll
 {
-	class TrollAnimatedObject
-		: public TemporalObject
+	namespace ProjectComponents
 	{
-	public:
-		TrollAnimatedObject( Object * p_object, TrollAnimationGroup * p_group, const wxString & p_fileName );
-		~TrollAnimatedObject();
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void AddAnimation( TrollAnimation * p_anim );
-		void Write( wxTextOutputStream * p_stream );
-
-		inline Object * GetObject()const
+		namespace Temporal
 		{
-			return m_object;
-		}
-		inline TrollAnimationGroup * GetGroup()const
-		{
-			return m_group;
-		}
+			class TrollAnimatedObject
+				: public TemporalObject
+			{
+			public:
+				TrollAnimatedObject( Object * p_object, TrollAnimationGroup * p_group, wxString const & p_fileName );
+				~TrollAnimatedObject();
 
-	private:
-		TrollAnimationGroup * m_group;
-		Object * m_object;
-		TrollAnimationStrMap m_animations;
-	};
+				void AddAnimation( TrollAnimation * p_anim );
+				void Write( wxTextOutputStream & p_stream );
+
+				inline Object * GetObject()const
+				{
+					return m_object;
+				}
+
+				inline TrollAnimationGroup * GetGroup()const
+				{
+					return m_group;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				TrollAnimationGroup * m_group;
+				Object * m_object;
+				TrollAnimationStrMap m_animations;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_TEMPORAL_NAMESPACE
 
 #endif
 

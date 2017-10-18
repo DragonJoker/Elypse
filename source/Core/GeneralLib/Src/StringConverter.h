@@ -28,8 +28,8 @@ namespace General
 {
 	namespace Utils
 	{
-		std::string d_dll ConvertToString( const std::wstring & p_wideString, const char * p_locale = "french", const char p_unknownCharReplacedBy = '?' );
-		std::wstring d_dll ConvertToWString( const std::string & p_string, const char * p_locale = "french" );
+		std::string d_dll ConvertToString( std::wstring const & p_wideString, char const * const p_locale = "french", const char p_unknownCharReplacedBy = '?' );
+		std::wstring d_dll ConvertToWString( std::string const & p_string, char const * const p_locale = "french" );
 
 		const size_t MAX_INT_LEN = 33;
 
@@ -55,7 +55,7 @@ namespace General
 
 			if ( p_value < 0 )
 			{
-				unsigned int l_value = static_cast <unsigned int>( -p_value );
+				uint32_t l_value = static_cast <uint32_t>( -p_value );
 				l_signe = '-';
 
 				for ( ; l_value && l_indexBuffer ; -- l_indexBuffer, l_value /= p_base )
@@ -86,7 +86,7 @@ namespace General
 			return & l_buffer[l_indexBuffer];
 		}
 
-		inline char * uitoa( unsigned int p_value, size_t & p_len, int p_base = 10 )
+		inline char * uitoa( uint32_t p_value, size_t & p_len, int p_base = 10 )
 		{
 			static char l_buffer[MAX_INT_LEN] = { 0 };
 			p_len = 0;
@@ -114,16 +114,16 @@ namespace General
 			return & l_buffer[++ l_indexBuffer];
 		}
 
-		template <typename T>
-		inline std::string ToString( const T & p_val )
+		template< typename T >
+		inline std::string ToString( T const & p_val )
 		{
 			std::stringstream l_out;
 			l_out << p_val;
 			return l_out.str();
 		}
 
-		template <typename T>
-		inline std::wstring ToWString( const T & p_val )
+		template< typename T >
+		inline std::wstring ToWString( T const & p_val )
 		{
 			std::wstringstream l_out;
 			l_out << p_val;
@@ -132,13 +132,13 @@ namespace General
 
 
 		template <>
-		inline std::wstring ToWString <std::string> ( const std::string & p_val )
+		inline std::wstring ToWString< std::string >( std::string const & p_val )
 		{
 			return ConvertToWString( p_val );
 		}
 
 		template <>
-		inline std::string ToString <bool> ( const bool & p_val )
+		inline std::string ToString< bool >( const bool & p_val )
 		{
 			if ( p_val )
 			{
@@ -149,7 +149,7 @@ namespace General
 		}
 
 		template <>
-		inline std::string ToString <std::wstring> ( const std::wstring & p_val )
+		inline std::string ToString< std::wstring >( std::wstring const & p_val )
 		{
 			return ConvertToString( p_val );
 		}
@@ -157,13 +157,13 @@ namespace General
 		{
 			return ConvertToString( std::wstring( p_val ) );
 		}
-		inline std::string ToString( const wchar_t * p_val )
+		inline std::string ToString( wchar_t const * const p_val )
 		{
 			return ConvertToString( std::wstring( p_val ) );
 		}
 
 		template <>
-		inline std::string ToString <int> ( const int & p_val )
+		inline std::string ToString< int >( const int & p_val )
 		{
 #	if GENLIB_WINDOWS
 			char l_buffer[16];
@@ -176,7 +176,7 @@ namespace General
 		}
 
 		template <>
-		inline std::string ToString <unsigned int> ( const unsigned int & p_val )
+		inline std::string ToString< uint32_t >( const uint32_t & p_val )
 		{
 #	if GENLIB_WINDOWS
 			char l_buffer[16];
@@ -188,7 +188,7 @@ namespace General
 #	endif
 		}
 
-		inline char * CStrCopy( const std::string & p_string )
+		inline char * CStrCopy( std::string const & p_string )
 		{
 			if ( p_string.empty() )
 			{
@@ -228,10 +228,10 @@ namespace General
 			return StringCastHelper< OutCharType, InCharType >::Cast( p_val );
 		}
 
-		float parseFloat( const std::string & val );
-		int parseInt( const std::string & val );
-		unsigned int parseUnsignedInt( const std::string & val );
-		bool parseBool( const std::string & val );
+		float parseFloat( std::string const & val );
+		int parseInt( std::string const & val );
+		uint32_t parseUnsignedInt( std::string const & val );
+		bool parseBool( std::string const & val );
 
 	}
 }

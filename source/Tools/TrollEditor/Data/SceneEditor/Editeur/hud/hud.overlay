@@ -1,0 +1,7 @@
+template element Panel(Icon)
+{
+	metrics_mode pixels
+	width 32
+	height 32
+	material Base/Icon/Lock
+}

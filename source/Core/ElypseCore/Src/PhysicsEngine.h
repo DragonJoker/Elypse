@@ -40,24 +40,24 @@ namespace Elypse
 			~PhysicsEngine();
 
 		public:
-			void ClearAllUniverses() d_no_throw;
+			void ClearAllUniverses() noexcept;
 			void Update();
 			void Render();
 
-			PhysicsSimulation * CreateSimulation( const String & p_name );
-			bool DestroySimulation( const String & p_name );
+			PhysicsSimulation * CreateSimulation( String const & p_name );
+			bool DestroySimulation( String const & p_name );
 
-			PhysicsMaterial * CreateMaterial( const String & p_name );
-			bool DestroyMaterial( const String & p_name );
+			PhysicsMaterial * CreateMaterial( String const & p_name );
+			bool DestroyMaterial( String const & p_name );
 
 			static void CollisionCallback( void * p_data, Ode::dGeomID p_geomA, Ode::dGeomID p_geomB );
-			static void RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObject * p_objB, Ode::dContact * p_contacts, unsigned int p_numContacts );
+			static void RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObject * p_objB, Ode::dContact * p_contacts, uint32_t p_numContacts );
 
-			inline PhysicsSimulation * GetSimulation( const String & p_name ) const
+			inline PhysicsSimulation * GetSimulation( String const & p_name ) const
 			{
 				return General::Utils::map::findOrNull( m_universes, p_name );
 			}
-			inline PhysicsMaterial * GetMaterial( const String & p_name ) const
+			inline PhysicsMaterial * GetMaterial( String const & p_name ) const
 			{
 				return General::Utils::map::findOrNull( m_materials, p_name );
 			}

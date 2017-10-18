@@ -28,15 +28,12 @@ namespace Elypse
 {
 	namespace Pub
 	{
-		class d_dll_export PubInstance : public ZoneObject, public owned_by <PubObject>
+		class d_dll_export PubInstance
+			: public ZoneObject
+			, public owned_by< PubObject >
 		{
-		private:
-			Entity * m_entity;
-			Zone * m_zone;
-			unsigned int m_submat;
-
 		public:
-			PubInstance( PubObject * p_owner, Entity * p_entity );
+			PubInstance( PubObject & p_owner, Entity * p_entity );
 			~PubInstance();
 
 		public:
@@ -53,10 +50,15 @@ namespace Elypse
 				return m_entity;
 			}
 
-			inline void SetSubMat( unsigned int p_submat )
+			inline void SetSubMat( uint32_t p_submat )
 			{
 				m_submat = p_submat;
 			}
+
+		private:
+			Entity * m_entity;
+			Zone * m_zone;
+			uint32_t m_submat;
 		};
 	}
 }

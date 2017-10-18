@@ -70,15 +70,15 @@ namespace Program
 			void _privateFunc()const {}
 
 		public:
-			void Print( const String & p_string, int p_int, const char * p_charStar );
+			void Print( String const & p_string, int p_int, char const * const p_charStar );
 
 		public:
-			inline const String & GetName()const
+			inline String const & GetName()const
 			{
 				return m_name;
 			}
 
-			inline void SetName( const String & p_name )
+			inline void SetName( String const & p_name )
 			{
 				m_name = p_name;
 			}

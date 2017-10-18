@@ -40,83 +40,86 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Project/Temporal/Module_Temporal.h"
 #include "Project/Media/Module_Media.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class FunctionsTree
-		: public wxTreeCtrl
+	namespace GUI
 	{
-	public:
-		FunctionsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style );
-		~FunctionsTree();
-
-		void Cleanup();
-		void CreateTitreFunction( const wxString & p_name );
-		void CreaFunc( const wxString & p_funcName, VariableBaseType p_returnValue, std::vector <VariableBaseType> p_params );
-		void ClassFunc( const wxString & p_funcName, VariableBaseType p_returnValue, std::vector <VariableBaseType> p_params );
-		void CreateTitreConstant( const wxString & p_name );
-		void CreateConstant( const wxString & p_constName, VariableBaseType p_type );
-		void CreateFunctionsTree();
-		void CreateConstantsTree();
-		void CreateImageList( int size = 16 );
-		void AddFunctionsToTree();
-
-		inline int GetImageSize()const
+		class FunctionsTree
+			: public wxTreeCtrl
 		{
-			return m_imageSize;
-		}
-		inline const wxTreeItemId &	GetSelected()const
-		{
-			return m_selectedItem;
-		}
+		public:
+			FunctionsTree( wxWindow * parent, ProjectFrame * projectFrame, wxPoint const & pos, wxSize const & size, long style );
+			~FunctionsTree();
 
-		inline void SetSelected( const wxTreeItemId & p_item )
-		{
-			m_selectedItem = p_item;
-		}
+			void Cleanup();
+			void CreateTitreFunction( wxString const & p_name );
+			void CreaFunc( wxString const & p_funcName, VariableBaseType p_returnValue, std::vector <VariableBaseType> p_params );
+			void ClassFunc( wxString const & p_funcName, VariableBaseType p_returnValue, std::vector <VariableBaseType> p_params );
+			void CreateTitreConstant( wxString const & p_name );
+			void CreateConstant( wxString const & p_constName, VariableBaseType p_type );
+			void CreateFunctionsTree();
+			void CreateConstantsTree();
+			void CreateImageList( int size = 16 );
+			void AddFunctionsToTree();
 
-	protected:
-		inline bool _isTestItem( const wxTreeItemId & item )
-		{
-			return GetItemParent( item ) == GetRootItem() && !GetPrevSibling( item );
-		}
+			inline int GetImageSize()const
+			{
+				return m_imageSize;
+			}
+			inline wxTreeItemId const &	GetSelected()const
+			{
+				return m_selectedItem;
+			}
 
-	private:
-		void _buildFunctionsList( const StrPairArrayStrMap & p_list, int p_image, int p_imageSel );
-		wxString _buildFunctionHelper( const wxString & p_function, VariableBaseType p_returnValue, std::vector <VariableBaseType> p_params );
-		void _logEvent( const wxChar * name, const wxTreeEvent & p_event );
+			inline void SetSelected( wxTreeItemId const & p_item )
+			{
+				m_selectedItem = p_item;
+			}
 
-		DECLARE_EVENT_TABLE()
-		void OnDragBegin( wxTreeEvent & p_event );
-		void OnDragEnd( wxTreeEvent & p_event );
-		void OnItemActivated( wxTreeEvent & p_event );
-		void OnItemRClick( wxTreeEvent & p_event );
-		void OnShowToolTip( wxTreeEvent & p_event );
+		protected:
+			inline bool _isTestItem( wxTreeItemId const & item )
+			{
+				return GetItemParent( item ) == GetRootItem() && !GetPrevSibling( item );
+			}
 
-	private:
-		typedef std::map< wxString, wxString > wxStrStrMap;
+		private:
+			void _buildFunctionsList( const StrPairArrayStrMap & p_list, int p_image, int p_imageSel );
+			wxString _buildFunctionHelper( wxString const & p_function, VariableBaseType p_returnValue, std::vector <VariableBaseType> p_params );
+			void _logEvent( const wxChar * name, const wxTreeEvent & p_event );
 
-		int m_imageSize;
+			DECLARE_EVENT_TABLE()
+			void OnDragBegin( wxTreeEvent & p_event );
+			void OnDragEnd( wxTreeEvent & p_event );
+			void OnItemActivated( wxTreeEvent & p_event );
+			void OnItemRClick( wxTreeEvent & p_event );
+			void OnShowToolTip( wxTreeEvent & p_event );
 
-		wxTreeItemId m_idParent;
-		wxTreeItemId m_rootId;
-		wxTreeItemId m_functionsId;
-		wxTreeItemId m_constantsId;
-		wxTreeItemId m_selectedItem;
+		private:
+			typedef std::map< wxString, wxString > wxStrStrMap;
 
-		ItemStrMap m_functionGroupsItems;
-		ItemStrMap m_constantGroupsItems;
+			int m_imageSize;
 
-		StrArray m_functionsGroups;
-		StrArray m_constantsGroups;
-		StrPairArrayStrMap m_functions;
-		StrPairArrayStrMap m_classFunctions;
-		StrPairArrayStrMap m_constants;
-		wxString m_currentGroup;
-		
-		wxStrStrMap m_map;
-	};
+			wxTreeItemId m_idParent;
+			wxTreeItemId m_rootId;
+			wxTreeItemId m_functionsId;
+			wxTreeItemId m_constantsId;
+			wxTreeItemId m_selectedItem;
+
+			ItemStrMap m_functionGroupsItems;
+			ItemStrMap m_constantGroupsItems;
+
+			StrArray m_functionsGroups;
+			StrArray m_constantsGroups;
+			StrPairArrayStrMap m_functions;
+			StrPairArrayStrMap m_classFunctions;
+			StrPairArrayStrMap m_constants;
+			wxString m_currentGroup;
+
+			wxStrStrMap m_map;
+			ProjectFrame * m_projectFrame;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

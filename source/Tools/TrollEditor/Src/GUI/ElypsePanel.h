@@ -22,25 +22,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class ElypsePanel
-		: public wxPanel
+	namespace GUI
 	{
-	private:
-		ElypseCtrl * m_elypseCtrl;
+		class ElypsePanel
+			: public wxPanel
+		{
+		private:
+			ElypseCtrl * m_elypseCtrl;
 
-	public:
-		ElypsePanel( wxWindow * p_parent, const wxPoint & p_position, const wxSize & p_size )
-			: wxPanel( p_parent, wxID_ANY, p_position, p_size, wxWANTS_CHARS )
-		{
-		}
-		~ElypsePanel()
-		{
-		}
-	};
+		public:
+			ElypsePanel( wxWindow * p_parent, wxPoint const & p_position, wxSize const & p_size )
+				: wxPanel( p_parent, wxID_ANY, p_position, p_size, wxWANTS_CHARS )
+			{
+				SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
+				SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			}
+
+			~ElypsePanel()
+			{
+			}
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

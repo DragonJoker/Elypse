@@ -34,8 +34,7 @@ void * operator new( size_t p_size )
 
 	if ( MemoryManager::Exists() )
 	{
-		RecursiveMutex & l_mutex = MemoryManager::GetSingleton().m_mutex;
-		GENLIB_SCOPED_RECURSIVE_LOCK( l_mutex );
+		auto l_lock = make_unique_lock( MemoryManager::GetSingleton().m_mutex );
 
 		if ( ! MemoryManager::IsLocked() )
 		{
@@ -63,10 +62,9 @@ void * operator new[]( size_t p_size )
 
 	if ( MemoryManager::Exists() )
 	{
-		RecursiveMutex & l_mutex = MemoryManager::GetSingleton().m_mutex;
-		GENLIB_SCOPED_RECURSIVE_LOCK( l_mutex );
+		auto l_lock = make_unique_lock( MemoryManager::GetSingleton().m_mutex );
 
-		if ( ! MemoryManager::IsLocked() )
+		if ( !MemoryManager::IsLocked() )
 		{
 			MemoryManager::Lock();
 
@@ -90,10 +88,9 @@ void operator delete( void * p_pointer )
 {
 	if ( MemoryManager::Exists() )
 	{
-		RecursiveMutex & l_mutex = MemoryManager::GetSingleton().m_mutex;
-		GENLIB_SCOPED_RECURSIVE_LOCK( l_mutex );
+		auto l_lock = make_unique_lock( MemoryManager::GetSingleton().m_mutex );
 
-		if ( ! MemoryManager::IsLocked() )
+		if ( !MemoryManager::IsLocked() )
 		{
 			MemoryManager::Lock();
 
@@ -119,10 +116,9 @@ void operator delete[]( void * p_pointer )
 {
 	if ( MemoryManager::Exists() )
 	{
-		RecursiveMutex & l_mutex = MemoryManager::GetSingleton().m_mutex;
-		GENLIB_SCOPED_RECURSIVE_LOCK( l_mutex );
+		auto l_lock = make_unique_lock( MemoryManager::GetSingleton().m_mutex );
 
-		if ( ! MemoryManager::IsLocked() )
+		if ( !MemoryManager::IsLocked() )
 		{
 			MemoryManager::Lock();
 

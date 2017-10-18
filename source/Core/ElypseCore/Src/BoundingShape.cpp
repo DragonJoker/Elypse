@@ -26,13 +26,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <ode/objects.h>
 
 BoundingShape::BoundingShape( BoundingShapeClass p_class )
-	: m_class( p_class ),
-		m_enabled( true ),
-		m_maxContacts( 0 ),
-		m_geom( NULL ),
-		m_space( NULL ),
-		m_parentObject( NULL ),
-		m_contacts( NULL )
+	: m_class( p_class )
+	, m_enabled( true )
+	, m_maxContacts( 0 )
+	, m_geom( NULL )
+	, m_space( NULL )
+	, m_parentObject( NULL )
+	, m_contacts( NULL )
 {
 	SetMaxContacts( 12 );
 }
@@ -64,7 +64,7 @@ void BoundingShape::SetParent( PhysicsObject * p_parent )
 	dGeomSetBody( m_geom, p_parent->GetBodyId() );
 }
 
-void BoundingShape::SetMaxContacts( unsigned int p_maxContacts )
+void BoundingShape::SetMaxContacts( uint32_t p_maxContacts )
 {
 	if ( m_contacts != NULL )
 	{

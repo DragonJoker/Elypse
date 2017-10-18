@@ -22,28 +22,26 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Temporal/Module_Temporal.h"
 
-#define TROLL_GUI_TIME_NAMESPACE TROLL_GUI_NAMESPACE::Time
-#define BEGIN_TROLL_GUI_TIME_NAMESPACE BEGIN_TROLL_GUI_NAMESPACE { namespace Time
-#define END_TROLL_GUI_TIME_NAMESPACE END_TROLL_GUI_NAMESPACE }
-
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	namespace Time
+	namespace GUI
 	{
-		class ArrowPanel;
-		class ContinuousEventPanel;
-		class LinePanel;
-		class PonctualEventPanel;
-		class SequencePanel;
-		class TimeLineContainer;
-		class TimeLinePanel;
-		class TimePanel;
-		class TimeTick;
+		namespace Time
+		{
+			class ArrowPanel;
+			class ContinuousEventPanel;
+			class LinePanel;
+			class PonctualEventPanel;
+			class SequencePanel;
+			class TimeLineContainer;
+			class TimeLinePanel;
+			class TimePanel;
+			class TimeTick;
 
-		typedef std::multimap< int, int > IntIMultiMap;
-		typedef std::map< int, IntIMultiMap > DimensionMap;
+			typedef std::multimap< int, int > IntIMultiMap;
+			typedef std::map< int, IntIMultiMap > DimensionMap;
+		}
 	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif

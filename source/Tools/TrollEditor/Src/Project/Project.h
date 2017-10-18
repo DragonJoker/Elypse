@@ -22,191 +22,233 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "GUI/TrollEditorGuiPrerequisites.h"
 
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	class Project
-		: public std::enable_shared_from_this< Project >
+	namespace ProjectComponents
 	{
-	public:
-		Project();
-		Project( const wxString & p_projectName, const wxString & p_mainSceneName, const wxString & p_path, BackgroundType p_backgroundType, const wxString & p_background, bool p_shadows, AntiAliasing p_aa, const wxSize & p_resolution );
-		~Project();
+		class Project
+			: public std::enable_shared_from_this< Project >
+		{
+		public:
+			Project();
+			Project( wxString const & p_projectName, wxString const & p_mainSceneName, wxString const & p_path, BackgroundType p_backgroundType, wxString const & p_background, bool p_shadows, AntiAliasing p_aa, wxSize const & p_resolution );
+			~Project();
 
-		void FlushObjects();
+			void FlushObjects();
 
-		Scene * GetScene( const wxString & p_sceneName );
-		Scene * GetScene( const wxTreeItemId & p_item );
-		void RemoveScene( const wxString & p_sceneName );
-		void RemoveScene( Scene * p_scene );
-		Scene * CreateScene( wxString const & p_strName );
-		void AddScene( Scene * p_scene );
-		void Save( wxTextOutputStream * p_stream );
-		void Load( const wxString & p_path, GUI::FilesTree * p_tree );
-		void Load( wxFileInputStream * p_input, wxTextInputStream * p_stream, const wxString & p_path, GUI::FilesTree * p_tree = NULL );
-		void Write();
+			ScenePtr GetScene( wxString const & p_sceneName );
+			void RemoveScene( wxString const & p_sceneName );
+			void RemoveScene( ScenePtr p_scene );
+			ScenePtr CreateScene( wxString const & p_strName );
+			bool AddScene( ScenePtr p_scene );
+			void Load( wxString const & p_path );
+			void SaveScripts();
 
-		void SetBackgroundImage( const wxString & p_img );
-		void SetBackgroundColour( const wxString & p_colour );
+			void SetBackgroundImage( wxString const & p_img );
+			void SetBackgroundColour( wxString const & p_colour );
 
-		bool FindFileInScenes( const wxString & p_fileName, File *& p_file, Scene *& p_scene );
+			bool FindFileInScenes( wxString const & p_fileName, File *& p_file, ScenePtr & p_scene );
 
-		inline Scene * GetMainScene()const
-		{
-			return m_mainScene;
-		}
-		inline SceneMap GetScenes()const
-		{
-			return m_scenes;
-		}
-		inline const wxString & GetPath()const
-		{
-			return m_projectPath;
-		}
-		inline const wxString & GetBackground()const
-		{
-			return m_bgString;
-		}
-		inline BackgroundType GetBackgroundType()const
-		{
-			return m_bgType;
-		}
-		inline wxColour const & GetBackgroundColour()const
-		{
-			return m_bgColour;
-		}
-		inline wxImage const & GetBackgroundImage()const
-		{
-			return m_bgImage;
-		}
-		inline const wxString & GetName()const
-		{
-			return m_name;
-		}
-		inline bool IsSaved()const
-		{
-			return m_saved;
-		}
-		inline bool IsModified()const
-		{
-			return m_modified;
-		}
-		inline const wxString & GetProjectFileName()const
-		{
-			return m_projectFileName;
-		}
-		inline AntiAliasing GetFSAA()const
-		{
-			return m_antiAliasing;
-		}
-		inline bool GetShadows()const
-		{
-			return m_shadows;
-		}
-		inline const wxSize & GetResolution()const
-		{
-			return m_resolution;
-		}
-		inline const wxString & GetStartupScript()const
-		{
-			return m_startupScript;
-		}
-		inline bool GetShowDebug()const
-		{
-			return m_showDebug;
-		}
-		inline bool GetShowFPS()const
-		{
-			return m_showFPS;
-		}
-		inline void SetSaved( bool p_saved )
-		{
-			m_saved = p_saved;
-		}
-		inline void SetModified( bool p_modified )
-		{
-			m_modified = p_modified;
-		}
-		inline void SetProjectFileName( const wxString & p_name )
-		{
-			m_projectFileName = p_name;
-		}
-		inline void SetProjectPath( const wxString & p_path )
-		{
-			m_projectPath = p_path;
-		}
-		inline void	SetName( const wxString & p_name )
-		{
-			m_name = p_name;
-			m_modified = true;
-		}
-		inline void SetShadows( bool p_shadows )
-		{
-			m_shadows = p_shadows;
-			m_modified = true;
-		}
-		inline void SetBackgroundType( BackgroundType p_type )
-		{
-			m_bgType = p_type;
-			m_modified = true;
-		}
-		inline void SetFSAA( AntiAliasing p_fsaa )
-		{
-			m_antiAliasing = p_fsaa;
-			m_modified = true;
-		}
-		inline void	SetResolution( const wxSize & p_res )
-		{
-			m_resolution = p_res;
-		}
-		inline void	SetBackgroundColour( wxColour const & p_colour )
-		{
-			m_bgColour = p_colour;
-			m_bgType = bgColour;
-		}
-		inline void SetBackgroundImage( wxImage const & p_image )
-		{
-			m_bgImage = p_image;
-			m_bgType = bgImage;
-		}
-		inline void	SetStartupScript( const wxString & p_ss )
-		{
-			m_startupScript = p_ss;
-		}
-		inline void	SetShowDebug( bool p_sd )
-		{
-			m_showDebug = p_sd;
-		}
-		inline void SetShowFPS( bool p_sf )
-		{
-			m_showFPS = p_sf;
-		}
+			inline ScenePtr GetMainScene()const
+			{
+				return m_mainScene;
+			}
+			inline bool HasMainScene()const
+			{
+				return m_mainScene != nullptr;
+			}
+			inline ScenePtr GetSplashScene()const
+			{
+				return m_splashScene;
+			}
+			inline bool HasSplashScene()const
+			{
+				return m_splashScene != nullptr;
+			}
+			inline SceneArray const & GetScenes()const
+			{
+				return m_scenes;
+			}
+			inline SceneArray & GetScenes()
+			{
+				return m_scenes;
+			}
+			inline wxString const & GetPath()const
+			{
+				return m_projectPath;
+			}
+			inline wxString const & GetBackground()const
+			{
+				return m_bgString;
+			}
+			inline BackgroundType GetBackgroundType()const
+			{
+				return m_bgType;
+			}
+			inline wxColour const & GetBackgroundColour()const
+			{
+				return m_bgColour;
+			}
+			inline wxImage const & GetBackgroundImage()const
+			{
+				return m_bgImage;
+			}
+			inline wxString const & GetName()const
+			{
+				return m_name;
+			}
+			inline bool IsSaved()const
+			{
+				return m_saved;
+			}
+			inline bool IsModified()const
+			{
+				return m_modified;
+			}
+			inline wxString const & GetProjectFileName()const
+			{
+				return m_projectFileName;
+			}
+			inline AntiAliasing GetFSAA()const
+			{
+				return m_antiAliasing;
+			}
+			inline bool GetShadows()const
+			{
+				return m_shadows;
+			}
+			inline wxSize const & GetResolution()const
+			{
+				return m_resolution;
+			}
+			inline wxString const & GetStartupScript()const
+			{
+				return m_startupScript;
+			}
+			inline bool GetShowDebug()const
+			{
+				return m_showDebug;
+			}
+			inline bool GetShowFPS()const
+			{
+				return m_showFPS;
+			}
+			inline void SetSaved( bool p_saved )
+			{
+				m_saved = p_saved;
+			}
+			inline void SetModified( bool p_modified )
+			{
+				m_modified = p_modified;
+			}
+			inline void SetProjectFileName( wxString const & p_name )
+			{
+				m_projectFileName = p_name;
+			}
+			inline void SetProjectPath( wxString const & p_path )
+			{
+				m_projectPath = p_path;
+			}
+			inline void	SetName( wxString const & p_name )
+			{
+				m_name = p_name;
+				m_modified = true;
+			}
+			inline void	SetSplashScene( wxString const & p_name )
+			{
+				m_splashScene = GetScene( p_name );
+				m_modified = true;
+			}
+			inline void	SetMainScene( wxString const & p_name )
+			{
+				m_mainScene = GetScene( p_name );
+				m_modified = true;
+			}
+			inline void SetShadows( bool p_shadows )
+			{
+				m_shadows = p_shadows;
+				m_modified = true;
+			}
+			inline void SetBackgroundType( BackgroundType p_type )
+			{
+				m_bgType = p_type;
+				m_modified = true;
+			}
+			inline void SetFSAA( AntiAliasing p_fsaa )
+			{
+				m_antiAliasing = p_fsaa;
+				m_modified = true;
+			}
+			inline void	SetResolution( wxSize const & p_res )
+			{
+				m_resolution = p_res;
+			}
+			inline void	SetBackgroundColour( wxColour const & p_colour )
+			{
+				m_bgColour = p_colour;
+				m_bgType = bgColour;
+			}
+			inline void SetBackgroundImage( wxImage const & p_image )
+			{
+				m_bgImage = p_image;
+				m_bgType = bgImage;
+			}
+			inline void	SetStartupScript( wxString const & p_ss )
+			{
+				m_startupScript = p_ss;
+			}
+			inline void	SetShowDebug( bool p_sd )
+			{
+				m_showDebug = p_sd;
+			}
+			inline void SetShowFPS( bool p_sf )
+			{
+				m_showFPS = p_sf;
+			}
+			inline auto begin()
+			{
+				return m_scenes.begin();
+			}
+			inline auto begin()const
+			{
+				return m_scenes.begin();
+			}
+			inline auto end()
+			{
+				return m_scenes.end();
+			}
+			inline auto end()const
+			{
+				return m_scenes.end();
+			}
 
-	private:
-		void _fillSceneDependencies( Scene * p_scene );
-		void _buildColour( const wxString & p_infos );
+		private:
+			void DoFillSceneDependencies( Scene const & p_scene );
+			void DoBuildColour( wxString const & p_infos );
 
-	private:
-		wxString m_name;
-		wxString m_projectPath;
-		BackgroundType m_bgType;
-		wxString m_bgString;
-		wxColour m_bgColour;
-		wxImage m_bgImage;
-		bool m_shadows;
-		AntiAliasing m_antiAliasing;
-		bool m_showDebug;
-		bool m_showFPS;
-		wxString m_startupScript;
+		private:
+			wxString m_name;
+			wxString m_projectPath;
+			BackgroundType m_bgType;
+			wxString m_bgString;
+			wxColour m_bgColour;
+			wxImage m_bgImage;
+			bool m_shadows;
+			AntiAliasing m_antiAliasing;
+			bool m_showDebug;
+			bool m_showFPS;
+			wxString m_startupScript;
 
-		Scene * m_mainScene;
-		SceneMap m_scenes;
-		bool m_saved;
-		bool m_modified;
-		wxString m_projectFileName;
-		wxSize m_resolution;
-	};
+			ScenePtr m_mainScene;
+			ScenePtr m_splashScene;
+			SceneArray m_scenes;
+			bool m_saved;
+			bool m_modified;
+			wxString m_projectFileName;
+			wxSize m_resolution;
+		};
+	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif
 

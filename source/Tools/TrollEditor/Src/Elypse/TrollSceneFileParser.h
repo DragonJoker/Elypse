@@ -23,30 +23,32 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <SceneFileParser.h>
 #include <Module_SceneFile.h>
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	class TrollSceneFileParser
-		: public SceneFileParser
+	namespace ElypseRW
 	{
-	private:
-		String m_fileName;
-		bool m_lineToAdd;
-
-	public:
-		TrollSceneFileParser( const String & p_instance, const String & p_baseDirectory );
-		virtual ~TrollSceneFileParser();
-
-		virtual void ParseScript( ConfigFile * p_file );
-
-		inline const String & GetFileName()const
+		class TrollSceneFileParser
+			: public SceneFileParser
 		{
-			return m_fileName;
-		}
-	};
+		private:
+			String m_fileName;
+			bool m_lineToAdd;
 
-	extern TrollSceneFileParser * g_fileParser;
-	extern wxString g_fileName;
+		public:
+			TrollSceneFileParser( String const & p_instance, String const & p_baseDirectory );
+			virtual ~TrollSceneFileParser();
+
+			virtual void ParseScript( ConfigFile * p_file );
+
+			inline String const & GetFileName()const
+			{
+				return m_fileName;
+			}
+		};
+
+		extern TrollSceneFileParser * g_fileParser;
+		extern wxString g_fileName;
+	}
 }
-END_TROLL_ELYPSE_NAMESPACE
 
 #endif

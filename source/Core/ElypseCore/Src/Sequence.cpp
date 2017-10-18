@@ -18,17 +18,16 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "PrecompiledHeader.h"
 
 #include "Sequence.h"
-#include "BaseEvent.h"
 
 #include "Context.h"
 
-Sequence::Sequence( const String & p_name )
-	: named( p_name ),
-		m_target( NULL ),
-		m_totalLength( 0.0 ),
-		m_currentTime( 0.0 ),
-		m_looped( false ),
-		m_status( STOPPED )
+Sequence::Sequence( String const & p_name )
+	: named( p_name )
+	, m_target( NULL )
+	, m_totalLength( 0.0 )
+	, m_currentTime( 0.0 )
+	, m_looped( false )
+	, m_status( STOPPED )
 {
 	m_ponctualIterator = m_ponctualEvents.begin();
 	m_continuousIterator = m_continuousEvents.begin();
@@ -44,7 +43,7 @@ void Sequence::Start()
 {
 	m_ponctualIterator = m_ponctualEvents.begin();
 	m_continuousIterator = m_continuousEvents.begin();
-	multimap::cycle( m_continuousEvents, & BaseContinuousEvent::Reset );
+	multimap::cycle( m_continuousEvents, &BaseContinuousEvent::Reset );
 	m_status = PLAYING;
 }
 
@@ -54,7 +53,7 @@ void Sequence::Stop()
 	m_currentTime = 0.0;
 	m_ponctualIterator = m_ponctualEvents.begin();
 	m_continuousIterator = m_continuousEvents.begin();
-	multimap::cycle( m_continuousEvents, & BaseContinuousEvent::Reset );
+	multimap::cycle( m_continuousEvents, &BaseContinuousEvent::Reset );
 }
 
 void Sequence::Pause( bool p_pause )
@@ -161,13 +160,6 @@ void Sequence::RemoveContinuousEvent( BaseContinuousEvent * p_event )
 			++l_it;
 		}
 	}
-}
-
-void Sequence::SetTarget( void * p_target )
-{
-	m_target = p_target;
-	multimap::cycle( m_ponctualEvents, &BasePonctualEvent::SetTarget, p_target );
-	multimap::cycle( m_continuousEvents, &BaseContinuousEvent::SetTarget, p_target );
 }
 
 void Sequence::Update( Real p_time )

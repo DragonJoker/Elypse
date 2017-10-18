@@ -36,50 +36,38 @@ namespace General
 			UNKNOWN
 		};
 
-		class Url
-			: public std::string
+		template< typename CharT >
+		class UrlT
+			: public std::basic_string< CharT >
 		{
+			using my_string = std::basic_string< CharT >;
+
 		public:
-			inline Url()
-				: std::string()
-				, m_protocol( UNKNOWN )
-				, m_offset( 0 )
+			inline UrlT()
+				: std::string{}
 			{
 			}
 
-			inline Url( const char * p_data )
-				: std::string( p_data )
+			inline UrlT( CharT const * const p_data )
+				: std::string{ p_data }
 			{
-				RetrieveProtocol();
+				doRetrieveProtocol();
 			}
 
-			inline Url( const std::string & p_data )
-				: std::string( p_data )
+			inline UrlT( my_string const & p_data )
+				: std::string{ p_data }
 			{
-				RetrieveProtocol();
+				doRetrieveProtocol();
 			}
 
-			inline Url( const Url & p_data )
+			inline UrlT( UrlT< CharT > const & p_data )
 				: std::string( p_data )
 				, m_offset( p_data.m_offset )
 			{
-				RetrieveProtocol();
+				doRetrieveProtocol();
 			}
 
-			inline const Url operator /( const Url & p_url )const
-			{
-				Url l_url( * this );
-
-				if ( !empty() )
-				{
-					l_url.push_back( m_separator );
-				}
-
-				l_url.append( p_url );
-				return l_url;
-			}
-
-			inline Url & operator /= ( const Url & p_url )
+			inline UrlT< CharT > & operator/=( UrlT< CharT > const & p_url )
 			{
 				if ( !empty() )
 				{
@@ -90,12 +78,12 @@ namespace General
 				return *this;
 			}
 
-			inline const std::string GetBaseSite()const
+			inline const my_string GetBaseSite()const
 			{
-				std::string l_return;
-				size_t l_index = find( m_separator, m_offset );
+				my_string l_return;
+				auto l_index = find( m_separator, m_offset );
 
-				if ( l_index != std::string::npos )
+				if ( l_index != my_string::npos )
 				{
 					l_return = substr( m_offset, l_index - m_offset );
 				}
@@ -103,13 +91,13 @@ namespace General
 				return l_return;
 			}
 
-			inline const std::string GetDirectory()const
+			inline const my_string GetDirectory()const
 			{
-				std::string l_return;
-				size_t l_start = find( m_separator, m_offset );
-				size_t l_end = find_last_of( m_separator );
+				auto l_start = find( m_separator, m_offset );
+				auto l_end = find_last_of( m_separator );
+				my_string l_return;
 
-				if ( l_start != l_end && l_start != std::string::npos && l_end != std::string::npos )
+				if ( l_start != l_end && l_start != my_string::npos && l_end != my_string::npos )
 				{
 					l_return = substr( l_start + 1, l_end - l_start - 1 );
 				}
@@ -117,12 +105,12 @@ namespace General
 				return l_return;
 			}
 
-			inline const std::string GetFilename()const
+			inline const my_string GetFilename()const
 			{
-				std::string l_return;
-				size_t l_index = find_last_of( m_separator );
+				auto l_index = find_last_of( m_separator );
+				my_string l_return;
 
-				if ( l_index != std::string::npos )
+				if ( l_index != my_string::npos )
 				{
 					l_return = substr( l_index + 1 );
 				}
@@ -134,12 +122,12 @@ namespace General
 				return l_return;
 			}
 
-			inline const std::string GetAllButFilename()const
+			inline const my_string GetAllButFilename()const
 			{
-				std::string l_return;
-				size_t l_index = find_last_of( m_separator );
+				auto l_index = find_last_of( m_separator );
+				my_string l_return;
 
-				if ( l_index != std::string::npos )
+				if ( l_index != my_string::npos )
 				{
 					l_return = substr( 0, l_index + 1 );
 				}
@@ -151,54 +139,66 @@ namespace General
 				return l_return;
 			}
 
-			UrlProtocol GetProtocol()
+			inline UrlProtocol GetProtocol()
 			{
-				_checkProtocol();
+				doCheckProtocol();
 				return m_protocol;
 			}
 
-			inline void RetrieveProtocol()
+		private:
+			inline void doRetrieveProtocol()
 			{
 				m_protocol = UNKNOWN;
 
 				if ( size() > 4 )
 				{
-					std::string l_temp( substr( 0, 4 ) );
+					my_string l_temp( substr( 0, 4 ) );
 
-					if ( l_temp == "http" )
+					if ( l_temp == my_string{ "http" } )
 					{
 						m_protocol = HTTP;
-						m_separator = '/';
+						m_separator = CharT{ '/' };
 						m_offset = find_first_not_of( ":/", 4 );
 					}
-					else if ( l_temp == "file" )
+					else if ( l_temp == my_string{ "file" } )
 					{
 						m_protocol = LOCAL;
-						m_separator = d_path_slash;
+						m_separator = CharT{ d_path_slash };
 						m_offset = find_first_not_of( ":/", 4 );
 					}
-					else if ( l_temp == "ftp:" )
+					else if ( l_temp == my_string{ "ftp:" } )
 					{
 						m_protocol = FTP;
-						m_separator = '/';
+						m_separator = CharT{ '/' };
 						m_offset = find_first_not_of( ":/", 4 );
 					}
 				}
 			}
-		private:
-			inline void _checkProtocol()
+
+			inline void doCheckProtocol()
 			{
 				if ( m_protocol == UNKNOWN )
 				{
-					RetrieveProtocol();
+					doRetrieveProtocol();
 				}
 			}
 
 		private:
-			UrlProtocol m_protocol;
-			size_t m_offset;
-			char m_separator = '/';
+			UrlProtocol m_protocol{ UNKNOWN };
+			size_t m_offset{ 0 };
+			CharT m_separator = '/';
 		};
+
+		template< typename CharT >
+		inline UrlT< CharT > operator/( UrlT< CharT > const & p_lhs, UrlT< CharT > const & p_rhs )
+		{
+			UrlT< CharT > l_url{ p_lhs };
+			l_url /= p_rhs;
+			return l_url;
+		}
+
+		using Url = UrlT< char >;
+		using WUrl = UrlT< wchar_t >;
 	}
 }
 

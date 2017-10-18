@@ -33,36 +33,36 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-VideoTexture::VideoTexture( VideoObject * p_owner )
-	: owned_by <VideoObject>	( p_owner ),
-		 m_bufferChange( false ),
-		 m_bufferSize( m_owner->m_width * m_owner->m_height * 4 ),
-		 m_tmpBuffer( new unsigned char[m_bufferSize] )
+VideoTexture::VideoTexture( VideoObject & p_owner )
+	: owned_by< VideoObject >( p_owner )
+	, m_bufferChange( false )
+	, m_bufferSize( GetOwner()->m_width * GetOwner()->m_height * 4 )
+	, m_tmpBuffer( new unsigned char[m_bufferSize] )
 {
 }
 
 VideoTexture::~VideoTexture()
 {
 	delete [] m_tmpBuffer;
-	MaterialManager::getSingletonPtr()->remove( m_owner->GetName() );
+	MaterialManager::getSingletonPtr()->remove( GetOwner()->GetName() );
 	TextureManager::getSingletonPtr()->remove( m_texture->getHandle() );
 }
 
 bool VideoTexture::initialise()
 {
-	createDefinedTexture( m_owner->GetName() );
+	createDefinedTexture( GetOwner()->GetName() );
 	return true;
 }
 
-void VideoTexture::_createTexture( const String & p_materialName, const String & p_groupName, bool p_createMat )
+void VideoTexture::_createTexture( String const & p_materialName, String const & p_groupName, bool p_createMat )
 {
 	TextureUnitState * l_texUnitState;
 	MaterialPtr l_pMaterial = MaterialManager::getSingleton().getByName( p_materialName );
 	m_texture = TextureManager::getSingleton().createManual( p_materialName,
 				p_groupName,
 				TEX_TYPE_2D,
-				m_owner->m_width,
-				m_owner->m_height,
+				GetOwner()->m_width,
+				GetOwner()->m_height,
 				0,
 				PF_R8G8B8,
 				TU_DYNAMIC_WRITE_ONLY_DISCARDABLE ).getPointer();
@@ -82,7 +82,7 @@ void VideoTexture::_createTexture( const String & p_materialName, const String &
 	l_texUnitState->setTextureAddressingMode( TextureUnitState::TAM_WRAP );
 }
 
-void VideoTexture::createDefinedTexture( const String & p_materialName, const String & p_groupName )
+void VideoTexture::createDefinedTexture( String const & p_materialName, String const & p_groupName )
 {
 	if ( TextureManager::getSingleton().getByName( p_materialName ).isNull() )
 	{
@@ -90,9 +90,9 @@ void VideoTexture::createDefinedTexture( const String & p_materialName, const St
 	}
 }
 
-void VideoTexture::CopyToBuffer( unsigned char * p_buffer, unsigned int p_bufferSize )
+void VideoTexture::CopyToBuffer( unsigned char * p_buffer, uint32_t p_bufferSize )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( m_bufferSize == p_bufferSize )
 	{
@@ -107,7 +107,7 @@ void VideoTexture::CopyToBuffer( unsigned char * p_buffer, unsigned int p_buffer
 
 void VideoTexture::Update()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( ! m_bufferChange )
 	{
@@ -123,7 +123,7 @@ void VideoTexture::Update()
 
 void VideoTexture::RedrawInBlack()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	memset( m_tmpBuffer, 0, m_bufferSize );
 	m_bufferChange = true;
 }

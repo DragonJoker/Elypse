@@ -50,7 +50,7 @@ namespace Elypse
 		private:
 			HDR_Listener * m_listener;
 		public:
-			PostEffect_HDR( const String & p_name, Viewport * p_viewport );
+			PostEffect_HDR( String const & p_name, Viewport * p_viewport );
 			virtual ~PostEffect_HDR();
 		};
 	}

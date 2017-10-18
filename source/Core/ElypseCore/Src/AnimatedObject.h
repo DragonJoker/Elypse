@@ -24,14 +24,16 @@ namespace Elypse
 {
 	namespace Animation
 	{
-		class d_dll_export AnimatedObject : General::Theory::owned_by<AnimatedObjectGroup>, d_noncopyable
+		class d_dll_export AnimatedObject
+			: General::Theory::owned_by< AnimatedObjectGroup >
+			, d_noncopyable
 		{
 		protected:
 			Ogre::Entity * m_entity;
 			AnimationMap m_animations;
 
 		public:
-			AnimatedObject( AnimatedObjectGroup * p_group, Ogre::Entity * p_ogreEntity );
+			AnimatedObject( AnimatedObjectGroup & p_group, Ogre::Entity * p_ogreEntity );
 			~AnimatedObject();
 
 		protected:
@@ -45,15 +47,15 @@ namespace Elypse
 
 			void SetPauseAllAnimations( bool p_pause );
 
-			EMAnimation * GetAnimation( const String & p_animationName )const
+			EMAnimation * GetAnimation( String const & p_animationName )const
 			{
 				return General::Utils::map::findOrNull( m_animations, p_animationName );
 			}
 
 			RealMap GetAllAnimationsTimes() const;
 
-			unsigned int GetNumPlayingAnimations();
-			const String & GetPlayingAnimationName( unsigned int p_index );
+			uint32_t GetNumPlayingAnimations();
+			String const & GetPlayingAnimationName( uint32_t p_index );
 
 		public:
 			inline Ogre::Entity * GetEntity()const

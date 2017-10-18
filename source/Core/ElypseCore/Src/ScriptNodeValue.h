@@ -56,7 +56,7 @@ namespace Elypse
 				return m_type == p_type;
 			}
 
-			template <typename T>
+			template< typename T >
 			inline bool IsType()const
 			{
 				return static_cast<VariableBaseType>( NodeTypeBinding<T>::NType ) == m_type;

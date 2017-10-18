@@ -1,8 +1,27 @@
 project WallDestruction
 {
-	resolution		640 480
+	resolution		800 600
 	colour			0 0 0
-	startup_script	bool c_modeInstant = false;bool c_modeConcours = false;string c_gameName = "WallDestruction";string c_sceneName = "WallDestruction";int c_instantID = 0;
+	startup_script	string c_gameName = "WallDestruction";string c_sceneName = "WallDestruction";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "localhost/Kazugame";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	scene kazu
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+		data_files_other
+		{
+			kazu
+		}
+	}
 	scene WallDestruction
 	{
 		scene_files
@@ -23,24 +42,10 @@ project WallDestruction
 		}
 		data_files_other
 		{
-			Sons
+			WallDestruction
+			Interface
 		}
 		dependencies
-		{
-			kazu
-		}
-	}
-	scene kazu
-	{
-		scene_files
-		{
-			kazu.emscene
-		}
-		load_script_files
-		{
-			kazu.emscript
-		}
-		data_files_3d
 		{
 			kazu
 		}

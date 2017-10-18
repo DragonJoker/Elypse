@@ -23,11 +23,6 @@ string c_sceneName;
 bool c_modeInstant;
 int c_instantID;
 
-c_modeInstant = false;
-c_gameName = "Echecs";
-c_sceneName = "Echecs";
-c_instantID = 0;
-
 void KazuPlayGame()
 {
 	l_infos = StringFromUrl( "http://" + c_baseSite + "/connection_game.php?action=confirm&gamename=" + c_gameName, "");
@@ -145,11 +140,6 @@ void CheckClearToGo()
 void InitialiseKazuSplash()
 {
 	l_splashtext = OverlayElement_GetByName( "Splash/Status");
-	c_baseSite = "marc";
-	g_serverAddr = "82.66.41.235";
-//	c_baseSite = "www.kazugame.com";
-//	g_serverAddr = "ns368997.ovh.net";
-	g_serverPort = 48621;
 
 	Overlay_Hide("Splash/Jouer");
 
@@ -166,6 +156,7 @@ void InitialiseKazuSplash()
 		{
 			c_highscorePage = "http://" + c_baseSite + "/score.php";
 			Overlay_Show("Splash/Jouer");
+			//LaunchGame();
 		};
 	};
 };

@@ -36,7 +36,7 @@ namespace Elypse
 			String m_targetName;
 
 		public:
-			Portal( const String & p_name );
+			Portal( String const & p_name );
 			~Portal();
 
 		public:
@@ -47,7 +47,7 @@ namespace Elypse
 			{
 				return m_target;
 			}
-			inline const String &	GetTargetName()const
+			inline String const &	GetTargetName()const
 			{
 				return m_targetName;
 			}
@@ -68,7 +68,7 @@ namespace Elypse
 			{
 				m_target = p_targetZone;
 			}
-			inline void 			SetTargetName( const String & p_name )
+			inline void 			SetTargetName( String const & p_name )
 			{
 				m_targetName = p_name;
 			}

@@ -118,7 +118,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define MD5_T64  0xeb86d391 //Transformation Constant 64
 
 //Null data (except for first BYTE) used to finalise the checksum calculation
-static unsigned char PADDING[64] = 
+static unsigned char PADDING[64] =
 {
 	0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -127,7 +127,7 @@ static unsigned char PADDING[64] =
 
 using namespace General::Utils;
 
-std::string MD5::HashFile( const std::string & p_filePath )
+std::string MD5::HashFile( std::string const & p_filePath )
 {
 	//open the file as a binary file in readonly mode, denying write access
 	FILE * l_file = fopen( p_filePath.c_str(), "rb" );
@@ -138,7 +138,7 @@ std::string MD5::HashFile( const std::string & p_filePath )
 	}
 
 	//the file has been successfully opened, so now get and return its checksum
-	const std::string & l_returnValue = HashFile( l_file );
+	std::string const & l_returnValue = HashFile( l_file );
 	fclose( l_file );
 	return l_returnValue;
 }
@@ -172,16 +172,16 @@ std::string MD5::HashFile( FILE * p_file )
 	}
 }
 
-std::string  MD5::Hash( const unsigned char * p_buffer, unsigned int p_len )
+std::string  MD5::Hash( const unsigned char * p_buffer, uint32_t p_len )
 {
 	MD5 l_MD5Checksum;
 	l_MD5Checksum._update( p_buffer, p_len );
 	return l_MD5Checksum._final();
 }
 
-std::string  MD5::Hash( const std::string & p_string )
+std::string  MD5::Hash( std::string const & p_string )
 {
-	return MD5::Hash( reinterpret_cast<const unsigned char * >( p_string.c_str() ), ( unsigned int )( p_string.length() ) );
+	return MD5::Hash( reinterpret_cast<const unsigned char * >( p_string.c_str() ), ( uint32_t )( p_string.length() ) );
 }
 
 unsigned long MD5::_rotateLeft( unsigned long p_x, int p_n )
@@ -230,10 +230,10 @@ void MD5::II( unsigned long & A,
 	A += B;
 }
 
-void MD5::ByteToDWord( unsigned long * p_output, const unsigned char * p_input, unsigned int p_len )
+void MD5::ByteToDWord( unsigned long * p_output, const unsigned char * p_input, uint32_t p_len )
 {
-	unsigned int i = 0; //index to p_output array
-	unsigned int j = 0; //index to p_input array
+	uint32_t i = 0; //index to p_output array
+	uint32_t j = 0; //index to p_input array
 
 	//transfer the data by shifting and copying
 	for ( ; j < p_len ; i ++, j += 4 )
@@ -340,11 +340,11 @@ MD5::MD5()
 	m_MD5[3] = MD5_INIT_STATE_3;
 }
 
-void MD5::DWordToByte( unsigned char * p_output, unsigned long * p_input, unsigned int p_len )
+void MD5::DWordToByte( unsigned char * p_output, unsigned long * p_input, uint32_t p_len )
 {
 	//transfer the data by shifting and copying
-	unsigned int i = 0;
-	unsigned int j = 0;
+	uint32_t i = 0;
+	uint32_t j = 0;
 
 	for ( ; j < p_len; i++, j += 4 )
 	{
@@ -361,8 +361,8 @@ std::string MD5::_final()
 	unsigned char l_bits[8];
 	DWordToByte( l_bits, m_count, 8 );
 	//Pad out to 56 mod 64.
-	unsigned int l_index = static_cast <unsigned int>( ( m_count[0] >> 3 ) & 0x3f );
-	unsigned int l_padLen = ( l_index < 56 ) ? ( 56 - l_index ) : ( 120 - l_index );
+	uint32_t l_index = static_cast <uint32_t>( ( m_count[0] >> 3 ) & 0x3f );
+	uint32_t l_padLen = ( l_index < 56 ) ? ( 56 - l_index ) : ( 120 - l_index );
 	_update( PADDING, l_padLen );
 	//Append length (before padding)
 	_update( l_bits, 8 );
@@ -409,7 +409,7 @@ std::string MD5::_final()
 void MD5::_update( const unsigned char * p_input, unsigned long p_len )
 {
 	//Compute number of bytes mod 64
-	unsigned int l_index = static_cast <unsigned int>( ( m_count[0] >> 3 ) & 0x3F );
+	uint32_t l_index = static_cast <uint32_t>( ( m_count[0] >> 3 ) & 0x3F );
 
 	//Update number of bits
 	if ( ( m_count[0] += p_len << 3 )  < ( p_len << 3 ) )
@@ -419,8 +419,8 @@ void MD5::_update( const unsigned char * p_input, unsigned long p_len )
 
 	m_count[1] += ( p_len >> 29 );
 	//Transform as many times as possible.
-	unsigned int i = 0;
-	unsigned int l_partLen = 64 - l_index;
+	uint32_t i = 0;
+	uint32_t l_partLen = 64 - l_index;
 
 	if ( p_len >= l_partLen )
 	{

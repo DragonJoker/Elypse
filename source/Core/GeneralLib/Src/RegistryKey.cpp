@@ -26,6 +26,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <windows.h>
 #pragma warning( pop )
 
+#include <array>
+
 using namespace General::Computer;
 
 namespace General
@@ -36,21 +38,23 @@ namespace General
 		class RegistryKeyBaseImplBase
 		{
 		public:
-			RegistryKeyBaseImplBase( RegistryFolder p_folder, const T & p_name )
-				: m_folder( p_folder == RF_HKLM ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER ),
-					m_name( p_name ),
-					m_created( false )
+			RegistryKeyBaseImplBase( RegistryFolder p_folder, T const & p_name )
+				: m_folder{ p_folder == RF_HKLM ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER }
+				, m_name{ p_name }
+				, m_created{ false }
 			{
 			}
 
-			~RegistryKeyBaseImplBase();
+			~RegistryKeyBaseImplBase()
+			{
+			}
 
 		public:
 			void Close()
 			{
 				if ( m_created )
 				{
-					RegCloseKey( m_key );
+					::RegCloseKey( m_key );
 					m_created = false;
 				}
 			}
@@ -67,8 +71,8 @@ namespace General
 			: public RegistryKeyBaseImplBase< std::string >
 		{
 		public:
-			RegistryKeyBaseImpl( RegistryFolder p_folder, const std::string & p_name )
-				: RegistryKeyBaseImplBase( p_folder, p_name )
+			RegistryKeyBaseImpl( RegistryFolder p_folder, std::string const & p_name )
+				: RegistryKeyBaseImplBase{ p_folder, p_name }
 			{
 			}
 
@@ -79,7 +83,7 @@ namespace General
 
 			bool Open()
 			{
-				m_created = RegOpenKeyExA( m_folder, m_name.c_str(), 0L, KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
+				m_created = ::RegOpenKeyExA( m_folder, m_name.c_str(), 0L, KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
 				return m_created;
 			}
 
@@ -89,7 +93,7 @@ namespace General
 
 				if ( m_created )
 				{
-					long l_result = RegDeleteKeyA( m_folder, m_name.c_str() );
+					long l_result = ::RegDeleteKeyA( m_folder, m_name.c_str() );
 
 					if ( l_result == ERROR_SUCCESS )
 					{
@@ -111,32 +115,32 @@ namespace General
 
 				if ( !m_created )
 				{
-					m_created = ( RegCreateKeyExA( m_folder, m_name.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, & m_key, NULL ) == ERROR_SUCCESS );
+					m_created = ( ::RegCreateKeyExA( m_folder, m_name.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nullptr, &m_key, nullptr ) == ERROR_SUCCESS );
 					l_return = m_created;
 				}
 
 				return l_return;
 			}
 
-			bool SetStringValue( const std::string & p_name, const std::string & p_value )
+			bool SetStringValue( std::string const & p_name, std::string const & p_value )
 			{
-				return RegSetValueExA( m_key, p_name.c_str(), 0, REG_SZ, reinterpret_cast <const unsigned char *>( p_value.c_str() ), static_cast<unsigned long>( p_value.size() + 1 ) ) == ERROR_SUCCESS;
+				return ::RegSetValueExA( m_key, p_name.c_str(), 0, REG_SZ, reinterpret_cast< BYTE const * >( p_value.c_str() ), uint32_t( p_value.size() + 1 ) ) == ERROR_SUCCESS;
 			}
 
-			bool SetStringExpandValue( const std::string & p_name, const std::string & p_value )
+			bool SetStringExpandValue( std::string const & p_name, std::string const & p_value )
 			{
-				return RegSetValueExA( m_key, p_name.c_str(), 0, REG_EXPAND_SZ, reinterpret_cast <const unsigned char *>( p_value.c_str() ), static_cast<unsigned long>( p_value.size() + 1 ) ) == ERROR_SUCCESS;
+				return ::RegSetValueExA( m_key, p_name.c_str(), 0, REG_EXPAND_SZ, reinterpret_cast< BYTE const *>( p_value.c_str() ), uint32_t( p_value.size() + 1 ) ) == ERROR_SUCCESS;
 			}
 
-			std::string GetStringValue( const std::string & p_name )
+			std::string GetStringValue( std::string const & p_name )
 			{
 				std::string l_return;
-				char l_buffer[512];
-				unsigned long l_size = 511;
+				std::array< char, 512 > l_buffer;
+				DWORD l_size = DWORD( l_buffer.size() - 1 );
 
-				if ( RegQueryValueExA( m_key, p_name.c_str(), NULL, NULL, reinterpret_cast <unsigned char *>( &l_buffer[0] ), & l_size ) == ERROR_SUCCESS )
+				if ( ::RegQueryValueExA( m_key, p_name.c_str(), nullptr, nullptr, reinterpret_cast< BYTE * >( &l_buffer[0] ), &l_size ) == ERROR_SUCCESS )
 				{
-					l_return = l_buffer;
+					l_return = l_buffer.data();
 				}
 
 				return l_return;
@@ -148,7 +152,7 @@ namespace General
 			: public RegistryKeyBaseImplBase< std::wstring >
 		{
 		public:
-			RegistryKeyBaseImpl( RegistryFolder p_folder, const std::wstring & p_name )
+			RegistryKeyBaseImpl( RegistryFolder p_folder, std::wstring const & p_name )
 				: RegistryKeyBaseImplBase( p_folder, p_name )
 			{
 			}
@@ -160,7 +164,7 @@ namespace General
 
 			bool Open()
 			{
-				m_created = RegOpenKeyExW( m_folder, m_name.c_str(), 0L, KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
+				m_created = ::RegOpenKeyExW( m_folder, m_name.c_str(), 0L, KEY_ALL_ACCESS, &m_key ) == ERROR_SUCCESS;
 				return m_created;
 			}
 
@@ -170,7 +174,7 @@ namespace General
 
 				if ( m_created )
 				{
-					long l_result = RegDeleteKeyW( m_folder, m_name.c_str() );
+					long l_result = ::RegDeleteKeyW( m_folder, m_name.c_str() );
 
 					if ( l_result == ERROR_SUCCESS )
 					{
@@ -192,32 +196,32 @@ namespace General
 
 				if ( !m_created )
 				{
-					m_created = ( RegCreateKeyExW( m_folder, m_name.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, & m_key, NULL ) == ERROR_SUCCESS );
+					m_created = ( ::RegCreateKeyExW( m_folder, m_name.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, nullptr, &m_key, nullptr ) == ERROR_SUCCESS );
 					l_return = m_created;
 				}
 
 				return l_return;
 			}
 
-			bool SetStringValue( const std::wstring & p_name, const std::wstring & p_value )
+			bool SetStringValue( std::wstring const & p_name, std::wstring const & p_value )
 			{
-				return RegSetValueExW( m_key, p_name.c_str(), 0, REG_SZ, reinterpret_cast <const BYTE *>( p_value.c_str() ), static_cast<unsigned long>( p_value.size() + 1 ) ) == ERROR_SUCCESS;
+				return ::RegSetValueExW( m_key, p_name.c_str(), 0, REG_SZ, reinterpret_cast< BYTE const * >( p_value.c_str() ), uint32_t( p_value.size() + 1 ) ) == ERROR_SUCCESS;
 			}
 
-			bool SetStringExpandValue( const std::wstring & p_name, const std::wstring & p_value )
+			bool SetStringExpandValue( std::wstring const & p_name, std::wstring const & p_value )
 			{
-				return RegSetValueExW( m_key, p_name.c_str(), 0, REG_EXPAND_SZ, reinterpret_cast <const BYTE *>( p_value.c_str() ), static_cast<unsigned long>( p_value.size() + 1 ) ) == ERROR_SUCCESS;
+				return ::RegSetValueExW( m_key, p_name.c_str(), 0, REG_EXPAND_SZ, reinterpret_cast< BYTE const * >( p_value.c_str() ), uint32_t( p_value.size() + 1 ) ) == ERROR_SUCCESS;
 			}
 
-			std::wstring GetStringValue( const std::wstring & p_name )
+			std::wstring GetStringValue( std::wstring const & p_name )
 			{
 				std::wstring l_return;
-				wchar_t l_buffer[512];
-				DWORD l_size = 511;
+				std::array< wchar_t, 512 > l_buffer;
+				DWORD l_size = DWORD( l_buffer.size() - 1 );
 
-				if ( RegQueryValueExW( m_key, p_name.c_str(), NULL, NULL, reinterpret_cast< BYTE *>( &l_buffer[0] ), &l_size ) == ERROR_SUCCESS )
+				if ( ::RegQueryValueExW( m_key, p_name.c_str(), NULL, NULL, reinterpret_cast< BYTE * >( &l_buffer[0] ), &l_size ) == ERROR_SUCCESS )
 				{
-					l_return = l_buffer;
+					l_return = l_buffer.data();
 				}
 
 				return l_return;
@@ -228,9 +232,9 @@ namespace General
 
 using General::Computer::RegistryKeyBaseImpl;
 
-RegistryKeyBase< std::string >::RegistryKeyBase( RegistryFolder p_folder, const std::string & p_keyName )
-	: m_impl( std::make_unique< RegistryKeyBaseImpl< std::string > >( p_folder, p_keyName ) )
-	, m_exists( false )
+RegistryKeyBase< std::string >::RegistryKeyBase( RegistryFolder p_folder, std::string const & p_keyName )
+	: m_impl{ std::make_unique< RegistryKeyBaseImpl< std::string > >( p_folder, p_keyName ) }
+	, m_exists{ false }
 {
 }
 
@@ -239,17 +243,17 @@ RegistryKeyBase< std::string >::~RegistryKeyBase()
 	Close();
 }
 
-bool RegistryKeyBase< std::string >::SetStringValue( const std::string & p_name, const std::string & p_value )
+bool RegistryKeyBase< std::string >::SetStringValue( std::string const & p_name, std::string const & p_value )
 {
 	return m_impl->SetStringValue( p_name, p_value );
 }
 
-bool RegistryKeyBase< std::string >::SetStringExpandValue( const std::string & p_name, const std::string & p_value )
+bool RegistryKeyBase< std::string >::SetStringExpandValue( std::string const & p_name, std::string const & p_value )
 {
 	return m_impl->SetStringExpandValue( p_name, p_value );
 }
 
-std::string RegistryKeyBase< std::string >::GetStringValue( const std::string & p_valueName )
+std::string RegistryKeyBase< std::string >::GetStringValue( std::string const & p_valueName )
 {
 	return m_impl->GetStringValue( p_valueName );
 }
@@ -283,9 +287,9 @@ bool RegistryKeyBase< std::string >::IsValid()
 												Wide String
 ********************************************************************************************************************/
 
-RegistryKeyBase< std::wstring >::RegistryKeyBase( RegistryFolder p_folder, const std::wstring & p_keyName )
-	: m_impl( std::make_unique< RegistryKeyBaseImpl< std::wstring > >( p_folder, p_keyName ) )
-	, m_exists( false )
+RegistryKeyBase< std::wstring >::RegistryKeyBase( RegistryFolder p_folder, std::wstring const & p_keyName )
+	: m_impl{ std::make_unique< RegistryKeyBaseImpl< std::wstring > >( p_folder, p_keyName ) }
+	, m_exists{ false }
 {
 }
 
@@ -294,17 +298,17 @@ RegistryKeyBase< std::wstring >::~RegistryKeyBase()
 	Close();
 }
 
-bool RegistryKeyBase< std::wstring >::SetStringValue( const std::wstring & p_name, const std::wstring & p_value )
+bool RegistryKeyBase< std::wstring >::SetStringValue( std::wstring const & p_name, std::wstring const & p_value )
 {
 	return m_impl->SetStringValue( p_name, p_value );
 }
 
-bool RegistryKeyBase< std::wstring >::SetStringExpandValue( const std::wstring & p_name, const std::wstring & p_value )
+bool RegistryKeyBase< std::wstring >::SetStringExpandValue( std::wstring const & p_name, std::wstring const & p_value )
 {
 	return m_impl->SetStringExpandValue( p_name, p_value );
 }
 
-std::wstring RegistryKeyBase< std::wstring >::GetStringValue( const std::wstring & p_valueName )
+std::wstring RegistryKeyBase< std::wstring >::GetStringValue( std::wstring const & p_valueName )
 {
 	return m_impl->GetStringValue( p_valueName );
 }

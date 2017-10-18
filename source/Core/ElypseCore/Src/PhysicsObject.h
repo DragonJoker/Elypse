@@ -89,7 +89,7 @@ namespace Elypse
 			ObjectState m_drawState;
 			size_t m_stateLimit;
 
-			unsigned int m_id;
+			uint32_t m_id;
 
 			Real m_disableThresold_time;
 			Real m_disableThresold_linear;
@@ -100,13 +100,13 @@ namespace Elypse
 			Ogre::Vector3 m_outTranslate;
 
 		public:
-			PhysicsObject( Ogre::Entity * p_entity, Space * p_space );
-			PhysicsObject( const String & p_name, Space * p_space );
+			PhysicsObject( PhysicsSimulation & p_parent, Ogre::Entity * p_entity, Space * p_space );
+			PhysicsObject( PhysicsSimulation & p_parent, String const & p_name, Space * p_space );
 			~PhysicsObject();
 
 		public:
 			void AddBound( BoundingShape * p_object );
-			PhysicsObject * Clone( const String & p_name, Space * p_space );
+			PhysicsObject * Clone( String const & p_name, Space * p_space );
 
 			void UpdateState();
 			void UpdateNode();
@@ -200,11 +200,11 @@ namespace Elypse
 				return m_phantom;
 			}
 
-			inline void SetId( unsigned int p_id )
+			inline void SetId( uint32_t p_id )
 			{
 				m_id = p_id;
 			}
-			inline unsigned int GetId()const
+			inline uint32_t GetId()const
 			{
 				return m_id;
 			}

@@ -32,18 +32,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypsePlugin.h"
 
-VideoObject::VideoObject( const String & p_name, ElypsePlugin * p_plugin )
-	: named( p_name ),
-		m_isFinished( false ),
-		m_isPlaying( false ),
-		m_looped( false ),
-		m_tokenUrl( false ),
-		m_autoInitialised( true ),
-		m_width( 0 ),
-		m_height( 0 ),
-		m_videoTexture( NULL ),
-		m_plugin( p_plugin ),
-		m_impl( NULL )
+VideoObject::VideoObject( String const & p_name, ElypsePlugin * p_plugin )
+	: named( p_name )
+	, m_isFinished( false )
+	, m_isPlaying( false )
+	, m_looped( false )
+	, m_tokenUrl( false )
+	, m_autoInitialised( true )
+	, m_width( 0 )
+	, m_height( 0 )
+	, m_videoTexture( NULL )
+	, m_plugin( p_plugin )
+	, m_impl( NULL )
 {
 	genlib_assert( m_plugin != NULL );
 }
@@ -79,7 +79,7 @@ VideoOverlay * VideoObject::CreateOverlay( EMOverlay * p_overlay )
 		return l_vidOverlay;
 	}
 
-	l_vidOverlay = new VideoOverlay( this, p_overlay );
+	l_vidOverlay = new VideoOverlay( *this, p_overlay );
 	m_overlayMap.insert( std::make_pair( p_overlay, l_vidOverlay ) );
 	return l_vidOverlay;
 }
@@ -93,7 +93,7 @@ VideoInstance * VideoObject::CreateInstance( Entity * p_entity )
 		return l_vidInstance;
 	}
 
-	l_vidInstance = new VideoInstance( this, p_entity );
+	l_vidInstance = new VideoInstance( *this, p_entity );
 	m_instanceMap.insert( std::make_pair( p_entity, l_vidInstance ) );
 	return l_vidInstance;
 }
@@ -172,7 +172,7 @@ void VideoObject::Initialise()
 	{
 		if ( VideoManager::GetSingletonPtr()->GetCurrentFactory() != NULL )
 		{
-			m_impl = VideoManager::GetSingletonPtr()->GetCurrentFactory()->Create( this );
+			m_impl = VideoManager::GetSingletonPtr()->GetCurrentFactory()->Create( *this );
 			m_impl->SetMaxVolume( m_maxVolume );
 			m_impl->SetVolumePercent( m_volumePercent );
 			m_impl->Mute( m_muted );
@@ -187,7 +187,7 @@ void VideoObject::InitialiseVideoTexture()
 {
 	if ( m_videoTexture == NULL )
 	{
-		m_videoTexture = new VideoTexture( this );
+		m_videoTexture = new VideoTexture( *this );
 		m_videoTexture->initialise();
 	}
 

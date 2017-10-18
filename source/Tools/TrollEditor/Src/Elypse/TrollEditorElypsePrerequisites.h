@@ -25,11 +25,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "TrollEditorPrerequisites.h"
 
-#define TROLL_ELYPSE_NAMESPACE TROLL_NAMESPACE::ElypseRW
-#define BEGIN_TROLL_ELYPSE_NAMESPACE BEGIN_TROLL_NAMESPACE { namespace ElypseRW
-#define END_TROLL_ELYPSE_NAMESPACE } END_TROLL_NAMESPACE
-
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	namespace ElypseRW
 	{
@@ -42,9 +38,8 @@ BEGIN_TROLL_NAMESPACE
 		class TrollInstance;
 		class TrollFrameListener;
 
-		String ValueTypeToString( unsigned int p_type );
+		String ValueTypeToString( uint32_t p_type );
 	}
 }
-END_TROLL_NAMESPACE
 
 #endif

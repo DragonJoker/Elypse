@@ -34,7 +34,7 @@ namespace Elypse
 			bool m_created;
 
 		public:
-			ObjectMaterial( const String & p_name );
+			ObjectMaterial( String const & p_name );
 			~ObjectMaterial();
 		private:
 			void _drawTriangleHighPart( const PixelBox & p_box, const Ogre::TexturePtr & p_texture, const ColourValue & p_colour, const Vector2 & p_top, const Vector2 & p_lowLeft, const Vector2 & p_lowRight );
@@ -42,15 +42,15 @@ namespace Elypse
 
 		public:
 			void Create();
-			void CreateCopyFrom( const String & p_name );
+			void CreateCopyFrom( String const & p_name );
 
-			void CopyTexture( unsigned int p_textureIndex, const String & p_textureName );
+			void CopyTexture( uint32_t p_textureIndex, String const & p_textureName );
 
-			void DrawRect( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_coords, const Vector2 & p_size );
-			void DrawLine( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width );
-			void DrawCircleEndedLine( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width );
-			void DrawCircle( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_coords, Real p_radius );
-			void DrawTriangle( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_a, const Vector2 & p_b, const Vector2 & p_c );
+			void DrawRect( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_coords, const Vector2 & p_size );
+			void DrawLine( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width );
+			void DrawCircleEndedLine( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width );
+			void DrawCircle( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_coords, Real p_radius );
+			void DrawTriangle( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_a, const Vector2 & p_b, const Vector2 & p_c );
 		};
 	}
 }

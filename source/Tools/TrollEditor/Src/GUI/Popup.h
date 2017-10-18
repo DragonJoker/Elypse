@@ -23,41 +23,44 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/popupwin.h>
 #include <wx/spinctrl.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class SimpleTransientPopup
-		: public wxPopupTransientWindow
+	namespace GUI
 	{
-	public:
-		SimpleTransientPopup( wxWindow * p_parent );
-		virtual ~SimpleTransientPopup();
-
-		virtual void Popup( wxWindow * focus = NULL );
-		virtual void OnDismiss();
-		virtual bool ProcessLeftDown( wxMouseEvent & p_event );
-		virtual bool Show( bool show = true );
-
-	public:
-		inline wxScrolledWindow * GetChild()
+		class SimpleTransientPopup
+			: public wxPopupTransientWindow
 		{
-			return m_panel;
-		}
+		public:
+			SimpleTransientPopup( wxWindow * p_parent );
+			virtual ~SimpleTransientPopup();
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnMouse( wxMouseEvent & p_event );
-		void OnSize( wxSizeEvent & p_event );
-		void OnSetFocus( wxFocusEvent & p_event );
-		void OnKillFocus( wxFocusEvent & p_event );
-		void OnButton( wxCommandEvent & p_event );
-		void OnSpinCtrl( wxSpinEvent & p_event );
+			virtual void Popup( wxWindow * focus = NULL );
+			virtual void OnDismiss();
+			virtual bool ProcessLeftDown( wxMouseEvent & p_event );
+			virtual bool Show( bool show = true );
 
-	private:
-		wxScrolledWindow * m_panel;
-		wxButton * m_button;
-		wxSpinCtrl * m_spinCtrl;
-		wxStaticText * m_mouseText;
-	};
+		public:
+			inline wxScrolledWindow * GetChild()
+			{
+				return m_panel;
+			}
+
+		private:
+			DECLARE_EVENT_TABLE()
+			void OnMouse( wxMouseEvent & p_event );
+			void OnSize( wxSizeEvent & p_event );
+			void OnSetFocus( wxFocusEvent & p_event );
+			void OnKillFocus( wxFocusEvent & p_event );
+			void OnButton( wxCommandEvent & p_event );
+			void OnSpinCtrl( wxSpinEvent & p_event );
+
+		private:
+			wxScrolledWindow * m_panel;
+			wxButton * m_button;
+			wxSpinCtrl * m_spinCtrl;
+			wxStaticText * m_mouseText;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
+
 #endif

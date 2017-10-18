@@ -22,45 +22,51 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class SequencePanel
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		SequencePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-		~SequencePanel();
+		namespace Time
+		{
+			class SequencePanel
+				: public wxPanel
+			{
+			public:
+				SequencePanel( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
+				~SequencePanel();
 
-		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * SetSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence );
-		void AddPonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event, Real p_time );
-		void AddContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
-		void RemovePonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event );
-		void RemoveContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
+				ProjectComponents::Temporal::TrollSequence * SetSequence( ProjectComponents::Temporal::TrollSequence * p_sequence );
+				void AddPonctualEvent( ProjectComponents::Temporal::TrollPonctualEvent * p_event, Real p_time );
+				void AddContinuousEvent( ProjectComponents::Temporal::TrollContinuousEvent * p_event );
+				void RemovePonctualEvent( ProjectComponents::Temporal::TrollPonctualEvent * p_event );
+				void RemoveContinuousEvent( ProjectComponents::Temporal::TrollContinuousEvent * p_event );
 
-	private:
-		void _addPonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event, Real p_time );
-		void _addContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
-		int _getTopForContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
-		int _getTopForPonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event );
-		int _getTop( int p_left, int p_width );
-		void _showContextMenu( const wxPoint & p_pos );
-		
-		DECLARE_EVENT_TABLE()
-		void OnAddPonctualEvent( wxCommandEvent & p_event );
-		void OnAddContinuousEvent( wxCommandEvent & p_event );
-		void OnLeftMouseUp( wxMouseEvent & p_event );
-		void OnRightMouseUp( wxMouseEvent & p_event );
+			private:
+				void _addPonctualEvent( ProjectComponents::Temporal::TrollPonctualEvent * p_event, Real p_time );
+				void _addContinuousEvent( ProjectComponents::Temporal::TrollContinuousEvent * p_event );
+				int _getTopForContinuousEvent( ProjectComponents::Temporal::TrollContinuousEvent * p_event );
+				int _getTopForPonctualEvent( ProjectComponents::Temporal::TrollPonctualEvent * p_event );
+				int _getTop( int p_left, int p_width );
+				void _showContextMenu( wxPoint const & p_pos );
 
-	protected:
-		LinePanel * m_sequencePanel;
-		std::vector< PonctualEventPanel * > m_ponctualEvents;
-		std::vector< ContinuousEventPanel * > m_continuousEvents;
-		int m_currentLeft;
-		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * m_sequence;
-		DimensionMap m_addedPanelsDimensions;
-		int m_maxTop;
-	};
+				DECLARE_EVENT_TABLE()
+				void OnAddPonctualEvent( wxCommandEvent & p_event );
+				void OnAddContinuousEvent( wxCommandEvent & p_event );
+				void OnLeftMouseUp( wxMouseEvent & p_event );
+				void OnRightMouseUp( wxMouseEvent & p_event );
+
+			protected:
+				LinePanel * m_sequencePanel;
+				std::vector< PonctualEventPanel * > m_ponctualEvents;
+				std::vector< ContinuousEventPanel * > m_continuousEvents;
+				int m_currentLeft;
+				ProjectComponents::Temporal::TrollSequence * m_sequence;
+				DimensionMap m_addedPanelsDimensions;
+				int m_maxTop;
+				ProjectFrame * m_projectFrame;
+			};
+		}
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

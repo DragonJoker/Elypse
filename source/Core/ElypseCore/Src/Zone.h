@@ -28,28 +28,13 @@ namespace Elypse
 {
 	namespace Scene
 	{
-		class d_dll_export Zone : public named, noncopyable, public owned_by<Universe>
+		class d_dll_export Zone
+			: public named
+			, private noncopyable
+			, public owned_by< Universe >
 		{
-		private:
-			PortalMap m_portals;
-			ZoneObjectSet m_objects;
-
-			bool m_unloadAtExit;
-			bool m_loaded;
-
 		public:
-			bool m_firstInit;
-
-			DataFileArray m_dataFiles;
-
-			ConfigFileArray m_loadScriptFiles;
-			ConfigFileArray m_unloadScriptFiles;
-			ConfigFileArray m_sceneFiles;
-			ScriptNodeArray m_loadScriptNodes;
-			ScriptNodeArray m_unloadScriptNodes;
-
-		public:
-			Zone( const String & p_zoneName , Universe * p_parentUniverse );
+			Zone( String const & p_zoneName , Universe & p_parentUniverse );
 			virtual ~Zone();
 
 		public:
@@ -62,7 +47,7 @@ namespace Elypse
 
 			void ClearPortals();
 
-			Portal * GetPortal( const String & p_portalName )const
+			Portal * GetPortal( String const & p_portalName )const
 			{
 				return General::Utils::map::findOrNull( m_portals, p_portalName );
 			}
@@ -90,6 +75,24 @@ namespace Elypse
 			{
 				m_dataFiles.push_back( p_dataFile );
 			}
+
+		private:
+			PortalMap m_portals;
+			ZoneObjectSet m_objects;
+
+			bool m_unloadAtExit;
+			bool m_loaded;
+
+		public:
+			bool m_firstInit;
+
+			DataFileArray m_dataFiles;
+
+			ConfigFileArray m_loadScriptFiles;
+			ConfigFileArray m_unloadScriptFiles;
+			ConfigFileArray m_sceneFiles;
+			ScriptNodeArray m_loadScriptNodes;
+			ScriptNodeArray m_unloadScriptNodes;
 		};
 	}
 }

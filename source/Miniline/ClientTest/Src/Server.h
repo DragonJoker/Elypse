@@ -27,17 +27,42 @@ namespace Elypse
 {
 	namespace Network
 	{
-		class ChatClient : public TcpBaseClient
+		// Exemple de TcpReader qui merde fais par le Bubar à revoir avant usage
+		class TcpTestReader
+			: public General::Network::TcpQueuedReader
+		{
+		protected:
+			General::Templates::lockless_queue <std::string> m_messages;
+
+		public:
+			TcpTestReader( boost::asio::ip::tcp::socket & p_socket, boost::asio::io_service & p_service )
+				: General::Network::TcpQueuedReader( p_socket, p_service )
+			{
+			}
+			virtual ~TcpTestReader()
+			{
+			}
+
+		protected:
+			virtual void CallbackReceivedMessage( std::string const & p_message )
+			{
+				std::cout << "message recu : " << p_message << std::endl;
+				m_messages.push_back( p_message );
+			}
+		};
+
+		class ChatClient
+			: public TcpBaseClient
 		{
 		public:
 			General::Network::TcpWriter m_writer;
-			General::Network::TcpQueuedReader m_reader;
+			TcpTestReader m_reader;
 
 		public:
 			ChatClient( boost::asio::io_service & p_service )
-				:	TcpBaseClient( p_service ),
-					m_writer( m_socket, p_service ),
-					m_reader( m_socket, p_service )
+				: TcpBaseClient( p_service )
+				, m_writer( m_socket, p_service )
+				, m_reader( m_socket, p_service )
 			{
 			}
 
@@ -48,12 +73,14 @@ namespace Elypse
 			}
 		};
 
-		class TcpServer : public TcpAcceptor
+		class TcpServer
+			: public TcpAcceptor
 		{
 		public:
-			TcpServer( unsigned short p_port )
-				:	TcpAcceptor( p_port )
+			TcpServer( uint16_t p_port )
+				: TcpAcceptor( p_port )
 			{
+				DoAccept();
 			}
 
 			~TcpServer()

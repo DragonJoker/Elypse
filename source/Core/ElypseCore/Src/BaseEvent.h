@@ -21,56 +21,105 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Module_Sequences.h"
 #include "BaseFrame.h"
 #include "Interpolators.h"
+#include "EventTarget.h"
 
 namespace Elypse
 {
 	namespace Sequences
 	{
-		class d_abstract BasePonctualEvent
+		class BasePonctualEvent
 		{
-		protected:
-			void * m_target;
-
 		public:
 			BasePonctualEvent()
-			{}
-			virtual ~BasePonctualEvent() {}
+			{
+			}
 
-		public:
+			virtual ~BasePonctualEvent()
+			{
+			}
+
+			inline void SetTarget( std::unique_ptr< EventTargetBase > && p_target )
+			{
+				m_target = std::move( p_target );
+			}
+
+			template< typename T >
+			inline void SetTarget( T * p_target )
+			{
+				m_target = make_target( p_target );
+			}
+
+			inline EventTargetBase const & GetTarget()const
+			{
+				genlib_assert( m_target );
+				return *m_target;
+			}
+
 			virtual void Apply() = 0;
 			virtual void Rollback() = 0;
 
-		public:
-			inline void SetTarget( void * p_target )
-			{
-				m_target = p_target;
-			}
-			inline void * GetTarget()const
-			{
-				return m_target;
-			}
+		protected:
+			std::unique_ptr< EventTargetBase > m_target;
 		};
 
-		class d_abstract BaseContinuousEvent
+		class BaseContinuousEvent
 		{
-		protected:
-			void * m_target;
-
-			SequenceTrackType m_type;
-
-			Real m_length;
-			Real m_currentTime;
-			Real m_startTime;
-
 		public:
 			BaseContinuousEvent( SequenceTrackType p_type )
-				: m_target( NULL ),
-					m_type( p_type ),
-					m_length( 0.0 ),
-					m_currentTime( 0.0 ),
-					m_startTime( 0.0 )
-			{}
-			virtual ~BaseContinuousEvent() {}
+				: m_type( p_type )
+				, m_length( 0.0 )
+				, m_currentTime( 0.0 )
+				, m_startTime( 0.0 )
+			{
+			}
+
+			virtual ~BaseContinuousEvent()
+			{
+			}
+
+			inline bool IsFinished()const
+			{
+				return m_currentTime >= m_length;
+			}
+
+			inline SequenceTrackType GetType()const
+			{
+				return m_type;
+			}
+
+			inline Real GetLength()const
+			{
+				return m_length;
+			}
+
+			inline Real GetStartTime()const
+			{
+				return m_startTime;
+			}
+
+			inline void SetTarget( std::unique_ptr< EventTargetBase > && p_target )
+			{
+				m_target = std::move( p_target );
+			}
+
+			template< typename T >
+			inline void SetTarget( T * p_target )
+			{
+				m_target = make_target( p_target );
+			}
+
+			virtual void Rollback( Real p_time )
+			{
+				_getRemainingTime( p_time );
+				Real l_time = m_currentTime;
+				Reset();
+				Apply( l_time );
+			}
+
+			virtual void Apply( Real p_time ) = 0;
+			virtual void UpdateTime( Real p_newStartTime ) = 0;
+			virtual void CalcLength() = 0;
+			virtual void Reset() = 0;
 
 		protected:
 			inline void _getRemainingTime( Real p_time )
@@ -79,56 +128,27 @@ namespace Elypse
 				m_currentTime = min( m_currentTime, m_length );
 			}
 
-		public:
-
-			inline bool IsFinished()const
-			{
-				return m_currentTime >= m_length;
-			}
-			inline void SetTarget( void * p_target )
-			{
-				m_target = p_target;
-			}
-			inline SequenceTrackType GetType()const
-			{
-				return m_type;
-			};
-			inline Real GetLength()const
-			{
-				return m_length;
-			}
-			inline Real GetStartTime()const
-			{
-				return m_startTime;
-			}
-
-		public:
-			virtual void Apply( Real p_time ) = 0;
-			virtual void Rollback( Real p_time )
-			{
-				_getRemainingTime( p_time );
-				Real l_time = m_currentTime;
-				Reset();
-				Apply( l_time );
-			}
-			virtual void UpdateTime( Real p_newStartTime ) = 0;
-			virtual void CalcLength() = 0;
-			virtual void Reset() = 0;
+		protected:
+			SequenceTrackType m_type;
+			Real m_length;
+			Real m_currentTime;
+			Real m_startTime;
+			std::unique_ptr< EventTargetBase > m_target;
 		};
 
-		class d_abstract BaseContinuousV3Event : public BaseContinuousEvent
+		class BaseContinuousV3Event
+			: public BaseContinuousEvent
 		{
-		protected:
-			BaseVector3FrameMap m_frames;
-			Vector3_Interpolator * m_interpolator;
-
 		public:
 			BaseContinuousV3Event()
 				: BaseContinuousEvent( VECTOR3 )
-			{}
-			~BaseContinuousV3Event() {}
+			{
+			}
 
-		public:
+			~BaseContinuousV3Event()
+			{
+			}
+
 			virtual void Reset()
 			{
 				m_currentTime = 0.0;
@@ -176,21 +196,25 @@ namespace Elypse
 			{
 				return m_frames.size();
 			}
+
+		protected:
+			BaseVector3FrameMap m_frames;
+			Vector3_Interpolator * m_interpolator;
 		};
 
-		class d_abstract BaseContinuousQEvent : public BaseContinuousEvent
+		class BaseContinuousQEvent
+			: public BaseContinuousEvent
 		{
-		protected:
-			BaseQuaternionFrameMap m_frames;
-			Quaternion_Interpolator * m_interpolator;
-
 		public:
 			BaseContinuousQEvent()
 				: BaseContinuousEvent( QUATERNION )
-			{}
-			~BaseContinuousQEvent() {}
+			{
+			}
 
-		public:
+			~BaseContinuousQEvent()
+			{
+			}
+
 			virtual void Reset()
 			{
 				m_currentTime = 0.0;
@@ -238,21 +262,25 @@ namespace Elypse
 			{
 				return m_frames.size();
 			}
+
+		protected:
+			BaseQuaternionFrameMap m_frames;
+			Quaternion_Interpolator * m_interpolator;
 		};
 
-		class d_abstract BaseContinuousREvent : public BaseContinuousEvent
+		class BaseContinuousREvent
+			: public BaseContinuousEvent
 		{
-		protected:
-			BaseRealFrameMap m_frames;
-			Real_Interpolator * m_interpolator;
-
 		public:
 			BaseContinuousREvent()
 				: BaseContinuousEvent( REAL )
-			{}
-			~BaseContinuousREvent() {}
+			{
+			}
 
-		public:
+			~BaseContinuousREvent()
+			{
+			}
+
 			virtual void Reset()
 			{
 				m_currentTime = 0.0;
@@ -300,6 +328,10 @@ namespace Elypse
 			{
 				return m_frames.size();
 			}
+
+		protected:
+			BaseRealFrameMap m_frames;
+			Real_Interpolator * m_interpolator;
 		};
 	}
 }

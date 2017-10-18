@@ -31,11 +31,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <StringConverter.h>
 
-VideoImpl_GStreamer::VideoImpl_GStreamer( VideoObject * p_owner )
-	: VideoImplementation( p_owner ),
-		m_videoLinked( false ),
-		m_pipeline( NULL ),
-		m_videoCaps( NULL )
+VideoImpl_GStreamer::VideoImpl_GStreamer( VideoObject & p_owner )
+	: VideoImplementation( p_owner )
+	, m_videoLinked( false )
+	, m_pipeline( NULL )
+	, m_videoCaps( NULL )
 {
 }
 
@@ -116,7 +116,7 @@ void VideoImpl_GStreamer::Reset()
 	_cleanup();
 }
 
-void VideoImpl_GStreamer::Initialise( const Url & p_mediaUrl )
+void VideoImpl_GStreamer::Initialise( Url const & p_mediaUrl )
 {
 	if ( m_pipeline != NULL )
 	{
@@ -189,8 +189,8 @@ void VideoImpl_GStreamer::Initialise( const Url & p_mediaUrl )
 	}
 
 	gst_bin_add_many( GST_BIN( m_pipeline ),
-						m_fileSrc, m_typeFind,
-						m_audioQueue, m_audioConverter, m_audioSink, NULL );
+					  m_fileSrc, m_typeFind,
+					  m_audioQueue, m_audioConverter, m_audioSink, NULL );
 	m_binEltSet.insert( m_pipeline );
 	m_binEltSet.insert( m_fileSrc );
 	m_binEltSet.insert( m_typeFind );
@@ -353,8 +353,8 @@ void VideoImpl_GStreamer::_tryToPlug( GstPad * p_pad, const GstCaps * p_caps )
 		{
 			GstCaps * l_videoScalerCaps = gst_caps_new_simple(
 											  "video/x-raw-rgb",
-											  "width", G_TYPE_INT, m_owner->GetWidth(),
-											  "height", G_TYPE_INT, m_owner->GetHeight(),
+											  "width", G_TYPE_INT, GetOwner()->GetWidth(),
+											  "height", G_TYPE_INT, GetOwner()->GetHeight(),
 											  "bpp", G_TYPE_INT, 32,
 											  "depth", G_TYPE_INT, 32,
 											  "endianness", G_TYPE_INT, G_BIG_ENDIAN, NULL );
@@ -364,7 +364,7 @@ void VideoImpl_GStreamer::_tryToPlug( GstPad * p_pad, const GstCaps * p_caps )
 			g_signal_connect( m_videoSink, "handoff", G_CALLBACK( VideoImpl_GStreamer::_handoffCB ), this );
 			gst_caps_unref( l_videoScalerCaps );
 			gst_bin_add_many( GST_BIN( m_pipeline ),
-								m_videoQueue, m_videoConverter, m_videoScaler, m_videoScaleFilter, m_videoSink, NULL );
+							  m_videoQueue, m_videoConverter, m_videoScaler, m_videoScaleFilter, m_videoSink, NULL );
 			gst_element_link_many( m_videoQueue, m_videoConverter, m_videoScaler, m_videoScaleFilter, m_videoSink, NULL );
 			m_binEltSet.insert( m_videoQueue );
 			m_binEltSet.insert( m_videoConverter );

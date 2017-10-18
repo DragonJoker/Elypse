@@ -30,14 +30,14 @@ http://www.gnu.org/copyleft/lesser.txt.
  2 3
 */
 
-ParametricLayer::ParametricLayer( Vector3 * p_controlPoints, unsigned int p_resolution,
-									ParametricLayer * p_parent, unsigned int p_quadrant,
-									unsigned int p_depth )
-	: m_controlPoints( p_controlPoints ),
-		m_parent( p_parent ),
-		m_depth( p_depth ),
-		m_resolution( p_resolution ),
-		m_quadrant( p_quadrant )
+ParametricLayer::ParametricLayer( Vector3 * p_controlPoints, uint32_t p_resolution,
+								  ParametricLayer * p_parent, uint32_t p_quadrant,
+								  uint32_t p_depth )
+	: m_controlPoints( p_controlPoints )
+	, m_parent( p_parent )
+	, m_depth( p_depth )
+	, m_resolution( p_resolution )
+	, m_quadrant( p_quadrant )
 {
 	m_precalcX = new Real[8 * p_resolution + 4];
 	m_precalcY = new Real[8 * p_resolution + 4];
@@ -122,7 +122,7 @@ ParametricLayer::~ParametricLayer()
 	delete [] m_precalcY;
 }
 
-void ParametricLayer::CreateAtDeph( unsigned int p_depth )
+void ParametricLayer::CreateAtDeph( uint32_t p_depth )
 {
 	if ( m_points[0] == NULL )
 	{
@@ -173,7 +173,7 @@ void ParametricLayer::CreateAtDeph( unsigned int p_depth )
 	}
 }
 
-void ParametricLayer::CreateSubLayer( unsigned int p_quadrant )
+void ParametricLayer::CreateSubLayer( uint32_t p_quadrant )
 {
 	if ( m_subLayers[p_quadrant] == NULL )
 	{
@@ -182,15 +182,15 @@ void ParametricLayer::CreateSubLayer( unsigned int p_quadrant )
 	}
 }
 
-void ParametricLayer::CreateSurface( unsigned int p_quadrant )
+void ParametricLayer::CreateSurface( uint32_t p_quadrant )
 {
 	m_points[p_quadrant] = new Vector3[m_resolution * m_resolution];
 	CalculateQuadrant( p_quadrant );
 }
 
-unsigned int ParametricLayer::CountFinalPoints()const
+uint32_t ParametricLayer::CountFinalPoints()const
 {
-	unsigned int p_count = 0;
+	uint32_t p_count = 0;
 
 	if ( m_subLayers[0] )
 	{
@@ -270,7 +270,7 @@ void ParametricLayer::Draw( Surface * p_surface )
 	}
 }
 
-void ParametricLayer::DrawQuadrant( unsigned int p_quadrant , Surface * p_surface )
+void ParametricLayer::DrawQuadrant( uint32_t p_quadrant , Surface * p_surface )
 {
 	Vector3 * l_allPoints = m_points[p_quadrant];
 
@@ -280,15 +280,15 @@ void ParametricLayer::DrawQuadrant( unsigned int p_quadrant , Surface * p_surfac
 	}
 }
 
-void ParametricLayer::CalculateQuadrant( unsigned int p_quadrant )
+void ParametricLayer::CalculateQuadrant( uint32_t p_quadrant )
 {
-	unsigned int i , j , k , l;
+	uint32_t i , j , k , l;
 	Vector3 * l_allPoints = m_points[p_quadrant];
 	m_boxes[p_quadrant]->setNull();
 	Real * l_fpointer;
 	Real * l_tempPoints = new Real[12];
-	unsigned int l_shiftX = ( p_quadrant & 1 ) * 4 * ( m_resolution - 1 ) ;
-	unsigned int l_shiftY = ( p_quadrant >> 1 ) * 4 * ( m_resolution - 1 );
+	uint32_t l_shiftX = ( p_quadrant & 1 ) * 4 * ( m_resolution - 1 ) ;
+	uint32_t l_shiftY = ( p_quadrant >> 1 ) * 4 * ( m_resolution - 1 );
 
 	for ( i = 0 ; i < m_resolution ; i ++ )
 	{
@@ -348,9 +348,9 @@ void ParametricLayer::CalculateQuadrant( unsigned int p_quadrant )
 			l = l_shiftY + 4 * j;
 			l_fpointer = l_tempPoints;
 			l_allPoints[ i * m_resolution + j ].x = l_tempPoints[0] * m_precalcY[ l ]
-					+ l_tempPoints[1] * m_precalcY[ l + 1 ]
-					+ l_tempPoints[2] * m_precalcY[ l + 2 ]
-					+ l_tempPoints[3] * m_precalcY[ l + 3 ];
+													+ l_tempPoints[1] * m_precalcY[ l + 1 ]
+													+ l_tempPoints[2] * m_precalcY[ l + 2 ]
+													+ l_tempPoints[3] * m_precalcY[ l + 3 ];
 			k = l;
 			l_allPoints[ i * m_resolution + j ].y = l_tempPoints[4] * m_precalcY[ l ]
 													+ l_tempPoints[5] * m_precalcY[ l + 1 ]
@@ -379,7 +379,7 @@ void ParametricLayer::PrecalcCoefficients()
 	Real l_resolution = Real( 1.0 / ( 2.0 * m_resolution - 2 ) );
 	Real l_f , l_omf;
 
-	for ( unsigned int i = 0 ; i < ( 2 * m_resolution + 1 ) ; i++ )
+	for ( uint32_t i = 0 ; i < ( 2 * m_resolution + 1 ) ; i++ )
 	{
 		l_f = m_positionX + m_sizeX * ( i * l_resolution );
 		l_omf = Real( 1.0 - l_f );
@@ -396,7 +396,7 @@ void ParametricLayer::PrecalcCoefficients()
 	}
 }
 
-ParametricLayer * ParametricLayer::GetNeighbour( unsigned int p_quadrant , unsigned int p_side )const
+ParametricLayer * ParametricLayer::GetNeighbour( uint32_t p_quadrant , uint32_t p_side )const
 {
 	ParametricLayer * l_selfSide;
 
@@ -471,7 +471,7 @@ ParametricLayer * ParametricLayer::GetNeighbour( unsigned int p_quadrant , unsig
 	return NULL;
 }
 
-void ParametricLayer::CutToDepth( unsigned int p_depth )
+void ParametricLayer::CutToDepth( uint32_t p_depth )
 {
 	if ( ( m_depth ) < p_depth )
 	{
@@ -530,7 +530,7 @@ bool ParametricLayer::UpdateResolution( Camera * p_camera )
 	int p_rez;
 	AxisAlignedBox * l_box;
 	bool l_ret = false;
-	unsigned int l_quadrant;
+	uint32_t l_quadrant;
 
 	for ( l_quadrant = 0 ; l_quadrant < 4 ; l_quadrant ++ )
 	{
@@ -582,7 +582,7 @@ bool ParametricLayer::UpdateResolution( Camera * p_camera )
 	return l_ret;
 }
 
-void ParametricLayer::RemoveQuadrant( unsigned int p_quadrant )
+void ParametricLayer::RemoveQuadrant( uint32_t p_quadrant )
 {
 	if ( m_subLayers[p_quadrant] != NULL )
 	{

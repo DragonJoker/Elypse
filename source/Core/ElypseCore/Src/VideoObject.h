@@ -39,8 +39,8 @@ namespace Elypse
 			bool m_tokenUrl;
 			bool m_autoInitialised;
 
-			unsigned int m_width;
-			unsigned int m_height;
+			uint32_t m_width;
+			uint32_t m_height;
 
 			VideoOverlayMap m_overlayMap;
 			VideoInstanceMap m_instanceMap;
@@ -58,7 +58,7 @@ namespace Elypse
 			VideoImplementation * m_impl;
 
 		public:
-			VideoObject( const String & p_name, ElypsePlugin * p_plugin );
+			VideoObject( String const & p_name, ElypsePlugin * p_plugin );
 			virtual ~VideoObject();
 
 			VideoOverlay * CreateOverlay( EMOverlay * p_overlay );
@@ -84,7 +84,7 @@ namespace Elypse
 			virtual void RemoveFromZone( Zone * p_zone );
 
 		public:
-			inline const Url & GetMediaUrl()const
+			inline Url const & GetMediaUrl()const
 			{
 				return m_mediaUrl;
 			}
@@ -111,11 +111,11 @@ namespace Elypse
 				return m_autoInitialised;
 			}
 
-			inline unsigned int GetWidth()const
+			inline uint32_t GetWidth()const
 			{
 				return m_width;
 			}
-			inline unsigned int GetHeight()const
+			inline uint32_t GetHeight()const
 			{
 				return m_height;
 			}
@@ -125,12 +125,12 @@ namespace Elypse
 				return m_videoTexture;
 			}
 
-			inline void SetSize( unsigned int p_width, unsigned int p_height )
+			inline void SetSize( uint32_t p_width, uint32_t p_height )
 			{
 				m_width = p_width;
 				m_height = p_height;
 			}
-			inline void SetUrl( const Url & p_mediaUrl )
+			inline void SetUrl( Url const & p_mediaUrl )
 			{
 				m_mediaUrl = p_mediaUrl;
 			}
@@ -142,7 +142,7 @@ namespace Elypse
 			{
 				m_looped = p_looped;
 			}
-			inline void SetTokenUrl( const Url & p_mediaUrl )
+			inline void SetTokenUrl( Url const & p_mediaUrl )
 			{
 				m_mediaUrl = p_mediaUrl;
 				m_tokenUrl = true;

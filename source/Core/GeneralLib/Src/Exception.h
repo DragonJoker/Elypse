@@ -27,53 +27,51 @@ namespace General
 {
 	namespace Utils
 	{
-		class GenException : public std::exception
+		class GenException
+			: public std::exception
 		{
 		public:
-			GenException( const std::string & p_description, const char * p_file,
-							const char * p_function, unsigned int p_line )
-				: m_line( p_line )
-				, m_description( p_description )
-				, m_filename( p_file )
-				, m_functionName( p_function )
+			GenException( std::string const & p_description, char const * const p_file, char const * const p_function, uint32_t p_line )
+				: m_line{ p_line }
+				, m_description{ p_description }
+				, m_filename{ p_file }
+				, m_functionName{ p_function }
 			{
 			}
-			virtual ~GenException() d_no_throw
+			virtual ~GenException() noexcept
 			{
 			}
 
-		public:
-			inline virtual const char * what() const d_no_throw
+			inline virtual char const * what()const noexcept
 			{
 				return m_description.c_str();
 			}
-			inline const char * GetFilename()const
+			inline char const * const GetFilename()const
 			{
 				return m_filename;
 			}
-			inline const char * GetFunction()const
+			inline char const * const GetFunction()const
 			{
 				return m_functionName;
 			}
-			inline unsigned int GetLine()const
+			inline uint32_t GetLine()const
 			{
 				return m_line;
 			}
-			inline const std::string & GetDescription()const
+			inline std::string const & GetDescription()const
 			{
 				return m_description;
 			}
 
 		public:
-			unsigned int m_line;
-			std::string m_description;
-			const char * m_filename;
-			const char * m_functionName;
-			const char * m_typeDesc;
+			uint32_t const m_line;
+			std::string const m_description;
+			char const * const m_filename;
+			char const * const m_functionName;
 		};
 	}
 }
 
-#define GENLIB_EXCEPTION( p_text) throw General::Utils::GenException( p_text, __FILE__, __FUNCTION__, __LINE__)
+#define GENLIB_EXCEPTION( p_text ) throw General::Utils::GenException( p_text, __FILE__, __FUNCTION__, __LINE__)
 
 #endif

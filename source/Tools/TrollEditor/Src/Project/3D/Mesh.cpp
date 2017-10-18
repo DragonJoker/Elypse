@@ -19,41 +19,46 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Mesh.h"
 
-BEGIN_TROLL_PROJECT_3D_NAMESPACE
+namespace Troll
 {
-	TrollMesh::TrollMesh( const wxString & p_meshName )
-		: m_meshName( p_meshName )
+	namespace ProjectComponents
 	{
-	}
-
-	TrollMesh::~TrollMesh()
-	{
-		m_subMaterials.clear();
-	}
-
-	wxString TrollMesh::GetMaterial( unsigned int p_index )
-	{
-		if ( p_index >= m_subMaterials.size() )
+		namespace Objects3D
 		{
-			return wxString();
+			TrollMesh::TrollMesh( wxString const & p_meshName )
+				: m_meshName( p_meshName )
+			{
+			}
+
+			TrollMesh::~TrollMesh()
+			{
+				m_subMaterials.clear();
+			}
+
+			wxString TrollMesh::GetMaterial( uint32_t p_index )
+			{
+				if ( p_index >= m_subMaterials.size() )
+				{
+					return wxString();
+				}
+
+				return m_subMaterials[p_index];
+			}
+
+			void TrollMesh::AddSubMaterial( wxString const & p_name )
+			{
+				m_subMaterials[uint32_t( m_subMaterials.size() )] = p_name;
+			}
+
+			void TrollMesh::SetSubMaterial( wxString const & p_name, uint32_t p_index )
+			{
+				if ( p_index >= m_subMaterials.size() )
+				{
+					return;
+				}
+
+				m_subMaterials[p_index] = p_name;
+			}
 		}
-
-		return m_subMaterials[p_index];
-	}
-
-	void TrollMesh::AddSubMaterial( const wxString & p_name )
-	{
-		m_subMaterials[m_subMaterials.size()] = p_name;
-	}
-
-	void TrollMesh::SetSubMaterial( const wxString & p_name, unsigned int p_index )
-	{
-		if ( p_index >= m_subMaterials.size() )
-		{
-			return;
-		}
-
-		m_subMaterials[p_index] = p_name;
 	}
 }
-END_TROLL_PROJECT_3D_NAMESPACE

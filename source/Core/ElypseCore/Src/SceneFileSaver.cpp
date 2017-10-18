@@ -41,9 +41,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 using namespace Ogre;
 
 SceneFileSaver::SceneFileSaver( SceneManager * p_manager, ScriptEngine * p_engine, EMGui * p_gui )
-	: m_sceneManager( p_manager ),
-		m_scriptEngine( p_engine ),
-		m_gui( p_gui )
+	: m_sceneManager( p_manager )
+	, m_scriptEngine( p_engine )
+	, m_gui( p_gui )
 {
 }
 
@@ -52,9 +52,9 @@ SceneFileSaver::~SceneFileSaver()
 	;
 }
 
-void SceneFileSaver::_ntabs( unsigned int p_numTabs )
+void SceneFileSaver::_ntabs( uint32_t p_numTabs )
 {
-	for ( unsigned int  i = 0 ; i < p_numTabs ; i ++ )
+	for ( uint32_t  i = 0 ; i < p_numTabs ; i ++ )
 	{
 		m_buffer << '\t';
 	}
@@ -82,11 +82,11 @@ void SceneFileSaver::_writeObjects()
 			m_buffer << "	attach_to " << l_entity->getParentSceneNode()->getName() << std::endl;
 		}
 
-		unsigned short l_numSubMeshes = l_entity->getMesh()->getNumSubMeshes();
+		uint16_t l_numSubMeshes = l_entity->getMesh()->getNumSubMeshes();
 
 		if ( l_numSubMeshes > 1 )
 		{
-			for ( unsigned short i = 0 ; i < l_numSubMeshes ; i ++ )
+			for ( uint16_t i = 0 ; i < l_numSubMeshes ; i ++ )
 			{
 				if ( l_entity->getSubEntity( i )->getMaterialName() != l_entity->getMesh()->getSubMesh( i )->getMaterialName() )
 				{
@@ -508,7 +508,7 @@ void SceneFileSaver::_writeSounds()
 }
 */
 
-void SceneFileSaver::SaveAll( const String & p_filename )
+void SceneFileSaver::SaveAll( String const & p_filename )
 {
 	m_buffer.open( p_filename.c_str() );
 

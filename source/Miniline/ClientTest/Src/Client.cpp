@@ -78,8 +78,8 @@ namespace Elypse
 				TcpConnectorBase::m_socket.close();
 				m_stopped = true;
 				m_noSend = true;
-				//m_service->post( SocketKiller( this));//boost::bind( & ElypseTcpClient::Suicide, this));
-				//m_service->post( GENLIB_THREAD_CLASS_FUNCTOR( this, ElypseTcpClient, Suicide));
+				//m_service->post( SocketKiller( this ) );
+				//m_service->post( [this](){ Suicide() } );
 			}
 		}
 
@@ -105,7 +105,7 @@ namespace Elypse
 			}
 		}
 
-		//void ElypseTcpClient::CallbackResolve( const boost::system::error_code & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
+		//void ElypseTcpClient::CallbackResolve( boost::system::error_code const & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
 		//{
 		//	std::cout << "ElypseTcpClient::CallbackResolve - CallbackConnect\n";
 		//	if (_checkOk()){ d_coucou; return;}
@@ -130,7 +130,7 @@ namespace Elypse
 		//	//std::cout << "ElypseTcpClient::CallbackResolve - CallbackConnect - End\n";
 		//}
 
-		//void ElypseTcpClient::CallbackConnect( const boost::system::error_code & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
+		//void ElypseTcpClient::CallbackConnect( boost::system::error_code const & p_err, boost::asio::ip::tcp::resolver::iterator p_resolverIterator)
 		//{
 		//	if ( ! p_err)
 		//	{
@@ -168,13 +168,13 @@ namespace Elypse
 			StartAsyncRead();
 		}
 
-		void ElypseTcpClient::CallbackReceivedMessage( const std::string & p_message )
+		void ElypseTcpClient::CallbackReceivedMessage( std::string const & p_message )
 		{
 			//if (_checkOk()){ d_coucou; return;}
 			//std::cout << "Received a message\n";
 		}
 
-		bool ElypseTcpClient::CallbackWriterError( const boost::system::error_code & p_err )
+		bool ElypseTcpClient::CallbackWriterError( boost::system::error_code const & p_err )
 		{
 			Stop();
 
@@ -196,7 +196,7 @@ namespace Elypse
 			return true;
 		}
 
-		bool ElypseTcpClient::CallbackReaderError( const boost::system::error_code & p_err )
+		bool ElypseTcpClient::CallbackReaderError( boost::system::error_code const & p_err )
 		{
 			m_service->post( SocketKiller( this ) ); //boost::bind( & ElypseTcpClient::Suicide, this));
 			//Stop();
@@ -222,8 +222,9 @@ namespace Elypse
 			return true;
 		}
 
-		bool ElypseTcpClient::CallbackConnectorError( const boost::system::error_code & p_err )
+		bool ElypseTcpClient::CallbackConnectorError( boost::system::error_code const & p_err )
 		{
+			std::cout << "ElypseTcpClient::CallbackConnectorError: " << p_err.message() << "\n";
 			Stop();
 
 			//if (_checkOk()) return true;

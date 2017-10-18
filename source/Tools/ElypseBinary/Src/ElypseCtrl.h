@@ -23,18 +23,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <Module_Main.h>
 #include <OwnedBy.h>
 
-BEGIN_ELYPSE_BINARY_NAMESPACE
+namespace ElypseBinary
 {
 	class ElypseCtrl
 		: public wxControl
 		, public owned_by< ElypseApp >
 	{
 	public:
-		ElypseCtrl( ElypseApp * p_owner, wxWindow * p_parent, COMMON_GUI_NAMESPACE::wxElypsePluginSPtr p_plugin, std::shared_ptr< ElypseInstance > p_elypse );
+		ElypseCtrl( ElypseApp & p_owner, wxWindow * p_parent, GuiCommon::wxElypsePluginSPtr p_plugin, std::shared_ptr< ElypseInstance > p_elypse );
 		~ElypseCtrl();
 
 		const String GetWHandle();
-			
+
 	private:
 		static wxSize GetClientSize( wxWindow * p_window )
 		{
@@ -70,7 +70,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 
 	private:
 		std::weak_ptr< ElypseInstance > m_elypse;
-		COMMON_GUI_NAMESPACE::wxElypsePluginWPtr m_plugin;
+		GuiCommon::wxElypsePluginWPtr m_plugin;
 
 		Real m_width;
 		Real m_height;
@@ -80,6 +80,5 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		bool m_middleButton;
 	};
 }
-END_ELYPSE_BINARY_NAMESPACE
 
 #endif

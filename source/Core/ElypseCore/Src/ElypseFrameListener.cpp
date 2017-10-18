@@ -75,29 +75,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <Manager.h>
 #include "ElypseLogs.h"
 
-ElypseFrameListener::ElypseFrameListener( ElypseInstance * p_ogre, RenderWindow * p_window,
-										const Url & p_baseURL, const Path & p_installDir,
-										const String & p_appStringIndex )
-	: owned_by <ElypseInstance>	( p_ogre ), m_window( p_window ),
-				 m_sceneManager( NULL ), m_objectMaterialManager( NULL ),
-				 m_gui( NULL ), m_physics( NULL ),
-				 m_scriptEngine( NULL ), m_parser( NULL ),
-				 m_mirrorManager( NULL ), m_universeManager( NULL ),
-				 m_camTexManager( NULL ), m_museFile( NULL ),
-				 m_postEffectsManager( NULL ), m_animationManager( NULL ),
-				 m_sequenceManager( NULL ), m_context( NULL ),
-				 m_scriptQueue( 50 ), m_keysDown( NULL ),
-				 m_main( true ), m_showFPS( false ),
-				 m_ready( false ), m_mouseMove( false ),
-				 m_mainUrl( p_baseURL ), m_filename( p_baseURL.GetFilename() ),
-				 m_appIndexStr( p_appStringIndex ), m_installDir( p_installDir ),
-				 m_deletableScriptQueue( 50 )
+ElypseFrameListener::ElypseFrameListener( ElypseInstance & p_instance, RenderWindow * p_window, Url const & p_baseURL, const Path & p_installDir, String const & p_appStringIndex )
+	: owned_by< ElypseInstance >( p_instance )
+	, m_window( p_window )
+	, m_mainUrl( p_baseURL )
+	, m_filename( p_baseURL.GetFilename() )
+	, m_appIndexStr( p_appStringIndex )
+	, m_installDir( p_installDir )
 {
-	genlib_assert( m_owner != NULL );
 	genlib_assert( m_window != NULL );
 	genlib_assert( ! m_installDir.empty() );
 	genlib_assert( ! m_appIndexStr.empty() );
-	m_network = new NetworkManager;
+	m_network = new Network::NetworkManager;
 	m_museFile = ElypseController::GetSingletonPtr()->GetDownloadManager()->StartDownloadFile( m_mainUrl );
 	m_debugOverlay = OverlayManager::getSingleton().getByName( "Core/DebugOverlay" );
 
@@ -108,12 +97,12 @@ ElypseFrameListener::ElypseFrameListener( ElypseInstance * p_ogre, RenderWindow 
 
 	ShowDebugOverlay( false );
 
-	for ( unsigned int i = 0 ; i < static_cast<unsigned int>( NUM_SCRIPT_VAR ); i ++ )
+	for ( uint32_t i = 0 ; i < static_cast<uint32_t>( NUM_SCRIPT_VAR ); i ++ )
 	{
 		m_scriptVars[i] = NULL;
 	}
 
-	for ( unsigned int i = 0 ; i < static_cast<unsigned int>( NUM_SCRIPT_BINDS ); i ++ )
+	for ( uint32_t i = 0 ; i < static_cast<uint32_t>( NUM_SCRIPT_BINDS ); i ++ )
 	{
 		m_scriptBinds[i] = NULL;
 	}
@@ -122,17 +111,12 @@ ElypseFrameListener::ElypseFrameListener( ElypseInstance * p_ogre, RenderWindow 
 	EMUSE_LOG_MESSAGE_DEBUG( "Framelistener : creating" );
 }
 
-ElypseFrameListener::ElypseFrameListener( ElypseInstance * p_instance, ElypseFrameListener * p_ofl,
-										RenderWindow * p_window, const String & p_appStringIndex )
-	: owned_by <ElypseInstance>	( p_instance ),
-		   m_window( p_window ),
-		   m_scriptQueue( 50 ),
-		   m_deletableScriptQueue( 50 ),
-		   m_main( false ),
-		   m_mouseMove( false ),
-		   m_appIndexStr( p_appStringIndex )
+ElypseFrameListener::ElypseFrameListener( ElypseInstance & p_instance, ElypseFrameListener * p_ofl, RenderWindow * p_window, String const & p_appStringIndex )
+	: owned_by <ElypseInstance>	( p_instance )
+	, m_window( p_window )
+	, m_main{ false }
+	, m_appIndexStr( p_appStringIndex )
 {
-	genlib_assert( m_owner != NULL );
 	genlib_assert( p_ofl != NULL );
 	genlib_assert( m_window != NULL );
 	genlib_assert( ! m_appIndexStr.empty() );
@@ -184,8 +168,8 @@ void ElypseFrameListener::_setupEffectsManager()
 void ElypseFrameListener::_setupUniverse()
 {
 	m_universeManager = new UniverseManager( m_appIndexStr );
-	Universe * l_uni = m_universeManager->CreateUniverse( "Main" );
-//	Universe * l_uni = new Universe( "Main"/*, m_owner->GetSceneManager()*/);
+	auto l_uni = m_universeManager->CreateUniverse( "Main" );
+//	Universe * l_uni = new Universe( "Main"/*, GetOwner()->GetSceneManager()*/);
 	l_uni->SetRenderTarget( m_window );
 //	m_universeManager->AddElement( l_uni);
 	m_sceneManager = l_uni->GetManager();
@@ -202,7 +186,7 @@ void ElypseFrameListener::_setupInterfaces()
 
 void ElypseFrameListener::_setupScript()
 {
-	m_scriptEngine = new ScriptEngine( m_installDir / "rsc" / m_filename, m_owner->GetLoadingBar() );
+	m_scriptEngine = new ScriptEngine( m_installDir / "rsc" / m_filename, GetOwner()->GetLoadingBar() );
 	m_scriptEngine->Initialise();
 	m_parser->m_scriptEngine = m_scriptEngine;
 	m_context = new Context;
@@ -212,7 +196,7 @@ void ElypseFrameListener::_setupScript()
 	m_context->mirrorManager = m_mirrorManager;
 	m_context->universeManager = m_universeManager;
 	m_context->animationManager = m_animationManager;
-	m_context->downloadManager = m_owner->GetDownloadManager();
+	m_context->downloadManager = GetOwner()->GetDownloadManager();
 	m_context->camTexManager = m_camTexManager;
 	m_context->universe = m_universeManager->GetElementByName( "Main" );
 	m_context->sceneManager = m_sceneManager;
@@ -221,9 +205,9 @@ void ElypseFrameListener::_setupScript()
 	m_context->instanceNum = m_appIndexStr;
 	m_context->mainCamera = m_camera;
 	m_context->mainViewport = m_camera->getViewport();
-	m_context->plugin = m_owner->GetPlugin();
+	m_context->plugin = GetOwner()->GetPlugin();
 	m_context->imageDir = m_installDir / "rsc" / m_filename / "Images";
-	m_context->emuseInstance = m_owner;
+	m_context->emuseInstance = GetOwner();
 	m_context->sequenceManager = m_sequenceManager;
 	m_context->network = m_network;
 	m_context->baseURL = m_mainUrl;
@@ -234,8 +218,8 @@ void ElypseFrameListener::_setupScript()
 	m_context->physicsSpace = m_context->physicsSimulation->GetDynamicSpace();
 	m_parser->m_context = m_context;
 	m_scriptEngine->SetContext( m_context );
-	m_scriptEngine->GetVariable( "GENERAL_SCREEN_WIDTH" )->set( static_cast <Real>( m_window->getWidth() ) );
-	m_scriptEngine->GetVariable( "GENERAL_SCREEN_HEIGHT" )->set( static_cast <Real>( m_window->getHeight() ) );
+	m_scriptEngine->GetVariable( "GENERAL_SCREEN_WIDTH" )->set( Real( m_window->getWidth() ) );
+	m_scriptEngine->GetVariable( "GENERAL_SCREEN_HEIGHT" )->set( Real( m_window->getHeight() ) );
 }
 
 void ElypseFrameListener::_setupMainScript()
@@ -259,8 +243,8 @@ void ElypseFrameListener::_setupMainScript()
 	{
 		std::cout << "Set graphical status, not found main.emcfg" << std::endl;
 		OverlayManager::getSingletonPtr()->getByName( "Core/NoScene" )->show();
-		m_owner->GetLoadingBar()->finish();
-//		m_owner->GetPlugin()->SetGraphicalStatus( StatusErrorUnknown);
+		GetOwner()->GetLoadingBar()->finish();
+//		GetOwner()->GetPlugin()->SetGraphicalStatus( StatusErrorUnknown);
 		//TODO : could not download the main file
 	}
 	else
@@ -297,13 +281,13 @@ void ElypseFrameListener::_initialiseFromExisting( ElypseFrameListener * p_other
 	m_camTexManager = NULL;
 	m_universeManager = NULL;
 
-	if ( m_sceneManager->hasCamera( m_owner->GetName() ) )
+	if ( m_sceneManager->hasCamera( GetOwner()->GetName() ) )
 	{
-		m_camera = m_sceneManager->getCamera( m_owner->GetName() );
+		m_camera = m_sceneManager->getCamera( GetOwner()->GetName() );
 	}
 	else
 	{
-		m_camera = m_sceneManager->createCamera( m_owner->GetName() );
+		m_camera = m_sceneManager->createCamera( GetOwner()->GetName() );
 	}
 
 	Viewport * l_viewport = m_window->addViewport( m_camera );
@@ -338,7 +322,7 @@ void ElypseFrameListener::_setupBinds()
 
 void ElypseFrameListener::_destroyBinds()
 {
-	for ( unsigned int i = 0 ; i < static_cast<unsigned int>( NUM_SCRIPT_BINDS ); i ++ )
+	for ( uint32_t i = 0 ; i < static_cast<uint32_t>( NUM_SCRIPT_BINDS ); i ++ )
 	{
 		if ( m_scriptBinds[i] != NULL )
 		{
@@ -397,8 +381,8 @@ bool ElypseFrameListener::frameStarted( Real p_timeSinceLastFrame )
 		return false;
 	}
 
-	GENLIB_AUTO_SCOPED_LOCK();
-	ElypseResourceGroupManager::setPrefix( m_owner->GetName() );
+	auto l_lock = make_unique_lock( m_mutex );
+	ElypseResourceGroupManager::setPrefix( GetOwner()->GetName() );
 
 	if ( m_main )
 	{
@@ -418,28 +402,27 @@ bool ElypseFrameListener::frameStarted( Real p_timeSinceLastFrame )
 			//TODO : pas sur.
 			if ( m_gui->GetTopmost() != NULL && m_gui->GetTopmost()->HasScript() )
 			{
-				m_owner->GetPlugin()->ChangeCursorTo( ArrowCursor );
+				GetOwner()->GetPlugin()->ChangeCursorTo( ArrowCursor );
 			}
 			else
 			{
-				m_owner->GetPlugin()->ChangeCursorTo( m_owner->GetPlugin()->GetBaseCursor() );
+				GetOwner()->GetPlugin()->ChangeCursorTo( GetOwner()->GetPlugin()->GetBaseCursor() );
 			}
 
 			m_mouseMove = false;
 		}
 
-		ElypseMessage * l_message = m_network->GetLastMessage();
+		ElypseMessage l_message = m_network->GetLastMessage();
 
-		while ( l_message != NULL )
+		while ( l_message )
 		{
-			m_scriptVars[NETWORK_CURRENT_MESSAGE]->set<String>( l_message->m_message );
+			m_scriptVars[NETWORK_CURRENT_MESSAGE]->set( l_message.m_message );
 
-			if ( m_scriptBinds[NETWORK_MESSAGE] != NULL )
+			if ( m_scriptBinds[NETWORK_MESSAGE] )
 			{
 				m_scriptEngine->Execute( m_scriptBinds[NETWORK_MESSAGE] );
 			}
 
-			delete l_message;
 			l_message = m_network->GetLastMessage();
 		}
 
@@ -548,7 +531,7 @@ void ElypseFrameListener::MouseRDown( Real x, Real y )
 
 void ElypseFrameListener::MouseLDown( Real x, Real y )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	SetMouse( x, y );
 	x /= m_camera->getViewport()->getActualWidth();
 	y /= m_camera->getViewport()->getActualHeight();
@@ -644,7 +627,7 @@ void ElypseFrameListener::ResetAll()
 		MouseMUp( m_scriptVars[MOUSE_POSITION_X]->get <Real> (), m_scriptVars[MOUSE_POSITION_Y]->get <Real> () );
 	}
 
-	for ( unsigned int i = 0 ; i < NUM_KEYS ; i ++ )
+	for ( uint32_t i = 0 ; i < NUM_KEYS ; i ++ )
 	{
 		if ( m_keysDown[i] )
 		{
@@ -653,7 +636,7 @@ void ElypseFrameListener::ResetAll()
 	}
 }
 
-void ElypseFrameListener::KeyDown( unsigned int p_key )
+void ElypseFrameListener::KeyDown( uint32_t p_key )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 //	std::cout << "keydown : " << p_key << std::endl;
@@ -666,7 +649,7 @@ void ElypseFrameListener::KeyDown( unsigned int p_key )
 	}
 }
 
-void ElypseFrameListener::KeyUp( unsigned int p_key )
+void ElypseFrameListener::KeyUp( uint32_t p_key )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 //	std::cout << "keyup : " << p_key << std::endl;
@@ -679,7 +662,7 @@ void ElypseFrameListener::KeyUp( unsigned int p_key )
 	}
 }
 
-void ElypseFrameListener::KeyRepeat( unsigned int p_key, unsigned int p_repeat )
+void ElypseFrameListener::KeyRepeat( uint32_t p_key, uint32_t p_repeat )
 {
 //	EMUSE_AUTO_SCOPED_LOCK();
 //	std::cout << "keyrepeat : " << p_key << std::endl;
@@ -687,14 +670,14 @@ void ElypseFrameListener::KeyRepeat( unsigned int p_key, unsigned int p_repeat )
 
 	if ( l_node != NULL )
 	{
-		for ( unsigned int i = 0; i < p_repeat; i ++ )
+		for ( uint32_t i = 0; i < p_repeat; i ++ )
 		{
 			m_scriptQueue.Push( l_node );
 		}
 	}
 }
 
-void ElypseFrameListener::OnChar( unsigned int p_char )
+void ElypseFrameListener::OnChar( uint32_t p_char )
 {
 //	std::cout << "on char : " << _keycodeToChar( p_char) << " (" << p_char << ")" << std::endl;
 	if ( m_scriptBinds[KEY_CHAR_DOWN] != NULL )
@@ -704,14 +687,14 @@ void ElypseFrameListener::OnChar( unsigned int p_char )
 	}
 }
 
-void ElypseFrameListener::OnCharRepeat( unsigned int p_char, unsigned int p_numRepeat )
+void ElypseFrameListener::OnCharRepeat( uint32_t p_char, uint32_t p_numRepeat )
 {
 //	std::cout << "on char repeat : " << _keycodeToChar( p_char) << std::endl;
 	if ( m_scriptBinds[KEY_CHAR_REPEAT] != NULL )
 	{
 		m_scriptVars[KEY_CURRENT]->set( _keycodeToChar( p_char ) );
 
-		for ( unsigned int i = 0; i < p_numRepeat; i ++ )
+		for ( uint32_t i = 0; i < p_numRepeat; i ++ )
 		{
 			m_scriptQueue.Push( m_scriptBinds[KEY_CHAR_REPEAT] );
 		}
@@ -749,9 +732,9 @@ void ElypseFrameListener::AddToScriptQueue( ScriptNode * p_node )
 	}
 }
 
-void ElypseFrameListener::AddToScriptQueue( const String & p_script )
+void ElypseFrameListener::AddToScriptQueue( String const & p_script )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 //	std::cout << "AddToScriptQueue : " << p_script << std::endl;
 	String l_string = p_script;
 	ScriptNode * l_node = m_scriptEngine->CompileScript( l_string );
@@ -780,7 +763,7 @@ void ElypseFrameListener::SetCallback( CallbackType p_type, ScriptNode * p_node 
 	}
 }
 
-char ElypseFrameListener::_keycodeToChar( unsigned int p_keycode )
+char ElypseFrameListener::_keycodeToChar( uint32_t p_keycode )
 {
 	//TODO : delegate to plugin, avec check du mappage clavier et check maj/min, etc, pour avoir la vraie touche.
 	return static_cast <char>( p_keycode );

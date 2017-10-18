@@ -27,17 +27,20 @@ namespace Elypse
 {
 	namespace Data
 	{
-		class d_dll_export DataFile : public General::Theory::named, public General::Theory::owned_by<MuseFile>, d_noncopyable
+		class d_dll_export DataFile
+			: public General::Theory::named
+			, public General::Theory::owned_by< MuseFile >
+			, d_noncopyable
 		{
 		protected:
 			bool m_initialised;
 			bool m_downloaded;
 			bool m_preInit;
-			General::MultiThreading::Mutex m_mutex;
+			std::mutex m_mutex;
 			UIntMap m_loadedBy;
 
 		public:
-			DataFile( const String & p_filename, MuseFile * p_owner );
+			DataFile( String const & p_filename, MuseFile & p_owner );
 			~DataFile();
 
 		protected:

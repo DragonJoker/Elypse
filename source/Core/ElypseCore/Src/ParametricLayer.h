@@ -44,38 +44,38 @@ namespace Elypse
 			ParametricLayer * m_parent;
 			ParametricLayer * m_bounds[8];
 
-			unsigned int m_depth;
-			unsigned int m_resolution;
-			unsigned int m_quadrant;
+			uint32_t m_depth;
+			uint32_t m_resolution;
+			uint32_t m_quadrant;
 
 		public:
-			ParametricLayer( Vector3 * p_controlPoints, unsigned int p_resolution,
-								ParametricLayer * p_parent, unsigned int p_quadrant, unsigned int p_depth );
+			ParametricLayer( Vector3 * p_controlPoints, uint32_t p_resolution,
+							 ParametricLayer * p_parent, uint32_t p_quadrant, uint32_t p_depth );
 			~ParametricLayer();
 
 		public:
-			void CreateAtDeph( unsigned int p_depth );
-			void CreateSubLayer( unsigned int p_quadrant );
-			unsigned int CountFinalPoints()const;
+			void CreateAtDeph( uint32_t p_depth );
+			void CreateSubLayer( uint32_t p_quadrant );
+			uint32_t CountFinalPoints()const;
 			void Draw( Surface * p_surface );
 
-			void CutToDepth( unsigned int p_depth );
+			void CutToDepth( uint32_t p_depth );
 			bool UpdateResolution( Camera * p_camera );
-			void RemoveQuadrant( unsigned int p_quadrant );
+			void RemoveQuadrant( uint32_t p_quadrant );
 
 		private:
 			void PrecalcCoefficients();
-			ParametricLayer * GetNeighbour( unsigned int p_quadrant, unsigned int p_side )const;
-			void CreateSurface( unsigned int p_quadrant );
-			void CalculateQuadrant( unsigned int p_quadrant );
-			void DrawQuadrant( unsigned int p_quadrant, Surface * p_object );
+			ParametricLayer * GetNeighbour( uint32_t p_quadrant, uint32_t p_side )const;
+			void CreateSurface( uint32_t p_quadrant );
+			void CalculateQuadrant( uint32_t p_quadrant );
+			void DrawQuadrant( uint32_t p_quadrant, Surface * p_object );
 
 		public:
-			inline ParametricLayer * GetSubLayer( unsigned int p_index )
+			inline ParametricLayer * GetSubLayer( uint32_t p_index )
 			{
 				return m_subLayers[p_index];
 			}
-			inline void SetBoundNorth( unsigned int p_index, ParametricLayer * p_neighbour )
+			inline void SetBoundNorth( uint32_t p_index, ParametricLayer * p_neighbour )
 			{
 				m_bounds[p_index] = p_neighbour;
 			}

@@ -25,13 +25,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>
 
-ParametricSurface::ParametricSurface( SceneManager * p_manager, const String & p_name,
-										unsigned int p_resolution, unsigned int p_numControlPoints )
-	: Surface( p_name, p_manager ),
-		m_resolution( p_resolution ),
-		m_numControlPoints( p_numControlPoints ),
-		m_currentControlPointIndex( 0 ),
-		m_currentDepth( 0 )
+ParametricSurface::ParametricSurface( SceneManager * p_manager, String const & p_name,
+									  uint32_t p_resolution, uint32_t p_numControlPoints )
+	: Surface( p_name, p_manager )
+	, m_resolution( p_resolution )
+	, m_numControlPoints( p_numControlPoints )
+	, m_currentControlPointIndex( 0 )
+	, m_currentDepth( 0 )
 {
 	m_controlPoints = new Vector3[p_numControlPoints];
 	m_box = new AxisAlignedBox;
@@ -48,7 +48,7 @@ ParametricSurface::~ParametricSurface()
 	delete m_box;
 }
 
-void ParametricSurface::CreateAtDepth( unsigned int p_depth )
+void ParametricSurface::CreateAtDepth( uint32_t p_depth )
 {
 	m_firstLayer->CreateAtDeph( p_depth );
 	m_currentDepth = p_depth;

@@ -29,65 +29,69 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/treectrl.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class ObjectsTree
-		: public wxTreeCtrl
+	namespace GUI
 	{
-	public:
-		ObjectsTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style );
-		~ObjectsTree();
-
-		void Cleanup();
-
-		void InitObjectList();
-		void AddSceneNode( const wxString & p_name, const wxString & p_parentName );
-		TROLL_PROJECT_2D_NAMESPACE::TrollOverlay * AddOverlay( TROLL_PROJECT_2D_NAMESPACE::TrollOverlay * p_overlay, const wxString & p_parentName );
-		void CreateImageList( int size = 16 );
-		void ShowContextMenuObject( const wxPoint & pos, wxTreeItemId p_item );
-		void AddSceneObject( TROLL_PROJECT_NAMESPACE::Object * p_object );
-		wxTreeItemId GetFolderId( const wxString & p_name );
-
-		inline int GetImageSize()const
+		class ObjectsTree
+			: public wxTreeCtrl
 		{
-			return m_imageSize;
-		}
+		public:
+			ObjectsTree( wxWindow * parent, ProjectFrame * projectFrame, wxPoint const & pos, wxSize const & size, long style );
+			~ObjectsTree();
 
-	protected:
-		inline bool _isTestItem( const wxTreeItemId & item )const
-		{
-			return GetItemParent( item ) == GetRootItem() && !GetPrevSibling( item );
-		}
+			void Cleanup();
 
-	private:
-		void _logEvent( const wxChar * name, const wxTreeEvent & p_event );
-		void _add3DObject( TROLL_PROJECT_3D_NAMESPACE::Troll3DObject * p_object );
-		void _addTemporalObject( TROLL_PROJECT_TEMPORAL_NAMESPACE::TemporalObject * p_object );
-		void _addMediaObject( TROLL_PROJECT_MEDIA_NAMESPACE::MediaObject * p_object );
+			void InitObjectList();
+			void AddSceneNode( wxString const & p_name, wxString const & p_parentName );
+			ProjectComponents::Objects2D::TrollOverlay * AddOverlay( ProjectComponents::Objects2D::TrollOverlay * p_overlay, wxString const & p_parentName );
+			void CreateImageList( int size = 16 );
+			void ShowContextMenuObject( wxPoint const & pos, wxTreeItemId p_item );
+			void AddSceneObject( ProjectComponents::Object * p_object );
+			wxTreeItemId GetFolderId( wxString const & p_name );
 
-		DECLARE_EVENT_TABLE()
-		void OnObjectLClic( wxTreeEvent & p_event );
-		void OnObjectRClic( wxTreeEvent & p_event );
+			inline int GetImageSize()const
+			{
+				return m_imageSize;
+			}
 
-	private:
-		int m_imageSize;
+		protected:
+			inline bool _isTestItem( wxTreeItemId const & item )const
+			{
+				return GetItemParent( item ) == GetRootItem() && !GetPrevSibling( item );
+			}
 
-		wxTreeItemId m_root;
-		TreeItemIdMap m_folders;
-		RecursiveTreeItemObjectPtrMap m_sceneNodes;
-		TreeItemObjectMap m_objects;
-		TreeItemObjectMap m_lights;
-		TreeItemObjectMap m_cameras;
-		RecursiveTreeItemObjectPtrMap m_overlays;
-		TreeItemObjectMap m_animationGroups;
-		TreeItemObjectMap m_animatedObjects;
-		TreeItemObjectMap m_sounds;
-		TreeItemObjectMap m_videos;
+		private:
+			void DoLogEvent( const wxChar * name, const wxTreeEvent & p_event );
+			void DoAdd3DObject( ProjectComponents::Objects3D::Troll3DObject * p_object );
+			void DoAddTemporalObject( ProjectComponents::Temporal::TemporalObject * p_object );
+			void DoAddMediaObject( ProjectComponents::Media::MediaObject * p_object );
 
-		wxTreeItemId m_idParent;
-	};
+			DECLARE_EVENT_TABLE()
+			void OnObjectLClic( wxTreeEvent & p_event );
+			void OnObjectRClic( wxTreeEvent & p_event );
+			void OnSaveModifications( wxCommandEvent & p_event );
+
+		private:
+			int m_imageSize;
+
+			wxTreeItemId m_root;
+			TreeItemIdMap m_folders;
+			RecursiveTreeItemObjectPtrMap m_sceneNodes;
+			TreeItemObjectMap m_objects;
+			TreeItemObjectMap m_lights;
+			TreeItemObjectMap m_cameras;
+			RecursiveTreeItemObjectPtrMap m_overlays;
+			TreeItemObjectMap m_animationGroups;
+			TreeItemObjectMap m_animatedObjects;
+			TreeItemObjectMap m_sounds;
+			TreeItemObjectMap m_videos;
+
+			wxTreeItemId m_idParent;
+			ProjectFrame * m_projectFrame;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

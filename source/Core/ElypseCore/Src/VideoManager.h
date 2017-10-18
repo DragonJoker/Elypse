@@ -48,8 +48,8 @@ namespace Elypse
 			~VideoManager();
 
 		public:
-			VideoObject * CreateVideoObject( const String & p_name, ElypsePlugin * p_plugin );
-			bool IsVideo( const String & p_entityName );
+			VideoObject * CreateVideoObject( String const & p_name, ElypsePlugin * p_plugin );
+			bool IsVideo( String const & p_entityName );
 			void Cleanup();
 			void StartAll();
 			void StopAll();
@@ -57,11 +57,11 @@ namespace Elypse
 			void SetVolume( int p_volume );
 			void Mute( bool p_muted );
 			//void UpdateVolume( const Vector3 & p_position, Radian p_orientation);
-			//void ReleaseAllZone( const String & p_zoneName);
-			void DeleteVideoObject( const String & p_name );
+			//void ReleaseAllZone( String const & p_zoneName);
+			void DeleteVideoObject( String const & p_name );
 
 			void RegisterFactory( VideoFactory * p_factory );
-			void SetCurrentFactory( const String & p_name );
+			void SetCurrentFactory( String const & p_name );
 
 		public:
 			void Update();
@@ -75,7 +75,7 @@ namespace Elypse
 			{
 				return Real( m_volume );
 			}
-			inline VideoObject 	*		GetVideoObject( const String & p_name )const
+			inline VideoObject 	*		GetVideoObject( String const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_objectList, p_name );
 			}

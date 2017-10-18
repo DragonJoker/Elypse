@@ -22,45 +22,42 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <MuseFile.h>
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	class TrollMuseFile
-		: public Elypse::Data::MuseFile
+	namespace ElypseRW
 	{
-	public:
-		TrollMuseFile( const String & p_name )
-			: MuseFile( p_name )
+		class TrollMuseFile
+			: public Elypse::Data::MuseFile
 		{
-		}
+		public:
+			TrollMuseFile( String const & p_name )
+				: MuseFile( p_name )
+			{
+			}
 
-		virtual ~TrollMuseFile()
-		{
-		}
+			virtual ~TrollMuseFile()
+			{
+			}
 
-		virtual bool WaitForFile( const String & p_filename, bool p_useLoadingBar )
-		{
-			return true;
-		}
+			virtual bool WaitForFile( String const & p_filename, bool p_useLoadingBar )
+			{
+				return true;
+			}
 
-		virtual Path GetCompletePath()const
-		{
-			return m_completePath;
-		}
+			virtual Path GetCompletePath()const
+			{
+				return m_completePath;
+			}
 
-		void SetCompletePath( const General::Utils::Path & p_path )
-		{
-			m_completePath = p_path;
-		}
+			void SetCompletePath( const General::Utils::Path & p_path )
+			{
+				m_completePath = p_path;
+			}
 
-		inline MuseDownloader * GetDownloader()const
-		{
-			return m_downloader;
-		}
-
-	private:
-		General::Utils::Path m_completePath;
-	};
+		private:
+			General::Utils::Path m_completePath;
+		};
+	}
 }
-END_TROLL_ELYPSE_NAMESPACE
 
 #endif

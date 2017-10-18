@@ -45,6 +45,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreLog.h>
 #include <OgreEntity.h>
 #include <OgreMaterialManager.h>
+#include <OgreMaterial.h>
 #include <OgreCamera.h>
 #include <OgreStringConverter.h>
 #include <OgreOverlayManager.h>
@@ -439,7 +440,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ve3_SnapCoords )
 	Vector3 l_vector = l_originalVector;
 	Real l_temp;
 
-	for ( unsigned int i = 0 ; i < 3 ; i ++ )
+	for ( uint32_t i = 0 ; i < 3 ; i ++ )
 	{
 		l_temp = ( l_vector.ptr()[i] ) / l_clamp - Math::Floor( l_vector.ptr()[i] / l_clamp );
 
@@ -1000,8 +1001,8 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_GetPosition )
 	if ( l_overlay != NULL )
 	{
 		RETURN_AS( Vector3 ) Vector3( l_overlay->GetOgreOverlayElement()->_getLeft() * ScriptEngine::GetContext()->mainViewport->getActualWidth(),
-										l_overlay->GetOgreOverlayElement()->_getTop() * ScriptEngine::GetContext()->mainViewport->getActualHeight(),
-										0.0 );
+									  l_overlay->GetOgreOverlayElement()->_getTop() * ScriptEngine::GetContext()->mainViewport->getActualHeight(),
+									  0.0 );
 	}
 	else
 	{
@@ -1050,8 +1051,8 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_GetAbsolutePosition )
 	if ( l_overlay != NULL )
 	{
 		RETURN_AS( Vector3 ) Vector3( l_overlay->GetOgreOverlayElement()->_getDerivedLeft() * ScriptEngine::GetContext()->mainViewport->getActualWidth(),
-										l_overlay->GetOgreOverlayElement()->_getDerivedTop() * ScriptEngine::GetContext()->mainViewport->getActualHeight(),
-										0.0 );
+									  l_overlay->GetOgreOverlayElement()->_getDerivedTop() * ScriptEngine::GetContext()->mainViewport->getActualHeight(),
+									  0.0 );
 	}
 	else
 	{
@@ -1350,7 +1351,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_ScrollUV )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setTextureScroll( p_x + l_tex->getTextureUScroll(), p_y + l_tex->getTextureVScroll() );
 }
 
@@ -1372,7 +1373,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetScrollUV )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setTextureScroll( p_x, p_y );
 }
 
@@ -1394,7 +1395,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_RotateUV )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setTextureRotate( l_tex->getTextureRotate() + Degree( p_angle ) );
 }
 
@@ -1416,7 +1417,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetRotateUV )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setTextureRotate( Degree( p_angle ) );
 }
 
@@ -1438,7 +1439,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_ScaleUV )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setTextureScale( l_tex->getTextureUScale() * p_x, l_tex->getTextureVScale() * p_y );
 }
 
@@ -1460,7 +1461,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetScaleUV )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setTextureScale( p_x, p_y );
 }
 
@@ -1482,7 +1483,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetAlpha )
 		return SCRIPT_ERROR( "Error @ OvE_ScrollUV : Index out of bounds" );
 	}
 
-	TextureUnitState * l_tex = l_pass->getTextureUnitState( static_cast<unsigned short>( p_index ) );
+	TextureUnitState * l_tex = l_pass->getTextureUnitState( uint16_t( p_index ) );
 	l_tex->setColourOperationEx( LBX_BLEND_MANUAL, LBS_TEXTURE, LBS_CURRENT, ColourValue::White, ColourValue::White, p_alpha );
 //	l_tex->setAlphaOperation( LBX_SOURCE1, LBS_MANUAL, LBS_CURRENT, 1.0, 1.0, p_alpha);
 	l_mat->getBestTechnique()->getPass( 0 )->setSceneBlending( SBT_TRANSPARENT_ALPHA );
@@ -1650,14 +1651,14 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( CTx_GetByName )
 {
 	VERBOSE_STARTFUNC( "CamTex_GetByName" );
 	GET_AND_EXEC_PARAM( String, l_camTexName, 0 );
-	CamTex * l_camTex = ScriptEngine::GetContext()->camTexManager->GetElementByName( l_camTexName );
+	auto l_camTex = ScriptEngine::GetContext()->camTexManager->GetElementByName( l_camTexName );
 
-	if ( l_camTex == NULL )
+	if ( !l_camTex )
 	{
 		SCRIPT_ERROR( "Error @ CamTex_GetByName : CamTex [" + l_camTexName + "] does not exist." );
 	}
 
-	RETURN_AS( CamTex * ) l_camTex;
+	RETURN_AS( CamTex * ) l_camTex.get();
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( CTx_Refresh )
@@ -2808,7 +2809,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_GetWebFileType )
 	GET_AND_EXEC_PARAM( String, p_url, 0 );
 	CURLManager l_manager;
 	l_manager.Initialise();
-	const String & l_type = l_manager.GetContentType( p_url );
+	String const & l_type = l_manager.GetContentType( p_url );
 
 	if ( l_type.empty() )
 	{
@@ -2916,9 +2917,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_TestAllEntities )
 		while ( itResourceName != resourceNames->end() )
 		{
 			Entity * l_entity = ScriptEngine::GetContext()->sceneManager->createEntity( "mesh [ " + ( *itResourceName ) + " ]", ( *itResourceName ) );
-			unsigned int imax = l_entity->getNumSubEntities();
+			uint32_t imax = l_entity->getNumSubEntities();
 
-			for ( unsigned int i = 0 ; i < imax ; i ++ )
+			for ( uint32_t i = 0 ; i < imax ; i ++ )
 			{
 				SubEntity * l_sub = l_entity->getSubEntity( i );
 
@@ -2942,7 +2943,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_TestAllEntities )
 
 	while ( l_iter2.hasMoreElements() )
 	{
-		MaterialPtr l_ptr = l_iter2.getNext();
+		MaterialPtr l_ptr = l_iter2.getNext().staticCast< Material >();
 		l_ptr->load();
 		l_ptr->unload();
 //		Entity * l_entity = ScriptEngine::GetContext()->sceneManager->createEntity( "testEntity",l_ptr->getName());
@@ -2961,9 +2962,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_TestAllEntities )
 
 	while ( l_iter3.hasMoreElements() )
 	{
-		Ogre::TexturePtr l_ptr = l_iter3.getNext();
+		Ogre::TexturePtr l_ptr = l_iter3.getNext().staticCast< Ogre::Texture >();
 
-		if ( l_ptr->getHeight() != NextPowOfTwo( static_cast<unsigned int>( l_ptr->getHeight() ) ) || l_ptr->getWidth() != NextPowOfTwo( static_cast<unsigned int>( l_ptr->getWidth() ) ) )
+		if ( l_ptr->getHeight() != NextPowOfTwo( static_cast<uint32_t>( l_ptr->getHeight() ) ) || l_ptr->getWidth() != NextPowOfTwo( static_cast<uint32_t>( l_ptr->getWidth() ) ) )
 		{
 			EMUSE_LOG_MESSAGE_RELEASE( "ERREUR_DATA : Texture non puissance de 2 : " + l_ptr->getName() + " : " + StringConverter::toString( l_ptr->getHeight() ) + " x " + StringConverter::toString( l_ptr->getWidth() ) );
 		}
@@ -2981,7 +2982,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_Download )
 		return SCRIPT_ERROR( "StartDownloadMuseFile : muse file named [" + p_name + "] does not exist" );
 	}
 
-	l_file->GetDownloader()->StartDownload();
+	l_file->GetDownloader().StartDownload();
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_GetMD5Hash )
@@ -3149,9 +3150,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mir_SetAlpha )
 {
 	VERBOSE_STARTFUNC( "Mirror_SetAlpha" );
 	GET_AND_EXEC_THREE_PARAM( String, l_sMirrorName, String, l_sMaterialName, Real, l_sNewAlpha );
-	Mirror * l_mirror = ScriptEngine::GetContext()->mirrorManager->GetElementByName( l_sMirrorName );
+	auto l_mirror = ScriptEngine::GetContext()->mirrorManager->GetElementByName( l_sMirrorName );
 
-	if ( l_mirror != NULL )
+	if ( l_mirror )
 	{
 		l_mirror->ChangeMaterialAlpha( l_sMaterialName, l_sNewAlpha );
 	}
@@ -3165,11 +3166,11 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mir_Update )
 {
 	VERBOSE_STARTFUNC( "Mirror_Update" );
 	GET_AND_EXEC_PARAM( String, l_sMirrorName, 0 );
-	Mirror * mir = ScriptEngine::GetContext()->mirrorManager->GetElementByName( l_sMirrorName );
+	auto l_mirror = ScriptEngine::GetContext()->mirrorManager->GetElementByName( l_sMirrorName );
 
-	if ( mir != NULL )
+	if ( l_mirror )
 	{
-		mir->RequireUpdate();
+		l_mirror->RequireUpdate();
 	}
 	else
 	{
@@ -3181,9 +3182,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( PEf_Enable )
 {
 	VERBOSE_STARTFUNC( "PEf_Enable" );
 	GET_AND_EXEC_TWO_PARAM( String, l_sPostEffectName, bool, l_sEnable );
-	PostEffect * l_postEffect = ScriptEngine::GetContext()->postEffectManager->GetElementByName( l_sPostEffectName );
+	auto l_postEffect = ScriptEngine::GetContext()->postEffectManager->GetElementByName( l_sPostEffectName );
 
-	if ( l_postEffect != NULL )
+	if ( l_postEffect )
 	{
 		l_postEffect->SetEnabled( l_sEnable );
 	}
@@ -3342,7 +3343,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Str_GetChar )
 {
 	VERBOSE_STARTFUNC( "String_GetChar" );
 	GET_AND_EXEC_TWO_PARAM( String, l_string, int, l_sIndex );
-	unsigned int l_index = static_cast <unsigned int>( l_sIndex );
+	uint32_t l_index = static_cast <uint32_t>( l_sIndex );
 
 	if ( l_string.length() > l_index )
 	{
@@ -3359,7 +3360,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Str_SetChar )
 {
 	VERBOSE_STARTFUNC( "Str_SetChar" );
 	GET_AND_EXEC_THREE_PARAM( String, l_string, int, l_sIndex, char, l_sChar );
-	unsigned int l_index = static_cast <unsigned int>( l_sIndex );
+	uint32_t l_index = static_cast <uint32_t>( l_sIndex );
 
 	if ( l_string.length() > l_index )
 	{
@@ -3397,9 +3398,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Str_Erase )
 	VERBOSE_STARTFUNC( "Str_Erase" );
 	GET_AND_EXEC_THREE_PARAM( String, p_target, int, p_start, int, p_end );
 
-	if ( static_cast <unsigned int>( p_start ) < p_target.length() )
+	if ( static_cast <uint32_t>( p_start ) < p_target.length() )
 	{
-		p_target.erase( static_cast <unsigned int>( p_start ), static_cast <unsigned int>( p_end ) );
+		p_target.erase( static_cast <uint32_t>( p_start ), static_cast <uint32_t>( p_end ) );
 	}
 }
 
@@ -3456,7 +3457,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( AoG_Create )
 	}
 	else
 	{
-		RETURN_AS( AnimatedObjectGroup * ) ScriptEngine::GetContext()->animationManager->CreateElement( l_groupName, ScriptEngine::GetContext()->animationManager );
+		RETURN_AS( AnimatedObjectGroup * ) ScriptEngine::GetContext()->animationManager->CreateElement( l_groupName, *ScriptEngine::GetContext()->animationManager ).get();
 	}
 }
 
@@ -3464,35 +3465,31 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( AoG_GetByName )
 {
 	VERBOSE_STARTFUNC( "AnimationGroup_GetByName" );
 	GET_AND_EXEC_PARAM( String, l_groupName, 0 );
-	AnimatedObjectGroup * l_aog = ScriptEngine::GetContext()->animationManager->GetElementByName( l_groupName );
+	auto l_aog = ScriptEngine::GetContext()->animationManager->GetElementByName( l_groupName );
 
-	if ( l_aog == NULL )
+	if ( !l_aog )
 	{
 		SCRIPT_ERROR( "Error @ AnimationGroup_GetByName : Animation group " + l_groupName + " does not exist" );
 	}
 
-	RETURN_AS( AnimatedObjectGroup * ) l_aog;
+	RETURN_AS( AnimatedObjectGroup * ) l_aog.get();
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( AoG_Exists )
 {
 	VERBOSE_STARTFUNC( "AnimationGroup_Exists" );
 	GET_AND_EXEC_PARAM( String, l_groupName, 0 );
-	AnimatedObjectGroup * l_aog = ScriptEngine::GetContext()->animationManager->GetElementByName( l_groupName );
-	RETURN_AS( bool )( l_aog != NULL );
+	auto l_aog = ScriptEngine::GetContext()->animationManager->GetElementByName( l_groupName );
+	RETURN_AS( bool )( l_aog != nullptr );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( AoG_Destroy )
 {
 	VERBOSE_STARTFUNC( "AnimationGroup_Destroy" );
 	GET_AND_EXEC_PARAM( String, l_groupName, 0 );
-	AnimatedObjectGroup * l_group = ScriptEngine::GetContext()->animationManager->RemoveElement( l_groupName );
+	auto l_group = ScriptEngine::GetContext()->animationManager->RemoveElement( l_groupName );
 
-	if ( l_group != NULL )
-	{
-		delete l_group;
-	}
-	else
+	if ( !l_group )
 	{
 		SCRIPT_ERROR( "Error @ AnimationGroup_Destroy : Animation group " + l_groupName + " doesn't exist" );
 	}
@@ -3637,7 +3634,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( AOb_GetPlayingAnimationName )
 
 	if ( l_object != NULL )
 	{
-		String l_name = l_object->GetPlayingAnimationName( static_cast <unsigned int>( l_index ) );
+		String l_name = l_object->GetPlayingAnimationName( static_cast <uint32_t>( l_index ) );
 		RETURN_AS( String ) l_name;
 	}
 	else
@@ -4055,9 +4052,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetCameraByName )
 {
 	VERBOSE_STARTFUNC( "Universe_GetCameraByName" );
 	GET_AND_EXEC_TWO_PARAM( String, l_uniName, String, l_camName );
-	Universe * l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
+	auto l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
 
-	if ( l_uni != NULL )
+	if ( l_uni )
 	{
 		SceneManager * l_manager = l_uni->GetManager();
 
@@ -4068,13 +4065,13 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetCameraByName )
 		else
 		{
 			SCRIPT_ERROR( "Error @ Universe_GetCameraByName : Camera [" + l_camName + "] does not exist in universe [" + l_uniName + "]" );
-			RETURN_AS( Camera * ) NULL;
+			RETURN_AS( Camera * ) nullptr;
 		}
 	}
 	else
 	{
 		SCRIPT_ERROR( "Error @ Universe_GetCameraByName : Universe [" + l_uniName + "] does not exist" );
-		RETURN_AS( Camera * ) NULL;
+		RETURN_AS( Camera * ) nullptr;
 	}
 }
 
@@ -4082,9 +4079,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetEntityByName )
 {
 	VERBOSE_STARTFUNC( "Universe_GetEntityByName" );
 	GET_AND_EXEC_TWO_PARAM( String, l_uniName, String, l_entName );
-	Universe * l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
+	auto l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
 
-	if ( l_uni != NULL )
+	if ( l_uni )
 	{
 		SceneManager * l_manager = l_uni->GetManager();
 
@@ -4095,13 +4092,13 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetEntityByName )
 		else
 		{
 			SCRIPT_ERROR( "Error @ Universe_GetEntityByName : Entity [" + l_entName + "] does not exist in universe [" + l_uniName + "]" );
-			RETURN_AS( Entity * ) NULL;
+			RETURN_AS( Entity * ) nullptr;
 		}
 	}
 	else
 	{
 		SCRIPT_ERROR( "Error @ Universe_GetEntityByName : Universe [" + l_uniName + "] does not exist" );
-		RETURN_AS( Entity * ) NULL;
+		RETURN_AS( Entity * ) nullptr;
 	}
 }
 
@@ -4109,9 +4106,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetLightByName )
 {
 	VERBOSE_STARTFUNC( "Universe_GetLightByName" );
 	GET_AND_EXEC_TWO_PARAM( String, l_uniName , String, l_lightName );
-	Universe * l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
+	auto l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
 
-	if ( l_uni != NULL )
+	if ( l_uni )
 	{
 		SceneManager * l_manager = l_uni->GetManager();
 
@@ -4122,13 +4119,13 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetLightByName )
 		else
 		{
 			SCRIPT_ERROR( "Error @ Universe_GetLightByName : Light [" + ( l_lightName ) + "] does not exist in universe [" + ( l_uniName ) + "]" );
-			RETURN_AS( Light * ) NULL;
+			RETURN_AS( Light * ) nullptr;
 		}
 	}
 	else
 	{
 		SCRIPT_ERROR( "Error @ Universe_GetLightByName : Universe [" + ( l_uniName ) + "] does not exist" );
-		RETURN_AS( Light * ) NULL;
+		RETURN_AS( Light * ) nullptr;
 	}
 }
 
@@ -4136,9 +4133,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetSceneNodeByName )
 {
 	VERBOSE_STARTFUNC( "Universe_GetSceneNodeByName" );
 	GET_AND_EXEC_TWO_PARAM( String, l_uniName , String, l_nodeName );
-	Universe * l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
+	auto l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
 
-	if ( l_uni != NULL )
+	if ( l_uni )
 	{
 		SceneManager * l_manager = l_uni->GetManager();
 
@@ -4148,13 +4145,13 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetSceneNodeByName )
 		}
 		else
 		{
-			RETURN_AS( SceneNode * ) NULL;
+			RETURN_AS( SceneNode * ) nullptr;
 			SCRIPT_ERROR( "Error @ Universe_GetSceneNodeByName : SceneNode [" + l_nodeName + "] does not exist in universe [" + l_uniName + "]" );
 		}
 	}
 	else
 	{
-		RETURN_AS( SceneNode * ) NULL;
+		RETURN_AS( SceneNode * ) nullptr;
 		SCRIPT_ERROR( "Error @ Universe_GetCameraByName : Universe [" + l_uniName + "] does not exist" );
 	}
 }
@@ -4166,10 +4163,10 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetUniverseList )
 	Arr_Clear( caller );
 	NodeValueBaseArray & l_array = caller->get<NodeValueBaseArray>();
 
-	for ( i = ScriptEngine::GetContext()->universeManager->m_objectMap.begin() ; i != ScriptEngine::GetContext()->universeManager->m_objectMap.end() ; i++ )
+	for ( auto i : *ScriptEngine::GetContext()->universeManager )
 	{
-		NodeValue<String> * l_node = new NodeValue<String>();
-		l_node->m_value = i->second->GetName();
+		NodeValue< String > * l_node = new NodeValue<String>();
+		l_node->m_value = i.second->GetName();
 		l_array.push_back( l_node );
 	}
 }
@@ -4179,9 +4176,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Uni_GetSceneList )
 	VERBOSE_STARTFUNC( "Universe_GetSceneList" );
 	GET_AND_EXEC_PARAM( String, l_uniName , 0 );
 	Arr_Clear( caller );
-	Universe * l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
+	auto l_uni = ScriptEngine::GetContext()->universeManager->GetElementByName( l_uniName );
 
-	if ( l_uni != NULL )
+	if ( l_uni )
 	{
 		NodeValueBaseArray & l_array = caller->get<NodeValueBaseArray>();
 
@@ -4744,9 +4741,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Wim_Delete )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Seq_Start )
 {
 	GET_AND_EXEC_PARAM( String, p_name, 0 );
-	Sequence * l_sequence = ScriptEngine::GetContext()->sequenceManager->GetElementByName( p_name );
+	auto l_sequence = ScriptEngine::GetContext()->sequenceManager->GetElementByName( p_name );
 
-	if ( l_sequence == NULL )
+	if ( !l_sequence )
 	{
 		return;
 	}
@@ -4757,9 +4754,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Seq_Start )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Seq_Stop )
 {
 	GET_AND_EXEC_PARAM( String, p_name, 0 );
-	Sequence * l_sequence = ScriptEngine::GetContext()->sequenceManager->GetElementByName( p_name );
+	auto l_sequence = ScriptEngine::GetContext()->sequenceManager->GetElementByName( p_name );
 
-	if ( l_sequence == NULL )
+	if ( !l_sequence )
 	{
 		return;
 	}
@@ -4770,9 +4767,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Seq_Stop )
 EMUSE_SCRIPT_FUNCTION_DECLARE( Seq_Pause )
 {
 	GET_AND_EXEC_TWO_PARAM( String, p_name, bool, p_pause );
-	Sequence * l_sequence = ScriptEngine::GetContext()->sequenceManager->GetElementByName( p_name );
+	auto l_sequence = ScriptEngine::GetContext()->sequenceManager->GetElementByName( p_name );
 
-	if ( l_sequence == NULL )
+	if ( !l_sequence )
 	{
 		return;
 	}

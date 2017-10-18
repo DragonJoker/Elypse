@@ -142,24 +142,6 @@ namespace Chat
 			c_maxMessageLength = 256
 		};
 
-	private:
-		ChatPlugin * m_plugin;
-		std::weak_ptr< ChatRoom > m_room;
-		ChatClientStatus m_status;
-		std::weak_ptr< ChatDatabase > m_database;
-		std::weak_ptr< ChatGame > m_game;
-
-		LoginInformations m_login;
-		Avatar m_avatar;
-		Clothes m_clothes;
-
-		char m_messageBuffer[MAX_MSG_LENGTH];
-		String m_toSend;
-		ClientIdStrMap m_friends;
-		ClientIdStrMap m_ignored;
-
-		bool m_toDelete;
-
 	public:
 		ChatTcpClient( std::shared_ptr< Elypse::Server::ElypseTcpService > p_elypseService, ChatPlugin * p_plugin );
 		virtual ~ChatTcpClient();
@@ -178,28 +160,27 @@ namespace Chat
 
 		void RemoveFriend( ChatTcpClient * p_toRemove );
 		void RemoveIgnored( ChatTcpClient * p_toRemove );
-		void RemoveFriend( const String & p_toRemove );
-		void RemoveIgnored( const String & p_toRemove );
+		void RemoveFriend( uint32_t p_toRemove );
+		void RemoveIgnored( uint32_t p_toRemove );
 
-		void AddFriend( const String & p_name, unsigned int p_toAdd );
-		void AddIgnored( const String & p_name, unsigned int p_toAdd );
+		void AddFriend( String const & p_name, uint32_t p_toAdd );
+		void AddIgnored( String const & p_name, uint32_t p_toAdd );
 
-		const String &	GetRoomName();
+		String const &	GetRoomName();
 
 		void SendEndGameMessage();
 		void SendStartGameMessage();
 		void SendGameAlreadyCreatedMessage();
 		void SendGameDontExistMessage();
 		void SendCreateGameOK();
-		void SendGameJoinMessage( int p_place, const String & p_name, Clothes const & p_clothes );
-		void SendGameQuitMessage( const String & p_name );
+		void SendGameJoinMessage( int p_place, String const & p_name, Clothes const & p_clothes );
+		void SendGameQuitMessage( String const & p_name );
 		void SendGameJoinOkMessage( int p_place );
 		void SendGameMessage( General::Templates::ReadBuffer & p_buffer );
 		void SendGameMessage( General::Templates::WriteBuffer & p_buffer );
-		size_t GetRandom( size_t p_max );
-		bool CheckValid( int p_comp );
+		uint32_t GetRandom( uint32_t p_max );
+		void CheckValid( int p_comp );
 
-	public:
 		inline const LoginInformations & GetLogin()const
 		{
 			return m_login;
@@ -262,18 +243,20 @@ namespace Chat
 		}
 
 	private:
+		void DoSendBuffer( General::Templates::WriteBuffer const & p_message );
+		void DoSendNoParamMessage( MessageSent p_type );
 		void DoQuitRoom();
 		void DoQuitGame();
 		bool DoEndWork();
-		bool DoIsIgnored( const String & p_name );
+		bool DoIsIgnored( uint32_t p_name );
 		String DoBuildJoinMessage();
 		void DoSendDressesMessage();
 		void DoSendRoomsMessage();
 		void DoSendKickMessage();
 		void DoSendGameJoinFail();
-		void DoForwardMessage( const String & p_message );
-		void DoForwardGameMessage( const String & p_message );
-		void DoForwardTalkMessage( const String & p_message );
+		void DoForwardMessage( General::Templates::WriteBuffer const & p_message );
+		void DoForwardGameMessage( General::Templates::WriteBuffer const & p_message );
+		void DoForwardTalkMessage( General::Templates::WriteBuffer const & p_message );
 		void DoProcessConnectMessage( General::Templates::ReadBuffer & p_buffer );
 		void DoProcessDressMessage( General::Templates::ReadBuffer & p_buffer );
 		void DoProcessJoinMessage( General::Templates::ReadBuffer & p_buffer );
@@ -306,18 +289,49 @@ namespace Chat
 		void DoProcessSitDownMessage();
 		void DoProcessSitUpMessage();
 
-		virtual void CallbackReceivedMessage( const String & p_message );
-		virtual bool CallbackReaderError( const boost::system::error_code & p_err );
-		virtual bool CallbackWriterError( const boost::system::error_code & p_err );
-		virtual bool CallbackConnectorError( const boost::system::error_code & p_err );
+		virtual void CallbackReceivedMessage( String const & p_message );
+		virtual bool CallbackReaderError( boost::system::error_code const & p_err );
+		virtual bool CallbackWriterError( boost::system::error_code const & p_err );
+		virtual bool CallbackConnectorError( boost::system::error_code const & p_err );
 
 		inline std::shared_ptr< ChatDatabase > DoGetDatabase()
 		{
 			return m_database.lock();
 		}
 
+		template< typename RetType >
+		RetType DoDatabaseAction( std::function< RetType() > p_function )
+		{
+			m_avatar.Work();
+			RetType l_return = p_function();
+
+			if ( !DoEndWork() )
+			{
+				throw std::runtime_error( "ChatTcpClient::DoDatabaseAction - " + GetName() + "has been deleted " );
+			}
+
+			return l_return;
+		}
+
 	private:
 		static uint32_t ClientsCount;
+
+	private:
+		ChatPlugin * m_plugin;
+		std::weak_ptr< ChatRoom > m_room;
+		ChatClientStatus m_status;
+		std::weak_ptr< ChatDatabase > m_database;
+		std::weak_ptr< ChatGame > m_game;
+
+		LoginInformations m_login;
+		Avatar m_avatar;
+		Clothes m_clothes;
+
+		char m_messageBuffer[MAX_MSG_LENGTH];
+		ClientStrIdMap m_friends;
+		ClientStrIdMap m_ignored;
+
+		bool m_toDelete;
 	};
 }
 

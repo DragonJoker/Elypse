@@ -25,44 +25,42 @@ namespace General
 {
 	namespace Files
 	{
-		typedef std::vector <std::wstring> WStringArray;
+		using WStringArray = std::vector< std::wstring >;
 
 		class DownloadableFile
 		{
 		public:
-			DownloadableFile( const std::wstring & p_name, const std::wstring & p_path );
-			DownloadableFile( const std::wstring & p_name, const WStringArray & p_multiPath );
+			DownloadableFile( std::wstring const & p_name, std::wstring const & p_path );
+			DownloadableFile( std::wstring const & p_name, WStringArray const & p_multiPath );
 
 			~DownloadableFile();
 
-		public:
-			bool ExistsAndIsIdentical( const std::string & p_version );
+			bool ExistsAndIsIdentical( std::string const & p_version );
 
-		public:
 			inline std::wstring GetPath()const
 			{
-				if ( ! m_usesMultiPath )
+				if ( !m_usesMultiPath )
 				{
 					return m_path + m_name;
 				}
 
 				return m_multiPath[0] + m_name;
 			}
-			inline const std::wstring & GetBasePath()const
+			inline std::wstring const & GetBasePath()const
 			{
-				if ( ! m_usesMultiPath )
+				if ( !m_usesMultiPath )
 				{
 					return m_path;
 				}
 
 				return m_multiPath[0];
 			}
-			inline void SetToExec( const std::wstring & p_params )
+			inline void SetToExec( std::wstring const & p_params )
 			{
 				m_toExec = true;
 				m_executionParams = p_params;
 			}
-			inline const std::wstring & GetExecParams()const
+			inline std::wstring const & GetExecParams()const
 			{
 				return m_executionParams;
 			}
@@ -78,32 +76,30 @@ namespace General
 			{
 				return m_toExec;
 			}
-			inline const std::wstring & GetName()const
+			inline std::wstring const & GetName()const
 			{
 				return m_name;
 			}
-			inline const std::string & GetHash()const
+			inline std::string const & GetHash()const
 			{
 				return m_hash;
 			}
 
 		private:
-			bool _exists();
-			void _getHash();
+			bool doExists();
+			void doGetHash();
 
 		private:
 			std::wstring m_name;
 			std::wstring m_path;
 			std::wstring m_executionParams;
 			std::string m_hash;
-			bool m_executable;
-			bool m_zipped;
-			bool m_usesMultiPath;
-			bool m_exists;
-			bool m_toExec;
-			unsigned int m_size;
-
-		public:
+			bool m_executable{ false };
+			bool m_zipped{ false };
+			bool m_usesMultiPath{ false };
+			bool m_exists{ false };
+			bool m_toExec{ false };
+			uint32_t m_size{ 0 };
 			WStringArray m_multiPath;
 		};
 	}

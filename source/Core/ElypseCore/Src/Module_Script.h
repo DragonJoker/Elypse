@@ -29,7 +29,7 @@ namespace Elypse
 		static const uint32_t NUM_KEYS = 255u;
 
 		enum VariableBaseType
-		: uint32_t
+			: uint32_t
 		{
 			EMVT_NULL,
 			EMVT_INT,
@@ -160,7 +160,7 @@ namespace Elypse
 		class VariableType;
 		class VariableTypeManager;
 
-		typedef void ( d_fast_call RawFunction )( ScriptNode * );
+		typedef void ( RawFunction )( ScriptNode * );
 
 		typedef std::map <String, Function *>							FunctionMap;
 		typedef std::map <String, UserFunction *>						UserFunctionMap;

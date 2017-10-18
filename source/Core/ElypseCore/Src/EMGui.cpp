@@ -27,12 +27,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreOverlayElement.h>
 #include <OgreFontManager.h>
 
-EMGui::EMGui( const String & p_instanceKey, Real p_aspect )
-	: m_currentClickedOverlay( NULL ),
-		m_currentMouseOverOverlay( NULL ),
-		m_topmostOverlay( NULL ),
-		m_instanceKey( p_instanceKey ),
-		m_aspectRatio( p_aspect )
+EMGui::EMGui( String const & p_instanceKey, Real p_aspect )
+	: m_currentClickedOverlay( NULL )
+	, m_currentMouseOverOverlay( NULL )
+	, m_topmostOverlay( NULL )
+	, m_instanceKey( p_instanceKey )
+	, m_aspectRatio( p_aspect )
 {
 }
 
@@ -41,7 +41,7 @@ EMGui::~EMGui()
 	ClearAll();
 }
 
-void EMGui::ClearAll() d_no_throw
+void EMGui::ClearAll() noexcept
 {
 	m_currentMouseOverOverlay = NULL;
 	m_currentClickedOverlay = NULL;
@@ -62,9 +62,9 @@ EMOverlayGroup * EMGui::AddOverlay( Overlay * p_overlay)
 }
 */
 
-EMOverlayGroup * EMGui::CreateOverlayGroup( const String & p_name )
+EMOverlayGroup * EMGui::CreateOverlayGroup( String const & p_name )
 {
-	return General::Utils::map::insert( m_groups, p_name, p_name, this );
+	return General::Utils::map::insert( m_groups, p_name, p_name, *this );
 }
 
 
@@ -86,7 +86,7 @@ ScriptNode * EMGui::Click( Real p_x, Real p_y )
 EMOverlay * EMGui::GetTopmostAt( Real p_x, Real p_y )const
 {
 	EMOverlay * l_topmost = NULL;
-	unsigned short l_minZorder = 0;
+	uint16_t l_minZorder = 0;
 	OverlayGroupMap::const_iterator iter = m_groups.begin();
 	const OverlayGroupMap::const_iterator & iend = m_groups.end();
 
@@ -152,7 +152,7 @@ void EMGui::AddElement( EMOverlay * p_element )
 	m_overlays.insert( std::make_pair( p_element->GetName(), p_element ) );
 }
 
-void EMGui::RemoveOverlay( const String & p_overlayName )
+void EMGui::RemoveOverlay( String const & p_overlayName )
 {
 	if ( p_overlayName.empty() )
 	{
@@ -167,7 +167,7 @@ void EMGui::RemoveOverlay( const String & p_overlayName )
 	}
 }
 
-void EMGui::DestroyEMOverlay( const String & p_name )
+void EMGui::DestroyEMOverlay( String const & p_name )
 {
 	EMOverlayMap::iterator l_it = m_overlays.find( p_name );
 
@@ -182,7 +182,7 @@ void EMGui::DestroyEMOverlay( const String & p_name )
 	}
 }
 
-void EMGui::DestroyOverlayGroup( const String & p_name )
+void EMGui::DestroyOverlayGroup( String const & p_name )
 {
 	General::Utils::map::deleteValue( m_groups, p_name );
 }
@@ -203,7 +203,7 @@ Real EMGui::GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )cons
 	return p_font->getGlyphAspectRatio( p_char ) * p_fontSize / m_aspectRatio;
 }
 
-Real EMGui::GetWidth( const String & p_string, const FontPtr & p_font, Real p_fontSize )const
+Real EMGui::GetWidth( String const & p_string, const FontPtr & p_font, Real p_fontSize )const
 {
 	if ( p_font.isNull() )
 	{

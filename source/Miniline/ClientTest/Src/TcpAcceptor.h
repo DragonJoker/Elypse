@@ -64,11 +64,10 @@ namespace Elypse
 			TcpBaseClient * m_currentClient;
 
 		public:
-			TcpAcceptor( unsigned short p_port )
-				:	m_service(),
-					m_acceptor( m_service, boost::asio::ip::tcp::endpoint( boost::asio::ip::tcp::v4(), p_port ) )
+			TcpAcceptor( uint16_t p_port )
+				: m_service()
+				, m_acceptor( m_service, boost::asio::ip::tcp::endpoint( boost::asio::ip::tcp::v4(), p_port ) )
 			{
-				DoAccept();
 			}
 
 			virtual ~TcpAcceptor()
@@ -78,16 +77,17 @@ namespace Elypse
 				General::Utils::set::deleteAll( m_clients );
 			}
 
-		private:
-			virtual TcpBaseClient * DoCreateClient() = 0;
-
+		protected:
 			virtual void DoAccept()
 			{
 				m_currentClient = DoCreateClient();
-				m_acceptor.async_accept( m_currentClient->GetSocket(), boost::bind( & TcpAcceptor::CallbackAccept, this, boost::asio::placeholders::error ) );
+				m_acceptor.async_accept( m_currentClient->GetSocket(), boost::bind( &TcpAcceptor::CallbackAccept, this, boost::asio::placeholders::error ) );
 			}
 
-			virtual void CallbackAccept( const boost::system::error_code & error )
+		private:
+			virtual TcpBaseClient * DoCreateClient() = 0;
+
+			virtual void CallbackAccept( boost::system::error_code const & error )
 			{
 				if ( error )
 				{

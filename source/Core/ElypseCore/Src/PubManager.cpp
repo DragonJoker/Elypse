@@ -38,7 +38,7 @@ PubManager::~PubManager()
 	General::Utils::map::deleteAll( m_objectList );
 }
 
-void PubManager::RemovePubObject( const String & p_name )
+void PubManager::RemovePubObject( String const & p_name )
 {
 	General::Utils::map::deleteValue( m_objectList, p_name );
 }
@@ -84,7 +84,7 @@ void PubManager::OnClick( Real p_x, Real p_y, SceneManager * p_sceneManager, Cam
 	}
 }
 
-PubObject * PubManager::CreatePubObject( const String & p_name, ElypsePlugin * p_plugin )
+PubObject * PubManager::CreatePubObject( String const & p_name, ElypsePlugin * p_plugin )
 {
 	return General::Utils::map::insert( m_objectList, p_name, p_name, p_plugin );
 }

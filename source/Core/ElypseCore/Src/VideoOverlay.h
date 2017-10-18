@@ -27,7 +27,9 @@ namespace Elypse
 {
 	namespace Media
 	{
-		class d_dll_export VideoOverlay : public ZoneObject, owned_by <VideoObject>
+		class d_dll_export VideoOverlay
+			: public ZoneObject
+			, public owned_by< VideoObject >
 		{
 		private:
 			EMOverlay * m_EMOverlay;
@@ -35,16 +37,19 @@ namespace Elypse
 			bool m_delayLoad;
 
 		public:
-			VideoOverlay( VideoObject * p_owner, EMOverlay * p_EMOverlay )
-				: owned_by <VideoObject>	( p_owner ),
-					 m_EMOverlay( p_EMOverlay ),
-					 m_delayLoad( false )
+			VideoOverlay( VideoObject & p_owner, EMOverlay * p_EMOverlay )
+				: owned_by< VideoObject >( p_owner )
+				, m_EMOverlay( p_EMOverlay )
+				, m_delayLoad( false )
 			{
 				genlib_assert( m_EMOverlay != NULL );
-				genlib_assert( m_owner != NULL );
 			}
-			~VideoOverlay()	{}
-			void Initialise( const String & p_videoTextureName );
+
+			~VideoOverlay()
+			{
+			}
+
+			void Initialise( String const & p_videoTextureName );
 			void Reset();
 
 		public:

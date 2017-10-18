@@ -34,10 +34,6 @@ namespace General
 		class AutoSingleton
 			: d_noncopyable
 		{
-		protected:
-			AutoSingleton() {}
-			~AutoSingleton() {}
-
 		public:
 			static T & GetSingleton()
 			{
@@ -47,8 +43,12 @@ namespace General
 
 			static T * GetSingletonPtr()
 			{
-				return & GetSingleton();
+				return &GetSingleton();
 			}
+
+		protected:
+			AutoSingleton() = default;
+			~AutoSingleton() = default;
 		};
 	}
 }

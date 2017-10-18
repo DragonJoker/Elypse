@@ -20,7 +20,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Module_Network.h"
 
-#include <Thread.h>
+#include <thread>
 #include <OwnedBy.h>
 #include <TcpConnector.h>
 #include <TcpReader.h>
@@ -41,69 +41,75 @@ namespace Elypse
 			, public owned_by<NetworkManager>
 			, public named
 		{
-		private:
-			bool m_connected;
-			Thread * m_boostThread;
-			boost::asio::io_service * m_service;
-
-		private:
-			virtual void CallbackFinishConnect();
-			virtual bool CallbackConnectorError( const boost::system::error_code & p_err );
-			virtual bool CallbackWriterError( const boost::system::error_code & p_err );
-			virtual bool CallbackReaderError( const boost::system::error_code & p_err );
-			virtual void CallbackReceivedMessage( const std::string & p_message );
-
-			void DoMainLoop();
-
 		public:
-			ElypseTcpClient( const std::string & p_name, boost::asio::io_service * p_service, NetworkManager * p_owner );
+			ElypseTcpClient( std::string const & p_name, boost::asio::io_service & p_service, NetworkManager & p_owner );
 			~ElypseTcpClient();
 
 			void Run();
-			inline boost::asio::io_service * GetService()
+
+			inline boost::asio::io_service & GetService()
 			{
 				return m_service;
 			}
 
-		public:
 			inline bool IsConnected()
 			{
 				return m_connected;
 			}
+
+		private:
+			virtual void CallbackFinishConnect();
+			virtual bool CallbackConnectorError( boost::system::error_code const & p_err );
+			virtual bool CallbackWriterError( boost::system::error_code const & p_err );
+			virtual bool CallbackReaderError( boost::system::error_code const & p_err );
+			virtual void CallbackReceivedMessage( std::string const & p_message );
+
+			void DoMainLoop();
+
+		private:
+			bool m_connected{ false };
+			std::thread * m_thread{ nullptr };
+			boost::asio::io_service & m_service;
 		};
 
 		struct ElypseMessage
 		{
-			String m_clientName;
-			String m_message;
-
-			ElypseMessage( const String & p_name, const String & p_msg )
-				: m_clientName( p_name ),
-					m_message( p_msg )
+			ElypseMessage( String const & p_name, String const & p_msg )
+				: m_clientName{ p_name }
+				, m_message{ p_msg }
 			{
 			}
+
+			explicit operator bool()const
+			{
+				return !m_clientName.empty() || !m_message.empty();
+			}
+
+			String m_clientName;
+			String m_message;
 		};
 
 		class d_dll_export NetworkManager
+			: d_noncopyable
 		{
-		protected:
-			ElypseTcpClientStrMap m_clients;
-			std::vector <ElypseMessage *> m_messages;
-
-			bool m_stop;
-
 		public:
 			NetworkManager();
 			~NetworkManager();
 
 		public:
-			bool CreateClient( const String & p_name );
-			bool Connect( const String & p_name, const String & p_host, unsigned short p_port );
-			bool Write( const String & p_name, const String & p_msg );
-			ElypseTcpClient * GetTcpClient( const String & p_name )const;
-			ElypseMessage * GetLastMessage();
-			bool CloseClient( const String & p_name );
-			void AddMessage( const String & p_name, const String & p_msg );
+			bool CreateClient( String const & p_name );
+			bool Connect( String const & p_name, String const & p_host, uint16_t p_port );
+			bool Write( String const & p_name, String const & p_msg );
+			ElypseTcpClient * GetTcpClient( String const & p_name )const;
+			ElypseMessage GetLastMessage();
+			bool CloseClient( String const & p_name );
+			void AddMessage( String const & p_name, String const & p_msg );
+
+		protected:
+			ElypseTcpClientStrMap m_clients;
+			std::vector< ElypseMessage > m_messages;
+
+			bool m_stop;
 		};
 	}
 }

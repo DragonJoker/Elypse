@@ -21,29 +21,28 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "GUI/MainFrame.h"
 
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	TrollLogs::TrollLogs()
 	{
 		GENLIB_SET_SINGLETON_FOR_DLL();
 	}
 
-	void TrollLogs::_logMessage( const String & p_comment )
+	void TrollLogs::DoLogMessage( String const & p_comment )
 	{
 		if ( sm_singleton )
 		{
-			GENLIB_SCOPED_LOCK( m_logMutex );
+			auto l_lock = make_unique_lock( m_logMutex );
 			LogMessage( make_wxString( p_comment ) );
 		}
 	}
 
-	void TrollLogs::_consoleMessage( const String & p_comment )
+	void TrollLogs::DoConsoleMessage( String const & p_comment )
 	{
 		if ( sm_singleton )
 		{
-			GENLIB_SCOPED_LOCK( m_consoleMutex );
+			auto l_lock = make_unique_lock( m_consoleMutex );
 			std::clog << p_comment << std::endl;
 		}
 	}
 }
-END_TROLL_NAMESPACE

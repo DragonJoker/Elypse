@@ -72,7 +72,7 @@ namespace Chat
 			m_materials.insert( std::make_pair( l_submatId, l_matIndex ) );
 		}
 
-		std::clog << "\n";
+		std::clog << std::endl;
 		return true;
 	}
 
@@ -90,7 +90,7 @@ namespace Chat
 			std::clog << " - SubMaterial " << l_mat.first << " : " << l_mat.second;
 		}
 
-		std::clog << "\n";
+		std::clog << std::endl;
 	}
 
 	//************************************************************************************************
@@ -99,7 +99,7 @@ namespace Chat
 	{
 		p_buffer >> m_slot;
 		p_buffer >> m_id;
-		std::clog << "ChatTcpClient::SaveDresses - Tattoo " << m_id << " at slot " << m_slot << "\n";
+		std::clog << "ChatTcpClient::SaveDresses - Tattoo " << m_id << " at slot " << m_slot << std::endl;
 		return true;
 	}
 
@@ -107,7 +107,7 @@ namespace Chat
 	{
 		p_buffer << m_slot;
 		p_buffer << m_id;
-		std::clog << "Slot : " << m_slot << " - Tattoo : " << m_id << "\n";
+		std::clog << "Slot : " << m_slot << " - Tattoo : " << m_id << std::endl;
 	}
 
 	//************************************************************************************************
@@ -118,7 +118,7 @@ namespace Chat
 		p_buffer >> m_sex;
 		p_buffer >> l_count;
 
-		std::clog << "ChatTcpClient::SaveDresses - nb dresses : " << l_count << "\n";
+		std::clog << "ChatTcpClient::SaveDresses - nb dresses : " << l_count << std::endl;
 
 		for ( int i = 0 ; i < l_count ; i++ )
 		{
@@ -129,7 +129,7 @@ namespace Chat
 
 		p_buffer >> l_count;
 
-		std::clog << "ChatTcpClient::SaveDresses - nb tattoos : " << l_count << "\n";
+		std::clog << "ChatTcpClient::SaveDresses - nb tattoos : " << l_count << std::endl;
 
 		for ( int i = 0 ; i < l_count ; i++ )
 		{
@@ -168,48 +168,29 @@ namespace Chat
 
 	bool LoginInformations::Load( ReadBuffer & p_buffer )
 	{
-		int l_size;
-		p_buffer >> l_size;
-		String l_name;
-
-		char const * l_cname = p_buffer.readArray< char >( l_size );
-
-		if ( !l_cname )
-		{
-			return false;
-		}
-
-		m_name.assign( l_cname, l_size );
+		bool l_return = false;
+		m_name = p_buffer.readString();
 
 		if ( m_name != "anonymous" )
 		{
 			m_anonymous = false;
-			p_buffer >> l_size;
-			String l_pass;
-
-			char const * l_cpass = p_buffer.readArray< char >( l_size );
-
-			if ( !l_cpass )
-			{
-				return false;
-			}
-
-			m_password.assign( l_cpass, l_size );
+			m_password = p_buffer.readString();
+			l_return = true;
 		}
 		else
 		{
 			char l_cname2[256];
 			size_t l_written = snprintf( l_cname2, 256, "anonymous%i", m_id );
 			m_name.assign( l_cname2, l_written );
+			l_return = true;
 		}
 
-		return true;
+		return l_return;
 	}
 
 	void LoginInformations::Save( WriteBuffer & p_buffer )const
 	{
-		p_buffer << int( m_name.size() );
-		p_buffer.writeArray( m_name.c_str(), int( m_name.size() ) );
+		p_buffer << m_name;
 	}
 
 	//************************************************************************************************
@@ -245,6 +226,7 @@ namespace Chat
 		, m_database( m_plugin->GetDatabase() )
 		, m_login( ++ClientsCount )
 		, m_game()
+		, m_toDelete( false )
 	{
 		std::clog << "ChatTcpClient()" << std::endl;
 	}
@@ -281,21 +263,13 @@ namespace Chat
 	bool ChatTcpClient::LoadNameAndPass( ReadBuffer & p_buffer )
 	{
 		bool l_return = false;
+		CheckValid( ccsNone );
 
-		if ( CheckValid( ccsNone ) )
+		if ( m_login.Load( p_buffer ) )
 		{
-			if ( m_login.Load( p_buffer ) )
+			if ( !m_login.IsAnonymous() )
 			{
-				m_avatar.Work();
-
-				if ( m_login.IsAnonymous() || DoGetDatabase()->ConnectUser( m_login ) )
-				{
-					l_return = DoEndWork();
-				}
-				else
-				{
-					DoEndWork();
-				}
+				l_return = DoDatabaseAction< bool >( std::bind( &ChatDatabase::ConnectUser, DoGetDatabase(), std::ref( m_login ) ) );
 			}
 		}
 
@@ -304,33 +278,22 @@ namespace Chat
 
 	bool ChatTcpClient::SaveDresses( General::Templates::ReadBuffer & p_buffer )
 	{
-		bool l_return = false;
-
-		if ( CheckValid( ccsNone ) )
-		{
-			Clothes l_clothes;
-			std::swap( m_clothes, l_clothes );
-			m_clothes.Load( p_buffer );
-			m_avatar.Work();
-			DoGetDatabase()->SaveClothes( m_clothes, GetId() );
-			l_return = DoEndWork();
-		}
-
-		return l_return;
+		CheckValid( ccsNone );
+		Clothes l_clothes;
+		std::swap( m_clothes, l_clothes );
+		m_clothes.Load( p_buffer );
+		return DoDatabaseAction< bool >( std::bind( &ChatDatabase::SaveClothes, DoGetDatabase(), std::ref( m_clothes ), GetId() ) );
 	}
 
-	const String & ChatTcpClient::GetRoomName()
+	String const & ChatTcpClient::GetRoomName()
 	{
+		CheckValid( ccsInRoom );
+		std::shared_ptr< ChatRoom > l_room = m_room.lock();
 		String const * l_return = &ChatEmptyString;
 
-		if ( CheckValid( ccsInRoom ) )
+		if ( l_room )
 		{
-			std::shared_ptr< ChatRoom > l_room = m_room.lock();
-
-			if ( l_room )
-			{
-				l_return = &l_room->GetName();
-			}
+			l_return = &l_room->GetName();
 		}
 
 		return *l_return;
@@ -338,263 +301,186 @@ namespace Chat
 
 	void ChatTcpClient::SetRoom( std::shared_ptr< ChatRoom > p_room )
 	{
-		if ( CheckValid( ccsNone ) )
-		{
-			m_room = p_room;
-			m_status = ccsInRoom;
-		}
+		CheckValid( ccsNone );
+		m_room = p_room;
+		m_status = ccsInRoom;
 	}
 
 	void ChatTcpClient::RemoveRoom()
 	{
-		if ( CheckValid( ccsInRoom ) )
-		{
-			m_room.reset();
-			m_status = ccsDressed;
-		}
+		CheckValid( ccsInRoom );
+		m_room.reset();
+		m_status = ccsDressed;
 	}
 
 	void ChatTcpClient::RemoveFriend( ChatTcpClient * p_toRemove )
 	{
-		if ( CheckValid( ccsInRoom ) )
-		{
-			RemoveFriend( p_toRemove->GetName() );
-		}
+		CheckValid( ccsInRoom );
+		RemoveFriend( p_toRemove->GetId() );
 	}
 
 	void ChatTcpClient::RemoveIgnored( ChatTcpClient * p_toRemove )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		RemoveIgnored( p_toRemove->GetName() );
+		CheckValid( ccsInRoom );
+		RemoveIgnored( p_toRemove->GetId() );
 	}
 
-	void ChatTcpClient::RemoveFriend( const String & p_toRemove )
+	void ChatTcpClient::RemoveFriend( uint32_t p_toRemove )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		ClientIdStrMap::iterator l_it = m_friends.find( p_toRemove );
-
-		if ( l_it == m_friends.end() )
-		{
-			return;
-		}
-
-		m_friends.erase( l_it );
-	}
-
-	void ChatTcpClient::RemoveIgnored( const String & p_toRemove )
-	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		ClientIdStrMap::iterator l_it = m_ignored.find( p_toRemove );
-
-		if ( l_it == m_ignored.end() )
-		{
-			return;
-		}
-
-		m_ignored.erase( l_it );
-
-		m_avatar.Work();
-		DoGetDatabase()->RemoveIgnored( m_login.GetId(), l_it->second );
-
-		if ( !DoEndWork() )
-		{
-			return;
-		}
-	}
-
-	void ChatTcpClient::AddFriend( const String & p_name, unsigned int p_id )
-	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		ClientIdStrMap::iterator l_it = m_friends.find( p_name );
+		CheckValid( ccsInRoom );
+		auto l_it = m_friends.find( p_toRemove );
 
 		if ( l_it != m_friends.end() )
 		{
-			return;
+			m_friends.erase( l_it );
 		}
-
-		m_friends.insert( std::make_pair( p_name, p_id ) );
 	}
 
-	void ChatTcpClient::AddIgnored( const String & p_name, unsigned int p_id )
+	void ChatTcpClient::RemoveIgnored( uint32_t p_toRemove )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		ClientIdStrMap::iterator l_it = m_ignored.find( p_name );
+		CheckValid( ccsInRoom );
+		auto l_it = m_ignored.find( p_toRemove );
 
 		if ( l_it != m_ignored.end() )
 		{
-			return;
+			m_ignored.erase( l_it );
+			DoDatabaseAction< bool >( std::bind( &ChatDatabase::RemoveIgnored, DoGetDatabase(), m_login.GetId(), p_toRemove ) );
 		}
+	}
 
-		m_ignored.insert( std::make_pair( p_name, p_id ) );
+	void ChatTcpClient::AddFriend( String const & p_name, uint32_t p_id )
+	{
+		CheckValid( ccsInRoom );
+		auto l_it = m_friends.find( p_id );
+
+		if ( l_it == m_friends.end() )
+		{
+			m_friends.insert( std::make_pair( p_id, p_name ) );
+		}
+	}
+
+	void ChatTcpClient::AddIgnored( String const & p_name, uint32_t p_id )
+	{
+		CheckValid( ccsInRoom );
+		auto l_it = m_ignored.find( p_id );
+
+		if ( l_it == m_ignored.end() )
+		{
+			m_ignored.insert( std::make_pair( p_id, p_name ) );
+		}
 	}
 
 	void ChatTcpClient::SendEndGameMessage()
 	{
-		if ( !CheckValid( ccsInGame ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msEndGame;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsInGame );
+		DoSendNoParamMessage( msEndGame );
 		m_game.reset();
 	}
 
 	void ChatTcpClient::SendStartGameMessage()
 	{
-		if ( !CheckValid( ccsInGame ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msGameStart;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsInGame );
+		DoSendNoParamMessage( msGameStart );
 	}
 
 	void ChatTcpClient::SendGameAlreadyCreatedMessage()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msGameAlreadyCreated;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsNone );
+		DoSendNoParamMessage( msGameAlreadyCreated );
 	}
 
 	void ChatTcpClient::SendGameDontExistMessage()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msGameDontExist;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsNone );
+		DoSendNoParamMessage( msGameDontExist );
 	}
 
 	void ChatTcpClient::SendCreateGameOK()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msCreateGameOK;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsNone );
+		DoSendNoParamMessage( msCreateGameOK );
 		m_status = ccsInGame;
 	}
 
-	void ChatTcpClient::SendGameJoinMessage( int p_place, const String & p_name, Clothes const & p_clothes )
+	void ChatTcpClient::SendGameJoinMessage( int p_place, String const & p_name, Clothes const & p_clothes )
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsNone );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msJoinGame;
-		l_buffer << static_cast< int >( p_name.size() );
-		l_buffer.writeArray< char >( p_name.c_str(), p_name.size() );
+		l_buffer << p_name;
 		l_buffer << p_place;
 		p_clothes.Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		DoSendBuffer( l_buffer );
 	}
 
-	void ChatTcpClient::SendGameQuitMessage( const String & p_name )
+	void ChatTcpClient::SendGameQuitMessage( String const & p_name )
 	{
-		if ( !CheckValid( ccsInGame ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInGame );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msQuitGame;
-		l_buffer << static_cast< int >( p_name.size() );
-		l_buffer.writeArray< char >( p_name.c_str(), p_name.size() );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		l_buffer << p_name;
+		DoSendBuffer( l_buffer );
 		m_status = ccsNone;
 	}
 
 	void ChatTcpClient::SendGameJoinOkMessage( int p_place )
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msJoinGameOK << p_place;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsNone );
+		DoSendNoParamMessage( msJoinGameOK );
 		m_status = ccsInGame;
 	}
 
-	size_t ChatTcpClient::GetRandom( size_t p_max )
+	uint32_t ChatTcpClient::GetRandom( uint32_t p_max )
 	{
-		if ( p_max == 0 )
+		uint32_t l_return = 0;
+
+		if ( p_max )
 		{
-			return 0;
+			l_return = std::uniform_int_distribution< uint32_t >( 0, p_max - 1 )( m_elypseService.lock()->GetRandomDevice() );
 		}
 
-		size_t l_rand = rand() % p_max;
-		return l_rand;
+		return l_return;
+	}
+
+	void ChatTcpClient::CheckValid( int p_comp )
+	{
+		if ( m_toDelete )
+		{
+			DoGetService()->EraseClient( this );
+			throw std::runtime_error( "The client has been deleted" );
+		}
+		else if ( m_status < p_comp )
+		{
+			throw std::runtime_error( "The client is in a wrong state" );
+		}
+	}
+
+	void ChatTcpClient::DoSendNoParamMessage( MessageSent p_type )
+	{
+		CheckValid( ccsNone );
+		auto && l_buffer = make_wbuffer( m_messageBuffer );
+		l_buffer << p_type;
+		DoSendBuffer( l_buffer );
+	}
+
+	void ChatTcpClient::DoSendBuffer( WriteBuffer const & p_buffer )
+	{
+		String l_toSend( p_buffer.data(), p_buffer.size() );
+		AsyncSend( l_toSend );
 	}
 
 	bool ChatTcpClient::DoEndWork()
 	{
+		bool l_return = true;
 		m_avatar.Work( false );
 
 		if ( m_toDelete )
 		{
 			DoGetService()->EraseClient( this );
-			return false;
+			l_return = false;
 		}
 
-		return true;
-	}
-
-	bool ChatTcpClient::CheckValid( int p_comp )
-	{
-		if ( m_toDelete )
-		{
-			DoGetService()->EraseClient( this );
-			return false;
-		}
-
-		return m_status >= p_comp;
+		return l_return;
 	}
 
 	void ChatTcpClient::DoQuitRoom()
@@ -606,8 +492,7 @@ namespace Chat
 			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msQuit;
 			m_login.Save( l_buffer );
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			DoForwardMessage( m_toSend );
+			DoForwardMessage( l_buffer );
 			l_room->RemoveClient( this );
 			m_room.reset();
 		}
@@ -619,17 +504,16 @@ namespace Chat
 
 		if ( m_status == ccsInGame && l_game )
 		{
-			std::cout << m_login.GetName() << " was in a game\n";
+			std::cout << m_login.GetName() << " was in a game" << std::endl;
 			auto && l_buffer = make_wbuffer( m_messageBuffer );
 			l_buffer << msQuitGame;
 			m_login.Save( l_buffer );
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			DoForwardGameMessage( m_toSend );
+			DoForwardGameMessage( l_buffer );
 			l_game->RemovePlayer( this );
 
 			if ( l_game->GetInitiatorId() == m_login.GetId() )
 			{
-				std::cout << m_login.GetName() << " was the initiator of the game, ending it\n";
+				std::cout << m_login.GetName() << " was the initiator of the game, ending it" << std::endl;
 				m_plugin->RemoveGame( l_game->GetGameName(), m_login.GetId() );
 			}
 			else if ( l_game->GetPlayersCount() == 0 )
@@ -641,213 +525,147 @@ namespace Chat
 		}
 	}
 
-	bool ChatTcpClient::DoIsIgnored( const String & p_name )
+	bool ChatTcpClient::DoIsIgnored( uint32_t p_id )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return false;
-		}
-
-		return ( m_ignored.find( p_name ) != m_ignored.end() );
+		CheckValid( ccsInRoom );
+		return m_ignored.find( p_id ) != m_ignored.end();
 	}
 
 	String ChatTcpClient::DoBuildJoinMessage()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return String();
-		}
-
+		CheckValid( ccsNone );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msJoin;
 		m_login.Save( l_buffer );
 		m_clothes.Save( l_buffer );
 		m_avatar.Save( l_buffer );
-		String l_result;
-		l_result.assign( l_buffer.data(), l_buffer.size() );
-		return l_result;
+		return String( l_buffer.data(), l_buffer.size() );
 	}
 
 	void ChatTcpClient::DoSendDressesMessage()
 	{
-		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " sends his dresses\n";
-
-		if ( !CheckValid( ccsNone ) )
-		{
-			std::cerr << "ChatTcpClient::DoSendDressesMessage - nothing to send\n";
-			return;
-		}
-
+		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " sends his dresses" << std::endl;
+		CheckValid( ccsNone );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msAvatar;
 		m_clothes.Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
-		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " has ended the sending of his dresses : " << l_buffer.size() << "\n";
+		DoSendBuffer( l_buffer );
+		std::clog << "ChatTcpClient::DoSendDressesMessage - " << GetName() << " has ended the sending of his dresses : " << l_buffer.size() << std::endl;
 	}
 
 	void ChatTcpClient::DoSendRoomsMessage()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsNone );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msRooms;
 		m_plugin->GetWorld()->Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		DoSendBuffer( l_buffer );
 	}
 
 	void ChatTcpClient::DoSendKickMessage()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msKickUser;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsNone );
+		DoSendNoParamMessage( msKickUser );
 	}
 
 	void ChatTcpClient::DoSendGameJoinFail()
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msJoinGameFail;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		CheckValid( ccsNone );
+		DoSendNoParamMessage( msJoinGameFail );
 	}
 
-	void ChatTcpClient::DoForwardMessage( const String & p_message )
+	void ChatTcpClient::DoForwardMessage( WriteBuffer const & p_message )
 	{
+		CheckValid( ccsInRoom );
+		String l_message( p_message.data(), p_message.size() );
 		std::shared_ptr< ChatRoom > l_room = m_room.lock();
 
-		if ( !CheckValid( ccsInRoom ) || l_room )
+		if ( l_room )
 		{
-			return;
+			l_room->ForwardMessage( l_message, GetId() );
 		}
-
-		l_room->ForwardMessage( p_message, GetName() );
 	}
 
-	void ChatTcpClient::DoForwardGameMessage( const String & p_message )
+	void ChatTcpClient::DoForwardGameMessage( WriteBuffer const & p_message )
 	{
+		CheckValid( ccsInRoom );
+		String l_message( p_message.data(), p_message.size() );
 		std::shared_ptr< ChatGame > l_game = m_game.lock();
 
-		if ( !CheckValid( ccsInRoom ) || l_game )
+		if ( l_game )
 		{
-			return;
+			l_game->ForwardMessage( l_message, GetId() );
 		}
-
-		l_game->ForwardMessage( p_message, GetName() );
 	}
 
-	void ChatTcpClient::DoForwardTalkMessage( const String & p_message )
+	void ChatTcpClient::DoForwardTalkMessage( WriteBuffer const & p_message )
 	{
+		CheckValid( ccsInRoom );
+		String l_message( p_message.data(), p_message.size() );
 		std::shared_ptr< ChatRoom > l_room = m_room.lock();
 
-		if ( !CheckValid( ccsInRoom ) || l_room )
+		if ( l_room )
 		{
-			return;
+			l_room->ForwardMessage( l_message, GetId(), m_ignored );
 		}
-
-		l_room->ForwardMessage( p_message, GetName(), m_ignored );
 	}
 
 	void ChatTcpClient::DoProcessConnectMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
+		CheckValid( ccsNone );
 
 		if ( LoadNameAndPass( p_buffer ) )
 		{
-			if ( !CheckValid( ccsNone ) )
-			{
-				return;
-			}
+			CheckValid( ccsNone );
 
 			if ( !IsAnonymous() )
 			{
-				ChatTcpClient * l_client = m_plugin->GetClient( GetName() );
+				ChatTcpClient * l_client = m_plugin->GetClient( GetId() );
 
 				if ( l_client )
 				{
-					std::cout << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " was already connected\n";
+					std::cout << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " was already connected" << std::endl;
 					l_client->DoSendKickMessage();
 					m_plugin->RemoveClient( l_client );
 				}
 
 				m_plugin->AddClient( this );
-				m_avatar.Work();
 
 				Clothes l_clothes;
 				std::swap( m_clothes, l_clothes );
 
-				if ( !DoGetDatabase()->LoadClothes( m_clothes, GetId() ) )
+				if ( !DoDatabaseAction< bool >( std::bind( &ChatDatabase::LoadClothes, DoGetDatabase(), std::ref( m_clothes ), GetId() ) ) )
 				{
-					std::cerr << "ChatTcpClient::DoProcessConnectMessage - Can't load dresses for " << GetName() << "\n";
-					return;
+					throw std::runtime_error( "ChatTcpClient::DoProcessConnectMessage - Can't load dresses for " + GetName() );
 				}
 
 				m_status = ccsDressed;
 
-				if ( !DoEndWork() )
-				{
-					std::cerr << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
-					return;
-				}
-
-				m_avatar.Work();
-				DoGetDatabase()->LoadFriends( m_friends, GetId() );
-
-				if ( !DoEndWork() )
-				{
-					std::cerr << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
-					return;
-				}
-
-				m_avatar.Work();
-				DoGetDatabase()->LoadIgnored( m_ignored, GetId() );
-
-				if ( !DoEndWork() )
-				{
-					std::cerr << "ChatTcpClient::DoProcessConnectMessage - " << GetName() << " has not ended his work\n";
-					return;
-				}
+				DoDatabaseAction< bool >( std::bind( &ChatDatabase::LoadFriends, DoGetDatabase(), std::ref( m_friends ), GetId() ) );
+				DoDatabaseAction< bool >( std::bind( &ChatDatabase::LoadIgnored, DoGetDatabase(), std::ref( m_ignored ), GetId() ) );
 			}
 			else
 			{
-				std::clog << "ChatClient::DoProcessConnectMessage - Anonymous\n";
+				std::clog << "ChatClient::DoProcessConnectMessage - Anonymous" << std::endl;
 				m_plugin->AddClient( this );
-				std::clog << "ChatClient::DoProcessConnectMessage - Added\n";
-				std::map <int, Dress *>::iterator l_it;
-				size_t l_size;
-				size_t l_sex = GetRandom( 2 );
+				std::clog << "ChatClient::DoProcessConnectMessage - Added" << std::endl;
+				uint32_t l_sex = GetRandom( 2 );
 				Clothes l_clothes;
 				std::swap( m_clothes, l_clothes );
-				m_clothes.m_sex = l_sex;
+				m_clothes.m_sex = uint8_t( l_sex );
+				uint64_t l_slots = DoDatabaseAction< uint64_t >( std::bind( &ChatDatabase::GetDressSlotsCount, DoGetDatabase() ) );
 
-				for ( int i = 1 ; i <= DoGetDatabase()->GetNumDressSlots() ; i++ )
+				for ( uint32_t i = 1 ; i <= l_slots ; i++ )
 				{
 					Dress l_dress;
-					l_dress.m_id = 137;
+					l_dress.m_id = DEFAULT_DRESS_ID;
 					l_dress.m_slot = ChatClientDressSlot( i );
 					m_clothes.m_dresses.insert( std::make_pair( l_dress.m_slot, l_dress ) );
 				}
 
 				for ( auto && l_it : m_clothes.m_dresses )
 				{
-					l_size = DoGetDatabase()->GetDressesSize( l_sex, l_it.first );
+					uint32_t l_size = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetDressesCount, DoGetDatabase(), l_sex, l_it.first ) );
 
 					if ( l_size > 10 )
 					{
@@ -855,7 +673,7 @@ namespace Chat
 					}
 
 					Dress & l_dress = l_it.second;
-					l_dress.m_id = DoGetDatabase()->GetDress( l_sex, l_it.first, GetRandom( l_size ) );
+					l_dress.m_id = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetDress, DoGetDatabase(), l_sex, l_it.first, GetRandom( l_size ) ) );
 
 					if ( l_it.first == 11 || l_it.first == 13 )
 					{
@@ -864,43 +682,30 @@ namespace Chat
 				}
 			}
 
-			std::cout << "ChatClient " << GetName() << " connected\n";
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msConnectOK;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
+			std::cout << "ChatClient " << GetName() << " connected" << std::endl;
+			DoSendNoParamMessage( msConnectOK );
 			m_status = ccsConnected;
-			return;
 		}
-
-		if ( !CheckValid( ccsNone ) )
+		else
 		{
-			return;
+			CheckValid( ccsNone );
+			std::clog << "ChatTcpClient::DoProcessConnectMessage - Not connected" << std::endl;
+			DoSendNoParamMessage( msConnectFail );
 		}
-
-		std::clog << "ChatTcpClient::DoProcessConnectMessage - Not connected\n";
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msConnectFail;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
-
 	}
 
 	void ChatTcpClient::DoProcessDressMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsConnected ) )
-		{
-			return;
-		}
+		CheckValid( ccsConnected );
 
 		if ( !IsAnonymous() )
 		{
-			std::clog << "ChatTcpClient::DoProcessDressMessage - not anonymous\n";
+			std::clog << "ChatTcpClient::DoProcessDressMessage - not anonymous" << std::endl;
 			SaveDresses( p_buffer );
 		}
 		else
 		{
-			std::clog << "ChatTcpClient::DoProcessDressMessage - anonymous\n";
+			std::clog << "ChatTcpClient::DoProcessDressMessage - anonymous" << std::endl;
 		}
 
 		if ( m_status < ccsInRoom )
@@ -913,17 +718,13 @@ namespace Chat
 
 	void ChatTcpClient::DoProcessJoinMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsDressed ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsDressed );
 		int l_size;
 		p_buffer >> l_size;
 		String l_roomName;
 		l_roomName.assign( p_buffer.readArray< char >( l_size ), l_size );
 
-		std::clog << "DoProcessJoinMessage - " << l_roomName << "\n";
+		std::clog << "DoProcessJoinMessage - " << l_roomName << std::endl;
 		std::shared_ptr< ChatRoom > l_room = m_plugin->GetRoom( l_roomName );
 		String l_joinMessage = DoBuildJoinMessage();
 
@@ -940,52 +741,41 @@ namespace Chat
 		}
 		else
 		{
-			std::cout << "NULL Room\n";
+			std::cout << "NULL Room" << std::endl;
 		}
 	}
 
 	void ChatTcpClient::DoProcessQuitMessage()
 	{
+		CheckValid( ccsInRoom );
 		std::shared_ptr< ChatRoom > l_room = m_room.lock();
 
-		if ( !CheckValid( ccsInRoom ) || !l_room )
+		if ( l_room )
 		{
-			return;
+			std::clog << "Sending quit to room clients" << std::endl;
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
+			l_buffer << msQuit;
+			m_login.Save( l_buffer );
+			DoForwardMessage( l_buffer );
+			l_room->RemoveClient( this );
 		}
-
-		std::clog << "Sending quit to room clients\n";
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msQuit;
-		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
-		l_room->RemoveClient( this );
 	}
 
 	void ChatTcpClient::DoProcessUpdateMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		p_buffer >> m_avatar.GetPosition().x >> m_avatar.GetPosition().y >> m_avatar.GetPosition().z >> m_avatar.GetYaw();
 
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msUpdate;
 		m_login.Save( l_buffer );
 		l_buffer << GetPosition().x << GetPosition().y << GetPosition().z << GetYaw();
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessWalkMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		int l_running;
 		int l_backward;
 		p_buffer >> m_avatar.GetPosition().x >> m_avatar.GetPosition().y >> m_avatar.GetPosition().z >> l_backward >> l_running;
@@ -994,155 +784,98 @@ namespace Chat
 		l_buffer << msWalk;
 		m_login.Save( l_buffer );
 		l_buffer << GetPosition().x << GetPosition().y << GetPosition().z << l_backward << l_running;
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessTurnMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		p_buffer >> m_avatar.GetYaw();
 
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msTurn;
 		m_login.Save( l_buffer );
 		l_buffer << GetYaw();
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessTalkMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		int l_size;
-		p_buffer >> l_size;
-		std::clog << l_size << "\n";
-		String l_message;
-		l_message.assign( p_buffer.readArray< char >( l_size ), l_size );
-		std::cout << GetName() << " : " << l_message << "\n";
+		CheckValid( ccsInRoom );
+		String l_message = p_buffer.readString();
+		std::cout << GetName() << " : " << l_message << std::endl;
 
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msTalk;
 		m_login.Save( l_buffer );
-		l_buffer << l_size;
-		l_buffer.writeArray< char >( l_message.c_str(), l_size );
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardTalkMessage( m_toSend );
+		l_buffer << l_message;
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessWhispMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_message;
-		l_message.assign( p_buffer.readArray< char >( l_size ), l_size );
-		String l_distantName;
-		size_t l_index = l_message.find_first_of( " " );
-		l_distantName = l_message.substr( 0, l_index );
-		l_message = l_message.substr( l_index + 1 );
-		std::cout << "DoProcessWhispMessage - " << l_distantName << " - " << l_message << "\n";
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msWhisp;
-		m_login.Save( l_buffer );;
-		l_buffer << l_size;
-		l_buffer.writeArray< char >( l_message.c_str(), l_message.size() );
-
-		ChatRoomStrMap l_rooms = m_plugin->GetWorld()->GetRooms();
-		ChatTcpClientStrMap l_clients;
-		bool l_found = false;
-		auto && l_rIt = l_rooms.begin();
-		String l_toSend;
-
-		while ( l_rIt != l_rooms.end() && ! l_found )
+		else
 		{
-			std::shared_ptr< ChatRoom > l_room = l_rIt->second;
-			ChatTcpClientStrMap l_clients = l_room->GetClients();
-			auto && l_it = l_clients.begin();
+			String l_message = p_buffer.readString();
+			String l_distantName;
+			size_t l_index = l_message.find_first_of( " " );
+			l_distantName = l_message.substr( 0, l_index );
+			l_message = l_message.substr( l_index + 1 );
+			std::cout << "DoProcessWhispMessage - " << l_distantName << " - " << l_message << std::endl;
 
-			while ( l_it != l_clients.end() && ! l_found )
+			if ( l_distantName != GetName() )
 			{
-				ChatTcpClient * l_client = l_it->second;
+				ChatTcpClient * l_client = m_plugin->GetWorld()->GetClient( l_distantName );
 
-				if ( l_client->GetName() == l_distantName && l_client->GetName() != GetName() )
+				if ( l_client )
 				{
-					l_found = true;
+					auto && l_buffer = make_wbuffer( m_messageBuffer );
+					l_buffer << msWhisp;
+					m_login.Save( l_buffer );
+					l_buffer << l_message;
+					String l_toSend;
 					l_toSend.assign( l_buffer.data(), l_buffer.size() );
 
-					if ( !l_client->DoIsIgnored( GetName() ) )
+					if ( !l_client->DoIsIgnored( GetId() ) )
 					{
 						l_client->AsyncSend( l_toSend );
 					}
 
-					l_buffer = WriteBuffer( m_messageBuffer, MAX_MSG_LENGTH );
-					l_buffer << msWhispOK;
-					m_toSend.assign( l_buffer.data(), l_buffer.size() );
-					AsyncSend( m_toSend );
+					DoSendNoParamMessage( msWhispOK );
 				}
-
-				++l_it;
+				else
+				{
+					std::cout << "WhispFail" << std::endl;
+					DoSendNoParamMessage( msWhispFail );
+				}
 			}
-
-			++l_rIt;
-		}
-
-		if ( !l_found )
-		{
-			std::cout << "WhispFail\n";
-			l_buffer = WriteBuffer( m_messageBuffer, MAX_MSG_LENGTH );
-			l_buffer << msWhispFail;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
+			else
+			{
+				std::cout << "WhispFail" << std::endl;
+				DoSendNoParamMessage( msWhispFail );
+			}
 		}
 	}
 
 	void ChatTcpClient::DoProcessBeginWalkMessage()
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		m_avatar.Sit( false );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msBeginWalk;
 		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessEndWalkMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		float l_x, l_y, l_z, l_yaw;
 		p_buffer >> l_x >> l_y >> l_z >> l_yaw;
 
@@ -1150,33 +883,22 @@ namespace Chat
 		l_buffer << msEndWalk;
 		m_login.Save( l_buffer );
 		l_buffer << l_x << l_y << l_z << l_yaw;
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessBeginRunMessage()
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		m_avatar.Sit( false );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msBeginRun;
 		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessEndRunMessage( General::Templates::ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		float l_x, l_y, l_z, l_yaw;
 		int l_stillWalking;
 		p_buffer >> l_stillWalking >> l_x >> l_y >> l_z >> l_yaw;
@@ -1185,419 +907,280 @@ namespace Chat
 		l_buffer << msEndRun;
 		m_login.Save( l_buffer );
 		l_buffer << l_x << l_y << l_z << l_yaw;
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessEmoteMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_message;
-		l_message.assign( p_buffer.readArray< char >( l_size ), l_size );
-		std::cout << "DoProcessEmoteMessage - " << l_message << "\n";
+		CheckValid( ccsInRoom );
+		String l_message = p_buffer.readString();
+		std::cout << "DoProcessEmoteMessage - " << l_message << std::endl;
 
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msEmote;
 		m_login.Save( l_buffer );
-		l_buffer << l_size;
-		l_buffer.writeArray< char >( l_message.c_str(), l_size );
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		l_buffer << l_message;
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessRemoveFriendMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_toRemove;
-		l_toRemove.assign( p_buffer.readArray< char >( l_size ), l_size );
-
-		m_avatar.Work();
-		unsigned int l_friendId = DoGetDatabase()->GetClientId( l_toRemove );
-
-		if ( !DoEndWork() )
+		else
 		{
-			return;
-		}
+			String l_toRemove = p_buffer.readString();
+			uint32_t l_friendId = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetClientId, DoGetDatabase(), std::ref( l_toRemove ) ) );
 
-		if ( l_friendId != 0 )
-		{
-			m_avatar.Work();
-			DoGetDatabase()->RemoveFriend( m_login.GetId(), l_friendId );
-
-			if ( !DoEndWork() )
+			if ( l_friendId != 0 )
 			{
-				return;
-			}
+				DoDatabaseAction< bool >( std::bind( &ChatDatabase::RemoveFriend, DoGetDatabase(), m_login.GetId(), l_friendId ) );
+				DoDatabaseAction< bool >( std::bind( &ChatDatabase::RemoveFriend, DoGetDatabase(), l_friendId, m_login.GetId() ) );
+				ChatTcpClient * l_friend = m_plugin->GetClient( l_friendId );
 
-			DoGetDatabase()->RemoveFriend( l_friendId, m_login.GetId() );
+				if ( l_friend )
+				{
+					l_friend->RemoveFriend( GetId() );
+				}
 
-			if ( !DoEndWork() )
-			{
-				return;
-			}
+				auto && l_it = m_friends.find( l_friendId );
 
-			ChatTcpClient * l_friend = m_plugin->GetClient( l_toRemove );
-
-			if ( l_friend )
-			{
-				l_friend->RemoveFriend( GetName() );
-			}
-
-			auto && l_it = m_friends.find( l_toRemove );
-
-			if ( l_it != m_friends.end() )
-			{
-				m_friends.erase( l_it );
+				if ( l_it != m_friends.end() )
+				{
+					m_friends.erase( l_it );
+				}
 			}
 		}
 	}
 
 	void ChatTcpClient::DoProcessRemoveIgnoredMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_toRemove;
-		l_toRemove.assign( p_buffer.readArray< char >( l_size ), l_size );
-
-		RemoveIgnored( l_toRemove );
+		else
+		{
+			RemoveIgnored( DoGetDatabase()->GetClientId( p_buffer.readString() ) );
+		}
 	}
 
 	void ChatTcpClient::DoProcessNewFriendMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_name;
-		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
-		std::clog << "DoProcessNewFriendMessage - " << l_name << "\n";
-
-		if ( l_name != GetName() )
+		else
 		{
-			ChatTcpClient * l_newFriend = m_plugin->GetClient( l_name );
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
+			String l_name = p_buffer.readString();
+			std::clog << "DoProcessNewFriendMessage - " << l_name << std::endl;
 
-			if ( l_newFriend == NULL )
+			if ( l_name != GetName() )
 			{
-				std::cout << "DoProcessNewFriendMessage - Friend not found\n";
-				l_buffer << msNewFriendDoesntExist << l_size;
-				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.data(), l_buffer.size() );
-				AsyncSend( m_toSend );
-			}
-			else if ( m_friends.find( l_name ) != m_friends.end() )
-			{
-				std::cout << "DoProcessNewFriendMessage - Friend found, already in friends\n";
-				l_buffer << msNewFriendAlreadyFriend << l_size;
-				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.data(), l_buffer.size() );
-				AsyncSend( m_toSend );
-			}
-			else
-			{
-				std::clog << "DoProcessNewFriendMessage - Friend found\n";
-				l_buffer << msNewFriendAsk;
-				m_login.Save( l_buffer );
-				m_toSend.assign( l_buffer.data(), l_buffer.size() );
-				l_newFriend->AsyncSend( m_toSend );
+				uint32_t l_id = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetClientId, DoGetDatabase(), std::ref( l_name ) ) );
+				ChatTcpClient * l_newFriend = m_plugin->GetClient( l_id );
+				auto && l_buffer = make_wbuffer( m_messageBuffer );
+
+				if ( !l_newFriend )
+				{
+					std::cout << "DoProcessNewFriendMessage - Friend not found" << std::endl;
+					l_buffer << msNewFriendDoesntExist;
+					l_buffer << l_name;
+					DoSendBuffer( l_buffer );
+				}
+				else if ( m_friends.find( l_id ) != m_friends.end() )
+				{
+					std::cout << "DoProcessNewFriendMessage - Friend found, already in friends" << std::endl;
+					l_buffer << msNewFriendAlreadyFriend;
+					l_buffer << l_name;
+					DoSendBuffer( l_buffer );
+				}
+				else
+				{
+					std::clog << "DoProcessNewFriendMessage - Friend found" << std::endl;
+					l_buffer << msNewFriendAsk;
+					m_login.Save( l_buffer );
+					DoSendBuffer( l_buffer );
+				}
 			}
 		}
 	}
 
 	void ChatTcpClient::DoProcessNewIgnoredMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_name;
-		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
-
-		if ( l_name != GetName() )
+		else
 		{
-			m_avatar.Work();
-			unsigned int l_ignoredId = DoGetDatabase()->GetClientId( l_name );
+			String l_name = p_buffer.readString();
+			std::clog << "DoProcessNewIgnoredMessage - " << l_name << std::endl;
 
-			if ( !DoEndWork() )
+			if ( l_name != GetName() )
 			{
-				return;
-			}
+				uint32_t l_id = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetClientId, DoGetDatabase(), std::ref( l_name ) ) );
+				auto && l_buffer = make_wbuffer( m_messageBuffer );
 
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-
-			if ( l_ignoredId == 0 )
-			{
-				l_buffer << msNewIgnoredDoesntExist << l_size;
-				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.data(), l_buffer.size() );
-				AsyncSend( m_toSend );
-			}
-			else if ( m_ignored.find( l_name ) != m_ignored.end() )
-			{
-				l_buffer << msNewIgnoredAlreadyIgnored << l_size;
-				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.data(), l_buffer.size() );
-				AsyncSend( m_toSend );
-			}
-			else
-			{
-				m_ignored.insert( std::make_pair( l_name, l_ignoredId ) );
-				m_avatar.Work();
-				DoGetDatabase()->AddIgnored( m_login.GetId(), l_ignoredId );
-
-				if ( !DoEndWork() )
+				if ( !l_id )
 				{
-					return;
+					l_buffer << msNewIgnoredDoesntExist;
+					l_buffer << l_name;
+					DoSendBuffer( l_buffer );
 				}
-
-				l_buffer << msNewIgnoredDone << l_size;
-				l_buffer.writeArray< char >( l_name.c_str(), l_size );
-				m_toSend.assign( l_buffer.data(), l_buffer.size() );
-				AsyncSend( m_toSend );
+				else if ( m_ignored.find( l_id ) != m_ignored.end() )
+				{
+					l_buffer << msNewIgnoredAlreadyIgnored;
+					l_buffer << l_name;
+					DoSendBuffer( l_buffer );
+				}
+				else
+				{
+					m_ignored.insert( std::make_pair( l_id, l_name ) );
+					DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::AddIgnored, DoGetDatabase(), GetId(), l_id ) );
+					l_buffer << msNewIgnoredDone;
+					l_buffer << l_name;
+					DoSendBuffer( l_buffer );
+				}
 			}
 		}
 	}
 
 	void ChatTcpClient::DoProcessUpdateFriendsMessage()
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		String l_noRoom = "Non connecte";
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msUpdateFriendsList;
-		l_buffer << int( m_friends.size() );
-
-		for ( auto && l_it : m_friends )
+		else
 		{
-			ChatTcpClient * l_friend = m_plugin->GetClient( l_it.first );
-			l_buffer << int( l_it.first.size() );
-			l_buffer.writeArray< char >( l_it.first.c_str(), l_it.first.size() );
+			String l_noRoom = "Non connecte";
 
-			if ( l_friend && l_friend->GetStatus() == ccsInRoom )
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
+			l_buffer << msUpdateFriendsList;
+			l_buffer << uint32_t( m_friends.size() );
+
+			for ( auto && l_it : m_friends )
 			{
-				l_buffer << int( l_friend->GetRoomName().size() );
-				l_buffer.writeArray< char >( l_friend->GetRoomName().c_str(), l_friend->GetRoomName().size() );
+				ChatTcpClient * l_friend = m_plugin->GetClient( l_it.first );
+				l_buffer << l_friend->GetName();
+
+				if ( l_friend && l_friend->GetStatus() == ccsInRoom )
+				{
+					l_buffer << l_friend->GetRoomName();
+				}
+				else
+				{
+					l_buffer << l_noRoom;
+				}
 			}
-			else
-			{
-				l_buffer << int( l_noRoom.size() );
-				l_buffer.writeArray< char >( l_noRoom.c_str(), l_noRoom.size() );
-			}
+
+			DoSendBuffer( l_buffer );
 		}
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
 	}
 
 	void ChatTcpClient::DoProcessUpdateIgnoredMessage()
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msUpdateIgnoredList;
-		l_buffer << static_cast< int >( m_ignored.size() );
-
-		for ( auto && l_it : m_ignored )
+		else
 		{
-			ChatTcpClient * l_ignored = m_plugin->GetClient( l_it.first );
-			l_buffer << int( l_it.first.size() );
-			l_buffer.writeArray< char >( l_it.first.c_str(), l_it.first.size() );
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
+			l_buffer << msUpdateIgnoredList;
+			l_buffer << uint32_t( m_ignored.size() );
 
-			if ( l_ignored && l_ignored->GetStatus() == ccsInRoom )
+			for ( auto && l_it : m_ignored )
 			{
-				l_buffer << '1';
+				ChatTcpClient * l_ignored = m_plugin->GetClient( l_it.first );
+				l_buffer << l_ignored->GetName();
+
+				if ( l_ignored && l_ignored->GetStatus() == ccsInRoom )
+				{
+					l_buffer << '1';
+				}
+				else
+				{
+					l_buffer << '0';
+				}
 			}
-			else
-			{
-				l_buffer << '0';
-			}
+
+			DoSendBuffer( l_buffer );
 		}
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
 	}
 
 	void ChatTcpClient::DoProcessFriendRefuseMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_refusedName;
-		l_refusedName.assign( p_buffer.readArray< char >( l_size ), l_size );
-
-		ChatTcpClient * l_refused = m_plugin->GetClient( l_refusedName );
-
-		if ( l_refused )
+		else
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msNewFriendRefuse;
-			m_login.Save( l_buffer );
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			l_refused->AsyncSend( m_toSend );
+			String l_refusedName = p_buffer.readString();
+			uint32_t l_id = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetClientId, DoGetDatabase(), std::ref( l_refusedName ) ) );
+			ChatTcpClient * l_refused = m_plugin->GetClient( l_id );
+
+			if ( l_refused )
+			{
+				auto && l_buffer = make_wbuffer( m_messageBuffer );
+				l_buffer << msNewFriendRefuse;
+				m_login.Save( l_buffer );
+				DoSendBuffer( l_buffer );
+			}
 		}
 	}
 
 	void ChatTcpClient::DoProcessFriendAcceptMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
+		CheckValid( ccsInRoom );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_acceptedName;
-		l_acceptedName.assign( p_buffer.readArray< char >( l_size ), l_size );
-
-		ChatTcpClient * l_accepted = m_plugin->GetClient( l_acceptedName );
-
-		if ( l_accepted )
+		else
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msNewFriendAccept;
-			m_login.Save( l_buffer );
+			String l_acceptedName = p_buffer.readString();
+			uint32_t l_id = DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::GetClientId, DoGetDatabase(), std::ref( l_acceptedName ) ) );
+			ChatTcpClient * l_accepted = m_plugin->GetClient( l_id );
 
-			l_accepted->m_friends.insert( std::make_pair( GetName(), m_login.GetId() ) );
-			m_friends.insert( std::make_pair( l_acceptedName, l_accepted->GetId() ) );
-
-			m_avatar.Work();
-			DoGetDatabase()->AddFriend( l_accepted->GetId(), m_login.GetId() );
-
-			if ( !DoEndWork() )
+			if ( l_accepted )
 			{
-				return;
+				auto && l_buffer = make_wbuffer( m_messageBuffer );
+				l_buffer << msNewFriendAccept;
+				m_login.Save( l_buffer );
+
+				l_accepted->m_friends.insert( std::make_pair( m_login.GetId(), GetName() ) );
+				m_friends.insert( std::make_pair( l_accepted->GetId(), l_acceptedName ) );
+				DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::AddFriend, DoGetDatabase(), l_accepted->GetId(), m_login.GetId() ) );
+				DoDatabaseAction< uint32_t >( std::bind( &ChatDatabase::AddFriend, DoGetDatabase(), m_login.GetId(), l_accepted->GetId() ) );
 			}
-
-			DoGetDatabase()->AddFriend( m_login.GetId(), l_accepted->GetId() );
-
-			if ( !DoEndWork() )
-			{
-				return;
-			}
-
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			l_accepted->AsyncSend( m_toSend );
 		}
 	}
 
 	void ChatTcpClient::DoProcessRefreshGamesListMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsConnected ) )
-		{
-			return;
-		}
-
-		int l_size = 0;
-		p_buffer >> l_size;
-		String l_name;
-		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
+		CheckValid( ccsConnected );
+		String l_name = p_buffer.readString();
 		StrUIntIdMap l_map = m_plugin->GetGamesList( l_name );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msRefreshGamesList;
@@ -1607,469 +1190,380 @@ namespace Chat
 		{
 			l_buffer << l_it->first;//id creator
 			l_buffer << l_it->second.second;//nb players
-			l_buffer << static_cast< int >( l_it->second.first.size() );
-			l_buffer.writeArray< char >( l_it->second.first.c_str(), l_it->second.first.size() ); //creator name
+			l_buffer << l_it->second.first; //creator name
 		}
 
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		DoSendBuffer( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessJoinGameMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
+		CheckValid( ccsNone );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
-		}
-
-		if ( m_status != ccsConnected )
-		{
-			DoSendGameJoinFail();
-			return;
-		}
-
-		int l_size = 0;
-		p_buffer >> l_size;
-		String l_name;
-		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
-		int l_id;
-		p_buffer >> l_id;
-		std::shared_ptr< ChatGame > l_game = m_plugin->GetGame( l_name, l_id );
-
-		if ( l_game || !l_game->AddPlayer( this ) )
-		{
-			DoSendGameJoinFail();
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
 		else
 		{
-			int l_place = l_game->GetPlayerPlace( GetName() );
-			SendGameJoinOkMessage( l_place );
-			ClientIdChatCLientMap l_players = l_game->GetPlayers();
-			ClientIdChatCLientMap::iterator l_myIt = l_players.find( m_login.GetId() );
-
-			for ( auto && l_it : l_players )
+			if ( m_status != ccsConnected )
 			{
-				ChatTcpClient * l_player = l_it.second;
+				DoSendGameJoinFail();
+			}
+			else
+			{
+				String l_name = p_buffer.readString();
+				int l_id;
+				p_buffer >> l_id;
+				std::shared_ptr< ChatGame > l_game = m_plugin->GetGame( l_name, l_id );
 
-				if ( l_player && l_player->GetId() != GetId() && !l_player->IsToDelete() )
+				if ( l_game || !l_game->AddPlayer( this ) )
 				{
-					l_player->SendGameJoinMessage( l_place, GetName(), m_clothes );
-					SendGameJoinMessage( l_game->GetPlayerPlace( l_player->GetName() ),
-										 l_player->GetName(),
-										 l_player->GetClothes() );
+					DoSendGameJoinFail();
 				}
+				else
+				{
+					int l_place = l_game->GetPlayerPlace( GetName() );
+					SendGameJoinOkMessage( l_place );
+					auto && l_myIt = l_game->GetPlayers().find( m_login.GetId() );
+
+					for ( auto && l_it : l_game->GetPlayers() )
+					{
+						ChatTcpClient * l_player = l_it.second;
+
+						if ( l_player && l_player->GetId() != GetId() && !l_player->IsToDelete() )
+						{
+							l_player->SendGameJoinMessage( l_place, GetName(), m_clothes );
+							SendGameJoinMessage( l_game->GetPlayerPlace( l_player->GetName() ), l_player->GetName(), l_player->GetClothes() );
+						}
+					}
+				}
+
+				m_game = l_game;
+				m_status = ccsInGame;
 			}
 		}
-
-		m_game = l_game;
-		m_status = ccsInGame;
-		return;
 	}
 
 	void ChatTcpClient::DoProcessQuitGameMessage()
 	{
+		CheckValid( ccsInGame );
 		std::shared_ptr< ChatGame > l_game = m_game.lock();
 
-		if ( !CheckValid( ccsInGame ) || l_game )
+		if ( l_game )
 		{
-			return;
-		}
+			std::clog << "Sending quit to game players" << std::endl;
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
+			l_buffer << msQuitGame;
+			m_login.Save( l_buffer );
+			DoForwardGameMessage( l_buffer );
+			l_game->RemovePlayer( this );
 
-		std::clog << "Sending quit to game players\n";
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msQuitGame;
-		m_login.Save( l_buffer );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardGameMessage( m_toSend );
-		l_game->RemovePlayer( this );
+			if ( l_game->GetInitiatorId() == m_login.GetId() )
+			{
+				std::clog << GetName() << " was the initiator of the game, deleting it" << std::endl;
+				m_plugin->RemoveGame( l_game->GetGameName(), m_login.GetId() );
+			}
+			else if ( l_game->GetPlayersCount() == 0 )
+			{
+				m_plugin->RemoveGame( l_game->GetGameName(), l_game->GetInitiatorId() );
+			}
 
-		if ( l_game->GetInitiatorId() == m_login.GetId() )
-		{
-			std::clog << GetName() << " was the initiator of the game, deleting it\n";
-			m_plugin->RemoveGame( l_game->GetGameName(), m_login.GetId() );
+			m_game.reset();
 		}
-		else if ( l_game->GetPlayersCount() == 0 )
-		{
-			m_plugin->RemoveGame( l_game->GetGameName(), l_game->GetInitiatorId() );
-		}
-
-		m_game.reset();
 	}
 
 	void ChatTcpClient::DoProcessGameMessage( ReadBuffer & p_buffer )
 	{
+		CheckValid( ccsInGame );
 		std::shared_ptr< ChatGame > l_game = m_game.lock();
 
-		if ( !CheckValid( ccsInGame ) || l_game )
+		if ( l_game )
 		{
-			return;
+			auto && l_buffer = make_wbuffer( m_messageBuffer );
+			l_buffer << msGame;
+			m_login.Save( l_buffer );
+			l_buffer.writeArray< char >( p_buffer.data() + sizeof( MessageReceived ), p_buffer.left() );
+			DoForwardGameMessage( l_buffer );
 		}
-
-		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msGame;
-		m_login.Save( l_buffer );
-		l_buffer.writeArray< char >( p_buffer.data() + sizeof( MessageReceived ), p_buffer.left() );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardGameMessage( m_toSend );
 	}
 
 	void ChatTcpClient::DoProcessCreateGameMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
+		CheckValid( ccsNone );
 
 		if ( IsAnonymous() )
 		{
-			auto && l_buffer = make_wbuffer( m_messageBuffer );
-			l_buffer << msUnavailableToAnonymous;
-			m_toSend.assign( l_buffer.data(), l_buffer.size() );
-			AsyncSend( m_toSend );
-			return;
+			DoSendNoParamMessage( msUnavailableToAnonymous );
 		}
-
-		if ( m_status != ccsConnected )
+		else
 		{
-			SendGameDontExistMessage();
-			return;
+			if ( m_status != ccsConnected )
+			{
+				SendGameDontExistMessage();
+			}
+			else
+			{
+				String l_name = p_buffer.readString();
+				m_game = m_plugin->AddGame( l_name, this );
+				m_status = ccsInGame;
+			}
 		}
-
-		int l_size = 0;
-		p_buffer >> l_size;
-		String l_name;
-		l_name.assign( p_buffer.readArray< char >( l_size ), l_size );
-		m_game = m_plugin->AddGame( l_name, this );
-		m_status = ccsInGame;
 	}
 
 	void ChatTcpClient::DoProcessSitDownMessage()
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		m_avatar.Sit();
 
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msSitDown;
 		m_login.Save( l_buffer );
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessSitUpMessage()
 	{
-		if ( !CheckValid( ccsInRoom ) )
-		{
-			return;
-		}
-
+		CheckValid( ccsInRoom );
 		m_avatar.Sit( false );
 
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
 		l_buffer << msSitUp;
 		m_login.Save( l_buffer );
-
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		DoForwardMessage( m_toSend );
+		DoForwardMessage( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessGameInfoMessage( ReadBuffer & p_buffer )
 	{
-		if ( !CheckValid( ccsNone ) )
-		{
-			return;
-		}
-
-		int l_size;
-		p_buffer >> l_size;
-		String l_gameName;
-		char const * l_cName = p_buffer.readArray< char >( l_size );
-
-		if ( l_cName == NULL )
-		{
-			return;
-		}
-
-		l_gameName.assign( l_cName, l_size );
-
-		unsigned int l_maxPlayers = m_plugin->GetGameMaxPLayers( l_gameName );
-
+		CheckValid( ccsNone );
 		auto && l_buffer = make_wbuffer( m_messageBuffer );
-		l_buffer << msGameInfo << static_cast< int >( l_maxPlayers );
-		m_toSend.assign( l_buffer.data(), l_buffer.size() );
-		AsyncSend( m_toSend );
+		l_buffer << msGameInfo << static_cast< int >( m_plugin->GetGameMaxPLayers( p_buffer.readString() ) );
+		DoSendBuffer( l_buffer );
 	}
 
 	void ChatTcpClient::DoProcessGameStartMessage()
 	{
+		CheckValid( ccsInGame );
 		std::shared_ptr< ChatGame > l_game = m_game.lock();
 
-		if ( !CheckValid( ccsInGame ) || l_game )
+		if ( l_game )
 		{
-			return;
+			l_game->StartGame();
 		}
-
-		l_game->StartGame();
 	}
 
-	void ChatTcpClient::CallbackReceivedMessage( const String & p_message )
+	void ChatTcpClient::CallbackReceivedMessage( String const & p_message )
 	{
-		if ( !CheckValid( ccsNone ) )
+		try
 		{
-			std::cout << GetName() << " Received a message but is not valid\n";
-			return;
+			CheckValid( ccsNone );
+			String l_message = p_message;
+			ReadBuffer l_buffer( l_message.data(), uint32_t( p_message.size() ) );
+			int l_header;
+			l_buffer >> l_header;
+			std::clog << GetName() << " Received a message : " << l_header << std::endl;
+
+			switch ( l_header )
+			{
+			case mrConnect:
+				if ( m_status < ccsConnected )
+				{
+					std::clog << GetName() << " Received message Connect" << std::endl;
+					DoProcessConnectMessage( l_buffer );
+				}
+
+				break;
+
+			case mrAvatar:
+				std::cout << GetName() << " Received message Avatar" << std::endl;
+				DoProcessDressMessage( l_buffer );
+				break;
+
+			case mrJoin:
+				if ( m_status < ccsInRoom )
+				{
+					std::cout << GetName() << " Received message Join" << std::endl;
+					DoProcessJoinMessage( l_buffer );
+				}
+
+				break;
+
+			case mrQuit:
+				if ( m_status == ccsInRoom )
+				{
+					std::cout << GetName() << " Received message Quit" << std::endl;
+					DoProcessQuitMessage();
+				}
+
+				break;
+
+			case mrUpdateRooms:
+				std::cout << GetName() << " Received message UpdateRooms" << std::endl;
+				DoSendRoomsMessage();
+				break;
+
+			case mrUpdate:
+				std::clog << "Received message Update" << std::endl;
+				DoProcessUpdateMessage( l_buffer );
+				break;
+
+			case mrWalk:
+				std::clog << "Received message Walk" << std::endl;
+				DoProcessWalkMessage( l_buffer );
+				break;
+
+			case mrTurn:
+				std::clog << "Received message Turn" << std::endl;
+				DoProcessTurnMessage( l_buffer );
+				break;
+
+			case mrTalk:
+				std::clog << "Received message Talk" << std::endl;
+				DoProcessTalkMessage( l_buffer );
+				break;
+
+			case mrWhisp:
+				std::clog << "Received message Whisp" << std::endl;
+				DoProcessWhispMessage( l_buffer );
+				break;
+
+			case mrBeginWalk:
+				std::clog << "Received message BeginWalk" << std::endl;
+				DoProcessBeginWalkMessage();
+				break;
+
+			case mrEndWalk:
+				std::clog << "Received message EndWalk" << std::endl;
+				DoProcessEndWalkMessage( l_buffer );
+				break;
+
+			case mrBeginRun:
+				std::clog << "Received message BeginRun" << std::endl;
+				DoProcessBeginRunMessage();
+				break;
+
+			case mrEndRun:
+				std::clog << "Received message EndRun" << std::endl;
+				DoProcessEndRunMessage( l_buffer );
+				break;
+
+			case mrEmote:
+				std::cout << GetName() << " Received message Emote" << std::endl;
+				DoProcessEmoteMessage( l_buffer );
+				break;
+
+			case mrRemoveFriend:
+				std::cout << GetName() << " Received message RemoveFriend" << std::endl;
+				DoProcessRemoveFriendMessage( l_buffer );
+				break;
+
+			case mrRemoveIgnored:
+				std::cout << GetName() << " Received message RemoveIgnored" << std::endl;
+				DoProcessRemoveIgnoredMessage( l_buffer );
+				break;
+
+			case mrUpdateFriendsList:
+				std::cout << GetName() << " Received message UpdateFriendsList" << std::endl;
+				DoProcessUpdateFriendsMessage();
+				break;
+
+			case mrUpdateIgnoredList:
+				std::cout << GetName() << " Received message UpdateIgnoredList" << std::endl;
+				DoProcessUpdateIgnoredMessage();
+				break;
+
+			case mrNewFriend:
+				std::cout << GetName() << " Received message NewFriend" << std::endl;
+				DoProcessNewFriendMessage( l_buffer );
+				break;
+
+			case mrNewIgnored:
+				std::cout << GetName() << " Received message NewIgnored" << std::endl;
+				DoProcessNewIgnoredMessage( l_buffer );
+				break;
+
+			case mrNewFriendAccept:
+				std::cout << GetName() << " Received message NewFriendAccept" << std::endl;
+				DoProcessFriendAcceptMessage( l_buffer );
+				break;
+
+			case mrNewFriendRefuse:
+				std::cout << GetName() << " Received message NewFriendRefuse" << std::endl;
+				DoProcessFriendRefuseMessage( l_buffer );
+				break;
+
+			case mrRefreshGamesList:
+				std::cout << GetName() << " Received message RefreshGamesList" << std::endl;
+				DoProcessRefreshGamesListMessage( l_buffer );
+				break;
+
+			case mrJoinGame:
+				std::cout << GetName() << " Received message JoinGame" << std::endl;
+				DoProcessJoinGameMessage( l_buffer );
+				break;
+
+			case mrCreateGame:
+				std::cout << GetName() << " Received message CreateGame" << std::endl;
+				DoProcessCreateGameMessage( l_buffer );
+				break;
+
+			case mrQuitGame:
+				std::cout << GetName() << " Received message QuitGame" << std::endl;
+				DoProcessQuitGameMessage();
+				break;
+
+			case mrGame:
+				std::clog << GetName() << " Received message Game" << std::endl;
+				DoProcessGameMessage( l_buffer );
+				break;
+
+			case mrSitDown:
+				std::cout << GetName() << " Received message Sitdown" << std::endl;
+				DoProcessSitDownMessage();
+				break;
+
+			case mrSitUp:
+				std::cout << GetName() << " Received message Situp" << std::endl;
+				DoProcessSitUpMessage();
+				break;
+
+			case mrGameInfo:
+				std::cout << GetName() << " Received message Game info" << std::endl;
+				DoProcessGameInfoMessage( l_buffer );
+				break;
+
+			case mrGameStart:
+				std::cout << GetName() << " Received message Game start" << std::endl;
+				DoProcessGameStartMessage();
+				break;
+
+			case mrRequestDresses:
+				std::cout << GetName() << " Received message Request dresses" << std::endl;
+				DoSendDressesMessage();
+				break;
+			}
+
+			CheckValid( ccsNone );
 		}
-
-		char * l_msgBuf = CStrCopy( p_message );
-		ReadBuffer l_buffer( l_msgBuf, p_message.size() );
-		int l_header;
-		l_buffer >> l_header;
-		std::clog << GetName() << " Received a message : " << l_header << "\n";
-
-		switch ( l_header )
+		catch ( std::exception & exc )
 		{
-		case mrConnect:
-			if ( m_status < ccsConnected )
-			{
-				std::clog << GetName() << " Received message Connect\n";
-				DoProcessConnectMessage( l_buffer );
-			}
-
-			break;
-
-		case mrAvatar:
-			std::cout << GetName() << " Received message Avatar\n";
-			DoProcessDressMessage( l_buffer );
-			break;
-
-		case mrJoin:
-			if ( m_status < ccsInRoom )
-			{
-				std::cout << GetName() << " Received message Join\n";
-				DoProcessJoinMessage( l_buffer );
-			}
-
-			break;
-
-		case mrQuit:
-			if ( m_status == ccsInRoom )
-			{
-				std::cout << GetName() << " Received message Quit\n";
-				DoProcessQuitMessage();
-			}
-
-			break;
-
-		case mrUpdateRooms:
-			std::cout << GetName() << " Received message UpdateRooms\n";
-			DoSendRoomsMessage();
-			break;
-
-		case mrUpdate:
-			std::clog << "Received message Update\n";
-			DoProcessUpdateMessage( l_buffer );
-			break;
-
-		case mrWalk:
-			std::clog << "Received message Walk\n";
-			DoProcessWalkMessage( l_buffer );
-			break;
-
-		case mrTurn:
-			std::clog << "Received message Turn\n";
-			DoProcessTurnMessage( l_buffer );
-			break;
-
-		case mrTalk:
-			std::clog << "Received message Talk\n";
-			DoProcessTalkMessage( l_buffer );
-			break;
-
-		case mrWhisp:
-			std::clog << "Received message Whisp\n";
-			DoProcessWhispMessage( l_buffer );
-			break;
-
-		case mrBeginWalk:
-			std::clog << "Received message BeginWalk\n";
-			DoProcessBeginWalkMessage();
-			break;
-
-		case mrEndWalk:
-			std::clog << "Received message EndWalk\n";
-			DoProcessEndWalkMessage( l_buffer );
-			break;
-
-		case mrBeginRun:
-			std::clog << "Received message BeginRun\n";
-			DoProcessBeginRunMessage();
-			break;
-
-		case mrEndRun:
-			std::clog << "Received message EndRun\n";
-			DoProcessEndRunMessage( l_buffer );
-			break;
-
-		case mrEmote:
-			std::cout << GetName() << " Received message Emote\n";
-			DoProcessEmoteMessage( l_buffer );
-			break;
-
-		case mrRemoveFriend:
-			std::cout << GetName() << " Received message RemoveFriend\n";
-			DoProcessRemoveFriendMessage( l_buffer );
-			break;
-
-		case mrRemoveIgnored:
-			std::cout << GetName() << " Received message RemoveIgnored\n";
-			DoProcessRemoveIgnoredMessage( l_buffer );
-			break;
-
-		case mrUpdateFriendsList:
-			std::cout << GetName() << " Received message UpdateFriendsList\n";
-			DoProcessUpdateFriendsMessage();
-			break;
-
-		case mrUpdateIgnoredList:
-			std::cout << GetName() << " Received message UpdateIgnoredList\n";
-			DoProcessUpdateIgnoredMessage();
-			break;
-
-		case mrNewFriend:
-			std::cout << GetName() << " Received message NewFriend\n";
-			DoProcessNewFriendMessage( l_buffer );
-			break;
-
-		case mrNewIgnored:
-			std::cout << GetName() << " Received message NewIgnored\n";
-			DoProcessNewIgnoredMessage( l_buffer );
-			break;
-
-		case mrNewFriendAccept:
-			std::cout << GetName() << " Received message NewFriendAccept\n";
-			DoProcessFriendAcceptMessage( l_buffer );
-			break;
-
-		case mrNewFriendRefuse:
-			std::cout << GetName() << " Received message NewFriendRefuse\n";
-			DoProcessFriendRefuseMessage( l_buffer );
-			break;
-
-		case mrRefreshGamesList:
-			std::cout << GetName() << " Received message RefreshGamesList\n";
-			DoProcessRefreshGamesListMessage( l_buffer );
-			break;
-
-		case mrJoinGame:
-			std::cout << GetName() << " Received message JoinGame\n";
-			DoProcessJoinGameMessage( l_buffer );
-			break;
-
-		case mrCreateGame:
-			std::cout << GetName() << " Received message CreateGame\n";
-			DoProcessCreateGameMessage( l_buffer );
-			break;
-
-		case mrQuitGame:
-			std::cout << GetName() << " Received message QuitGame\n";
-			DoProcessQuitGameMessage();
-			break;
-
-		case mrGame:
-			std::clog << GetName() << " Received message Game\n";
-			DoProcessGameMessage( l_buffer );
-			break;
-
-		case mrSitDown:
-			std::cout << GetName() << " Received message Sitdown\n";
-			DoProcessSitDownMessage();
-			break;
-
-		case mrSitUp:
-			std::cout << GetName() << " Received message Situp\n";
-			DoProcessSitUpMessage();
-			break;
-
-		case mrGameInfo:
-			std::cout << GetName() << " Received message Game info\n";
-			DoProcessGameInfoMessage( l_buffer );
-			break;
-
-		case mrGameStart:
-			std::cout << GetName() << " Received message Game start\n";
-			DoProcessGameStartMessage();
-			break;
-
-		case mrRequestDresses:
-			std::cout << GetName() << " Received message Request dresses\n";
-			DoSendDressesMessage();
-			break;
+			std::cerr << exc.what() << std::endl;
 		}
-
-		delete [] l_msgBuf;
-
-		CheckValid( ccsNone );
 	}
 
-	bool ChatTcpClient::CallbackReaderError( const boost::system::error_code & p_err )
+	bool ChatTcpClient::CallbackReaderError( boost::system::error_code const & p_err )
 	{
-		//std::clog << "ChatTcpClient::CallbackReaderError - Active" << std::endl;
-		//boost::asio::ip::tcp::endpoint l_endPoint = TcpBaseClient::m_socket.remote_endpoint();
-		//std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-		//l_endPoint = TcpBaseClient::m_socket.local_endpoint();
-		//std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-
-		//std::cout << "ChatTcpClient::CallbackReaderError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
-		//if (m_working)
-		//{
-		//	m_toDelete = true;
-		//}
-		//else
-		//{
-		//	m_elypseService->EraseClient( this);
-		//}
-
 		TcpReaderBase::m_service.post( SocketKiller( this ) );
 		return true;
 	}
 
-	bool ChatTcpClient::CallbackWriterError( const boost::system::error_code & p_err )
+	bool ChatTcpClient::CallbackWriterError( boost::system::error_code const & p_err )
 	{
 		Stop();
-		//std::clog << "ChatTcpClient::CallbackWriterError - Active" << std::endl;
-		//boost::asio::ip::tcp::endpoint l_endPoint = TcpBaseClient::m_socket.remote_endpoint();
-		//std::string l_remoteAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-		//l_endPoint = TcpBaseClient::m_socket.local_endpoint();
-		//std::string l_localAddr = l_endPoint.address().to_string() + ":" + General::Utils::ToString( l_endPoint.port());
-
-		//std::cout << "ChatTcpClient::CallbackWriterError => Error on socket [" << l_localAddr << "]-[" << l_remoteAddr << "] : [" << p_err.message() << "]" << std::endl;
-		//if (m_working)
-		//{
-		//	m_toDelete = true;
-		//}
-		//else
-		//{
-		//	m_elypseService->EraseClient( this);
-		//}
-
 		return true;
 	}
 
-	bool ChatTcpClient::CallbackConnectorError( const boost::system::error_code & p_err )
+	bool ChatTcpClient::CallbackConnectorError( boost::system::error_code const & p_err )
 	{
 		Stop();
 		return true;

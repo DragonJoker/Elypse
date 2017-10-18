@@ -26,7 +26,7 @@ Surface::Surface()
 {
 }
 
-Surface::Surface( const String & p_name, SceneManager * p_manager )
+Surface::Surface( String const & p_name, SceneManager * p_manager )
 	: m_name( p_name )
 {
 	m_object = p_manager->createManualObject( p_name );
@@ -36,7 +36,7 @@ Surface::~Surface()
 {
 }
 
-void Surface::CreateFromHeightMap( Real * p_heightMap , unsigned int p_width , unsigned int p_height , const String & p_materialName )
+void Surface::CreateFromHeightMap( Real * p_heightMap , uint32_t p_width , uint32_t p_height , String const & p_materialName )
 {
 }
 
@@ -46,15 +46,15 @@ void Surface::Clear()
 }
 
 void Surface::CreateFromSpaceMap( Vector3 * p_spaceMap ,
-									unsigned int p_width ,
-									unsigned int p_height ,
-									const String & p_materialName ,
-									bool p_seamNorth ,
-									bool p_seamEast ,
-									bool p_seamSouth ,
-									bool p_seamWest )
+								  uint32_t p_width ,
+								  uint32_t p_height ,
+								  String const & p_materialName ,
+								  bool p_seamNorth ,
+								  bool p_seamEast ,
+								  bool p_seamSouth ,
+								  bool p_seamWest )
 {
-	unsigned int i, j, k;
+	uint32_t i, j, k;
 //	m_object->begin(p_materialName , RenderOperation::OT_TRIANGLE_LIST);
 	Vector3 l_normal, l_a, l_b;
 	k = p_width + 1;

@@ -135,7 +135,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_WhileLoop )
 	}
 
 	bool l_condition = cond->get<bool>();
-	unsigned int i = 0;
+	uint32_t i = 0;
 
 	while ( l_condition )
 	{
@@ -211,7 +211,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Gen_ForLoop )
 
 	try
 	{
-		unsigned int i = 0 ;
+		uint32_t i = 0 ;
 
 		while ( cond->get<bool>() )
 		{
@@ -420,7 +420,7 @@ namespace Elypse
 	{
 		void RemoveObjects( SceneNode * p_node )
 		{
-			unsigned short max, i;
+			uint16_t max, i;
 			max = p_node->numChildren();
 
 			for ( i = 0 ; i < max ; i ++ )
@@ -432,7 +432,7 @@ namespace Elypse
 
 			for ( i = 0 ; i < max ; i ++ )
 			{
-				ScriptEngine::GetContext()->sceneManager->destroyMovableObject( p_node->detachObject( static_cast <unsigned short>( 0 ) ) );
+				ScriptEngine::GetContext()->sceneManager->destroyMovableObject( p_node->detachObject( uint16_t( 0 ) ) );
 			}
 		}
 	}
@@ -948,7 +948,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Pck_PackInt )
 {
 	GET_AND_EXEC_PARAM( int, p_value, 0 );
 	String l_string;
-	l_string.append( reinterpret_cast <const char *>( & p_value ), sizeof( int ) );
+	l_string.append( reinterpret_cast <char const * const>( & p_value ), sizeof( int ) );
 	RETURN_AS( String ) l_string;
 }
 
@@ -956,7 +956,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Pck_PackReal )
 {
 	GET_AND_EXEC_PARAM( Real, p_value, 0 );
 	String l_string;
-	l_string.append( reinterpret_cast <const char *>( & p_value ), sizeof( Real ) );
+	l_string.append( reinterpret_cast <char const * const>( & p_value ), sizeof( Real ) );
 	RETURN_AS( String ) l_string;
 }
 
@@ -964,7 +964,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Pck_PackVector3 )
 {
 	GET_AND_EXEC_PARAM( Vector3, p_value, 0 );
 	String l_string;
-	l_string.append( reinterpret_cast <const char *>( & p_value ), sizeof( Vector3 ) );
+	l_string.append( reinterpret_cast <char const * const>( & p_value ), sizeof( Vector3 ) );
 	RETURN_AS( String ) l_string;
 }
 
@@ -972,7 +972,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Pck_PackQuaternion )
 {
 	GET_AND_EXEC_PARAM( Quaternion, p_value, 0 );
 	String l_string;
-	l_string.append( reinterpret_cast <const char *>( & p_value ), sizeof( Quaternion ) );
+	l_string.append( reinterpret_cast <char const * const>( & p_value ), sizeof( Quaternion ) );
 	RETURN_AS( String ) l_string;
 }
 

@@ -29,22 +29,24 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreSceneNode.h>
 #include <OgreStringConverter.h>
 
-SoundPlaylist::SoundPlaylist( const String & p_name, Real p_SFXVolume, Real p_musicVolume, const String & p_zoneName )
-	: m_name( p_name ),
-		m_zoneName( p_zoneName ),
-		m_timerType( TT_Fixed ),
-		m_random( false ),
-		m_looped( false ),
-		m_waiting( false ),
-		m_nbUse( 0 ),
-		m_currentPlaying( -1 ),
-		m_type( EM_NONE ),
-		m_timerTime( 0.0 ),
-		m_timerMin( 0.0 ),
-		m_timerMax( 0.0 ),
-		m_musicVolume( minmax <Real> ( 0, p_musicVolume, 1 ) ),
-		m_SFXVolume( minmax <Real> ( 0, p_SFXVolume, 1 ) ),
-		m_volumePercent( 1.0 )
+#include <random>
+
+SoundPlaylist::SoundPlaylist( String const & p_name, Real p_SFXVolume, Real p_musicVolume, String const & p_zoneName )
+	: m_name( p_name )
+	, m_zoneName( p_zoneName )
+	, m_timerType( TT_Fixed )
+	, m_random( false )
+	, m_looped( false )
+	, m_waiting( false )
+	, m_nbUse( 0 )
+	, m_currentPlaying( -1 )
+	, m_type( EM_NONE )
+	, m_timerTime( 0.0 )
+	, m_timerMin( 0.0 )
+	, m_timerMax( 0.0 )
+	, m_musicVolume( minmax <Real> ( 0, p_musicVolume, 1 ) )
+	, m_SFXVolume( minmax <Real> ( 0, p_SFXVolume, 1 ) )
+	, m_volumePercent( 1.0 )
 {
 	EMUSE_MESSAGE_DEBUG( "SoundObject::SoundPlaylist - " + p_name );
 }
@@ -80,7 +82,7 @@ void SoundPlaylist::AddSoundObject( SoundObject * p_soundObject )
 	m_volume = m_musicVolume;
 }
 
-void SoundPlaylist::SetNode( SceneNode * p_node, const String & p_zone )
+void SoundPlaylist::SetNode( SceneNode * p_node, String const & p_zone )
 {
 	SoundObjectMap::iterator l_it = m_objectList.begin();
 	const SoundObjectMap::iterator & l_end = m_objectList.end();
@@ -98,11 +100,11 @@ void SoundPlaylist::SetNode( SceneNode * p_node, const String & p_zone )
 void SoundPlaylist::_randomise()
 {
 	EMSoundsPosition l_positions;
-	size_t l_rand;
+	std::random_device l_device;
 
-	while ( ! m_positions.empty() )
+	while ( !m_positions.empty() )
 	{
-		l_rand = rand() % m_positions.size();
+		auto l_rand = std::uniform_int_distribution< size_t >( 0, m_positions.size() - 1 )( l_device );
 		l_positions.push_back( m_positions[l_rand] );
 		m_positions.erase( m_positions.begin() + l_rand );
 	}
@@ -193,7 +195,7 @@ void SoundPlaylist::Next()
 	m_currentPlaying = -1;
 }
 
-void SoundPlaylist::ReleaseAllZone( const String & p_zoneName )
+void SoundPlaylist::ReleaseAllZone( String const & p_zoneName )
 {
 	_logMessage( "SoundPlaylist::ReleaseAllZone - Zone : " + p_zoneName + " Playlist Name : " + m_name );
 
@@ -293,7 +295,7 @@ void SoundPlaylist::_update3D( Real p_tslf )
 	l_sInstance->Update3D( p_tslf );
 }
 
-void SoundPlaylist::_logMessage( const String & p_msg )
+void SoundPlaylist::_logMessage( String const & p_msg )
 {
 	EMUSE_MESSAGE_DEBUG( p_msg );
 }

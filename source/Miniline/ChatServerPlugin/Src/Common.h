@@ -55,8 +55,8 @@ namespace Chat
 	class ChatGame;
 	class ChatDatabase;
 
-	typedef std::map< String, ChatTcpClient * > ChatTcpClientStrMap;
-	typedef std::map< String, uint32_t > ClientIdStrMap;
+	typedef std::map< uint32_t, ChatTcpClient * > ChatTcpClientIdMap;
+	typedef std::map< uint32_t, String > ClientStrIdMap;
 	typedef std::map< uint32_t, ChatTcpClient * > ClientIdChatCLientMap;
 	typedef std::map< String, std::shared_ptr< ChatRoom > > ChatRoomStrMap;
 	typedef std::map< uint32_t, std::shared_ptr< ChatGame > > ChatGameIDMap;
@@ -65,6 +65,9 @@ namespace Chat
 	typedef std::pair< String, uint32_t > StrUIntPair;
 	typedef std::map< uint32_t, StrUIntPair > StrUIntIdMap;
 	typedef std::vector< String > StringArray;
+	typedef std::vector< uint32_t > UIntArray;
+	typedef std::map< uint32_t, UIntArray > UintArrayUIntMap;
+	typedef std::map< uint32_t, UintArrayUIntMap > UintArrayUIntMapUIntMap;
 
 	struct Vector3
 	{
@@ -74,7 +77,7 @@ namespace Chat
 	};
 
 	enum ChatClientStatus
-	: int
+		: int
 	{
 		ccsNone,
 		ccsConnected,
@@ -84,7 +87,7 @@ namespace Chat
 	};
 
 	enum ChatClientDressSlot
-	: int
+		: int
 	{
 		ccdsSex,
 		ccdsBody,
@@ -104,16 +107,16 @@ namespace Chat
 	{
 		bool Load( General::Templates::ReadBuffer & p_buffer );
 		void Save( General::Templates::WriteBuffer & p_buffer )const;
-		int m_id = 0;
+		uint32_t m_id = 0;
 		ChatClientDressSlot m_slot = ccdsMaxDresses;
-		std::map< int, int > m_materials;
+		std::map< uint32_t, uint32_t > m_materials;
 	};
 
 	struct Tattoo
 	{
 		bool Load( General::Templates::ReadBuffer & p_buffer );
 		void Save( General::Templates::WriteBuffer & p_buffer )const;
-		int m_id = 0;
+		uint32_t m_id = 0;
 		ChatClientDressSlot m_slot = ccdsMaxDresses;
 	};
 
@@ -136,7 +139,7 @@ namespace Chat
 	};
 
 	enum MessageReceived
-	: int
+		: int
 	{
 		mrConnect,
 		mrAvatar,
@@ -174,7 +177,7 @@ namespace Chat
 	};
 
 	enum MessageSent
-	: int
+		: int
 	{
 		msConnectOK,
 		msConnectFail,

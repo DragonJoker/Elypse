@@ -19,33 +19,38 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "TemporalObject.h"
 
-BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE
+namespace Troll
 {
-	TemporalObject::TemporalObject( const wxString & p_name, const wxString & p_fileName, TemporalObjectType p_type )
-		: Object( p_name, p_fileName, TROLL_PROJECT_NAMESPACE::ttTemporalObject )
-		, m_temporalObjectType( p_type )
+	namespace ProjectComponents
 	{
-		wxString l_msg = wxT( "Creating Temporal object : " );
-
-		if ( p_type == ttAnimationGroup )
+		namespace Temporal
 		{
-			l_msg += wxT( "Animation Group - " );
-		}
-		else if ( p_type == ttAnimatedObject )
-		{
-			l_msg += wxT( "Animated Object - " );
-		}
-		else if ( p_type == ttAnimation )
-		{
-			l_msg += wxT( "Animation - " );
-		}
+			TemporalObject::TemporalObject( wxString const & p_name, wxString const & p_fileName, TemporalObjectType p_type )
+				: Object( p_name, p_fileName, ProjectComponents::ttTemporalObject )
+				, m_temporalObjectType( p_type )
+			{
+				wxString l_msg = wxT( "Creating Temporal object : " );
 
-		l_msg += wxT( "Name : " ) + p_name;
-		LogMessage( l_msg );
-	}
+				if ( p_type == ttAnimationGroup )
+				{
+					l_msg += wxT( "Animation Group - " );
+				}
+				else if ( p_type == ttAnimatedObject )
+				{
+					l_msg += wxT( "Animated Object - " );
+				}
+				else if ( p_type == ttAnimation )
+				{
+					l_msg += wxT( "Animation - " );
+				}
 
-	TemporalObject::~TemporalObject()
-	{
+				l_msg += wxT( "Name : " ) + p_name;
+				LogMessage( l_msg );
+			}
+
+			TemporalObject::~TemporalObject()
+			{
+			}
+		}
 	}
 }
-END_TROLL_PROJECT_TEMPORAL_NAMESPACE

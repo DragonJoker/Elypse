@@ -37,12 +37,12 @@ using namespace General::Files;
 using namespace General::Theory;
 using namespace General::Utils;
 
-DataFile::DataFile( const String & p_name, MuseFile * p_owner )
-	: named( p_name ),
-		owned_by( p_owner ),
-		m_initialised( false ),
-		m_downloaded( false ),
-		m_preInit( false )
+DataFile::DataFile( String const & p_name, MuseFile & p_owner )
+	: named( p_name )
+	, owned_by( p_owner )
+	, m_initialised( false )
+	, m_downloaded( false )
+	, m_preInit( false )
 {
 }
 
@@ -64,21 +64,21 @@ DataFile::~DataFile()
 
 String DataFile::GetDescriptiveName()const
 {
-	return m_owner->GetName() + " > " + m_name;
+	return GetOwner()->GetName() + " > " + m_name;
 }
 
 void DataFile::_load()
 {
-	GENLIB_LOCK_MUTEX( m_mutex );
+	m_mutex.lock();
 
 	if ( ! m_downloaded )
 	{
-		GENLIB_UNLOCK_MUTEX( m_mutex );
-		m_owner->WaitForFile( m_name, true );
-		GENLIB_LOCK_MUTEX( m_mutex );
+		m_mutex.unlock();
+		GetOwner()->WaitForFile( m_name, true );
+		m_mutex.lock();
 	}
 
-	const Path & l_fullPath = m_owner->GetCompletePath();
+	const Path & l_fullPath = GetOwner()->GetCompletePath();
 	const Path & l_extractPath = l_fullPath / ( m_name + "_" );
 
 	if ( ! m_preInit )
@@ -115,7 +115,7 @@ void DataFile::_load()
 		EMUSE_LOG_MESSAGE_RELEASE( "Exception during data load in pack [" + m_name + "] : " + p_exception.getFullDescription() );
 	}
 
-	GENLIB_UNLOCK_MUTEX( m_mutex );
+	m_mutex.unlock();
 }
 
 void DataFile::_unload()
@@ -150,6 +150,6 @@ void DataFile::Release()
 
 void DataFile::DownloadFinished()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	m_downloaded = true;
 }

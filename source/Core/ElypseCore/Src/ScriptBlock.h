@@ -40,8 +40,8 @@ namespace Elypse
 			VariableType * m_variableType;
 			OperatorLevel m_operatorLevel;
 
-			unsigned int m_lineNumBegin;
-			unsigned int m_depth;
+			uint32_t m_lineNumBegin;
+			uint32_t m_depth;
 
 			bool m_operator_rightToLeft;
 
@@ -51,9 +51,9 @@ namespace Elypse
 
 		public:
 			bool Parse();
-			void Clear() d_no_throw;
+			void Clear() noexcept;
 			virtual ScriptBlock * _initialise(	ScriptCompiler * p_compiler, BlockType p_type,
-												unsigned int p_lineNum, unsigned int p_depth,
+												uint32_t p_lineNum, uint32_t p_depth,
 												ScriptBlock * p_parent );
 			ScriptNode * Compile();
 

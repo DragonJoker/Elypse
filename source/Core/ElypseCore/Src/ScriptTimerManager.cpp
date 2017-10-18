@@ -24,10 +24,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "ScriptNode.h"
 
 ScriptTimerManager::ScriptTimerManager( ScriptEngine * p_scriptEngine )
-	: m_engine( p_scriptEngine ),
-		m_currentTimer( NULL ),
-		m_paused( false ),
-		m_deleteCurrentTimer( false )
+	: m_engine( p_scriptEngine )
+	, m_currentTimer( NULL )
+	, m_paused( false )
+	, m_deleteCurrentTimer( false )
 {
 	genlib_assert( m_engine != NULL );
 	m_timeLeft = m_engine->GetVariable( "CURRENTTIMER_TIME_LEFT" );
@@ -127,7 +127,7 @@ void ScriptTimerManager::UpdateAll( Real p_time )
 	}
 }
 
-ScriptTimer * ScriptTimerManager::AddTimer( const String & p_timerName, Real p_timerBaseTime, ScriptNode * p_timerCode, ScriptTimerType p_type, ScriptNode * p_finalTimer )
+ScriptTimer * ScriptTimerManager::AddTimer( String const & p_timerName, Real p_timerBaseTime, ScriptNode * p_timerCode, ScriptTimerType p_type, ScriptNode * p_finalTimer )
 {
 	genlib_assert( ! p_timerName.empty() );
 
@@ -155,7 +155,7 @@ ScriptTimer * ScriptTimerManager::AddTimer( const String & p_timerName, Real p_t
 	return l_timer;
 }
 
-void ScriptTimerManager::DestroyTimer( const String & p_timerName )
+void ScriptTimerManager::DestroyTimer( String const & p_timerName )
 {
 	ScriptTimer * l_timer = General::Utils::map::findOrNull( m_timers, p_timerName );
 

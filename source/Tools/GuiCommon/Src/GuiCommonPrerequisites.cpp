@@ -17,13 +17,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "GuiCommonPch.h"
 
-BEGIN_COMMON_GUI_NAMESPACE
+namespace GuiCommon
 {
 	namespace
 	{
 		const wxString CONVERSION_ERROR = _( "Conversion Error" );
 		const wxString RANGE_ERROR = _( "Range Error" );
-		
+
 		const wxString ERROR_FLOATING_POINT = _( "Please enter a floating point value" );
 		const wxString ERROR_FLOATING_POINT_RANGE = _( "Please enter a floating point value in the range" );
 		const wxString ERROR_INTEGER = _( "Please enter a numeric value" );
@@ -45,7 +45,7 @@ BEGIN_COMMON_GUI_NAMESPACE
 		return p_in.char_str().data();
 	}
 
-	bool GetReal( const wxString & p_value, float & p_res )
+	bool GetReal( wxString const & p_value, float & p_res )
 	{
 		bool l_return = false;
 		double l_res = 0.0;
@@ -65,7 +65,7 @@ BEGIN_COMMON_GUI_NAMESPACE
 		return l_return;
 	}
 
-	bool GetReal( const wxString & p_value, float p_min, float p_max, float & p_res )
+	bool GetReal( wxString const & p_value, float p_min, float p_max, float & p_res )
 	{
 		bool l_return = GetReal( p_value, p_res );
 
@@ -82,7 +82,7 @@ BEGIN_COMMON_GUI_NAMESPACE
 		return l_return;
 	}
 
-	bool GetInt( const wxString & p_value, int & p_res )
+	bool GetInt( wxString const & p_value, int & p_res )
 	{
 		bool l_return = false;
 		long l_res = 0;
@@ -100,7 +100,7 @@ BEGIN_COMMON_GUI_NAMESPACE
 		return l_return;
 	}
 
-	bool GetInt( const wxString & p_value, int p_min, int p_max, int & p_res )
+	bool GetInt( wxString const & p_value, int p_min, int p_max, int & p_res )
 	{
 		bool l_return = GetInt( p_value, p_res );
 
@@ -117,24 +117,23 @@ BEGIN_COMMON_GUI_NAMESPACE
 		return l_return;
 	}
 
-	bool GetReal( const String & p_value, float & p_res )
+	bool GetReal( String const & p_value, float & p_res )
 	{
 		return GetReal( make_wxString( p_value ), p_res );
 	}
 
-	bool GetReal( const String & p_value, float p_min, float p_max, float & p_res )
+	bool GetReal( String const & p_value, float p_min, float p_max, float & p_res )
 	{
 		return GetReal( make_wxString( p_value ), p_min, p_max, p_res );
 	}
 
-	bool GetInt( const String & p_value, int & p_res )
+	bool GetInt( String const & p_value, int & p_res )
 	{
 		return GetInt( make_wxString( p_value.c_str() ), p_res );
 	}
 
-	bool GetInt( const String & p_value, int p_min, int p_max, int & p_res )
+	bool GetInt( String const & p_value, int p_min, int p_max, int & p_res )
 	{
 		return GetInt( make_wxString( p_value ), p_min, p_max, p_res );
 	}
 }
-END_COMMON_GUI_NAMESPACE

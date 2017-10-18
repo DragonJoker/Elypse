@@ -35,35 +35,35 @@ namespace Elypse
 			static ElypseLogs * sm_singleton;
 
 		protected:
-			Mutex m_logMutex;
-			Mutex m_consoleMutex;
+			std::mutex m_logMutex;
+			std::mutex m_consoleMutex;
 
 		public:
 			ElypseLogs();
 			virtual ~ElypseLogs();
 
 		protected:
-			virtual void _logMessage( const String & p_comment );
-			virtual void _consoleMessage( const String & p_comment );
+			virtual void DoLogMessage( String const & p_comment );
+			virtual void DoConsoleMessage( String const & p_comment );
 
 		public:
-			static inline void Elypse_Message( const String & p_comment )
+			static inline void Elypse_Message( String const & p_comment )
 			{
 				Elypse_LogMessage( p_comment );
 				Elypse_ConsoleMessage( p_comment );
 			}
-			static inline void Elypse_LogMessage( const String & p_comment )
+			static inline void Elypse_LogMessage( String const & p_comment )
 			{
 				if ( sm_singleton != NULL )
 				{
-					sm_singleton->_logMessage( p_comment );
+					sm_singleton->DoLogMessage( p_comment );
 				}
 			}
-			static inline void Elypse_ConsoleMessage( const String & p_comment )
+			static inline void Elypse_ConsoleMessage( String const & p_comment )
 			{
 				if ( sm_singleton != NULL )
 				{
-					sm_singleton->_consoleMessage( p_comment );
+					sm_singleton->DoConsoleMessage( p_comment );
 				}
 				else
 				{

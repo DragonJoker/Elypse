@@ -20,11 +20,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "TrollEditorPrerequisites.h"
 
-#define TROLL_PROJECT_NAMESPACE TROLL_NAMESPACE::ProjectComponents
-#define BEGIN_TROLL_PROJECT_NAMESPACE BEGIN_TROLL_NAMESPACE { namespace ProjectComponents
-#define END_TROLL_PROJECT_NAMESPACE END_TROLL_NAMESPACE }
-
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	namespace ProjectComponents
 	{
@@ -32,7 +28,8 @@ BEGIN_TROLL_NAMESPACE
 		{
 			Normal,
 			Selected,
-			MouseOver
+			MouseOver,
+			StateCount
 		};
 
 		enum ObjectType
@@ -40,20 +37,23 @@ BEGIN_TROLL_NAMESPACE
 			tt3DObject,
 			ttOverlay,
 			ttTemporalObject,
-			ttMediaObject
+			ttMediaObject,
+			ObjectTypeCount
 		};
 
 		enum AntiAliasing
 		{
 			aa0 = 0,
 			aa2x = 1,
-			aa4x = 2
+			aa4x = 2,
+			AntialiasingCount
 		};
 
 		enum BackgroundType
 		{
 			bgColour,
-			bgImage
+			bgImage,
+			BackgroundTypeCount
 		};
 
 		enum InterpolationMethod
@@ -62,7 +62,8 @@ BEGIN_TROLL_NAMESPACE
 			Square,
 			Cubic,
 			Sinus,
-			Bezier
+			Bezier,
+			InterpolationMethodCount
 		};
 
 		enum FileType
@@ -71,14 +72,16 @@ BEGIN_TROLL_NAMESPACE
 			loadScriptFile,
 			unloadScriptFile,
 			dataFile,
-			dataFolder
+			dataFolder,
+			FileTypeCount
 		};
 
 		enum ShadowType
 		{
 			stNone,
 			stTextureAdditive,
-			stStencilAdditive
+			stStencilAdditive,
+			ShadowTypeCount
 		};
 
 		class Displayable;
@@ -89,16 +92,17 @@ BEGIN_TROLL_NAMESPACE
 		class SceneFile;
 		class Object;
 
-		typedef std::vector< File * > FileArray;
-		typedef std::map< unsigned int, wxString > wxStringUIntMap;
+		using ScenePtr = std::shared_ptr< Scene >;
+		typedef std::vector< File > FileArray;
+		typedef std::map< uint32_t, wxString > wxStringUIntMap;
 		typedef std::map< wxString, SceneFile * > SceneFileStrMap;
-		typedef std::map< wxString, Scene * > SceneMap;
+		typedef std::vector< ScenePtr > SceneArray;
+		typedef std::map< wxString, ScenePtr > SceneMap;
 		typedef std::map< wxString, Object * > ObjectMap;
-		
+
 		typedef std::shared_ptr< Project > ProjectSPtr;
 		typedef std::weak_ptr< Project > ProjectWPtr;
 	}
 }
-END_TROLL_NAMESPACE
 
 #endif

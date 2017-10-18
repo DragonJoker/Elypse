@@ -46,23 +46,23 @@ namespace Elypse
 			ColourValue m_background;
 			Real m_alpha;
 
-			unsigned int m_texWidth;
-			unsigned int m_texHeight;
+			uint32_t m_texWidth;
+			uint32_t m_texHeight;
 
 			String m_instanceKey;
 
 		public:
-			Mirror( const String & p_name );
+			Mirror( String const & p_name );
 			~Mirror();
 
 		public:
-			void AddMaterial( const String & p_materialName, Real p_opacity );
-			void RemoveMaterial( const String & p_materialName );
-			void ChangeMaterialAlpha( const String & p_materialName, Real p_opacity );
+			void AddMaterial( String const & p_materialName, Real p_opacity );
+			void RemoveMaterial( String const & p_materialName );
+			void ChangeMaterialAlpha( String const & p_materialName, Real p_opacity );
 			void Update();
 			bool IsVisible()const;
 			void SetAutoUpdate( bool p_redrawWhenCameraMoves, bool p_redrawEveryFrame );
-			void Initialise( const String & p_instanceKey, SceneManager * p_sceneManager );
+			void Initialise( String const & p_instanceKey, SceneManager * p_sceneManager );
 
 		private:
 			void _linkCameras();
@@ -82,7 +82,7 @@ namespace Elypse
 			{
 				m_normal = p_normal;
 			}
-			inline void SetTextureResolution( unsigned int p_width, unsigned int p_height )
+			inline void SetTextureResolution( uint32_t p_width, uint32_t p_height )
 			{
 				m_texWidth = p_width;
 				m_texHeight = p_height;

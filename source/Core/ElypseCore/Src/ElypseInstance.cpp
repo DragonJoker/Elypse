@@ -47,30 +47,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 using namespace Ogre;
 
 ElypseInstance::ElypseInstance( const Path & p_installPath, ElypsePlugin * p_plugin )
-	: named( "ElypseInstance" ),
-		m_installationPath( p_installPath ),
-		m_root( NULL ),
-		m_renderWindow( NULL ),
-		m_plugin( p_plugin ),
-		m_thread( NULL ),
-		m_downManager( NULL ),
-		m_frameListener( NULL ),
-		m_loadingBar( NULL ),
-		m_antialiasing( 0 ),
-		m_height( 0 ),
-		m_width( 0 ),
-		m_download( true ),
-		m_useDirectX( true ),
-		m_initialised( false ),
-		m_toDelete( false ),
-		m_deleted( false ),
-		m_hasFocus( false ),
-		m_main( false ),
-		m_hasPrimaryWindow( false ),
-		m_showFPS( false ),
-		m_useConsole( false ),
-		m_deactivated( false ),
-		m_linked( false )
+	: named( "ElypseInstance" )
+	, m_installationPath( p_installPath )
+	, m_root( NULL )
+	, m_renderWindow( NULL )
+	, m_plugin( p_plugin )
+	, m_thread( NULL )
+	, m_downManager( NULL )
+	, m_frameListener( NULL )
+	, m_loadingBar( NULL )
+	, m_antialiasing( 0 )
+	, m_height( 0 )
+	, m_width( 0 )
+	, m_download( true )
+	, m_useDirectX( true )
+	, m_initialised( false )
+	, m_toDelete( false )
+	, m_deleted( false )
+	, m_hasFocus( false )
+	, m_main( false )
+	, m_hasPrimaryWindow( false )
+	, m_showFPS( false )
+	, m_useConsole( false )
+	, m_deactivated( false )
+	, m_linked( false )
 {
 	genlib_assert( ! m_installationPath.empty() );
 	genlib_assert( m_plugin != NULL );
@@ -79,21 +79,21 @@ ElypseInstance::ElypseInstance( const Path & p_installPath, ElypsePlugin * p_plu
 	EMUSE_MESSAGE_DEBUG( "ElypseInstance::ElypseInstance" );
 }
 
-bool ElypseInstance::Init( unsigned int p_width, unsigned int p_height, const String & p_linkedTo )
+bool ElypseInstance::Init( uint32_t p_width, uint32_t p_height, String const & p_linkedTo )
 {
 	EMUSE_MESSAGE_DEBUG( "ElypseInstance::Init" );
 	m_height = p_height;
 	m_width = p_width;
 	bool ret = false;
 
-//	GENLIB_AUTO_SCOPED_LOCK();
+	//auto l_lock = make_unique_lock( m_mutex );
 
 	if ( ElypseController::GetSingletonPtr() == NULL )
 	{
 		ret = true;
 //		std::cout << "EMUse controller creation, with prefix of : " << m_name << std::endl;
 //		ResourceGroupManager::setPrefix( m_name);
-		ElypseController::Create();
+		ElypseController::Create( *this );
 		ElypseController::GetSingletonPtr()->PreInit( m_useConsole, m_useDirectX, m_download, m_installationPath );
 		EMUSE_MESSAGE_NORMAL( "Instance : " + m_name + " Primary" );
 		m_main = true;
@@ -119,7 +119,10 @@ bool ElypseInstance::Init( unsigned int p_width, unsigned int p_height, const St
 
 	if ( ret )
 	{
-		m_thread = GENLIB_THREAD_CREATE_MEMBER_FUNC_THREAD( ElypseInstance, this, StartThread );
+		m_thread = new std::thread{ [this]()
+		{
+			ElypseController::GetSingletonPtr()->AddThread( *this );
+		} };
 	}
 
 	Sleep( 50 );
@@ -136,24 +139,24 @@ ElypseInstance::~ElypseInstance()
 		Destroy();
 	}
 
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( m_thread )
 	{
 		m_thread->join();
-		GENLIB_THREAD_DELETE_THREAD( m_thread );
+		delete m_thread;
 	}
 }
 
 void ElypseInstance::StartThread()
 {
-	ElypseController::GetSingletonPtr()->AddThread( this );
+	ElypseController::GetSingletonPtr()->AddThread( *this );
 }
 
 void ElypseInstance::Destroy()
 {
 	EMUSE_MESSAGE_DEBUG( "ElypseInstance::Destroy : " + m_name );
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( m_deleted )
 	{
@@ -206,7 +209,7 @@ void ElypseInstance::Destroy()
 	m_toDelete = false;
 	m_initialised = false;
 	m_deleted = true;
-	GENLIB_CONDITION_NOTIFY_ONE( m_condition );
+	m_condition.notify_one();
 }
 
 void ElypseInstance::Initialise()
@@ -290,7 +293,7 @@ void ElypseInstance::CreateScene()
 {
 	if ( m_linked )
 	{
-		m_frameListener = new ElypseFrameListener( this, m_frameListener, m_renderWindow, m_appIndexStr );
+		m_frameListener = new ElypseFrameListener( *this, m_frameListener, m_renderWindow, m_appIndexStr );
 	}
 	else
 	{
@@ -316,7 +319,7 @@ void ElypseInstance::CreateScene()
 
 void ElypseInstance::_createFramelistener()
 {
-	m_frameListener = new ElypseFrameListener( this, m_renderWindow, m_mainUrl, m_installationPath, m_appIndexStr );
+	m_frameListener = new ElypseFrameListener( *this, m_renderWindow, m_mainUrl, m_installationPath, m_appIndexStr );
 	m_frameListener->SetStartupScript( m_startupScript );
 	m_frameListener->PreInitialise();
 }
@@ -329,7 +332,7 @@ void ElypseInstance::SetToDelete( bool p_toDelete )
 
 void ElypseInstance::RenderOneFrame()
 {
-//	GENLIB_AUTO_SCOPED_LOCK();
+	//auto l_lock = make_unique_lock( m_mutex );
 	if ( m_toDelete )
 	{
 		return;
@@ -468,7 +471,7 @@ bool ElypseInstance::IsActive()
 {
 	if ( this != NULL )
 	{
-		GENLIB_AUTO_SCOPED_LOCK();
+		auto l_lock = make_unique_lock( m_mutex );
 		return ( m_initialised && m_frameListener != NULL && m_frameListener->IsReady() );
 	}
 
@@ -491,8 +494,8 @@ void ElypseInstance::WaitForDeletion()
 		return;
 	}
 
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	EMUSE_MESSAGE_RELEASE( "ElypseInstance::WaitForDeletion -> wait for deletion" );
-	GENLIB_CONDITION_WAIT( m_condition, m_mutex );
+	m_condition.wait( l_lock );
 	EMUSE_MESSAGE_RELEASE( "ElypseInstance::WaitForDeletion -> deleted" );
 }

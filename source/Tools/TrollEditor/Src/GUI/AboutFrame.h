@@ -22,29 +22,31 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/frame.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class AboutFrame
-		: public wxFrame
+	namespace GUI
 	{
-	protected:
-		wxFrame * m_easterEggFrame;
-		wxButton * m_back;
-		wxString m_word;
+		class AboutFrame
+			: public wxFrame
+		{
+		protected:
+			wxFrame * m_easterEggFrame;
+			wxButton * m_back;
+			wxString m_word;
 
-	public:
-		AboutFrame( wxWindow * parent );
+		public:
+			AboutFrame( wxWindow * parent );
 
-	private:
-		void _onKeyUp( wxKeyEvent & p_event );
-		void _onBack( wxCommandEvent & p_event );
-		void _onCloseKeumar( wxCommandEvent & p_event );
-		void _onShowKeumar( wxCommandEvent & p_event );
+		private:
+			void _onKeyUp( wxKeyEvent & p_event );
+			void _onBack( wxCommandEvent & p_event );
+			void _onCloseKeumar( wxCommandEvent & p_event );
+			void _onShowKeumar( wxCommandEvent & p_event );
 
-		DECLARE_EVENT_TABLE()
-	};
+			DECLARE_EVENT_TABLE()
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

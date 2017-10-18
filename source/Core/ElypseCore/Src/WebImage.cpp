@@ -33,12 +33,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-WebImage::WebImage( const String & p_name )
-	: named( p_name ),
-		m_material( NULL ),
-		m_texture( NULL ),
-		m_ready( false ),
-		m_loading( false )
+WebImage::WebImage( String const & p_name )
+	: named( p_name )
+	, m_material( NULL )
+	, m_texture( NULL )
+	, m_ready( false )
+	, m_loading( false )
 {
 	m_material = static_cast <Material *>( MaterialManager::getSingleton().create( m_name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME ).getPointer() );
 }
@@ -52,7 +52,7 @@ WebImage::~WebImage()
 	}
 
 	_delete();
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	MaterialManager::getSingletonPtr()->remove( m_material->getName() );
 	m_material = NULL;
 	General::Utils::vector::deleteAll( m_targets );
@@ -60,7 +60,7 @@ WebImage::~WebImage()
 
 void WebImage::_delete()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( m_texture != NULL )
 	{
@@ -71,7 +71,7 @@ void WebImage::_delete()
 
 void WebImage::Reload()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( m_ready || m_texture == NULL )
 	{
@@ -93,7 +93,7 @@ void WebImage::_setupImage()
 	{
 		String l_contents;
 		String l_ext;
-		const String & l_type = l_curl.GetContentType( m_url );
+		String const & l_type = l_curl.GetContentType( m_url );
 
 		if ( l_type == "image/gif" )
 		{
@@ -110,7 +110,7 @@ void WebImage::_setupImage()
 		else
 		{
 			EMUSE_LOG_MESSAGE_RELEASE( "File type is not valid for WebImage named " + m_name + " : type : " + l_type );
-			GENLIB_AUTO_SCOPED_LOCK();
+			auto l_lock = make_unique_lock( m_mutex );
 			m_loading = false;
 			delete l_image;
 			return;
@@ -138,15 +138,15 @@ void WebImage::_setupImage()
 	m_texture = TextureManager::getSingleton().createManual( m_name,
 				ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 				Ogre::TEX_TYPE_2D,
-				static_cast <unsigned int>( l_image->getWidth() ),
-				static_cast <unsigned int>( l_image->getHeight() ),
+				static_cast <uint32_t>( l_image->getWidth() ),
+				static_cast <uint32_t>( l_image->getHeight() ),
 				0,
 				Ogre::PF_X8R8G8B8,
 				Ogre::TU_DEFAULT ).getPointer();
 	m_texture->loadImage( * l_image );
 	l_tex->setTextureName( m_name );
 	delete l_image;
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	m_ready = true;
 	m_loading = false;
 	General::Utils::vector::cycle( m_targets, & MaterialTarget::Apply, m_name );
@@ -154,7 +154,7 @@ void WebImage::_setupImage()
 	WebImageManager::GetSingletonPtr()->Unlock();
 }
 
-void WebImage::_loadFromMemory( const String & p_ext, const String & p_buffer, Image * p_image )
+void WebImage::_loadFromMemory( String const & p_ext, String const & p_buffer, Image * p_image )
 {
 	Codec * l_codec = Codec::getCodec( p_ext );
 	genlib_assert( l_codec != NULL );
@@ -168,6 +168,6 @@ void WebImage::_loadFromMemory( const String & p_ext, const String & p_buffer, I
 
 void WebImage::AddTarget( MaterialTarget * p_target )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	m_targets.push_back( p_target );
 }

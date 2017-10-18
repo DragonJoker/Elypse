@@ -33,7 +33,7 @@ namespace Elypse
 {
 	namespace Media
 	{
-		const unsigned int MAXCHANNEL = 4095;
+		const uint32_t MAXCHANNEL = 4095;
 		const Real MINDISTSOUND = 4.0;
 		const Real MAXDISTSOUND = 10000.0;
 		const Real MINVOLUME = 0.0;

@@ -77,10 +77,10 @@ void VariableTypeManager::_populateBaseTypeNames()
 //	m_baseTypeNames[EMVT_SUB3] = "SUB3";
 }
 
-VariableType * VariableTypeManager::_add( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2, const String & p_hash )
+VariableType * VariableTypeManager::_add( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2, String const & p_hash )
 {
 	VariableType * l_type = new VariableType( p_type, p_subType1, p_subType2 );
-	const String & l_hash = ( p_hash.empty() ? _hash( p_type, p_subType1, p_subType2 ) : p_hash );
+	String const & l_hash = ( p_hash.empty() ? _hash( p_type, p_subType1, p_subType2 ) : p_hash );
 	m_types.insert( std::make_pair( l_hash, l_type ) );
 	return l_type;
 }
@@ -91,12 +91,12 @@ String VariableTypeManager::_hash( VariableBaseType p_type, VariableType * p_sub
 	l_hash[0] = static_cast< uint64_t >( p_type );
 	l_hash[1] = reinterpret_cast< uint64_t >( p_subType1 );
 	l_hash[2] = reinterpret_cast< uint64_t >( p_subType2 );
-	return	std::string( reinterpret_cast<const char *>( &l_hash[0] ), sizeof( l_hash ) );
+	return	std::string( reinterpret_cast<char const * const>( &l_hash[0] ), sizeof( l_hash ) );
 }
 
 VariableType * VariableTypeManager::_get( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2 )
 {
-	const String & l_hash = _hash( p_type, p_subType1, p_subType2 );
+	String const & l_hash = _hash( p_type, p_subType1, p_subType2 );
 	VariableType * l_vt = General::Utils::map::findOrNull( m_types, l_hash );
 
 	if ( l_vt == NULL )

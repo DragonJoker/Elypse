@@ -29,8 +29,8 @@ namespace General
 #if GENLIB_WINDOWS
 #	pragma comment( lib, "version.lib")
 #endif
-		d_dll bool GetFileVersion( const std::string & p_fileName, std::string & p_version );
-		d_dll bool GetFileVersion( const std::wstring & p_fileName, std::wstring & p_version );
+		d_dll bool GetFileVersion( std::string const & p_fileName, std::string & p_version );
+		d_dll bool GetFileVersion( std::wstring const & p_fileName, std::wstring & p_version );
 	}
 }
 

@@ -27,18 +27,12 @@ namespace General
 {
 	namespace MultiThreading
 	{
-		typedef std::recursive_mutex RecursiveMutex;
-		typedef std::mutex Mutex;
+		template< typename T_mutex >
+		std::unique_lock< T_mutex > make_unique_lock( T_mutex & p_mutex )
+		{
+			return std::unique_lock< T_mutex > { p_mutex };
+		}
 	}
 }
-
-#define GENLIB_AUTO_SCOPED_LOCK() std::unique_lock< std::mutex > scoped_lock_m_mutex( m_mutex )
-#define GENLIB_SCOPED_LOCK( p_mutex ) std::unique_lock< std::mutex > scoped_lock_ ## p_mutex( p_mutex )
-#define GENLIB_SCOPED_RECURSIVE_LOCK( p_mutex ) std::unique_lock< std::recursive_mutex > scoped_lock_ ## p_mutex( p_mutex )
-
-#define GENLIB_LOCK_MUTEX( p_mutex ) ( p_mutex ).lock()
-#define GENLIB_UNLOCK_MUTEX( p_mutex ) ( p_mutex ).unlock()
-#define GENLIB_RECURSIVE_LOCK_MUTEX( p_mutex ) ( p_mutex ).lock()
-#define GENLIB_RECURSIVE_UNLOCK_MUTEX( p_mutex ) ( p_mutex ).unlock()
 
 #endif

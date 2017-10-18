@@ -22,73 +22,79 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "GUI/TimeSequence/Module_Time.h"
 
-BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE
+namespace Troll
 {
-	class TrollPonctualEvent
-		: public TemporalObject
+	namespace ProjectComponents
 	{
-	private:
-		TrollSequence * m_sequence;
-		BasePonctualEvent * m_museEvent;
-		float m_fireTime;
-		wxString m_targetTypeName;
-		wxString m_targetName;
-		wxString m_actionArguments;
-		TROLL_GUI_TIME_NAMESPACE::PonctualEventPanel * m_panel;
+		namespace Temporal
+		{
+			class TrollPonctualEvent
+				: public TemporalObject
+			{
+			public:
+				TrollPonctualEvent( TrollSequence * p_sequence, BasePonctualEvent * p_event, wxString const & p_targetTypeName, wxString const & p_targetName, float p_fireTime, wxString const & p_eventAction, wxString const & p_name, wxString const & p_fileName );
+				~TrollPonctualEvent();
 
-	public:
-		TrollPonctualEvent( TrollSequence * p_sequence, BasePonctualEvent * p_event, const wxString & p_targetTypeName, const wxString & p_targetName, float p_fireTime, const wxString & p_eventAction, const wxString & p_name, const wxString & p_fileName );
-		~TrollPonctualEvent();
+				void Write( wxTextOutputStream & p_stream );
 
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
+				void SetFireTime( float p_time );
+				void SetActionName( wxString const & p_name );
+				void SetTargetType( wxString const & p_type );
+				void SetTarget( wxString const & p_target );
+				void SetActionArgs( wxString const & p_args );
 
-		void Write( wxTextOutputStream * p_stream );
+				inline float GetFireTime()const
+				{
+					return m_fireTime;
+				}
+				inline wxString GetTargetType()const
+				{
+					return m_targetTypeName;
+				}
+				inline wxString GetTarget()const
+				{
+					return m_targetName;
+				}
+				inline BasePonctualEvent * GetMuseEvent()const
+				{
+					return m_museEvent;
+				}
+				inline wxString GetActionArgs()const
+				{
+					return m_actionArguments;
+				}
+				inline TrollSequence * GetSequence()const
+				{
+					return m_sequence;
+				}
+				inline GUI::Time::PonctualEventPanel * GetEventPanel()const
+				{
+					return m_panel;
+				}
 
-		void SetFireTime( float p_time );
-		void SetActionName( const wxString & p_name );
-		void SetTarget( const wxString & p_type, const wxString & p_target );
-		void SetActionArgs( const wxString & p_args );
+				inline void SetPanel( GUI::Time::PonctualEventPanel * p_panel )
+				{
+					m_panel = p_panel;
+				}
+				inline void	SetMuseEvent( BasePonctualEvent * p_event )
+				{
+					m_museEvent = p_event;
+				}
 
-		inline float GetFireTime()const
-		{
-			return m_fireTime;
-		}
-		inline wxString GetTargetType()const
-		{
-			return m_targetTypeName;
-		}
-		inline wxString GetTarget()const
-		{
-			return m_targetName;
-		}
-		inline BasePonctualEvent * GetMuseEvent()const
-		{
-			return m_museEvent;
-		}
-		inline wxString GetActionArgs()const
-		{
-			return m_actionArguments;
-		}
-		inline TrollSequence * GetSequence()const
-		{
-			return m_sequence;
-		}
-		inline TROLL_GUI_TIME_NAMESPACE::PonctualEventPanel * GetEventPanel()const
-		{
-			return m_panel;
-		}
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
 
-		inline void SetPanel( TROLL_GUI_TIME_NAMESPACE::PonctualEventPanel * p_panel )
-		{
-			m_panel = p_panel;
+			private:
+				TrollSequence * m_sequence;
+				BasePonctualEvent * m_museEvent;
+				float m_fireTime;
+				wxString m_targetTypeName;
+				wxString m_targetName;
+				wxString m_actionArguments;
+				GUI::Time::PonctualEventPanel * m_panel;
+			};
 		}
-		inline void	SetMuseEvent( BasePonctualEvent * p_event )
-		{
-			m_museEvent = p_event;
-		}
-	};
+	}
 }
-END_TROLL_PROJECT_TEMPORAL_NAMESPACE
 
 #endif
-

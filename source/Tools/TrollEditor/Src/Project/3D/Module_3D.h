@@ -22,51 +22,49 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <OgrePrerequisites.h>
 
-#define TROLL_PROJECT_3D_NAMESPACE TROLL_PROJECT_NAMESPACE::Objects3D
-#define BEGIN_TROLL_PROJECT_3D_NAMESPACE BEGIN_TROLL_PROJECT_NAMESPACE { namespace Objects3D
-#define END_TROLL_PROJECT_3D_NAMESPACE END_TROLL_PROJECT_NAMESPACE }
-
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	namespace Objects3D
+	namespace ProjectComponents
 	{
-		enum TrollLightType
+		namespace Objects3D
 		{
-			ltPoint,
-			ltDirectional,
-			ltSpotLight
-		};
+			enum TrollLightType
+			{
+				ltPoint,
+				ltDirectional,
+				ltSpotLight
+			};
 
-		enum Troll3DObjectType
-		{
-			ttNode,
-			ttEntity,
-			ttLight,
-			ttCamera
-		};
+			enum Troll3DObjectType
+			{
+				ttNode,
+				ttEntity,
+				ttLight,
+				ttCamera
+			};
 
-		enum TrollCameraPolygonMode
-		{
-			tcPoint = 1,
-			tcWireFrame = 2,
-			tcSolid = 3
-		};
+			enum TrollCameraPolygonMode
+			{
+				tcPoint = 1,
+				tcWireFrame = 2,
+				tcSolid = 3
+			};
 
-		class TrollMesh;
-		class Troll3DObject;
-		class TrollEntity;
-		class TrollLight;
-		class TrollSceneNode;
-		class TrollCamera;
+			class TrollMesh;
+			class Troll3DObject;
+			class TrollEntity;
+			class TrollLight;
+			class TrollSceneNode;
+			class TrollCamera;
 
-		typedef std::map< wxString, Troll3DObject * > Troll3DObjectMap;
-		typedef std::map< wxString, TrollEntity * > TrollEntityMap;
-		typedef std::map< wxString, TrollMesh * > TrollMeshStrMap;
-		typedef std::map< wxString, TrollSceneNode * > TrollSceneNodeMap;
-		typedef std::map< wxString, TrollLight * > TrollLightMap;
-		typedef std::map< wxString, TrollCamera * > TrollCameraMap;
+			typedef std::map< wxString, Troll3DObject * > Troll3DObjectMap;
+			typedef std::map< wxString, TrollEntity * > TrollEntityMap;
+			typedef std::map< wxString, TrollMesh * > TrollMeshStrMap;
+			typedef std::map< wxString, TrollSceneNode * > TrollSceneNodeMap;
+			typedef std::map< wxString, TrollLight * > TrollLightMap;
+			typedef std::map< wxString, TrollCamera * > TrollCameraMap;
+		}
 	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

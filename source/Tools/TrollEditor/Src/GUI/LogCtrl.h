@@ -22,19 +22,21 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/listbox.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class LogCtrl
-		: public wxListBox
+	namespace GUI
 	{
-	public:
-		LogCtrl( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size, long style );
+		class LogCtrl
+			: public wxListBox
+		{
+		public:
+			LogCtrl( wxWindow * parent, wxWindowID id, wxPoint const & pos, wxSize const & size, long style );
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnDoubleClick( wxMouseEvent & p_event );
-	};
+		private:
+			DECLARE_EVENT_TABLE()
+			void OnDoubleClick( wxMouseEvent & p_event );
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif

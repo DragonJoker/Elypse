@@ -28,10 +28,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-CamTex::CamTex( const String & p_name, SceneManager * p_sceneManager, Camera * p_camera, unsigned int p_textureWidth, unsigned int p_textureHeight )
-	: named( p_name ),
-		m_camera( p_camera ),
-		m_sceneManager( p_sceneManager )
+CamTex::CamTex( String const & p_name, SceneManager * p_sceneManager, Camera * p_camera, uint32_t p_textureWidth, uint32_t p_textureHeight )
+	: named( p_name )
+	, m_camera( p_camera )
+	, m_sceneManager( p_sceneManager )
 {
 	m_texture = TextureManager::getSingleton().createManual( m_name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, TEX_TYPE_2D, p_textureWidth, p_textureHeight, 0, PF_A8R8G8B8, TU_RENDERTARGET | TU_AUTOMIPMAP );
 	m_renderTarget = m_texture->getBuffer()->getRenderTarget();
@@ -40,7 +40,7 @@ CamTex::CamTex( const String & p_name, SceneManager * p_sceneManager, Camera * p
 	m_viewport->setClearEveryFrame( true );
 	m_viewport->setBackgroundColour( ColourValue::Black );
 	m_viewport->setOverlaysEnabled( false );
-	p_camera->setAspectRatio( p_textureWidth / static_cast <Real>( p_textureHeight ) );
+	p_camera->setAspectRatio( p_textureWidth / Real( p_textureHeight ) );
 	p_camera->setNearClipDistance( 5.0 );
 	MaterialPtr l_material;
 	l_material = MaterialManager::getSingletonPtr()->getByName( m_name );
@@ -79,7 +79,7 @@ void CamTex::SetCamera( Camera * p_camera )
 {
 	m_textureUnitState->setProjectiveTexturing( false, p_camera );
 	m_viewport->setCamera( p_camera );
-	p_camera->setAspectRatio( static_cast <Real>( m_viewport->getActualWidth() ) / static_cast <Real>( m_viewport->getActualHeight() ) );
+	p_camera->setAspectRatio( Real( m_viewport->getActualWidth() ) / Real( m_viewport->getActualHeight() ) );
 	m_camera = p_camera;
 }
 

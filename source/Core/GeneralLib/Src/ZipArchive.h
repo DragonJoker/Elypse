@@ -18,7 +18,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifndef ___ZIP_ARCHIVE_H___
 #define ___ZIP_ARCHIVE_H___
 
-#include "Zip.h"
+#include "ZipBase.h"
 #include "ZipDirectory.h"
 
 #include "Exception.h"
@@ -31,6 +31,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <limits>
 #include <cstdint>
+#include <memory>
 
 #if defined( MSDOS ) || defined( OS2 ) || defined( _WIN32 ) || defined( __CYGWIN__ )
 #	include <fcntl.h>
@@ -47,7 +48,8 @@ namespace General
 	namespace Files
 	{
 		template< typename CharType >
-		class d_dll ZipArchiveImpl
+		class ZipArchiveImpl
+			: d_noncopyable
 		{
 		protected:
 			typedef std::basic_string< CharType > StringType;
@@ -56,62 +58,63 @@ namespace General
 			typedef std::vector< ZipFileBase< CharType > > ZipFileArrayType;
 
 		public:
-			ZipArchiveImpl( const StringType & p_name, const StringType & p_path )
-				: m_basename( p_name )
-				, m_path( p_path )
-				, m_fullPath( p_path )
-				, m_zip( NULL )
-				, m_rootDirectory( new ZipDirectoryBase< CharType >( StringType(), NULL ) )
+			inline ZipArchiveImpl( StringType const & p_name, StringType const & p_path )
+				: m_basename{ p_name }
+				, m_path{ p_path }
+				, m_fullPath{ p_path }
+				, m_zip{ nullptr }
+				, m_rootDirectory{ new ZipDirectoryBase< CharType >{ StringType{}, nullptr } }
 			{
 				m_fullPath.push_back( d_path_slash );
 				m_fullPath += p_name;
 			}
 
-			~ZipArchiveImpl()
+			inline ~ZipArchiveImpl()
 			{
 				delete m_rootDirectory;
 				d_debug_assert( !m_zip );
 			}
 
-		public:
-			bool HasFile( const StringType & p_filename )const
+			inline bool HasFile( StringType const & p_filename )const
 			{
 				return ( m_files.find( p_filename ) != m_files.end() );
 			}
 
-			bool HasDirectory( const StringType & p_filename )const
+			inline bool HasDirectory( StringType const & p_filename )const
 			{
 				return ( m_directories.find( p_filename ) != m_directories.end() );
 			}
 
-			ZipFileBase< CharType > * GetFile( const StringType & p_name )const
+			inline ZipFileBase< CharType > * GetFile( StringType const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_files, p_name );
 			}
 
-			ZipDirectoryBase< CharType > * GetDirectory( const StringType & p_name )const
+			inline ZipDirectoryBase< CharType > * GetDirectory( StringType const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_directories, p_name );
 			}
 
-			ZipFileArrayType RecurseFindFile( const StringType & p_name )
+			inline ZipFileArrayType RecurseFindFile( StringType const & p_name )
 			{
 				return m_rootDirectory->RecurseFindFile( p_name );
 			}
 
-		public:
-			inline const StringType & GetName()const
+			inline StringType const & GetName()const
 			{
 				return m_basename;
 			}
-			inline const StringType & GetBasePath()const
+
+			inline StringType const & GetBasePath()const
 			{
 				return m_path;
 			}
-			inline const StringType & GetFullPath()const
+
+			inline StringType const & GetFullPath()const
 			{
 				return m_fullPath;
 			}
+
 			inline zip * GetArchive()const
 			{
 				return m_zip;
@@ -130,13 +133,39 @@ namespace General
 		};
 
 		template< typename CharType >
-		class d_dll ZipArchiveBase
+		class ZipArchiveBase
 			: public ZipArchiveImpl< CharType >
 		{
 		protected:
 			typedef typename ZipArchiveImpl< CharType >::StringType StringType;
 
-			bool _load()
+		public:
+			inline ZipArchiveBase( StringType const & p_name, StringType const & p_path )
+				: ZipArchiveImpl< CharType >( p_name, p_path )
+			{
+			}
+
+			inline bool Extract( StringType const & p_newPath )
+			{
+				try
+				{
+					if ( !doLoad() )
+					{
+						return false;
+					}
+
+					StringType l_path = p_newPath;
+					doCheckPath( l_path );
+					return this->m_rootDirectory->Extract( l_path, this );
+				}
+				catch ( Utils::GenException & )
+				{
+					return false;
+				}
+			}
+
+		protected:
+			inline bool doLoad()
 			{
 				int l_result = 0;
 				this->m_zip = zip_open( Utils::string_cast< char >( this->m_fullPath ).c_str(), ZIP_CHECKCONS, &l_result );
@@ -199,7 +228,7 @@ namespace General
 								l_currentDirectory = this->m_rootDirectory->AddDirectory( l_path );
 							}
 
-							this->m_directories.insert( std::make_pair( l_path, l_currentDirectory ) );
+							this->m_directories.insert( { l_path, l_currentDirectory } );
 						}
 						else
 						{
@@ -208,7 +237,7 @@ namespace General
 
 						ZipFile * l_file = l_currentDirectory->AddFile( i, l_name, l_fullPath );
 						l_file->SetSize( l_stat.comp_size, l_stat.size );
-						this->m_files.insert( std::make_pair( l_fullPath, l_file ) );
+						this->m_files.insert( { l_fullPath, l_file } );
 					}
 				}
 
@@ -216,40 +245,14 @@ namespace General
 				return true;
 			}
 
-			void _checkPath( StringType & p_path )
+			inline void doCheckPath( StringType & p_path )
 			{
 				//if (p_path.empty() || p_path[p_path.size() - 1] != '/')
 				{
 					p_path.push_back( CharType( '/' ) );
 				}
 			}
-
-		public:
-			ZipArchiveBase( const StringType & p_name, const StringType & p_path )
-				: ZipArchiveImpl< CharType >( p_name, p_path )
-			{}
-
-		public:
-			bool Extract( StringType const & p_newPath )
-			{
-				try
-				{
-					if ( !_load() )
-					{
-						return false;
-					}
-
-					StringType l_path = p_newPath;
-					_checkPath( l_path );
-					return this->m_rootDirectory->Extract( l_path, this );
-				}
-				catch ( Utils::GenException & )
-				{
-					return false;
-				}
-			}
 		};
-
 	}
 }
 

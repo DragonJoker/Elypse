@@ -21,7 +21,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Mirror.h"
 
-MirrorManager::MirrorManager( const String & p_instanceKey )
+MirrorManager::MirrorManager( String const & p_instanceKey )
 	: m_instanceKey( p_instanceKey )
 {
 }
@@ -32,5 +32,8 @@ MirrorManager::~MirrorManager()
 
 void MirrorManager::UpdateAll()const
 {
-	General::Utils::map::cycle( m_objectMap, & Mirror::Update );
+	for ( auto l_it : m_objectMap )
+	{
+		l_it.second->Update();
+	}
 }

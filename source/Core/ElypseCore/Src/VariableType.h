@@ -40,7 +40,7 @@ namespace Elypse
 		protected:
 			String _hash( VariableBaseType p_type, VariableType * p_subType1 = NULL, VariableType * p_subType2 = NULL );
 
-			VariableType * _add( VariableBaseType p_type, VariableType * p_subType1 = NULL, VariableType * p_subType2 = NULL, const String & p_hash = EMPTY_STRING );
+			VariableType * _add( VariableBaseType p_type, VariableType * p_subType1 = NULL, VariableType * p_subType2 = NULL, String const & p_hash = EMPTY_STRING );
 			VariableType * _get( VariableBaseType p_type, VariableType * p_subType1, VariableType * p_subType2 );
 
 			void _populateBaseTypeNames();
@@ -67,8 +67,8 @@ namespace Elypse
 
 		public:
 			VariableType( VariableBaseType p_mainType, VariableType * p_subType1, VariableType * p_subType2 )
-				: m_toplevelType( p_mainType ),
-					m_struct( NULL )
+				: m_toplevelType( p_mainType )
+				, m_struct( NULL )
 			{
 				if ( p_subType1 != NULL )
 				{
@@ -101,7 +101,7 @@ namespace Elypse
 			{
 				return m_struct;
 			}
-			inline VariableType * GetSubType( unsigned int p_index )const
+			inline VariableType * GetSubType( uint32_t p_index )const
 			{
 				if ( p_index < m_subTypes.size() )
 				{

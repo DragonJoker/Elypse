@@ -23,49 +23,52 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <vector>
 #include <map>
 
-#define TROLL_NAMESPACE ELYPSE_NAMESPACE::Troll
 #define BEGIN_TROLL_NAMESPACE BEGIN_ELYPSE_NAMESPACE { namespace Troll
 #define END_TROLL_NAMESPACE } END_ELYPSE_NAMESPACE
 
 class wxWindow;
 
-BEGIN_ELYPSE_NAMESPACE
+namespace Troll
 {
-	namespace Troll
+	class Application;
+
+	using GuiCommon::make_string;
+	using GuiCommon::make_wxString;
+
+	static const wxString SCENE_FILES = _( "Scene files" );
+	static const wxString LOAD_SCRIPT_FILES = _( "Load script files" );
+	static const wxString UNLOAD_SCRIPT_FILES = _( "Unload script files" );
+	static const wxString GRAPHIC_DATA_FOLDERS = _( "Graphic (2D and 3D) data folders" );
+	static const wxString OTHER_DATA_FOLDERS = _( "Non graphic data folders" );
+	static const wxString TROLL_EDITOR_ERROR = _( "TrollEditor Error" );
+
+	static const wxColour PANEL_BACKGROUND_COLOUR = wxColour( 30, 30, 30 );
+	static const wxColour PANEL_FOREGROUND_COLOUR = wxColour( 220, 220, 220 );
+	static const wxColour BORDER_COLOUR = wxColour( 90, 90, 90 );
+	static const wxColour INACTIVE_TAB_COLOUR = wxColour( 60, 60, 60 );
+	static const wxColour INACTIVE_TEXT_COLOUR = wxColour( 200, 200, 200 );
+	static const wxColour ACTIVE_TAB_COLOUR = wxColour( 51, 153, 255, 255 );
+	static const wxColour ACTIVE_TEXT_COLOUR = wxColour( 255, 255, 255, 255 );
+
+	void LogDebug( wxString const & p_message );
+	void LogMessage( wxString const & p_message );
+	void LogError( wxString const & p_message );
+
+	inline void LogDebug( String const & p_message )
 	{
-		class Application;
+		LogDebug( make_wxString( p_message ) );
+	}
 
-		using GuiCommon::make_string;
-		using GuiCommon::make_wxString;
+	inline void LogMessage( String const & p_message )
+	{
+		LogMessage( make_wxString( p_message ) );
+	}
 
-		static const wxString SCENE_FILES = _( "Scene files" );
-		static const wxString LOAD_SCRIPT_FILES = _( "Load script files" );
-		static const wxString UNLOAD_SCRIPT_FILES = _( "Unload script files" );
-		static const wxString GRAPHIC_DATA_FOLDERS = _( "Graphic (2D and 3D) data folders" );
-		static const wxString OTHER_DATA_FOLDERS = _( "Non graphic data folders" );
-		static const wxString TROLL_EDITOR_ERROR = _( "TrollEditor Error" );
-		
-		void LogDebug( wxString const & p_message );
-		void LogMessage( wxString const & p_message );
-		void LogError( wxString const & p_message );
-
-		inline void LogDebug( String const & p_message )
-		{
-			LogDebug( make_wxString( p_message ) );
-		}
-
-		inline void LogMessage( String const & p_message )
-		{
-			LogMessage( make_wxString( p_message ) );
-		}
-
-		inline void LogError( String const & p_message )
-		{
-			LogError( make_wxString( p_message ) );
-		}
+	inline void LogError( String const & p_message )
+	{
+		LogError( make_wxString( p_message ) );
 	}
 }
-END_ELYPSE_NAMESPACE
 
 #undef TROLL_HAS_MAKE_UNIQUE
 

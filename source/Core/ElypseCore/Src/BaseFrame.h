@@ -33,8 +33,8 @@ namespace Elypse
 			Vector3 vector3;
 
 			BaseVector3Frame( Real p_time, const Vector3 & p_vector3 )
-				: time( p_time ),
-					vector3( p_vector3 )
+				: time( p_time )
+				, vector3( p_vector3 )
 			{}
 		};
 
@@ -44,8 +44,8 @@ namespace Elypse
 			Quaternion quaternion;
 
 			BaseQuaternionFrame( Real p_time, const Quaternion & p_quaternion )
-				: time( p_time ),
-					quaternion( p_quaternion )
+				: time( p_time )
+				, quaternion( p_quaternion )
 			{}
 		};
 
@@ -55,8 +55,8 @@ namespace Elypse
 			Real real;
 
 			BaseRealFrame( Real p_time, Real p_real )
-				: time( p_time ),
-					real( p_real )
+				: time( p_time )
+				, real( p_real )
 			{}
 		};
 	}

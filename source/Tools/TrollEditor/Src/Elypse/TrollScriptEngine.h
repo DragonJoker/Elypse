@@ -22,16 +22,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <ScriptEngine.h>
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	class TrollScriptEngine
-		: public Elypse::Script::ScriptEngine
+	namespace ElypseRW
 	{
-	public:
-		TrollScriptEngine( const Path & p_basePath, ElypseLoadingBar * p_loadingBar );
-		virtual ~TrollScriptEngine();
-	};
+		class TrollScriptEngine
+			: public Elypse::Script::ScriptEngine
+		{
+		public:
+			TrollScriptEngine( const Path & p_basePath, ElypseLoadingBar * p_loadingBar );
+			virtual ~TrollScriptEngine();
+		};
+	}
 }
-END_TROLL_ELYPSE_NAMESPACE
 
 #endif

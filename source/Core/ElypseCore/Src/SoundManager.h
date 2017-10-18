@@ -54,29 +54,29 @@ namespace Elypse
 			bool m_initialised;
 
 		public:
-			SoundManager( const String & p_basePath );
+			SoundManager( String const & p_basePath );
 			~SoundManager();
 
 		public:
 			void AddPlaylist( SoundPlaylist * p_playlist );
-			void RemoveSoundObject( const String & p_SOName );
-			void RemoveNode( const String & p_nodeName );
-			bool IsSoundObject( const String & p_name );
+			void RemoveSoundObject( String const & p_SOName );
+			void RemoveNode( String const & p_nodeName );
+			bool IsSoundObject( String const & p_name );
 			void Cleanup();
 			void StartAll();
 			void StopAll();
 			void PauseAll();
-			void SetVolumePercent( const String & p_nodeName, Real p_volumePercent );
+			void SetVolumePercent( String const & p_nodeName, Real p_volumePercent );
 			void Update( const Vector3 & p_position, const Real * p_up, const Real * p_forward, Real p_updateTime );
 			void SetVolume( Real p_volume, SoundType p_type );
 			void Mute( bool p_mute, SoundType p_type );
 
 			void RegisterInstance( SoundInstance * p_instance );
 
-			SoundObject * CreateSound( const String & p_name );
+			SoundObject * CreateSound( String const & p_name );
 
 		private:
-			void _logMessage( const String & p_msg );
+			void _logMessage( String const & p_msg );
 			void _update( Real p_time );
 
 		public:
@@ -96,7 +96,7 @@ namespace Elypse
 			{
 				return m_musicMuted;
 			}
-			inline const String &	GetBasePath()const
+			inline String const &	GetBasePath()const
 			{
 				return m_basePath;
 			}
@@ -108,7 +108,7 @@ namespace Elypse
 			{
 				return m_sounds;
 			}
-			inline SoundObject *	GetSoundObject( const String & p_name )
+			inline SoundObject *	GetSoundObject( String const & p_name )
 			{
 				if ( ! m_initialised )
 				{
@@ -117,7 +117,7 @@ namespace Elypse
 
 				return General::Utils::map::findOrNull( m_sounds, p_name );
 			}
-			inline SoundPlaylist * GetSoundPlaylist( const String & p_name )
+			inline SoundPlaylist * GetSoundPlaylist( String const & p_name )
 			{
 				if ( ! m_initialised )
 				{
@@ -128,10 +128,10 @@ namespace Elypse
 			}
 
 		public:
-			static bool CheckFMODError( FMOD_RESULT p_result, unsigned int p_line, const char * p_file );
+			static bool CheckFMODError( FMOD_RESULT p_result, uint32_t p_line, char const * const p_file );
 			static const String OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType );
 
-			static inline void LogMessage( const String & p_msg )
+			static inline void LogMessage( String const & p_msg )
 			{
 				GetSingletonPtr()->_logMessage( p_msg );
 			}

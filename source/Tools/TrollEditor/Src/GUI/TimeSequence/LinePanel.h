@@ -22,42 +22,48 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class LinePanel
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		LinePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-		~LinePanel();
-
-		void Replace();
-
-		void SetSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence );
-		void AddPonctualEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollPonctualEvent * p_event, Real p_time );
-		void AddContinuousEvent( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollContinuousEvent * p_event );
-
-		inline TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * GetSequence()const
+		namespace Time
 		{
-			return m_sequence;
+			class LinePanel
+				: public wxPanel
+			{
+			public:
+				LinePanel( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
+				~LinePanel();
+
+				void Replace();
+
+				void SetSequence( ProjectComponents::Temporal::TrollSequence * p_sequence );
+				void AddPonctualEvent( ProjectComponents::Temporal::TrollPonctualEvent * p_event, Real p_time );
+				void AddContinuousEvent( ProjectComponents::Temporal::TrollContinuousEvent * p_event );
+
+				inline ProjectComponents::Temporal::TrollSequence * GetSequence()const
+				{
+					return m_sequence;
+				}
+
+			private:
+				void _showContextMenu( wxPoint const & p_pos );
+
+				DECLARE_EVENT_TABLE()
+				void OnAddPonctualEvent( wxCommandEvent & p_event );
+				void OnAddContinuousEvent( wxCommandEvent & p_event );
+				void OnLeftMouseUp( wxMouseEvent & p_event );
+				void OnRightMouseUp( wxMouseEvent & p_event );
+				void OnMouseEnter( wxMouseEvent & p_event );
+				void OnMouseLeave( wxMouseEvent & p_event );
+
+			private:
+				ProjectComponents::Temporal::TrollSequence * m_sequence;
+				int m_currentLeft;
+				ProjectFrame * m_projectFrame;
+			};
 		}
-
-	private:
-		void _showContextMenu( const wxPoint & p_pos );
-
-		DECLARE_EVENT_TABLE()
-		void OnAddPonctualEvent( wxCommandEvent & p_event );
-		void OnAddContinuousEvent( wxCommandEvent & p_event );
-		void OnLeftMouseUp( wxMouseEvent & p_event );
-		void OnRightMouseUp( wxMouseEvent & p_event );
-		void OnMouseEnter( wxMouseEvent & p_event );
-		void OnMouseLeave( wxMouseEvent & p_event );
-
-	private:
-		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * m_sequence;
-		int m_currentLeft;
-	};
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

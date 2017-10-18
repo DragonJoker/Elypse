@@ -26,40 +26,40 @@ namespace General
 		{
 		}
 
-		Path::Path( const char * p_data )
-			: std::string( Normalise( p_data ) )
+		Path::Path( char const * const p_data )
+			: std::string{ Normalise( p_data ) }
 		{
 		}
 
-		Path::Path( const std::string & p_data )
-			: std::string( Normalise( p_data ) )
+		Path::Path( std::string const & p_data )
+			: std::string{ Normalise( p_data ) }
 		{
 		}
 
 		Path::Path( const Path & p_data )
-			: std::string( Normalise( p_data ) )
+			: std::string{ Normalise( p_data ) }
 		{
 		}
 
-		Path & Path::operator = ( const char * p_path )
+		Path & Path::operator=( char const * const p_path )
 		{
-			std::string::operator = ( Normalise( p_path ) );
+			std::string::operator=( Normalise( p_path ) );
 			return *this;
 		}
 
-		Path & Path::operator = ( const std::string & p_path )
+		Path & Path::operator=( std::string const & p_path )
 		{
-			std::string::operator = ( Normalise( p_path ) );
+			std::string::operator=( Normalise( p_path ) );
 			return *this;
 		}
 
-		Path & Path::operator = ( const Path & p_path )
+		Path & Path::operator=( const Path & p_path )
 		{
-			std::string::operator = ( Normalise( p_path ) );
+			std::string::operator=( Normalise( p_path ) );
 			return *this;
 		}
 
-		Path & Path::operator /= ( const Path & p_path )
+		Path & Path::operator/=( const Path & p_path )
 		{
 			push_back( d_path_slash );
 			append( p_path );
@@ -97,7 +97,7 @@ namespace General
 			return l_return;
 		}
 
-		Path operator /( const Path & p_a, const Path & p_b )
+		Path operator/( const Path & p_a, const Path & p_b )
 		{
 			return Path( p_a ) /= p_b;
 		}

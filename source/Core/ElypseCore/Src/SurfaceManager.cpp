@@ -30,5 +30,8 @@ SurfaceManager::~SurfaceManager()
 
 void SurfaceManager::UpdateAllSurfaces()
 {
-	General::Utils::map::cycle( m_objectMap, & ParametricSurface::Update, m_camera );
+	for ( auto l_it : m_objectMap )
+	{
+		l_it.second->Update( m_camera );
+	}
 }

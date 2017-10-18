@@ -53,29 +53,29 @@ namespace Elypse
 		public:
 			ElypseInstance * m_instance;
 			PluginGraphicalStatus m_graphicalStatus;
-			unsigned int m_width;
-			unsigned int m_height;
+			uint32_t m_width;
+			uint32_t m_height;
 			CursorType m_baseCursor;
 
 			CURLManager * m_curl;
 
-			Mutex m_mutex;
+			std::mutex m_mutex;
 
 		public:
 			ElypsePlugin();
 			virtual ~ElypsePlugin();
 
 		public:
-			void ThreadedStringFromUrl( const String & p_url, const String & p_postParams, ScriptNode * p_caller, ScriptNode * p_execAtAnd );
-			String GetStringFromUrl( const String & p_url, const String & p_postParams );
-			void SetSessionCookie( const String & p_cookieParams );
+			void ThreadedStringFromUrl( String const & p_url, String const & p_postParams, ScriptNode * p_caller, ScriptNode * p_execAtAnd );
+			String GetStringFromUrl( String const & p_url, String const & p_postParams );
+			void SetSessionCookie( String const & p_cookieParams );
 
 		public:
-			virtual bool OpenURL( const String & p_url, bool p_newWindow, bool p_usePostMethod ) = 0;
-			virtual void MajorError( const String & p_errorText, const String & p_title ) = 0;
+			virtual bool OpenURL( String const & p_url, bool p_newWindow, bool p_usePostMethod ) = 0;
+			virtual void MajorError( String const & p_errorText, String const & p_title ) = 0;
 			virtual void Quit() = 0;
 			virtual void PostChangeGraphicalStatus() = 0;
-			virtual bool ExecuteJavascript( const String & p_functionName ) = 0;
+			virtual bool ExecuteJavascript( String const & p_functionName ) = 0;
 			virtual void ChangeCursorTo( CursorType p_cursorType ) = 0;
 
 		public:
@@ -93,7 +93,7 @@ namespace Elypse
 				m_graphicalStatus = p_status;
 				PostChangeGraphicalStatus();
 			}
-			inline void SetSize( unsigned int p_width , unsigned int p_height )
+			inline void SetSize( uint32_t p_width , uint32_t p_height )
 			{
 				m_width = p_width ;
 				m_height = p_height;

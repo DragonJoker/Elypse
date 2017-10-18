@@ -35,10 +35,10 @@ namespace Elypse
 
 		struct EM_SndHeader;
 
-		typedef std::map	<String, MuseDownloader *> DownloaderMap;
-		typedef std::vector	<MuseFilePack *>				MuseFileArray;
-		typedef std::vector	<EM_SndHeader *>			SndHeaderArray;
-		typedef std::vector <char>						DataArray;
+		typedef std::map< String, MuseDownloader * > DownloaderMap;
+		typedef std::vector< MuseFilePack * > MuseFileArray;
+		typedef std::vector< EM_SndHeader * > SndHeaderArray;
+		typedef std::vector< char > DataArray;
 
 		enum DataBlockType
 		{
@@ -75,7 +75,7 @@ namespace Elypse
 			HEADERERROR = 6
 		};
 
-		static const std::string  DataTypeExtension[] = 
+		static const std::string  DataTypeExtension[] =
 		{
 			"",
 			".zip", // EM_BLOCK_ZIPDATA = 1, /* .zip files */

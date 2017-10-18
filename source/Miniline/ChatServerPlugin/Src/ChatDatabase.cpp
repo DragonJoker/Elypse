@@ -83,13 +83,19 @@ namespace
 
 	static const size_t MAX_QUERY_LEN = 4096;
 
-	void Format( Database::String & p_result, size_t p_count, Database::String const & p_format, ... )
+	Database::String Format( Database::String const & p_format, size_t p_count, ... )
 	{
 		std::vector< Database::TChar > l_result( p_count + 1 );
 		va_list l_list;
-		va_start( l_list, p_format );
-		vsnprintf( l_result.data(), p_count, p_format.c_str(), l_list );
+		va_start( l_list, p_count );
+		int l_written = vsnprintf( l_result.data(), p_count, p_format.c_str(), l_list );
 		va_end( l_list );
+		return String( l_result.data(), l_written );
+	}
+
+	void AddElement( UintArrayUIntMapUIntMap & p_allElements, uint32_t p_elemId, uint32_t p_slotId, uint32_t p_elemSex, uint32_t p_slotSex )
+	{
+		p_allElements.insert( std::make_pair( p_elemSex, UintArrayUIntMap() ) ).first->second.insert( std::make_pair( p_slotId, UIntArray() ) ).first->second.push_back( p_elemId );
 	}
 }
 
@@ -146,9 +152,10 @@ bool ChatDatabase::Initialize()
 	if ( !m_configInfo.DBName.empty() && !m_configInfo.DBUser.empty() && m_configInfo.DBPort > 1024 )
 	{
 		Database::String l_result;
-		m_manager->Initialize( m_configInfo.DBHost, m_configInfo.DBName, m_configInfo.DBUser, m_configInfo.DBPass );
+		m_manager->Initialise( m_configInfo.DBHost, m_configInfo.DBUser, m_configInfo.DBPass );
 		m_manager->CreateConnection( l_result );
 		m_db = m_manager->RetrieveConnection();
+		m_db->SelectDatabase( m_configInfo.DBName );
 		l_return = Update();
 	}
 
@@ -157,26 +164,26 @@ bool ChatDatabase::Initialize()
 
 bool ChatDatabase::Update()
 {
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( c_loadUsersQuery );
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( c_loadUsersQuery );
 
 	if ( !l_result || l_result->GetRowCount() == 0 )
 	{
 		return false;
 	}
 
-	Database::DatabaseRowPtr l_row;
-	unsigned long long l_rowCount = l_result->GetRowCount();
+	Database::DatabaseRowSPtr l_row;
+	uint64_t l_rowCount = l_result->GetRowCount();
 
 	m_clients.clear();
-	unsigned int l_id;
+	uint32_t l_id;
 	String l_name;
 
-	for ( unsigned long long i = 0 ; i < l_rowCount ; i++ )
+	for ( uint64_t i = 0 ; i < l_rowCount ; i++ )
 	{
 		l_row = l_result->GetNextRow();
 		l_row->Get( 0, l_id );
 		l_row->Get( 1, l_name );
-		m_clients.insert( std::make_pair( l_name, l_id ) );
+		m_clients.insert( std::make_pair( l_id, l_name ) );
 	}
 
 	l_result = m_db->ExecuteSelect( c_getNumDressSlotsQuery );
@@ -209,40 +216,11 @@ bool ChatDatabase::Update()
 
 	m_allDresses.clear();
 	l_rowCount = l_result->GetRowCount();
-	int l_dressId;
-	int l_slotId;
-	int l_slotSex;
-	int l_dressSex;
-	std::map <int, std::map <int, std::vector <int> > >::iterator l_slotsIt;
-	std::map <int, std::vector <int> >::iterator l_dressesIt;
 
-	for ( unsigned long long i = 0 ; i < l_rowCount ; i++ )
+	for ( uint64_t i = 0 ; i < l_rowCount ; i++ )
 	{
 		l_row = l_result->GetNextRow();
-		l_dressId = l_row->Get< int >( 0 );
-		l_slotId = l_row->Get< int >( 1 );
-		l_dressSex = l_row->Get< int >( 2 );
-		l_slotSex = l_row->Get< int >( 3 );
-		l_slotsIt = m_allDresses.find( l_dressSex );
-
-		//std::clog << "ChatDatabase::Update - Dress : " << l_dressId << ", Sex : " << l_dressSex << " - Slot : " << l_slotId << ", Sex : " << l_slotSex << "\n";
-		if ( l_slotsIt == m_allDresses.end() )
-		{
-			std::map <int, std::vector <int> > l_map;
-			m_allDresses.insert( std::make_pair( l_dressSex, l_map ) );
-			l_slotsIt = m_allDresses.find( l_dressSex );
-		}
-
-		l_dressesIt = l_slotsIt->second.find( l_slotId );
-
-		if ( l_slotsIt->second.find( l_slotId ) == l_slotsIt->second.end() )
-		{
-			std::vector <int> l_array;
-			l_slotsIt->second.insert( std::make_pair( l_slotId, l_array ) );
-			l_dressesIt = l_slotsIt->second.find( l_slotId );
-		}
-
-		l_dressesIt->second.push_back( l_dressId );
+		AddElement( m_allDresses, l_row->Get< uint32_t >( 0 ), l_row->Get< uint32_t >( 1 ), l_row->Get< uint32_t >( 2 ), l_row->Get< uint32_t >( 3 ) );
 	}
 
 
@@ -255,37 +233,11 @@ bool ChatDatabase::Update()
 
 	m_allTattoos.clear();
 	l_rowCount = l_result->GetRowCount();
-	int l_tattooId;
-	int l_tattooSex;
-	std::map <int, std::vector <int> >::iterator l_tattoosIt;
 
-	for ( unsigned long long i = 0 ; i < l_rowCount ; i++ )
+	for ( uint64_t i = 0 ; i < l_rowCount ; i++ )
 	{
 		l_row = l_result->GetNextRow();
-		l_tattooId = l_row->Get< int >( 0 );
-		l_slotId = l_row->Get< int >( 1 );
-		l_tattooSex = l_row->Get< int >( 2 );
-		l_slotSex = l_row->Get< int >( 3 );
-		l_slotsIt = m_allTattoos.find( l_tattooSex );
-
-		//std::clog << "ChatDatabase::Update - Tattoo : " << l_tattooId << ", Sex : " << l_tattooSex << " - Slot : " << l_slotId << ", Sex : " << l_slotSex << "\n";
-		if ( l_slotsIt == m_allTattoos.end() )
-		{
-			std::map <int, std::vector <int> > l_map;
-			m_allTattoos.insert( std::make_pair( l_tattooSex, l_map ) );
-			l_slotsIt = m_allTattoos.find( l_tattooSex );
-		}
-
-		l_tattoosIt = l_slotsIt->second.find( l_slotId );
-
-		if ( l_slotsIt->second.find( l_slotId ) == l_slotsIt->second.end() )
-		{
-			std::vector <int> l_array;
-			l_slotsIt->second.insert( std::make_pair( l_slotId, l_array ) );
-			l_tattoosIt = l_slotsIt->second.find( l_slotId );
-		}
-
-		l_tattoosIt->second.push_back( l_tattooId );
+		AddElement( m_allDresses, l_row->Get< uint32_t >( 0 ), l_row->Get< uint32_t >( 1 ), l_row->Get< uint32_t >( 2 ), l_row->Get< uint32_t >( 3 ) );
 	}
 
 	return true;
@@ -294,55 +246,46 @@ bool ChatDatabase::Update()
 bool ChatDatabase::ConnectUser( LoginInformations & p_client )
 {
 	bool l_return = false;
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_connectQuery,
-			p_client.GetName().c_str(),
-			p_client.GetPass().c_str() );
+	Database::String l_query = Format( c_connectQuery, MAX_QUERY_LEN, p_client.GetName().c_str(), p_client.GetPass().c_str() );
 
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 	if ( l_result && l_result->GetRowCount() > 0 )
 	{
-		int l_id = l_result->GetNextRow()->Get< int >( 0 );
-		//std::clog << "Connect User - ID : " << l_id << "\n";
-		p_client.SetId( static_cast <unsigned int>( l_id ) );
+		uint32_t l_id = l_result->GetNextRow()->Get< uint32_t >( 0 );
+		//std::clog << "Connect User - ID : " << l_id << std::endl;
+		p_client.SetId( static_cast <uint32_t>( l_id ) );
 		l_return = true;
 	}
 
 	return l_return;
 }
 
-bool ChatDatabase::LoadClothes( Clothes & p_clothes, int p_id )
+bool ChatDatabase::LoadClothes( Clothes & p_clothes, uint32_t p_id )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_loadSexQuery,
-			p_id );
+	Database::String l_query = Format( c_loadSexQuery, MAX_QUERY_LEN, p_id );
 
-	Database::DatabaseResultPtr l_result1 = m_db->ExecuteSelect( l_query );
+	Database::DatabaseResultSPtr l_result1 = m_db->ExecuteSelect( l_query );
 
 	if ( !l_result1 || l_result1->GetRowCount() == 0 )
 	{
-		std::cout << "ChatDatabase::LoadDresses - can't retrieve sex\n";
+		std::cout << "ChatDatabase::LoadDresses - can't retrieve sex" << std::endl;
 		return NULL;
 	}
 
 	String l_sex = l_result1->GetNextRow()->Get< String >( 0 );
-	//std::clog << "ChatDatabase::LoadDresses - Sex : " << l_sex << "\n";
+	//std::clog << "ChatDatabase::LoadDresses - Sex : " << l_sex << std::endl;
 
 	p_clothes.m_sex = ( l_sex == "homme" ? 0 : 1 );
 
 	{
 		// DRESSES
-		Format( l_query, MAX_QUERY_LEN,
-				c_loadDressesQuery,
-				p_id );
-		Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+		l_query = Format( c_loadDressesQuery, MAX_QUERY_LEN, p_id );
+		Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 		if ( !l_result || l_result->GetRowCount() <= 0 )
 		{
-			std::cout << "ChatDatabase::LoadDresses - can't retrieve dresses\n";
+			std::cout << "ChatDatabase::LoadDresses - can't retrieve dresses" << std::endl;
 			return false;
 		}
 
@@ -350,19 +293,17 @@ bool ChatDatabase::LoadClothes( Clothes & p_clothes, int p_id )
 
 		for ( uint32_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			Database::DatabaseRowPtr l_row = l_result->GetNextRow();
-			int l_playerDressId = l_row->Get< int >( 0 );
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			int l_playerDressId = l_row->Get< uint32_t >( 0 );
 			Dress l_dress;
-			l_dress.m_slot = ChatClientDressSlot( l_row->Get< int >( 1 ) );
-			l_dress.m_id = l_row->Get< int >( 2 );
-			Format( l_query, MAX_QUERY_LEN,
-					c_loadDressMatQuery,
-					l_playerDressId );
-			Database::DatabaseResultPtr l_result2 = m_db->ExecuteSelect( l_query );
+			l_dress.m_slot = ChatClientDressSlot( l_row->Get< uint32_t >( 1 ) );
+			l_dress.m_id = l_row->Get< uint32_t >( 2 );
+			l_query = Format( c_loadDressMatQuery, MAX_QUERY_LEN, l_playerDressId );
+			Database::DatabaseResultSPtr l_result2 = m_db->ExecuteSelect( l_query );
 
 			if ( !l_result2 )
 			{
-				std::cout << "ChatDatabase::LoadDresses - can't retrieve dresses\n";
+				std::cout << "ChatDatabase::LoadDresses - can't retrieve dresses" << std::endl;
 				return false;
 			}
 
@@ -370,9 +311,9 @@ bool ChatDatabase::LoadClothes( Clothes & p_clothes, int p_id )
 
 			for ( uint32_t j = 0 ; j < l_rowCount2 ; j++ )
 			{
-				Database::DatabaseRowPtr l_row2 = l_result2->GetNextRow();
-				int l_submatId = l_row2->Get< int >( 1 );
-				int l_matIndex = l_row2->Get< int >( 0 );
+				Database::DatabaseRowSPtr l_row2 = l_result2->GetNextRow();
+				uint32_t l_submatId = l_row2->Get< uint32_t >( 1 );
+				uint32_t l_matIndex = l_row2->Get< uint32_t >( 0 );
 				l_dress.m_materials.insert( std::make_pair( l_submatId, l_matIndex ) );
 			}
 
@@ -382,15 +323,12 @@ bool ChatDatabase::LoadClothes( Clothes & p_clothes, int p_id )
 
 	{
 		// TATTOOS
-		Format( l_query, MAX_QUERY_LEN,
-				c_loadTattoosQuery,
-				p_id );
-
-		Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+		l_query = Format( c_loadTattoosQuery, MAX_QUERY_LEN, p_id );
+		Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 		if ( !l_result || l_result->GetRowCount() <= 0 )
 		{
-			std::cout << "ChatDatabase::LoadDresses - can't retrieve tattoos\n";
+			std::cout << "ChatDatabase::LoadDresses - can't retrieve tattoos" << std::endl;
 			return true;
 		}
 
@@ -398,11 +336,11 @@ bool ChatDatabase::LoadClothes( Clothes & p_clothes, int p_id )
 
 		for ( uint32_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			Database::DatabaseRowPtr l_row = l_result->GetNextRow();
-			int l_playerTattooId = l_row->Get< int >( 0 );
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			uint32_t l_playerTattooId = l_row->Get< uint32_t >( 0 );
 			Tattoo l_tattoo;
-			l_tattoo.m_slot = ChatClientDressSlot( l_row->Get< int >( 1 ) );
-			l_tattoo.m_id = l_row->Get< int >( 2 );
+			l_tattoo.m_slot = ChatClientDressSlot( l_row->Get< uint32_t >( 1 ) );
+			l_tattoo.m_id = l_row->Get< uint32_t >( 2 );
 			p_clothes.m_tattoos.insert( std::make_pair( l_tattoo.m_slot, l_tattoo ) );
 		}
 	} // END TATTOOS
@@ -410,7 +348,7 @@ bool ChatDatabase::LoadClothes( Clothes & p_clothes, int p_id )
 	return true;
 }
 
-bool ChatDatabase::SaveClothes( Clothes const & p_clothes, int p_id )
+bool ChatDatabase::SaveClothes( Clothes const & p_clothes, uint32_t p_id )
 {
 	if ( DoFlushDBFromPlayerInfos( p_id ) )
 	{
@@ -420,96 +358,66 @@ bool ChatDatabase::SaveClothes( Clothes const & p_clothes, int p_id )
 	return false;
 }
 
-bool ChatDatabase::RemoveFriend( unsigned int p_id, unsigned int p_friend )
+bool ChatDatabase::RemoveFriend( uint32_t p_id, uint32_t p_friend )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN, c_removeFriendQuery,
-			p_id, p_friend );
-	m_db->ExecuteUpdate( l_query );
-
-	return true;
+	Database::String l_query = Format( c_removeFriendQuery, MAX_QUERY_LEN,  p_id, p_friend );
+	return m_db->ExecuteUpdate( l_query );
 }
 
-bool ChatDatabase::RemoveIgnored( unsigned int p_id, unsigned int p_ignored )
+bool ChatDatabase::RemoveIgnored( uint32_t p_id, uint32_t p_ignored )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN, c_removeIgnoredQuery,
-			p_id, p_ignored );
-	m_db->ExecuteUpdate( l_query );
-
-	return true;
+	Database::String l_query = Format( c_removeIgnoredQuery, MAX_QUERY_LEN, p_id, p_ignored );
+	return m_db->ExecuteUpdate( l_query );
 }
 
-bool ChatDatabase::AddFriend( unsigned int p_id, unsigned int p_friend )
+bool ChatDatabase::AddFriend( uint32_t p_id, uint32_t p_friend )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN, c_addFriendQuery,
-			p_id, p_friend );
-	m_db->ExecuteUpdate( l_query );
-
-	return true;
+	Database::String l_query = Format( c_addFriendQuery, MAX_QUERY_LEN, p_id, p_friend );
+	return m_db->ExecuteUpdate( l_query );
 }
 
-bool ChatDatabase::AddIgnored( unsigned int p_id, unsigned int p_ignored )
+bool ChatDatabase::AddIgnored( uint32_t p_id, uint32_t p_ignored )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN, c_addIgnoredQuery,
-			p_id, p_ignored );
-	m_db->ExecuteUpdate( l_query );
-
-	return true;
+	Database::String l_query = Format( c_addIgnoredQuery, MAX_QUERY_LEN, p_id, p_ignored );
+	return m_db->ExecuteUpdate( l_query );
 }
 
-bool ChatDatabase::LoadFriends( ClientIdStrMap & p_friends, int p_id )
+bool ChatDatabase::LoadFriends( ClientStrIdMap & p_friends, uint32_t p_id )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_loadFriendsQuery,
-			p_id );
-
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+	Database::String l_query = Format( c_loadFriendsQuery, MAX_QUERY_LEN, p_id );
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 	if ( l_result != NULL && l_result->GetRowCount() > 0 )
 	{
-		unsigned long long l_rowCount = l_result->GetRowCount();
-		Database::DatabaseRowPtr l_row;
-		int l_id;
-		String l_name;
+		uint64_t l_rowCount = l_result->GetRowCount();
 
 		for ( size_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			l_row = l_result->GetNextRow();
-			l_id = l_row->Get< int >( 0 );
-			l_name = l_row->Get< String >( 1 );
-			p_friends.insert( std::make_pair( l_name, l_id ) );
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			uint32_t l_id = l_row->Get< uint32_t >( 0 );
+			String l_name = l_row->Get< String >( 1 );
+			p_friends.insert( std::make_pair( l_id, l_name ) );
 		}
 	}
 
 	return true;
 }
 
-bool ChatDatabase::LoadIgnored( ClientIdStrMap & p_ignored, int p_id )
+bool ChatDatabase::LoadIgnored( ClientStrIdMap & p_ignored, uint32_t p_id )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_loadIgnoredQuery,
-			p_id );
-
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+	Database::String l_query = Format( c_loadIgnoredQuery, MAX_QUERY_LEN, p_id );
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 	if ( l_result != NULL && l_result->GetRowCount() > 0 )
 	{
-		unsigned long long l_rowCount = l_result->GetRowCount();
-		Database::DatabaseRowPtr l_row;
-		int l_id;
-		String l_name;
+		uint64_t l_rowCount = l_result->GetRowCount();
 
 		for ( size_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			l_row = l_result->GetNextRow();
-			l_id = l_row->Get< int >( 0 );
-			l_name = l_row->Get< String >( 1 );
-			p_ignored.insert( std::make_pair( l_name, l_id ) );
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			uint32_t l_id = l_row->Get< uint32_t >( 0 );
+			String l_name = l_row->Get< String >( 1 );
+			p_ignored.insert( std::make_pair( l_id, l_name ) );
 		}
 	}
 
@@ -522,23 +430,20 @@ bool ChatDatabase::LoadRooms( ChatWorld & p_world )
 	std::cout << "******************************" << std::endl;
 	std::cout << "LoadingRooms" << std::endl;
 
-	//std::clog << "ChatDatabase::LoadRooms - " << c_loadRoomsQuery << "\n";
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( c_loadRoomsQuery );
+	//std::clog << "ChatDatabase::LoadRooms - " << c_loadRoomsQuery << std::endl;
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( c_loadRoomsQuery );
 
 	if ( l_result )
 	{
-		String l_roomName;
-		String l_sceneName;
-		unsigned long long l_rowCount = l_result->GetRowCount();
-		Database::DatabaseRowPtr l_row;
-		std::cout << "NbRooms : " << l_rowCount << "\n";
+		uint64_t l_rowCount = l_result->GetRowCount();
+		std::cout << "NbRooms : " << l_rowCount << std::endl;
 
 		for ( size_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			l_row = l_result->GetNextRow();
-			l_roomName = l_row->Get< String >( 1 );
-			l_sceneName = l_row->Get< String >( 2 );
-			std::cout << l_roomName << " - " << l_sceneName << "\n";
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			String l_roomName = l_row->Get< String >( 1 );
+			String l_sceneName = l_row->Get< String >( 2 );
+			std::cout << l_roomName << " - " << l_sceneName << std::endl;
 			p_world.AddRoom( l_roomName, l_sceneName );
 		}
 
@@ -556,28 +461,24 @@ bool ChatDatabase::LoadRooms( ChatWorld & p_world )
 bool ChatDatabase::LoadGames( StrUIntIdMap & p_names )
 {
 	bool l_return = false;
-	std::cout << "LoadingGames\n";
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( c_loadGamesQuery );
+	std::cout << "LoadingGames" << std::endl;
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( c_loadGamesQuery );
 
 	if ( l_result != NULL )
 	{
-		String l_gameName;
-		unsigned int l_gameId;
-		unsigned int l_maxPlayers;
-		unsigned long long l_rowCount = l_result->GetRowCount();
-		Database::DatabaseRowPtr l_row;
-		std::cout << "NbGames : " << l_rowCount << "\n";
+		uint64_t l_rowCount = l_result->GetRowCount();
+		std::cout << "NbGames : " << l_rowCount << std::endl;
 
 		for ( size_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			l_row = l_result->GetNextRow();
-			l_gameName = l_row->Get< String >( 0 );
-			l_gameId = l_row->Get< int >( 1 );
-			l_maxPlayers = l_row->Get< int >( 2 );
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			String l_gameName = l_row->Get< String >( 0 );
+			uint32_t l_gameId = l_row->Get< uint32_t >( 1 );
+			uint32_t l_maxPlayers = l_row->Get< uint32_t >( 2 );
 
 			if ( p_names.find( l_gameId ) == p_names.end() )
 			{
-				std::cout << l_gameId << " - " << l_gameName << " - " << l_maxPlayers << "\n";
+				std::cout << l_gameId << " - " << l_gameName << " - " << l_maxPlayers << std::endl;
 				p_names.insert( std::make_pair( l_gameId, std::make_pair( l_gameName, l_maxPlayers ) ) );
 			}
 		}
@@ -590,106 +491,97 @@ bool ChatDatabase::LoadGames( StrUIntIdMap & p_names )
 	}
 
 	std::cout << "******************************" << std::endl;
-	return false;
+	return l_return;
 }
 
-unsigned int ChatDatabase::GetClientId( const String & p_name )
+uint32_t ChatDatabase::GetClientId( String const & p_name )
 {
-	ClientIdStrMap::iterator l_it = m_clients.find( p_name );
+	uint32_t l_return = 0;
+	auto l_it = std::find_if( m_clients.begin(), m_clients.end(), [&p_name]( ClientStrIdMap::value_type const & p_client )
+	{
+		return p_client.second == p_name;
+	} );
 
 	if ( l_it != m_clients.end() )
 	{
-		return l_it->second;
+		l_return = l_it->first;
 	}
 
-	return 0;
+	return l_return;
 }
 
-void ChatDatabase::AddPlayerToGame( unsigned int p_gameId )
+void ChatDatabase::AddPlayerToGame( uint32_t p_gameId )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_addPlayerToGameQuery,
-			p_gameId );
+	Database::String l_query = Format( c_addPlayerToGameQuery, MAX_QUERY_LEN, p_gameId );
 	m_db->ExecuteUpdate( l_query );
 }
 
-void ChatDatabase::RemovePlayerFromGame( unsigned int p_gameId )
+void ChatDatabase::RemovePlayerFromGame( uint32_t p_gameId )
 {
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_removePlayerFromGameQuery,
-			p_gameId );
+	Database::String l_query = Format( c_removePlayerFromGameQuery, MAX_QUERY_LEN, p_gameId );
 	m_db->ExecuteUpdate( l_query );
 }
 
-size_t ChatDatabase::GetDressesSize( size_t p_sex, size_t p_slotId )
+uint32_t ChatDatabase::GetDressesCount( uint32_t p_sex, uint32_t p_slotId )
 {
-//	std::cout << "ChatDatabase::GetDressesSize - Sex : " << p_sex << " - Slot " << p_slotId << "\n";
-	std::map <int, std::map <int, std::vector <int> > >::iterator l_it = m_allDresses.find( p_sex );
+	//std::cout << "ChatDatabase::GetDressesSize - Sex : " << p_sex << " - Slot " << p_slotId << std::endl;
+	uint32_t l_return = 0;
+	auto && l_it = m_allDresses.find( p_sex );
 
-	if ( l_it == m_allDresses.end() )
+	if ( l_it != m_allDresses.end() )
 	{
-		return 0;
+		auto && l_it2 = l_it->second.find( p_slotId );
+
+		if ( l_it2 != l_it->second.end() )
+		{
+			l_return = uint32_t( l_it2->second.size() );
+		}
 	}
 
-	std::map <int, std::vector <int> >::iterator l_it2 = l_it->second.find( p_slotId );
-
-	if ( l_it2 == l_it->second.end() )
-	{
-		return 0;
-	}
-
-	return l_it2->second.size();
+	return l_return;
 }
 
-int ChatDatabase::GetDress( size_t p_sex, size_t p_slotId, size_t p_index )
+uint32_t ChatDatabase::GetDress( uint32_t p_sex, uint32_t p_slotId, uint32_t p_index )
 {
-	std::clog << "ChatDatabase::GetDress - Sex : " << p_sex << " - Slot " << p_slotId << " - Index " << p_index << "\n";
-	std::map <int, std::map <int, std::vector <int> > >::iterator l_it = m_allDresses.find( p_sex );
+	uint32_t l_return = DEFAULT_DRESS_ID;
+	std::clog << "ChatDatabase::GetDress - Sex : " << p_sex << " - Slot " << p_slotId << " - Index " << p_index << std::endl;
+	auto && l_it = m_allDresses.find( p_sex );
 
-	if ( l_it == m_allDresses.end() )
+	if ( l_it != m_allDresses.end() )
 	{
-		return 137;
+		auto && l_it2 = l_it->second.find( p_slotId );
+
+		if ( l_it2 != l_it->second.end() && p_index < l_it2->second.size() )
+		{
+			l_return = l_it2->second[p_index];
+		}
 	}
 
-	std::map <int, std::vector <int> >::iterator l_it2 = l_it->second.find( p_slotId );
-
-	if ( l_it2 == l_it->second.end() || p_index >= l_it2->second.size() )
-	{
-		return 137;
-	}
-
-	return l_it2->second[p_index];
+	return l_return;
 }
 
-bool ChatDatabase::DoFlushDBFromPlayerInfos( int p_id )
+bool ChatDatabase::DoFlushDBFromPlayerInfos( uint32_t p_id )
 {
 	bool l_return = false;
-	Database::String l_query;
 	// first, we flush the db infos about the player's dresses
-	Format( l_query, MAX_QUERY_LEN,
-			c_retrievePlayerDressQuery,
-			p_id );
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+	Database::String l_query = Format( c_retrievePlayerDressQuery, MAX_QUERY_LEN, p_id );
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 	if ( !l_result )
 	{
-		std::cerr << "ChatDatabase::DoFlushDBFromPlayerInfos - Can't execute query #1\n";
+		std::cerr << "ChatDatabase::DoFlushDBFromPlayerInfos - Can't execute query #1" << std::endl;
 		l_return = false;
 	}
 	else
 	{
-		unsigned long long l_rowCount = l_result->GetRowCount();
-		std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #1 - Nb Rows : " << l_rowCount << "\n";
+		uint64_t l_rowCount = l_result->GetRowCount();
+		std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #1 - Nb Rows : " << l_rowCount << std::endl;
 
 		if ( l_rowCount > 0 )
 		{
-			Format( l_query, MAX_QUERY_LEN,
-					c_removePlayerDressMatsQuery,
-					l_result->GetNextRow()->Get< String >( 0 ).c_str() );
+			l_query = Format( c_removePlayerDressMatsQuery, MAX_QUERY_LEN, l_result->GetNextRow()->Get< String >( 0 ).c_str() );
 
-			for ( unsigned long long i = 1 ; i < l_rowCount ; i++ )
+			for ( uint64_t i = 1 ; i < l_rowCount ; i++ )
 			{
 				l_query += " or ref_player_dress='";
 				l_query += l_result->GetNextRow()->Get< String >( 0 );
@@ -697,44 +589,32 @@ bool ChatDatabase::DoFlushDBFromPlayerInfos( int p_id )
 			}
 
 			m_db->ExecuteUpdate( l_query );
-			std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #2 -> Success\n";
+			std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #2 -> Success" << std::endl;
 
-			Format( l_query, MAX_QUERY_LEN,
-					c_removeDressesQuery,
-					p_id );
+			l_query = Format( c_removeDressesQuery, MAX_QUERY_LEN, p_id );
 			m_db->ExecuteUpdate( l_query );
-			std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #3 -> Success\n";
+			std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #3 -> Success" << std::endl;
 		}
 
-		Format( l_query, MAX_QUERY_LEN,
-				c_removeTattoosQuery,
-				p_id );
+		l_query = Format( c_removeTattoosQuery, MAX_QUERY_LEN, p_id );
 		m_db->ExecuteUpdate( l_query );
-		std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #4 -> Success\n";
+		std::clog << "ChatDatabase::DoFlushDBFromPlayerInfos - Query #4 -> Success" << std::endl;
 		l_return = true;
 	}
 
 	return l_return;
 }
 
-bool ChatDatabase::DoFillDBWithPlayerInfos( Clothes const & p_clothes, int p_id )
+bool ChatDatabase::DoFillDBWithPlayerInfos( Clothes const & p_clothes, uint32_t p_id )
 {
 	bool l_return = false;
-	Database::String l_query;
-	Format( l_query, MAX_QUERY_LEN,
-			c_updateSexQuery,
-			( p_clothes.m_sex == 1 ? "femme" : "homme" ),
-			p_id );
+	Database::String l_query = Format( c_updateSexQuery, MAX_QUERY_LEN, ( p_clothes.m_sex == 1 ? "femme" : "homme" ), p_id );
 	m_db->ExecuteUpdate( l_query );
-	std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #1 -> Success\n";
+	std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #1 -> Success" << std::endl;
 
-	std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Nb Dresses : " << p_clothes.m_dresses.size() << "\n";
+	std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Nb Dresses : " << p_clothes.m_dresses.size() << "" << std::endl;
 	auto && l_dressIt = p_clothes.m_dresses.begin();
-	Format( l_query, MAX_QUERY_LEN,
-			c_insertDressQuery,
-			p_id,
-			l_dressIt->second.m_id,
-			l_dressIt->second.m_slot );
+	l_query = Format( c_insertDressQuery, MAX_QUERY_LEN, p_id, l_dressIt->second.m_id, l_dressIt->second.m_slot );
 	l_dressIt++;
 
 	size_t l_length = MAX_QUERY_LEN;
@@ -742,65 +622,56 @@ bool ChatDatabase::DoFillDBWithPlayerInfos( Clothes const & p_clothes, int p_id 
 	while ( l_dressIt != p_clothes.m_dresses.end() )
 	{
 		l_query += ", ('";
-		l_query += Database::CStrUtils::ToString( p_id );
+		l_query += Database::StringUtils::ToString( p_id );
 		l_query += "', '";
-		l_query += Database::CStrUtils::ToString( l_dressIt->second.m_id );
+		l_query += Database::StringUtils::ToString( l_dressIt->second.m_id );
 		l_query += "', '";
-		l_query += Database::CStrUtils::ToString( l_dressIt->second.m_slot );
+		l_query += Database::StringUtils::ToString( l_dressIt->second.m_slot );
 		l_query += "')";
 		l_dressIt++;
 	}
 
 	m_db->ExecuteUpdate( l_query );
-	std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #2 -> Success\n";
+	std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #2 -> Success" << std::endl;
 
-	Format( l_query, MAX_QUERY_LEN,
-			c_retrievePlayerDressQuery,
-			p_id );
-	Database::DatabaseResultPtr l_result = m_db->ExecuteSelect( l_query );
+	l_query = Format( c_retrievePlayerDressQuery, MAX_QUERY_LEN, p_id );
+	Database::DatabaseResultSPtr l_result = m_db->ExecuteSelect( l_query );
 
 	if ( !l_result || !l_result->GetRowCount() )
 	{
-		std::cerr << "ChatDatabase::DoFillDBWithPlayerInfos - can't execute query #6\n";
+		std::cerr << "ChatDatabase::DoFillDBWithPlayerInfos - can't execute query #6" << std::endl;
 	}
 	else
 	{
 		uint64_t l_rowCount = l_result->GetRowCount();
-		std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #3 - Nb Rows : " << l_rowCount << "\n";
-		std::map <int, int> l_map;
+		std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #3 - Nb Rows : " << l_rowCount << std::endl;
+		std::map< uint32_t, uint32_t > l_map;
 
 		for ( uint64_t i = 0 ; i < l_rowCount ; i++ )
 		{
-			Database::DatabaseRowPtr l_row = l_result->GetNextRow();
-			int l_dress = l_row->Get< int >( 1 );
-			int l_pdress = l_row->Get< int >( 0 );
+			Database::DatabaseRowSPtr l_row = l_result->GetNextRow();
+			uint32_t l_dress = l_row->Get< uint32_t >( 1 );
+			uint32_t l_pdress = l_row->Get< uint32_t >( 0 );
 			l_map.insert( std::make_pair( l_dress, l_pdress ) );
-			std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - DressId : " << l_dress << " - PlayerDressId : " << l_pdress << "\n";
+			std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - DressId : " << l_dress << " - PlayerDressId : " << l_pdress << std::endl;
 		}
-
-		std::map <int, int>::iterator l_mapIt;
-		int l_playerDressId;
 
 		for ( auto && l_it : p_clothes.m_dresses )
 		{
-			std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Dress Id : " << l_it.second.m_id << "\n";
-			l_mapIt = l_map.find( l_it.second.m_id );
+			std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Dress Id : " << l_it.second.m_id << std::endl;
+			auto && l_mapIt = l_map.find( l_it.second.m_id );
 
 			if ( l_mapIt != l_map.end() )
 			{
-				std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Found - Nb materials : " << l_it.second.m_materials.size() << "\n";
-				l_playerDressId = l_mapIt->second;
+				std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Found - Nb materials : " << l_it.second.m_materials.size() << std::endl;
+				uint32_t l_playerDressId = l_mapIt->second;
 
 				for ( auto && l_matit : l_it.second.m_materials )
 				{
-					std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - " << l_playerDressId << " - " << l_matit.second << " - " << l_matit.first << "\n";
-					Format( l_query, MAX_QUERY_LEN,
-							c_insertDressMatQuery,
-							l_playerDressId,
-							l_matit.second,
-							l_matit.first );
+					std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - " << l_playerDressId << " - " << l_matit.second << " - " << l_matit.first << std::endl;
+					l_query = Format( c_insertDressMatQuery, MAX_QUERY_LEN, l_playerDressId, l_matit.second, l_matit.first );
 					m_db->ExecuteUpdate( l_query );
-					std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #4 : " << l_query << "-> Success\n";
+					std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #4 : " << l_query << "-> Success" << std::endl;
 				}
 			}
 		}
@@ -809,28 +680,24 @@ bool ChatDatabase::DoFillDBWithPlayerInfos( Clothes const & p_clothes, int p_id 
 
 		if ( l_tattooIt != p_clothes.m_tattoos.end() )
 		{
-			Format( l_query, MAX_QUERY_LEN,
-					c_insertTattooQuery,
-					p_id,
-					l_tattooIt->second.m_id,
-					l_tattooIt->second.m_slot );
+			l_query = Format( c_insertTattooQuery, MAX_QUERY_LEN, p_id, l_tattooIt->second.m_id, l_tattooIt->second.m_slot );
 			l_tattooIt++;
 
 			while ( l_tattooIt != p_clothes.m_tattoos.end() )
 			{
-				std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Tattoo : ID : " << l_tattooIt->second.m_id << ", Slot : " << l_tattooIt->second.m_slot << "\n";
+				std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Tattoo : ID : " << l_tattooIt->second.m_id << ", Slot : " << l_tattooIt->second.m_slot << std::endl;
 				l_query += ", ('";
-				l_query += Database::CStrUtils::ToString( p_id );
+				l_query += Database::StringUtils::ToString( p_id );
 				l_query += "', '";
-				l_query += Database::CStrUtils::ToString( l_tattooIt->second.m_id );
+				l_query += Database::StringUtils::ToString( l_tattooIt->second.m_id );
 				l_query += "', '";
-				l_query += Database::CStrUtils::ToString( l_tattooIt->second.m_slot );
+				l_query += Database::StringUtils::ToString( l_tattooIt->second.m_slot );
 				l_query += "')";
 				l_tattooIt++;
 			}
 
 			m_db->ExecuteUpdate( l_query );
-			std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #5 -> Success\n";
+			std::clog << "ChatDatabase::DoFillDBWithPlayerInfos - Query #5 -> Success" << std::endl;
 		}
 
 		l_return = true;

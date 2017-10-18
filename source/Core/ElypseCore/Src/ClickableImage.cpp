@@ -23,17 +23,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreTextureManager.h>
 #include <OgreTexture.h>
 
-ClickableImage::ClickableImage( const String & p_name, Real p_width, Real p_height )
+ClickableImage::ClickableImage( String const & p_name, Real p_width, Real p_height )
 {
 	genlib_assert( ! p_name.empty() );
 	m_raw = RawImageManager::GetSingletonPtr()->GetElementByName( p_name );
 
-	if ( m_raw == NULL )
+	if ( !m_raw )
 	{
 		m_raw = RawImageManager::GetSingletonPtr()->CreateElement( p_name );
 	}
 
-	genlib_assert( m_raw != NULL );
+	genlib_assert( m_raw != nullptr );
 	m_raw->Use();
 	m_x = p_width;
 	m_y = p_height;

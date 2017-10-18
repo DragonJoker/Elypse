@@ -73,7 +73,7 @@ namespace Elypse
 			bool _invokeParser( String & p_line, const AttributeParserMap & p_parsers );
 
 		public:
-			SceneFileParser( const String & p_instance, const Path & p_baseDirectory );
+			SceneFileParser( String const & p_instance, const Path & p_baseDirectory );
 			virtual ~SceneFileParser();
 
 		public:
@@ -84,11 +84,11 @@ namespace Elypse
 			}
 
 		public:
-			static void parsingError( Context * context, const String & s );
+			static void parsingError( Context * context, String const & s );
 
-			static Vector3 Parser_Vector3Value( const String & params );
-			static Vector4 Parser_Vector4Value( const String & params );
-			static ColourValue Parser_ColourValue( const String & params );
+			static Vector3 Parser_Vector3Value( String const & params );
+			static Vector4 Parser_Vector4Value( String const & params );
+			static ColourValue Parser_ColourValue( String const & params );
 		};
 	}
 }

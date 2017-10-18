@@ -1,0 +1,639 @@
+material Base/Icon/Arc_Rotate
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture arc_rotate.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Arc_Rotate_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture arc_rotate_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Copy
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture copy.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Copy_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture copy_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Light
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture create_light.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Light_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture create_light_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Delete
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture delete.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Delete_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture delete_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Grid
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture grid.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Grid_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture grid_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Import
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture import.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Import_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture import_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Lock
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture lock_selection.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Lock_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture lock_selection_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Move
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture move.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Move_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture move_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/New
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture new_document.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/New_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture new_document_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Open
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture open.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Open_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture open_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Pan
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture pan.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Pan_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture pan_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Reset
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture reset_object.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Reset_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture reset_object_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Rotate
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture rotate.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Rotate_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture rotate_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Save
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture save.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Save_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture save_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Scale
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture scale.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Scale_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture scale_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Select
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture select.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Select_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture select_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Snap
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture snap_grid.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Snap_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture snap_grid_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Wireframe
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture wireframe.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Wireframe_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture wireframe_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Zoom
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture zoom.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/Zoom_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture zoom_active.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/SaveAs
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture save_as.jpg
+			}
+		}
+	}
+}
+
+material Base/Icon/SaveAs_A
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture save_as_active.jpg
+			}
+		}
+	}
+}

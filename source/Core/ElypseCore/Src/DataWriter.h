@@ -29,19 +29,7 @@ namespace Elypse
 	{
 		class d_dll_export DataWriter
 		{
-		private:
-			BlockList m_header;
-			std::vector< std::string > m_fileslist;
-
 		public:
-			/**
-				Default constructor, makes nothing at all
-			*/
-			DataWriter();
-			/**
-				Destructor, clears the list of files
-			*/
-			~DataWriter();
 			/**
 				Adds a file to the list of files, without compressing it
 					@params : p_file : [in]	the file to add to the list
@@ -73,6 +61,10 @@ namespace Elypse
 			void WriteHeader( size_t & l_nbBytes, FILE * p_file );
 			void WriteZipHeader( ZipBlockList p_list, FILE * p_file );
 			std::vector< std::string > GetFileList();
+
+		private:
+			BlockList m_header;
+			std::vector< std::string > m_fileslist;
 		};
 	}
 }

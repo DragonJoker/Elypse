@@ -27,12 +27,12 @@ namespace Elypse
 		class d_dll_export VideoFactory : public named
 		{
 		public:
-			VideoFactory( const String & p_name )
+			VideoFactory( String const & p_name )
 				: named( p_name )
 			{
 			}
 			virtual void Initialise() = 0;
-			virtual VideoImplementation * Create( VideoObject * p_owner ) = 0;
+			virtual VideoImplementation * Create( VideoObject & p_owner ) = 0;
 			virtual void Update() = 0;
 		};
 	}

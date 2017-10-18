@@ -25,7 +25,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/defs.h>
 #include <wx/dynlib.h>
 
-BEGIN_COMMON_GUI_NAMESPACE
+namespace GuiCommon
 {
 	class wxElypsePlugin
 		: public Elypse::Main::ElypsePlugin
@@ -34,16 +34,16 @@ BEGIN_COMMON_GUI_NAMESPACE
 		wxElypsePlugin();
 		virtual ~wxElypsePlugin();
 
-		virtual String GetStringFromUrl( const String & p_url , bool p_usePostMethod );
-		virtual bool OpenURL( const String & p_url, bool p_newWindow, bool p_usePostMethod );
-		virtual void MajorError( const String & p_errorText, const String & p_title );
+		virtual String GetStringFromUrl( String const & p_url , bool p_usePostMethod );
+		virtual bool OpenURL( String const & p_url, bool p_newWindow, bool p_usePostMethod );
+		virtual void MajorError( String const & p_errorText, String const & p_title );
 		virtual void Quit();
 		virtual void PostChangeGraphicalStatus();
 		virtual void LockGui();
 		virtual void UnlockGui();
 		virtual void ChangeCursorTo( CursorType p_cursorType );
 
-		virtual bool ExecuteJavascript( const String & p_functionName )
+		virtual bool ExecuteJavascript( String const & p_functionName )
 		{
 			return true;
 		};
@@ -52,7 +52,7 @@ BEGIN_COMMON_GUI_NAMESPACE
 		{
 			m_handle = p_handle;
 		}
-		inline void SetProgramFilesDir( const String & p_fullPath )
+		inline void SetProgramFilesDir( String const & p_fullPath )
 		{
 			m_programFiles = p_fullPath;
 		}
@@ -60,7 +60,7 @@ BEGIN_COMMON_GUI_NAMESPACE
 		{
 			m_protectedMode = true;
 		}
-		inline void SetBaseUrl( const String & p_baseUrl )
+		inline void SetBaseUrl( String const & p_baseUrl )
 		{
 			m_baseUrl = p_baseUrl;
 		}
@@ -77,6 +77,5 @@ BEGIN_COMMON_GUI_NAMESPACE
 		std::unique_ptr< wxDynamicLibrary > m_pLibrary;
 	};
 }
-END_COMMON_GUI_NAMESPACE
 
 #endif

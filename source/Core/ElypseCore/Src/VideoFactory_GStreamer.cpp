@@ -31,8 +31,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 GENLIB_INIT_SINGLETON( VideoFactory_GStreamer );
 
 VideoFactory_GStreamer::VideoFactory_GStreamer()
-	: VideoFactory( "GStreamer" ),
-		m_factories( NULL )
+	: VideoFactory( "GStreamer" )
+	, m_factories( NULL )
 {
 	GENLIB_SET_SINGLETON();
 	int l_argc;

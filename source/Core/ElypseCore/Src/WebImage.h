@@ -34,7 +34,7 @@ namespace Elypse
 			Texture * m_texture;
 			Url m_url;
 
-			Mutex m_mutex;
+			std::mutex m_mutex;
 
 			MaterialTargetArray m_targets;
 
@@ -42,13 +42,13 @@ namespace Elypse
 			bool m_loading;
 
 		public:
-			WebImage( const String & p_name );
+			WebImage( String const & p_name );
 			~WebImage();
 
 		private:
 			void _delete();
 			void _setupImage();
-			void _loadFromMemory( const String & p_ext, const String & p_buffer, Image * p_image );
+			void _loadFromMemory( String const & p_ext, String const & p_buffer, Image * p_image );
 
 		public:
 			void Reload();
@@ -60,7 +60,7 @@ namespace Elypse
 			{
 				return m_ready;
 			}
-			inline void SetUrl( const Url & p_url )
+			inline void SetUrl( Url const & p_url )
 			{
 				m_url = p_url;
 			}

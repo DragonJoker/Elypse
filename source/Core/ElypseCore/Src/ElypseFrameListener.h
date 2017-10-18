@@ -41,7 +41,9 @@ namespace Elypse
 {
 	namespace Main
 	{
-		class d_dll_export ElypseFrameListener : noncopyable, owned_by <ElypseInstance>
+		class d_dll_export ElypseFrameListener
+			: private noncopyable
+			, private owned_by< ElypseInstance >
 		{
 		protected:
 			enum 	//variables
@@ -55,61 +57,6 @@ namespace Elypse
 				NETWORK_CURRENT_MESSAGE,
 				NUM_SCRIPT_VAR
 			};
-
-		protected:
-			Overlay * m_debugOverlay;
-			RenderWindow * m_window;
-
-			SceneManager * m_sceneManager;
-			Camera * m_camera;
-
-			EMGui * m_gui;
-			PhysicsEngine * m_physics;
-			ScriptEngine * m_scriptEngine;
-			SceneFileParser * m_parser;
-			MirrorManager * m_mirrorManager;
-			UniverseManager * m_universeManager;
-			CamTexManager * m_camTexManager;
-			PostEffectManager * m_postEffectsManager;
-			AnimationManager * m_animationManager;
-			ObjectMaterialManager * m_objectMaterialManager;
-			SequenceManager * m_sequenceManager;
-			NetworkManager * m_network;
-
-			MuseFile * m_museFile;
-
-			Context * m_context;
-
-			ScriptNode * m_scriptVars[NUM_SCRIPT_VAR];
-			ScriptNode * m_scriptBinds[NUM_SCRIPT_BINDS];
-
-			ScriptNode * m_startUpScriptNode;
-
-			ThreadedQueue <ScriptNode *> m_scriptQueue;
-			ThreadedQueue <ScriptNode *> m_deletableScriptQueue;
-
-
-
-			bool * m_keysDown;
-
-			bool m_main;
-			bool m_showFPS;
-			bool m_ready;
-
-			bool m_mouseMove;
-			bool m_mouseRDown;
-			bool m_mouseLDown;
-			bool m_mouseMDown;
-
-			Url m_mainUrl;
-			String m_filename;
-			String m_appIndexStr;
-
-			String m_startupScript;
-
-			Path m_installDir;
-
-			Mutex m_mutex;
 
 		protected:
 			void _updateStats();
@@ -126,7 +73,7 @@ namespace Elypse
 			void _clearAndSetupBind( ScriptNode *& p_bind, ScriptNode * p_node );
 			void _destroyBinds();
 
-			char _keycodeToChar( unsigned int p_keycode );
+			char _keycodeToChar( uint32_t p_keycode );
 
 			inline void _tryPush( ScriptNode * p_node )
 			{
@@ -137,11 +84,11 @@ namespace Elypse
 			}
 
 		public:
-			ElypseFrameListener( ElypseInstance * p_oa,
-								RenderWindow * m_window, const Url & p_baseURL,
-								const Path & p_installPath, const String & p_appStringIndex );
-			ElypseFrameListener( ElypseInstance * p_oa, ElypseFrameListener * p_ofl,
-								RenderWindow * p_window, const String & p_instanceNum );
+			ElypseFrameListener( ElypseInstance & p_instance,
+								 RenderWindow * m_window, Url const & p_baseURL,
+								 const Path & p_installPath, String const & p_appStringIndex );
+			ElypseFrameListener( ElypseInstance & p_instance, ElypseFrameListener * p_ofl,
+								 RenderWindow * p_window, String const & p_instanceNum );
 			virtual ~ElypseFrameListener();
 
 		public:
@@ -165,14 +112,14 @@ namespace Elypse
 
 			void ResetAll();
 
-			void KeyDown( unsigned int p_keyCode );
-			void KeyUp( unsigned int p_keyCode );
-			void KeyRepeat( unsigned int p_keyCode, unsigned int p_numRepeat );
-			void OnChar( unsigned int p_keyCode );
-			void OnCharRepeat( unsigned int p_keyCode, unsigned int p_numRepeat );
+			void KeyDown( uint32_t p_keyCode );
+			void KeyUp( uint32_t p_keyCode );
+			void KeyRepeat( uint32_t p_keyCode, uint32_t p_numRepeat );
+			void OnChar( uint32_t p_keyCode );
+			void OnCharRepeat( uint32_t p_keyCode, uint32_t p_numRepeat );
 
 			void AddToScriptQueue( ScriptNode * p_node );
-			void AddToScriptQueue( const String & p_script );
+			void AddToScriptQueue( String const & p_script );
 
 			void SetCallback( CallbackType p_type, ScriptNode * p_node );
 		public:
@@ -188,7 +135,7 @@ namespace Elypse
 			{
 				return m_context;
 			}
-			inline const String &	GetFileName()const
+			inline String const &	GetFileName()const
 			{
 				return m_filename;
 			}
@@ -197,10 +144,63 @@ namespace Elypse
 				return m_installDir;
 			}
 
-			inline void	SetStartupScript( const String & p_script )
+			inline void	SetStartupScript( String const & p_script )
 			{
 				m_startupScript = p_script;
 			}
+
+		protected:
+			Overlay * m_debugOverlay{ nullptr };
+			RenderWindow * m_window{ nullptr };
+
+			SceneManager * m_sceneManager{ nullptr };
+			Camera * m_camera{ nullptr };
+
+			EMGui * m_gui{ nullptr };
+			PhysicsEngine * m_physics{ nullptr };
+			ScriptEngine * m_scriptEngine{ nullptr };
+			SceneFileParser * m_parser{ nullptr };
+			MirrorManager * m_mirrorManager{ nullptr };
+			UniverseManager * m_universeManager{ nullptr };
+			CamTexManager * m_camTexManager{ nullptr };
+			PostEffectManager * m_postEffectsManager{ nullptr };
+			AnimationManager * m_animationManager{ nullptr };
+			ObjectMaterialManager * m_objectMaterialManager{ nullptr };
+			SequenceManager * m_sequenceManager{ nullptr };
+			Network::NetworkManager * m_network{ nullptr };
+
+			MuseFile * m_museFile{ nullptr };
+
+			Context * m_context{ nullptr };
+
+			std::array< ScriptNode *, NUM_SCRIPT_VAR > m_scriptVars;
+			std::array< ScriptNode *, NUM_SCRIPT_BINDS > m_scriptBinds;
+
+			ScriptNode * m_startUpScriptNode{ nullptr };
+
+			ThreadedQueue< ScriptNode * > m_scriptQueue{ 50 };
+			ThreadedQueue< ScriptNode * > m_deletableScriptQueue{ 50 };
+
+			bool * m_keysDown{ nullptr };
+
+			bool m_main{ true };
+			bool m_showFPS{ false };
+			bool m_ready{ false };
+
+			bool m_mouseMove{ false };
+			bool m_mouseRDown{ false };
+			bool m_mouseLDown{ false };
+			bool m_mouseMDown{ false };
+
+			Url m_mainUrl;
+			String m_filename;
+			String m_appIndexStr;
+
+			String m_startupScript;
+
+			Path m_installDir;
+
+			std::mutex m_mutex;
 		};
 	}
 }

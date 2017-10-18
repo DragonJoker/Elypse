@@ -39,7 +39,7 @@ namespace Elypse
 			FMOD::Sound * m_sound;
 			SoundInstance * m_globalInstance;
 
-			unsigned int m_useCount;
+			uint32_t m_useCount;
 			SoundType m_type;
 
 			bool m_looped;
@@ -51,19 +51,19 @@ namespace Elypse
 			Real m_volumePercent;
 
 		public:
-			SoundObject( const String & p_name );
+			SoundObject( String const & p_name );
 			virtual ~SoundObject();
 
 		public:
 			SoundInstance * CreateInstance( SceneNode * p_node );
-			void SetSoundUrl( const String & p_url );
-			void RemoveNode( const String & p_entName );
+			void SetSoundUrl( String const & p_url );
+			void RemoveNode( String const & p_entName );
 			void PlayAll();
 			void PauseAll();
 			void StopAll();
 			void Update3D( Real p_time );
 			void UpdateFade( Real p_time );
-			void SetLocal( const String & p_zoneName );
+			void SetLocal( String const & p_zoneName );
 
 			void SetMaxVolume( Real p_volume );
 			void Mute( bool p_mute );
@@ -74,7 +74,7 @@ namespace Elypse
 			virtual void RemoveFromZone( Zone * p_zone );
 
 		public:
-			inline unsigned int		GetUseCount() const
+			inline uint32_t		GetUseCount() const
 			{
 				return m_useCount;
 			}
@@ -82,7 +82,7 @@ namespace Elypse
 			{
 				return m_globalInstance != NULL;
 			}
-			inline const String &	GetSoundURL() const
+			inline String const &	GetSoundURL() const
 			{
 				return m_soundURL;
 			}
@@ -120,7 +120,7 @@ namespace Elypse
 				m_volumePercent = p_volume;
 			}
 
-			inline SoundInstance * GetSoundInstance( const String & p_name )
+			inline SoundInstance * GetSoundInstance( String const & p_name )
 			{
 				return General::Utils::map::findOrNull( m_instances, p_name );
 			}

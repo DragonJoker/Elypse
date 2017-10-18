@@ -1,0 +1,25 @@
+//* Lors de la création d'un nouveau fichier de scène, si le fichier est renommé de suite, le fichier crée sur le disque dur s'appelle toujours NewFile1.emscene.
+//* Bug lors de la sauvegarde du fichier .teproj d'un nouveau projet contenant juste un fichier de scène vide.
+//* Lors d'une suppression de fichier, fermer l'onglet correspondant si le fichier est ouvert.
+//* Enlever de la liste enlève le fichier de la liste, supprimer le fichier aussi, mais supprimer le fichier ne supprime pas le fichier du disque dur.
+//* Tabulations mal gérées lors d'une édition de fichier. Au lieu d'ajouter une tabulation dans le fichier édité à la position du curseur, il change le focus et le mets sur l'élément suivant dans le Tab Order.
+//* Un ajout de ligne par la touche entrée en ajoute deux, de même un ajout d'espace en ajoute deux...
+//* F12 lance le test du projet, mais ne le stoppe pas toujours.
+//* Apparition de deux fichiers chelou dans le répertoire du projet lors de la fin d'un test du projet (lancé au préalable par F12).
+//* Lors de la fermeture d'un fichier (ou d'un projet), demander l'enregistrement s'il a été modifié.
+//* Numéros de lignes buggués lors d'un scroll avec la souris.
+//* Menu/Compiler ne compile plus.
+//* Les fleches gauche et droite sont prises par wxWidget
+//* Double clic sur les logs fait planter
+//* Quand une ligne de txt est trop longue, elle est coupée et compte pour 2 lignes
+//* Ctrl+S plante Troll lors d'un test de scène.
+//* Création de fichier Unused.txt et [nom de fichier].emsceneUnused.emscene dans le dossier du projet... Si tu pouvais foutre ton brin ailleurs !!
+//* Impossible de compiler autre chose que le premier fichier de script de la scène. (Bon à voir maintenant ça marche)...
+//* Lorsque l'on compile un fichier .emscript qui prends en compte des variables d'un autre .emscript, ya des erreurs qui en sortent de partout.
+//* Runtime error occurred quand on fait ctrl+s lors d'un test de scène avec un fichier ouvert.
+//* Problème de restauration de l'application quand elle a été réduite dans la barre des tâches pdt un test de scène. (quand un testpanel est lancé).
+//* Problème de redimensionnement de la boîte d'édition de texte.
+//* Bug de resize, au niveau des tabs de log
+
+* Lors de l'enregistrement des fichiers, les fichiers sont enregistrés dans le dossier de la scène concernée et de la scène principale...
+* Corriger les divers plantages...

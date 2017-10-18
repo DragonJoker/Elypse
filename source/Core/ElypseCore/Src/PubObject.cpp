@@ -31,15 +31,15 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <NeoCurl.h>
 #include <StringUtils.h>
 
-PubObject::PubObject( const String & p_name, ElypsePlugin * p_plugin )
-	: named( p_name ),
-		m_plugin( p_plugin ),
-		m_image( NULL )
+PubObject::PubObject( String const & p_name, ElypsePlugin * p_plugin )
+	: named( p_name )
+	, m_plugin( p_plugin )
+	, m_image( NULL )
 {
 	genlib_assert( m_plugin != NULL );
 	time_t abstime;
 	time( & abstime );
-	m_timestamp = StringConverter::toString( static_cast <unsigned int>( abstime ) );
+	m_timestamp = StringConverter::toString( static_cast <uint32_t>( abstime ) );
 }
 
 PubObject::~PubObject()
@@ -52,18 +52,18 @@ PubObject::~PubObject()
 	General::Utils::map::deleteAll( m_instances );
 }
 
-void PubObject::SetLinkUrl( const String & p_url )
+void PubObject::SetLinkUrl( String const & p_url )
 {
 	m_linkURL = string::replace( p_url, " ", m_timestamp.c_str() );
 }
 
-void PubObject::SetUrl( const String & p_url )
+void PubObject::SetUrl( String const & p_url )
 {
 	m_imageURL = string::replace( p_url, " ", m_timestamp.c_str() );
 	_retrieveUrl();
 }
 
-void PubObject::SetImageUrl( const String & p_url )
+void PubObject::SetImageUrl( String const & p_url )
 {
 	m_imageURL = string::replace( p_url, " ", m_timestamp.c_str() );
 }
@@ -117,13 +117,13 @@ void PubObject::Finalise()
 PubInstance * PubObject::CreateInstance( Entity * p_ent )
 {
 	genlib_assert( p_ent != NULL );
-	PubInstance * l_instance = General::Utils::map::insert( m_instances, p_ent->getName(), this, p_ent );
+	PubInstance * l_instance = General::Utils::map::insert( m_instances, p_ent->getName(), *this, p_ent );
 	return l_instance;
 }
 
 void PubObject::OnClick()
 {
-	if ( ! m_clicked )
+	if ( !m_clicked )
 	{
 		m_clicked = true;
 		m_timer.Time();

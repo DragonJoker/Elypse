@@ -22,15 +22,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Elypse/TrollScriptCompiler.h"
 #include "Elypse/TrollSceneFileParser.h"
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	TrollScriptEngine::TrollScriptEngine( const Path & p_path, ElypseLoadingBar * p_loadingBar )
-		: ScriptEngine( new TrollScriptCompiler( NULL, p_path, false ), p_path, p_loadingBar )
+	namespace ElypseRW
 	{
-	}
+		TrollScriptEngine::TrollScriptEngine( const Path & p_path, ElypseLoadingBar * p_loadingBar )
+			: ScriptEngine( new TrollScriptCompiler( NULL, p_path, false ), p_path, p_loadingBar )
+		{
+		}
 
-	TrollScriptEngine::~TrollScriptEngine()
-	{
+		TrollScriptEngine::~TrollScriptEngine()
+		{
+		}
 	}
 }
-END_TROLL_ELYPSE_NAMESPACE

@@ -27,13 +27,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-EMOverlayGroup::EMOverlayGroup( const String & p_name, EMGui * p_owner )
-	: named( p_name ),
-		owned_by<EMGui>	( p_owner ),
-		m_overlay( NULL ),
-		m_visible( true )
+EMOverlayGroup::EMOverlayGroup( String const & p_name, EMGui & p_owner )
+	: named( p_name )
+	, owned_by< EMGui >( p_owner )
+	, m_overlay( NULL )
+	, m_visible( true )
 {
-	genlib_assert( m_owner != NULL );
 	m_overlay = OverlayManager::getSingletonPtr()->create( m_name );
 	m_first = CreateElement( m_name );
 }
@@ -82,14 +81,14 @@ void EMOverlayGroup::_finaliseAddElement( EMOverlay * p_element )
 	}
 }
 
-EMOverlay * EMOverlayGroup::CreateElement( const String & p_name )
+EMOverlay * EMOverlayGroup::CreateElement( String const & p_name )
 {
-	EMOverlay * l_overlay = General::Utils::map::insert( m_elements, p_name, p_name, this );
-	m_owner->AddElement( l_overlay );
+	EMOverlay * l_overlay = General::Utils::map::insert( m_elements, p_name, p_name, *this );
+	GetOwner()->AddElement( l_overlay );
 	return l_overlay;
 }
 
-void EMOverlayGroup::_removeElement( const String & p_name )
+void EMOverlayGroup::_removeElement( String const & p_name )
 {
 	const EMOverlayMap::iterator & l_it = m_elements.find( p_name );
 
@@ -106,7 +105,7 @@ void EMOverlayGroup::_removeElement( const String & p_name )
 	m_elements.erase( l_it );
 }
 
-void EMOverlayGroup::DestroyElement( const String & p_name )
+void EMOverlayGroup::DestroyElement( String const & p_name )
 {
 	const EMOverlayMap::iterator & l_it = m_elements.find( p_name );
 

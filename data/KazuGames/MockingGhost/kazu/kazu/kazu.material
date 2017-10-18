@@ -1,0 +1,28 @@
+material Splashscreen/Kazu
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			texture_unit
+			{
+				texture Kazugame.jpg
+			}
+		}
+	}
+}
+material Splashscreen/Jouer
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			texture_unit
+			{
+				texture bouton_jouer.jpg
+			}
+		}
+	}
+}

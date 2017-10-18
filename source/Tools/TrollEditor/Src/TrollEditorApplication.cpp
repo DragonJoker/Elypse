@@ -23,13 +23,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/cmdline.h>
 
-IMPLEMENT_APP( TROLL_NAMESPACE::Application )
+wxIMPLEMENT_APP( Troll::Application );
 
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	Application::Application()
-		: wxApp()
-		, m_mainFrame( NULL )
+		: wxApp{}
 	{
 	}
 
@@ -49,7 +48,7 @@ BEGIN_TROLL_NAMESPACE
 		wxCmdLineParser l_parser( argc, argv );
 		l_parser.AddSwitch(	wxT( "h" ), wxT( "help" ), _( "Displays this help" ) );
 		l_parser.AddSwitch(	wxT( "d" ), wxT( "debug" ), _( "Displays debug logs in console log" ) );
-		l_parser.AddParam( wxT( "[project file]" ), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL );
+		l_parser.AddParam( wxT( "project file" ), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL );
 		l_parser.Parse();
 
 		// S'il y avait des erreurs ou "-h" ou "--help", on affiche l'aide et on sort
@@ -66,7 +65,7 @@ BEGIN_TROLL_NAMESPACE
 #else
 			bool l_debug( true );
 #endif
-			m_mainFrame = new GUI::MainFrame( l_debug, wxT( "Troll Editor" ), 50, 50, 800, 600 );
+			m_mainFrame = new GUI::MainFrame { l_debug, wxT( "Troll Editor" ), 50, 50, 800, 600 };
 			m_mainFrame->Show();
 			m_mainFrame->Maximize();
 
@@ -82,19 +81,23 @@ BEGIN_TROLL_NAMESPACE
 		return l_return;
 	}
 
+	int Application::OnExit()
+	{
+		return wxApp::OnExit();
+	}
+
 	void LogDebug( wxString const & p_message )
 	{
-		GUI::MainFrame::GetInstance()->LogDebug( p_message );
+		wxGetApp().GetMainFrame()->LogDebug( p_message );
 	}
 
 	void LogMessage( wxString const & p_message )
 	{
-		GUI::MainFrame::GetInstance()->LogMessage( p_message );
+		wxGetApp().GetMainFrame()->LogMessage( p_message );
 	}
 
 	void LogError( wxString const & p_message )
 	{
-		GUI::MainFrame::GetInstance()->LogError( p_message );
+		wxGetApp().GetMainFrame()->LogError( p_message );
 	}
 }
-END_TROLL_NAMESPACE

@@ -48,13 +48,13 @@ namespace General
 			}
 
 			template< typename CharType >
-			static inline std::vector<std::basic_string< CharType > > split( const std::string & str, const CharType * delims, unsigned int maxSplits = 10 )
+			static inline std::vector< std::basic_string< CharType > > split( std::basic_string< CharType > const & str, const CharType * delims, uint32_t maxSplits = 10 )
 			{
 				std::vector< std::basic_string< CharType > > ret;
 				ret.reserve( maxSplits ? maxSplits + 1 : 10 );
-				unsigned int numSplits = 0;
-				size_t start, pos;
-				start = 0;
+				uint32_t numSplits = 0;
+				size_t start = 0;
+				size_t pos = 0;
 
 				do
 				{
@@ -84,27 +84,19 @@ namespace General
 			}
 
 			template< typename CharType >
-			static inline std::vector<std::basic_string< CharType > > split( const std::string & str, const std::basic_string< CharType > & delims = string_cast< CharType >( "\t\n " ), unsigned int maxSplits = 10 )
+			static inline std::vector< std::basic_string< CharType > > split( std::basic_string< CharType > const & str, const std::basic_string< CharType > & delims = string_cast< CharType >( "\t\n " ), uint32_t maxSplits = 10 )
 			{
 				return split( str, delims.c_str(), maxSplits );
 			}
 
 			static inline void toLowerCase( std::string & p_str )
 			{
-				std::transform(
-					p_str.begin(),
-					p_str.end(),
-					p_str.begin(),
-					tolower );
+				std::transform( p_str.begin(), p_str.end(), p_str.begin(), tolower );
 			}
 
 			static inline void toUpperCase( std::string & p_str )
 			{
-				std::transform(
-					p_str.begin(),
-					p_str.end(),
-					p_str.begin(),
-					toupper );
+				std::transform( p_str.begin(), p_str.end(), p_str.begin(), toupper );
 			}
 
 			template< typename CharType >
@@ -113,7 +105,7 @@ namespace General
 				std::basic_string< CharType > l_return;
 				std::basic_string< CharType > l_temp;
 				size_t l_currentPos = 0;
-				size_t l_pos;
+				size_t l_pos = 0;
 
 				while ( ( l_pos = p_target.find( p_find, l_currentPos ) ) != std::basic_string< CharType >::npos )
 				{

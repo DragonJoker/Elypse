@@ -21,8 +21,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Chat;
 
-ChatGame::ChatGame( unsigned int p_id, ChatTcpClient * p_initiator,
-					const String & p_gameName, unsigned int p_maxPlayers,
+ChatGame::ChatGame( uint32_t p_id, ChatTcpClient * p_initiator,
+					String const & p_gameName, uint32_t p_maxPlayers,
 					std::shared_ptr< ChatDatabase > p_database )
 	: m_initiator( p_initiator )
 	, m_initiatorId( p_initiator->GetId() )
@@ -49,7 +49,7 @@ bool ChatGame::AddPlayer( ChatTcpClient * p_client )
 
 	if ( m_players.find( p_client->GetId() ) == m_players.end() || IsFull() )
 	{
-		std::cout << "ChatGame::AddPlayer - adding id :" << p_client->GetId() << "\n";
+		std::cout << "ChatGame::AddPlayer - adding id :" << p_client->GetId() << std::endl;
 		m_players.insert( std::make_pair( p_client->GetId(), p_client ) );
 		m_playersPlaces.push_back( p_client->GetName() );
 		DoGetDatabase()->AddPlayerToGame( m_id );
@@ -105,32 +105,32 @@ void ChatGame::EndGame()
 	}
 }
 
-int ChatGame::GetPlayerPlace( const String & p_name )
+uint32_t ChatGame::GetPlayerPlace( String const & p_name )
 {
 	auto && l_it = std::find_if( m_playersPlaces.begin(), m_playersPlaces.end(), [&p_name]( String const & l_name )
 	{
 		return l_name == p_name;
 	} );
 
-	int l_return = -1;
+	uint32_t l_return = 0xFFFFFFFF;
 
 	if ( l_it != m_playersPlaces.end() )
 	{
-		l_return = int( std::distance( m_playersPlaces.begin(), l_it ) );
+		l_return = uint32_t( std::distance( m_playersPlaces.begin(), l_it ) );
 	}
 
 	return l_return;
 }
 
-void ChatGame::ForwardMessage( const String & p_message, const String & p_name )
+void ChatGame::ForwardMessage( String const & p_message, uint32_t p_id )
 {
 	for ( auto && l_it : m_players )
 	{
 		ChatTcpClient * l_player = l_it.second;
 
-		if ( l_player && !l_player->IsToDelete() && l_player->GetName() != p_name )
+		if ( l_player && !l_player->IsToDelete() && l_player->GetId() != p_id )
 		{
-			std::clog << "forwarding message to " << l_player->GetName() << "\n";
+			std::clog << "forwarding message to " << l_player->GetName() << std::endl;
 			l_player->AsyncSend( p_message );
 		}
 	}

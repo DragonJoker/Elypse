@@ -22,36 +22,41 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Object.h"
 
-BEGIN_TROLL_PROJECT_3D_NAMESPACE
+namespace Troll
 {
-	class Troll3DObject
-		: public Object
+	namespace ProjectComponents
 	{
-	public:
-		Troll3DObject( const wxString & p_name, const wxString & p_fileName, Troll3DObjectType p_type );
-		virtual ~Troll3DObject();
-
-		virtual void AttachTo( TrollSceneNode * p_node );
-		void Detach();
-
-		inline Troll3DObjectType Get3DObjectType()const
+		namespace Objects3D
 		{
-			return m_3DObjectType;
-		}
-		inline TrollSceneNode * GetParent()const
-		{
-			return m_parent;
-		}
-		inline void SetParent( TrollSceneNode * p_parent )
-		{
-			m_parent = p_parent;
-		}
+			class Troll3DObject
+				: public Object
+			{
+			public:
+				Troll3DObject( wxString const & p_name, wxString const & p_fileName, Troll3DObjectType p_type );
+				virtual ~Troll3DObject();
 
-	protected:
-		TrollSceneNode * m_parent;
-		Troll3DObjectType m_3DObjectType;
-	};
+				virtual void AttachTo( TrollSceneNode * p_node );
+				void Detach();
+
+				inline Troll3DObjectType Get3DObjectType()const
+				{
+					return m_3DObjectType;
+				}
+				inline TrollSceneNode * GetParent()const
+				{
+					return m_parent;
+				}
+				inline void SetParent( TrollSceneNode * p_parent )
+				{
+					m_parent = p_parent;
+				}
+
+			protected:
+				TrollSceneNode * m_parent;
+				Troll3DObjectType m_3DObjectType;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_3D_NAMESPACE
 
 #endif

@@ -22,7 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <ElypseLogs.h>
 
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	class TrollLogs
 		: public Elypse::Debug::ElypseLogs
@@ -31,10 +31,9 @@ BEGIN_TROLL_NAMESPACE
 		TrollLogs();
 
 	protected:
-		virtual void _logMessage( const String & p_comment );
-		virtual void _consoleMessage( const String & p_comment );
+		virtual void DoLogMessage( String const & p_comment );
+		virtual void DoConsoleMessage( String const & p_comment );
 	};
 }
-END_TROLL_NAMESPACE
 
 #endif

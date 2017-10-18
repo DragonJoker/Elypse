@@ -20,32 +20,37 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Module_3D.h"
 
-BEGIN_TROLL_PROJECT_3D_NAMESPACE
+namespace Troll
 {
-	class TrollMesh
+	namespace ProjectComponents
 	{
-	public:
-		TrollMesh( const wxString & p_meshName );
-		~TrollMesh();
-
-		void AddSubMaterial( const wxString & p_name );
-		void SetSubMaterial( const wxString & p_name, unsigned int p_index );
-		wxString GetMaterial( unsigned int p_index );
-
-		inline const wxString & GetName()const
+		namespace Objects3D
 		{
-			return m_meshName;
-		}
-		inline unsigned int GetNumSubMaterials()const
-		{
-			return m_subMaterials.size();
-		}
+			class TrollMesh
+			{
+			public:
+				TrollMesh( wxString const & p_meshName );
+				~TrollMesh();
 
-	private:
-		wxString m_meshName;
-		wxStringUIntMap m_subMaterials;
-	};
+				void AddSubMaterial( wxString const & p_name );
+				void SetSubMaterial( wxString const & p_name, uint32_t p_index );
+				wxString GetMaterial( uint32_t p_index );
+
+				inline wxString const & GetName()const
+				{
+					return m_meshName;
+				}
+				inline uint32_t GetNumSubMaterials()const
+				{
+					return uint32_t( m_subMaterials.size() );
+				}
+
+			private:
+				wxString m_meshName;
+				wxStringUIntMap m_subMaterials;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_3D_NAMESPACE
 
 #endif

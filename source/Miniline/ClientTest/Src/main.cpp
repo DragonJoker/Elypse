@@ -21,28 +21,22 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <Utils.h>
 #include <Buffer.h>
 
+#include <atomic>
+
 using namespace General::Templates;
 using namespace Elypse::Network;
 using namespace boost;
 
-asio::io_service * g_service;
-
-void start()
-{
-	while ( true )
-	{
-		g_service->run();
-	}
-}
+uint16_t const g_port = 31333;
 
 int ServerMain()
 {
-	TcpServer l_server( 31333 );
+	TcpServer l_server( g_port );
 	l_server.Run();
 
 	//chat_server_list servers;
 
-	//tcp::endpoint endpoint( tcp::v4(), 31333);
+	//tcp::endpoint endpoint( tcp::v4(), g_port);
 	//chat_server_ptr server( new chat_server(io_service, endpoint));
 	//servers.push_back( server);
 
@@ -53,61 +47,65 @@ int ServerMain()
 
 int ClientMain()
 {
-	unsigned int l_count = 0;
-	std::vector <ElypseTcpClient *> l_clients;
-	ElypseTcpClient * l_client;
-
-	g_service = new asio::io_service();
-	std::thread l_thread( &start );
-
-
-	char * l_connectMsg = new char[256];
-	WriteBuffer l_buffer( l_connectMsg, 256 );
-	l_buffer << ( int )0 << ( int )9;
-	l_buffer.writeArray<char>( "anonymous", 9 );
-	l_buffer << ( int )9;
-	l_buffer.writeArray<char>( "anonymous", 9 );
-
-	std::string l_mesg;
-	l_mesg.assign( l_buffer.data(), l_buffer.size() );
-
-	int l_max = 500;
-
-	while ( true )
+	asio::io_service l_service;
+	std::atomic_bool l_stop{ false };
+	std::thread l_thread{ [&l_stop, &l_service]()
 	{
-		d_coucou;
+		while ( !l_stop )
+		{
+			l_service.run();
+		}
+	} };
 
+	std::array< char, 256 > l_connectMsg;
+	WriteBuffer l_buffer( l_connectMsg.data(), 256 );
+	l_buffer << int32_t{ 0 } << int32_t{ 9 };
+	l_buffer.writeArray( "anonymous" );
+	l_buffer << int32_t{ 9 };
+	l_buffer.writeArray( "anonymous" );
+	std::string const l_mesg( l_buffer.data(), l_buffer.size() );
+
+	int const l_max = 200;
+
+	uint32_t l_count = 0;
+	std::vector< ElypseTcpClient * > l_clients;
+
+	for ( int j = 0; j < l_max; ++j )
+	{
 		for ( int i = 0 ; i < l_max ; i++ )
 		{
 			std::cout << "creating client " << i << " out of [ " << l_count << " ]\n";
 			l_count++;
 
-			l_client = new ElypseTcpClient( g_service );
-			l_client->AsyncConnect( "127.0.0.1", 48621);
+			auto l_client = new ElypseTcpClient( &l_service );
+			l_client->AsyncConnect( "127.0.0.1", g_port );
 			l_clients.push_back( l_client );
 		}
 
-		for ( int i = 0 ; i < l_max ; i++ )
+		for ( auto & l_client : l_clients )
 		{
-			if ( l_clients[i]->IsConnected() )
+			if ( l_client->IsConnected() )
 			{
-				std::cout << "client " << i << " sends connect message\n";
-				l_clients[i]->AsyncSend( l_mesg );
+				std::cout << "client sends connect message\n";
+				l_client->AsyncSend( l_mesg );
 			}
 			else
 			{
-				l_clients[i]->StoreMessage( l_mesg );
+				l_client->StoreMessage( l_mesg );
 			}
 		}
 
-		for ( int i = 0 ; i < l_max ; i++ )
+		for ( auto & l_client : l_clients )
 		{
-			std::cout << "deleting client " << i << "\n";
-			l_clients[i]->Stop();
+			std::cout << "deleting client\n";
+			l_client->Stop();
 		}
 
 		l_clients.clear();
 	}
+
+	l_stop = true;
+	l_thread.join();
 
 	return EXIT_SUCCESS;
 }

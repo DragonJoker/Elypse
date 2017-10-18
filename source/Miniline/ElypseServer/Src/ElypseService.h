@@ -24,6 +24,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Named.h>
 #include <memory>
+#include <random>
 
 namespace Elypse
 {
@@ -39,7 +40,7 @@ namespace Elypse
 			: public General::Theory::named
 		{
 		protected:
-			ElypseService( const std::string & p_name )
+			ElypseService( std::string const & p_name )
 				: General::Theory::named( p_name )
 			{
 			}
@@ -50,7 +51,7 @@ namespace Elypse
 			}
 
 		public:
-			virtual unsigned short GetPortNo() const = 0;
+			virtual uint16_t GetPortNo() const = 0;
 			virtual TypeService GetTypeService() const = 0;
 		};
 
@@ -59,7 +60,7 @@ namespace Elypse
 			, public General::Network::TcpAcceptor
 		{
 		protected:
-			ElypseTcpService( const std::string & p_name, unsigned short p_port )
+			ElypseTcpService( std::string const & p_name, uint16_t p_port )
 				: ElypseService( p_name )
 				, General::Network::TcpAcceptor( p_port )
 			{
@@ -72,25 +73,33 @@ namespace Elypse
 				std::clog << "~ElypseTCPService(" << m_name << ") deleted" << std::endl;
 			}
 
-		public:
 			inline TypeService GetTypeService() const
 			{
 				return TcpService;
 			}
-			inline unsigned short GetPortNo() const
+
+			inline uint16_t GetPortNo() const
 			{
-				return m_acceptor.local_endpoint().port();
+				return m_acceptor->local_endpoint().port();
 			}
+
+			inline std::random_device & GetRandomDevice()
+			{
+				return m_device;
+			}
+
+		private:
+			std::random_device m_device;
 		};
 
 		class ElypseUdpService
 			: public ElypseService
 		{
 		private:
-			unsigned short m_port;
+			uint16_t m_port;
 
 		protected:
-			ElypseUdpService( const std::string & p_name, unsigned short p_port )
+			ElypseUdpService( std::string const & p_name, uint16_t p_port )
 				: ElypseService( p_name )
 				, m_port( p_port )
 			{
@@ -103,12 +112,12 @@ namespace Elypse
 				std::clog << "~ElypseUDPService(" << m_name << ") deleted" << std::endl;
 			}
 
-		public:
 			inline TypeService GetTypeService() const
 			{
 				return UdpService;
 			}
-			inline unsigned short GetPortNo() const
+
+			inline uint16_t GetPortNo() const
 			{
 				return m_port;
 			}

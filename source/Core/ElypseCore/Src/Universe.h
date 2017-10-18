@@ -26,29 +26,19 @@ namespace Elypse
 {
 	namespace Scene
 	{
-		class d_dll_export Universe : public named, noncopyable
+		class d_dll_export Universe
+			: public named
+			, private noncopyable
+			, public std::enable_shared_from_this< Universe >
 		{
-		private:
-			SceneManager * m_manager;
-			Camera * m_camera;
-			RenderTarget * m_renderTarget;
-			Viewport * m_viewport;
-
-			//PathMap * m_pathMap;
-
 		public:
-			ZoneMap m_zones;
-
-		public:
-			Universe( const String & p_universeName, const String & p_instanceKey );
+			Universe( String const & p_universeName, String const & p_instanceKey );
 			~Universe();
 
-		public:
 			void AddZone( Zone * p_zone );
 			void SetRenderTarget( RenderTarget * p_renderTarget );
-			void ClearScene() d_no_throw;
+			void ClearScene() noexcept;
 
-		public:
 			inline Camera * GetCamera()const
 			{
 				return m_camera;
@@ -61,28 +51,41 @@ namespace Elypse
 			{
 				return m_manager;
 			}
-			inline Zone * GetZone( const String & p_zoneName )const
+			inline Zone * GetZone( String const & p_zoneName )const
 			{
 				return General::Utils::map::findOrNull( m_zones, p_zoneName );
 			}
+
+		private:
+			SceneManager * m_manager{ nullptr };
+			Camera * m_camera{ nullptr };
+			RenderTarget * m_renderTarget{ nullptr };
+			Viewport * m_viewport{ nullptr };
+			//PathMap * m_pathMap{ nullptr };
+
+		public:
+			ZoneMap m_zones;
 		};
 
-		class UniverseManager : public Manager<Universe>
+		class UniverseManager
+			: public Manager< Universe >
 		{
-			String m_instanceKey;
 		public:
-			UniverseManager( const String & p_instanceKey )
-				: m_instanceKey( p_instanceKey )
+			UniverseManager( String const & p_instanceKey )
+				: m_instanceKey{ p_instanceKey }
 			{
 			}
-			~UniverseManager()
-			{}
 
-		public:
-			Universe * CreateUniverse( const String & p_name )
+			std::shared_ptr< Universe > CreateUniverse( String const & p_name )
 			{
-				return General::Utils::map::insert( m_objectMap, p_name, p_name, m_instanceKey );
+				return Manager< Universe >::CreateElement( p_name, m_instanceKey );
 			}
+
+		private:
+			using Manager< Universe >::CreateElement;
+
+		private:
+			String m_instanceKey;
 		};
 	}
 }

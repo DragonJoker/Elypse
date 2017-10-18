@@ -28,12 +28,12 @@ namespace Elypse
 			: public General::Utils::GenException
 		{
 		public:
-			CompileError( const std::string & p_description, const char * p_file, const char * p_function, unsigned int p_line )
+			CompileError( std::string const & p_description, char const * const p_file, char const * const p_function, uint32_t p_line )
 				: General::Utils::GenException( p_description, p_file, p_function, p_line )
 			{
 			}
 
-			virtual ~CompileError() d_no_throw
+			virtual ~CompileError() noexcept
 			{
 			}
 		};

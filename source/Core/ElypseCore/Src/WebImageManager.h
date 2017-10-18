@@ -35,7 +35,7 @@ namespace Elypse
 
 			WebImageMap m_images;
 
-			Mutex m_mutex;
+			std::mutex m_mutex;
 
 			ThreadPool m_threadPool;
 
@@ -44,15 +44,15 @@ namespace Elypse
 			~WebImageManager();
 
 		public:
-			WebImage * Create( const String & p_name );
-			bool DestroyImage( const String & p_name );
+			WebImage * Create( String const & p_name );
+			bool DestroyImage( String const & p_name );
 			void Lock();
 			void Unlock();
 
 			void ThreadedLoad( WebImage * p_image );
 
 		public:
-			inline WebImage * GetWebImage( const String & p_name )const
+			inline WebImage * GetWebImage( String const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_images, p_name );
 			}

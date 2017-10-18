@@ -19,117 +19,99 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define ___MUTEX_MANAGER_H___
 
 #include "AutoSingleton.h"
-#include "Mutex.h"
 
 #include <map>
+#include <mutex>
 
 #define GENLIB_THREAD_INIT() General::MultiThreading::MutexManager::GetSingleton().RegisterThread()
+
+namespace Private
+{
+#	include "Mutex.h"
+}
 
 namespace General
 {
 	namespace MultiThreading
 	{
-		enum LockResult
-		{
-			LR_UNDEFINED,
-			LR_SUCCESS,
-			LR_FAILURE_DOUBLE_LOCK,
-			LR_FAILURE_DEADLOCK,
-			LR_FAILURE_NOT_LOCKED,
-			LR_FAILURE_WRONG_THREAD
-		};
-
-		class MutexState
-		{
-		public:
-			MutexState( const Mutex * p_mutexPtr )
-				: m_mutexPtr( p_mutexPtr )
-				, m_lockCount( 1 )
-				, m_ownerThreadID( std::this_thread::get_id() )
-			{
-			}
-
-			LockResult Lock()
-			{
-				LockResult l_return = LR_UNDEFINED;
-
-				if ( !m_lockCount )
-				{
-					m_lockCount++;
-					m_ownerThreadID = std::this_thread::get_id();
-					l_return = LR_SUCCESS;
-				}
-				else if ( std::this_thread::get_id() == m_ownerThreadID )
-				{
-					m_lockCount ++;
-					l_return = LR_FAILURE_DOUBLE_LOCK;
-				}
-				else
-				{
-					l_return = LR_FAILURE_DEADLOCK;
-				}
-
-				return l_return;
-			}
-
-			LockResult Unlock()
-			{
-				LockResult l_return = LR_UNDEFINED;
-
-				if ( m_lockCount == 0 )
-				{
-					l_return = LR_FAILURE_NOT_LOCKED;
-				}
-				else if ( std::this_thread::get_id() != m_ownerThreadID )
-				{
-					l_return = LR_FAILURE_WRONG_THREAD;
-				}
-				else
-				{
-					m_lockCount --;
-					l_return = LR_SUCCESS;
-				}
-
-				return l_return;
-			}
-
-		private:
-			const Mutex * m_mutexPtr;
-
-		public:
-			unsigned int m_lockCount;
-			std::thread::id m_ownerThreadID;
-			bool m_recursive;
-		};
-
 		class MutexManager
 			: public Theory::AutoSingleton< MutexManager >
 		{
-		public:
-			MutexManager()
-				: m_nextThreadID( 0 )
+		private:
+			enum LockResult
 			{
-			}
+				LR_UNDEFINED,
+				LR_SUCCESS,
+				LR_FAILURE_DOUBLE_LOCK,
+				LR_FAILURE_DEADLOCK,
+				LR_FAILURE_NOT_LOCKED,
+				LR_FAILURE_WRONG_THREAD
+			};
 
-			~MutexManager()
+			class MutexState
 			{
-			}
-
-		public:
-			void RegisterThread()
-			{
-				std::unique_lock< std::mutex > scoped_lock( m_mutex );
-			}
-
-			bool SimpleLock( const Mutex * p_mutexPtr )
-			{
-				bool l_return = false;
-				std::unique_lock< std::mutex > scoped_lock( m_mutex );
-				auto && ifind = m_mutexeMap.find( p_mutexPtr );
-
-				if ( ifind == m_mutexeMap.end() )
+			public:
+				LockResult Lock()
 				{
-					m_mutexeMap.insert( std::make_pair( p_mutexPtr, MutexState( p_mutexPtr ) ) );
+					auto l_return{ LR_UNDEFINED };
+
+					if ( !m_lockCount )
+					{
+						m_lockCount++;
+						m_ownerThreadID = std::this_thread::get_id();
+						l_return = LR_SUCCESS;
+					}
+					else if ( std::this_thread::get_id() == m_ownerThreadID )
+					{
+						m_lockCount++;
+						l_return = LR_FAILURE_DOUBLE_LOCK;
+					}
+					else
+					{
+						l_return = LR_FAILURE_DEADLOCK;
+					}
+
+					return l_return;
+				}
+
+				LockResult Unlock()
+				{
+					auto l_return{ LR_UNDEFINED };
+
+					if ( m_lockCount == 0 )
+					{
+						l_return = LR_FAILURE_NOT_LOCKED;
+					}
+					else if ( std::this_thread::get_id() != m_ownerThreadID )
+					{
+						l_return = LR_FAILURE_WRONG_THREAD;
+					}
+					else
+					{
+						m_lockCount--;
+						l_return = LR_SUCCESS;
+					}
+
+					return l_return;
+				}
+
+			private:
+				uint32_t m_lockCount{ 1 };
+				std::thread::id m_ownerThreadID{ std::this_thread::get_id() };
+			};
+
+			using MutexStateMap = std::map< std::mutex const *, MutexState >;
+
+		public:
+			bool SimpleLock( std::mutex const & p_mutex )
+			{
+				auto l_return{ false };
+				std::unique_lock< std::mutex > scoped_lock{ m_mutex };
+				auto && ifind = m_mutexesMap.find( &p_mutex );
+
+				if ( ifind == m_mutexesMap.end() )
+				{
+					m_mutexesMap.insert( { &p_mutex, MutexState{} } );
 					l_return = true;
 				}
 				else
@@ -140,13 +122,13 @@ namespace General
 				return l_return;
 			}
 
-			bool SimpleUnlock( const Mutex * p_mutexPtr )
+			bool SimpleUnlock( std::mutex const & p_mutex )
 			{
-				bool l_return = false;
-				std::unique_lock< std::mutex > scoped_lock( m_mutex );
-				auto && ifind = m_mutexeMap.find( p_mutexPtr );
+				auto l_return{ false };
+				std::unique_lock< std::mutex > scoped_lock{ m_mutex };
+				auto && ifind = m_mutexesMap.find( &p_mutex );
 
-				if ( ifind != m_mutexeMap.end() )
+				if ( ifind != m_mutexesMap.end() )
 				{
 					l_return = ifind->second.Unlock() == LR_SUCCESS;
 				}
@@ -155,20 +137,18 @@ namespace General
 			}
 
 		private:
-			typedef std::map< const Mutex *, MutexState > MutexStateMap;
-
-		public:
-			Mutex m_mutex;
-			MutexStateMap m_mutexeMap;
+			std::mutex m_mutex;
+			MutexStateMap m_mutexesMap;
 		};
 
+		template< typename T_mutex >
 		struct MutexLock
 		{
 		public:
-			MutexLock( Mutex & p_mutex )
-				: m_mutex( p_mutex )
+			MutexLock( T_mutex & p_mutex )
+				: m_mutex{ p_mutex }
 			{
-				if ( MutexManager::GetSingleton().SimpleLock( &m_mutex ) )
+				if ( MutexManager::GetSingleton().SimpleLock( m_mutex ) )
 				{
 					m_dead = false;
 					m_mutex.lock();
@@ -182,7 +162,7 @@ namespace General
 			{
 				if ( !m_dead )
 				{
-					if ( MutexManager::GetSingleton().SimpleUnlock( &m_mutex ) )
+					if ( MutexManager::GetSingleton().SimpleUnlock( m_mutex ) )
 					{
 						m_mutex.unlock();
 					}
@@ -190,25 +170,20 @@ namespace General
 			}
 
 		private:
-			MutexLock( const MutexLock & );
+			MutexLock( const MutexLock & ) = delete;
+			MutexLock & operator=( const MutexLock & ) = delete;
 
 		private:
-			Mutex & m_mutex;
-			bool m_dead;
+			T_mutex & m_mutex;
+			bool m_dead{ false };
 		};
+
+		template< typename T_mutex >
+		MutexLock< T_mutex > make_unique_lock( T_mutex & p_mutex )
+		{
+			return MutexLock< T_mutex > { p_mutex };
+		}
 	}
 }
-
-#ifdef GENLIB_SCOPED_LOCK
-#	undef GENLIB_SCOPED_LOCK
-#	undef GENLIB_SCOPED_RECURSIVE_LOCK
-#	undef GENLIB_LOCK_MUTEX
-#	undef GENLIB_UNLOCK_MUTEX
-#endif
-
-#define GENLIB_SCOPED_LOCK( p_mutex ) General::MultiThreading::MutexLock l_mutex_lock_ ## p_mutex( p_mutex )
-#define GENLIB_SCOPED_RECURSIVE_LOCK( p_mutex ) General::MultiThreading::MutexLock l_mutex_lock_ ## p_mutex( p_mutex )
-#define GENLIB_LOCK_MUTEX( p_mutex ) General::MultiThreading::MutexManager::GetSingleton().SimpleLock( &p_mutex )
-#define GENLIB_UNLOCK_MUTEX( p_mutex ) General::MultiThreading::MutexManager::GetSingleton().SimpleUnlock( &p_mutex )
 
 #endif

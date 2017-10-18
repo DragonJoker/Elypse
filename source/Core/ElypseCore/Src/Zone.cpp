@@ -27,14 +27,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseLogs.h"
 
-Zone::Zone( const String & p_name, Universe * p_parent )
-	: named( p_name ),
-		owned_by <Universe>	( p_parent ),
-		m_loaded( false ),
-		m_firstInit( true )
+Zone::Zone( String const & p_name, Universe & p_parent )
+	: named( p_name )
+	, owned_by< Universe >( p_parent )
+	, m_loaded( false )
+	, m_firstInit( true )
 {
-	genlib_assert( m_owner != NULL );
-//	std::cout << "Zone created : " << m_name << std::endl;
+	//std::cout << "Zone created : " << m_name << std::endl;
 }
 
 Zone::~Zone()

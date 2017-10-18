@@ -39,7 +39,7 @@ void VideoFactory_DirectShow::Update()
 {
 }
 
-VideoImplementation * VideoFactory_DirectShow::Create( VideoObject * p_owner )
+VideoImplementation * VideoFactory_DirectShow::Create( VideoObject & p_owner )
 {
 	return new VideoImpl_DirectShow( p_owner );
 }

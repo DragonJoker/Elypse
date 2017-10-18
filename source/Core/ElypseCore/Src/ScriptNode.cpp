@@ -24,17 +24,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseLogs.h"
 
-unsigned int ScriptNode::sm_numNodes = 0;
+uint32_t ScriptNode::sm_numNodes = 0;
 
-ScriptNode::ScriptNode( ConfigFile * p_file, unsigned int p_lineNum )
-	: m_value( NULL ),
-		m_function( NULL ),
-		m_file( p_file ),
-		m_userFunction( NULL ),
-		m_numUses( 0 ),
-		m_type( NULL ),
-		m_ref( false ),
-		m_createdAtLine( p_lineNum )
+ScriptNode::ScriptNode( ConfigFile * p_file, uint32_t p_lineNum )
+	: m_value( NULL )
+	, m_function( NULL )
+	, m_file( p_file )
+	, m_userFunction( NULL )
+	, m_numUses( 0 )
+	, m_type( NULL )
+	, m_ref( false )
+	, m_createdAtLine( p_lineNum )
 {
 	sm_numNodes ++;
 //	std::cout << "Create Node ( " << sm_numNodes <<  " ) -> " << this << std::endl;

@@ -42,27 +42,30 @@ WebImageManager::~WebImageManager()
 	General::Utils::map::deleteAll( m_images );
 }
 
-WebImage * WebImageManager::Create( const String & p_name )
+WebImage * WebImageManager::Create( String const & p_name )
 {
 	return General::Utils::map::insert( m_images, p_name, p_name );
 }
 
-bool WebImageManager::DestroyImage( const String & p_name )
+bool WebImageManager::DestroyImage( String const & p_name )
 {
 	return General::Utils::map::deleteValue( m_images, p_name );
 }
 
 void WebImageManager::Unlock()
 {
-	GENLIB_UNLOCK_MUTEX( m_mutex );
+	m_mutex.unlock();
 }
 
 void WebImageManager::Lock()
 {
-	GENLIB_LOCK_MUTEX( m_mutex );
+	m_mutex.lock();
 }
 
 void WebImageManager::ThreadedLoad( WebImage * p_image )
 {
-	m_threadPool.AddJob( GENLIB_THREAD_CLASS_FUNCTOR( p_image, WebImage, Load ) );
+	m_threadPool.AddJob( [p_image]()
+	{
+		p_image->Load();
+	} );
 }

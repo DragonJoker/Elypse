@@ -27,18 +27,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 using namespace Ogre;
 
 BoundingMesh::BoundingMesh( Mesh * p_mesh )
-	: BoundingShape( COC_TriangleMesh ),
-		m_mesh( p_mesh ),
-		m_vertices( NULL ),
-		m_odeVertices( NULL ),
-		m_odeIndices( NULL ),
-		m_indices( NULL ),
-		m_indexCount( 0 ),
-		m_vertexCount( 0 )
+	: BoundingShape( COC_TriangleMesh )
+	, m_mesh( p_mesh )
+	, m_vertices( NULL )
+	, m_odeVertices( NULL )
+	, m_odeIndices( NULL )
+	, m_indices( NULL )
+	, m_indexCount( 0 )
+	, m_vertexCount( 0 )
 {
 	genlib_assert( m_mesh != NULL );
 
-	for ( unsigned int i = 0 ; i < m_mesh->getNumSubMeshes() ; i ++ )
+	for ( uint32_t i = 0 ; i < m_mesh->getNumSubMeshes() ; i ++ )
 	{
 		if ( m_mesh->getSubMesh( i )->useSharedVertices )
 		{
@@ -47,7 +47,7 @@ BoundingMesh::BoundingMesh( Mesh * p_mesh )
 		}
 	}
 
-	for ( unsigned int i = 0 ; i < m_mesh->getNumSubMeshes() ; i ++ )
+	for ( uint32_t i = 0 ; i < m_mesh->getNumSubMeshes() ; i ++ )
 	{
 		SubMesh * l_subMesh = m_mesh->getSubMesh( i );
 
@@ -93,8 +93,8 @@ BoundingMesh::~BoundingMesh()
 void BoundingMesh::_addVertexData( VertexData * p_data )
 {
 	genlib_assert( p_data != NULL );
-	unsigned int l_previousSize = m_vertexCount;
-	m_vertexCount += static_cast <unsigned int>( p_data->vertexCount );
+	uint32_t l_previousSize = m_vertexCount;
+	m_vertexCount += static_cast <uint32_t>( p_data->vertexCount );
 	Vector3 * l_vertices = new Vector3[m_vertexCount];
 
 	if ( m_vertices )
@@ -108,13 +108,13 @@ void BoundingMesh::_addVertexData( VertexData * p_data )
 	{
 		const VertexElement * l_positionElements = p_data->vertexDeclaration->findElementBySemantic( VES_POSITION );
 		HardwareVertexBufferSharedPtr l_buffer = p_data->vertexBufferBinding->getBuffer( l_positionElements->getSource() );
-		unsigned int l_size = static_cast <unsigned int>( l_buffer->getVertexSize() );
+		uint32_t l_size = static_cast <uint32_t>( l_buffer->getVertexSize() );
 		unsigned char * l_ptr = static_cast <unsigned char *>( l_buffer->lock( HardwareBuffer::HBL_READ_ONLY ) );
 		float * pReal;
 		Vector3 * l_vertexPtr = &m_vertices[l_previousSize];
-		unsigned int l_count = static_cast <unsigned int>( p_data->vertexCount );
+		uint32_t l_count = static_cast <uint32_t>( p_data->vertexCount );
 
-		for ( unsigned int j = 0 ; j < l_count ; j ++ )
+		for ( uint32_t j = 0 ; j < l_count ; j ++ )
 		{
 			l_positionElements->baseVertexPointerToElement( l_ptr, & pReal );
 			l_vertexPtr->x = ( *pReal++ );
@@ -128,34 +128,34 @@ void BoundingMesh::_addVertexData( VertexData * p_data )
 	}
 }
 
-void BoundingMesh::_addIndexData( IndexData * p_data, unsigned int p_offset )
+void BoundingMesh::_addIndexData( IndexData * p_data, uint32_t p_offset )
 {
 	if ( ! p_data )
 	{
 		return;
 	}
 
-	unsigned int l_previousSize = m_indexCount;
-	m_indexCount += static_cast <unsigned int>( p_data->indexCount );
-	unsigned int * l_indices = new unsigned int[m_indexCount];
+	uint32_t l_previousSize = m_indexCount;
+	m_indexCount += static_cast <uint32_t>( p_data->indexCount );
+	uint32_t * l_indices = new uint32_t[m_indexCount];
 
 	if ( m_indices )
 	{
-		memcpy( l_indices, m_indices, sizeof( unsigned int ) * l_previousSize );
+		memcpy( l_indices, m_indices, sizeof( uint32_t ) * l_previousSize );
 		delete [] m_indices;
 	}
 
 	m_indices = l_indices;
-	unsigned int l_numTris = static_cast <unsigned int>( p_data->indexCount / 3 );
+	uint32_t l_numTris = static_cast <uint32_t>( p_data->indexCount / 3 );
 	HardwareIndexBufferSharedPtr l_buffer = p_data->indexBuffer;
 	const bool use32bitindexes = ( l_buffer->getType() == HardwareIndexBuffer::IT_32BIT );
-	unsigned int l_offset = l_previousSize;
+	uint32_t l_offset = l_previousSize;
 
 	if ( use32bitindexes )
 	{
-		const unsigned int * pInt = static_cast <unsigned int *>( l_buffer->lock( HardwareBuffer::HBL_READ_ONLY ) );
+		const uint32_t * pInt = static_cast <uint32_t *>( l_buffer->lock( HardwareBuffer::HBL_READ_ONLY ) );
 
-		for ( unsigned int i = 0 ; i < l_numTris ; i ++ )
+		for ( uint32_t i = 0 ; i < l_numTris ; i ++ )
 		{
 			m_indices[l_offset ++] = p_offset + *pInt++;
 			m_indices[l_offset ++] = p_offset + *pInt++;
@@ -164,13 +164,13 @@ void BoundingMesh::_addIndexData( IndexData * p_data, unsigned int p_offset )
 	}
 	else
 	{
-		const unsigned short * pShort = static_cast <unsigned short *>( l_buffer->lock( HardwareBuffer::HBL_READ_ONLY ) );
+		const uint16_t * pShort = static_cast <uint16_t *>( l_buffer->lock( HardwareBuffer::HBL_READ_ONLY ) );
 
-		for ( unsigned int i = 0 ; i < l_numTris ; i ++ )
+		for ( uint32_t i = 0 ; i < l_numTris ; i ++ )
 		{
-			m_indices[l_offset ++] = p_offset + static_cast<unsigned int>( *pShort++ );
-			m_indices[l_offset ++] = p_offset + static_cast<unsigned int>( *pShort++ );
-			m_indices[l_offset ++] = p_offset + static_cast<unsigned int>( *pShort++ );
+			m_indices[l_offset ++] = p_offset + static_cast<uint32_t>( *pShort++ );
+			m_indices[l_offset ++] = p_offset + static_cast<uint32_t>( *pShort++ );
+			m_indices[l_offset ++] = p_offset + static_cast<uint32_t>( *pShort++ );
 		}
 	}
 
@@ -180,16 +180,16 @@ void BoundingMesh::_addIndexData( IndexData * p_data, unsigned int p_offset )
 void BoundingMesh::_createTriMesh()
 {
 	m_odeVertices = new dVector3[m_vertexCount];
-	m_odeIndices = new unsigned int[m_indexCount];
+	m_odeIndices = new uint32_t[m_indexCount];
 
-	for ( unsigned int i = 0 ; i < m_vertexCount ; i ++ )
+	for ( uint32_t i = 0 ; i < m_vertexCount ; i ++ )
 	{
 		m_odeVertices[i][0] = static_cast <dReal>( m_vertices[i].x );
 		m_odeVertices[i][1] = static_cast <dReal>( m_vertices[i].y );
 		m_odeVertices[i][2] = static_cast <dReal>( m_vertices[i].z );
 	}
 
-	memcpy( m_odeIndices, m_indices, sizeof( unsigned int ) * m_indexCount );
+	memcpy( m_odeIndices, m_indices, sizeof( uint32_t ) * m_indexCount );
 	m_triID = dGeomTriMeshDataCreate();
 	dGeomTriMeshDataBuildSimple( m_triID, m_odeVertices[0], static_cast< int >( m_vertexCount ), reinterpret_cast <dTriIndex *>( m_odeIndices ), static_cast< int >( m_indexCount ) );
 	m_geom = dCreateTriMesh( 0, m_triID, 0, 0, 0 );

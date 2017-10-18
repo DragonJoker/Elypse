@@ -28,19 +28,13 @@ namespace Elypse
 {
 	namespace Physics
 	{
-		class d_dll_export Space : public named, noncopyable, public owned_by<PhysicsSimulation>
+		class d_dll_export Space
+			: public named
+			, noncopyable
+			, public owned_by< PhysicsSimulation >
 		{
-		private:
-			dSpaceID m_space;
-
-			PhysicsObjectSet m_objects;
-			AxisAlignedBox m_box;
-
-			bool m_autoUpdated;
-			bool m_internalCollisions;
-
 		public:
-			Space( const String & p_name, PhysicsSimulation * p_simulation, bool p_autoUpdated );
+			Space( String const & p_name, PhysicsSimulation & p_simulation, bool p_autoUpdated );
 			~Space();
 
 		public:
@@ -53,7 +47,7 @@ namespace Elypse
 			void CollideShape( BoundingShape * p_collidesWith );
 			void CollideObject( PhysicsObject * p_collidesWith );
 
-			void Clear() d_no_throw;
+			void Clear() noexcept;
 
 			void Render( Real l_factor );
 			void ApplyDamping();
@@ -84,6 +78,15 @@ namespace Elypse
 			{
 				m_internalCollisions = p_collide;
 			}
+
+		private:
+			dSpaceID m_space;
+
+			PhysicsObjectSet m_objects;
+			AxisAlignedBox m_box;
+
+			bool m_autoUpdated;
+			bool m_internalCollisions;
 		};
 	}
 }

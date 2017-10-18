@@ -21,10 +21,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreTexture.h>
 #include <OgreColourValue.h>
 
-ObjectMaterial::ObjectMaterial( const String & p_name )
-	: named( p_name ),
-		m_material( NULL ),
-		m_created( false )
+ObjectMaterial::ObjectMaterial( String const & p_name )
+	: named( p_name )
+	, m_material( NULL )
+	, m_created( false )
 {
 	Ogre::ResourcePtr l_ptr = MaterialManager::getSingletonPtr()->getByName( m_name );
 
@@ -49,7 +49,7 @@ void ObjectMaterial::Create()
 	m_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->create( m_name, "Internal", true ).getPointer() );
 }
 
-void ObjectMaterial::CreateCopyFrom( const String & p_name )
+void ObjectMaterial::CreateCopyFrom( String const & p_name )
 {
 	m_created = true;
 	MaterialPtr l_ptr = MaterialManager::getSingletonPtr()->getByName( p_name );
@@ -62,7 +62,7 @@ void ObjectMaterial::CreateCopyFrom( const String & p_name )
 	m_material = l_ptr->clone( m_name ).getPointer();
 	Pass * l_pass = m_material->getTechnique( 0 )->getPass( 0 );
 
-	for ( unsigned short i = 0 ; i < l_pass->getNumTextureUnitStates() ; i ++ )
+	for ( uint16_t i = 0 ; i < l_pass->getNumTextureUnitStates() ; i ++ )
 	{
 		TextureUnitState * l_tus = l_pass->getTextureUnitState( i );
 		Ogre::TexturePtr l_srcPtr = l_tus->_getTexturePtr();
@@ -74,7 +74,7 @@ void ObjectMaterial::CreateCopyFrom( const String & p_name )
 	}
 }
 
-void ObjectMaterial::DrawRect( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_coords, const Vector2 & p_size )
+void ObjectMaterial::DrawRect( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_coords, const Vector2 & p_size )
 {
 	genlib_assert( m_material != NULL );
 	TextureUnitState * l_tus = m_material->getTechnique( 0 )->getPass( 0 )->getTextureUnitState( p_textureIndex );
@@ -98,7 +98,7 @@ void ObjectMaterial::DrawRect( unsigned int p_textureIndex, const ColourValue & 
 	l_ptr->getBuffer()->unlock();
 }
 
-void ObjectMaterial::DrawCircle( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_center, Real p_radius )
+void ObjectMaterial::DrawCircle( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_center, Real p_radius )
 {
 //	std::cout << "DrawCircle : " << p_center << " // radius : " << p_radius << std::endl;
 	genlib_assert( m_material != NULL );
@@ -176,7 +176,7 @@ void ObjectMaterial::_drawTriangleLowPart( const PixelBox & p_box, const Ogre::T
 	}
 }
 
-void ObjectMaterial::DrawTriangle( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_a, const Vector2 & p_b, const Vector2 & p_c )
+void ObjectMaterial::DrawTriangle( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_a, const Vector2 & p_b, const Vector2 & p_c )
 {
 	genlib_assert( m_material != NULL );
 	TextureUnitState * l_tus = m_material->getTechnique( 0 )->getPass( 0 )->getTextureUnitState( p_textureIndex );
@@ -266,7 +266,7 @@ void ObjectMaterial::DrawTriangle( unsigned int p_textureIndex, const ColourValu
 	l_ptr->getBuffer()->unlock();
 }
 
-void ObjectMaterial::DrawLine( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width )
+void ObjectMaterial::DrawLine( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width )
 {
 	Vector2 l_a, l_b, l_c, l_d;
 	Vector2 l_diff = p_end - p_start;
@@ -286,7 +286,7 @@ void ObjectMaterial::DrawLine( unsigned int p_textureIndex, const ColourValue & 
 	DrawTriangle( p_textureIndex, p_colour, l_b, l_c, l_d );
 }
 
-void ObjectMaterial::DrawCircleEndedLine( unsigned int p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width )
+void ObjectMaterial::DrawCircleEndedLine( uint32_t p_textureIndex, const ColourValue & p_colour, const Vector2 & p_start, const Vector2 & p_end, Real p_width )
 {
 	DrawCircle( p_textureIndex, p_colour, p_start, p_width );
 	DrawCircle( p_textureIndex, p_colour, p_end, p_width );
@@ -308,7 +308,7 @@ void ObjectMaterial::DrawCircleEndedLine( unsigned int p_textureIndex, const Col
 	DrawTriangle( p_textureIndex, p_colour, l_b, l_c, l_d );
 }
 
-void ObjectMaterial::CopyTexture( unsigned int p_textureIndex, const String & p_textureName )
+void ObjectMaterial::CopyTexture( uint32_t p_textureIndex, String const & p_textureName )
 {
 	TextureUnitState * l_tus = m_material->getTechnique( 0 )->getPass( 0 )->getTextureUnitState( p_textureIndex );
 	Ogre::TexturePtr l_ptr = l_tus->_getTexturePtr();

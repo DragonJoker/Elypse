@@ -25,13 +25,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace General::Utils;
 
-DownloadableFile::DownloadableFile( const std::wstring & p_name, const std::wstring & p_path )
-	: m_name( p_name )
-	, m_path( p_path )
-	, m_executable( false )
-	, m_zipped( false )
-	, m_usesMultiPath( false )
-	, m_toExec( false )
+DownloadableFile::DownloadableFile( std::wstring const & p_name, std::wstring const & p_path )
+	: m_name{ p_name }
+	, m_path{ p_path }
 {
 	if ( p_name.length() > 4 )
 	{
@@ -44,19 +40,16 @@ DownloadableFile::DownloadableFile( const std::wstring & p_name, const std::wstr
 		}
 	}
 
-	if ( _exists() )
+	if ( doExists() )
 	{
-		_getHash();
+		doGetHash();
 	}
 }
 
-DownloadableFile::DownloadableFile( const std::wstring & p_name, const WStringArray & p_multiPath )
-	: m_name( p_name )
-	, m_multiPath( p_multiPath )
-	, m_executable( false )
-	, m_zipped( false )
-	, m_usesMultiPath( true )
-	, m_toExec( false )
+DownloadableFile::DownloadableFile( std::wstring const & p_name, WStringArray const & p_multiPath )
+	: m_name{ p_name }
+	, m_multiPath{ p_multiPath }
+	, m_usesMultiPath{ true }
 {
 	if ( p_name.length() > 4 )
 	{
@@ -69,20 +62,20 @@ DownloadableFile::DownloadableFile( const std::wstring & p_name, const WStringAr
 		}
 	}
 
-	if ( m_multiPath.empty() )
+	if ( m_multiPath.size() < 2 )
 	{
 		m_usesMultiPath = false;
-	}
-	else if ( m_multiPath.size() == 1 )
-	{
-		m_usesMultiPath = false;
-		m_path = m_multiPath[0];
-		m_multiPath.clear();
+
+		if ( !m_multiPath.empty() )
+		{
+			m_path = m_multiPath[0];
+			m_multiPath.clear();
+		}
 	}
 
-	if ( _exists() )
+	if ( doExists() )
 	{
-		_getHash();
+		doGetHash();
 	}
 }
 
@@ -90,7 +83,7 @@ DownloadableFile::~DownloadableFile()
 {
 }
 
-bool DownloadableFile::_exists()
+bool DownloadableFile::doExists()
 {
 	if ( !m_usesMultiPath )
 	{
@@ -109,7 +102,7 @@ bool DownloadableFile::_exists()
 	return m_exists;
 }
 
-void DownloadableFile::_getHash()
+void DownloadableFile::doGetHash()
 {
 	if ( m_exists )
 	{
@@ -139,9 +132,9 @@ void DownloadableFile::_getHash()
 	}
 }
 
-bool DownloadableFile::ExistsAndIsIdentical( const std::string & p_hash )
+bool DownloadableFile::ExistsAndIsIdentical( std::string const & p_hash )
 {
-	if ( ! m_exists )
+	if ( !m_exists )
 	{
 		return false;
 	}

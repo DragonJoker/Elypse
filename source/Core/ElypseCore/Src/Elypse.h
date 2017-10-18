@@ -60,11 +60,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgrePrerequisites.h>
 #include <OgreStringVector.h>
 #include <OgreArchive.h>
+#include <OgreOverlay.h>
 #pragma warning( pop )
 #include <vector>
 #include <map>
 #include <queue>
 #include <set>
+#include <memory>
+#include <cstdint>
 
 #ifdef GENLIB_USE_ASSERT
 #	undef GENLIB_USE_ASSERT
@@ -176,7 +179,7 @@ namespace General
 {
 	namespace Templates
 	{
-		template<typename T>
+		template< typename T >
 		class Manager;
 	}
 }
@@ -199,14 +202,14 @@ namespace Elypse
 	typedef std::vector <Entity *>		EntityArray;
 	typedef std::vector <String>		StringArray;
 	typedef std::vector <int>			IntArray;
-	typedef std::vector <unsigned int>	UIntArray;
+	typedef std::vector <uint32_t>	UIntArray;
 	typedef std::vector <StringPair>		StringPairArray;
 
 	typedef std::queue <String>			StringQueue;
 
 	typedef std::map <String, Real>		RealMap;
 	typedef std::map <String, int>		IntMap;
-	typedef std::map <String, unsigned int>		UIntMap;
+	typedef std::map <String, uint32_t>		UIntMap;
 	typedef std::map <int, String>		StringIMap;
 	typedef std::map <int, String>		StringStringMap;
 

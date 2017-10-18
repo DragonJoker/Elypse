@@ -28,9 +28,10 @@ namespace Elypse
 {
 	namespace Animation
 	{
-		class d_dll_export  EMAnimation : public General::Theory::named,
-			General::Theory::owned_by<AnimatedObject>,
-			d_noncopyable
+		class d_dll_export EMAnimation
+			: public General::Theory::named
+			, General::Theory::owned_by< AnimatedObject >
+			, d_noncopyable
 		{
 		protected:
 			//The actual link to the Ogre animationState, which controls the bone/vertices needed by said animation.
@@ -73,7 +74,7 @@ namespace Elypse
 			bool m_useTimeIn;
 
 		public:
-			EMAnimation( AnimatedObject * p_owner, Ogre::AnimationState * p_ogreAnimationState );
+			EMAnimation( AnimatedObject & p_owner, Ogre::AnimationState * p_ogreAnimationState );
 			~EMAnimation();
 
 		private:

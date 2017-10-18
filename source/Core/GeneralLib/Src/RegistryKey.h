@@ -38,7 +38,7 @@ namespace General
 		{
 		private:
 			RegistryKeyBase();
-			RegistryKeyBase( const RegistryKeyBase & );
+			RegistryKeyBase( RegistryKeyBase const & );
 		};
 
 		typedef RegistryKeyBase< std::string > RegistryKey;
@@ -53,7 +53,7 @@ namespace General
 			typedef std::string _string_t;
 
 		public:
-			RegistryKeyBase( RegistryFolder p_folder, const _string_t & p_keyName );
+			RegistryKeyBase( RegistryFolder p_folder, _string_t const & p_keyName );
 			~RegistryKeyBase();
 
 		public:
@@ -62,10 +62,10 @@ namespace General
 			bool IsValid();
 			bool Create();
 			bool Delete();
-			bool SetStringValue( const _string_t & p_name, const _string_t & p_value );
-			bool SetStringExpandValue( const _string_t & p_name, const _string_t & p_value );
-			const _string_t & GetName()const;
-			_string_t GetStringValue( const _string_t & p_valueName );
+			bool SetStringValue( _string_t const & p_name, _string_t const & p_value );
+			bool SetStringExpandValue( _string_t const & p_name, _string_t const & p_value );
+			_string_t const & GetName()const;
+			_string_t GetStringValue( _string_t const & p_valueName );
 
 		private:
 			std::unique_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
@@ -81,7 +81,7 @@ namespace General
 			typedef std::wstring _string_t;
 
 		public:
-			RegistryKeyBase( RegistryFolder p_folder, const _string_t & p_keyName );
+			RegistryKeyBase( RegistryFolder p_folder, _string_t const & p_keyName );
 			~RegistryKeyBase();
 
 		public:
@@ -90,10 +90,10 @@ namespace General
 			bool IsValid();
 			bool Create();
 			bool Delete();
-			bool SetStringValue( const _string_t & p_name, const _string_t & p_value );
-			bool SetStringExpandValue( const _string_t & p_name, const _string_t & p_value );
-			const _string_t & GetName()const;
-			_string_t GetStringValue( const _string_t & p_valueName );
+			bool SetStringValue( _string_t const & p_name, _string_t const & p_value );
+			bool SetStringExpandValue( _string_t const & p_name, _string_t const & p_value );
+			_string_t const & GetName()const;
+			_string_t GetStringValue( _string_t const & p_valueName );
 
 		private:
 			std::unique_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;

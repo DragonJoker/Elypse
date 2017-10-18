@@ -105,12 +105,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <StringConverter.h>
 #include <StringUtils.h>
 
-void Elypse::SceneFile::SceneFileParser::parsingError( Context * p_context, const String & l_error )
+void Elypse::SceneFile::SceneFileParser::parsingError( Context * p_context, String const & l_error )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "Line #" + StringConverter::toString( p_context->lineNo ) + " / " + l_error );
 }
 
-Vector3 Elypse::SceneFile::SceneFileParser::Parser_Vector3Value( const String & p_params )
+Vector3 Elypse::SceneFile::SceneFileParser::Parser_Vector3Value( String const & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -125,7 +125,7 @@ Vector3 Elypse::SceneFile::SceneFileParser::Parser_Vector3Value( const String & 
 					StringConverter::parseReal( l_split[2] ) );
 }
 
-Vector4 Elypse::SceneFile::SceneFileParser::Parser_Vector4Value( const String & p_params )
+Vector4 Elypse::SceneFile::SceneFileParser::Parser_Vector4Value( String const & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -141,7 +141,7 @@ Vector4 Elypse::SceneFile::SceneFileParser::Parser_Vector4Value( const String & 
 					StringConverter::parseReal( l_split[3] ) );
 }
 
-ColourValue Elypse::SceneFile::SceneFileParser::Parser_ColourValue( const String & p_params )
+ColourValue Elypse::SceneFile::SceneFileParser::Parser_ColourValue( String const & p_params )
 {
 	const StringVector & l_split = StringUtil::split( p_params, ", \t" );
 
@@ -222,7 +222,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_RootScene )
 
 	if ( p_context->scene == NULL )
 	{
-		Zone * l_zone = new Zone( p_params, p_context->universe );
+		Zone * l_zone = new Zone( p_params, *p_context->universe );
 		p_context->scene = l_zone;
 		p_context->universe->AddZone( l_zone );
 	}
@@ -415,7 +415,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_RootSceneNode )
 DEFINE_SCENE_FILE_PARSER( Parser_RootAnimationGroup )
 {
 	p_context->section = SS_ANIMATED_OBJECT_GROUP ;
-	p_context->animatedObjectGroup = p_context->animationManager->CreateElement( p_params, p_context->animationManager );
+	p_context->animatedObjectGroup = p_context->animationManager->CreateElement( p_params, *p_context->animationManager );
 	return true;
 }
 
@@ -502,8 +502,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_RootOverlay )
 
 DEFINE_SCENE_FILE_PARSER( Parser_RootUniverse )
 {
-	Universe * l_universe;
-	l_universe = p_context->universeManager->GetElementByName( p_params );
+	auto l_universe = p_context->universeManager->GetElementByName( p_params );
 
 	if ( l_universe == NULL )
 	{
@@ -577,23 +576,23 @@ DEFINE_SCENE_FILE_PARSER( Parser_RootPostEffect )
 
 	if ( p_params == "HDR" )
 	{
-		p_context->postEffectManager->AddElement( new PostEffect_HDR( "HDR", p_context->universe->GetViewport() ) );
+		p_context->postEffectManager->AddElement( std::make_shared< PostEffect_HDR >( "HDR", p_context->universe->GetViewport() ) );
 	}
 	else if ( p_params == "GaussianBlur" )
 	{
-		p_context->postEffectManager->AddElement( new PostEffect_GaussianBlur( "GaussianBlur", p_context->universe->GetViewport() ) );
+		p_context->postEffectManager->AddElement( std::make_shared< PostEffect_GaussianBlur >( "GaussianBlur", p_context->universe->GetViewport() ) );
 	}
 	else if ( p_params == "LensFlare" )
 	{
-		p_context->postEffectManager->AddElement( new PostEffect_LensFlare( "LensFlare", p_context->universe->GetViewport() ) );
+		p_context->postEffectManager->AddElement( std::make_shared< PostEffect_LensFlare >( "LensFlare", p_context->universe->GetViewport() ) );
 	}
 	else if ( p_params == "MotionBlur" )
 	{
-		p_context->postEffectManager->AddElement( new PostEffect_MotionBlur( "MotionBlur", p_context->universe->GetViewport() ) );
+		p_context->postEffectManager->AddElement( std::make_shared< PostEffect_MotionBlur >( "MotionBlur", p_context->universe->GetViewport() ) );
 	}
 	else
 	{
-		p_context->postEffectManager->AddElement( new PostEffect( p_params, p_context->universe->GetViewport() ) );
+		p_context->postEffectManager->AddElement( std::make_shared< PostEffect >( p_params, p_context->universe->GetViewport() ) );
 	}
 
 	return false;
@@ -1002,7 +1001,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectSubmesh )
 		return true;
 	}
 
-	unsigned int l_numSubEnt = StringConverter::parseInt( p_params );
+	uint32_t l_numSubEnt = StringConverter::parseInt( p_params );
 
 	if ( l_numSubEnt >= p_context->object->getNumSubEntities() )
 	{
@@ -1148,7 +1147,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectPub )
 
 	if ( l_split.size() == 2 )
 	{
-		l_instance->SetSubMat( static_cast <unsigned int>( StringConverter::parseInt( l_split[1] ) ) );
+		l_instance->SetSubMat( static_cast <uint32_t>( StringConverter::parseInt( l_split[1] ) ) );
 	}
 
 	l_instance->Apply();
@@ -1184,7 +1183,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectEnd )
 
 				for ( size_t i = 0 ; i < filptr->size() ; i ++ )
 				{
-					const String & collName = filptr.getPointer()->at( i ).basename;
+					String const & collName = filptr.getPointer()->at( i ).basename;
 					MeshPtr l_ptr = MeshManager::getSingletonPtr()->load( collName, l_groupName );
 
 					if ( ! l_ptr.isNull() )
@@ -1754,9 +1753,9 @@ DEFINE_SCENE_FILE_PARSER( Parser_CameraTex )
 		return false;
 	}
 
-	unsigned int l_width = static_cast <unsigned int>( StringConverter::parseInt( splitCmd[0] ) );
-	unsigned int l_height = static_cast <unsigned int>( StringConverter::parseInt( splitCmd[1] ) );
-	p_context->camTexManager->AddElement( new CamTex( p_context->camera->getName(), p_context->sceneManager, p_context->camera, l_width, l_height ) );
+	uint32_t l_width = static_cast <uint32_t>( StringConverter::parseInt( splitCmd[0] ) );
+	uint32_t l_height = static_cast <uint32_t>( StringConverter::parseInt( splitCmd[1] ) );
+	p_context->camTexManager->AddElement( std::make_shared< CamTex >( p_context->camera->getName(), p_context->sceneManager, p_context->camera, l_width, l_height ) );
 	return false;
 }
 
@@ -2361,7 +2360,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_OverlayZIndex )
 {
 	if ( p_context->overlayGroup != NULL )
 	{
-		p_context->overlayGroup->GetOverlay()->setZOrder( static_cast <unsigned short>( StringConverter::parseUnsignedInt( p_params ) ) );
+		p_context->overlayGroup->GetOverlay()->setZOrder( uint16_t( StringConverter::parseUnsignedInt( p_params ) ) );
 	}
 
 	return false;
@@ -2862,8 +2861,8 @@ DEFINE_SCENE_FILE_PARSER( Parser_MirrorResolution )
 		return false;
 	}
 
-	unsigned int l_width = StringConverter::parseUnsignedInt( l_p_params[0] );
-	unsigned int l_height = StringConverter::parseUnsignedInt( l_p_params[1] );
+	uint32_t l_width = StringConverter::parseUnsignedInt( l_p_params[0] );
+	uint32_t l_height = StringConverter::parseUnsignedInt( l_p_params[1] );
 	p_context->mirror->SetTextureResolution( l_width, l_height );
 	return false;
 }
@@ -2967,8 +2966,8 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneFile )
 
 	if ( l_index != String::npos )
 	{
-		const String & l_filename = p_params.substr( 0, l_index );
-		const String & l_musepackName = p_params.substr( l_index, String::npos );
+		String const & l_filename = p_params.substr( 0, l_index );
+		String const & l_musepackName = p_params.substr( l_index, String::npos );
 
 		if ( l_filename.empty() || l_musepackName.empty() )
 		{
@@ -3011,8 +3010,8 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneDataFile )
 
 	if ( l_index != String::npos )
 	{
-		const String & l_filename = p_params.substr( 0, l_index );
-		const String & l_musepackName = p_params.substr( l_index, String::npos );
+		String const & l_filename = p_params.substr( 0, l_index );
+		String const & l_musepackName = p_params.substr( l_index, String::npos );
 
 		if ( l_filename.empty() || l_musepackName.empty() )
 		{
@@ -3054,8 +3053,8 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneLoadScriptFile )
 
 	if ( l_index != String::npos )
 	{
-		const String & l_filename = p_params.substr( 0, l_index );
-		const String & l_musepackName = p_params.substr( l_index, String::npos );
+		String const & l_filename = p_params.substr( 0, l_index );
+		String const & l_musepackName = p_params.substr( l_index, String::npos );
 
 		if ( l_filename.empty() || l_musepackName.empty() )
 		{
@@ -3097,8 +3096,8 @@ DEFINE_SCENE_FILE_PARSER( Parser_SceneUnloadScriptFile )
 
 	if ( l_index != String::npos )
 	{
-		const String & l_filename = p_params.substr( 0, l_index );
-		const String & l_musepackName = p_params.substr( l_index, String::npos );
+		String const & l_filename = p_params.substr( 0, l_index );
+		String const & l_musepackName = p_params.substr( l_index, String::npos );
 
 		if ( l_filename.empty() || l_musepackName.empty() )
 		{
@@ -4000,7 +3999,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceEvent )
 		return false;
 	}
 
-	l_event->SetTarget( p_context->sequenceTarget );
+	l_event->SetTarget( std::move( p_context->sequenceTarget ) );
 //	p_context->log->logMessage( "DEFINE_SCENE_FILE_PARSER( Parser_SequenceEvent) 4");
 	p_context->sequence->AddPonctualEvent( l_event, StringConverter::parseReal( l_split[0] ) );
 //	p_context->log->logMessage( "DEFINE_SCENE_FILE_PARSER( Parser_SequenceEvent) 5");
@@ -4014,7 +4013,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceTarget )
 
 	if ( l_split[0] == "scene_node" )
 	{
-		p_context->sequenceTarget = p_context->sceneManager->getSceneNode( l_split[1] );
+		p_context->sequenceTarget = make_target( p_context->sceneManager->getSceneNode( l_split[1] ) );
 
 		if ( p_context->sequenceTarget == NULL )
 		{
@@ -4023,7 +4022,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceTarget )
 	}
 	else if ( l_split[0] == "function" )
 	{
-		p_context->sequenceTarget = p_context->scriptEngine->GetFunction( l_split[1] );
+		p_context->sequenceTarget = make_target( p_context->scriptEngine->GetFunction( l_split[1] ) );
 
 		if ( p_context->sequenceTarget == NULL )
 		{
@@ -4032,7 +4031,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceTarget )
 	}
 	else if ( l_split[0] == "overlay" )
 	{
-		p_context->sequenceTarget = p_context->gui->GetOverlayGroup( l_split[1] );
+		p_context->sequenceTarget = make_target( p_context->gui->GetOverlayGroup( l_split[1] ) );
 
 		if ( p_context->sequenceTarget == NULL )
 		{
@@ -4041,7 +4040,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceTarget )
 	}
 	else if ( l_split[0] == "overlayElement" )
 	{
-		p_context->sequenceTarget = p_context->gui->GetElementByName( l_split[1] ); //OverlayManager::getSingletonPtr()->getOverlayElement( l_split[1]);
+		p_context->sequenceTarget = make_target( p_context->gui->GetElementByName( l_split[1] ) ); //OverlayManager::getSingletonPtr()->getOverlayElement( l_split[1]);
 
 		if ( p_context->sequenceTarget == NULL )
 		{
@@ -4050,7 +4049,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceTarget )
 	}
 	else if ( l_split[0] == "sequence" )
 	{
-		p_context->sequenceTarget = p_context->sequenceManager->GetElementByName( l_split[1] );
+		p_context->sequenceTarget = make_target( p_context->sequenceManager->GetElementByName( l_split[1] ).get() );
 
 		if ( p_context->sequenceTarget == NULL )
 		{
@@ -4165,7 +4164,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SequenceTrackEnd )
 {
 //	p_context->log->logMessage( "DEFINE_SCENE_FILE_PARSER( Parser_SequenceTrackEnd)");
 	p_context->sequence->AddContinuousEvent( p_context->sequenceTrack );
-	p_context->sequenceTrack->SetTarget( p_context->sequenceTarget );
+	p_context->sequenceTrack->SetTarget( std::move( p_context->sequenceTarget ) );
 	p_context->section = SS_SEQUENCE;
 	return false;
 }

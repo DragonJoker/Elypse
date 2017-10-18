@@ -23,32 +23,33 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/frame.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class ReplaceDialog
-		: public wxFrame
+	namespace GUI
 	{
-	public:
-		ReplaceDialog( wxWindow * p_parent, wxStcTextEditor * p_textPanel );
+		class ReplaceDialog
+			: public wxFrame
+		{
+		public:
+			ReplaceDialog( wxWindow * p_parent, wxStcTextEditor * p_textPanel );
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnFind( wxCommandEvent & p_event );
-		void OnReplace( wxCommandEvent & p_event );
-		void OnReplaceAll( wxCommandEvent & p_event );
+		private:
+			DECLARE_EVENT_TABLE()
+			void OnFind( wxCommandEvent & p_event );
+			void OnReplace( wxCommandEvent & p_event );
+			void OnReplaceAll( wxCommandEvent & p_event );
 
-	private:
-		wxStcTextEditor * m_textPanel;
-		wxTextCtrl * m_textToReplace;
-		wxTextCtrl * m_replacementText;
-		wxButton * m_find;
-		wxButton * m_replace;
-		wxButton * m_replaceAll;
-		bool m_first;
-		wxString m_text;
-	};
+		private:
+			wxStcTextEditor * m_textPanel;
+			wxTextCtrl * m_textToReplace;
+			wxTextCtrl * m_replacementText;
+			wxButton * m_find;
+			wxButton * m_replace;
+			wxButton * m_replaceAll;
+			bool m_first;
+			wxString m_text;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
-

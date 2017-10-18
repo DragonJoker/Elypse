@@ -1,0 +1,18 @@
+background_colour 0.000000 0.000000 0.000000 1.000000
+
+scene Editeur
+{
+	data_file core.zip
+	data_file hud.zip
+	scene_file SceneEditor.emscene
+	load_script_file SceneEditor.emscript
+}
+
+scene Connexion
+{
+	scene_file connexion.emscene
+	muse_file file://D:\Script\Skyrock\Skyrock.muse
+}
+
+start_scene Connexion
+start_scene Editeur

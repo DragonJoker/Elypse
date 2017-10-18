@@ -30,9 +30,9 @@ namespace Elypse
 			VariableType * m_type;
 
 		public:
-			StructRow( const String & p_name, VariableType * p_type )
-				: named( p_name ),
-					m_type( p_type )
+			StructRow( String const & p_name, VariableType * p_type )
+				: named( p_name )
+				, m_type( p_type )
 			{
 			}
 
@@ -51,19 +51,19 @@ namespace Elypse
 			UserFunctionMap m_classFunctions;
 
 		public:
-			Structure( const String & p_name );
+			Structure( String const & p_name );
 			~Structure();
 
 		public:
-			void AddMember( const String & p_name, VariableType * p_type );
+			void AddMember( String const & p_name, VariableType * p_type );
 			void AddFunction( UserFunction * p_function );
 
-			UserFunction * GetFunction( const String & p_name )
+			UserFunction * GetFunction( String const & p_name )
 			{
 				return General::Utils::map::findOrNull( m_classFunctions, p_name );
 			}
 
-			unsigned int FindMember( const String & p_name )const;
+			uint32_t FindMember( String const & p_name )const;
 
 
 
@@ -87,7 +87,7 @@ namespace Elypse
 
 			void Copy( StructInstance * p_origin );
 
-			NodeValueBase * GetMember( unsigned int p_index )const
+			NodeValueBase * GetMember( uint32_t p_index )const
 			{
 				if ( m_members.size() > p_index )
 				{

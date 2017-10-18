@@ -27,9 +27,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 using namespace General::Theory;
 using namespace General::Utils;
 
-AnimatedObjectGroup::AnimatedObjectGroup( const String & p_name, AnimationManager * p_owner )
-	: owned_by <AnimationManager> ( p_owner ),
-		named( p_name )
+AnimatedObjectGroup::AnimatedObjectGroup( String const & p_name, AnimationManager & p_owner )
+	: owned_by< AnimationManager >( p_owner )
+	, named( p_name )
 {
 }
 
@@ -46,7 +46,7 @@ void AnimatedObjectGroup::Update( Real p_delta )
 AnimatedObject * AnimatedObjectGroup::AddEntity( Entity * p_entity )
 {
 	genlib_assert( p_entity != NULL );
-	AnimatedObject * l_object = General::Utils::map::insert( m_objects, p_entity->getName(), this, p_entity );
+	AnimatedObject * l_object = General::Utils::map::insert( m_objects, p_entity->getName(), *this, p_entity );
 	const RealMap & l_map = l_object->GetAllAnimationsTimes();
 
 	if ( m_objects.size() == 1 )
@@ -61,7 +61,7 @@ AnimatedObject * AnimatedObjectGroup::AddEntity( Entity * p_entity )
 	return l_object;
 }
 
-void AnimatedObjectGroup::StartAnimation( const String & p_animationName )
+void AnimatedObjectGroup::StartAnimation( String const & p_animationName )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -77,7 +77,7 @@ void AnimatedObjectGroup::StartAnimation( const String & p_animationName )
 	}
 }
 
-void AnimatedObjectGroup::StopAnimation( const String & p_animationName )
+void AnimatedObjectGroup::StopAnimation( String const & p_animationName )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -93,7 +93,7 @@ void AnimatedObjectGroup::StopAnimation( const String & p_animationName )
 	}
 }
 
-void AnimatedObjectGroup::PauseAnimation( const String & p_animationName )
+void AnimatedObjectGroup::PauseAnimation( String const & p_animationName )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -109,7 +109,7 @@ void AnimatedObjectGroup::PauseAnimation( const String & p_animationName )
 	}
 }
 
-void AnimatedObjectGroup::SetTimeAnimation( const String & p_animationName, Real p_time )
+void AnimatedObjectGroup::SetTimeAnimation( String const & p_animationName, Real p_time )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -125,7 +125,7 @@ void AnimatedObjectGroup::SetTimeAnimation( const String & p_animationName, Real
 	}
 }
 
-void AnimatedObjectGroup::SetTimeScaleAnimation( const String & p_animationName, Real p_timescale )
+void AnimatedObjectGroup::SetTimeScaleAnimation( String const & p_animationName, Real p_timescale )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -141,12 +141,12 @@ void AnimatedObjectGroup::SetTimeScaleAnimation( const String & p_animationName,
 	}
 }
 
-void AnimatedObjectGroup::RemoveObject( const String & p_objectName )
+void AnimatedObjectGroup::RemoveObject( String const & p_objectName )
 {
 	General::Utils::map::deleteValue( m_objects, p_objectName );
 }
 
-void AnimatedObjectGroup::SetWeightAnimation( const String & p_animationName, Real p_weight )
+void AnimatedObjectGroup::SetWeightAnimation( String const & p_animationName, Real p_weight )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -162,7 +162,7 @@ void AnimatedObjectGroup::SetWeightAnimation( const String & p_animationName, Re
 	}
 }
 
-void AnimatedObjectGroup::SetAnimationTimeOut( const String & p_animationName, Real p_timeOut )
+void AnimatedObjectGroup::SetAnimationTimeOut( String const & p_animationName, Real p_timeOut )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -178,7 +178,7 @@ void AnimatedObjectGroup::SetAnimationTimeOut( const String & p_animationName, R
 	}
 }
 
-void AnimatedObjectGroup::SetAnimationTimeIn( const String & p_animationName, Real p_timeIn )
+void AnimatedObjectGroup::SetAnimationTimeIn( String const & p_animationName, Real p_timeIn )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -194,7 +194,7 @@ void AnimatedObjectGroup::SetAnimationTimeIn( const String & p_animationName, Re
 	}
 }
 
-void AnimatedObjectGroup::SetAnimationLooped( const String & p_animationName, bool p_looped )
+void AnimatedObjectGroup::SetAnimationLooped( String const & p_animationName, bool p_looped )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -210,7 +210,7 @@ void AnimatedObjectGroup::SetAnimationLooped( const String & p_animationName, bo
 	}
 }
 
-void AnimatedObjectGroup::SetAnimationReversed( const String & p_animationName, bool p_reversed )
+void AnimatedObjectGroup::SetAnimationReversed( String const & p_animationName, bool p_reversed )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();
@@ -226,12 +226,12 @@ void AnimatedObjectGroup::SetAnimationReversed( const String & p_animationName, 
 	}
 }
 
-Real AnimatedObjectGroup::GetAnimationTime( const String & p_animationName )const
+Real AnimatedObjectGroup::GetAnimationTime( String const & p_animationName )const
 {
 	return General::Utils::map::findOrNull( m_commonAnimationsTime, p_animationName );
 }
 
-void AnimatedObjectGroup::ChainAnimation( const String & p_animName, const String & p_chainedAnimationName )
+void AnimatedObjectGroup::ChainAnimation( String const & p_animName, String const & p_chainedAnimationName )
 {
 	AnimatedObjectMap::iterator i = m_objects.begin();
 	const AnimatedObjectMap::iterator & iend = m_objects.end();

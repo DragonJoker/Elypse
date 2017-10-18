@@ -27,12 +27,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseLogs.h"
 
-ConfigFile::ConfigFile()
-	: ConfigFile( String(), NULL )
+ConfigFile::ConfigFile( MuseFile & p_owner )
+	: ConfigFile( String(), p_owner )
 {
 }
 
-ConfigFile::ConfigFile( const String & p_name, MuseFile * p_owner )
+ConfigFile::ConfigFile( String const & p_name, MuseFile & p_owner )
 	: named( p_name )
 	, owned_by( p_owner )
 	, m_useCount( 0 )
@@ -61,25 +61,25 @@ void ConfigFile::Release()
 
 void ConfigFile::DownloadFinished()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	m_downloaded = true;
 }
 
 String ConfigFile::GetDescriptiveName()const
 {
-	return m_owner->GetName() + " > " + m_name;
+	return GetOwner()->GetName() + " > " + m_name;
 }
 
 void ConfigFile::DoLoad()
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	EMUSE_CONSOLE_MESSAGE_DEBUG( "ConfigFile::Load - " + m_name + "\n" );
 
 	if ( !m_downloaded )
 	{
-		GENLIB_UNLOCK_MUTEX( m_mutex );
-		m_owner->WaitForFile( m_name, true );
-		GENLIB_LOCK_MUTEX( m_mutex );
+		m_mutex.unlock();
+		GetOwner()->WaitForFile( m_name, true );
+		m_mutex.lock();
 	}
 
 	EMUSE_CONSOLE_MESSAGE_DEBUG( "ConfigFile::Loaded - " + m_name + "\n" );

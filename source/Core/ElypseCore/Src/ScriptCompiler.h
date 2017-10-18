@@ -45,7 +45,7 @@ namespace Elypse
 			SlottedObjectPool <ScriptNode> m_nodePool;
 
 		protected:
-			unsigned int m_currentLine;
+			uint32_t m_currentLine;
 
 			ScriptNodeMap m_constants;
 			ScriptNodeMap m_userVariables;
@@ -65,14 +65,14 @@ namespace Elypse
 
 			Structure  * m_currentStructure;
 
-			unsigned int m_numWarnings;
-			unsigned int m_numErrors;
+			uint32_t m_numWarnings;
+			uint32_t m_numErrors;
 
 			char * m_buffer;
 			const String * m_stringBuffer;
 			ifstream * m_currentFileStream;
-			unsigned int m_currentBufferIndex;
-			unsigned int m_currentMaxIndex;
+			uint32_t m_currentBufferIndex;
+			uint32_t m_currentMaxIndex;
 
 			std::map< char, ScriptNode *> m_charFlyweight;
 			std::map< String, ScriptNode *> m_stringFlyweight;
@@ -91,25 +91,25 @@ namespace Elypse
 			virtual ~ScriptCompiler();
 
 		public:
-			ScriptNode * GetUsableFunctionNode( const String & p_functionName )const;
+			ScriptNode * GetUsableFunctionNode( String const & p_functionName )const;
 
 		protected:
 			void 					_initialiseVariableMap();
 			void 					_initialiseFunctionMap();
 			void 					_initialiseOperatorMap();
 
-			virtual void			_creaFunc( const String & p_functionName,
+			virtual void			_creaFunc( String const & p_functionName,
+											   RawFunction * p_function, VariableBaseType p_returnValue, ... );
+			virtual void			_classFunc( String const & p_functionName,
 												RawFunction * p_function, VariableBaseType p_returnValue, ... );
-			virtual void			_classFunc( const String & p_functionName,
-												RawFunction * p_function, VariableBaseType p_returnValue, ... );
-			virtual void			_createOperator( const String & p_name,
+			virtual void			_createOperator( String const & p_name,
 					RawFunction * p_func, VariableBaseType p_returnType,
 					VariableBaseType p_left, VariableBaseType p_right );
 
-			virtual void			_functionGroup( const String & p_name ) {}
+			virtual void			_functionGroup( String const & p_name ) {}
 
-			virtual void			_constantGroup( const String & p_name ) {}
-			virtual ScriptNode *	_createConstant( VariableBaseType type, const String & p_constantName );
+			virtual void			_constantGroup( String const & p_name ) {}
+			virtual ScriptNode *	_createConstant( VariableBaseType type, String const & p_constantName );
 
 		protected:
 			virtual ScriptBlock *	_getBlock();
@@ -140,37 +140,37 @@ namespace Elypse
 			void					_declareVariable( ScriptBlockArray & p_blockArray );
 			void					_declareVariableDetail( VariableType * p_variableType, ScriptBlockArray & p_blockArray );
 			VariableType 	*		_getVariableType( ScriptBlockArray & p_blockArray );
-			VariableType 	*		_getVariableTypeRecus( ScriptBlockArray & p_blockArray, unsigned int & p_recusIndex );
+			VariableType 	*		_getVariableTypeRecus( ScriptBlockArray & p_blockArray, uint32_t & p_recusIndex );
 			VariableType 	*		_substituteVarType( VariableType * p_base, VariableType * p_type );
-			unsigned int			_getTypeList( ScriptBlockArray & p_blockArray )const;
+			uint32_t			_getTypeList( ScriptBlockArray & p_blockArray )const;
 
 		protected:
 			void					_typedef( ScriptBlockArray & p_blockArray );
-			VariableType 	*		FindType( const String & p_name )const;
+			VariableType 	*		FindType( String const & p_name )const;
 			ScriptNode 	*		_compileStructMember( ScriptBlockArray & p_left, ScriptBlockArray & p_right, ScriptBlock * p_block );
 			void					_compileFuncParamsWithinParenthesis( const ScriptBlockArray & p_blockArray, ScriptNodeArray & p_compiledNodes );
 
-			void					_printBlockArray( const String & p_where, const ScriptBlockArray & p_childs );
+			void					_printBlockArray( String const & p_where, const ScriptBlockArray & p_childs );
 
 		protected:
 
-			ScriptNode 	*		_createUserVariable( const String & p_variableName, VariableType * p_variableType, bool p_functionParam = false );
-			ScriptNode 	*		_getUserVariable( const String & p_variableName );
+			ScriptNode 	*		_createUserVariable( String const & p_variableName, VariableType * p_variableType, bool p_functionParam = false );
+			ScriptNode 	*		_getUserVariable( String const & p_variableName );
 
-			UserFunction 	*		_createUserFunction( const String & p_functionName, VariableType * p_functionReturnType );
-			Function 		*		_getFunction( const String & p_functionName )const
+			UserFunction 	*		_createUserFunction( String const & p_functionName, VariableType * p_functionReturnType );
+			Function 		*		_getFunction( String const & p_functionName )const
 			{
 				return General::Utils::map::findOrNull( m_functions, p_functionName );
 			}
-			Function 		*		_getClassFunction( VariableType * p_class, const String & p_functionName )const;
+			Function 		*		_getClassFunction( VariableType * p_class, String const & p_functionName )const;
 
 			ScriptNode 	*		_getOperator( ScriptBlock * p_operator, ScriptNode * p_leftOperand, ScriptNode * p_rightOperand );
 
 		public:
-			ScriptNode 	*		GetProgramConstant( const String & p_variableName )const;
+			ScriptNode 	*		GetProgramConstant( String const & p_variableName )const;
 			virtual ScriptNode *	CompileScriptFile( ConfigFile * p_scriptFile );
-			virtual ScriptNode *	CompileScript( const String & p_script );
-			UserFunction 	*		GetUserFunction( const String & p_functionName )const; // { return General::Utils::map::findOrNull( m_userFunctions, p_functionName); }
+			virtual ScriptNode *	CompileScript( String const & p_script );
+			UserFunction 	*		GetUserFunction( String const & p_functionName )const; // { return General::Utils::map::findOrNull( m_userFunctions, p_functionName); }
 
 			ScriptNode 	*		CreateScriptNode();
 			ScriptNode 	*		CreateScriptNode( unsigned p_lineNum );
@@ -182,7 +182,7 @@ namespace Elypse
 			void _releaseNode( ScriptNode * p_node );
 
 			ScriptNode * GetFlyweight( char p_value );
-			ScriptNode * GetFlyweight( const String & p_value );
+			ScriptNode * GetFlyweight( String const & p_value );
 			ScriptNode * GetFlyweight( int p_value );
 			ScriptNode * GetFlyweight( Real p_value );
 
@@ -194,10 +194,10 @@ namespace Elypse
 
 			const String 	&		_getScriptFileName()const;
 
-			virtual void			_log( const String & p_message );
+			virtual void			_log( String const & p_message );
 
 		protected:
-			inline unsigned int		_getCurrentLine()const
+			inline uint32_t		_getCurrentLine()const
 			{
 				return m_currentLine;
 			}
@@ -217,11 +217,11 @@ namespace Elypse
 //		inline void				_setInStructDecla	( bool p_in) { m_withinStructDecla = p_in; }
 
 
-			inline unsigned int GetNumErrors()const
+			inline uint32_t GetNumErrors()const
 			{
 				return m_numErrors;
 			}
-			inline unsigned int GetNumWarnings()const
+			inline uint32_t GetNumWarnings()const
 			{
 				return m_numWarnings;
 			}

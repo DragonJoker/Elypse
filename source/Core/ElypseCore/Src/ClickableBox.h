@@ -32,8 +32,8 @@ namespace Elypse
 
 		public:
 			ClickableBox( Real p_width, Real p_height )
-				: m_width( p_width ),
-					m_height( p_height )
+				: m_width( p_width )
+				, m_height( p_height )
 			{}
 			virtual ~ClickableBox() {}
 

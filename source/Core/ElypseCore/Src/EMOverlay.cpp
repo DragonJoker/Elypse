@@ -34,23 +34,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-EMOverlay::EMOverlay( const String & p_name, EMOverlayGroup * p_owner )
-	: named( p_name ),
-		owned_by<EMOverlayGroup>( p_owner ),
-		m_visible( true ),
-		m_clickedScript( NULL ),
-		m_overlay( NULL ),
-		m_parent( NULL ),
-		m_baseMaterialCopy( NULL ),
-		m_textAlign( TextAreaOverlayElement::Left ),
-		m_wordWrapping( false )
+EMOverlay::EMOverlay( String const & p_name, EMOverlayGroup & p_owner )
+	: named( p_name )
+	, owned_by< EMOverlayGroup >( p_owner )
+	, m_visible( true )
+	, m_clickedScript( NULL )
+	, m_overlay( NULL )
+	, m_parent( NULL )
+	, m_baseMaterialCopy( NULL )
+	, m_textAlign( TextAreaOverlayElement::Left )
+	, m_wordWrapping( false )
 {
 }
 
 EMOverlay::~EMOverlay()
 {
-	m_owner->_removeElement( m_name );
-	m_owner->GetOwner()->RemoveOverlay( m_name );
+	GetOwner()->_removeElement( m_name );
+	GetOwner()->GetOwner()->RemoveOverlay( m_name );
 
 	if ( m_clickedScript != NULL )
 	{
@@ -77,7 +77,7 @@ EMOverlay::~EMOverlay()
 	}
 }
 
-bool EMOverlay::Initialise( const String & p_className )
+bool EMOverlay::Initialise( String const & p_className )
 {
 	if ( m_overlay != NULL )
 	{
@@ -97,7 +97,7 @@ bool EMOverlay::Initialise( const String & p_className )
 		return false;
 	}
 
-	m_overlay = OverlayManager::getSingletonPtr()->createOverlayElementFromTemplate( p_className, "", m_name /* + m_owner->GetOwner()->GetInstanceKey() */, false );
+	m_overlay = OverlayManager::getSingletonPtr()->createOverlayElementFromTemplate( p_className, "", m_name /* + GetOwner()->GetOwner()->GetInstanceKey() */, false );
 	/*
 		if (m_overlay->getTypeName() == "TextArea")
 		{
@@ -109,7 +109,7 @@ bool EMOverlay::Initialise( const String & p_className )
 	m_overlay->setMetricsMode( GMM_RELATIVE );
 //	}
 	m_baseMaterialName = m_overlay->getMaterialName();
-	m_owner->_finaliseAddElement( this );
+	GetOwner()->_finaliseAddElement( this );
 
 	if ( m_parent != NULL && m_parent->m_overlay != NULL )
 	{
@@ -119,7 +119,7 @@ bool EMOverlay::Initialise( const String & p_className )
 	return true;
 }
 
-void EMOverlay::Reinitialise( const String & p_className )
+void EMOverlay::Reinitialise( String const & p_className )
 {
 	if ( m_parent != NULL )
 	{
@@ -131,16 +131,16 @@ void EMOverlay::Reinitialise( const String & p_className )
 	m_overlay = NULL;
 	Initialise( p_className );
 
-	for ( unsigned int i = 0 ; i < m_childs.size() ; i++ )
+	for ( uint32_t i = 0 ; i < m_childs.size() ; i++ )
 	{
 		m_childs[i]->SetParent( this );
 		reinterpret_cast <OverlayContainer *>( m_overlay )->addChild( m_childs[i]->GetOgreOverlayElement() );
 	}
 }
 
-EMOverlay * EMOverlay::CreateChild( const String & p_name )
+EMOverlay * EMOverlay::CreateChild( String const & p_name )
 {
-	EMOverlay * l_element = m_owner->CreateElement( p_name );
+	EMOverlay * l_element = GetOwner()->CreateElement( p_name );
 	l_element->SetParent( this );
 	m_childs.push_back( l_element );
 	return l_element;
@@ -155,7 +155,7 @@ void EMOverlay::DestroyChild( EMOverlay * p_child )
 	}
 }
 
-void EMOverlay::SetBaseMaterial( const String & p_materialName )
+void EMOverlay::SetBaseMaterial( String const & p_materialName )
 {
 	if ( m_overlay )
 	{
@@ -275,7 +275,7 @@ EMOverlay * EMOverlay::GetAt( Real p_x, Real p_y )
 
 	EMOverlay * l_overlay = NULL;
 	EMOverlay * l_retOverlay = NULL;
-	unsigned short l_zmax = 0;
+	uint16_t l_zmax = 0;
 	size_t imax = m_childs.size();
 
 	for ( size_t i = 0 ; i < imax; ++ i )
@@ -420,7 +420,7 @@ void EMOverlay::SetHeight( Real p_height )
 	}
 }
 
-void EMOverlay::SetCaption( const String & p_caption )
+void EMOverlay::SetCaption( String const & p_caption )
 {
 	if ( m_overlay )
 	{
@@ -482,7 +482,7 @@ void EMOverlay::_wrapWords()
 			l_lastPossibleIndex = i;
 		}
 
-		l_total += m_owner->GetOwner()->GetWidth( l_caption[i], l_font, l_fontSize );
+		l_total += GetOwner()->GetOwner()->GetWidth( l_caption[i], l_font, l_fontSize );
 
 		if ( l_total >= m_overlay->getWidth() )
 		{
@@ -539,7 +539,7 @@ void EMOverlay::_addChild( EMOverlay * p_child )
 {
 	p_child->SetParent( this );
 	m_childs.push_back( p_child );
-	m_owner->_finaliseAddElement( p_child );
+	GetOwner()->_finaliseAddElement( p_child );
 
 	if ( m_overlay != NULL )
 	{
@@ -551,17 +551,17 @@ void EMOverlay::ChangeParent( EMOverlay * p_parent )
 {
 	genlib_assert( p_parent != NULL );
 
-	if ( m_owner != p_parent->GetOwner() || m_parent == NULL )
+	if ( GetOwner() != p_parent->GetOwner() || m_parent == nullptr )
 	{
-		m_owner->_removeElement( m_name );
+		GetOwner()->_removeElement( m_name );
 	}
 
 	if ( m_parent == NULL )
 	{
-		m_owner->GetOwner()->DestroyOverlayGroup( m_owner->GetName() );
+		GetOwner()->GetOwner()->DestroyOverlayGroup( GetOwner()->GetName() );
 	}
 
 	p_parent->_addChild( this );
-	m_owner = p_parent->GetOwner();
+	ChangeOwner( *p_parent->GetOwner() );
 	m_parent = p_parent;
 }

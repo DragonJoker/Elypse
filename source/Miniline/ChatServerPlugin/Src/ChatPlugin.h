@@ -65,7 +65,7 @@ namespace Chat
 		Elypse::Server::ElypseServiceArray m_services;
 		std::shared_ptr< ChatWorld > m_world;
 		ClientIdChatCLientMap m_connectedClients;
-		ClientIdStrMap m_clientIDs;
+		ClientStrIdMap m_clients;
 		std::shared_ptr< ChatDatabase > m_database;
 		ChatGameStrMap m_games;
 		StrUIntIdMap m_gamesNames;
@@ -74,22 +74,23 @@ namespace Chat
 		ChatPlugin( String const & p_path );
 		~ChatPlugin();
 
-		virtual unsigned short GetVersionNo();
-		Elypse::Server::ElypseServiceArray GetServices();
+		virtual uint16_t GetVersionNo();
+		virtual Elypse::Server::ElypseServiceArray const & GetServices()const;
 
 		void AddRoom( std::shared_ptr< ChatRoom > p_room );
-		std::shared_ptr< ChatRoom > GetRoom( const String & p_roomName );
+		std::shared_ptr< ChatRoom > GetRoom( String const & p_roomName );
 
-		ChatTcpClient * GetClient( const String & p_name );
-		const String & GetClientName( unsigned int p_id );
+		ChatTcpClient * GetClient( uint32_t p_id );
+		String const & GetClientName( uint32_t p_id );
+		uint32_t GetClientId( String const & p_name );
 		void AddClient( ChatTcpClient * p_client );
 		void RemoveClient( ChatTcpClient * p_client );
 
-		std::shared_ptr< ChatGame > AddGame( const String & p_gameName, ChatTcpClient * p_initiator );
-		std::shared_ptr< ChatGame > GetGame( const String & p_gameName, int p_initiatorID );
-		StrUIntIdMap GetGamesList( const String & p_gameName );
-		unsigned int GetGameMaxPLayers( const String & p_gameName );
-		void RemoveGame( const String & p_gameName, int p_initiatorID );
+		std::shared_ptr< ChatGame > AddGame( String const & p_gameName, ChatTcpClient * p_initiator );
+		std::shared_ptr< ChatGame > GetGame( String const & p_gameName, int p_initiatorID );
+		StrUIntIdMap GetGamesList( String const & p_gameName );
+		uint32_t GetGameMaxPLayers( String const & p_gameName );
+		void RemoveGame( String const & p_gameName, int p_initiatorID );
 		void _loadRooms();
 		void _loadGames();
 

@@ -37,10 +37,10 @@ namespace Elypse
 
 			bool m_paused;
 
-			unsigned int m_numExecs;
+			uint32_t m_numExecs;
 
 		public:
-			ScriptTimer( const String & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction = NULL );
+			ScriptTimer( String const & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction = NULL );
 			~ScriptTimer();
 
 		public:

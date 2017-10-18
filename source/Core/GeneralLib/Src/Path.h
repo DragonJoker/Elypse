@@ -36,13 +36,13 @@ namespace General
 		{
 		public:
 			Path();
-			Path( const char * p_data );
-			Path( const std::string & p_data );
+			Path( char const * const p_data );
+			Path( std::string const & p_data );
 			Path( const Path & p_data );
-			Path & operator = ( const char * p_path );
-			Path & operator = ( const std::string & p_path );
-			Path & operator = ( const Path & p_path );
-			Path & operator /= ( const Path & p_path );
+			Path & operator=( char const * const p_path );
+			Path & operator=( std::string const & p_path );
+			Path & operator=( const Path & p_path );
+			Path & operator/=( const Path & p_path );
 
 			const Path GetPath()const;
 			const std::string GetLeaf()const;
@@ -50,7 +50,7 @@ namespace General
 			static std::string Normalise( std::string const & p_path );
 		};
 
-		Path operator /( const Path & p_a, const Path & p_b );
+		Path operator/( const Path & p_a, const Path & p_b );
 	}
 }
 

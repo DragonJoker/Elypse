@@ -20,10 +20,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Portal.h"
 #include "Space.h"
 
-Portal::Portal( const String & p_name )
-	: named( p_name ),
-		m_active( true ),
-		m_trigger( NULL )
+Portal::Portal( String const & p_name )
+	: named( p_name )
+	, m_active( true )
+	, m_trigger( NULL )
 {
 }
 

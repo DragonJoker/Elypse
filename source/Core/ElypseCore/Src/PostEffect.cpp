@@ -21,9 +21,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <OgreCompositorManager.h>
 
-PostEffect::PostEffect( const String & p_name, Viewport * p_viewport, int p_position, bool p_autocreate )
-	: named( p_name ),
-		m_viewport( p_viewport )
+PostEffect::PostEffect( String const & p_name, Viewport * p_viewport, int p_position, bool p_autocreate )
+	: named( p_name )
+	, m_viewport( p_viewport )
 {
 	if ( p_autocreate )
 	{

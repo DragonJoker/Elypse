@@ -43,7 +43,7 @@ namespace Elypse
 			Real m_rollFrictionDamping;
 
 		public:
-			PhysicsMaterial( const String & p_name );
+			PhysicsMaterial( String const & p_name );
 			~PhysicsMaterial();
 
 		public:

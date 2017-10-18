@@ -33,10 +33,10 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace
 {
-	const unsigned int c_fastStepIterationCount = 40;
+	const uint32_t c_fastStepIterationCount = 40;
 }
 
-PhysicsSimulation::PhysicsSimulation( const String & p_name )
+PhysicsSimulation::PhysicsSimulation( String const & p_name )
 	: named( p_name )
 	, m_dynamicSpace( NULL )
 	, m_phantomSpace( NULL )
@@ -89,7 +89,7 @@ void PhysicsSimulation::_initialiseDefaultSpaces()
 	m_staticSpace->SetInternalCollisions( false );
 }
 
-void PhysicsSimulation::ClearObjects( bool p_recreateDefaults ) d_no_throw
+void PhysicsSimulation::ClearObjects( bool p_recreateDefaults ) noexcept
 {
 	_clearContacts();
 
@@ -106,7 +106,7 @@ void PhysicsSimulation::ClearObjects( bool p_recreateDefaults ) d_no_throw
 	}
 }
 
-void PhysicsSimulation::ClearSpaces( bool p_recreateDefaults ) d_no_throw
+void PhysicsSimulation::ClearSpaces( bool p_recreateDefaults ) noexcept
 {
 	General::Utils::map::deleteAll( m_spaces );
 
@@ -161,7 +161,7 @@ PhysicsObject * PhysicsSimulation::CreateObject( Entity * p_entity, bool p_stati
 	}
 
 	Space * l_space = ( p_static ? ( p_phantom ? m_phantomSpace : m_staticSpace ) : m_dynamicSpace );
-	PhysicsObject * l_object = new PhysicsObject( p_entity, l_space );
+	PhysicsObject * l_object = new PhysicsObject( *this, p_entity, l_space );
 
 	if ( p_static )
 	{
@@ -175,20 +175,18 @@ PhysicsObject * PhysicsSimulation::CreateObject( Entity * p_entity, bool p_stati
 
 	m_objects.insert( std::make_pair( p_entity->getName(), l_object ) );
 	l_object->SetMaterial( m_defaultMaterial );
-	l_object->SetOwner( this );
 	return l_object;
 }
 
-PhysicsObject * PhysicsSimulation::CreateObject( const String & p_name )
+PhysicsObject * PhysicsSimulation::CreateObject( String const & p_name )
 {
-	PhysicsObject * l_object = General::Utils::map::insert( m_objects, p_name, p_name, m_staticSpace );
-	l_object->SetOwner( this );
+	PhysicsObject * l_object = General::Utils::map::insert( m_objects, p_name, *this, p_name, m_staticSpace );
 	l_object->SetStatic( true );
 	l_object->SetMaterial( m_defaultMaterial );
 	return l_object;
 }
 
-void PhysicsSimulation::DestroyObject( const String & p_name )
+void PhysicsSimulation::DestroyObject( String const & p_name )
 {
 	General::Utils::map::deleteValue( m_objects, p_name );
 }
@@ -251,7 +249,7 @@ void PhysicsSimulation::Render()
 	General::Utils::map::cycle( m_spaces, & Space::Render, l_factor );
 }
 
-Space * PhysicsSimulation::CreateSpace( const String & p_name, bool p_autoUpdated )
+Space * PhysicsSimulation::CreateSpace( String const & p_name, bool p_autoUpdated )
 {
 	const SpaceMap::iterator & ifind = m_spaces.find( p_name );
 
@@ -260,12 +258,12 @@ Space * PhysicsSimulation::CreateSpace( const String & p_name, bool p_autoUpdate
 		return ifind->second;
 	}
 
-	Space * l_space = new Space( p_name, this, p_autoUpdated );
+	Space * l_space = new Space( p_name, *this, p_autoUpdated );
 	m_spaces.insert( std::make_pair( p_name, l_space ) );
 	return l_space;
 }
 
-bool PhysicsSimulation::DestroySpace( const String & p_name )
+bool PhysicsSimulation::DestroySpace( String const & p_name )
 {
 	return General::Utils::map::deleteValue( m_spaces, p_name );
 }
@@ -311,7 +309,7 @@ DistanceMap PhysicsSimulation::Raytrace( const Ray & p_ray, bool p_collideDynami
 	{
 		Real l_min = Math::POS_INFINITY;
 
-		for ( unsigned int j = 0 ; j < i->second.size() ; j ++ )
+		for ( uint32_t j = 0 ; j < i->second.size() ; j ++ )
 		{
 			l_min = min( l_min, i->second[j].distance( m_rayInstance->GetOrigin() ) );
 		}
@@ -322,7 +320,7 @@ DistanceMap PhysicsSimulation::Raytrace( const Ray & p_ray, bool p_collideDynami
 	return l_tempMap;
 }
 
-PhysicsObject * PhysicsSimulation::CloneObject( PhysicsObject * p_object, const String & p_clonedName, Space * p_newSpace )
+PhysicsObject * PhysicsSimulation::CloneObject( PhysicsObject * p_object, String const & p_clonedName, Space * p_newSpace )
 {
 	if ( p_newSpace == NULL )
 	{

@@ -20,55 +20,57 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "GUI/AutoCompletionListBox.h"
 
 #include "GUI/MainFrame.h"
-#include "GUI/StcTextEditor.hpp"
+#include "GUI/StcTextEditor.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	BEGIN_EVENT_TABLE( AutoCompletionListBox, wxListBox )
-		EVT_LEFT_DCLICK( AutoCompletionListBox::OnMouseLeftDown )
-		EVT_KEY_DOWN( AutoCompletionListBox::OnKeyDown )
-	END_EVENT_TABLE()
-
-	AutoCompletionListBox::AutoCompletionListBox( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size, const wxArrayString & choices )
-		: wxListBox( parent, id, pos, size, choices, wxLB_ALWAYS_SB | wxWANTS_CHARS )
+	namespace GUI
 	{
-	}
+		BEGIN_EVENT_TABLE( AutoCompletionListBox, wxListBox )
+			EVT_LEFT_DCLICK( AutoCompletionListBox::OnMouseLeftDown )
+			EVT_KEY_DOWN( AutoCompletionListBox::OnKeyDown )
+		END_EVENT_TABLE()
 
-	void AutoCompletionListBox::OnMouseLeftDown( wxMouseEvent & p_event )
-	{
-		//GUI::MainFrame::GetInstance()->m_editText->GetText()->AutoWord();
-	}
-
-	void AutoCompletionListBox::OnKeyDown( wxKeyEvent & p_event )
-	{
-		int l_key = p_event.GetKeyCode();
-
-		switch ( p_event.GetKeyCode() )
+		AutoCompletionListBox::AutoCompletionListBox( wxWindow * parent, wxWindowID id, wxPoint const & pos, wxSize const & size, const wxArrayString & choices )
+			: wxListBox( parent, id, pos, size, choices, wxLB_ALWAYS_SB | wxWANTS_CHARS )
 		{
-		case WXK_RIGHT:
-		{
-			//GUI::MainFrame::GetInstance()->m_editText->GetText()->AutoWord();
-			return;
-		}
-		break;
-
-		case WXK_RETURN:
-		{
-			//GUI::MainFrame::GetInstance()->m_editText->GetText()->AutoWord();
-			return;
-		}
-		break;
-
-		case WXK_ESCAPE:
-		{
-			//GUI::MainFrame::GetInstance()->m_listBox->Hide();
-			//GUI::MainFrame::GetInstance()->m_editText->GetText()->SetFocus();
-			return;
-		}
-		break;
 		}
 
-		p_event.Skip();
+		void AutoCompletionListBox::OnMouseLeftDown( wxMouseEvent & p_event )
+		{
+			//wxGetApp().GetMainFrame()->m_editText->GetText()->AutoWord();
+		}
+
+		void AutoCompletionListBox::OnKeyDown( wxKeyEvent & p_event )
+		{
+			int l_key = p_event.GetKeyCode();
+
+			switch ( p_event.GetKeyCode() )
+			{
+			case WXK_RIGHT:
+			{
+				//wxGetApp().GetMainFrame()->m_editText->GetText()->AutoWord();
+				return;
+			}
+			break;
+
+			case WXK_RETURN:
+			{
+				//wxGetApp().GetMainFrame()->m_editText->GetText()->AutoWord();
+				return;
+			}
+			break;
+
+			case WXK_ESCAPE:
+			{
+				//wxGetApp().GetMainFrame()->m_listBox->Hide();
+				//wxGetApp().GetMainFrame()->m_editText->GetText()->SetFocus();
+				return;
+			}
+			break;
+			}
+
+			p_event.Skip();
+		}
 	}
 }
-END_TROLL_GUI_NAMESPACE

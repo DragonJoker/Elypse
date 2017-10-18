@@ -37,9 +37,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 GENLIB_INIT_SINGLETON( VideoManager );
 
 VideoManager::VideoManager()
-	: m_currentFactory( NULL ),
-		m_volume( 100 ),
-		m_muted( false )
+	: m_currentFactory( NULL )
+	, m_volume( 100 )
+	, m_muted( false )
 {
 	GENLIB_SET_SINGLETON();
 #if ELYPSE_WINDOWS
@@ -67,7 +67,7 @@ void VideoManager::RegisterFactory( VideoFactory * p_factory )
 	}
 }
 
-void VideoManager::SetCurrentFactory( const String & p_name )
+void VideoManager::SetCurrentFactory( String const & p_name )
 {
 	VideoFactory * l_factory = General::Utils::map::findOrNull( m_factories, p_name );
 
@@ -81,10 +81,10 @@ void VideoManager::SetCurrentFactory( const String & p_name )
 
 void VideoManager::Update()
 {
-	General::Utils::map::cycle( m_objectList, & VideoObject::Update, static_cast <Real>( m_timer.Time() ) );
+	General::Utils::map::cycle( m_objectList, & VideoObject::Update, Real( m_timer.Time() ) );
 }
 
-VideoObject * VideoManager::CreateVideoObject( const String & p_name, ElypsePlugin * p_plugin )
+VideoObject * VideoManager::CreateVideoObject( String const & p_name, ElypsePlugin * p_plugin )
 {
 	VideoObject * l_object = General::Utils::map::insert( m_objectList, p_name, p_name, p_plugin );
 	l_object->SetMaxVolume( m_volume );
@@ -92,12 +92,12 @@ VideoObject * VideoManager::CreateVideoObject( const String & p_name, ElypsePlug
 	return l_object;
 }
 
-void VideoManager::DeleteVideoObject( const String & p_name )
+void VideoManager::DeleteVideoObject( String const & p_name )
 {
 	General::Utils::map::deleteValue( m_objectList, p_name );
 }
 
-bool VideoManager::IsVideo( const String & p_entityName )
+bool VideoManager::IsVideo( String const & p_entityName )
 {
 	//TODO.
 	return false;
@@ -156,7 +156,7 @@ void VideoManager::UpdateVolume( const Vector3 & p_position, Radian p_orientatio
 	}
 }
 
-void VideoManager::ReleaseAllZone( const String & p_zoneName)
+void VideoManager::ReleaseAllZone( String const & p_zoneName)
 {
 	VideoObjectMap::iterator l_it = m_objectList.begin();
 	StringArray l_toRemove;
@@ -173,7 +173,7 @@ void VideoManager::ReleaseAllZone( const String & p_zoneName)
 		++ l_it;
 	}
 
-	for (unsigned int i = 0 ; i < l_toRemove.size() ; ++ i)
+	for (uint32_t i = 0 ; i < l_toRemove.size() ; ++ i)
 	{
 		General::Utils::map::deleteValue( m_objectList, l_toRemove[i]);
 	}

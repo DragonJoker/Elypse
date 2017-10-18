@@ -38,7 +38,7 @@ namespace Elypse
 			Real				m_radius;
 			bool				m_enabled;
 			Ogre::Vector3				m_position;
-			unsigned int		m_maxContacts;
+			uint32_t		m_maxContacts;
 
 			Ode::dGeomID				m_geom;
 			Space 		*		m_space;
@@ -55,7 +55,7 @@ namespace Elypse
 
 		public:
 			void SetParent( PhysicsObject * p_parent );
-			void SetMaxContacts( unsigned int p_maxContacts );
+			void SetMaxContacts( uint32_t p_maxContacts );
 			void SetSpace( Space * p_space );
 			bool Collide( BoundingShape * p_collideWith );
 			const Ogre::AxisAlignedBox &	GetBoundingBox();

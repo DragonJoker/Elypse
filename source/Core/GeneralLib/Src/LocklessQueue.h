@@ -22,27 +22,18 @@ namespace General
 {
 	namespace Templates
 	{
-		template<typename T, unsigned int c_maxElements = 100>
+		template< typename T, uint32_t c_maxElements = 100 >
 		class lockless_queue
 		{
-		private:
-			T m_elements[c_maxElements];
-			unsigned int m_head;
-			unsigned int m_tail;
-
 		public:
 			lockless_queue()
-				: m_head( 0 ),
-					m_tail( 0 )
-			{
-			}
-
-			~lockless_queue()
+				: m_head{ 0 }
+				, m_tail{ 0 }
 			{
 			}
 
 		public:
-			inline unsigned int size()const
+			inline uint32_t size()const
 			{
 				return c_maxElements;
 			}
@@ -51,9 +42,9 @@ namespace General
 				return m_head == m_tail;
 			}
 
-			inline bool push_back( const T & p_element )
+			inline bool push_back( T const & p_element )
 			{
-				unsigned int l_head = m_head;
+				uint32_t l_head = m_head;
 
 				if ( ( l_head + 1 ) % size() == m_tail )
 				{
@@ -74,14 +65,14 @@ namespace General
 
 			inline T pop_front()
 			{
-				unsigned int l_tail = m_tail;
+				uint32_t l_tail = m_tail;
 
 				if ( l_tail == m_head )
 				{
-					return T();
+					return T{};
 				}
 
-				unsigned int l_index = l_tail;
+				uint32_t l_index = l_tail;
 				l_tail ++;
 
 				if ( l_tail == size() )
@@ -92,6 +83,11 @@ namespace General
 				m_tail = l_tail;
 				return m_elements[l_index];
 			}
+
+		private:
+			std::array< T, c_maxElements > m_elements;
+			uint32_t m_head;
+			uint32_t m_tail;
 		};
 	}
 }

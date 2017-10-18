@@ -27,7 +27,8 @@ namespace General
 	namespace Theory
 	{
 		template <class T>
-		class Singleton : d_noncopyable
+		class Singleton
+			: d_noncopyable
 		{
 		protected:
 			Singleton()
@@ -50,11 +51,12 @@ namespace General
 				return *GetSingletonUPtr();
 			}
 
-			static inline T * Create()
+			template< typename ... Params >
+			static inline T * Create( Params && ... p_params )
 			{
 				if ( !GetSingletonUPtr() )
 				{
-					SetSingleton( new T );
+					SetSingleton( new T{ std::forward< Params >( p_params )... } );
 				}
 
 				return GetSingletonPtr();
@@ -64,7 +66,7 @@ namespace General
 			{
 				T * l_instance = GetSingletonUPtr();
 				delete l_instance;
-				SetSingleton( NULL );
+				SetSingleton( nullptr );
 			}
 
 			static inline void SetSingleton( T * p_singleton )

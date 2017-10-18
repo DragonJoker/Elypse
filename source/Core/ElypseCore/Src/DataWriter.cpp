@@ -62,7 +62,7 @@ namespace Elypse
 				std::cout << "\t" << p_name << ":" << p_value << std::endl;
 			}
 
-			bool DecompressFile( const std::string & p_zipFileName, const std::string & p_fileName, int p_size )
+			bool DecompressFile( std::string const & p_zipFileName, std::string const & p_fileName, int p_size )
 			{
 				bool l_return = true;
 				gzFile l_infile = gzopen( p_zipFileName.c_str(), "r" );
@@ -136,17 +136,17 @@ namespace Elypse
 				return l_return;
 			}
 
-			std::string GetName( const std::string & p_fileurl )
+			std::string GetName( std::string const & p_fileurl )
 			{
 				return Path( p_fileurl ).GetLeaf();
 			}
 
-			std::string GetParentFolder( const std::string & p_folder )
+			std::string GetParentFolder( std::string const & p_folder )
 			{
 				return Path( p_folder ).GetPath();
 			}
 
-			std::string GetNameWithoutExtension( const std::string & p_fileurl )
+			std::string GetNameWithoutExtension( std::string const & p_fileurl )
 			{
 				std::string l_res = GetName( p_fileurl );
 				size_t l_index = l_res.find_last_of( "." );
@@ -159,7 +159,7 @@ namespace Elypse
 				return l_res;
 			}
 
-			std::string GetExtension( const std::string & p_fileurl )
+			std::string GetExtension( std::string const & p_fileurl )
 			{
 				size_t l_index = p_fileurl.find_last_of( "." );
 				std::string l_res;
@@ -172,7 +172,7 @@ namespace Elypse
 				return l_res;
 			}
 
-			DataBlockType GetType( const std::string & p_filename )
+			DataBlockType GetType( std::string const & p_filename )
 			{
 				DataBlockType l_return = EM_BLOCK_UNKNOWN;
 				std::string l_extension = GetExtension( p_filename );
@@ -218,17 +218,7 @@ namespace Elypse
 			}
 		}
 
-		DataWriter::DataWriter()
-		{
-		}
-
-		DataWriter::~DataWriter()
-		{
-			m_header.clear();
-			m_fileslist.clear();
-		}
-
-		bool DataWriter::AddFolder( const std::string & p_folder, Download::DataBlockType p_eType )
+		bool DataWriter::AddFolder( std::string const & p_folder, Download::DataBlockType p_eType )
 		{
 			bool l_return = false;
 			m_fileslist.clear();
@@ -254,7 +244,7 @@ namespace Elypse
 			return l_return;
 		}
 
-		void DataWriter::ListFiles( const std::string & p_folder )
+		void DataWriter::ListFiles( std::string const & p_folder )
 		{
 			ListDirectoryFiles( p_folder, [this]( std::string const & p_path )
 			{
@@ -262,9 +252,9 @@ namespace Elypse
 			} );
 		}
 
-		int DataWriter::CompressFile( const std::string & p_infilename, const std::string & p_outfilename )
+		int DataWriter::CompressFile( std::string const & p_infilename, std::string const & p_outfilename )
 		{
-			size_t l_totalWritten = -1;
+			int l_totalWritten = -1;
 			FILE * l_infile = fopen( p_infilename.c_str(), "rb" );
 
 			if ( l_infile )
@@ -278,11 +268,11 @@ namespace Elypse
 				else
 				{
 					uint8_t l_buffer[128];
-					size_t l_nbBytesRead = 0;
+					unsigned int l_nbBytesRead = 0;
 					size_t l_totalRead = 0;
 					l_totalWritten = 0;
 
-					while ( ( l_nbBytesRead = fread( l_buffer, sizeof( uint8_t ), sizeof( l_buffer ), l_infile ) ) > 0 )
+					while ( ( l_nbBytesRead = static_cast< unsigned int >( fread( l_buffer, sizeof( uint8_t ), sizeof( l_buffer ), l_infile ) ) ) > 0 )
 					{
 						l_totalRead += l_nbBytesRead;
 						l_totalWritten += gzwrite( l_outfile, l_buffer, l_nbBytesRead );
@@ -292,7 +282,7 @@ namespace Elypse
 					gzclose( l_outfile );
 					l_infile = fopen( p_outfilename.c_str(), "rb" );
 					fseek( l_infile, 0, SEEK_END );
-					l_totalWritten = ftell( l_infile );
+					l_totalWritten = int( ftell( l_infile ) );
 					fclose( l_infile );
 				}
 			}
@@ -329,7 +319,7 @@ namespace Elypse
 			return l_return;
 		}
 
-		bool DataWriter::AddFile( const std::string & p_fileurl, DataBlockType p_eType )
+		bool DataWriter::AddFile( std::string const & p_fileurl, DataBlockType p_eType )
 		{
 			bool l_return = false;
 			EM_Block block;
@@ -411,7 +401,7 @@ namespace Elypse
 			return l_return;
 		}
 
-		bool DataWriter::Write( const std::string & p_filename )
+		bool DataWriter::Write( std::string const & p_filename )
 		{
 			bool l_return = false;
 
@@ -472,8 +462,8 @@ namespace Elypse
 					uint32_t l_detected = ftell( l_file );
 					fseek( l_file, 0, SEEK_SET );
 					std::vector< uint8_t > l_readBuffer( l_size );
-					uint32_t l_uiRead = 0;
-					uint32_t l_uiTotal = 0;
+					size_t l_uiRead = 0;
+					size_t l_uiTotal = 0;
 
 					while ( l_uiTotal < l_size && ( l_uiRead = fread( &l_readBuffer[l_uiTotal], 1, l_size - l_uiTotal, l_file ) ) > 0 )
 					{
@@ -547,7 +537,7 @@ namespace Elypse
 		{
 			std::vector< std::string > l_return;
 
-			for ( unsigned int i = 0; i < m_header.size(); i++ )
+			for ( uint32_t i = 0; i < m_header.size(); i++ )
 			{
 				l_return.push_back( m_header[i].m_completeUrl );
 			}

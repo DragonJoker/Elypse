@@ -22,35 +22,39 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Module_Animation.h>
 
-BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE
+namespace Troll
 {
-	class TrollAnimation
-		: public TemporalObject
+	namespace ProjectComponents
 	{
-	private:
-		Elypse::Animation::EMAnimation * m_museAnimation;
-		bool m_looped;
-		float m_timein;
-		float m_timeout;
-
-	public:
-		TrollAnimation( const wxString & p_name, const wxString & p_fileName );
-		~TrollAnimation();
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void SetMuseAnimation( Elypse::Animation::EMAnimation * p_animation );
-
-		void Write( wxTextOutputStream * p_stream );
-
-	public:
-		inline void SetLooped( bool p_looped )
+		namespace Temporal
 		{
-			m_looped = p_looped;
+			class TrollAnimation
+				: public TemporalObject
+			{
+			public:
+				TrollAnimation( wxString const & p_name, wxString const & p_fileName );
+				~TrollAnimation();
+
+				void SetMuseAnimation( Elypse::Animation::EMAnimation * p_animation );
+
+				void Write( wxTextOutputStream & p_stream );
+
+				inline void SetLooped( bool p_looped )
+				{
+					m_looped = p_looped;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				Elypse::Animation::EMAnimation * m_museAnimation;
+				bool m_looped;
+				float m_timein;
+				float m_timeout;
+			};
 		}
-	};
+	}
 }
-END_TROLL_PROJECT_TEMPORAL_NAMESPACE
 
 #endif
-

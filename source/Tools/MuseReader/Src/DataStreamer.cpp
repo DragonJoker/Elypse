@@ -245,15 +245,15 @@ int CDataStreamer::GetType( wxString const & p_url )
 		std::string l_buf = make_string( p_url.substr( 0, 3 ) );
 		const std::regex l_regexDisk( "[a-zA-Z]:\\\\" );
 
-		if ( l_buf == wxT( "fil" ) || l_buf[0] == wxT( '/' ) || std::regex_search( l_buf, l_regexDisk ) )
+		if ( l_buf == "fil" || l_buf[0] == '/' || std::regex_search( l_buf, l_regexDisk ) )
 		{
 			l_return = EM_TYPE_LOCAL;
 		}
-		else if ( l_buf == wxT( "htt" ) )
+		else if ( l_buf == "htt" )
 		{
 			l_return = EM_TYPE_HTTP;
 		}
-		else if ( l_buf == wxT( "ftp" ) )
+		else if ( l_buf == "ftp" )
 		{
 			l_return = EM_TYPE_FTP;
 		}

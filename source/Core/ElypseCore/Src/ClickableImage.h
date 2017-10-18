@@ -24,17 +24,18 @@ namespace Elypse
 {
 	namespace Gui
 	{
-		class d_dll_export ClickableImage : public ClickableShape
+		class d_dll_export ClickableImage
+			: public ClickableShape
 		{
-		protected:
-			RawImage * m_raw;
-
 		public:
-			ClickableImage( const String & p_textureName, Real p_x, Real p_y );
+			ClickableImage( String const & p_textureName, Real p_x, Real p_y );
 			virtual ~ClickableImage();
 
 		public:
 			virtual bool TestClick( Real p_x, Real p_y );
+
+		protected:
+			std::shared_ptr< RawImage > m_raw;
 		};
 	}
 }

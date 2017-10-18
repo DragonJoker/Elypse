@@ -25,38 +25,38 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreSceneNode.h>
 #include <OgreVector3.h>
 
-SoundInstance::SoundInstance( SoundObject * p_parent )
-	: owned_by <SoundObject>	( p_parent ),
-		 m_node( NULL ),
-		 m_status( EM_STATUS_INIT ),
-		 m_looped( false ),
-		 m_fadeIn( false ),
-		 m_fadeOut( false ),
-		 m_isInPlaylist( false ),
-		 m_mute( false ),
-		 m_fadeInTime( 0.0 ),
-		 m_fadeOutTime( 0.0 ),
-		 m_currentTime( 0.0 ),
-		 m_timerTime( 0.0 ),
-		 m_volumePercent( 1.0 ),
-		 m_maxVolume( MAXVOLUME ),
-		 m_volume( MAXVOLUME )
+SoundInstance::SoundInstance( SoundObject & p_parent )
+	: owned_by< SoundObject >( p_parent )
+	, m_node( NULL )
+	, m_status( EM_STATUS_INIT )
+	, m_looped( false )
+	, m_fadeIn( false )
+	, m_fadeOut( false )
+	, m_isInPlaylist( false )
+	, m_mute( false )
+	, m_fadeInTime( 0.0 )
+	, m_fadeOutTime( 0.0 )
+	, m_currentTime( 0.0 )
+	, m_timerTime( 0.0 )
+	, m_volumePercent( 1.0 )
+	, m_maxVolume( MAXVOLUME )
+	, m_volume( MAXVOLUME )
 {
-//	_logMessage( "SoundObject - Media loaded - " + m_soundName);
-	unsigned int l_duration = 0;
+	//_logMessage( "SoundObject - Media loaded - " + m_soundName);
+	uint32_t l_duration = 0;
 
-	if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( FMOD_CHANNEL_FREE, m_owner->GetFMODSound(), true, & m_channel ) ) )
+	if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( GetOwner()->GetFMODSound(), nullptr, true, & m_channel ) ) )
 	{
 		m_mediaTime = 0.0;
 		m_status = EM_STATUS_NONE;
-		EMUSE_MESSAGE_RELEASE( "Sound " + m_owner->GetName() + ", could not create the instance" );
+		EMUSE_MESSAGE_RELEASE( "Sound " + GetOwner()->GetName() + ", could not create the instance" );
 		return;
 	}
 
-	CHECKFMODERROR( m_owner->GetFMODSound()->getLength( & l_duration, FMOD_TIMEUNIT_MS ) );
-	m_mediaTime = static_cast <Real>( l_duration );
+	CHECKFMODERROR( GetOwner()->GetFMODSound()->getLength( & l_duration, FMOD_TIMEUNIT_MS ) );
+	m_mediaTime = Real( l_duration );
 	m_status = EM_STATUS_READY;
-	EMUSE_MESSAGE_DEBUG( "SoundInstance create : " + m_owner->GetName() + ", timed : " + StringConverter::toString( m_mediaTime ) );
+	EMUSE_MESSAGE_DEBUG( "SoundInstance create : " + GetOwner()->GetName() + ", timed : " + StringConverter::toString( m_mediaTime ) );
 }
 
 SoundInstance::~SoundInstance()
@@ -81,7 +81,7 @@ void SoundInstance::SetNode( SceneNode * p_node )
 
 void SoundInstance::_set3D()
 {
-//	CHECKFMODERROR( m_owner->GetFMODSound()->setMode( FMOD_3D));
+	//CHECKFMODERROR( GetOwner()->GetFMODSound()->setMode( FMOD_3D));
 	CHECKFMODERROR( m_channel->setMode( FMOD_3D ) );
 	FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
 	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
@@ -149,7 +149,7 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 
 	if ( m_status != EM_STATUS_LOOP && m_currentTime < m_mediaTime )
 	{
-		unsigned int l_time = 0;
+		uint32_t l_time = 0;
 
 		if ( ! CHECKFMODERROR( m_channel->getPosition( & l_time, FMOD_TIMEUNIT_MS ) ) )
 		{
@@ -157,7 +157,7 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 			return;
 		}
 
-		m_currentTime = static_cast <Real>( l_time );
+		m_currentTime = Real( l_time );
 
 		if ( l_time == 0 && ! m_looped )
 		{
@@ -187,7 +187,7 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 				return;
 			}
 
-			if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( FMOD_CHANNEL_REUSE, m_owner->GetFMODSound(), false, & m_channel ) ) )
+			if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( GetOwner()->GetFMODSound(), nullptr, false, & m_channel ) ) )
 			{
 				m_status = EM_STATUS_NONE;
 				return;
@@ -270,15 +270,15 @@ void SoundInstance::Play()
 	{
 		if ( ! CHECKFMODERROR( m_channel->setPaused( false ) ) )
 		{
-			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + m_owner->GetName() );
+			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + GetOwner()->GetName() );
 			return;
 		}
 	}
 	else
 	{
-		if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( FMOD_CHANNEL_FREE, m_owner->GetFMODSound(), false, & m_channel ) ) )
+		if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( GetOwner()->GetFMODSound(), nullptr, false, & m_channel ) ) )
 		{
-			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + m_owner->GetName() );
+			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + GetOwner()->GetName() );
 			return;
 		}
 

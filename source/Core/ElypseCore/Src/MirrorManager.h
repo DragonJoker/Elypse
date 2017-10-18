@@ -26,17 +26,18 @@ namespace Elypse
 {
 	namespace SpecialEffects
 	{
-		class d_dll_export MirrorManager : public Manager<Mirror>
+		class d_dll_export MirrorManager
+			: public Manager< Mirror >
 		{
 			String m_instanceKey;
 		public:
-			MirrorManager( const String & p_instanceKey );
+			MirrorManager( String const & p_instanceKey );
 			~MirrorManager();
 
 		public:
 			void UpdateAll()const;
 
-			inline const String & GetInstanceKey()const
+			inline String const & GetInstanceKey()const
 			{
 				return m_instanceKey;
 			}

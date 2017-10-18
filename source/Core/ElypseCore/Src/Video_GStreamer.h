@@ -31,28 +31,11 @@ namespace Elypse
 {
 	namespace Media
 	{
-		class d_dll_export VideoImpl_GStreamer : public VideoImplementation
+		class d_dll_export VideoImpl_GStreamer
+			: public VideoImplementation
 		{
-		private:
-			bool m_videoLinked;
-			GstEltSet m_binEltSet;
-
-			GstElement * m_fileSrc;
-			GstElement * m_typeFind;
-			GstElement * m_audioQueue;
-			GstElement * m_audioConverter;
-			GstElement * m_audioSink;
-			GstElement * m_videoQueue;
-			GstElement * m_videoConverter;
-			GstElement * m_videoScaler;
-			GstElement * m_videoScaleFilter;
-			GstElement * m_videoSink;
-			GstElement * m_pipeline;
-			GstCaps * m_videoCaps;
-			char * m_mediaUrlStr;
-
 		public:
-			VideoImpl_GStreamer( VideoObject * p_owner );
+			VideoImpl_GStreamer( VideoObject & p_owner );
 			virtual ~VideoImpl_GStreamer();
 
 		public:
@@ -60,7 +43,7 @@ namespace Elypse
 			virtual bool Stop();
 			virtual bool Pause();
 			virtual void Reset();
-			virtual void Initialise( const Url & p_mediaUrl );
+			virtual void Initialise( Url const & p_mediaUrl );
 			virtual bool Update( Real p_time )
 			{
 				return true;
@@ -82,6 +65,23 @@ namespace Elypse
 			bool _tryToPlugVideo( GstPad * p_pad, const GstCaps * p_caps );
 			void _cleanup();
 
+		private:
+			bool m_videoLinked;
+			GstEltSet m_binEltSet;
+
+			GstElement * m_fileSrc;
+			GstElement * m_typeFind;
+			GstElement * m_audioQueue;
+			GstElement * m_audioConverter;
+			GstElement * m_audioSink;
+			GstElement * m_videoQueue;
+			GstElement * m_videoConverter;
+			GstElement * m_videoScaler;
+			GstElement * m_videoScaleFilter;
+			GstElement * m_videoSink;
+			GstElement * m_pipeline;
+			GstCaps * m_videoCaps;
+			char * m_mediaUrlStr;
 		};
 	}
 }

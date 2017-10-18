@@ -24,54 +24,52 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <OgrePrerequisites.h>
 
-#define TROLL_PROJECT_2D_NAMESPACE TROLL_PROJECT_NAMESPACE::Objects2D
-#define BEGIN_TROLL_PROJECT_2D_NAMESPACE BEGIN_TROLL_PROJECT_NAMESPACE { namespace Objects2D
-#define END_TROLL_PROJECT_2D_NAMESPACE END_TROLL_PROJECT_NAMESPACE }
-
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	namespace Objects2D
+	namespace ProjectComponents
 	{
-		enum TEHorizAlign
+		namespace Objects2D
 		{
-			hNone = -1,
-			hLeft = 0,
-			hCenter = 1,
-			hRight = 2
-		};
-		enum TEVerticAlign
-		{
-			vNone = -1,
-			vTop = 0,
-			vCenter = 1,
-			vBottom = 2
-		};
+			enum TEHorizAlign
+			{
+				hNone = -1,
+				hLeft = 0,
+				hCenter = 1,
+				hRight = 2
+			};
+			enum TEVerticAlign
+			{
+				vNone = -1,
+				vTop = 0,
+				vCenter = 1,
+				vBottom = 2
+			};
 
-		struct TextInfos
-		{
-			wxString m_caption;
-			Ogre::ColourValue m_textColour;
-			wxString m_fontName;
-			float m_fontSize;
-			TEHorizAlign m_horizontalAlign;
-			TEVerticAlign m_verticalAlign;
-		};
+			struct TextInfos
+			{
+				wxString m_caption;
+				Ogre::ColourValue m_textColour;
+				wxString m_fontName;
+				float m_fontSize;
+				TEHorizAlign m_horizontalAlign;
+				TEVerticAlign m_verticalAlign;
+			};
 
-		struct BorderInfos
-		{
-			wxString m_material;
-			float m_top;
-			float m_bottom;
-			float m_left;
-			float m_right;
-		};
+			struct BorderInfos
+			{
+				wxString m_material;
+				float m_top;
+				float m_bottom;
+				float m_left;
+				float m_right;
+			};
 
-		class TrollOverlay;
+			class TrollOverlay;
 
-		typedef std::map< wxString, TrollOverlay * > TrollOverlayMap;
-		typedef std::vector< TrollOverlay * > TrollOverlayArray;
+			typedef std::map< wxString, TrollOverlay * > TrollOverlayMap;
+			typedef std::vector< TrollOverlay * > TrollOverlayArray;
+		}
 	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

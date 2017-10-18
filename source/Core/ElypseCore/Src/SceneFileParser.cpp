@@ -33,9 +33,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <File.h>
 
-SceneFileParser::SceneFileParser( const String & p_appIndexStr, const Path & p_baseDirectory )
-	: m_baseDirectory( p_baseDirectory ),
-		m_appIndexStr( p_appIndexStr )
+SceneFileParser::SceneFileParser( String const & p_appIndexStr, const Path & p_baseDirectory )
+	: m_baseDirectory( p_baseDirectory )
+	, m_appIndexStr( p_appIndexStr )
 {
 	m_rootParsers					["background_colour"] = Parser_RootBackgroundColour;
 	m_rootParsers					["start_scene"] = Parser_RootStartScene;
@@ -402,7 +402,7 @@ void SceneFileParser::ParseScript( ConfigFile * p_configFile )
 {
 	bool nextIsOpenBrace = false;
 	bool commented = false;
-	const String & l_fileDescName = p_configFile->GetDescriptiveName();
+	String const & l_fileDescName = p_configFile->GetDescriptiveName();
 	EMUSE_LOG_MESSAGE_RELEASE( "SceneFileParser : Parsing script [" + l_fileDescName + "]" );
 	p_configFile->Use();
 	std::ifstream l_stream;

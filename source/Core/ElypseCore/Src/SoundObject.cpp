@@ -30,15 +30,15 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Zone.h"
 #include "ElypseLogs.h"
 
-SoundObject::SoundObject( const String & p_name )
-	: named( p_name ),
-		m_globalInstance( NULL ),
-		m_useCount( 0 ),
-		m_type( EM_NONE ),
-		m_looped( false ),
-		m_muted( false ),
-		m_global( true ),
-		m_volumePercent( MAXVOLUME )
+SoundObject::SoundObject( String const & p_name )
+	: named( p_name )
+	, m_globalInstance( NULL )
+	, m_useCount( 0 )
+	, m_type( EM_NONE )
+	, m_looped( false )
+	, m_muted( false )
+	, m_global( true )
+	, m_volumePercent( MAXVOLUME )
 {
 	EMUSE_MESSAGE_DEBUG( "SoundObject::SoundObject( " + m_name + ")" );
 }
@@ -77,7 +77,7 @@ void SoundObject::Mute( bool p_mute )
 	}
 }
 
-void SoundObject::SetSoundUrl( const String & p_soundURL )
+void SoundObject::SetSoundUrl( String const & p_soundURL )
 {
 	m_soundURL = p_soundURL;
 }
@@ -98,7 +98,7 @@ void SoundObject::Initialise()
 
 	if ( m_global )
 	{
-		m_globalInstance = new SoundInstance( this );
+		m_globalInstance = new SoundInstance( *this );
 
 		if ( m_type == EM_MUSIC )
 		{
@@ -129,7 +129,7 @@ SoundInstance * SoundObject::CreateInstance( SceneNode * p_node )
 		return l_instance;
 	}
 
-	l_instance = new SoundInstance( this );
+	l_instance = new SoundInstance( *this );
 
 	if ( m_type == EM_MUSIC )
 	{
@@ -146,7 +146,7 @@ SoundInstance * SoundObject::CreateInstance( SceneNode * p_node )
 	return l_instance;
 }
 
-void SoundObject::RemoveNode( const String & p_nodeName )
+void SoundObject::RemoveNode( String const & p_nodeName )
 {
 	General::Utils::map::deleteValue( m_instances, p_nodeName );
 	m_useCount --;
@@ -251,7 +251,7 @@ void SoundObject::UpdateFade( Real p_time )
 	}
 }
 
-void SoundObject::SetLocal( const String & p_zone )
+void SoundObject::SetLocal( String const & p_zone )
 {
 	m_zone = p_zone;
 	m_global = false;

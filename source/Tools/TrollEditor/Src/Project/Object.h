@@ -22,59 +22,69 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Displayable.h"
 
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	class Object
-		: public Displayable
+	namespace ProjectComponents
 	{
-	public:
-		Object( const wxString & p_name, const wxString & p_fileName, ObjectType p_type );
+		class Object
+			: public Displayable
+		{
+		public:
+			Object( wxString const & p_name, wxString const & p_fileName, ObjectType p_type );
 
-		inline ObjectType GetObjectType()const
-		{
-			return m_objectType;
-		}
-		inline const wxString & GetObjectName()const
-		{
-			return m_name;
-		}
-		inline State GetState()const
-		{
-			return m_state;
-		}
-		inline bool IsVisible()const
-		{
-			return m_visible;
-		}
-		inline const wxString & GetFileName()const
-		{
-			return m_fileName;
-		}
-		inline void SetObjectName( const wxString & p_name )
-		{
-			m_name = p_name;
-		}
-		inline void SetState( State p_state )
-		{
-			m_state = p_state;
-		}
-		inline void SetVisible( bool p_visible )
-		{
-			m_visible = p_visible;
-		}
-		inline void SetFileName( const wxString & p_name )
-		{
-			m_fileName = p_name;
-		}
+			inline ObjectType GetObjectType()const
+			{
+				return m_objectType;
+			}
 
-	protected:
-		wxString m_name;
-		State m_state;
-		bool m_visible;
-		wxString m_fileName;
-		ObjectType m_objectType;
-	};
+			inline wxString const & GetObjectName()const
+			{
+				return m_name;
+			}
+
+			inline State GetState()const
+			{
+				return m_state;
+			}
+
+			inline bool IsVisible()const
+			{
+				return m_visible;
+			}
+
+			inline wxString const & GetFileName()const
+			{
+				return m_fileName;
+			}
+
+			inline void SetObjectName( wxString const & p_name )
+			{
+				m_name = p_name;
+			}
+
+			inline void SetState( State p_state )
+			{
+				m_state = p_state;
+			}
+
+			inline void SetVisible( bool p_visible )
+			{
+				m_visible = p_visible;
+			}
+
+			inline void SetFileName( wxString const & p_name )
+			{
+				m_fileName = p_name;
+			}
+
+		protected:
+			wxString m_name;
+			State m_state;
+			bool m_visible;
+			wxString m_fileName;
+			ObjectType m_objectType;
+		};
+	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

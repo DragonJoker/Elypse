@@ -35,29 +35,24 @@ http://www.gnu.org/copyleft/lesser.txt.
 #	undef nabs
 #endif
 
-#define min min
-#define max max
-#define abs abs
-#define nabs nabs
-
 namespace General
 {
 	namespace Utils
 	{
-		template <typename T>
-		inline const T & min( const T & p_a, const T & p_b )
+		template< typename T >
+		inline T const & min( T const & p_a, T const & p_b )
 		{
 			return ( ( p_a < p_b ) ? p_a : p_b );
 		}
 
-		template <typename T>
-		inline const T & max( const T & p_a, const T & p_b )
+		template< typename T >
+		inline T const & max( T const & p_a, T const & p_b )
 		{
 			return ( ( p_a > p_b ) ? p_a : p_b );
 		}
 
-		template <typename T>
-		inline const T & minmax( const T & p_min, const T & p_value, const T & p_max )
+		template< typename T >
+		inline T const & minmax( T const & p_min, T const & p_value, T const & p_max )
 		{
 			if ( p_value < p_min )
 			{
@@ -72,8 +67,8 @@ namespace General
 			return p_value;
 		}
 
-		template <typename T>
-		inline void clamp( const T & p_min, T & p_value, const T & p_max )
+		template< typename T >
+		inline void clamp( T const & p_min, T & p_value, T const & p_max )
 		{
 			if ( p_value < p_min )
 			{
@@ -87,16 +82,16 @@ namespace General
 			}
 		}
 
-		template <typename T>
-		inline T abs( const T & p_value )
+		template< typename T >
+		inline T abs( T const & p_value )
 		{
-			return ( ( p_value < T() ) ? -p_value : p_value );
+			return ( ( p_value < T{} ) ? -p_value : p_value );
 		}
 
-		template <typename T>
-		inline T nabs( const T & p_value )
+		template< typename T >
+		inline T nabs( T const & p_value )
 		{
-			return ( ( p_value < T() ) ? p_value : -p_value );
+			return ( ( p_value < T{} ) ? p_value : -p_value );
 		}
 	}
 }

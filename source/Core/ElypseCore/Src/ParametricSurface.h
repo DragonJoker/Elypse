@@ -34,21 +34,21 @@ namespace Elypse
 			AxisAlignedBox * m_box;
 //		ManualObject * m_object;
 
-			unsigned int m_resolution;
-			unsigned int m_numControlPoints;
-			unsigned int m_currentControlPointIndex;
-			unsigned int m_currentDepth;
+			uint32_t m_resolution;
+			uint32_t m_numControlPoints;
+			uint32_t m_currentControlPointIndex;
+			uint32_t m_currentDepth;
 
 //		String m_name;
 
 		public:
-			ParametricSurface( SceneManager * p_manager, const String & p_name, unsigned int p_resolution, unsigned int p_numControlPoints );
+			ParametricSurface( SceneManager * p_manager, String const & p_name, uint32_t p_resolution, uint32_t p_numControlPoints );
 			~ParametricSurface();
 
 		public:
 			void Draw();
 			void AddControlPoint( const Vector3 & p_controlPoint );
-			void CreateAtDepth( unsigned int p_depth );
+			void CreateAtDepth( uint32_t p_depth );
 
 			void Update( Camera * p_camera );
 

@@ -36,7 +36,7 @@ namespace Elypse
 		{
 			friend ScriptCompiler;
 		public:
-			static unsigned int sm_numNodes;
+			static uint32_t sm_numNodes;
 
 			NodeValueBase * m_value;
 			RawFunction * m_function;
@@ -50,11 +50,11 @@ namespace Elypse
 
 			UserFunction * m_userFunction;
 
-			unsigned int m_numUses;
-			unsigned int m_createdAtLine;
+			uint32_t m_numUses;
+			uint32_t m_createdAtLine;
 
 		public:
-			ScriptNode( ConfigFile * p_file = NULL, unsigned int p_lineNum = 0 );
+			ScriptNode( ConfigFile * p_file = NULL, uint32_t p_lineNum = 0 );
 			~ScriptNode();
 
 			void _reinit();
@@ -92,7 +92,7 @@ namespace Elypse
 			{
 				m_childs.push_back( p_child );
 			}
-			inline void ReserveChilds( unsigned int p_numChilds )
+			inline void ReserveChilds( uint32_t p_numChilds )
 			{
 				m_childs.reserve( p_numChilds );
 			}
@@ -129,15 +129,15 @@ namespace Elypse
 			}
 			VariableBaseType GetBaseType()const;
 
-			inline void SetOrigin( ConfigFile * p_file, unsigned int p_lineNum )
+			inline void SetOrigin( ConfigFile * p_file, uint32_t p_lineNum )
 			{
 				m_file = p_file;
 				m_createdAtLine = p_lineNum;
 			}
 
 		protected:
-			template <typename T>
-			static inline NodeValueBase * _createValueBase( const T & p_value = T() )
+			template< typename T >
+			static inline NodeValueBase * _createValueBase( T const & p_value = T() )
 			{
 				NodeValue <T> * l_value = new NodeValue <T> ();
 				l_value->m_value = p_value;
@@ -145,8 +145,8 @@ namespace Elypse
 			}
 
 		public:
-			template <typename T>
-			inline void set( const T & p_value = T() )
+			template< typename T >
+			inline void set( T const & p_value = T() )
 			{
 				if ( m_value == NULL )
 				{
@@ -165,7 +165,7 @@ namespace Elypse
 				}
 			}
 
-			template <typename T>
+			template< typename T >
 			inline T & get()
 			{
 				if ( m_value != NULL )

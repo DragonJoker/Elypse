@@ -32,15 +32,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 extern "C"
 {
 	__declspec( dllimport ) void __stdcall Sleep( unsigned long );
-	__declspec( dllimport ) unsigned int __stdcall GetWindowsDirectoryA( char * lpBuffer, unsigned int uSize );
-	__declspec( dllimport ) void __stdcall QueryPerformanceCounter( long long * p_perfCount );
-	__declspec( dllimport ) void __stdcall QueryPerformanceFrequency( long long * p_perfFreq );
+	__declspec( dllimport ) uint32_t __stdcall GetWindowsDirectoryA( char * lpBuffer, uint32_t uSize );
 	__declspec( dllimport ) int __stdcall GetSystemMetrics( int p_code );
 }
 
 #	endif
 
-#	define GENLIB_SLEEP( time) Sleep( time)
+#	define GENLIB_SLEEP( time ) Sleep( time )
 
 #elif GENLIB_LINUX || GENLIB_MACOS
 
@@ -83,7 +81,7 @@ namespace General
 	}
 }
 
-#	define GENLIB_SLEEP( time) General::Utils::Sleep( time / 1000.0)
+#	define GENLIB_SLEEP( time ) General::Utils::Sleep( time / 1000.0 )
 
 #endif
 #endif

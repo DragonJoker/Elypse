@@ -24,33 +24,35 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 class wxListBox;
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class FolderList
-		: public wxDialog
+	namespace GUI
 	{
-	private:
-		wxListBox * m_filesList;
-		wxString m_folder;
+		class FolderList
+			: public wxDialog
+		{
+		private:
+			wxListBox * m_filesList;
+			wxString m_folder;
 
-	public:
-		FolderList( const wxString & p_folder, wxWindow * p_parent, const wxPoint & p_position = wxPoint( 100, 100 ) );
-		~FolderList();
+		public:
+			FolderList( wxString const & p_folder, wxWindow * p_parent, wxPoint const & p_position = wxPoint( 100, 100 ) );
+			~FolderList();
 
-		void RemoveFile( const wxString & p_file );
-		void AddFile( const wxString & p_file );
+			void RemoveFile( wxString const & p_file );
+			void AddFile( wxString const & p_file );
 
-	private:
-		void _listFolder();
-		void OnQuit( wxCommandEvent & p_event );
-		void OnAddFile( wxCommandEvent & p_event );
-		void OnDelFile( wxCommandEvent & p_event );
-		void OnKeyUp( wxKeyEvent & p_event );
+		private:
+			void _listFolder();
+			void OnQuit( wxCommandEvent & p_event );
+			void OnAddFile( wxCommandEvent & p_event );
+			void OnDelFile( wxCommandEvent & p_event );
+			void OnKeyUp( wxKeyEvent & p_event );
 
-	private:
-		DECLARE_EVENT_TABLE()
-	};
+		private:
+			DECLARE_EVENT_TABLE()
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif

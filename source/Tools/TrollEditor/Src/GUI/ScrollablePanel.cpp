@@ -19,24 +19,28 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "GUI/ScrollablePanel.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	BEGIN_EVENT_TABLE( TEScrollablePanel, wxPanel )
-		EVT_SCROLL( TEScrollablePanel::OnScroll )
-	END_EVENT_TABLE()
-
-	TEScrollablePanel::TEScrollablePanel( wxWindow * p_parent, wxWindowID p_id, wxPoint p_position, wxSize p_size )
-		: wxPanel( p_parent, p_id, p_position, p_size, wxVSCROLL | wxALWAYS_SHOW_SB )
+	namespace GUI
 	{
-	}
+		BEGIN_EVENT_TABLE( TEScrollablePanel, wxPanel )
+			EVT_SCROLL( TEScrollablePanel::OnScroll )
+		END_EVENT_TABLE()
 
-	TEScrollablePanel::~TEScrollablePanel()
-	{
-	}
+		TEScrollablePanel::TEScrollablePanel( wxWindow * p_parent, wxWindowID p_id, wxPoint p_position, wxSize p_size )
+			: wxPanel( p_parent, p_id, p_position, p_size, wxVSCROLL | wxALWAYS_SHOW_SB )
+		{
+			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
+			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+		}
 
-	void TEScrollablePanel::OnScroll( wxScrollEvent & p_event )
-	{
-		std::cout << "TEScrollablePanel::_onScroll";
+		TEScrollablePanel::~TEScrollablePanel()
+		{
+		}
+
+		void TEScrollablePanel::OnScroll( wxScrollEvent & p_event )
+		{
+			std::cout << "TEScrollablePanel::_onScroll";
+		}
 	}
 }
-END_TROLL_GUI_NAMESPACE

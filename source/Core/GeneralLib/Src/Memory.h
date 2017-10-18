@@ -93,32 +93,32 @@ namespace General
 		{
 		public:
 			MemoryBlock()
-				: file( NULL )
-				, function( NULL )
-				, ptr( NULL )
-				, line( 0 )
-				, size( 0 )
-				, isArray( false )
+				: file{ nullptr }
+				, function{ nullptr }
+				, line{ 0 }
+				, ptr{ nullptr }
+				, size{ 0 }
+				, isArray{ false }
 			{
 			}
 
-			MemoryBlock( const char * p_file, const char * p_function, unsigned int p_line )
-				: file( p_file )
-				, function( p_function )
-				, ptr( NULL )
-				, line( p_line )
-				, size( 0 )
-				, isArray( false )
+			MemoryBlock( char const * p_file, char const * p_function, uint32_t p_line )
+				: file{ p_file }
+				, function{ p_function }
+				, line{ p_line }
+				, ptr{ nullptr }
+				, size{ 0 }
+				, isArray{ false }
 			{
 			}
 
 			MemoryBlock( void * p_ptr, size_t p_size, bool p_array )
-				: file( NULL )
-				, function( NULL )
-				, ptr( p_ptr )
-				, line( 0 )
-				, size( p_size )
-				, isArray( p_array )
+				: file{ nullptr }
+				, function{ nullptr }
+				, ptr{ p_ptr }
+				, line{ 0 }
+				, size{ p_size }
+				, isArray{ p_array }
 			{
 			}
 
@@ -126,7 +126,7 @@ namespace General
 			{
 			}
 
-			MemoryBlock & operator = ( const MemoryBlock & p_other )
+			MemoryBlock & operator=( MemoryBlock const & p_other )
 			{
 				file = p_other.file;
 				function = p_other.function;
@@ -136,20 +136,20 @@ namespace General
 
 			void Clear()
 			{
-				file = NULL;
-				function = NULL;
-				ptr = NULL;
+				file = nullptr;
+				function = nullptr;
+				ptr = nullptr;
 				line = 0;
 				size = 0;
 				isArray = false;
 			}
 
 		public:
-			const char * file;
-			const char * function;
+			char const * file;
+			char const * function;
 			void * ptr;
-			unsigned int line;
-			size_t size;
+			uint32_t line;
+			uint64_t size;
 			bool isArray;
 		};
 
@@ -157,31 +157,25 @@ namespace General
 			: public General::Theory::AutoSingleton< MemoryManager >
 		{
 		public:
-			MemoryManager( const char * p_logLocation = GENLIB_LOG_LOCATION );
+			MemoryManager( char const * const p_logLocation = GENLIB_LOG_LOCATION );
 			~MemoryManager();
 
-		public:
 			void AddLocation( size_t p_size, void * p_pointer, bool p_typeArray );
 			bool RemoveLocation( void * p_pointer, bool p_isArray );
 			void FailedAlloc( size_t p_size, bool p_isArray );
-			void MemoryLeaksReport( const std::string & p_filename = std::string() );
+			void MemoryLeaksReport( std::string const & p_filename = std::string() );
 			void RecordAllocation( size_t p_size );
 			void RecordDeallocation( size_t p_size );
 
-			MemoryManager & operator <<( const MemoryBlock & p_block );
+			MemoryManager & operator<<( MemoryBlock const & p_block );
 
-			template <typename T>
-			T * operator <<( T * p_ptr )
+			template< typename T >
+			inline T * operator<<( T * p_ptr )
 			{
-				_localise( p_ptr );
+				doLocalise( p_ptr );
 				return p_ptr;
 			}
 
-		private:
-			void _finalReport();
-			void _localise( void * p_ptr );
-
-		public:
 			static inline void Lock()
 			{
 				GetSingleton().m_locked = true;
@@ -200,25 +194,29 @@ namespace General
 			}
 
 		private:
-			static unsigned int sm_initialised;
-			const char * m_logLocation;
+			void doFinalReport();
+			void doLocalise( void * p_ptr );
+
+		private:
+			static uint32_t sm_initialised;
+			char const * const m_logLocation;
 
 			typedef std::map< void *, MemoryBlock > MemoryBlockMap;
 			typedef std::vector< MemoryBlock > MemoryBlockArray;
 
 		public:
-			General::MultiThreading::RecursiveMutex m_mutex;
+			std::recursive_mutex m_mutex;
 			MemoryBlock m_lastBlock;
 			MemoryBlockMap m_memoryMap;
 			MemoryBlockArray m_failedNews;
 			MemoryBlockArray m_failedDeletes;
 
 			bool m_locked;
-			size_t m_currentMemoryAllocated;
-			size_t m_maximumMemoryAllocated;
-			size_t m_totalObjectsAllocated;
-			size_t m_totalArraysAllocated;
-			unsigned long long m_totalMemoryAllocated;
+			uint64_t m_currentMemoryAllocated;
+			uint64_t m_maximumMemoryAllocated;
+			uint64_t m_totalObjectsAllocated;
+			uint64_t m_totalArraysAllocated;
+			uint64_t m_totalMemoryAllocated;
 		};
 	}
 }

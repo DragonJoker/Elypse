@@ -72,7 +72,7 @@ namespace Elypse
 			Real m_defaultDampingAngular;
 
 		public:
-			PhysicsSimulation( const String & p_name );
+			PhysicsSimulation( String const & p_name );
 			~PhysicsSimulation();
 
 		private:
@@ -86,20 +86,20 @@ namespace Elypse
 			void Update();
 			void Render();
 			PhysicsObject * CreateObject( Entity * p_entity, bool p_static = false, bool p_phantom = false );
-			PhysicsObject * CreateObject( const String & p_name );
-			void DestroyObject( const String & p_name );
+			PhysicsObject * CreateObject( String const & p_name );
+			void DestroyObject( String const & p_name );
 			void DestroyObject( PhysicsObject * p_object );
-			PhysicsObject * CloneObject( PhysicsObject * p_object, const String & p_clonedName, Space * p_newSpace = NULL );
+			PhysicsObject * CloneObject( PhysicsObject * p_object, String const & p_clonedName, Space * p_newSpace = NULL );
 
 			void SetCFM( Real p_cfm );
 			void SetERP( Real p_erp );
 			void SetGravity( const Vector3 & p_gravity );
 
-			void ClearObjects( bool p_recreateDefaults = true ) d_no_throw;
-			void ClearSpaces( bool p_recreateDefaults = true ) d_no_throw;
+			void ClearObjects( bool p_recreateDefaults = true ) noexcept;
+			void ClearSpaces( bool p_recreateDefaults = true ) noexcept;
 
-			Space * CreateSpace( const String & p_name, bool p_autoUpdated );
-			bool DestroySpace( const String & p_name );
+			Space * CreateSpace( String const & p_name, bool p_autoUpdated );
+			bool DestroySpace( String const & p_name );
 
 			void SetDefaultAutoDisable( Real p_time, Real p_linear, Real p_angular );
 			void SetDefaultDamping( Real p_linear, Real p_angular );
@@ -200,11 +200,11 @@ namespace Elypse
 				return m_defaultDampingAngular;
 			}
 
-			inline PhysicsObject * GetObjectByName( const String & p_name )const
+			inline PhysicsObject * GetObjectByName( String const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_objects, p_name );
 			}
-			inline Space *	GetSpace( const String & p_name )const
+			inline Space *	GetSpace( String const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_spaces, p_name );
 			}

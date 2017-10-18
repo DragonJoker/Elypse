@@ -40,15 +40,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 	_log( "Compiler Warning [ " + _getScriptFileName()						\
 							+ " @ L# " + StringConverter::toString( p_block->m_lineNumBegin)	\
 							+ " ] -> " + p_desc );												\
- 
 
 UserFunction * Elypse::Script::ScriptCompiler::_compileUserFunction( ScriptBlockArray & p_childs, bool p_predeclareOnly )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_compileUserFunction" );
 //	_printBlockArray( "_compileUserFunction", p_childs);
 	ScriptBlockArray l_array;
-	unsigned int imax = static_cast <unsigned int>( p_childs.size() );
-	unsigned int l_current = 0;
+	uint32_t imax = static_cast <uint32_t>( p_childs.size() );
+	uint32_t l_current = 0;
 
 	do
 	{
@@ -66,7 +65,7 @@ UserFunction * Elypse::Script::ScriptCompiler::_compileUserFunction( ScriptBlock
 	}
 
 	l_array.clear();
-	const String & l_name = p_childs[l_current]->m_contents;
+	String const & l_name = p_childs[l_current]->m_contents;
 	UserFunction * l_function = GetUserFunction( l_name );
 	l_current ++;
 
@@ -81,8 +80,8 @@ UserFunction * Elypse::Script::ScriptCompiler::_compileUserFunction( ScriptBlock
 		}
 
 		ScriptBlock * l_params = p_childs[l_current];
-		unsigned int imax = static_cast <unsigned int>( l_params->m_childs.size() );
-		unsigned int j = 0;
+		uint32_t imax = static_cast <uint32_t>( l_params->m_childs.size() );
+		uint32_t j = 0;
 
 		while ( j < imax )
 		{
@@ -115,7 +114,7 @@ UserFunction * Elypse::Script::ScriptCompiler::_compileUserFunction( ScriptBlock
 					}
 
 					l_function->m_paramNodes.push_back( l_userVar );
-//					std::cout << "added param : " << l_params->m_childs[j]->m_contents << " typed : " << l_type->GetDesc() << std::endl;
+					//std::cout << "added param : " << l_params->m_childs[j]->m_contents << " typed : " << l_type->GetDesc() << std::endl;
 				}
 
 				j ++;
@@ -156,7 +155,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileSentence( ScriptBlockArray 
 		return p_childs[0]->m_compiledScript;
 	}
 
-	unsigned int l_typeList = _getTypeList( p_childs );
+	uint32_t l_typeList = _getTypeList( p_childs );
 
 	try
 	{
@@ -317,9 +316,9 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBlo
 	ScriptBlockArray l_rightOperands, l_leftOperands;
 	ScriptNode * l_rightNode = NULL, * l_leftNode = NULL;
 	bool l_rightPart = false;
-	unsigned int imax = static_cast <unsigned int>( p_blockArray.size() );
+	uint32_t imax = static_cast <uint32_t>( p_blockArray.size() );
 
-	for ( unsigned int i = 0 ; i < imax ; i ++ )
+	for ( uint32_t i = 0 ; i < imax ; i ++ )
 	{
 		if ( l_rightPart )
 		{
@@ -385,7 +384,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBlo
 						//TODO : user function use with params
 						ScriptNode * l_returnValue = l_function->m_returnNode;
 						ScriptNode * l_numParamsNode = CreateScriptNode( l_rightOperands[0]->m_lineNumBegin );
-						unsigned int l_numParams = static_cast <unsigned int>( l_function->m_params.size() );
+						uint32_t l_numParams = static_cast <uint32_t>( l_function->m_params.size() );
 						l_numParamsNode->SetType( VariableTypeManager::Get( EMVT_INT ) );
 						l_numParamsNode->set<int>( l_numParams );
 						ScriptNodeArray l_childsNodes = l_userFunctionNode->m_childs;
@@ -393,14 +392,14 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileOperatedSentence( ScriptBlo
 						l_userFunctionNode->AddChild( l_returnValue );
 						l_userFunctionNode->AddChild( l_numParamsNode );
 
-						for ( unsigned int i = 0 ; i < l_numParams ; i ++ )
+						for ( uint32_t i = 0 ; i < l_numParams ; i ++ )
 						{
 							l_userFunctionNode->AddChild( l_function->m_paramNodes[i] );
 						}
 
 						l_userFunctionNode->AddChild( l_function->m_node );
 
-						for ( unsigned int i = 0 ; i < l_numParams ; i ++ )
+						for ( uint32_t i = 0 ; i < l_numParams ; i ++ )
 						{
 							l_userFunctionNode->AddChild( l_childsNodes[i] );
 						}
@@ -471,9 +470,9 @@ ScriptBlock * Elypse::Script::ScriptCompiler::_getHighestOperator( ScriptBlockAr
 	VERBOSE_COMPILATOR_INTERNAL( "_getHighestOperator" );
 	OperatorLevel l_level = SO_NONE;
 	ScriptBlock * l_block = NULL;
-	unsigned int imax = static_cast <unsigned int>( p_blockArray.size() );
+	uint32_t imax = static_cast <uint32_t>( p_blockArray.size() );
 
-	for ( unsigned int i = 0 ; i < imax ; i ++ )
+	for ( uint32_t i = 0 ; i < imax ; i ++ )
 	{
 		if ( p_blockArray[i]->m_type == BT_OPERATOR )
 		{
@@ -532,7 +531,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArra
 	l_finalNode->SetFunction( p_function->m_function );
 	VariableType * l_retType = _substituteVarType( p_function->m_return, ( p_classInstance != NULL ? p_classInstance->GetType() : NULL ) );
 	l_finalNode->SetType( l_retType );
-	unsigned int l_functionParamIndex = 0;
+	uint32_t l_functionParamIndex = 0;
 
 	if ( p_function->m_params.size() == 0 )
 	{
@@ -553,7 +552,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArra
 		l_functionParamIndex = 1;
 	}
 
-	unsigned int imax = static_cast <unsigned int>( p_blockArray.size() );
+	uint32_t imax = static_cast <uint32_t>( p_blockArray.size() );
 
 	for ( size_t i = 0; i < p_blockArray.size(); ++i )
 	{
@@ -580,10 +579,9 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileFuncParams( ScriptBlockArra
 		{
 			ScriptNodeArray l_nodes;
 			_compileFuncParamsWithinParenthesis( l_block->m_childs, l_nodes );
-			_forui( j, l_nodes.size() )
-			{
-				ScriptNode * l_node = l_nodes[j];
 
+			for ( auto l_node : l_nodes )
+			{
 				if ( l_node != NULL && p_function->m_params.size() > l_functionParamIndex )
 				{
 					VariableType * l_type = _substituteVarType( p_function->m_params[l_functionParamIndex], ( p_classInstance != NULL ? p_classInstance->GetType() : ( !p_function->m_params.empty() ? p_function->m_params[0] : NULL ) ) );
@@ -632,7 +630,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileUserFunctionUse( ScriptBloc
 				//TODO : user function use with params
 				ScriptNode * l_returnValue = p_userFunction->m_returnNode;
 				ScriptNode * l_numParamsNode = CreateScriptNode( p_blockArray[0]->m_lineNumBegin );
-				unsigned int l_numParams = static_cast <unsigned int>( p_userFunction->m_params.size() );
+				uint32_t l_numParams = static_cast <uint32_t>( p_userFunction->m_params.size() );
 				l_numParamsNode->SetType( VariableTypeManager::Get( EMVT_INT ) );
 				l_numParamsNode->set<int>( l_numParams );
 				ScriptNodeArray l_childsNodes = l_userFunctionNode->m_childs;
@@ -640,14 +638,14 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileUserFunctionUse( ScriptBloc
 				l_userFunctionNode->AddChild( l_returnValue );
 				l_userFunctionNode->AddChild( l_numParamsNode );
 
-				for ( unsigned int i = 0 ; i < l_numParams ; i ++ )
+				for ( uint32_t i = 0 ; i < l_numParams ; i ++ )
 				{
 					l_userFunctionNode->AddChild( p_userFunction->m_paramNodes[i] );
 				}
 
 				l_userFunctionNode->AddChild( p_userFunction->m_node );
 
-				for ( unsigned int i = 0 ; i < l_numParams ; i ++ )
+				for ( uint32_t i = 0 ; i < l_numParams ; i ++ )
 				{
 					l_userFunctionNode->AddChild( l_childsNodes[i] );
 				}
@@ -791,8 +789,8 @@ void Elypse::Script::ScriptCompiler::_declareVariable( ScriptBlockArray & p_chil
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareVariable" );
 	ScriptBlockArray l_array;
-	unsigned int imax = static_cast <unsigned int>( p_childs.size() );
-	unsigned int l_current = 0;
+	uint32_t imax = static_cast <uint32_t>( p_childs.size() );
+	uint32_t l_current = 0;
 
 	do
 	{
@@ -804,7 +802,7 @@ void Elypse::Script::ScriptCompiler::_declareVariable( ScriptBlockArray & p_chil
 	VariableType * l_type = _getVariableType( l_array );
 	l_array.clear();
 
-	for ( unsigned int i = l_current ; i < imax ; i ++ )
+	for ( uint32_t i = l_current ; i < imax ; i ++ )
 	{
 		if ( p_childs[i]->m_type == BT_SEPARATOR )
 		{
@@ -827,7 +825,7 @@ void Elypse::Script::ScriptCompiler::_declareVariableDetail( VariableType * p_ty
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_declareVariableDetail" );
 	genlib_assert( p_array.size() > 0 );
-	const String & l_variableName = p_array[0]->m_contents;
+	String const & l_variableName = p_array[0]->m_contents;
 	ScriptNode * l_node = _getUserVariable( l_variableName );
 
 	if ( l_node != NULL && ( l_node->GetType() != p_type ) )
@@ -983,7 +981,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_getOperator( ScriptBlock * p_opera
 	if ( p_leftOperand != NULL && p_rightOperand != NULL
 			&&	p_leftOperand->GetType()->GetBase() == p_rightOperand->GetType()->GetBase()
 			&&	p_leftOperand->GetType() != p_rightOperand->GetType()
- )
+	   )
 	{
 		String l_error;
 		l_error = "Problematic parameters for operator " + p_operator->m_contents + " : ";
@@ -1014,11 +1012,11 @@ VariableType * Elypse::Script::ScriptCompiler::_getVariableType( ScriptBlockArra
 		}
 	}
 
-	unsigned int l_index = 0;
+	uint32_t l_index = 0;
 	return _getVariableTypeRecus( l_array, l_index );
 }
 
-VariableType * Elypse::Script::ScriptCompiler::_getVariableTypeRecus( ScriptBlockArray & p_blockArray, unsigned int & p_recursIndex )
+VariableType * Elypse::Script::ScriptCompiler::_getVariableTypeRecus( ScriptBlockArray & p_blockArray, uint32_t & p_recursIndex )
 {
 	VERBOSE_COMPILATOR_INTERNAL( "_getVariableTypeRecus" );
 
@@ -1122,7 +1120,7 @@ void Elypse::Script::ScriptCompiler::_compileStructDeclatation( ScriptBlockArray
 		return;
 	}
 
-	const String & l_name = p_blockArray[1]->m_contents;
+	String const & l_name = p_blockArray[1]->m_contents;
 //	genlib_assert( ! General::Utils::map::has( m_structures, l_name));
 	Structure * l_struct = General::Utils::map::findOrNull( m_structures, l_name );
 
@@ -1189,7 +1187,7 @@ void Elypse::Script::ScriptCompiler::_typedef( ScriptBlockArray & p_blockArray )
 		return;
 	}
 
-	const String & l_name = p_blockArray[p_blockArray.size() - 1]->m_contents;
+	String const & l_name = p_blockArray[p_blockArray.size() - 1]->m_contents;
 	ScriptBlockArray l_array( p_blockArray.begin() + 1, p_blockArray.begin() + p_blockArray.size() - 2 );
 	VariableType * l_type = _getVariableType( l_array );
 	m_typedefs.insert( std::make_pair( l_name, l_type ) );
@@ -1229,7 +1227,7 @@ ScriptNode  * Elypse::Script::ScriptCompiler::_compileStructMember( ScriptBlockA
 		return NULL;
 	}
 
-	unsigned int l_index = l_struct->FindMember( p_right[0]->m_contents );
+	uint32_t l_index = l_struct->FindMember( p_right[0]->m_contents );
 
 	if ( l_index == String::npos )
 	{
@@ -1337,7 +1335,7 @@ void Elypse::Script::ScriptCompiler::_declareStruct( ScriptBlockArray & p_blockA
 		return;
 	}
 
-	const String & l_name = p_blockArray[1]->m_contents;
+	String const & l_name = p_blockArray[1]->m_contents;
 	Structure * l_struct = General::Utils::map::findOrNull( m_structures, l_name );
 
 	if ( l_struct == NULL )
@@ -1350,7 +1348,7 @@ void Elypse::Script::ScriptCompiler::_declareStruct( ScriptBlockArray & p_blockA
 	m_currentStructure = l_struct;
 }
 
-void Elypse::Script::ScriptCompiler::_printBlockArray( const String & p_where, const ScriptBlockArray & p_childs )
+void Elypse::Script::ScriptCompiler::_printBlockArray( String const & p_where, const ScriptBlockArray & p_childs )
 {
 	std::cout << p_where << " : " << p_childs.size() << "\n{" << std::endl;
 	size_t i = 0;

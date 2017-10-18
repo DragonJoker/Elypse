@@ -20,20 +20,20 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "PhysicsMaterial.h"
 
 
-PhysicsMaterial::PhysicsMaterial( const String & p_name )
-	: named( p_name ),
-		m_friction( 0.0 ),
-		m_addFriction( 0.0 ),
-		m_bouncyness( 0.0 ),
-		m_velocityThreshold( 0.0 ),
-		m_erp( 0.0 ),
-		m_cfm( 0.0 ),
-		m_independentVelocity( 0.0 ),
-		m_addVelocity( 0.0 ),
-		m_forceDependentSlip( 0.0 ),
-		m_addForceDependentSlip( 0.0 ),
-		m_rollFrictionCoeff1( 0.0 ),
-		m_rollFrictionDamping( 0.0 )
+PhysicsMaterial::PhysicsMaterial( String const & p_name )
+	: named( p_name )
+	, m_friction( 0.0 )
+	, m_addFriction( 0.0 )
+	, m_bouncyness( 0.0 )
+	, m_velocityThreshold( 0.0 )
+	, m_erp( 0.0 )
+	, m_cfm( 0.0 )
+	, m_independentVelocity( 0.0 )
+	, m_addVelocity( 0.0 )
+	, m_forceDependentSlip( 0.0 )
+	, m_addForceDependentSlip( 0.0 )
+	, m_rollFrictionCoeff1( 0.0 )
+	, m_rollFrictionDamping( 0.0 )
 {
 }
 

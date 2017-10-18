@@ -31,8 +31,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 namespace
 {
-	const unsigned short MAX_FILENAMESIZE = 255;
-	const unsigned short MAX_MD5SIZE = 32;
+	const uint16_t MAX_FILENAMESIZE = 255;
+	const uint16_t MAX_MD5SIZE = 32;
 }
 
 bool MuseFilePack::ReadHeader( size_t & p_indexBuffer, const DataArray & p_waitingDatas )
@@ -100,11 +100,11 @@ bool MuseFilePack::ReadHeader( size_t & p_indexBuffer, const DataArray & p_waiti
 
 			if ( m_type == EM_BLOCK_ZIPDATA )
 			{
-				m_owner->GetOwner()->GetOwner()->GetDataFile( m_filename );
+				GetOwner()->GetOwner()->GetOwner()->GetDataFile( m_filename );
 			}
 			else if ( m_type == EM_BLOCK_INTERACTIONS || m_type == EM_BLOCK_SCENE || m_type == EM_BLOCK_EMCONFIG )
 			{
-				m_owner->GetOwner()->GetOwner()->GetConfigFile( m_filename );
+				GetOwner()->GetOwner()->GetOwner()->GetConfigFile( m_filename );
 			}
 
 //				break;
@@ -119,7 +119,7 @@ bool MuseFilePack::ReadHeader( size_t & p_indexBuffer, const DataArray & p_waiti
 
 			memcpy( & m_fileSize, & p_waitingDatas[p_indexBuffer], sizeof( int ) );
 			p_indexBuffer += sizeof( int );
-			m_owner->AddFileSize( static_cast<unsigned int>( m_fileSize ) );
+			GetOwner()->AddFileSize( static_cast<uint32_t>( m_fileSize ) );
 			m_status = FILESIZEISOK;
 //				break;
 		}
@@ -153,7 +153,7 @@ bool MuseFilePack::ReadContents( size_t & p_indexBuffer, const DataArray & p_wai
 	{
 		if ( m_fileSize == 0 )
 		{
-			fclose( fopen( ( m_owner->GetPackPath() / m_filename ).c_str(), "wb+" ) );
+			fclose( fopen( ( GetOwner()->GetPackPath() / m_filename ).c_str(), "wb+" ) );
 		}
 
 		return true;
@@ -161,11 +161,11 @@ bool MuseFilePack::ReadContents( size_t & p_indexBuffer, const DataArray & p_wai
 
 	if ( m_fileDescriptor == NULL )
 	{
-		m_fileDescriptor = fopen( ( m_owner->GetPackPath() / m_filename ).c_str(), "wb+" );
+		m_fileDescriptor = fopen( ( GetOwner()->GetPackPath() / m_filename ).c_str(), "wb+" );
 
 		if ( m_fileDescriptor == NULL )
 		{
-			EMUSE_MESSAGE_RELEASE( "MuseFilePack::ReadContents - Error in opening file [" + m_owner->GetPackPath() + "][" + m_filename + "] : [" + String( strerror( errno ) ) + "]" );
+			EMUSE_MESSAGE_RELEASE( "MuseFilePack::ReadContents - Error in opening file [" + GetOwner()->GetPackPath() + "][" + m_filename + "] : [" + String( strerror( errno ) ) + "]" );
 			return false;
 		}
 	}
@@ -184,7 +184,7 @@ bool MuseFilePack::ReadContents( size_t & p_indexBuffer, const DataArray & p_wai
 	}
 
 	m_downloadedBytes += l_min;
-	m_owner->JustDownloaded( l_min );
+	GetOwner()->JustDownloaded( l_min );
 	return true;
 }
 

@@ -24,11 +24,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreEntity.h>
 #include <OgreSubEntity.h>
 
-PubInstance::PubInstance( PubObject * p_owner, Entity * p_entity )
-	: owned_by <PubObject>	( p_owner ),
-		   m_entity( p_entity ),
-		   m_zone( NULL ),
-		   m_submat( 0 )
+PubInstance::PubInstance( PubObject & p_owner, Entity * p_entity )
+	: owned_by< PubObject >( p_owner )
+	, m_entity( p_entity )
+	, m_zone( NULL )
+	, m_submat( 0 )
 {
 }
 
@@ -44,16 +44,16 @@ void PubInstance::Apply()
 {
 	if ( m_submat >= m_entity->getNumSubEntities() )
 	{
-		m_entity->setMaterialName( m_owner->GetName() );
+		m_entity->setMaterialName( GetOwner()->GetName() );
 	}
 	else
 	{
-		m_entity->getSubEntity( m_submat )->setMaterialName( m_owner->GetName() );
+		m_entity->getSubEntity( m_submat )->setMaterialName( GetOwner()->GetName() );
 	}
 }
 
 void PubInstance::RemoveFromZone( Zone * p_zone )
 {
-	m_owner->RemoveInstance( this );
+	GetOwner()->RemoveInstance( this );
 	m_zone = NULL;
 }

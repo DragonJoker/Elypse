@@ -26,21 +26,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 #	include <sys/sysinfo.h>
 #endif
 
+#include <cstdint>
+
 namespace General
 {
 	namespace Computer
 	{
 		struct cpuid_reg
 		{
-			unsigned int eax;
-			unsigned int ebx;
-			unsigned int ecx;
-			unsigned int edx;
+			uint32_t eax;
+			uint32_t ebx;
+			uint32_t ecx;
+			uint32_t edx;
 		};
 
 #if defined( __ICL) || defined( _MSC_VER)
 
-		inline cpuid_reg _cpuid( unsigned int a, unsigned int c = 0 )
+		inline cpuid_reg _cpuid( uint32_t a, uint32_t c = 0 )
 		{
 			cpuid_reg r;
 
@@ -67,7 +69,7 @@ namespace General
 
 #elif defined( __GNUC__) && (defined( i386) || defined( __x86_64__))
 
-		inline cpuid_reg _cpuid( unsigned int a, unsigned int c = 0 )
+		inline cpuid_reg _cpuid( uint32_t a, uint32_t c = 0 )
 		{
 			cpuid_reg r;
 			__asm__( "cpuid" : " = a"( r.eax ), " = b"( r.ebx ), " = c"( r.ecx ), " = d"( r.edx ) : "a"( a ), "c"( c ) );
@@ -76,7 +78,7 @@ namespace General
 
 #else
 
-		inline cpuid_reg _cpuid( unsigned int a, unsigned int c = 0 )
+		inline cpuid_reg _cpuid( uint32_t a, uint32_t c = 0 )
 		{
 			cpuid_reg r = { 0, 0, 0, 0 };
 			return r;
@@ -84,7 +86,7 @@ namespace General
 
 #endif
 
-		inline cpuid_reg cpuid( unsigned int a, unsigned int c = 0 )
+		inline cpuid_reg cpuid( uint32_t a, uint32_t c = 0 )
 		{
 			if ( a <= _cpuid( 0 ).eax )
 			{
@@ -95,7 +97,7 @@ namespace General
 			return r;
 		}
 
-		inline cpuid_reg cpuid_ext( unsigned int a, unsigned int c = 0 )
+		inline cpuid_reg cpuid_ext( uint32_t a, uint32_t c = 0 )
 		{
 			a |= 0x80000000;
 
@@ -113,7 +115,7 @@ namespace General
 
 		inline char * cpu_vendor()
 		{
-			unsigned int * p = reinterpret_cast <unsigned int *>( _cpu_vendor );
+			uint32_t * p = reinterpret_cast <uint32_t *>( _cpu_vendor );
 			cpuid_reg reg = cpuid( 0 );
 			p[0] = reg.ebx;
 			p[1] = reg.edx;
@@ -124,7 +126,7 @@ namespace General
 
 		inline char * cpu_name()
 		{
-			unsigned int * p = reinterpret_cast <unsigned int *>( _cpu_name );
+			uint32_t * p = reinterpret_cast <uint32_t *>( _cpu_name );
 			cpuid_reg reg = cpuid_ext( 2 );
 			p[0] = reg.eax;
 			p[1] = reg.ebx;
@@ -172,16 +174,16 @@ namespace General
 			return ( ( cpuid_ext( 1 ).edx & 0x80000000 ) != 0 );
 		}
 
-		inline unsigned int num_l1_threads()
+		inline uint32_t num_l1_threads()
 		{
 			return ( ( cpuid( 4, 1 ).eax >> 14 ) & 0xFFF ) + 1;
 		}
-		inline unsigned int num_l2_threads()
+		inline uint32_t num_l2_threads()
 		{
 			return ( ( cpuid( 4, 2 ).eax >> 14 ) & 0xFFF ) + 1;
 		}
 
-		inline unsigned int l1_cache_size()
+		inline uint32_t l1_cache_size()
 		{
 			cpuid_reg reg = cpuid( 4, 1 );
 			return	( ( ( reg.ebx >> 22 ) & 0x3FF ) + 1 )
@@ -190,7 +192,7 @@ namespace General
 					* ( reg.ecx + 1 );
 		}
 
-		inline unsigned int l2_cache_size()
+		inline uint32_t l2_cache_size()
 		{
 			cpuid_reg reg = cpuid( 4, 2 );
 			return	( ( ( reg.ebx >> 22 ) & 0x3FF ) + 1 )
@@ -199,13 +201,13 @@ namespace General
 					* ( reg.ecx + 1 );
 		}
 
-		inline unsigned int num_logical_cores()
+		inline uint32_t num_logical_cores()
 		{
 			cpuid_reg reg = cpuid( 1 );
 			return ( ( reg.edx & 0x10000000 ) ? ( reg.ebx >> 16 ) & 0xFF : 1 );
 		}
 
-		inline unsigned int num_physical_cores()
+		inline uint32_t num_physical_cores()
 		{
 			return ( ( ! is_amd_cpu() ) ? ( ( cpuid( 4, 0 ).eax >> 26 ) & 0x03F ) + 1 : num_logical_cores() );
 		}

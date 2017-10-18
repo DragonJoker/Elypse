@@ -24,20 +24,9 @@ namespace Chat
 {
 	class ChatGame
 	{
-	private:
-		ChatTcpClient * m_initiator;
-		StringArray m_playersPlaces;
-		unsigned int m_initiatorId;
-		String m_gameName;
-		ClientIdChatCLientMap m_players;
-		unsigned int m_maxPlayers;
-		bool m_started;
-		unsigned int m_id;
-		std::weak_ptr< ChatDatabase > m_database;
-
 	public:
-		ChatGame( unsigned int p_id, ChatTcpClient * p_initiator,
-				  const String & p_gameName, unsigned int p_maxPlayers,
+		ChatGame( uint32_t p_id, ChatTcpClient * p_initiator,
+				  String const & p_gameName, uint32_t p_maxPlayers,
 				  std::shared_ptr< ChatDatabase > p_database );
 		~ChatGame();
 
@@ -45,22 +34,22 @@ namespace Chat
 		bool RemovePlayer( ChatTcpClient * p_client );
 		void StartGame();
 		void EndGame();
-		int GetPlayerPlace( const String & p_name );
-		void ForwardMessage( const String & p_message, const String & p_name );
+		uint32_t GetPlayerPlace( String const & p_name );
+		void ForwardMessage( String const & p_message, uint32_t p_name );
 
-		inline unsigned int GetInitiatorId()const
+		inline uint32_t GetInitiatorId()const
 		{
 			return m_initiatorId;
 		}
 		inline bool IsFull()const
 		{
-			return ( static_cast <unsigned int>( m_players.size() ) >= m_maxPlayers ) || m_started;
+			return GetPlayersCount() >= m_maxPlayers || m_started;
 		}
-		inline unsigned int GetPlayersCount()const
+		inline uint32_t GetPlayersCount()const
 		{
-			return static_cast <unsigned int>( m_players.size() );
+			return uint32_t( m_players.size() );
 		}
-		inline const String & GetGameName()const
+		inline String const & GetGameName()const
 		{
 			return m_gameName;
 		}
@@ -74,6 +63,17 @@ namespace Chat
 		{
 			return m_database.lock();
 		}
+
+	private:
+		ChatTcpClient * m_initiator;
+		StringArray m_playersPlaces;
+		uint32_t m_initiatorId;
+		String m_gameName;
+		ClientIdChatCLientMap m_players;
+		uint32_t m_maxPlayers;
+		bool m_started;
+		uint32_t m_id;
+		std::weak_ptr< ChatDatabase > m_database;
 	};
 }
 

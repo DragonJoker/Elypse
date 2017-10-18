@@ -38,14 +38,14 @@ namespace Elypse
 			~PubManager();
 
 		public:
-			PubObject * CreatePubObject( const String & p_name, ElypsePlugin * p_plugin );
+			PubObject * CreatePubObject( String const & p_name, ElypsePlugin * p_plugin );
 
-			void RemovePubObject( const String & p_name );
+			void RemovePubObject( String const & p_name );
 
 			void OnClick( Real p_x, Real p_y, SceneManager * p_sceneManager, Camera * p_camera, PhysicsSimulation * p_physics );
 
 		public:
-			inline PubObject * GetPubObject( const String & p_name )
+			inline PubObject * GetPubObject( String const & p_name )
 			{
 				return General::Utils::map::findOrNull( m_objectList, p_name );
 			}

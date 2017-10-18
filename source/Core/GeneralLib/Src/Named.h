@@ -30,15 +30,17 @@ namespace General
 		class namedBase
 		{
 		public:
-			namedBase( const T & p_name )
-				: m_name( p_name )
+			namedBase( T const & p_name )
+				: m_name{ p_name }
 			{
-				genlib_assert( ! m_name.empty() );
+				genlib_assert( !m_name.empty() );
 			}
-			~namedBase() {}
+			~namedBase()
+			{
+			}
 
 		public:
-			inline const T & GetName()const
+			inline T const & GetName()const
 			{
 				return m_name;
 			}

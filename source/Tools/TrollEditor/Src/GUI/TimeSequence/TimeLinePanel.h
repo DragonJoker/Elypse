@@ -22,33 +22,39 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class TimeLinePanel
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		TimeLinePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-		~TimeLinePanel();
+		namespace Time
+		{
+			class TimeLinePanel
+				: public wxPanel
+			{
+			public:
+				TimeLinePanel( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
+				~TimeLinePanel();
 
-		void UpdateSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence );
-		void UpdateSequences( float p_time );
-		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * AddSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence );
-		LinePanel * GetSequencePanel( const wxString & p_name );
+				void UpdateSequence( ProjectComponents::Temporal::TrollSequence * p_sequence );
+				void UpdateSequences( float p_time );
+				ProjectComponents::Temporal::TrollSequence * AddSequence( ProjectComponents::Temporal::TrollSequence * p_sequence );
+				LinePanel * GetSequencePanel( wxString const & p_name );
 
-	private:
-		DECLARE_EVENT_TABLE()
+			private:
+				DECLARE_EVENT_TABLE()
 
-	protected:
-		int m_totalWidth;
-		int m_totalHeight;
-		int m_currentTop;
-		int m_currentLeft;
-		TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequenceStrMap m_alreadyAddedSequences;
-		std::vector< SequencePanel * > m_sequences;
-		unsigned int m_displayedSequences;
-	};
+			protected:
+				int m_totalWidth;
+				int m_totalHeight;
+				int m_currentTop;
+				int m_currentLeft;
+				ProjectComponents::Temporal::TrollSequenceStrMap m_alreadyAddedSequences;
+				std::vector< SequencePanel * > m_sequences;
+				uint32_t m_displayedSequences;
+				ProjectFrame * m_projectFrame;
+			};
+		}
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

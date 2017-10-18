@@ -15,14 +15,12 @@ function( ToolsBuild )
 	set( wxWidgets_USE_STATIC OFF)
 
 	if (WIN32)
-		find_package( wxWidgets REQUIRED core base aui net stc scintilla )
+		find_package( wxWidgets COMPONENTS core base stc aui adv propgrid net scintilla )
 	else ()
-		find_package( wxWidgets REQUIRED core base aui net stc )
+		find_package( wxWidgets COMPONENTS core base stc aui adv propgrid net )
 	endif()
 
-	find_package( OpenGL )
-
-	if ( wxWidgets_FOUND AND GTK2_FOUND AND OPENGL_FOUND )
+	if ( wxWidgets_FOUND AND GTK2_FOUND )
 		message( STATUS "+ Found wxWidgets" )
 		include_directories( ${wxWidgets_INCLUDE_DIRS} )
 
@@ -34,15 +32,6 @@ function( ToolsBuild )
 				set( wxWidgetsLibraries "${Lib}" )
 			endif()
 		ENDFOREACH()
-		
-		set( OpenGlLibraries "" )
-		foreach( Lib ${OPENGL_gl_LIBRARY} )
-			if( OpenGlLibraries )
-				set( OpenGlLibraries "${OpenGlLibraries}|${Lib}" )
-			else()
-				set( OpenGlLibraries "${Lib}" )
-			endif()
-		endforeach()
 
 		#Few configuration for wxWidgets
 		string( COMPARE EQUAL "${wxWidgets_USE_DEBUG}" "ON" IsWxDebug )
@@ -56,7 +45,6 @@ function( ToolsBuild )
 		
 		set( BinariesLibraries
 			${wxWidgetsLibraries}
-			${OpenGlLibraries}
 		)
 		
 		if ( BUILD_TOOLS_ELYPSE_BINARY OR BUILD_TOOLS_MUSE_READER OR BUILD_TOOLS_MUSE_WRITER OR BUILD_TOOLS_TROLL_EDITOR )

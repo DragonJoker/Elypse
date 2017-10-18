@@ -32,7 +32,10 @@ copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/SceneEdi
 
 parse_subdir_files( Src/Elypse "Elypse" )
 parse_subdir_files( Src/GUI "GUI" )
-parse_subdir_files( Src/GUI/ObjectProperties "GUI\\\\ObjectProperties" )
+parse_subdir_files( Src/GUI/Aui "GUI\\\\Aui" )
+parse_subdir_files( Src/GUI/Properties "GUI\\\\Properties" )
+parse_subdir_files( Src/GUI/Properties/Common "GUI\\\\Properties\\\\Common" )
+parse_subdir_files( Src/GUI/Properties/Project "GUI\\\\Properties\\\\Project" )
 parse_subdir_files( Src/GUI/TimeSequence "GUI\\\\TimeSequence" )
 parse_subdir_files( Src/Project "Project" )
 parse_subdir_files( Src/Project/2D "Project\\\\2D" )

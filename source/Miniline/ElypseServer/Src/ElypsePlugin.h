@@ -30,18 +30,18 @@ namespace Elypse
 			: public General::Theory::named
 		{
 		protected:
-			ElypsePlugin( const std::string & p_name );
+			ElypsePlugin( std::string const & p_name );
 			virtual ~ElypsePlugin();
 
 		public:
-			virtual ElypseServiceArray GetServices() = 0;
-			virtual unsigned short GetVersionNo() = 0;
+			virtual ElypseServiceArray const & GetServices()const = 0;
+			virtual uint16_t GetVersionNo() = 0;
 
 		public:
-			static unsigned short sm_versionNo;
+			static uint16_t sm_versionNo;
 		};
 
-		typedef std::function< ElypsePlugin * ( const char * ) > PluginFactoryFct;
+		typedef std::function< ElypsePlugin * ( char const * const ) > PluginFactoryFct;
 		typedef std::function< void( ElypsePlugin *& ) > PluginDestroyerFct;
 	}
 }

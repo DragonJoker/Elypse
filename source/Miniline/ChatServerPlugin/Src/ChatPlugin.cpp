@@ -23,6 +23,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "ChatRoom.h"
 #include "STLMacros.h"
 
+#include <Database/DatabaseLogger.h>
+#include <Database/DatabaseStringUtils.h>
+
 #ifdef __GNUG__
 #include <signal.h>
 #endif
@@ -38,15 +41,15 @@ ChatPlugin * g_plugin;
 void TreatSignal( int p_signalNo )
 {
 #ifdef __GNUG__
-	std::cout << "TreatSignal\n";
+	std::cout << "TreatSignal" << std::endl;
 
 	if ( p_signalNo == SIGTSTP )
 	{
-		std::cout << "TreatSignal - Stop\n";
+		std::cout << "TreatSignal - Stop" << std::endl;
 		g_plugin->_loadRooms();
-		std::cout << "TreatSignal - Rooms loaded\n";
+		std::cout << "TreatSignal - Rooms loaded" << std::endl;
 		g_plugin->_loadGames();
-		std::cout << "TreatSignal - Games Loaded\n";
+		std::cout << "TreatSignal - Games Loaded" << std::endl;
 	}
 
 #endif
@@ -55,8 +58,8 @@ void TreatSignal( int p_signalNo )
 //******************************************************************************
 
 ChatTcpService::ChatTcpService( ChatPlugin * p_plugin )
-	:	ElypseTcpService( "Chat TCP Service", 48621 ),
-		m_plugin( p_plugin )
+	: ElypseTcpService( "Chat TCP Service", 48621 )
+	, m_plugin( p_plugin )
 {
 	std::clog << "ChatTCPService(" << m_name << ")" << std::endl;
 }
@@ -64,6 +67,7 @@ ChatTcpService::ChatTcpService( ChatPlugin * p_plugin )
 ChatTcpService::~ChatTcpService()
 {
 	std::clog << "~ChatTCPService(" << m_name << ")" << std::endl;
+	DoDeleteClients();
 }
 
 TcpBaseClient * ChatTcpService::DoCreateClient()
@@ -99,16 +103,14 @@ ChatUdpService::~ChatUdpService()
 //******************************************************************************
 
 ChatPlugin::ChatPlugin( String const & p_path )
-	:	ElypsePlugin( "Chat Plugin" ),
-		m_world( std::make_shared< ChatWorld >( "Base", 256 ) ),
-		m_database( std::make_shared< ChatDatabase >( p_path ) )
+	: ElypsePlugin( "Chat Plugin" )
+	, m_world( std::make_shared< ChatWorld >( "Base", 256 ) )
+	, m_database( std::make_shared< ChatDatabase >( p_path ) )
 {
 	g_plugin = this;
 	std::clog << "Chatplugin(" << m_name << ") - Services creation" << std::endl;
 	m_services.push_back( std::make_shared< ChatTcpService >( this ) );
 	m_services.push_back( std::make_shared< ChatUdpService >() );
-
-	srand( time( NULL ) );
 
 	if ( !m_database->Initialize() )
 	{
@@ -137,12 +139,12 @@ ChatPlugin::~ChatPlugin()
 	std::clog << "~Chatplugin(" << m_name << ") - Services deleted" << std::endl;
 }
 
-unsigned short ChatPlugin::GetVersionNo()
+uint16_t ChatPlugin::GetVersionNo()
 {
 	return sm_versionNo;
 }
 
-ElypseServiceArray ChatPlugin::GetServices()
+ElypseServiceArray const & ChatPlugin::GetServices()const
 {
 	return m_services;
 }
@@ -152,49 +154,58 @@ void ChatPlugin::AddRoom( std::shared_ptr< ChatRoom > p_room )
 	m_world->AddRoom( p_room );
 }
 
-std::shared_ptr< ChatRoom > ChatPlugin::GetRoom( const String & p_roomName )
+std::shared_ptr< ChatRoom > ChatPlugin::GetRoom( String const & p_roomName )
 {
 	return m_world->GetRoom( p_roomName );
 }
 
-ChatTcpClient * ChatPlugin::GetClient( const String & p_name )
+ChatTcpClient * ChatPlugin::GetClient( uint32_t p_id )
 {
-	auto && l_clientIdIt = m_clientIDs.find( p_name );
+	ChatTcpClient * l_return = NULL;
+	auto && l_clientIt = m_connectedClients.find( p_id );
 
-	if ( l_clientIdIt != m_clientIDs.end() )
+	if ( l_clientIt != m_connectedClients.end() )
 	{
-		auto && l_clientIt = m_connectedClients.find( l_clientIdIt->second );
-
-		if ( l_clientIt != m_connectedClients.end() )
-		{
-			return l_clientIt->second;
-		}
+		l_return = l_clientIt->second;
 	}
 
-	return nullptr;
+	return l_return;
 }
 
-const String & ChatPlugin::GetClientName( unsigned int p_id )
+uint32_t ChatPlugin::GetClientId( String const & p_name )
 {
-	auto && l_it = m_clientIDs.begin();
-
-	while ( l_it != m_clientIDs.end() )
+	auto && l_it = std::find_if( m_clients.begin(), m_clients.end(), [&p_name]( ClientStrIdMap::value_type const & p_client )
 	{
-		if ( l_it->second == p_id )
-		{
-			return l_it->first;
-		}
+		return p_client.second == p_name;
+	} );
 
-		++l_it;
+	uint32_t l_return = 0;
+
+	if ( l_it != m_clients.end() )
+	{
+		l_return = l_it->first;
 	}
 
-	return ChatEmptyString;
+	return l_return;
+}
+
+String const & ChatPlugin::GetClientName( uint32_t p_id )
+{
+	const String * l_return = &ChatEmptyString;
+	auto && l_it = m_clients.find( p_id );
+
+	if ( l_it != m_clients.end() )
+	{
+		l_return = &l_it->second;
+	}
+
+	return *l_return;
 }
 
 void ChatPlugin::AddClient( ChatTcpClient * p_client )
 {
 	m_connectedClients.insert( std::make_pair( p_client->GetId(), p_client ) );
-	m_clientIDs.insert( std::make_pair( p_client->GetName(), p_client->GetId() ) );
+	m_clients.insert( std::make_pair( p_client->GetId(), p_client->GetName() ) );
 }
 
 void ChatPlugin::RemoveClient( ChatTcpClient * p_client )
@@ -203,28 +214,28 @@ void ChatPlugin::RemoveClient( ChatTcpClient * p_client )
 
 	if ( l_it1 != m_connectedClients.end() )
 	{
-		std::clog << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_connectedClients\n";
+		std::clog << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_connectedClients" << std::endl;
 		m_connectedClients.erase( l_it1 );
 	}
 
-	auto && l_it2 = m_clientIDs.find( p_client->GetName() );
+	auto && l_it2 = m_clients.find( p_client->GetId() );
 
-	if ( l_it2 != m_clientIDs.end() )
+	if ( l_it2 != m_clients.end() )
 	{
-		std::clog << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_clientIDs\n";
-		m_clientIDs.erase( l_it2 );
+		std::clog << "ChatPlugin::RemoveClient - Removing " << p_client->GetName() << " from m_clientIDs" << std::endl;
+		m_clients.erase( l_it2 );
 	}
 }
 
-std::shared_ptr< ChatGame > ChatPlugin::AddGame( const String & p_gameName, ChatTcpClient * p_initiator )
+std::shared_ptr< ChatGame > ChatPlugin::AddGame( String const & p_gameName, ChatTcpClient * p_initiator )
 {
 	if ( !p_initiator )
 	{
 		return nullptr;
 	}
 
-	unsigned int l_gameId = 0;
-	unsigned int l_maxPlayers = 0;
+	uint32_t l_gameId = 0;
+	uint32_t l_maxPlayers = 0;
 	bool l_found = false;
 	auto && l_gnit = m_gamesNames.begin();
 
@@ -278,7 +289,7 @@ std::shared_ptr< ChatGame > ChatPlugin::AddGame( const String & p_gameName, Chat
 	return l_game;
 }
 
-std::shared_ptr< ChatGame > ChatPlugin::GetGame( const String & p_gameName, int p_initiatorID )
+std::shared_ptr< ChatGame > ChatPlugin::GetGame( String const & p_gameName, int p_initiatorID )
 {
 	auto && l_it = m_games.find( p_gameName );
 
@@ -297,7 +308,7 @@ std::shared_ptr< ChatGame > ChatPlugin::GetGame( const String & p_gameName, int 
 	return l_it2->second;
 }
 
-StrUIntIdMap ChatPlugin::GetGamesList( const String & p_gameName )
+StrUIntIdMap ChatPlugin::GetGamesList( String const & p_gameName )
 {
 	StrUIntIdMap l_map;
 	auto && l_it = m_games.find( p_gameName );
@@ -319,7 +330,7 @@ StrUIntIdMap ChatPlugin::GetGamesList( const String & p_gameName )
 	return l_map;
 }
 
-unsigned int ChatPlugin::GetGameMaxPLayers( const String & p_gameName )
+uint32_t ChatPlugin::GetGameMaxPLayers( String const & p_gameName )
 {
 	StrUIntIdMap l_map;
 	auto && l_it = m_gamesNames.begin();
@@ -339,13 +350,13 @@ unsigned int ChatPlugin::GetGameMaxPLayers( const String & p_gameName )
 	return 1;
 }
 
-void ChatPlugin::RemoveGame( const String & p_gameName, int p_initiatorID )
+void ChatPlugin::RemoveGame( String const & p_gameName, int p_initiatorID )
 {
 	auto && l_it = m_games.find( p_gameName );
 
 	if ( l_it == m_games.end() )
 	{
-		std::cout << "Game named " << p_gameName << " not found\n";
+		std::cout << "Game named " << p_gameName << " not found" << std::endl;
 		return;
 	}
 
@@ -353,7 +364,7 @@ void ChatPlugin::RemoveGame( const String & p_gameName, int p_initiatorID )
 
 	if ( l_it2 == l_it->second.end() )
 	{
-		std::cout << "Game created by " << p_initiatorID << " not found\n";
+		std::cout << "Game created by " << p_initiatorID << " not found" << std::endl;
 		return;
 	}
 
@@ -365,7 +376,7 @@ void ChatPlugin::_loadRooms()
 {
 	if ( !m_database->LoadRooms( *m_world ) )
 	{
-		exit( 1 );
+		throw std::runtime_error( "Couldn't load the rooms" );
 	}
 }
 
@@ -373,7 +384,7 @@ void ChatPlugin::_loadGames()
 {
 	if ( !m_database->LoadGames( m_gamesNames ) )
 	{
-		exit( 2 );
+		throw std::runtime_error( "Couldn't load the fames" );
 	}
 }
 
@@ -385,9 +396,17 @@ extern "C"
 #ifndef __GNUG__
 __declspec( dllexport )
 #endif
-ElypsePlugin * PluginFactory( const char * p_path )
+ElypsePlugin * PluginFactory( char const * const p_path )
 {
 	ElypsePlugin * l_return = NULL;
+	// Configure logger
+#if defined( NDEBUG )
+	NAMESPACE_DATABASE::CLogger::Initialise( NAMESPACE_DATABASE::ELogType_INFO );
+#else
+	NAMESPACE_DATABASE::CLogger::Initialise( NAMESPACE_DATABASE::ELogType_DEBUG );
+#endif
+	NAMESPACE_DATABASE::CLogger::SetFileName( NAMESPACE_DATABASE::StringUtils::ToString( p_path ) + STR( "ChatPlugin.log" ) );
+
 
 	try
 	{
@@ -412,6 +431,7 @@ void PluginDestroyer( ElypsePlugin *& p_pluginToDelete )
 {
 	delete reinterpret_cast< ChatPlugin * >( p_pluginToDelete );
 	p_pluginToDelete = NULL;
+	NAMESPACE_DATABASE::CLogger::Cleanup();
 }
 
 #ifdef __cplusplus

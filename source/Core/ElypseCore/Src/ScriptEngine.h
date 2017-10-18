@@ -57,20 +57,20 @@ namespace Elypse
 			virtual void Initialise();
 
 			void Execute( ScriptNode * p_node );
-			ScriptNode * GetKeyboardBind( unsigned int p_keyCode, unsigned int p_bindType )const;
+			ScriptNode * GetKeyboardBind( uint32_t p_keyCode, uint32_t p_bindType )const;
 			void AddScriptZone( String & p_scriptString );
 			ScriptNode * CompileScriptFile( ConfigFile * p_scriptFile );
 			ScriptNode * CompileScript( String & p_scriptString );
-			ScriptNode * GetVariable( const String & p_variableName )const;
-			ScriptNode * GetFunction( const String & p_functionName )const;
-			void ExecuteScriptFile( const String & p_filename );
+			ScriptNode * GetVariable( String const & p_variableName )const;
+			ScriptNode * GetFunction( String const & p_functionName )const;
+			void ExecuteScriptFile( String const & p_filename );
 
 
 			virtual void LoadZone( Zone * p_zone );
 			virtual void UnloadZone( Zone * p_zone );
 
 		public:
-			static void ScriptError( ScriptNode * p_node, const String & p_string );
+			static void ScriptError( ScriptNode * p_node, String const & p_string );
 			static inline Context * GetContext()
 			{
 				return sm_context;

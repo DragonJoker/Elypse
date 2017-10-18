@@ -23,22 +23,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <GuiCommonPrerequisites.h>
 
-#define ELYPSE_BINARY_NAMESPACE ELYPSE_NAMESPACE::Binary
-#define BEGIN_ELYPSE_BINARY_NAMESPACE BEGIN_ELYPSE_NAMESPACE { namespace Binary
-#define END_ELYPSE_BINARY_NAMESPACE END_ELYPSE_NAMESPACE }
-
-BEGIN_ELYPSE_NAMESPACE
+namespace ElypseBinary
 {
-	namespace Binary
-	{
-		class ElypseFrame;
-		class ElypseCtrl;
-		class ElypseApp;
+	class ElypseFrame;
+	class ElypseCtrl;
+	class ElypseApp;
 
-		using GuiCommon::make_string;
-		using GuiCommon::make_wxString;
-	}
+	using GuiCommon::make_string;
+	using GuiCommon::make_wxString;
 }
-END_ELYPSE_NAMESPACE
 
 #endif

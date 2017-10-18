@@ -23,52 +23,57 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Module_Project.h"
 
+#include "Properties/Project/ProjectProperties.h"
+
 #include <wx/dialog.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class NewProjectFrame
-		: public wxDialog
+	namespace GUI
 	{
-	public:
-		NewProjectFrame( wxWindow * p_parent, const wxString & title = _( "New Project" ), const wxPoint & pos = wxDefaultPosition );
-		~NewProjectFrame();
+		class NewProjectProperties
+			: public Properties::ProjectProperties
+		{
+		public:
+			NewProjectProperties();
+			~NewProjectProperties();
+			/**
+			 *\copydoc		Troll::GUI::Properties::ObjectProperty::OnValidate
+			 */
+			virtual bool OnValidate( wxWindow * p_parent );
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnSelectBackgroundType( wxCommandEvent & p_event );
-		void OnSelectBackgroundButton( wxCommandEvent & p_event );
-		void OnMainSceneChange( wxCommandEvent & p_event );
-		void OnShadowsChange( wxCommandEvent & p_event );
-		void OnAntiAliasingChange( wxCommandEvent & p_event );
-		void OnOK( wxCommandEvent & p_event );
-		void OnCancel( wxCommandEvent & p_event );
-		void OnBrowse( wxCommandEvent & p_event );
+		private:
+			/**
+			 *\copydoc		Troll::GUI::Properties::ObjectProperty::DoCreateProperties
+			 */
+			virtual void DoCreateProperties( wxPGEditor * p_editor, wxPropertyGrid * p_grid );
+			/**
+			 *\copydoc		Troll::GUI::Properties::ObjectProperty::DoPropertyChange
+			 */
+			virtual void DoPropertyChange( wxPropertyGridEvent & p_event );
 
-	private:
-		bool m_shadows;
-		TROLL_PROJECT_NAMESPACE::AntiAliasing m_antiAliasing;
-		TROLL_PROJECT_NAMESPACE::BackgroundType m_backgroundType;
-		wxString m_bgColour;
-		wxString m_bgImage;
-		wxString m_path;
+		private:
+			bool DoSelectFolder( wxPGProperty * p_property );
+			bool DoSelectBackground( wxPGProperty * p_property );
+			bool DoChangeStartupScript( wxPGProperty * p_property );
 
-		// GUI controls
-		wxTextCtrl * m_projectName;
-		wxButton * m_folderButton;
-		wxTextCtrl * m_projectFolder;
-		wxComboBox * m_bgRBox;
-		wxButton * m_bgSelect;
-		wxTextCtrl * m_mainSceneName;
-		wxCheckBox * m_shCkb;
-		wxComboBox * m_antiAlias;
-		wxTextCtrl * m_width;
-		wxTextCtrl * m_height;
-		wxButton * m_okBtn;
-		wxButton * m_cancelBtn;
-	};
+		private:
+			ProjectComponents::ProjectSPtr m_project;
+			wxString m_bgColour{ wxT( "black" ) };
+			wxString m_bgImage;
+			wxString m_path;
+			wxString m_startupScript;
+			wxString m_name;
+			wxString m_sceneName;
+			wxSize m_resolution{ 800, 600 };
+			bool m_shadows{ false };
+			bool m_showDebug{ false };
+			bool m_showFps{ false };
+			ProjectComponents::AntiAliasing m_antiAliasing{ ProjectComponents::aa0 };
+			ProjectComponents::BackgroundType m_backgroundType{ ProjectComponents::bgColour };
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

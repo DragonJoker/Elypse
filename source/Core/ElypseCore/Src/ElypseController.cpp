@@ -66,31 +66,31 @@ using namespace Ogre;
 
 namespace
 {
-	const char * c_installWebsiteUrl = "http://www.fordev-studio.com/Elypse/Install/";
+	char const * const c_installWebsiteUrl = "http://www.fordev-studio.com/Elypse/Install/";
 }
 
-void OdeErrorCallback( int p_errnum, const char * p_msg, va_list ap )
+void OdeErrorCallback( int p_errnum, char const * const p_msg, va_list ap )
 {
 	EMUSE_MESSAGE_RELEASE( "ERROR( " + StringConverter::toString( p_errnum ) + " ) -> " + String( p_msg ) );
 }
 
 GENLIB_INIT_SINGLETON( ElypseController );
 
-ElypseController::ElypseController()
-	: owned_by<ElypseInstance>	( NULL ),
-		m_root( NULL ),
-		m_log( NULL ),
-		m_primaryRenderWindow( NULL ),
-		m_downloadManager( NULL ),
-		m_direct3D( true ),
-		m_oneTimePostWindowInit( false ),
-		m_useConsole( false ),
-		m_downloadFiles( true ),
-		m_initialised( false ),
-		m_stopThread( false ),
-		m_vsync( true ),
-		m_numInstance( 0 ),
-		m_status( CS_NULL )
+ElypseController::ElypseController( ElypseInstance & p_owner )
+	: owned_by<ElypseInstance>( p_owner )
+	, m_root( NULL )
+	, m_log( NULL )
+	, m_primaryRenderWindow( NULL )
+	, m_downloadManager( NULL )
+	, m_direct3D( true )
+	, m_oneTimePostWindowInit( false )
+	, m_useConsole( false )
+	, m_downloadFiles( true )
+	, m_initialised( false )
+	, m_stopThread( false )
+	, m_vsync( true )
+	, m_numInstance( 0 )
+	, m_status( CS_NULL )
 {
 	new Elypse::Debug::ElypseLogs();
 	GENLIB_SET_SINGLETON();
@@ -128,7 +128,7 @@ void ElypseController::PreInit( bool p_useConsole, bool p_direct3D, bool p_downl
 ElypseController::~ElypseController()
 {
 	EMUSE_MESSAGE_DEBUG( "ElypseController::~ElypseController" );
-	GENLIB_SCOPED_LOCK( m_selfMutex );
+	auto l_lock = make_unique_lock( m_selfMutex );
 	dCloseODE();
 	EMUSE_MESSAGE_DEBUG( "ElypseController::~ElypseController" );
 	delete Elypse::Debug::ElypseLogs::GetSingletonPtr();
@@ -138,7 +138,7 @@ void ElypseController::AddApplication( ElypseInstance * p_instance )
 {
 	genlib_assert( p_instance != NULL );
 	EMUSE_MESSAGE_DEBUG( "ElypseController::AddApplication" );
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	m_instances.insert( std::make_pair( p_instance->GetName(), p_instance ) );
 }
 
@@ -156,7 +156,7 @@ bool ElypseController::_getNextAvailableRenderer( String & p_pluginName, String 
 	return true;
 }
 
-bool ElypseController::_loadRenderer( const String & p_pluginName, const String & p_rendererName )
+bool ElypseController::_loadRenderer( String const & p_pluginName, String const & p_rendererName )
 {
 	try
 	{
@@ -175,7 +175,7 @@ bool ElypseController::_loadRenderer( const String & p_pluginName, const String 
 	}
 }
 
-RenderWindow * ElypseController::CreateRenderWindow( const String & p_name, unsigned int p_width, unsigned int p_height, const String & p_handle, unsigned int p_antialiasing, bool & p_mainWindow )
+RenderWindow * ElypseController::CreateRenderWindow( String const & p_name, uint32_t p_width, uint32_t p_height, String const & p_handle, uint32_t p_antialiasing, bool & p_mainWindow )
 {
 	NameValuePairList list;
 	list["externalWindowHandle"] = p_handle;
@@ -185,10 +185,10 @@ RenderWindow * ElypseController::CreateRenderWindow( const String & p_name, unsi
 	list["FSAAQUALITY"] = StringConverter::toString( p_antialiasing * p_antialiasing );
 	RenderWindow * l_rend = NULL;
 	bool l_windowCreate = false;
-	m_owner->GetPlugin()->LockGui();
+	GetOwner()->GetPlugin()->LockGui();
 	l_rend = m_root->getRenderSystem()->_createRenderWindow( p_name, p_width, p_height, false, & list );
 	l_windowCreate = true;
-	m_owner->GetPlugin()->UnlockGui();
+	GetOwner()->GetPlugin()->UnlockGui();
 
 	if ( ! m_oneTimePostWindowInit )
 	{
@@ -208,22 +208,29 @@ RenderWindow * ElypseController::CreateRenderWindow( const String & p_name, unsi
 	return l_rend;
 }
 
-SceneManager * ElypseController::CreateSceneManager( const String & p_name )
+SceneManager * ElypseController::CreateSceneManager( String const & p_name )
 {
 	genlib_assert( ! p_name.empty() );
 	EMUSE_MESSAGE_DEBUG( "ElypseController::CreateSceneManager" );
-	return m_root->createSceneManager( ST_GENERIC, p_name );
+	auto l_sceneManager = m_root->createSceneManager( ST_GENERIC, p_name );
+
+	if ( m_overlaySystem )
+	{
+		l_sceneManager->addRenderQueueListener( m_overlaySystem );
+	}
+
+	return l_sceneManager;
 }
 
-void ElypseController::AddThread( ElypseInstance * p_owner )
+void ElypseController::AddThread( ElypseInstance & p_owner )
 {
 	EMUSE_MESSAGE_DEBUG( "ElypseController::AddThread" );
 
 	if ( m_status == CS_RENDERING )
 	{
-		GENLIB_AUTO_SCOPED_LOCK();
+		auto l_lock = make_unique_lock( m_mutex );
 		EMUSE_MESSAGE_DEBUG( "ElypseController::AddThread // OK, WAITING" );
-		GENLIB_CONDITION_WAIT( m_threadCurrentlyRendering, m_mutex );
+		m_threadCurrentlyRendering.wait( l_lock );
 		EMUSE_MESSAGE_DEBUG( "ElypseController::AddThread // OK, END WAITING" );
 	}
 	else
@@ -243,9 +250,9 @@ void ElypseController::AddThread( ElypseInstance * p_owner )
 
 	if ( m_status != CS_DESTROYING && m_status != CS_DESTROYED )
 	{
-		m_owner = p_owner;
-		//	m_currentOwner = p_owner;
-		m_owner->SetMain( true );
+		ChangeOwner( p_owner );
+		//m_currentOwner = p_owner;
+		GetOwner()->SetMain( true );
 		MainLoop();
 	}
 }
@@ -255,7 +262,7 @@ void ElypseController::Initialise()
 	EMUSE_MESSAGE_DEBUG( "ElypseController::Initialise" );
 	std::cout << "ElypseController::Initialise()" << std::endl;
 	ElypseResourceGroupManager::setPrefix( EMPTY_STRING );
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 
 	if ( m_initialised )
 	{
@@ -279,6 +286,7 @@ void ElypseController::Initialise()
 		try
 		{
 			m_root = new Root( EMPTY_STRING, EMPTY_STRING, l_directory / "Ogre.log" );
+			m_overlaySystem = new Ogre::OverlaySystem();
 		}
 		catch ( Ogre::Exception & e )
 		{
@@ -301,11 +309,12 @@ void ElypseController::Initialise()
 
 		if ( ! PluginLoader::GetSingletonPtr()->load( m_installDir, m_root ) )
 		{
-			m_owner->GetPlugin()->SetGraphicalStatus( StatusErrorOgre );
+			GetOwner()->GetPlugin()->SetGraphicalStatus( StatusErrorOgre );
 		}
 
 #if ELYPSE_WINDOWS
-		m_root->setRenderSystem( m_root->getRenderSystemByName( "Direct3D9 Rendering Subsystem" ) );
+		m_root->setRenderSystem( m_root->getRenderSystemByName( "OpenGL Rendering Subsystem" ) );
+		//m_root->setRenderSystem( m_root->getRenderSystemByName( "Direct3D11 Rendering Subsystem" ) );
 #else
 		m_root->setRenderSystem( m_root->getRenderSystemByName( "OpenGL Rendering Subsystem" ) );
 #endif
@@ -362,7 +371,7 @@ void ElypseController::Initialise()
 	}
 }
 
-void ElypseController::InitialiseRessources( const String & p_prefix )
+void ElypseController::InitialiseRessources( String const & p_prefix )
 {
 	ElypseResourceGroupManager::setPrefix( p_prefix );
 	EMUSE_MESSAGE_DEBUG( "ElypseController::Initialise , next is get core.zip" );
@@ -400,7 +409,7 @@ void ElypseController::InitialiseRessources( const String & p_prefix )
 	ElypseResourceGroupManager::loadResourceGroup( "core.zip" );
 }
 
-void ElypseController::UninitialiseRessources( const String & p_prefix )
+void ElypseController::UninitialiseRessources( String const & p_prefix )
 {
 	ElypseResourceGroupManager::setPrefix( p_prefix );
 
@@ -417,7 +426,7 @@ void ElypseController::UninitialiseRessources( const String & p_prefix )
 
 void ElypseController::MainLoop()
 {
-	GENLIB_SCOPED_LOCK( m_selfMutex );
+	auto l_lock = make_unique_lock( m_selfMutex );
 	EMUSE_MESSAGE_DEBUG( "ElypseController::MainLoop() : start" );
 	ElypseInstance * l_ogreApp;
 
@@ -466,7 +475,7 @@ void ElypseController::MainLoop()
 			VideoManager::GetSingletonPtr()->Update();
 		}
 
-		GENLIB_LOCK_MUTEX( m_mutex );
+		m_mutex.lock();
 		l_iterator = m_instances.begin();
 
 		while ( l_iterator != m_instances.end() )
@@ -487,7 +496,7 @@ void ElypseController::MainLoop()
 					{
 						l_ogreApp->Destroy();
 						m_log->logMessage( "CElypseController::OgreApplication removed, no more apps" );
-//						GENLIB_UNLOCK_MUTEX( m_mutex);
+						//m_mutex.unlock();
 						m_stopThread = true;
 						break;
 					}
@@ -495,10 +504,10 @@ void ElypseController::MainLoop()
 					{
 						if ( l_ogreApp->IsMain() )
 						{
-							m_owner->SetMain( false );
+							GetOwner()->SetMain( false );
 							l_ogreApp->Destroy();
 							m_log->logMessage( "CElypseController::Removed the main OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
-//							GENLIB_CONDITION_NOTIFY_ONE( m_threadCurrentlyRendering);
+//							m_threadCurrentlyRendering.notify_one();
 							m_stopThread = true;
 							break;
 						}
@@ -517,9 +526,9 @@ void ElypseController::MainLoop()
 						l_hasFocus = true;
 					}
 
-					m_owner->GetPlugin()->LockGui();
+					GetOwner()->GetPlugin()->LockGui();
 					l_ogreApp->RenderOneFrame();
-					m_owner->GetPlugin()->UnlockGui();
+					GetOwner()->GetPlugin()->UnlockGui();
 					++ l_iterator;
 				}
 			} // end if (Initialised)
@@ -554,21 +563,21 @@ void ElypseController::MainLoop()
 			}
 		} // end while (i)
 
-		if ( ! m_stopThread )
+		if ( !m_stopThread )
 		{
-			GENLIB_UNLOCK_MUTEX( m_mutex );
+			m_mutex.unlock();
 		}
 	} // end while (!m_stopThread)
 
-//	GENLIB_AUTO_SCOPED_LOCK();
+	//auto l_lock = make_unique_lock( m_mutex );
 	m_log->logMessage( "CElypseController::End of MainLoop" );
 
 	if ( ! m_instances.empty() )
 	{
 //		m_log->logMessage("CElypseController::MainLoop adopted by "+(m_instances.begin()->first));
 		EMUSE_MESSAGE_DEBUG( "ElypseController::Main Loop // ADOPTION" );
-		m_owner->SetMain( false );
-		GENLIB_CONDITION_NOTIFY_ONE( m_threadCurrentlyRendering );
+		GetOwner()->SetMain( false );
+		m_threadCurrentlyRendering.notify_one();
 //		Start((m_instances.begin()->second)->GetThread() , (m_instances.begin()->second) );
 //		return;
 	}
@@ -579,14 +588,14 @@ void ElypseController::MainLoop()
 	}
 
 	m_status = CS_INITIALISED;
-	GENLIB_UNLOCK_MUTEX( m_mutex );
-	GENLIB_CONDITION_NOTIFY_ALL( m_threadEnded );
+	m_mutex.unlock();
+	m_threadEnded.notify_all();
 }
 
 void ElypseController::DeleteOgre()
 {
 	EMUSE_CONSOLE_MESSAGE_RELEASE( "ElypseController::DeleteOgre // Start" );
-//	GENLIB_SCOPED_LOCK( m_selfMutex);
+	//auto l_lock = make_unique_lock( m_selfMutex );
 	m_status = CS_DESTROYING;
 
 	try
@@ -632,10 +641,12 @@ void ElypseController::DeleteOgre()
 		EMUSE_LOG_MESSAGE_RELEASE( "CElypseController::Bye" );
 		m_log = NULL;
 		EMUSE_CONSOLE_MESSAGE_DEBUG( "ElypseController::DeleteOgre // m_root->shutdown();" );
+		delete m_overlaySystem;
+		m_overlaySystem = nullptr;
 		delete m_root;
+		m_root = nullptr;
 		PluginLoader::GetSingletonPtr()->unload();
 		EMUSE_CONSOLE_MESSAGE_DEBUG( "ElypseController::DeleteOgre //DELETE( m_root );" );
-		m_root = NULL;
 	}
 	catch ( ... )
 	{
@@ -647,7 +658,7 @@ void ElypseController::DeleteOgre()
 	EMUSE_CONSOLE_MESSAGE_RELEASE( "ElypseController::DeleteOgre // END" );
 }
 
-void ElypseController::LinkInstanceTo( ElypseInstance * p_instance, const String & p_linkedToName )
+void ElypseController::LinkInstanceTo( ElypseInstance * p_instance, String const & p_linkedToName )
 {
 	EMUSE_MESSAGE_DEBUG( "ElypseController::LinkInstanceTo" );
 	InstanceMap::iterator ifind;
@@ -669,7 +680,7 @@ void ElypseController::LinkInstanceTo( ElypseInstance * p_instance, const String
 void ElypseController::WaitForThreadEnded()
 {
 	EMUSE_MESSAGE_NORMAL( "ElypseController::WaitForThreadEnded : Wait for thread ended pre lock mutex : " + ToString( std::this_thread::get_id() ) );
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	EMUSE_MESSAGE_NORMAL( "ElypseController::WaitForThreadEnded : Wait for thread ended post lock mutex : " + ToString( std::this_thread::get_id() ) );
 
 	if ( !GetSingletonPtr() )
@@ -678,7 +689,7 @@ void ElypseController::WaitForThreadEnded()
 		{
 			EMUSE_MESSAGE_NORMAL( "ElypseController::WaitForThreadEnded : Wait for thread ended" );
 			{
-				GENLIB_CONDITION_WAIT( m_threadEnded, m_mutex );
+				m_threadEnded.wait( l_lock );
 			}
 			EMUSE_MESSAGE_NORMAL( "ElypseController::WaitForThreadEnded : End of Waiting for thread ended" );
 		}

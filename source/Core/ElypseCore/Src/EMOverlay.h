@@ -53,14 +53,14 @@ namespace Elypse
 			bool m_wordWrapping;
 
 		public :
-			EMOverlay( const String & p_name, EMOverlayGroup * p_owner );
+			EMOverlay( String const & p_name, EMOverlayGroup & p_owner );
 			~EMOverlay();
 
 		public:
-			void SetBaseMaterial( const String & p_materialName );
+			void SetBaseMaterial( String const & p_materialName );
 			void SetClickedScript( ScriptNode * p_script );
 
-			EMOverlay * CreateChild( const String & p_name );
+			EMOverlay * CreateChild( String const & p_name );
 			//void AddChild( EMOverlay * p_child );
 
 			EMOverlay * RecursiveGetScript( Real p_x, Real p_y );
@@ -79,8 +79,8 @@ namespace Elypse
 
 			Ogre::Material * GetOrCopyMaterial();
 
-			bool Initialise( const String & p_className );
-			void Reinitialise( const String & p_className );
+			bool Initialise( String const & p_className );
+			void Reinitialise( String const & p_className );
 
 			void SetAlignment( Ogre::TextAreaOverlayElement::Alignment p_alignement );
 			Real GetTop()const;
@@ -94,7 +94,7 @@ namespace Elypse
 
 			void SetVisible( bool p_visible );
 
-			void SetCaption( const String & p_caption );
+			void SetCaption( String const & p_caption );
 
 			void ChangeParent( EMOverlay * p_parent );
 
@@ -107,35 +107,35 @@ namespace Elypse
 			void _addChild( EMOverlay * p_child );
 
 		public:
-			inline bool					IsVisible()const
+			inline bool IsVisible()const
 			{
 				return m_visible;
 			}
-			inline bool					HasScript()const
+			inline bool HasScript()const
 			{
 				return m_clickedScript != NULL;
 			}
-			inline bool					HasMouseOverMaterial()const
+			inline bool HasMouseOverMaterial()const
 			{
 				return ! m_mouseOverMaterialName.empty();
 			}
-			inline bool					HasClickedMaterial()const
+			inline bool HasClickedMaterial()const
 			{
 				return ! m_clickedMaterialName.empty();
 			}
-			inline unsigned int			GetNumChilds()const
+			inline uint32_t GetNumChilds()const
 			{
-				return static_cast <unsigned int>( m_childs.size() );
+				return static_cast <uint32_t>( m_childs.size() );
 			}
-			inline const String 	&	GetBaseMaterial()const
+			inline const String & GetBaseMaterial()const
 			{
 				return m_baseMaterialName;
 			}
-			inline const String 	&	GetMouseOverMaterial()const
+			inline const String & GetMouseOverMaterial()const
 			{
 				return m_mouseOverMaterialName;
 			}
-			inline const String 	&	GetClickedMaterial()const
+			inline const String & GetClickedMaterial()const
 			{
 				return m_clickedMaterialName;
 			}
@@ -144,15 +144,15 @@ namespace Elypse
 			{
 				return m_overlay;
 			}
-			inline EMOverlay		*	GetParent()const
+			inline EMOverlay * GetParent()const
 			{
 				return m_parent;
 			}
-			inline ScriptNode 	*		GetScript()const
+			inline ScriptNode * GetScript()const
 			{
 				return m_clickedScript;
 			}
-			inline bool					IsWordWrapped()const
+			inline bool IsWordWrapped()const
 			{
 				return m_wordWrapping;
 			}
@@ -162,11 +162,11 @@ namespace Elypse
 				return m_childs;
 			}
 
-			inline void SetMouseOverMaterial( const String & p_materialName )
+			inline void SetMouseOverMaterial( String const & p_materialName )
 			{
 				m_mouseOverMaterialName = p_materialName;
 			}
-			inline void SetClickedMaterial( const String & p_materialName )
+			inline void SetClickedMaterial( String const & p_materialName )
 			{
 				m_clickedMaterialName = p_materialName;
 			}

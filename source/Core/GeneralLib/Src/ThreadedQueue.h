@@ -30,83 +30,80 @@ namespace General
 		class ThreadedQueue
 			: d_noncopyable
 		{
-		private:
-			std::vector< T > m_items;
-			unsigned short m_maxSize;
-			unsigned short m_next;
-			unsigned short m_first;
-			unsigned short m_count;
-			Mutex m_mutex;
-			Condition m_condition;
-
 		public:
-			ThreadedQueue( unsigned int p_maxSize )
-				: m_maxSize( p_maxSize )
-				, m_next( 0 )
-				, m_first( 0 )
-				, m_count( 0 )
-				, m_items( p_maxSize )
+			ThreadedQueue( uint16_t p_maxSize )
+				: m_maxSize{ p_maxSize }
+				, m_items{ p_maxSize }
 			{
 			}
+
 			~ThreadedQueue()
 			{
 			}
 
-		public:
 			inline bool IsEmpty()const
 			{
 				return ( m_count == 0 );
 			}
+
 			inline bool IsFull()const
 			{
 				return ( m_count == m_maxSize );
 			}
 
-		public:
-			const T & Pop()
+			inline uint16_t size()const
 			{
-				GENLIB_AUTO_SCOPED_LOCK();
+				return m_count;
+			}
+
+			T const & Pop()
+			{
+				auto l_lock = make_unique_lock( m_mutex );
 
 				if ( IsEmpty() )
 				{
-					GENLIB_CONDITION_WAIT( m_condition, m_mutex );
+					m_condition.wait( l_lock );
 				}
 
-				unsigned int l_returnIndex = m_first;
+				uint32_t l_returnIndex{ m_first };
 				m_first = ( m_first + 1 ) % m_maxSize;
 				m_count --;
 
 				if ( m_count == ( m_maxSize - 1 ) )
 				{
-					GENLIB_CONDITION_NOTIFY_ONE( m_condition );
+					m_condition.notify_one();
 				}
 
 				return m_items[l_returnIndex];
 			}
 
-			void Push( const T & p_item )
+			void Push( T const & p_item )
 			{
-				GENLIB_AUTO_SCOPED_LOCK();
+				auto l_lock = make_unique_lock( m_mutex );
 
 				if ( IsFull() )
 				{
-					GENLIB_CONDITION_WAIT( m_condition, m_mutex );
+					m_condition.wait( l_lock );
 				}
 
-				m_count ++;
+				m_count++;
 				m_items[m_next] = p_item;
 				m_next = ( m_next + 1 ) % m_maxSize;
 
 				if ( m_count == 1 )
 				{
-					GENLIB_CONDITION_NOTIFY_ONE( m_condition );
+					m_condition.notify_one();
 				}
 			}
 
-			inline unsigned short size()const
-			{
-				return m_count;
-			}
+		private:
+			std::vector< T > m_items;
+			uint16_t m_maxSize{ 0 };
+			uint16_t m_next{ 0 };
+			uint16_t m_first{ 0 };
+			uint16_t m_count{ 0 };
+			std::mutex m_mutex;
+			std::condition_variable m_condition;
 		};
 	}
 }

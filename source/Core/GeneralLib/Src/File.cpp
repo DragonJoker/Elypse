@@ -48,19 +48,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <iostream>
 
-using namespace boost::filesystem;
-
 namespace General
 {
 	namespace Files
 	{
-		bool FileExists( const char * p_filename )
+		bool FileExists( char const * const p_filename )
 		{
 			struct stat l_stat;
 			return ( stat( p_filename, & l_stat ) == 0 );
 		}
 
-		bool DirectoryCreate( const std::string & p_filename )
+		bool DirectoryCreate( std::string const & p_filename )
 		{
 			if ( p_filename.empty() )
 			{
@@ -86,7 +84,7 @@ namespace General
 
 			try
 			{
-				return create_directory( p_filename );
+				return boost::filesystem::create_directory( p_filename );
 			}
 			catch ( std::exception & )
 			{
@@ -94,11 +92,11 @@ namespace General
 			}
 		}
 
-		bool DirectoryExists( const std::string & p_filename )
+		bool DirectoryExists( std::string const & p_filename )
 		{
 			try
 			{
-				return exists( p_filename ) && is_directory( p_filename );
+				return boost::filesystem::exists( p_filename ) && boost::filesystem::is_directory( p_filename );
 			}
 			catch ( std::exception & )
 			{
@@ -106,11 +104,11 @@ namespace General
 			}
 		}
 
-		bool FileDelete( const std::string & p_filename )
+		bool FileDelete( std::string const & p_filename )
 		{
 			try
 			{
-				remove( p_filename );
+				boost::filesystem::remove( p_filename );
 				return true;
 			}
 			catch ( std::exception & )
@@ -119,11 +117,11 @@ namespace General
 			}
 		}
 
-		bool FileCopy( const std::string & p_origin, const std::string & p_dest )
+		bool FileCopy( std::string const & p_origin, std::string const & p_dest )
 		{
 			try
 			{
-				copy_file( p_origin, p_dest );
+				boost::filesystem::copy_file( p_origin, p_dest );
 				return true;
 			}
 			catch ( std::exception & )
@@ -132,17 +130,17 @@ namespace General
 			}
 		}
 
-		bool DirectoryDelete( const std::string & p_dirName )
+		bool DirectoryDelete( std::string const & p_dirName )
 		{
-			if ( ! exists( p_dirName ) )
+			if ( !boost::filesystem::exists( p_dirName ) )
 			{
 				return false;
 			}
 
 			try
 			{
-				directory_iterator iend;
-				directory_iterator i( p_dirName );
+				boost::filesystem::directory_iterator iend;
+				boost::filesystem::directory_iterator i( p_dirName );
 
 				for ( ;	i != iend ; ++ i )
 				{
@@ -155,40 +153,33 @@ namespace General
 					}
 
 					remove( i->path() );
-					/*
-					{
-						//ERROR : could not delete a file ?
-						return false;
-					}
-					*/
 				}
 
-				remove( p_dirName );
+				boost::filesystem::remove( p_dirName );
 				return true;
 			}
 			catch ( ... )
 			{
-				//ERROR : could not delete a directory ?
 				return false;
 			}
 		}
 
-		unsigned int GetFileSize( const char * p_filename )
+		uint32_t GetFileSize( char const * const p_filename )
 		{
 			struct stat tagStat;
 			stat( p_filename, & tagStat );
-			return static_cast< unsigned int >( tagStat.st_size );
+			return static_cast< uint32_t >( tagStat.st_size );
 		}
 
 #if GENLIB_WINDOWS
 
-		bool FileExists( const wchar_t * p_filename )
+		bool FileExists( wchar_t const * const p_filename )
 		{
 			struct _stat l_stat;
 			return ( _wstat( p_filename, & l_stat ) == 0 );
 		}
 
-		bool DirectoryCreate( const std::wstring & p_filename )
+		bool DirectoryCreate( std::wstring const & p_filename )
 		{
 			if ( p_filename.empty() )
 			{
@@ -214,7 +205,7 @@ namespace General
 
 			try
 			{
-				return create_directory( p_filename );
+				return boost::filesystem::create_directory( p_filename );
 			}
 			catch ( std::exception & )
 			{
@@ -222,11 +213,11 @@ namespace General
 			}
 		}
 
-		bool DirectoryExists( const std::wstring & p_filename )
+		bool DirectoryExists( std::wstring const & p_filename )
 		{
 			try
 			{
-				return exists( p_filename ) && is_directory( p_filename );
+				return boost::filesystem::exists( p_filename ) && boost::filesystem::is_directory( p_filename );
 			}
 			catch ( std::exception & )
 			{
@@ -234,11 +225,11 @@ namespace General
 			}
 		}
 
-		bool FileDelete( const std::wstring & p_filename )
+		bool FileDelete( std::wstring const & p_filename )
 		{
 			try
 			{
-				remove( p_filename );
+				boost::filesystem::remove( p_filename );
 				return true;
 			}
 			catch ( std::exception & )
@@ -247,36 +238,36 @@ namespace General
 			}
 		}
 
-		bool DirectoryDelete( const std::wstring & p_dirName )
+		bool DirectoryDelete( std::wstring const & p_dirName )
 		{
-			if ( ! exists( p_dirName ) )
+			if ( !boost::filesystem::exists( p_dirName ) )
 			{
 				return false;
 			}
 
 			try
 			{
-				//wdirectory_iterator iend;
-				//wdirectory_iterator i( p_dirName);
+				boost::filesystem::directory_iterator iend;
+				boost::filesystem::directory_iterator i( p_dirName );
 
-				//for ( ;	i != iend ; ++ i)
-				//{
-				//	if (is_directory( i->status()))
-				//	{
-				//		if ( ! DirectoryDelete( i->path().string()))
-				//		{
-				//			return false;
-				//		}
-				//	}
-				//	remove( i->path());
-				//}
+				for ( ; i != iend ; ++ i )
+				{
+					if ( boost::filesystem::is_directory( i->status() ) )
+					{
+						if ( !DirectoryDelete( i->path().string() ) )
+						{
+							return false;
+						}
+					}
 
-				//remove( p_dirName);
+					remove( i->path() );
+				}
+
+				boost::filesystem::remove( p_dirName );
 				return true;
 			}
 			catch ( ... )
 			{
-				//ERROR : could not delete a directory ?
 				return false;
 			}
 		}
@@ -286,6 +277,7 @@ namespace General
 		void ListDirectoryFiles( Utils::Path const & p_folderPath, std::function< void( Utils::Path const & ) > p_function, bool p_recursive )
 		{
 #if defined( _WIN32 )
+
 			WIN32_FIND_DATAA l_findData;
 			HANDLE l_hHandle = ::FindFirstFileA( ( p_folderPath + d_path_slash + std::string( "*.*" ) ).c_str(), &l_findData );
 			std::string l_strBuffer;
@@ -324,6 +316,7 @@ namespace General
 			}
 
 #elif defined( __linux__ )
+
 			DIR * l_pDir;
 
 			if ( !( l_pDir = opendir( p_folderPath.c_str() ) ) )
@@ -390,7 +383,9 @@ namespace General
 			}
 
 #else
+
 #	error "Unsupported platform"
+
 #endif
 		}
 	}

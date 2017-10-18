@@ -45,30 +45,30 @@ namespace General
 			boost 870 msec
 			stat 450 msec
 		*/
-		bool FileExists( const char * p_filename );
-		bool DirectoryCreate( const std::string & p_filename );
-		bool DirectoryExists( const std::string & p_filename );
-		bool DirectoryDelete( const std::string & p_dirName );
-		bool FileDelete( const std::string & p_filename );
-		bool FileCopy( const std::string & p_origin, const std::string & p_dest );
+		bool FileExists( char const * const p_filename );
+		bool DirectoryCreate( std::string const & p_filename );
+		bool DirectoryExists( std::string const & p_filename );
+		bool DirectoryDelete( std::string const & p_dirName );
+		bool FileDelete( std::string const & p_filename );
+		bool FileCopy( std::string const & p_origin, std::string const & p_dest );
 
-		unsigned int GetFileSize( const char * p_filename );
+		uint32_t GetFileSize( char const * const p_filename );
 
-		inline unsigned int GetFileSize( const std::string & p_filename )
+		inline uint32_t GetFileSize( std::string const & p_filename )
 		{
 			return GetFileSize( p_filename.c_str() );
 		}
-		inline bool FileExists( const std::string & p_filename )
+		inline bool FileExists( std::string const & p_filename )
 		{
 			return FileExists( p_filename.c_str() );
 		}
 
-		bool FileExists( const wchar_t * p_filename );
-		bool FileDelete( const std::wstring & p_filename );
-		bool DirectoryCreate( const std::wstring & p_filename );
-		bool DirectoryExists( const std::wstring & p_filename );
-		bool DirectoryDelete( const std::wstring & p_dirName );
-		inline bool FileExists( const std::wstring & p_filename )
+		bool FileExists( wchar_t const * const p_filename );
+		bool FileDelete( std::wstring const & p_filename );
+		bool DirectoryCreate( std::wstring const & p_filename );
+		bool DirectoryExists( std::wstring const & p_filename );
+		bool DirectoryDelete( std::wstring const & p_dirName );
+		inline bool FileExists( std::wstring const & p_filename )
 		{
 			return FileExists( p_filename.c_str() );
 		}

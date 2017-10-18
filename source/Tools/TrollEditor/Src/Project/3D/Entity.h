@@ -22,52 +22,59 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Media/Module_Media.h"
 
-BEGIN_TROLL_PROJECT_3D_NAMESPACE
+namespace Troll
 {
-	class TrollEntity
-		: public Troll3DObject
+	namespace ProjectComponents
 	{
-	public:
-		TrollEntity( const wxString & p_name, const wxString & p_fileName );
-		virtual ~TrollEntity();
-
-		virtual void AttachTo( TrollSceneNode * p_node );
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void SetOgreEntity( Ogre::Entity * p_entity );
-		void SetMaterial( const wxString & p_name, bool p_updateOgre = true );
-		void SetMesh( TrollMesh * p_mesh );
-
-		void Write( wxTextOutputStream * p_stream );
-
-		inline TrollMesh * GetMesh()const
+		namespace Objects3D
 		{
-			return m_mesh;
-		}
-		inline wxString GetMaterial()const
-		{
-			return m_material;
-		}
-		inline Ogre::Entity * GetOgreEntity()const
-		{
-			return m_ogreEntity;
-		}
-		inline Media::TrollVideoObject * GetVideo()const
-		{
-			return m_video;
-		}
-		inline void SetVideo( Media::TrollVideoObject * p_video )
-		{
-			m_video = p_video;
-		}
+			class TrollEntity
+				: public Troll3DObject
+			{
+			public:
+				TrollEntity( wxString const & p_name, wxString const & p_fileName );
+				virtual ~TrollEntity();
 
-	protected:
-		TrollMesh * m_mesh;
-		wxString m_material;
-		Ogre::Entity * m_ogreEntity;
-		Media::TrollVideoObject * m_video;
-	};
+				virtual void AttachTo( TrollSceneNode * p_node );
+
+				void SetOgreEntity( Ogre::Entity * p_entity );
+				void SetMaterial( wxString const & p_name, bool p_updateOgre = true );
+				void SetMesh( TrollMesh * p_mesh );
+
+				void Write( wxTextOutputStream & p_stream );
+
+				inline TrollMesh * GetMesh()const
+				{
+					return m_mesh;
+				}
+				inline wxString GetMaterial()const
+				{
+					return m_material;
+				}
+				inline Ogre::Entity * GetOgreEntity()const
+				{
+					return m_ogreEntity;
+				}
+				inline Media::TrollVideoObject * GetVideo()const
+				{
+					return m_video;
+				}
+				inline void SetVideo( Media::TrollVideoObject * p_video )
+				{
+					m_video = p_video;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			protected:
+				TrollMesh * m_mesh;
+				wxString m_material;
+				Ogre::Entity * m_ogreEntity;
+				Media::TrollVideoObject * m_video;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_3D_NAMESPACE
 
 #endif

@@ -22,49 +22,56 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Module_Media.h>
 
-BEGIN_TROLL_PROJECT_MEDIA_NAMESPACE
+namespace Troll
 {
-	class TrollVideo
-		: public MediaObject
+	namespace ProjectComponents
 	{
-	public:
-		TrollVideo( const wxString & p_name, const wxString & p_fileName );
-		~TrollVideo();
-
-		TrollVideoObject * AddObject( Object * p_object );
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void SetMuseVideo( VideoObject * p_museVideo );
-		void SetUrl( const wxString & p_url );
-		void SetLooped( bool p_looped );
-		void SetEnabled( bool p_enabled );
-
-		void Write( wxTextOutputStream * p_stream );
-
-	public:
-		inline const wxString &	GetUrl()const
+		namespace Media
 		{
-			return m_filePath;
-		}
-		inline bool IsLooped()const
-		{
-			return m_looped;
-		}
-		inline bool IsEnabled()const
-		{
-			return m_enabled;
-		}
+			class TrollVideo
+				: public MediaObject
+			{
+			public:
+				TrollVideo( wxString const & p_name, wxString const & p_fileName );
+				~TrollVideo();
 
-	private:
-		wxString m_filePath;
-		TrollVideoObjectMap m_objects;
-		bool m_looped;
-		bool m_enabled;
-		VideoObject * m_museVideo;
-	};
+				TrollVideoObject * AddObject( Object * p_object );
+
+				void SetMuseVideo( VideoObject * p_museVideo );
+				void SetUrl( wxString const & p_url );
+				void SetLooped( bool p_looped );
+				void SetEnabled( bool p_enabled );
+
+				void Write( wxTextOutputStream & p_stream );
+
+				inline wxString const &	GetUrl()const
+				{
+					return m_filePath;
+				}
+
+				inline bool IsLooped()const
+				{
+					return m_looped;
+				}
+
+				inline bool IsEnabled()const
+				{
+					return m_enabled;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				wxString m_filePath;
+				TrollVideoObjectMap m_objects;
+				bool m_looped;
+				bool m_enabled;
+				VideoObject * m_museVideo;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_MEDIA_NAMESPACE
 
 #endif
 

@@ -29,37 +29,38 @@ namespace Elypse
 {
 	namespace Media
 	{
-		class d_dll_export VideoTexture : public Ogre::ExternalTextureSource, owned_by <VideoObject>
+		class d_dll_export VideoTexture
+			: public Ogre::ExternalTextureSource
+			, owned_by< VideoObject >
 		{
-		private:
-			bool m_bufferChange;
-			unsigned int m_bufferSize;
-
-			unsigned char * m_tmpBuffer;
-			Texture * m_texture;
-
-			Mutex m_mutex;
-
 		public:
-			VideoTexture( VideoObject * p_owner );
+			VideoTexture( VideoObject & p_owner );
 			~VideoTexture();
 
 		public:
 			virtual bool initialise();
 			virtual void shutDown()	{}
-			virtual void createDefinedTexture(
-				const String & p_materialName,
-				const String & p_groupName = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );
-			virtual void destroyAdvancedTexture(
-				const String & p_materialName,
-				const String & p_groupName = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME )	{}
+			virtual void createDefinedTexture( String const & p_materialName, String const & p_groupName = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );
+			virtual void destroyAdvancedTexture( String const & p_materialName, String const & p_groupName = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME )
+			{
+			}
+
 		public:
-			void CopyToBuffer( unsigned char * p_buffer, unsigned int p_bufferSize );
+			void CopyToBuffer( unsigned char * p_buffer, uint32_t p_bufferSize );
 			void Update();
 			void RedrawInBlack();
 
 		private:
-			void _createTexture( const String & p_materialName, const String & p_groupName, bool p_createMat );
+			void _createTexture( String const & p_materialName, String const & p_groupName, bool p_createMat );
+
+		private:
+			bool m_bufferChange;
+			uint32_t m_bufferSize;
+
+			unsigned char * m_tmpBuffer;
+			Texture * m_texture;
+
+			std::mutex m_mutex;
 		};
 	}
 }

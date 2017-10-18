@@ -33,46 +33,48 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Temporal/Module_Temporal.h"
 #include <ConfigFile.h>
 
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	class SceneFile
+	namespace ProjectComponents
 	{
-	public:
-		SceneFile();
-		~SceneFile();
-		
-		Objects3D::TrollEntity * GetEntity( const wxString & p_name )const;
-		Objects2D::TrollOverlay * GetOverlay( const wxString & p_name )const;
-		Objects3D::TrollSceneNode * GetSceneNode( const wxString & p_name )const;
-		Objects3D::TrollLight * GetLight( const wxString & p_name )const;
-		Objects3D::TrollCamera * GetCamera( const wxString & p_name )const;
-		Temporal::TrollAnimationGroup * GetAnimationGroup( const wxString & p_name )const;
-		Media::TrollSound * GetSound( const wxString & p_name )const;
-		Media::TrollVideo * GetVideo( const wxString & p_name )const;
-		Temporal::TrollSequence * GetSequence( const wxString & p_name )const;
-		void Write( const wxString & p_path );
+		class SceneFile
+		{
+		public:
+			SceneFile();
+			~SceneFile();
 
-	private:
-		void _writeUnusedFilePieces( wxTextOutputStream * p_textStream );
+			Objects3D::TrollEntity * GetEntity( wxString const & p_name )const;
+			Objects2D::TrollOverlay * GetOverlay( wxString const & p_name )const;
+			Objects3D::TrollSceneNode * GetSceneNode( wxString const & p_name )const;
+			Objects3D::TrollLight * GetLight( wxString const & p_name )const;
+			Objects3D::TrollCamera * GetCamera( wxString const & p_name )const;
+			Temporal::TrollAnimationGroup * GetAnimationGroup( wxString const & p_name )const;
+			Media::TrollSound * GetSound( wxString const & p_name )const;
+			Media::TrollVideo * GetVideo( wxString const & p_name )const;
+			Temporal::TrollSequence * GetSequence( wxString const & p_name )const;
+			void Write( wxString const & p_path )const;
 
-	public:
-		bool m_forceShadows;
-		ShadowType m_shadowType;
-		ColourValue m_ambientLight;
-		wxString m_fileName;
-		Objects3D::TrollEntityMap m_entities;
-		Objects2D::TrollOverlayMap m_overlayGroups;
-		Objects2D::TrollOverlayMap m_allOverlays;
-		Objects3D::TrollSceneNodeMap m_allSceneNodes;
-		Objects3D::TrollSceneNodeMap m_sceneNodes;
-		Objects3D::TrollLightMap m_lights;
-		Objects3D::TrollCameraMap m_cameras;
-		Temporal::TrollAnimationGroupStrMap m_animationGroups;
-		Media::TrollSoundStrMap m_sounds;
-		Media::TrollVideoStrMap m_videos;
-		Temporal::TrollSequenceStrMap m_sequences;
-	};
+		private:
+			void DoWriteUnusedFilePieces( wxTextOutputStream * p_textStream )const;
+
+		public:
+			bool m_forceShadows;
+			ShadowType m_shadowType;
+			ColourValue m_ambientLight;
+			wxString m_fileName;
+			Objects3D::TrollEntityMap m_entities;
+			Objects2D::TrollOverlayMap m_overlayGroups;
+			Objects2D::TrollOverlayMap m_allOverlays;
+			Objects3D::TrollSceneNodeMap m_allSceneNodes;
+			Objects3D::TrollSceneNodeMap m_sceneNodes;
+			Objects3D::TrollLightMap m_lights;
+			Objects3D::TrollCameraMap m_cameras;
+			Temporal::TrollAnimationGroupStrMap m_animationGroups;
+			Media::TrollSoundStrMap m_sounds;
+			Media::TrollVideoStrMap m_videos;
+			Temporal::TrollSequenceStrMap m_sequences;
+		};
+	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

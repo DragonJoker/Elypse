@@ -30,22 +30,18 @@ namespace Elypse
 {
 	namespace Gui
 	{
-		class d_dll_export RawImageManager : public AutoSingleton<RawImageManager>, public General::Templates::Manager<RawImage>
+		class d_dll_export RawImageManager
+			: public AutoSingleton< RawImageManager >
+			, public General::Templates::Manager< RawImage >
 		{
 		};
 
-		class d_dll_export RawImage : public ReferenceCounted<RawImage>, public General::Theory::named
+		class d_dll_export RawImage
+			: public ReferenceCounted< RawImage >
+			, public General::Theory::named
 		{
-		protected:
-			size_t m_width;
-			size_t m_height;
-
-			Ogre::ColourValue * m_data;
-
-			size_t m_refCount;
-
 		public:
-			RawImage( const String & p_name );
+			RawImage( String const & p_name );
 			~RawImage();
 
 		public:
@@ -56,9 +52,14 @@ namespace Elypse
 
 			inline const Ogre::ColourValue & GetPixelAt( Real p_x, Real p_y )const
 			{
-				return GetPixelAt( static_cast<size_t>( p_x * ( m_width - 1 ) ),
-								   static_cast<size_t>( p_y * ( m_height - 1 ) ) );
+				return GetPixelAt( size_t( p_x * ( m_width - 1 ) ), size_t( p_y * ( m_height - 1 ) ) );
 			}
+
+		protected:
+			uint32_t m_width{ 0 };
+			uint32_t m_height{ 0 };
+			std::vector< Ogre::ColourValue > m_data;
+			size_t m_refCount{ 0 };
 		};
 	}
 }

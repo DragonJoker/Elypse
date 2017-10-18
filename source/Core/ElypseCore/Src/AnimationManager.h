@@ -26,7 +26,8 @@ namespace Elypse
 {
 	namespace Animation
 	{
-		class d_dll_export AnimationManager : public General::Templates::Manager<AnimatedObjectGroup>, d_noncopyable
+		class d_dll_export AnimationManager
+			: public General::Templates::Manager< AnimatedObjectGroup >
 		{
 		public:
 			AnimationManager();

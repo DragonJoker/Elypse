@@ -20,11 +20,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Config.h"
 
-#if ! GENLIB_WINDOWS
+#if !GENLIB_WINDOWS
 #	error Available only on windows
 #else
 
-#	include <windows.h>
+#	include <Windows.h>
 #	include <string>
 #	include "StringConverter.h"
 
@@ -37,34 +37,26 @@ namespace General
 		public:
 			ComputerInfo()
 			{
-				m_numScreens = static_cast< int >( GetSystemMetrics( SM_CMONITORS ) );
-				m_mainScreenX = static_cast< int >( GetSystemMetrics( SM_CXSCREEN ) );
-				m_mainScreenY = static_cast< int >( GetSystemMetrics( SM_CYSCREEN ) );
-				ZeroMemory( & m_operatingSystem, sizeof( OSVERSIONINFO ) );
 				m_operatingSystem.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-				GetVersionEx( & m_operatingSystem );
+				GetVersionEx( &m_operatingSystem );
 				m_memoryStatus.dwLength = sizeof( m_memoryStatus );
 				ActualiseMemory();
 			}
 
-			~ComputerInfo() {}
-
-		public:
 			void ActualiseMemory()
 			{
-				GlobalMemoryStatusEx( & m_memoryStatus );
+				GlobalMemoryStatusEx( &m_memoryStatus );
 			}
 
-		public:
-			inline unsigned int GetNumScreens()const
+			inline uint32_t GetNumScreens()const
 			{
 				return m_numScreens;
 			}
-			inline unsigned int GetMainScreenWidth()const
+			inline uint32_t GetMainScreenWidth()const
 			{
 				return m_mainScreenX;
 			}
-			inline unsigned int GetMainScreenHeight()const
+			inline uint32_t GetMainScreenHeight()const
 			{
 				return m_mainScreenY;
 			}
@@ -80,30 +72,30 @@ namespace General
 			{
 				return General::Utils::ToString( m_operatingSystem.szCSDVersion );
 			}
-			inline unsigned long long GetTotalPhysicalMemory()const
+			inline uint64_t GetTotalPhysicalMemory()const
 			{
 				return m_memoryStatus.ullTotalPhys >> 10;
 			}
-			inline unsigned long long GetFreePhysicalMemory()const
+			inline uint64_t GetFreePhysicalMemory()const
 			{
 				return m_memoryStatus.ullAvailPhys >> 10;
 			}
-			inline unsigned int GetMemoryUsage()const
+			inline uint32_t GetMemoryUsage()const
 			{
 				return m_memoryStatus.dwMemoryLoad;
 			}
 			inline bool IsLittleEndian()const
 			{
-				unsigned char SwapTest[2] = { 1, 0 };
-				return ( *( short * ) SwapTest == 1 );
+				unsigned char SwapTest[2] { 1, 0 };
+				return ( ( *reinterpret_cast< short * >( SwapTest ) ) == 1 );
 			}
 
 		private:
-			unsigned int m_numScreens;
-			unsigned int m_mainScreenX;
-			unsigned int m_mainScreenY;
-			OSVERSIONINFO m_operatingSystem;
-			MEMORYSTATUSEX m_memoryStatus;
+			uint32_t m_numScreens{ ::GetSystemMetrics( SM_CMONITORS ) };
+			uint32_t m_mainScreenX{ ::GetSystemMetrics( SM_CXSCREEN ) };
+			uint32_t m_mainScreenY{ ::GetSystemMetrics( SM_CYSCREEN ) };
+			OSVERSIONINFO m_operatingSystem{ 0 };
+			MEMORYSTATUSEX m_memoryStatus{ 0 };
 		};
 	}
 }

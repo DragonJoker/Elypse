@@ -1,0 +1,37 @@
+//* Option permettant de créer le dossier du projet automatiquement à la création d'un nouveau projet
+//* Dans la liste des fonctions, avoir un tooltip (helptext, ou sur clic droit) qui donnera l'entête complet de la fonction dont il est question.
+//* A la fermeture, demander de sauvegarder le projet courant s'il y a eu des modifications depuis la dernière sauvegarde (ou s'il n'y as pas encore eu de sauvegarde pour un nouveau projet).
+//* A la création d'un projet sélectionner une couleur de fond par défaut (noir par exemple), plutôt que d'emmerder l'utilisateur à lui en demander une.
+//* Lors d'une sauvegarde de projet, placé la boîte de sélection de fichier dans le dossier du projet (et sauvegarde par défaut du fichier .teproj à la racine du projet).
+//* Le double click sur un fichier .teproj ouvre le TrollEditor, mais pas le projet sélectionné.
+//* Ajouter au clic droit sur l'onglet du nom d'un fichier ouvert les commandes applicables à celui-ci (en gros le même menu que dans la liste des fichiers).
+//* Rajouter les n° de ligne lors de l'édition d'un fichier (un ajout de ligne ne provoque l'ajout du n° de ligne correspondant tant que le fichier n'est pas fermé puis rouvert).
+//* Enlever les n° de ligne lors de l'édition d'un fichier (la suppression de la dernière ligne du fichier ne provoque pas d'ajustement des n° de ligne).
+//* Double click sur un mot sélectionne le mot.
+//* En plus des onglets "Debug" et "Compilation", un onglet "Exécution" contenant la sortie correspondante à l'exécution de la scène.
+//* Lier les fonctions de l'éditeur de scène au troll editor.
+//* Ne plus utiliser les zips, mettre les data folders, permettre d'importer des meshes
+//* Ajouter des "préférences" (ou options ou comme tu voudras appeler ça) aux projets, avec les données globales (couleur ou image de fond, antialiasing, etc...)
+//* Ne pas afficher la complétion syntaxique dans les fichiers emscene.
+//* Fonctions de recherche, de remplacement, etc...
+//* Pouvoir tabuler plusieurs lignes d'un coup (et les "untabuler").
+//* Permettre les projets multiscène.
+//* Editer les options de projet (console de debug, fps, antialiasing, startupscript, ...)
+
+
+
+URGENT
+
+* Permettre l'édition des animation groups.
+* Permettre de lier une 1ere scène à une 2eme (dire que la 1ere a besoin de la 2eme pour se lancer).
+* Permettre d'éditer la 3d et la 2d d'une scene particulière.
+
+
+PAS URGENT
+
+* Permettre l'édition des images par une commande système (par défaut mspaint, mais configurable pour y mettre photoshop par ex).	<------ Inutile?
+* Faire en sorte que l'on puisse annuler toutes les modifications depuis la dernière sauvegarde, et non pas juste la dernière.
+* Drag une fonction sur un fichier marque "this text will be dragged", le nom de la fonction ce serait mieux.
+* Multi-Projets? (va me traper le blond pour le coup)...
+* Creation et édition de material et d'overlay.
+* Mettre le TestPanel en wxWindow et non wxFrame

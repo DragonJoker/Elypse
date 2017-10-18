@@ -22,58 +22,64 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class TimePanel
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		TimePanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-		~TimePanel();
+		namespace Time
+		{
+			class TimePanel
+				: public wxPanel
+			{
+			public:
+				TimePanel( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
+				~TimePanel();
 
-		void IncrementTickPosition( int p_left );
-		void UpdateTick( int p_left, bool p_updateSequence = false );
+				void IncrementTickPosition( int p_left );
+				void UpdateTick( int p_left, bool p_updateSequence = false );
 
-		inline void SetFirst( float p_first )
-		{
-			m_first = p_first;
-			Refresh();
-		}
-		inline void IncrementFirst( float p_inc )
-		{
-			m_first += p_inc;
-			Refresh();
-		}
-		inline void DecrementFirst( float p_dec )
-		{
-			m_first -= p_dec;
-			Refresh();
-		}
-		inline void SetLeftDown( bool p_down )
-		{
-			m_leftDown = p_down;
-		}
-		inline float GetFirst()const
-		{
-			return m_first;
-		}
+				inline void SetFirst( float p_first )
+				{
+					m_first = p_first;
+					Refresh();
+				}
+				inline void IncrementFirst( float p_inc )
+				{
+					m_first += p_inc;
+					Refresh();
+				}
+				inline void DecrementFirst( float p_dec )
+				{
+					m_first -= p_dec;
+					Refresh();
+				}
+				inline void SetLeftDown( bool p_down )
+				{
+					m_leftDown = p_down;
+				}
+				inline float GetFirst()const
+				{
+					return m_first;
+				}
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnPaint( wxPaintEvent & p_event );
-		void OnLeftMouseDown( wxMouseEvent & p_event );
-		void OnLeftMouseUp( wxMouseEvent & p_event );
-		void OnMouseMove( wxMouseEvent & p_event );
+			private:
+				DECLARE_EVENT_TABLE()
+				void OnPaint( wxPaintEvent & p_event );
+				void OnLeftMouseDown( wxMouseEvent & p_event );
+				void OnLeftMouseUp( wxMouseEvent & p_event );
+				void OnMouseMove( wxMouseEvent & p_event );
 
-	protected:
-		int m_totalWidth;
-		float m_scale;
-		float m_first;
-		TimeTick * m_tick;
-		float m_currentTime;
-		bool m_leftDown;
-	};
+			protected:
+				int m_totalWidth;
+				float m_scale;
+				float m_first;
+				TimeTick * m_tick;
+				float m_currentTime;
+				bool m_leftDown;
+				ProjectFrame * m_projectFrame;
+			};
+		}
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

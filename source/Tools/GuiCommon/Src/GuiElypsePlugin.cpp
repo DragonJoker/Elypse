@@ -17,12 +17,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 */
 #include "GuiCommonPch.h"
 
-#include "GUIElypsePlugin.h"
+#include "GuiElypsePlugin.h"
 
 #include <ElypseLogs.h>
 #include <OgreStringConverter.h>
 
-BEGIN_COMMON_GUI_NAMESPACE
+namespace GuiCommon
 {
 	wxElypsePlugin::wxElypsePlugin()
 		: m_handle( 0 )
@@ -34,17 +34,17 @@ BEGIN_COMMON_GUI_NAMESPACE
 	{
 	}
 
-	String wxElypsePlugin::GetStringFromUrl( const String & p_url , bool p_usePostMethod )
+	String wxElypsePlugin::GetStringFromUrl( String const & p_url , bool p_usePostMethod )
 	{
 		return String();
 	}
 
-	bool wxElypsePlugin::OpenURL( const String & p_url, bool p_newWindow , bool p_usePostMethod )
+	bool wxElypsePlugin::OpenURL( String const & p_url, bool p_newWindow , bool p_usePostMethod )
 	{
 		return true;
 	}
 
-	void wxElypsePlugin::MajorError( const String & p_errorText, const String & p_title )
+	void wxElypsePlugin::MajorError( String const & p_errorText, String const & p_title )
 	{
 		wxMessageBox( make_wxString( p_errorText ), make_wxString( p_title ), wxICON_EXCLAMATION, m_handle );
 	}
@@ -99,4 +99,3 @@ BEGIN_COMMON_GUI_NAMESPACE
 		}
 	}
 }
-END_COMMON_GUI_NAMESPACE

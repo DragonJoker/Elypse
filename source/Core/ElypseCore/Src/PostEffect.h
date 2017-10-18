@@ -31,7 +31,7 @@ namespace Elypse
 			CompositorInstance * m_instance;
 
 		public:
-			PostEffect( const String & p_name, Viewport * p_viewport, int p_position = -1, bool p_autocreate = true );
+			PostEffect( String const & p_name, Viewport * p_viewport, int p_position = -1, bool p_autocreate = true );
 			virtual ~PostEffect();
 
 		public:

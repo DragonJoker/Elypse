@@ -22,25 +22,29 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Object.h"
 
-BEGIN_TROLL_PROJECT_MEDIA_NAMESPACE
+namespace Troll
 {
-	class MediaObject
-		: public Object
+	namespace ProjectComponents
 	{
-	public:
-		MediaObject( const wxString & p_name, const wxString & p_fileName, MediaObjectType p_type );
-		virtual ~MediaObject();
-
-		inline MediaObjectType	GetMediaObjectType()const
+		namespace Media
 		{
-			return m_mediaObjectType;
-		}
+			class MediaObject
+				: public Object
+			{
+			public:
+				MediaObject( wxString const & p_name, wxString const & p_fileName, MediaObjectType p_type );
+				virtual ~MediaObject();
 
-	protected:
-		MediaObjectType m_mediaObjectType;
-	};
+				inline MediaObjectType	GetMediaObjectType()const
+				{
+					return m_mediaObjectType;
+				}
+
+			protected:
+				MediaObjectType m_mediaObjectType;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_MEDIA_NAMESPACE
 
 #endif
-

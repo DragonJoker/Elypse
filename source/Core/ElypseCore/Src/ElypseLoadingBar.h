@@ -37,8 +37,8 @@ namespace Elypse
 
 			Real m_initProportion;
 
-			unsigned short m_numGroupsInit;
-			unsigned short m_numGroupsLoad;
+			uint16_t m_numGroupsInit;
+			uint16_t m_numGroupsLoad;
 
 			Real m_progressBarMaxSize;
 			Real m_progressBarScriptSize;
@@ -68,28 +68,28 @@ namespace Elypse
 			void finish();
 			void StartDownloadOfFile();
 			void EndDownloadOfFile();
-			void start( unsigned short numGroupsInit = 1, unsigned short numGroupsLoad = 1, Real initProportion = 0.70f );
-			void resourceGroupScriptingStarted( const String & groupName, size_t scriptCount );
-			void resourceGroupLoadStarted( const String & groupName, size_t resourceCount );
+			void start( uint16_t numGroupsInit = 1, uint16_t numGroupsLoad = 1, Real initProportion = 0.70f );
+			void resourceGroupScriptingStarted( String const & groupName, size_t scriptCount );
+			void resourceGroupLoadStarted( String const & groupName, size_t resourceCount );
 			void resourceLoadEnded();
-			void resourceDownloadStarted( const String & name );
+			void resourceDownloadStarted( String const & name );
 			void setPercent( Real p_percent, Real p_downSpeed );
 			void ResetBar();
 
 			void UpdateBar();
 
-			void scriptParseEnded( const String & );
+			void scriptParseEnded( String const & );
 
 			//Unused
-			void scriptParseStarted( const String &, bool & )
+			void scriptParseStarted( String const &, bool & )
 			{
 				;
 			}
-			void scriptParseEnded( const String &, bool )
+			void scriptParseEnded( String const &, bool )
 			{
 				;
 			}
-			void resourceGroupScriptingEnded( const String & )
+			void resourceGroupScriptingEnded( String const & )
 			{
 				;
 			}
@@ -97,7 +97,7 @@ namespace Elypse
 			{
 				;
 			}
-			void worldGeometryStageStarted( const String & )
+			void worldGeometryStageStarted( String const & )
 			{
 				;
 			}
@@ -105,29 +105,29 @@ namespace Elypse
 			{
 				;
 			}
-			void resourceGroupLoadEnded( const String & )
+			void resourceGroupLoadEnded( String const & )
 			{
 				;
 			}
-			void resourceDownloadEnded( const String & )
+			void resourceDownloadEnded( String const & )
 			{
 				;
 			}
 
 		public:
-			inline void SetLoadingBarOverlayName( const String & p_name )
+			inline void SetLoadingBarOverlayName( String const & p_name )
 			{
 				m_loadingOverlayName = p_name;
 			}
-			inline void SetLoadingBarProgressName( const String & p_name )
+			inline void SetLoadingBarProgressName( String const & p_name )
 			{
 				m_loadingBarProgressName = p_name;
 			}
-			inline void SetLoadingBarPercentName( const String & p_name )
+			inline void SetLoadingBarPercentName( String const & p_name )
 			{
 				m_loadingBarPercentageName = p_name;
 			}
-			inline void SetLoadingBarGroupName( const String & p_name )
+			inline void SetLoadingBarGroupName( String const & p_name )
 			{
 				m_loadingBarName = p_name;
 			}

@@ -36,8 +36,8 @@ namespace Elypse
 			, d_noncopyable
 		{
 		public:
-			ConfigFile();
-			ConfigFile( const String & p_name, MuseFile * p_owner );
+			ConfigFile( MuseFile & p_owner );
+			ConfigFile( String const & p_name, MuseFile & p_owner );
 			~ConfigFile();
 
 			void Use();
@@ -54,9 +54,9 @@ namespace Elypse
 			void DoLoad();
 
 		protected:
-			unsigned int m_useCount;
+			uint32_t m_useCount;
 			bool m_downloaded;
-			General::MultiThreading::Mutex m_mutex;
+			std::mutex m_mutex;
 		};
 	}
 }

@@ -39,29 +39,29 @@ PhysicsEngine::~PhysicsEngine()
 	General::Utils::map::deleteAll( m_materials );
 }
 
-void PhysicsEngine::ClearAllUniverses() d_no_throw
+void PhysicsEngine::ClearAllUniverses() noexcept
 {
 	General::Utils::map::deleteAll( m_universes );
 }
 
-PhysicsSimulation * PhysicsEngine::CreateSimulation( const String & p_name )
+PhysicsSimulation * PhysicsEngine::CreateSimulation( String const & p_name )
 {
 	genlib_assert( ! p_name.empty() );
 	return General::Utils::map::insert( m_universes, p_name, p_name );
 }
 
-bool PhysicsEngine::DestroySimulation( const String & p_name )
+bool PhysicsEngine::DestroySimulation( String const & p_name )
 {
 	return General::Utils::map::deleteValue( m_universes, p_name );
 }
 
-PhysicsMaterial * PhysicsEngine::CreateMaterial( const String & p_name )
+PhysicsMaterial * PhysicsEngine::CreateMaterial( String const & p_name )
 {
 	genlib_assert( ! p_name.empty() );
 	return General::Utils::map::insert( m_materials, p_name, p_name );
 }
 
-bool PhysicsEngine::DestroyMaterial( const String & p_name )
+bool PhysicsEngine::DestroyMaterial( String const & p_name )
 {
 	return General::Utils::map::deleteValue( m_materials, p_name );
 }
@@ -132,7 +132,7 @@ void PhysicsEngine::CollisionCallback( void *, dGeomID p_geomA, dGeomID p_geomB 
 	}
 }
 
-void PhysicsEngine::RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObject * p_objB, dContact * p_contact, unsigned int p_numContacts )
+void PhysicsEngine::RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObject * p_objB, dContact * p_contact, uint32_t p_numContacts )
 {
 	//TODO
 	if ( p_objA->IsStatic() )
@@ -157,7 +157,7 @@ void PhysicsEngine::RollingFrictionCallback( PhysicsObject * p_objA, PhysicsObje
 	Vector3 l_normal = Vector3::ZERO;
 	Vector3 l_position = Vector3::ZERO;
 
-	for ( unsigned int i = 0 ; i < p_numContacts ; i ++ )
+	for ( uint32_t i = 0 ; i < p_numContacts ; i ++ )
 	{
 		dVector3 l_result;
 		l_position += Vector3( p_contact[i].geom.pos[0], p_contact[i].geom.pos[1], p_contact[i].geom.pos[2] );

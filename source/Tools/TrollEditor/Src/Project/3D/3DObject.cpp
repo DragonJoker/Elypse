@@ -21,76 +21,81 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "SceneNode.h"
 
-BEGIN_TROLL_PROJECT_3D_NAMESPACE
+namespace Troll
 {
-	Troll3DObject::Troll3DObject( const wxString & p_name, const wxString & p_fileName, Troll3DObjectType p_type )
-		: Object( p_name, p_fileName, tt3DObject )
-		, m_parent( NULL )
-		, m_3DObjectType( p_type )
+	namespace ProjectComponents
 	{
-		wxString l_msg = wxT( "Creating 3D object : " );
+		namespace Objects3D
+		{
+			Troll3DObject::Troll3DObject( wxString const & p_name, wxString const & p_fileName, Troll3DObjectType p_type )
+				: Object( p_name, p_fileName, tt3DObject )
+				, m_parent( NULL )
+				, m_3DObjectType( p_type )
+			{
+				wxString l_msg = wxT( "Creating 3D object : " );
 
-		if ( p_type == ttNode )
-		{
-			l_msg += wxT( "TrollSceneNode - " );
-		}
-		else if ( p_type == ttEntity )
-		{
-			l_msg += wxT( "Entity - " );
-		}
-		else if ( p_type == ttLight )
-		{
-			l_msg += wxT( "Light - " );
-		}
-		else if ( p_type == ttCamera )
-		{
-			l_msg += wxT( "Camera - " );
-		}
+				if ( p_type == ttNode )
+				{
+					l_msg += wxT( "TrollSceneNode - " );
+				}
+				else if ( p_type == ttEntity )
+				{
+					l_msg += wxT( "Entity - " );
+				}
+				else if ( p_type == ttLight )
+				{
+					l_msg += wxT( "Light - " );
+				}
+				else if ( p_type == ttCamera )
+				{
+					l_msg += wxT( "Camera - " );
+				}
 
-		l_msg += wxT( "Name : " ) + p_name;
-		LogMessage( l_msg );
-	}
+				l_msg += wxT( "Name : " ) + p_name;
+				LogMessage( l_msg );
+			}
 
-	Troll3DObject::~Troll3DObject()
-	{
-		if ( m_parent != NULL )
-		{
-			Detach();
+			Troll3DObject::~Troll3DObject()
+			{
+				if ( m_parent != NULL )
+				{
+					Detach();
+				}
+			}
+
+			void Troll3DObject::AttachTo( TrollSceneNode * p_node )
+			{
+				if ( m_parent )
+				{
+					Detach();
+				}
+
+				if ( !p_node )
+				{
+					return;
+				}
+
+				m_parent = p_node;
+			}
+
+			void Troll3DObject::Detach()
+			{
+				if ( m_parent == NULL )
+				{
+					return;
+				}
+
+				if ( m_3DObjectType != ttNode )
+				{
+					m_parent->RemoveObject( m_name );
+				}
+				else
+				{
+					m_parent->RemoveChild( m_name );
+				}
+
+				m_parent = NULL;
+			}
 		}
-	}
-
-	void Troll3DObject::AttachTo( TrollSceneNode * p_node )
-	{
-		if ( m_parent )
-		{
-			Detach();
-		}
-
-		if ( ! p_node )
-		{
-			return;
-		}
-
-		m_parent = p_node;
-	}
-
-	void Troll3DObject::Detach()
-	{
-		if ( m_parent == NULL )
-		{
-			return;
-		}
-
-		if ( m_3DObjectType != ttNode )
-		{
-			m_parent->RemoveObject( m_name );
-		}
-		else
-		{
-			m_parent->RemoveChild( m_name );
-		}
-
-		m_parent = NULL;
 	}
 }
-END_TROLL_PROJECT_3D_NAMESPACE

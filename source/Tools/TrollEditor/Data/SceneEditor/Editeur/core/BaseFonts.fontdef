@@ -1,0 +1,23 @@
+Comic
+{
+	type truetype
+	size 32
+	resolution 55
+	source comic.ttf
+}
+
+Arial
+{
+	type truetype
+	size 32
+	resolution 55
+	source arial.ttf
+}
+
+ComicBold
+{
+	type truetype
+	size 32
+	resolution 55
+	source comicbd.ttf
+}

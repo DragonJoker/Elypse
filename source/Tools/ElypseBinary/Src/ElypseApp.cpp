@@ -33,11 +33,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/stdpaths.h>
 
-IMPLEMENT_APP( ELYPSE_BINARY_NAMESPACE::ElypseApp )
+IMPLEMENT_APP( ElypseBinary::ElypseApp )
 
 using namespace General::Utils;
 
-BEGIN_ELYPSE_BINARY_NAMESPACE
+namespace ElypseBinary
 {
 	namespace
 	{
@@ -51,7 +51,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		const wxString ELYPSE_BINARY_MUSEFILE = _( "ElypseBinary [musefile path] or" );
 		const wxString ELYPSE_BINARY_CONFIGFILE = _( "ElypseBinary [config file path]" );
 		const wxString ELYPSE_PLAYER = wxT( "Elypse Player" );
-		
+
 		const String PATH_SHARE_FOLDER = "share";
 		const String PATH_ELYPSE_FOLDER = "ElypseBinary";
 		const String PATH_CFG_FOLDER = "cfg";
@@ -102,11 +102,11 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 			if ( argc <= 1 )
 			{
 				l_fileName = make_string( wxFileSelector( CHOOSE_MUSE_FILE, wxEmptyString, wxEmptyString, wxEmptyString,
-														  MUSE_FILES_NAME + MUSE_FILES_WILDCARD, wxFD_OPEN ) );
+										  MUSE_FILES_NAME + MUSE_FILES_WILDCARD, wxFD_OPEN ) );
 			}
 			else
 			{
-				l_fileName = COMMON_GUI_NAMESPACE::make_string( argv[1] );
+				l_fileName = GuiCommon::make_string( argv[1] );
 			}
 
 			if ( !FileExists( l_fileName ) )
@@ -117,7 +117,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 			}
 			else
 			{
-				m_plugin = std::make_shared< COMMON_GUI_NAMESPACE::wxElypsePlugin >();
+				m_plugin = std::make_shared< GuiCommon::wxElypsePlugin >();
 				m_elypse = std::make_shared< ElypseInstance >( l_userPath, m_plugin.get() );
 
 				m_elypse->SetMain( true );
@@ -137,7 +137,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 				if ( InitParams( l_fileName ) )
 				{
 					m_frame = new ElypseFrame( ELYPSE_PLAYER, wxSize( m_width, m_height ) );
-					m_control = new ElypseCtrl( this, m_frame, m_plugin, m_elypse );
+					m_control = new ElypseCtrl( *this, m_frame, m_plugin, m_elypse );
 
 					m_plugin->SetHandle( m_control );
 
@@ -154,7 +154,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		return l_return;
 	}
 
-	bool ElypseApp::InitParams( const String & p_filepath )
+	bool ElypseApp::InitParams( String const & p_filepath )
 	{
 		Path l_path = p_filepath;
 		String l_filename = l_path.GetLeaf();
@@ -176,7 +176,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		return true;
 	}
 
-	void ElypseApp::_readConfigFile( const String & p_filepath )
+	void ElypseApp::_readConfigFile( String const & p_filepath )
 	{
 		std::ifstream l_file;
 		l_file.open( p_filepath.c_str() );
@@ -197,7 +197,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 					string::trim( l_paramValue );
 					string::trim( l_paramName );
 					string::toLowerCase( l_paramName );
-					
+
 					if ( l_paramName == CFG_RENDERER )
 					{
 						m_elypse->UseDirectX( l_paramValue == CFG_RENDERER_DX );
@@ -259,4 +259,3 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		m_elypse->WaitForDeletion();
 	}
 }
-END_ELYPSE_BINARY_NAMESPACE

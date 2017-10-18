@@ -40,20 +40,20 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #pragma warning( disable:4996 )
 
-MusePack::MusePack( MuseDownloader * p_owner,
+MusePack::MusePack( MuseDownloader & p_owner,
 					const Path & p_installPath,
 					const Path & p_basePath,
 					bool p_checkHeader )
-	: owned_by<MuseDownloader>( p_owner ),
-		m_timer( NULL ),
-		m_installPath( p_installPath ),
-		m_basePath( p_basePath ),
-		m_museOK( false ),
-		m_checkHeader( p_checkHeader ),
-		m_nbHeader( 0 ),
-		m_museFileSize( 0 ),
-		m_totalByteDownloaded( 0 ),
-		m_beginTime( 0 )
+	: owned_by< MuseDownloader >( p_owner )
+	, m_timer( NULL )
+	, m_installPath( p_installPath )
+	, m_basePath( p_basePath )
+	, m_museOK( false )
+	, m_checkHeader( p_checkHeader )
+	, m_nbHeader( 0 )
+	, m_museFileSize( 0 )
+	, m_totalByteDownloaded( 0 )
+	, m_beginTime{}
 {
 	m_packPath = m_installPath / "rsc" / m_basePath.GetLeaf();
 //	m_packPath.erase( m_packPath.size() - 5, String::npos);
@@ -76,7 +76,7 @@ MusePack::~MusePack()
 	}
 }
 
-size_t MusePack::GetFileIndex( const String & p_name )const
+size_t MusePack::GetFileIndex( String const & p_name )const
 {
 	for ( size_t i = 0 ; i < m_files.size() ; i ++ )
 	{
@@ -89,7 +89,7 @@ size_t MusePack::GetFileIndex( const String & p_name )const
 	return String::npos;
 }
 
-const String & MusePack::GetFileName( size_t p_index )const
+String const & MusePack::GetFileName( size_t p_index )const
 {
 	if ( p_index >= m_files.size() )
 	{
@@ -99,14 +99,14 @@ const String & MusePack::GetFileName( size_t p_index )const
 	return m_files[p_index]->GetFilename();
 }
 
-bool MusePack::IsDownloadFinished( unsigned int p_index )const
+bool MusePack::IsDownloadFinished( uint32_t p_index )const
 {
-	if ( p_index >= m_files.size() || ! m_owner->IsInitialised() )
+	if ( p_index >= m_files.size() || ! GetOwner()->IsInitialised() )
 	{
 		return false;
 	}
 
-	if ( m_owner->DownloadFiles() )
+	if ( GetOwner()->DownloadFiles() )
 	{
 		return m_files[p_index]->IsFinished();
 	}
@@ -127,13 +127,13 @@ bool MusePack::_getHeaders( size_t & p_indexBuffer )
 	{
 		if ( l_file == NULL )
 		{
-			l_file = new MuseFilePack( this );
+			l_file = new MuseFilePack( *this );
 			m_files.push_back( l_file );
 		}
 		else if ( l_file->IsHeaderCompleted() )
 		{
 //			m_museFileSize += l_file->GetFileSize();
-			l_file = new MuseFilePack( this );
+			l_file = new MuseFilePack( *this );
 			m_files.push_back( l_file );
 		}
 
@@ -145,7 +145,7 @@ bool MusePack::_getHeaders( size_t & p_indexBuffer )
 		}
 	}
 
-	m_owner->SetInitialised( true );
+	GetOwner()->SetInitialised( true );
 
 	if ( _finishHeaders() )
 	{
@@ -166,7 +166,7 @@ bool MusePack::_finishHeaders()
 		return true;
 	}
 
-	if ( ! m_owner->DownloadFiles() )
+	if ( ! GetOwner()->DownloadFiles() )
 	{
 		EMUSE_MESSAGE_DEBUG( "MusePack::_finishHeaders -> not downloading" );
 		return true;
@@ -201,7 +201,7 @@ bool MusePack::_getNumFiles( size_t & p_indexBuffer )
 	{
 		/* Erreur */
 		EMUSE_MESSAGE_RELEASE( "MusePack::_getNumFiles -> Error in getting file - [" + m_packPath + "], l_nbHeader : [" + StringConverter::toString( l_nbHeader ) + "]" );
-		m_owner->SetCantDownload( true );
+		GetOwner()->SetCantDownload( true );
 		return false;
 	}
 
@@ -249,7 +249,7 @@ size_t MusePack::CurlCallback( void * p_buffer, size_t p_size )
 	if ( m_nbHeader < m_files.size() )
 	{
 		EMUSE_MESSAGE_RELEASE( "MusePack::CurlCallback -> Error in getting file - [" + m_packPath + "] (m_nbHeader < m_files.size())" );
-		m_owner->SetCantDownload( true );
+		GetOwner()->SetCantDownload( true );
 		return p_size + 1;
 	}
 
@@ -345,7 +345,7 @@ void MusePack::_finishMuseFile()
 {
 	EMUSE_LOG_MESSAGE_RELEASE( "_finish muse file : " + m_packPath );
 	size_t l_nbHeaders = m_files.size();
-	MuseFile * l_museFile = m_owner->GetOwner();
+	MuseFile * l_museFile = GetOwner()->GetOwner();
 
 	for ( size_t i = 0 ; i < l_nbHeaders ; i ++ )
 	{
@@ -391,9 +391,9 @@ void MusePack::_finishMuseFile()
 	m_museOK = true;
 }
 
-bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileName, const String & p_folderName )
+bool MusePack::_treatGZipFile( const Path & p_basePath, String const & p_fileName, String const & p_folderName )
 {
-	if ( ! m_owner->DownloadFiles() )
+	if ( ! GetOwner()->DownloadFiles() )
 	{
 		return false;
 	}
@@ -443,7 +443,7 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 
 	SndHeaderArray l_sndList;
 
-	for ( unsigned int i = 0 ; i < unsigned( l_nbHeader ); i ++ )
+	for ( uint32_t i = 0 ; i < unsigned( l_nbHeader ); i ++ )
 	{
 		EM_SndHeader * l_sndHeader = new EM_SndHeader;
 		l_sndList.push_back( l_sndHeader );
@@ -496,9 +496,9 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 			return false;
 		}
 
-		l_sndHeader->fileName = new char[l_sndHeader->fileNameSize + 1];
+		l_sndHeader->fileName.resize( l_sndHeader->fileNameSize + 1 );
 
-		if ( fread( l_sndHeader->fileName, sizeof( char ), l_sndHeader->fileNameSize, l_file ) != l_sndHeader->fileNameSize )
+		if ( fread( l_sndHeader->fileName.data(), sizeof( char ), l_sndHeader->fileNameSize, l_file ) != l_sndHeader->fileNameSize )
 		{
 			if ( ferror( l_file ) != 0 )
 			{
@@ -517,10 +517,10 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 		l_sndHeader->fileName[l_sndHeader->fileNameSize] = '\0';
 	}
 
-	for ( unsigned int i = 0 ; i < unsigned( l_nbHeader ); i ++ )
+	for ( uint32_t i = 0 ; i < unsigned( l_nbHeader ); i ++ )
 	{
 		EM_SndHeader * l_sndHeader = l_sndList[i];
-		FILE * l_zipFile = fopen( ( p_basePath / p_folderName / l_sndHeader->fileName + ".gz" ).c_str(), "wb" );
+		FILE * l_zipFile = fopen( ( p_basePath / p_folderName / l_sndHeader->fileName.data() + ".gz" ).c_str(), "wb" );
 
 		if ( l_zipFile == NULL )
 		{
@@ -537,8 +537,8 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 			continue;
 		}
 
-		unsigned int l_nbWritten = 0;
-		unsigned int l_nbDataToWrite = 8192;
+		uint32_t l_nbWritten = 0;
+		uint32_t l_nbDataToWrite = 8192;
 		char * l_buffer = new char[8192];
 
 		while ( l_sndHeader->fileSize > l_nbWritten )
@@ -569,7 +569,7 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 			{
 				if ( ferror( l_file ) != 0 )
 				{
-					EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while writing into file [" + p_basePath + "/" + p_folderName + "/" + l_sndHeader->fileName + "]" );
+					EMUSE_MESSAGE_RELEASE( "MusePack::_treatGZipFile : Error while writing into file [" + p_basePath + "/" + p_folderName + "/" + l_sndHeader->fileName.data() + "]" );
 					delete [] l_buffer;
 					General::Utils::vector::deleteAll( l_sndList );
 					fclose( l_file );
@@ -590,9 +590,9 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 
 		delete [] l_buffer;
 		fclose( l_zipFile );
-		DecompressFile( p_basePath / p_folderName / l_sndHeader->fileName + ".gz",
-						p_basePath / p_folderName / l_sndHeader->fileName, 8192 );
-		FileDelete( p_basePath / p_folderName / l_sndHeader->fileName + ".gz" );
+		DecompressFile( p_basePath / p_folderName / l_sndHeader->fileName.data() + ".gz",
+						p_basePath / p_folderName / l_sndHeader->fileName.data(), 8192 );
+		FileDelete( p_basePath / p_folderName / l_sndHeader->fileName.data() + ".gz" );
 	}
 
 	General::Utils::vector::deleteAll( l_sndList );
@@ -602,7 +602,7 @@ bool MusePack::_treatGZipFile( const Path & p_basePath, const String & p_fileNam
 	return true;
 }
 
-bool MusePack::DecompressFile( const String & p_zipFileName, const String & p_fileName, int p_size )
+bool MusePack::DecompressFile( String const & p_zipFileName, String const & p_fileName, int p_size )
 {
 	bool l_return = true;
 	gzFile l_infile = gzopen( p_zipFileName.c_str(), "r" );

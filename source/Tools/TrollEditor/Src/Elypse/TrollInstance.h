@@ -22,26 +22,28 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <ElypseInstance.h>
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	class TrollInstance
-		: public ElypseInstance
+	namespace ElypseRW
 	{
-	public:
-		TrollInstance( const String & p_installPath , ElypsePlugin * p_plugin );
-		virtual ~TrollInstance();
-
-		virtual void CreateScene();
-
-		inline bool IsSceneCreated()const
+		class TrollInstance
+			: public ElypseInstance
 		{
-			return m_sceneCreated;
-		}
+		public:
+			TrollInstance( String const & p_installPath, ElypsePlugin * p_plugin );
+			virtual ~TrollInstance();
 
-	private:
-		bool m_sceneCreated;
-	};
+			virtual void CreateScene();
+
+			inline bool IsSceneCreated()const
+			{
+				return m_sceneCreated;
+			}
+
+		private:
+			bool m_sceneCreated;
+		};
+	}
 }
-END_TROLL_ELYPSE_NAMESPACE
 
 #endif

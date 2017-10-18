@@ -27,34 +27,11 @@ namespace Elypse
 {
 	namespace Media
 	{
-		class d_dll_export SoundInstance : public owned_by <SoundObject>
+		class d_dll_export SoundInstance
+			: public owned_by< SoundObject >
 		{
-		protected:
-			SceneNode * m_node;
-			FMOD::Channel * m_channel;
-
-			MediaStatus m_status;
-			String m_zone;
-
-			bool m_looped;
-			bool m_fadeIn;
-			bool m_fadeOut;
-			bool m_isInPlaylist;
-			bool m_mute;
-
-			Real m_fadeInTime;
-			Real m_fadeOutTime;
-			Real m_mediaTime;
-			Real m_currentTime;
-			Real m_timerTime;
-			Real m_volumePercent;
-			Real m_maxVolume;
-			Real m_volume;
-
-			FMOD_VECTOR m_lastPosition;
-
 		public:
-			SoundInstance( SoundObject * p_parent );
+			SoundInstance( SoundObject & p_parent );
 			~SoundInstance();
 
 		private:
@@ -143,6 +120,30 @@ namespace Elypse
 			{
 				return m_timerTime;
 			}
+
+		protected:
+			SceneNode * m_node;
+			FMOD::Channel * m_channel;
+
+			MediaStatus m_status;
+			String m_zone;
+
+			bool m_looped;
+			bool m_fadeIn;
+			bool m_fadeOut;
+			bool m_isInPlaylist;
+			bool m_mute;
+
+			Real m_fadeInTime;
+			Real m_fadeOutTime;
+			Real m_mediaTime;
+			Real m_currentTime;
+			Real m_timerTime;
+			Real m_volumePercent;
+			Real m_maxVolume;
+			Real m_volume;
+
+			FMOD_VECTOR m_lastPosition;
 		};
 	}
 }

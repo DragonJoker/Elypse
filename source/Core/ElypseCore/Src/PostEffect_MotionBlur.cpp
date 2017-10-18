@@ -28,7 +28,7 @@ using namespace Ogre;
 
 bool PostEffect_MotionBlur::sm_initialised = false;
 
-PostEffect_MotionBlur::PostEffect_MotionBlur( const String & p_name, Viewport * p_viewport )
+PostEffect_MotionBlur::PostEffect_MotionBlur( String const & p_name, Viewport * p_viewport )
 	: PostEffect( p_name, p_viewport, -1, false )
 {
 	if ( ! PostEffect_MotionBlur::IsInitialised() )

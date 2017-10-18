@@ -26,9 +26,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreCamera.h>
 #include <OgreRoot.h>
 
-PostEffect_LensFlare::PostEffect_LensFlare( const String & p_name, Viewport * p_viewport )
-	: PostEffect( p_name, p_viewport ),
-		m_camera( p_viewport->getCamera() )
+PostEffect_LensFlare::PostEffect_LensFlare( String const & p_name, Viewport * p_viewport )
+	: PostEffect( p_name, p_viewport )
+	, m_camera( p_viewport->getCamera() )
 {
 	OverlayManager::getSingletonPtr()->getByName( "Core/LensFlare" )->show();
 	m_lensflareElements[0] = OverlayManager::getSingletonPtr()->getOverlayElement( "Core/LensFlare/1" );
@@ -48,7 +48,7 @@ PostEffect_LensFlare::PostEffect_LensFlare( const String & p_name, Viewport * p_
 	}
 
 	m_direction.normalise();
-	m_listener = new LensFlareListener( this );
+	m_listener = new LensFlareListener( *this );
 }
 
 PostEffect_LensFlare::~PostEffect_LensFlare()
@@ -94,8 +94,8 @@ void PostEffect_LensFlare::Update()
 	}
 }
 
-LensFlareListener::LensFlareListener( PostEffect_LensFlare * p_owner )
-	: m_owner( p_owner )
+LensFlareListener::LensFlareListener( PostEffect_LensFlare & p_owner )
+	: owned_by( p_owner )
 {
 	Root::getSingletonPtr()->addFrameListener( this );
 }
@@ -107,6 +107,6 @@ LensFlareListener::~LensFlareListener()
 
 bool LensFlareListener::frameStarted( const FrameEvent & )
 {
-	m_owner->Update();
+	GetOwner()->Update();
 	return true;
 }

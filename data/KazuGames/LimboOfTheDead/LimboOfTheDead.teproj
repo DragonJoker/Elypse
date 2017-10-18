@@ -2,6 +2,24 @@ project LimboOfTheDead
 {
 	resolution		640 480
 	colour			0 0 0
+	show_debug		false
+	show_fps		false
+	startup_script	string c_gameName = "LimboOfTheDead";string c_sceneName = "LimboOfTheDead";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "localhost/Kazugame";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	scene kazu
+	{
+		scene_files
+		{
+			kazu.emscene
+		}
+		load_script_files
+		{
+			kazu.emscript
+		}
+		data_files_3d
+		{
+			kazu
+		}
+	}
 	scene LimboOfTheDead
 	{
 		scene_files
@@ -24,6 +42,10 @@ project LimboOfTheDead
 		data_files_other
 		{
 			Sons
+		}
+		dependencies
+		{
+			kazu
 		}
 	}
 }

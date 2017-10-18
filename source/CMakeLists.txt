@@ -13,8 +13,8 @@ set( VERSION_YEAR	2014	)
 
 # Used to look for external modules
 set( CMAKE_MODULE_PATH
-	"${CMAKE_SOURCE_DIR}/CMake"
-	"${CMAKE_SOURCE_DIR}/CMake/Modules"
+	${CMAKE_SOURCE_DIR}/CMake
+	${CMAKE_SOURCE_DIR}/CMake/Modules
 )
 # Experimental Precompiled headers support for GCC
 include( PCHSupport )
@@ -52,9 +52,9 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	find_package( Boost 1.55 REQUIRED date_time filesystem system )
 	find_package( CURL )
 	if ( WIN32 )
-		find_package( Ogre COMPONENTS OgreMain Plugin_CgProgramManager Plugin_ParticleFX RenderSystem_Direct3D9 )
+		find_package( Ogre COMPONENTS Main Overlay )
 	else ()
-		find_package( Ogre COMPONENTS OgreMain Plugin_ParticleFX RenderSystem_GL )
+		find_package( Ogre COMPONENTS Main Overlay Plugin_ParticleFX RenderSystem_GL )
 	endif ()
 	find_package( ODE )
 	find_package( Fmod )
@@ -261,28 +261,28 @@ if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	msg_debug( "CMAKE_CXX_FLAGS  : ${CMAKE_CXX_FLAGS}" )
 
 	macro( parse_subdir_files _FOLDER _GROUP )
-		file( GLOB _FOLDER_HEADER_FILES ${_FOLDER}/*.h ${_FOLDER}/*.hpp ${_FOLDER}/*.inl )
-		file( GLOB _FOLDER_SOURCE_FILES ${_FOLDER}/*.c ${_FOLDER}/*.cpp )
-		source_group( "Header Files\\${_GROUP}" FILES ${_FOLDER_HEADER_FILES} )
-		source_group( "Source Files\\${_GROUP}" FILES ${_FOLDER_SOURCE_FILES} )
+		file( GLOB _${_FOLDER}_HEADER_FILES ${_FOLDER}/*.h ${_FOLDER}/*.hpp ${_FOLDER}/*.inl )
+		file( GLOB _${_FOLDER}_SOURCE_FILES ${_FOLDER}/*.c ${_FOLDER}/*.cpp )
+		source_group( "Header Files\\${_GROUP}" FILES ${_${_FOLDER}_HEADER_FILES} )
+		source_group( "Source Files\\${_GROUP}" FILES ${_${_FOLDER}_SOURCE_FILES} )
 	endmacro()
 
 	if( Boost_FOUND AND OGRE_FOUND AND ODE_FOUND AND ZLIB_FOUND AND LIBZIP_FOUND AND CURL_FOUND AND FMOD_FOUND )
 		include_directories( ${CMAKE_SOURCE_DIR}/Core/GeneralLib/Src )
-		
+
 		add_subdirectory( Core )
 		#add_subdirectory( Plugins )
 		add_subdirectory( Tools )
 		add_subdirectory( Miniline )
-		
+
 		CoreInit()
 		ToolsInit()
 		MinilineInit()
-		
+
 		CoreBuild()
 		ToolsBuild()
 		MinilineBuild()
-		
+
 		set( msg "\nElypse following projects will be built" )
 		CoreSummary( ${msg} )
 		ToolsSummary( ${msg} )

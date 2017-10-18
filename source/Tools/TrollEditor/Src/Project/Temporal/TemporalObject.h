@@ -22,35 +22,40 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Object.h"
 
-BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE
+namespace Troll
 {
-	enum TemporalObjectType
+	namespace ProjectComponents
 	{
-		ttAnimationGroup,
-		ttAnimatedObject,
-		ttAnimation,
-		ttSequence,
-		ttPonctualEvent,
-		ttContinuousEvent,
-		ttKeyFrame
-	};
-
-	class TemporalObject
-		: public TROLL_PROJECT_NAMESPACE::Object
-	{
-	public:
-		TemporalObject( const wxString & p_name, const wxString & p_fileName, TemporalObjectType p_type );
-		virtual ~TemporalObject();
-
-		inline TemporalObjectType GetTemporalObjectType()const
+		namespace Temporal
 		{
-			return m_temporalObjectType;
-		}
+			enum TemporalObjectType
+			{
+				ttAnimationGroup,
+				ttAnimatedObject,
+				ttAnimation,
+				ttSequence,
+				ttPonctualEvent,
+				ttContinuousEvent,
+				ttKeyFrame
+			};
 
-	protected:
-		TemporalObjectType m_temporalObjectType;
-	};
+			class TemporalObject
+				: public ProjectComponents::Object
+			{
+			public:
+				TemporalObject( wxString const & p_name, wxString const & p_fileName, TemporalObjectType p_type );
+				virtual ~TemporalObject();
+
+				inline TemporalObjectType GetTemporalObjectType()const
+				{
+					return m_temporalObjectType;
+				}
+
+			protected:
+				TemporalObjectType m_temporalObjectType;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_TEMPORAL_NAMESPACE
 
 #endif

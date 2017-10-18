@@ -25,73 +25,80 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <Sequence.h>
 #include <Events.h>
 
-BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE
+namespace Troll
 {
-	class TrollSequence
-		: public TemporalObject
-		, public Sequence
+	namespace ProjectComponents
 	{
-	public:
-		TrollSequence( const wxString & p_name, const wxString & p_fileName );
-		~TrollSequence();
+		namespace Temporal
+		{
+			class TrollSequence
+				: public TemporalObject
+				, public Sequence
+			{
+			public:
+				TrollSequence( wxString const & p_name, wxString const & p_fileName );
+				~TrollSequence();
 
-		TrollPonctualEvent * AddPonctualEvent( BasePonctualEvent * p_event, const wxString & p_targetTypeName, const wxString & p_targetName, float p_fireTime, const wxString & p_eventAction, const wxString & p_name, const wxString & p_fileName );
-		TrollPonctualEvent * AddPonctualEvent( TrollPonctualEvent * p_event );
-		TrollContinuousEvent * AddContinuousEvent( TrollContinuousEvent * p_event );
+				TrollPonctualEvent * AddPonctualEvent( BasePonctualEvent * p_event, wxString const & p_targetTypeName, wxString const & p_targetName, float p_fireTime, wxString const & p_eventAction, wxString const & p_name, wxString const & p_fileName );
+				TrollPonctualEvent * AddPonctualEvent( TrollPonctualEvent * p_event );
+				TrollContinuousEvent * AddContinuousEvent( TrollContinuousEvent * p_event );
 
-		void RemovePonctualEvent( TrollPonctualEvent * p_event );
-		void RemoveContinuousEvent( TrollContinuousEvent * p_event );
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-		void Write( wxTextOutputStream * p_stream );
-		void ChangeContinuousEventTime( TrollContinuousEvent * p_event );
-		void ChangePonctualEventTime( TrollPonctualEvent * p_event );
-		void UpdatePonctualEvent( TrollPonctualEvent * p_event );
-		void Rollback( Real p_time );
-		virtual void Update( Real p_time );
+				void RemovePonctualEvent( TrollPonctualEvent * p_event );
+				void RemoveContinuousEvent( TrollContinuousEvent * p_event );
+				void Write( wxTextOutputStream & p_stream );
+				void ChangeContinuousEventTime( TrollContinuousEvent * p_event );
+				void ChangePonctualEventTime( TrollPonctualEvent * p_event );
+				void UpdatePonctualEvent( TrollPonctualEvent * p_event );
+				void Rollback( Real p_time );
+				virtual void Update( Real p_time );
 
-		inline TrollPonctualEventMap GetPonctualEvents()const
-		{
-			return m_teponctualEvents;
-		}
-		inline TrollContinuousEventMap GetContinuousEvents()const
-		{
-			return m_tecontinuousEvents;
-		}
-		inline float GetTotalLength()const
-		{
-			return m_duration;
-		}
-		inline float GetStartTime()const
-		{
-			return m_begin;
-		}
-		inline float GetEndTime()const
-		{
-			return m_end;
-		}
-		inline TROLL_GUI_TIME_NAMESPACE::LinePanel * GetLinePanel()const
-		{
-			return m_panel;
-		}
-		inline void SetPanel( TROLL_GUI_TIME_NAMESPACE::LinePanel * p_panel )
-		{
-			m_panel = p_panel;
-		}
+				inline TrollPonctualEventMap GetPonctualEvents()const
+				{
+					return m_teponctualEvents;
+				}
+				inline TrollContinuousEventMap GetContinuousEvents()const
+				{
+					return m_tecontinuousEvents;
+				}
+				inline float GetTotalLength()const
+				{
+					return m_duration;
+				}
+				inline float GetStartTime()const
+				{
+					return m_begin;
+				}
+				inline float GetEndTime()const
+				{
+					return m_end;
+				}
+				inline GUI::Time::LinePanel * GetLinePanel()const
+				{
+					return m_panel;
+				}
+				inline void SetPanel( GUI::Time::LinePanel * p_panel )
+				{
+					m_panel = p_panel;
+				}
 
-	private:
-		void _rollback( Real p_time );
-		void _update( Real p_time );
-		void _computeTimes();
+			private:
+				void _rollback( Real p_time );
+				void _update( Real p_time );
+				void _computeTimes();
 
-	private:
-		TROLL_GUI_TIME_NAMESPACE::LinePanel * m_panel;
-		float m_begin;
-		float m_end;
-		float m_duration;
-		TrollPonctualEventMap m_teponctualEvents;
-		TrollContinuousEventMap m_tecontinuousEvents;
-	};
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				GUI::Time::LinePanel * m_panel;
+				float m_begin;
+				float m_end;
+				float m_duration;
+				TrollPonctualEventMap m_teponctualEvents;
+				TrollContinuousEventMap m_tecontinuousEvents;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_TEMPORAL_NAMESPACE
 
 #endif

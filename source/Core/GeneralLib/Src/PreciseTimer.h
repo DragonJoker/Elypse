@@ -19,7 +19,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define ___PRECISE_TIMER_H___
 
 #include "Macros.h"
+
 #include <ostream>
+#include <chrono>
 
 namespace General
 {
@@ -28,51 +30,49 @@ namespace General
 		class d_dll PreciseTimer
 		{
 		private:
-			static long long sm_frequency;
-		private:
-			long long m_previousTime;
+			using Clock = std::chrono::high_resolution_clock;
 
 		public:
 			PreciseTimer();
 			~PreciseTimer();
 
-		public:
 			double Time();
-			double TimeDiff( long long p_time );
+			double TimeDiff( Clock::time_point const & p_time )const;
 
-		public:
-			inline long long SaveTime()const
+			inline Clock::time_point const & SaveTime()const
 			{
 				return m_previousTime;
 			}
 
-			inline friend std::ostream & operator << ( std::ostream & p_stream, PreciseTimer & p_timer )
-			{
-				p_stream << p_timer.Time();
-				return p_stream;
-			}
+		private:
+			Clock::time_point m_previousTime;
 		};
+
+		inline std::ostream & operator<<( std::ostream & p_stream, PreciseTimer & p_timer )
+		{
+			p_stream << p_timer.Time();
+			return p_stream;
+		}
 
 		class d_dll RepeatTimer
 		{
 		private:
-			long long m_previousTime;
-			double m_repeatTime;
-
-		private:
-			static long long sm_frequency;
+			using Clock = std::chrono::high_resolution_clock;
 
 		public:
-			RepeatTimer( double p_time );
+			RepeatTimer( std::chrono::milliseconds const & p_time );
 			~RepeatTimer();
 
-		public:
 			bool Time();
 
-			double GetRepeatTime()const
+			std::chrono::milliseconds const & GetRepeatTime()const
 			{
 				return m_repeatTime;
-			};
+			}
+
+		private:
+			Clock::time_point m_previousTime;
+			std::chrono::milliseconds m_repeatTime;
 		};
 	}
 }

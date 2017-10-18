@@ -25,37 +25,40 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/frame.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class SceneDependenciesFrame
-		: public wxFrame
+	namespace GUI
 	{
-	public:
-		SceneDependenciesFrame( wxWindow * p_parent, TROLL_PROJECT_NAMESPACE::Scene * p_scene = NULL, const wxString & title = _( "Scenes dependencies" ), const wxPoint & pos = wxDefaultPosition );
-		~SceneDependenciesFrame();
+		class SceneDependenciesFrame
+			: public wxDialog
+		{
+		public:
+			SceneDependenciesFrame( wxWindow * p_parent
+				, ProjectComponents::ScenePtr p_scene = nullptr
+				, wxString const & title = _( "Scenes dependencies" )
+				, wxPoint const & pos = wxDefaultPosition );
+			~SceneDependenciesFrame();
 
-		void SetScene( TROLL_PROJECT_NAMESPACE::Scene * p_scene );
+			void SetScene( ProjectComponents::ScenePtr p_scene );
 
-	private:
-		void _initialise();
-		void _populateSceneDependencies();
+		private:
+			void DoInitialise();
+			void DoPopulateSceneDependencies();
 
-		DECLARE_EVENT_TABLE()
-		void OnClose( wxCloseEvent & p_event );
-		void OnCheckScene( wxCommandEvent & p_event );
-		void OnSelectScene( wxCommandEvent & p_event );
-		void OnOK( wxCommandEvent & p_event );
+			DECLARE_EVENT_TABLE()
+			void OnClose( wxCloseEvent & p_event );
+			void OnCheckScene( wxCommandEvent & p_event );
+			void OnSelectScene( wxCommandEvent & p_event );
+			void OnOK( wxCommandEvent & p_event );
 
-	private:
-		wxComboBox * m_sceneSelector;
-		wxCheckListBox * m_sceneDependencies;
-		wxButton * m_okBtn;
+		private:
+			wxComboBox * m_sceneSelector{ nullptr };
+			wxCheckListBox * m_sceneDependencies{ nullptr };
 
-		TROLL_PROJECT_NAMESPACE::SceneMap m_scenes;
-		TROLL_PROJECT_NAMESPACE::Scene * m_selectedScene;
-	};
+			ProjectComponents::SceneMap m_scenes;
+			ProjectComponents::ScenePtr m_selectedScene{ nullptr };
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
-

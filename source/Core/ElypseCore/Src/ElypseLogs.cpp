@@ -37,7 +37,7 @@ Elypse::Debug::ElypseLogs::~ElypseLogs()
 	sm_singleton = NULL;
 }
 
-void Elypse::Debug::ElypseLogs::_logMessage( const String & p_comment )
+void Elypse::Debug::ElypseLogs::DoLogMessage( String const & p_comment )
 {
 	if ( ElypseController::GetSingletonPtr() != NULL )
 	{
@@ -45,7 +45,7 @@ void Elypse::Debug::ElypseLogs::_logMessage( const String & p_comment )
 
 		if ( NULL != l_log )
 		{
-			GENLIB_SCOPED_LOCK( m_logMutex );
+			auto l_lock = make_unique_lock( m_logMutex );
 			l_log->logMessage( p_comment );
 		}
 
@@ -60,9 +60,9 @@ void Elypse::Debug::ElypseLogs::_logMessage( const String & p_comment )
 	}
 }
 
-void Elypse::Debug::ElypseLogs::_consoleMessage( const String & p_comment )
+void Elypse::Debug::ElypseLogs::DoConsoleMessage( String const & p_comment )
 {
-	GENLIB_SCOPED_LOCK( m_consoleMutex );
+	auto l_lock = make_unique_lock( m_consoleMutex );
 	std::cout << p_comment << std::endl;
 #if defined( _MSC_VER )
 

@@ -29,130 +29,133 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Module_Project.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class ElypseCtrl
-		: public wxControl
+	namespace GUI
 	{
-		friend class ElypseFrame;
-		friend class MainFrame;
-
-	public:
-		ElypseCtrl( wxWindow * p_parent, TROLL_PROJECT_NAMESPACE::ProjectSPtr p_project, MainFrame * p_mainFrame, bool p_edit = false );
-		~ElypseCtrl();
-
-		const String GetWHandle();
-
-		void Init();
-		void SetCtrlFocus();
-		void KillCtrlFocus();
-
-		inline float GetMuseWidth()const
+		class ElypseCtrl
+			: public wxControl
 		{
-			return m_width;
-		}
-		inline float GetMuseHeight()const
-		{
-			return m_height;
-		}
-		inline TROLL_ELYPSE_NAMESPACE::TrollInstance * GetTrollInstance()const
-		{
-			return m_emuse;
-		}
-		inline void	SetNewOverlayFrame( NewOverlayFrame * p_frame )
-		{
-			m_newOverlayFrame = p_frame;
-		}
+			friend class ElypseFrame;
+			friend class ProjectFrame;
 
-	private:
-		void _initialise();
-		void _showContextMenu( const wxPoint & p_position );
-		void _setCustomFocus( bool p_hasFocus );
-		void DoClose();
-		
-		DECLARE_EVENT_TABLE()
-		void OnSetFocus( wxFocusEvent & p_event );
-		void OnKillFocus( wxFocusEvent & p_event );
-		void OnShow( wxShowEvent & p_event );
-		void OnActivate( wxActivateEvent & p_event );
-		void OnIconise( wxIconizeEvent & p_event );
-		void OnButtonLeftDown( wxMouseEvent & p_event );
-		void OnButtonLeftUp( wxMouseEvent & p_event );
-		void OnButtonMiddleDown( wxMouseEvent & p_event );
-		void OnButtonMiddleUp( wxMouseEvent & p_event );
-		void OnButtonRightDown( wxMouseEvent & p_event );
-		void OnButtonRightUp( wxMouseEvent & p_event );
-		void OnMouseWheel( wxMouseEvent & p_event );
-		void OnMouseMove( wxMouseEvent & p_event );
-		void OnMouseEnter( wxMouseEvent & p_event );
-		void OnMouseLeave( wxMouseEvent & p_event );
-		void OnKeyDown( wxKeyEvent & p_event );
-		void OnKeyUp( wxKeyEvent & p_event );
-		void OnChar( wxKeyEvent & p_event );
-		void OnClose( wxCloseEvent & p_event );
-		void OnResize( wxCommandEvent & p_event );
-		void OnReplace( wxCommandEvent & p_event );
-		void OnNew( wxCommandEvent & p_event );
-		void OnDelete( wxCommandEvent & p_event );
-		inline void OnPaint( wxPaintEvent & p_event )
-		{
-			p_event.Skip();
-		}
-		inline void OnEraseBackground( wxEraseEvent & p_event )
-		{
-			p_event.Skip();
-		}
-		inline void OnRenderTimer( wxTimerEvent & p_event )
-		{
-			p_event.Skip();
-		}
+		public:
+			ElypseCtrl( wxWindow * p_parent, ProjectComponents::ProjectSPtr p_project, ProjectFrame * p_mainFrame, bool p_edit = false );
+			~ElypseCtrl();
 
-		static wxSize GetClientSize( wxWindow * p_window )
-		{
-			int l_height = 0;
-			int l_width = 0;
-			p_window->GetClientSize( & l_width, & l_height );
-			return wxSize( l_width, l_height );
-		}
+			const String GetWHandle();
 
-	private:
-		TROLL_ELYPSE_NAMESPACE::TrollInstance * m_emuse;
-		COMMON_GUI_NAMESPACE::wxElypsePlugin * m_plugin;
-		TROLL_ELYPSE_NAMESPACE::TrollSceneFileParser * m_parser;
-		NewOverlayFrame * m_newOverlayFrame;
+			void Init();
+			void SetCtrlFocus();
+			void KillCtrlFocus();
 
-		Real m_width;
-		Real m_height;
+			inline float GetMuseWidth()const
+			{
+				return m_width;
+			}
+			inline float GetMuseHeight()const
+			{
+				return m_height;
+			}
+			inline ElypseRW::TrollInstance * GetTrollInstance()const
+			{
+				return m_emuse;
+			}
+			inline void	SetNewOverlayFrame( NewOverlayFrame * p_frame )
+			{
+				m_newOverlayFrame = p_frame;
+			}
 
-		unsigned int m_fsaa;
+		private:
+			void _initialise();
+			void _showContextMenu( wxPoint const & p_position );
+			void _setCustomFocus( bool p_hasFocus );
+			void DoClose();
 
-		bool m_rightButton;
-		bool m_leftButton;
-		bool m_middleButton;
+			DECLARE_EVENT_TABLE()
+			void OnSetFocus( wxFocusEvent & p_event );
+			void OnKillFocus( wxFocusEvent & p_event );
+			void OnShow( wxShowEvent & p_event );
+			void OnActivate( wxActivateEvent & p_event );
+			void OnIconise( wxIconizeEvent & p_event );
+			void OnButtonLeftDown( wxMouseEvent & p_event );
+			void OnButtonLeftUp( wxMouseEvent & p_event );
+			void OnButtonMiddleDown( wxMouseEvent & p_event );
+			void OnButtonMiddleUp( wxMouseEvent & p_event );
+			void OnButtonRightDown( wxMouseEvent & p_event );
+			void OnButtonRightUp( wxMouseEvent & p_event );
+			void OnMouseWheel( wxMouseEvent & p_event );
+			void OnMouseMove( wxMouseEvent & p_event );
+			void OnMouseEnter( wxMouseEvent & p_event );
+			void OnMouseLeave( wxMouseEvent & p_event );
+			void OnKeyDown( wxKeyEvent & p_event );
+			void OnKeyUp( wxKeyEvent & p_event );
+			void OnChar( wxKeyEvent & p_event );
+			void OnClose( wxCloseEvent & p_event );
+			void OnResize( wxCommandEvent & p_event );
+			void OnReplace( wxCommandEvent & p_event );
+			void OnNew( wxCommandEvent & p_event );
+			void OnDelete( wxCommandEvent & p_event );
+			inline void OnPaint( wxPaintEvent & p_event )
+			{
+				p_event.Skip();
+			}
+			inline void OnEraseBackground( wxEraseEvent & p_event )
+			{
+				p_event.Skip();
+			}
+			inline void OnRenderTimer( wxTimerEvent & p_event )
+			{
+				p_event.Skip();
+			}
 
-		bool m_focused;
-		bool m_primary;
-		bool m_deleteAll;
-		bool m_ogreActive;
-		bool m_isVista;
-		bool m_fucked;
-		bool m_destroyed;
-		bool m_oneTimePostSetFocus;
-		bool m_editionMode;
+			static wxSize GetClientSize( wxWindow * p_window )
+			{
+				int l_height = 0;
+				int l_width = 0;
+				p_window->GetClientSize( &l_width, &l_height );
+				return wxSize( l_width, l_height );
+			}
 
-		String m_baseDirectory;
-		String m_filename;
-		String m_installPath;
-		String m_path;
-		String m_museFile;
+		private:
+			ElypseRW::TrollInstance * m_emuse;
+			GuiCommon::wxElypsePlugin * m_plugin;
+			ElypseRW::TrollSceneFileParser * m_parser;
+			NewOverlayFrame * m_newOverlayFrame;
 
-		TROLL_PROJECT_NAMESPACE::Displayable * m_displayedObject;
-		TROLL_PROJECT_NAMESPACE::ProjectSPtr m_project;
-		TROLL_PROJECT_NAMESPACE::Scene * m_testedScene;
-		MainFrame * m_mainFrame;
+			Real m_width;
+			Real m_height;
 
-		int m_cursorType;
-	};
+			uint32_t m_fsaa;
+
+			bool m_rightButton;
+			bool m_leftButton;
+			bool m_middleButton;
+
+			bool m_focused;
+			bool m_primary;
+			bool m_deleteAll;
+			bool m_ogreActive;
+			bool m_isVista;
+			bool m_fucked;
+			bool m_destroyed;
+			bool m_oneTimePostSetFocus;
+			bool m_editionMode;
+
+			String m_baseDirectory;
+			String m_filename;
+			String m_installPath;
+			String m_path;
+			String m_museFile;
+
+			ProjectComponents::Displayable * m_displayedObject;
+			ProjectComponents::ProjectSPtr m_project;
+			ProjectComponents::ScenePtr m_testedScene;
+			ProjectFrame * m_mainFrame;
+
+			int m_cursorType;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
+
 #endif

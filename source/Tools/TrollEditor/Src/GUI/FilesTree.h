@@ -25,95 +25,116 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Project/Module_Project.h"
 #include "GUI/TreeItemData.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	enum FilesTreeIDs
+	namespace GUI
 	{
-		FilesTreeIcon_File = 0,
-		FilesTreeIcon_FileSelected = 1,
-		FilesTreeIcon_Folder = 2,
-		FilesTreeIcon_FolderSelected = 3,
-		FilesTreeIcon_FolderOpened = 4,
-		FilesTreeIcon_ClassFunction = 5,
-
-		TreeFichier_Ctrl = 1001,
-	};
-
-	struct SceneItem
-	{
-		TROLL_PROJECT_NAMESPACE::Scene * Trollscene;
-		wxTreeItemId TreeItem;
-	};
-
-	class FilesTree : public wxTreeCtrl
-	{
-	public:
-		FilesTree( wxWindow * parent, const wxPoint & pos, const wxSize & size, long style );
-		~FilesTree();
-
-		void Cleanup();
-
-		void CreateImageList( int size = 16 );
-
-		void InitProject( const wxString & p_projectName );
-		wxTreeItemId AddSceneToProject( TROLL_PROJECT_NAMESPACE::Scene * p_scene );
-		wxTreeItemId AddFolderToScene( const wxString & p_sceneName, const wxString & p_folderName );
-		wxTreeItemId AddFileToFolder( const wxTreeItemId & p_item, const wxString & idFile, TETreeItemType p_type, bool p_exists );
-		void ShowContextMenuFichier( const wxPoint & pos, TETreeItemData * p_item );
-		wxTreeItemId AddExistingFileToProjet( const wxTreeItemId & item, TETreeItemType p_type, const wxString idFile );
-
-		wxTreeItemId GetFolderId( const wxString & p_name );
-		wxTreeItemId GetItemByName( const wxString & p_name );
-
-		inline int GetImageSize()const
+		class TreeScene
 		{
-			return m_imageSize;
-		}
-		inline const wxTreeItemId &	GetSelected()const
+		public:
+			~TreeScene() = default;
+			TreeScene( TreeScene && ) = default;
+			TreeScene & operator=( TreeScene && ) = default;
+			TreeScene( TreeScene const & ) = delete;
+			TreeScene & operator=( TreeScene const & ) = delete;
+
+			TreeScene( ProjectComponents::ScenePtr p_scene )
+				: m_scene{ p_scene }
+			{
+			}
+
+			ProjectComponents::ScenePtr m_scene;
+			std::array< wxTreeItemId, ProjectComponents::FileTypeCount > m_folderIds;
+			wxTreeItemId m_sceneId;
+		};
+		using TreeSceneMap = std::map< wxString, TreeScene >;
+
+		class FilesTree
+			: public wxTreeCtrl
 		{
-			return m_selectedItem;
-		}
-		inline TROLL_PROJECT_NAMESPACE::Scene * GetSelectedScene()const
-		{
-			return m_selectedScene;
-		}
+		public:
+			FilesTree( wxWindow * parent, ProjectFrame * projectFrame, wxPoint const & pos, wxSize const & size, long style );
+			~FilesTree();
 
-		inline void SetSelected( const wxTreeItemId & p_item )
-		{
-			m_selectedItem = p_item;
-		}
+			void Cleanup();
 
-	protected:
-		inline bool _isTestItem( const wxTreeItemId & item )
-		{
-			return GetItemParent( item ) == GetRootItem() &&  ! GetPrevSibling( item );
-		}
+			void CreateImageList( int size = 16 );
 
-	private:
-		void _logEvent( const wxChar * name, const wxTreeEvent & p_event );
-		DECLARE_EVENT_TABLE()
-		void OnItemClic( wxTreeEvent & p_event );
-		void OnFichierRClick( wxTreeEvent & p_event );
-		void OnFileActivated( wxTreeEvent & p_event );
-		void OnBeginLabelEdit( wxTreeEvent & p_event );
-		void OnEndLabelEdit( wxTreeEvent & p_event );
+			void LoadProject( ProjectComponents::Project & p_project );
+			void LoadScene( ProjectComponents::ScenePtr p_scene );
+			TreeScene & AddSceneToProject( ProjectComponents::ScenePtr p_scene );
+			wxTreeItemId AddFolderToScene( wxString const & p_sceneName, wxString const & p_folderName );
+			wxTreeItemId AddFileToFolder( wxTreeItemId const & p_item, wxString const & idFile, TETreeItemType p_type, bool p_exists );
+			void ShowContextMenuFichier( wxPoint const & pos, TETreeItemData * p_item );
+			wxTreeItemId AddExistingFileToProjet( wxTreeItemId const & item, TETreeItemType p_type, const wxString idFile );
 
-	private:
-		int	m_imageSize;
-		TreeItemMap m_scenes;
-		wxTreeItemId m_idParent;
-		wxTreeItemId m_rootId;
-		wxTreeItemId m_rootProjetId;
-		wxTreeItemId m_selectedItem;
-		wxString m_itemName;
-		wxString m_itemPath;
-		TROLL_PROJECT_NAMESPACE::Scene * m_selectedScene;
+			wxTreeItemId GetFolderId( wxString const & p_name );
+			wxTreeItemId GetItemByName( wxString const & p_name );
 
-		TreeItemIdMap m_folders;
-		MapTypeFile m_mapFile;
-	};
+			inline int GetImageSize()const
+			{
+				return m_imageSize;
+			}
+			inline wxTreeItemId const &	GetSelected()const
+			{
+				return m_selectedItem;
+			}
+			inline ProjectComponents::ScenePtr GetSelectedScene()const
+			{
+				return m_selectedScene;
+			}
+
+			inline void SetSelected( wxTreeItemId const & p_item )
+			{
+				m_selectedItem = p_item;
+			}
+
+		private:
+			void DoListFolder();
+			void DoLogEvent( const wxChar * name, const wxTreeEvent & p_event );
+			ProjectComponents::ScenePtr DoGetSceneForItem( wxTreeItemId const & p_item );
+			ProjectComponents::FileType DoGetFolderType( wxTreeItemId const & p_item );
+
+			DECLARE_EVENT_TABLE()
+			void OnItemClick( wxTreeEvent & p_event );
+			void OnFichierRClick( wxTreeEvent & p_event );
+			void OnFileActivated( wxTreeEvent & p_event );
+			void OnBeginLabelEdit( wxTreeEvent & p_event );
+			void OnEndLabelEdit( wxTreeEvent & p_event );
+			void OnNewScene( wxCommandEvent & p_event );
+			void OnSceneDependencies( wxCommandEvent & p_event );
+			void OnDeleteScene( wxCommandEvent & p_event );
+			void OnAddNewFile( wxCommandEvent & p_event );
+			void OnAddExistingFile( wxCommandEvent & p_event );
+			void OnOpenFile( wxCommandEvent & p_event );
+			void OnSaveSelectedFile( wxCommandEvent & p_event );
+			void OnSaveSelectedFileAs( wxCommandEvent & p_event );
+			void OnListFolder( wxCommandEvent & p_event );
+			void OnRenameObject( wxCommandEvent & p_event );
+			void OnRemoveObject( wxCommandEvent & p_event );
+			void OnDeleteObject( wxCommandEvent & p_event );
+			void OnCloseObject( wxCommandEvent & p_event );
+			void OnSaveProject( wxCommandEvent & p_event );
+
+		private:
+			int	m_imageSize{ 0 };
+			TreeSceneMap m_scenes;
+			wxTreeItemId m_idParent;
+			wxTreeItemId m_rootId;
+			wxTreeItemId m_rootProjetId;
+			wxTreeItemId m_selectedItem;
+			wxString m_itemName;
+			wxString m_itemPath;
+			ProjectComponents::ScenePtr m_selectedScene{ nullptr };
+			ProjectFrame * m_projectFrame{ nullptr };
+
+			TreeItemIdMap m_folders;
+			MapTypeFile m_mapFile;
+			size_t m_numSceneFile{ 1 };
+			size_t m_numScriptFile{ 1 };
+			size_t m_numDataFile{ 1 };
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
-

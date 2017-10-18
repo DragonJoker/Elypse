@@ -22,46 +22,54 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Module_Media.h>
 
-BEGIN_TROLL_PROJECT_MEDIA_NAMESPACE
+namespace Troll
 {
-	class TrollSoundObject
-		: public MediaObject
+	namespace ProjectComponents
 	{
-	public:
-		TrollSoundObject( const wxString & p_name, const wxString & p_fileName );
-		~TrollSoundObject();
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void SetMuseInstance( Elypse::Media::SoundInstance * p_instance );
-		void SetAttenuation( float p_att );
-		void SetLooped( bool p_looped );
-		void SetTimer( float p_time );
-		void SetFadeIn( float p_time );
-		void SetFadeOut( float p_time );
-
-		void Write( wxTextOutputStream * p_stream );
-
-		inline TrollSound * GetSound()const
+		namespace Media
 		{
-			return m_sound;
-		}
-		inline SoundInstance GetInstance()const
-		{
-			return m_instance;
-		}
-		inline void SetSound( TrollSound * p_sound )
-		{
-			m_sound = p_sound;
-		}
+			class TrollSoundObject
+				: public MediaObject
+			{
+			public:
+				TrollSoundObject( wxString const & p_name, wxString const & p_fileName );
+				~TrollSoundObject();
 
-	private:
-		TrollSound * m_sound;
-		Object * m_object;
-		SoundInstance m_instance;
-		Elypse::Media::SoundInstance * m_museInstance;
-	};
+				void SetMuseInstance( Elypse::Media::SoundInstance * p_instance );
+				void SetAttenuation( float p_att );
+				void SetLooped( bool p_looped );
+				void SetTimer( float p_time );
+				void SetFadeIn( float p_time );
+				void SetFadeOut( float p_time );
+
+				void Write( wxTextOutputStream & p_stream );
+
+				inline TrollSound * GetSound()const
+				{
+					return m_sound;
+				}
+
+				inline SoundInstance GetInstance()const
+				{
+					return m_instance;
+				}
+
+				inline void SetSound( TrollSound * p_sound )
+				{
+					m_sound = p_sound;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				TrollSound * m_sound;
+				Object * m_object;
+				SoundInstance m_instance;
+				Elypse::Media::SoundInstance * m_museInstance;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_MEDIA_NAMESPACE
 
 #endif

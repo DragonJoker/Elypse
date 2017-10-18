@@ -2,7 +2,10 @@ project MockingGhost
 {
 	resolution		640 480
 	colour			0 0 0
-	scene KazuSplash
+	show_debug		false
+	show_fps		false
+	startup_script	string c_gameName = "MockingGhost";string c_sceneName = "MockingGhost";bool c_modeInstant = false;bool c_modeConcours = false;int c_instantID = 0;string c_baseSite = "localhost/Kazugame";string g_serverAddr = "127.0.0.1";int g_serverPort = 48621;
+	scene kazu
 	{
 		scene_files
 		{
@@ -41,7 +44,7 @@ project MockingGhost
 		}
 		dependencies
 		{
-			KazuSplash
+			kazu
 		}
 	}
 }

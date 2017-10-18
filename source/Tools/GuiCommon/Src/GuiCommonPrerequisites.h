@@ -28,38 +28,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define dSINGLE
 #include <Elypse.h>
 
-#define COMMON_GUI_NAMESPACE ELYPSE_NAMESPACE::GuiCommon
-#define BEGIN_COMMON_GUI_NAMESPACE BEGIN_ELYPSE_NAMESPACE { namespace GuiCommon
-#define END_COMMON_GUI_NAMESPACE } END_ELYPSE_NAMESPACE
-
-BEGIN_ELYPSE_NAMESPACE
+namespace GuiCommon
 {
-	namespace GuiCommon
+	class wxElypsePlugin;
+
+	typedef std::unique_ptr< wxElypsePlugin > wxElypsePluginUPtr;
+	typedef std::shared_ptr< wxElypsePlugin > wxElypsePluginSPtr;
+	typedef std::weak_ptr< wxElypsePlugin > wxElypsePluginWPtr;
+
+	inline wxString const & make_wxString( wxString const & p_value )
 	{
-		class wxElypsePlugin;
-		
-		typedef std::unique_ptr< wxElypsePlugin > wxElypsePluginUPtr;
-		typedef std::shared_ptr< wxElypsePlugin > wxElypsePluginSPtr;
-		typedef std::weak_ptr< wxElypsePlugin > wxElypsePluginWPtr;
-	
-		inline wxString const & make_wxString( wxString const & p_value )
-		{
-			return p_value;
-		}
-		wxString make_wxString( String const & p_value );
-		wxString make_wxString( char const * p_value );
-		String make_string( wxString const & p_in );
-	
-		bool GetReal( const wxString & p_value, float & p_res );
-		bool GetReal( const wxString & p_value, float p_min, float p_max, float & p_res );
-		bool GetInt( const wxString & p_value, int & p_res );
-		bool GetInt( const wxString & p_value, int p_min, int p_max, int & p_res );
-		bool GetReal( const String & p_value, float & p_res );
-		bool GetReal( const String & p_value, float p_min, float p_max, float & p_res );
-		bool GetInt( const String & p_value, int & p_res );
-		bool GetInt( const String & p_value, int p_min, int p_max, int & p_res );
+		return p_value;
 	}
+	wxString make_wxString( String const & p_value );
+	wxString make_wxString( char const * p_value );
+	String make_string( wxString const & p_in );
+
+	bool GetReal( wxString const & p_value, float & p_res );
+	bool GetReal( wxString const & p_value, float p_min, float p_max, float & p_res );
+	bool GetInt( wxString const & p_value, int & p_res );
+	bool GetInt( wxString const & p_value, int p_min, int p_max, int & p_res );
+	bool GetReal( String const & p_value, float & p_res );
+	bool GetReal( String const & p_value, float p_min, float p_max, float & p_res );
+	bool GetInt( String const & p_value, int & p_res );
+	bool GetInt( String const & p_value, int p_min, int p_max, int & p_res );
 }
-END_ELYPSE_NAMESPACE
 
 #endif

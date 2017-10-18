@@ -20,15 +20,15 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "ScriptTimer.h"
 #include "ScriptNode.h"
 
-ScriptTimer::ScriptTimer( const String & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction )
-	: named( p_name ),
-		m_action( p_code ),
-		m_finalAction( p_finalAction ),
-		m_type( p_type ),
-		m_leftTime( p_baseTime ),
-		m_baseTime( p_baseTime ),
-		m_paused( false ),
-		m_numExecs( 0 )
+ScriptTimer::ScriptTimer( String const & p_name, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalAction )
+	: named( p_name )
+	, m_action( p_code )
+	, m_finalAction( p_finalAction )
+	, m_type( p_type )
+	, m_leftTime( p_baseTime )
+	, m_baseTime( p_baseTime )
+	, m_paused( false )
+	, m_numExecs( 0 )
 {
 }
 

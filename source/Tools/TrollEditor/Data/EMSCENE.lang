@@ -97,6 +97,7 @@ language emscene
 			scene_node object camera light
 			sound
 			animated_object_group sequence
+			physics_simulation physics
 		}
 		style
 		{
@@ -118,6 +119,7 @@ language emscene
 			type direction diffuse specular
 			url global attenuation looped
 			target function event
+			auto_update bouncyness friction
 		}
 		style
 		{
@@ -133,6 +135,7 @@ language emscene
 		list
 		{
 			bottom top left right center directional sfx
+			true false
 		}
 		style
 		{

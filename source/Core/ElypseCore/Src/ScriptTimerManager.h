@@ -47,19 +47,19 @@ namespace Elypse
 		public:
 			void UpdateAll( Real p_timeStep );
 
-			ScriptTimer * AddTimer( const String & p_timerName, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalCode = NULL );
+			ScriptTimer * AddTimer( String const & p_timerName, Real p_baseTime, ScriptNode * p_code, ScriptTimerType p_type, ScriptNode * p_finalCode = NULL );
 
-			void DestroyTimer( const String & p_timerName );
+			void DestroyTimer( String const & p_timerName );
 
 			void PauseAll();
 			void PlayAll();
 			void KillAll();
 
-			inline bool			  HasTimer( const String & p_timerName )const
+			inline bool			  HasTimer( String const & p_timerName )const
 			{
 				return General::Utils::map::has( m_timers, p_timerName );
 			}
-			inline ScriptTimer * GetByName( const String & p_timerName )const
+			inline ScriptTimer * GetByName( String const & p_timerName )const
 			{
 				return General::Utils::map::findOrNull( m_timers, p_timerName );
 			}

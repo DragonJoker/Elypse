@@ -33,11 +33,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define M_EXTRACT_COORDS( X ) Real( X.m_x ), Real( X.m_y )
 #define M_CHECK_COORDS( X ) X.m_x < 0 || X.m_y < 0 || X.m_x > m_width || X.m_y > m_height
 
-BEGIN_ELYPSE_BINARY_NAMESPACE
+namespace ElypseBinary
 {
 	const long ID_RENDERTIMER = wxNewId();
 
-	ElypseCtrl::ElypseCtrl( ElypseApp * p_owner, wxWindow * p_parent, std::shared_ptr< COMMON_GUI_NAMESPACE::wxElypsePlugin > p_plugin, std::shared_ptr< ElypseInstance > p_elypse )
+	ElypseCtrl::ElypseCtrl( ElypseApp & p_owner, wxWindow * p_parent, std::shared_ptr< GuiCommon::wxElypsePlugin > p_plugin, std::shared_ptr< ElypseInstance > p_elypse )
 		: wxControl( p_parent, wxID_ANY, wxPoint( 0, 0 ), GetClientSize( p_parent ), wxWANTS_CHARS | wxBORDER_NONE )
 		, owned_by< ElypseApp >( p_owner )
 		, m_elypse( p_elypse )
@@ -47,8 +47,8 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		int l_height = 0;
 
 		GetSize( & l_width, & l_height );
-		m_width = static_cast <Real>( l_width );
-		m_height = static_cast <Real>( l_height );
+		m_width = Real( l_width );
+		m_height = Real( l_height );
 
 		SetFocus();
 	}
@@ -69,8 +69,17 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		Window l_wid = GDK_WINDOW_XWINDOW( l_gtkWidget->window );
 		std::stringstream l_str;
 		String l_screenStr = DisplayString( l_display );
-		l_screenStr = l_screenStr.substr( 1, ( l_screenStr.find( ".", 0 ) - 1 ) );
+		l_screenStr = l_screenStr.substr( l_screenStr.find( "." ) + 1, l_screenStr.size() );
+		l_str << reinterpret_cast <unsigned long>( l_display ) << ':' << l_screenStr << ':' << l_wid;
 		return String( l_str.str() );
+
+		//GtkWidget * l_gtkWidget = this->GetHandle();
+		//gtk_widget_realize( l_gtkWidget );
+		//Display * l_display = GDK_WINDOW_XDISPLAY( l_gtkWidget->window );
+		//std::stringstream l_str;
+		//String l_screenStr = DisplayString( l_display );
+		//l_screenStr = l_screenStr.substr( 1, ( l_screenStr.find( ".", 0 ) - 1 ) );
+		//return l_screenStr;
 #else
 #	error Not supported on this platform.
 #endif
@@ -109,7 +118,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		if ( l_elypse && l_elypse->IsActive() )
 		{
 #if ELYPSE_WINDOWS
-			unsigned short l_flags = HIWORD( p_keyEvent.GetRawKeyFlags() );
+			uint16_t l_flags = HIWORD( p_keyEvent.GetRawKeyFlags() );
 
 			if ( ( l_flags & KF_REPEAT ) == KF_REPEAT )
 			{
@@ -122,7 +131,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 				{
 					wxMutexGuiLeave();
 					//Do not touch that, *this gets destroyed in the OnExit, so we need to store a local of the m_owner
-					ElypseApp * l_owner = m_owner;
+					ElypseApp * l_owner = GetOwner();
 					l_owner->OnExit();
 					l_owner->OnInit();
 				}
@@ -205,7 +214,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 
 			CaptureMouse();
 		}
-		
+
 		auto && l_elypse = GetElypse();
 
 		if ( l_elypse && l_elypse->IsActive() )
@@ -254,7 +263,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 				CaptureMouse();
 			}
 		}
-		
+
 		auto && l_elypse = GetElypse();
 
 		if ( l_elypse && l_elypse->IsActive() )
@@ -271,7 +280,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		}
 
 		m_leftButton = false;
-		
+
 		auto && l_elypse = GetElypse();
 
 		if ( l_elypse && l_elypse->IsActive() )
@@ -301,7 +310,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 
 			CaptureMouse();
 		}
-		
+
 		auto && l_elypse = GetElypse();
 
 		if ( l_elypse && l_elypse->IsActive() )
@@ -318,7 +327,7 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		}
 
 		m_rightButton = false;
-		
+
 		auto && l_elypse = GetElypse();
 
 		if ( l_elypse && l_elypse->IsActive() )
@@ -350,4 +359,3 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		p_event.Skip();
 	}
 }
-END_ELYPSE_BINARY_NAMESPACE

@@ -23,43 +23,51 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Module_Media.h>
 
-BEGIN_TROLL_PROJECT_MEDIA_NAMESPACE
+namespace Troll
 {
-	class TrollVideoObject
-		: public MediaObject
+	namespace ProjectComponents
 	{
-	public:
-		TrollVideoObject( const wxString & p_name, const wxString & p_fileName );
-		~TrollVideoObject();
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void SetAttenuation( float p_att );
-		void Write( wxTextOutputStream * p_stream );
-		void SetMuseVideoObject( Elypse::Media::VideoObject * p_videoObject );
-		void SetMuseVideoOverlay( Elypse::Media::VideoOverlay * p_videoOverlay );
-
-		inline void SetVideo( TrollVideo * p_video )
+		namespace Media
 		{
-			m_video = p_video;
-		}
-		inline TrollVideo * GetVideo()const
-		{
-			return m_video;
-		}
-		inline float GetAttenuation()const
-		{
-			return m_attenuation;
-		}
+			class TrollVideoObject
+				: public MediaObject
+			{
+			public:
+				TrollVideoObject( wxString const & p_name, wxString const & p_fileName );
+				~TrollVideoObject();
 
-	private:
-		TrollVideo * m_video;
-		Object * m_object;
-		float m_attenuation;
-		Elypse::Media::VideoObject * m_videoObject;
-		Elypse::Media::VideoOverlay * m_videoOverlay;
-	};
+				void SetAttenuation( float p_att );
+				void Write( wxTextOutputStream & p_stream );
+				void SetMuseVideoObject( Elypse::Media::VideoObject * p_videoObject );
+				void SetMuseVideoOverlay( Elypse::Media::VideoOverlay * p_videoOverlay );
+
+				inline void SetVideo( TrollVideo * p_video )
+				{
+					m_video = p_video;
+				}
+
+				inline TrollVideo * GetVideo()const
+				{
+					return m_video;
+				}
+
+				inline float GetAttenuation()const
+				{
+					return m_attenuation;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				TrollVideo * m_video;
+				Object * m_object;
+				float m_attenuation;
+				Elypse::Media::VideoObject * m_videoObject;
+				Elypse::Media::VideoOverlay * m_videoOverlay;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_MEDIA_NAMESPACE
 
 #endif

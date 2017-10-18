@@ -24,7 +24,10 @@ namespace Elypse
 {
 	namespace Gui
 	{
-		class d_dll_export EMOverlayGroup : public General::Theory::named, public General::Theory::owned_by<EMGui>, d_noncopyable
+		class d_dll_export EMOverlayGroup
+			: public General::Theory::named
+			, public General::Theory::owned_by< EMGui >
+			, d_noncopyable
 		{
 			friend class EMOverlay;
 
@@ -36,18 +39,18 @@ namespace Elypse
 			bool m_visible;
 
 		public:
-			EMOverlayGroup( const String & p_name, EMGui * p_owner );
+			EMOverlayGroup( String const & p_name, EMGui & p_owner );
 			~EMOverlayGroup();
 
 		public:
-			EMOverlay * CreateElement( const String & p_name );
+			EMOverlay * CreateElement( String const & p_name );
 			void ShowImmediate( bool p_visible );
 			bool Contains( Real p_x, Real p_y )const;
-			void DestroyElement( const String & p_name );
+			void DestroyElement( String const & p_name );
 
 		protected:
 			void _finaliseAddElement( EMOverlay * p_element );
-			void _removeElement( const String & p_name );
+			void _removeElement( String const & p_name );
 
 		public:
 			inline void					SetVisible( bool p_visible )
@@ -71,7 +74,7 @@ namespace Elypse
 				return m_elements;
 			}
 
-			inline EMOverlay * GetElement( const String & p_name )const
+			inline EMOverlay * GetElement( String const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_elements, p_name );
 			}

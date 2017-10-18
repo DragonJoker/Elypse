@@ -231,6 +231,8 @@ CREATE TABLE IF NOT EXISTS `mini_slots` (
 --
 -- Dumping data for table `mini_slots`
 --
+INSERT INTO `mini_slots` (`id_slot`, `sex`) VALUES
+(1, 1);
 
 
 
@@ -243,12 +245,14 @@ CREATE TABLE IF NOT EXISTS `mini_slots` (
 CREATE TABLE IF NOT EXISTS `mini_dresses` (
   `id_dress` int(8) NOT NULL auto_increment,
   `sex` int(8) NOT NULL,
-  PRIMARY KEY  (`id_dress`)
+  PRIMARY KEY (`id_dress`,`sex`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `mini_dresses`
 --
+INSERT INTO `mini_dresses` (`id_dress`, `sex`) VALUES
+(1, 1);
 
 
 
@@ -267,7 +271,8 @@ CREATE TABLE IF NOT EXISTS `mini_dress_slots` (
 --
 -- Dumping data for table `mini_dress_slots`
 --
-
+INSERT INTO `mini_dress_slots` (`ref_dress`, `ref_slot`) VALUES
+(1, 1);
 
 
 -- --------------------------------------------------------
@@ -287,6 +292,8 @@ CREATE TABLE IF NOT EXISTS `mini_player_dress` (
 --
 -- Dumping data for table `mini_player_dress`
 --
+INSERT INTO `mini_player_dress` (`id_player_dress`, `ref_slot`, `ref_dress`, `ref_player`) VALUES
+(1, 1, 1, 1);
 
 
 
@@ -305,6 +312,8 @@ CREATE TABLE IF NOT EXISTS `mini_player_dress_mat` (
 --
 -- Dumping data for table `mini_player_dress_mat`
 --
+INSERT INTO `mini_player_dress_mat` (`ref_player_dress`, `ref_dress_mat`, `submat`) VALUES
+(1, 1, 1);
 
 
 
@@ -322,7 +331,8 @@ CREATE TABLE IF NOT EXISTS `mini_dress_mats` (
 --
 -- Dumping data for table `mini_dress_mats`
 --
-
+INSERT INTO `mini_dress_mats` (`ref_dress`, `submat_index`) VALUES
+(1, 0);
 
 
 -- --------------------------------------------------------
@@ -340,13 +350,15 @@ CREATE TABLE IF NOT EXISTS `mini_paint_slots` (
 --
 -- Dumping data for table `mini_paint_slots`
 --
+INSERT INTO `mini_paint_slots` (`id_slot`, `sex`) VALUES
+(1, 1);
 
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mini_dresses`
+-- Table structure for table `mini_tattoos`
 --
 
 CREATE TABLE IF NOT EXISTS `mini_tattoos` (
@@ -358,16 +370,17 @@ CREATE TABLE IF NOT EXISTS `mini_tattoos` (
 --
 -- Dumping data for table `mini_dresses`
 --
-
+INSERT INTO `mini_tattoos` (`id_tatoo`, `sex`) VALUES
+(1, 1);
 
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mini_dress_slots`
+-- Table structure for table `mini_tattoo_slots`
 --
 
-CREATE TABLE IF NOT EXISTS `mini_paint_slots` (
+CREATE TABLE IF NOT EXISTS `mini_tattoo_slots` (
   `ref_tattoo` int(8) NOT NULL,
   `ref_slot` int(8) NOT NULL,
   PRIMARY KEY  (`ref_tattoo`, `ref_slot`)
@@ -376,7 +389,8 @@ CREATE TABLE IF NOT EXISTS `mini_paint_slots` (
 --
 -- Dumping data for table `mini_dress_slots`
 --
-
+INSERT INTO `mini_tattoo_slots` (`ref_tattoo`, `ref_slot`) VALUES
+(1, 1);
 
 
 -- --------------------------------------------------------
@@ -396,5 +410,7 @@ CREATE TABLE IF NOT EXISTS `mini_player_tattoo` (
 --
 -- Dumping data for table `mini_player_tattoo`
 --
+INSERT INTO `mini_player_tattoo` (`id_player_tattoo`, `ref_slot`, `ref_tattoo`, `ref_player`) VALUES
+(1, 1, 1, 1);
 
 

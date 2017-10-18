@@ -24,61 +24,65 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Module_Media.h>
 
-BEGIN_TROLL_PROJECT_MEDIA_NAMESPACE
+namespace Troll
 {
-	class TrollSound
-		: public MediaObject
+	namespace ProjectComponents
 	{
-	public:
-		TrollSound( const wxString & p_name, const wxString & p_fileName );
-		~TrollSound();
-
-		TrollSoundObject * AddObject( TROLL_PROJECT_3D_NAMESPACE::TrollSceneNode * p_node );
-
-		virtual int BuildPanel( wxWindow * p_parent, int p_width );
-
-		void SetMuseSound( Elypse::Media::SoundObject * p_sound );
-		void SetUrl( const wxString & p_filePath );
-		void SetSoundType( TrollSoundType p_type );
-		void SetLocal();
-		void SetGlobalAttenuation( float p_att );
-		void SetGlobalLooped( bool p_looped );
-		void SetGlobalTimer( float p_time );
-		void SetGlobalFadeIn( float p_time );
-		void SetGlobalFadeOut( float p_time );
-
-		void Write( wxTextOutputStream * p_stream );
-
-	public:
-		inline wxString GetUrl()const
+		namespace Media
 		{
-			return m_filePath;
-		}
-		inline TrollSoundType GetSoundType()const
-		{
-			return m_soundType;
-		}
-		inline bool IsGlobal()const
-		{
-			return m_isGlobal;
-		}
-		inline SoundInstance * GetGlobal()const
-		{
-			return m_globalInstance;
-		}
+			class TrollSound
+				: public MediaObject
+			{
+			public:
+				TrollSound( wxString const & p_name, wxString const & p_fileName );
+				~TrollSound();
 
-	private:
-		wxString m_filePath;
-		TrollSoundType m_soundType;
-		bool m_isGlobal;
-		TrollSoundObjectMap m_objects;
-		Elypse::Media::SoundObject * m_museSound;
+				TrollSoundObject * AddObject( ProjectComponents::Objects3D::TrollSceneNode * p_node );
 
-		//if global
-		SoundInstance * m_globalInstance;
-	};
+				void SetMuseSound( Elypse::Media::SoundObject * p_sound );
+				void SetUrl( wxString const & p_filePath );
+				void SetSoundType( TrollSoundType p_type );
+				void SetLocal();
+				void SetGlobalAttenuation( float p_att );
+				void SetGlobalLooped( bool p_looped );
+				void SetGlobalTimer( float p_time );
+				void SetGlobalFadeIn( float p_time );
+				void SetGlobalFadeOut( float p_time );
+
+				void Write( wxTextOutputStream & p_stream );
+
+				inline wxString GetUrl()const
+				{
+					return m_filePath;
+				}
+				inline TrollSoundType GetSoundType()const
+				{
+					return m_soundType;
+				}
+				inline bool IsGlobal()const
+				{
+					return m_isGlobal;
+				}
+				inline SoundInstance * GetGlobal()const
+				{
+					return m_globalInstance;
+				}
+
+			private:
+				GUI::Properties::ObjectProperty * DoCreateProperties()override;
+
+			private:
+				wxString m_filePath;
+				TrollSoundType m_soundType;
+				bool m_isGlobal;
+				TrollSoundObjectMap m_objects;
+				Elypse::Media::SoundObject * m_museSound;
+
+				//if global
+				SoundInstance * m_globalInstance;
+			};
+		}
+	}
 }
-END_TROLL_PROJECT_MEDIA_NAMESPACE
 
 #endif
-

@@ -22,7 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Module_Download.h"
 
-#include <Thread.h>
+#include <thread>
 #include <Mutex.h>
 #include <Condition.h>
 
@@ -47,7 +47,7 @@ namespace Elypse
 			RenderWindow * m_renderWindow;
 
 			ElypsePlugin * m_plugin;
-			Thread * m_thread;
+			std::thread * m_thread;
 
 			DownloadManager * m_downManager;
 
@@ -55,9 +55,9 @@ namespace Elypse
 			ElypseFrameListener * m_frameListener;
 			ElypseLoadingBar * m_loadingBar;
 
-			unsigned int m_antialiasing;
-			unsigned int m_height;
-			unsigned int m_width;
+			uint32_t m_antialiasing;
+			uint32_t m_height;
+			uint32_t m_width;
 
 			bool m_download;
 			bool m_useDirectX;
@@ -74,8 +74,8 @@ namespace Elypse
 
 			unsigned long m_lastFrameTime;
 
-			Mutex m_mutex;
-			Condition m_condition;
+			std::mutex m_mutex;
+			std::condition_variable m_condition;
 
 			InstanceSet m_instancesLinkedToSelf;
 
@@ -84,7 +84,7 @@ namespace Elypse
 			virtual ~ElypseInstance();
 
 		public:
-			bool Init( unsigned int p_width, unsigned int p_height, const String & p_linkedTo );
+			bool Init( uint32_t p_width, uint32_t p_height, String const & p_linkedTo );
 
 			void Initialise();
 
@@ -109,111 +109,134 @@ namespace Elypse
 			{
 				m_main = p_primary;
 			}
-			inline void SetHandle( const String & p_handle )
+
+			inline void SetHandle( String const & p_handle )
 			{
 				m_handle = p_handle;
 			}
-			inline void SetFileUrl( const Url & p_url )
+
+			inline void SetFileUrl( Url const & p_url )
 			{
 				m_mainUrl = p_url;
 				m_mainUrl.GetProtocol();
 			}
+
 			inline void UseDirectX( bool p_useDirectX )
 			{
 				m_useDirectX = p_useDirectX;
 			}
+
 			inline void ShowFPS( bool p_showFPS )
 			{
 				m_showFPS = p_showFPS;
 			}
-			inline void SetAntialiasing( unsigned int p_antialiasing )
+
+			inline void SetAntialiasing( uint32_t p_antialiasing )
 			{
 				m_antialiasing = p_antialiasing;
 			}
+
 			inline void SetDownloadFiles( bool p_download )
 			{
 				m_download = p_download;
 			}
+
 			inline void	SetFocus( bool p_focus )
 			{
 				m_hasFocus = p_focus;
 			}
-			inline void	SetStartupScript( const String & p_script )
+
+			inline void	SetStartupScript( String const & p_script )
 			{
 				m_startupScript = p_script;
 			}
+
 			inline void	Deactivate()
 			{
 				m_deactivated = true;
 			}
-			inline void SetCurrentDirectory( const Url & p_dir )
+
+			inline void SetCurrentDirectory( Url const & p_dir )
 			{
 				m_currentDirectory = p_dir;
 			}
 
-			inline bool					IsDeleted()const
+			inline bool IsDeleted()const
 			{
 				return m_deleted;
 			}
-			inline bool					IsMain()const
+
+			inline bool IsMain()const
 			{
 				return m_main;
 			}
-			inline bool					HasFocus()const
+
+			inline bool HasFocus()const
 			{
 				return m_hasFocus;
 			}
-			inline Thread 		*		GetThread()const
+
+			inline std::thread * GetThread()const
 			{
 				return m_thread;
 			}
-			inline DownloadManager	*	GetDownloadManager()const
+
+			inline DownloadManager * GetDownloadManager()const
 			{
 				return m_downManager;
 			}
-			inline ElypseLoadingBar	*	GetLoadingBar()const
+
+			inline ElypseLoadingBar * GetLoadingBar()const
 			{
 				return m_loadingBar;
 			}
-			inline bool					IsInitialised()const
+
+			inline bool IsInitialised()const
 			{
 				return m_initialised;
 			}
-			inline bool					IsToDelete()const
+
+			inline bool IsToDelete()const
 			{
 				return m_toDelete;
 			}
-			inline ElypsePlugin 	*	GetPlugin()const
+
+			inline ElypsePlugin * GetPlugin()const
 			{
 				return m_plugin;
 			}
-			inline const String 	&	GetHandle()const
+
+			inline const String & GetHandle()const
 			{
 				return m_handle;
 			}
+
 			inline ElypseFrameListener * GetFL()const
 			{
 				return m_frameListener;
 			}
 
-			inline unsigned int			GetWindowWidth()const
+			inline uint32_t GetWindowWidth()const
 			{
 				return m_width;
 			}
-			inline unsigned int			GetWindowHeight()const
+
+			inline uint32_t GetWindowHeight()const
 			{
 				return m_height;
 			}
 
-			inline const Url 	&		GetFileUrl()const
+			inline const Url & GetFileUrl()const
 			{
 				return m_mainUrl;
 			}
-			inline const Url 	&		GetCurrentDirectory()const
+
+			inline const Url & GetCurrentDirectory()const
 			{
 				return m_currentDirectory;
 			}
-			inline RenderWindow 	*	GetWindow()const
+
+			inline RenderWindow * GetWindow()const
 			{
 				return m_renderWindow;
 			}

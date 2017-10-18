@@ -28,18 +28,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <ode/objects.h>
 
-PhysicsObject::PhysicsObject( Entity * p_entity, Space * p_space )
-	: named( p_entity->getName() ),
-		m_entity( p_entity ),
-		m_node( p_entity->getParentSceneNode() ),
-		m_space( p_space ),
-		m_mass( NULL ),
-		m_material( NULL ),
-		m_enabled( true ),
-		m_static( false ),
-		m_phantom( false ),
-		m_applyMoveOut( false ),
-		m_outTranslate( Vector3::ZERO )
+PhysicsObject::PhysicsObject( PhysicsSimulation & p_parent, Entity * p_entity, Space * p_space )
+	: named( p_entity->getName() )
+	, owned_by< PhysicsSimulation >( p_parent )
+	, m_entity( p_entity )
+	, m_node( p_entity->getParentSceneNode() )
+	, m_space( p_space )
+	, m_mass( NULL )
+	, m_material( NULL )
+	, m_enabled( true )
+	, m_static( false )
+	, m_phantom( false )
+	, m_applyMoveOut( false )
+	, m_outTranslate( Vector3::ZERO )
 {
 	genlib_assert( m_entity != NULL );
 
@@ -66,18 +67,19 @@ PhysicsObject::PhysicsObject( Entity * p_entity, Space * p_space )
 	SetEnabled( true );
 }
 
-PhysicsObject::PhysicsObject( const String & p_name, Space * p_space )
-	: named( p_name ),
-		m_entity( NULL ),
-		m_node( NULL ),
-		m_space( p_space ),
-		m_mass( NULL ),
-		m_material( NULL ),
-		m_enabled( false ),
-		m_static( true ),
-		m_phantom( true ),
-		m_applyMoveOut( false ),
-		m_outTranslate( Vector3::ZERO )
+PhysicsObject::PhysicsObject( PhysicsSimulation & p_parent, String const & p_name, Space * p_space )
+	: named( p_name )
+	, owned_by< PhysicsSimulation >( p_parent )
+	, m_entity( NULL )
+	, m_node( NULL )
+	, m_space( p_space )
+	, m_mass( NULL )
+	, m_material( NULL )
+	, m_enabled( false )
+	, m_static( true )
+	, m_phantom( true )
+	, m_applyMoveOut( false )
+	, m_outTranslate( Vector3::ZERO )
 {
 	m_body = dBodyCreate( p_space->GetOwner()->GetWorldID() );
 	dBodyDisable( m_body );
@@ -491,7 +493,7 @@ int PhysicsObject::NumCollisionTest_Complete( PhysicsObject * p_collideWith )
 }
 
 
-PhysicsObject * PhysicsObject::Clone( const String & p_name, Space * p_space )
+PhysicsObject * PhysicsObject::Clone( String const & p_name, Space * p_space )
 {
 	genlib_assert( ! p_name.empty() );
 
@@ -500,7 +502,7 @@ PhysicsObject * PhysicsObject::Clone( const String & p_name, Space * p_space )
 		p_space = m_space;
 	}
 
-	PhysicsObject * l_object = new PhysicsObject( p_name, p_space );
+	PhysicsObject * l_object = new PhysicsObject( *GetOwner(), p_name, p_space );
 	l_object->SetPosition( GetPosition() );
 	l_object->SetOrientation( GetOrientation() );
 	size_t imax = m_bounds.size();

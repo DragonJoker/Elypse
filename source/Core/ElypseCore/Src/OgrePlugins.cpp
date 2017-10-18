@@ -21,6 +21,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseLogs.h"
 
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+#include <vector>
+
 namespace Elypse
 {
 	namespace Main
@@ -33,8 +38,8 @@ namespace Elypse
 #endif
 		{
 		}
-			
-		bool PluginLoader::load( const String & p_installPath, Root * p_root )
+
+		bool PluginLoader::load( String const & p_installPath, Root * p_root )
 		{
 			try
 			{
@@ -67,7 +72,7 @@ namespace Elypse
 #endif
 		}
 
-		void PluginLoader::loadStatic( const String & p_installPath, Root * p_root )
+		void PluginLoader::loadStatic( String const & p_installPath, Root * p_root )
 		{
 #if defined(OGRE_USE_STATIC_PLUGINS)
 #	if ELYPSE_WINDOWS
@@ -76,14 +81,14 @@ namespace Elypse
 			m_graphPlugin = new GLPlugin();
 #	endif
 			p_root->installPlugin( m_graphPlugin );
-			m_cgPlugin = new CgPlugin();
+//			m_cgPlugin = new CgPlugin();
 			p_root->installPlugin( m_cgPlugin );
 			m_particleFXPlugin = new ParticleFXPlugin();
 			p_root->installPlugin( m_particleFXPlugin );
 #endif
 		}
 
-		void PluginLoader::loadDynamic( const String & p_installPath, Root * p_root )
+		void PluginLoader::loadDynamic( String const & p_installPath, Root * p_root )
 		{
 #if !defined(OGRE_USE_STATIC_PLUGINS)
 			String l_debugSuffix;
@@ -95,15 +100,15 @@ namespace Elypse
 			SetCurrentDirectoryA( p_installPath.c_str() );
 			String l_pluginPath = "";
 #	else
-			String l_pluginPath = "../lib/";
+			String l_pluginPath;
 #	endif
 
 #	if ELYPSE_WINDOWS
-			p_root->loadPlugin( l_pluginPath + "RenderSystem_Direct3D9" + l_debugSuffix );
+			p_root->loadPlugin( l_pluginPath + "RenderSystem_GL" + l_debugSuffix );
+			//p_root->loadPlugin( l_pluginPath + "RenderSystem_Direct3D11" + l_debugSuffix );
 #	else
 			p_root->loadPlugin( l_pluginPath + "RenderSystem_GL" + l_debugSuffix );
 #	endif
-
 			p_root->loadPlugin( l_pluginPath + "Plugin_CgProgramManager" + l_debugSuffix );
 			p_root->loadPlugin( l_pluginPath + "Plugin_ParticleFX" + l_debugSuffix );
 #endif

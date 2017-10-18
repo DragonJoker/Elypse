@@ -29,6 +29,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/textfile.h>
 #include <wx/stattext.h>
 
+#include <GuiCommonPrerequisites.h>
+
 namespace
 {
 	enum eIDC
@@ -75,21 +77,6 @@ namespace
 		}
 
 		return l_return;
-	}
-
-	wxString make_wxString( char const * p_string )
-	{
-		return wxString( p_string, wxConvLibc );
-	}
-
-	wxString make_wxString( std::string const & p_string )
-	{
-		return make_wxString( p_string.c_str() );
-	}
-
-	std::string make_string( wxString const & p_string )
-	{
-		return p_string.char_str().data();
 	}
 
 	const int OFFSET = 5;
@@ -165,7 +152,7 @@ void MuseWriterDlg::AddFile( wxString const & p_file )
 {
 	wxString l_log;
 
-	if ( m_dataWriter.AddFile( make_string( p_file ) ) )
+	if ( m_dataWriter.AddFile( GuiCommon::make_string( p_file ) ) )
 	{
 		m_log->AppendString( _( "Added " ) + p_file );
 		m_files->AppendString( p_file.substr( p_file.find_last_of( wxFileName::GetPathSeparator() ) + 1 ) );
@@ -190,7 +177,7 @@ void MuseWriterDlg::DoAddFolder( wxString const & p_file, Elypse::Download::Data
 {
 	wxString l_log;
 
-	if ( m_dataWriter.AddFolder( make_string( p_file ), p_type ) )
+	if ( m_dataWriter.AddFolder( GuiCommon::make_string( p_file ), p_type ) )
 	{
 		m_log->AppendString( _( "Added " ) + p_file );
 		m_files->AppendString( p_file.substr( p_file.find_last_of( wxFileName::GetPathSeparator() ) + 1 ) );
@@ -207,7 +194,7 @@ bool MuseWriterDlg::DoWrite()
 
 	if ( !m_outFileName.empty() )
 	{
-		l_return = m_dataWriter.Write( make_string( m_outFileName ) );
+		l_return = m_dataWriter.Write( GuiCommon::make_string( m_outFileName ) );
 	}
 
 	return l_return;
@@ -219,7 +206,7 @@ void MuseWriterDlg::DoUpdateFileList()
 
 	for ( auto && l_file : m_dataWriter.GetFileList() )
 	{
-		m_files->AppendString( make_wxString( l_file.substr( l_file.find_last_of( d_path_slash ) + 1 ) ) );
+		m_files->AppendString( GuiCommon::make_wxString( l_file.substr( l_file.find_last_of( d_path_slash ) + 1 ) ) );
 	}
 }
 

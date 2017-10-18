@@ -25,77 +25,42 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/string.h>
 #include <ConfigFile.h>
 
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	struct File
+	namespace ProjectComponents
 	{
-		File()
-			: m_scene( NULL )
-			, Filetype( sceneFile )
-			, CfgFile()
-			, FolderId( 0 )
-			, Saved( false )
-			, Open( false )
-			, ItemId( 0 )
-			, EditPanel( NULL )
-			, IdOnglet( 0 )
-			, m_compiled( false )
-			, FileName()
+		struct File
 		{
-		}
+			File() = default;
 
-		File( Scene * p_pScene, FileType p_eFileType, wxString p_strFile, Elypse::Data::MuseFile * p_pMuseFile, wxTreeItemId p_iFolderId )
-			: m_scene( p_pScene )
-			, Filetype( p_eFileType )
-			, CfgFile( std::make_unique< ConfigFile >( GuiCommon::make_string( p_strFile ), p_pMuseFile ) )
-			, FolderId( p_iFolderId )
-			, Saved( true )
-			, Open( false )
-			, ItemId( 0 )
-			, EditPanel( NULL )
-			, IdOnglet( 0 )
-			, m_compiled( false )
-		{
-			//TODOMIAOU ?
-			CfgFile->DownloadFinished();
-			p_strFile.Replace( wxT( "/" ), wxString() << wxFileName::GetPathSeparator() );
-			p_strFile.Replace( wxT( "\\" ), wxString() << wxFileName::GetPathSeparator() );
-			std::size_t l_index = p_strFile.find_last_of( wxFileName::GetPathSeparator() );
-			FileName = p_strFile.substr( l_index + 1 );
-		}
+			File( Scene * p_pScene, FileType p_eFileType, wxString p_strFile, Elypse::Data::MuseFile & p_pMuseFile, wxTreeItemId p_iFolderId = 0 )
+				: m_scene{ p_pScene }
+				, Filetype{ p_eFileType }
+				, CfgFile{ std::make_shared< ConfigFile >( GuiCommon::make_string( p_strFile ), p_pMuseFile ) }
+				, FolderId{ p_iFolderId }
+				, Saved{ true }
+			{
+				//TODOMIAOU ?
+				CfgFile->DownloadFinished();
+				p_strFile.Replace( wxT( "/" ), wxString() << wxFileName::GetPathSeparator() );
+				p_strFile.Replace( wxT( "\\" ), wxString() << wxFileName::GetPathSeparator() );
+				std::size_t l_index = p_strFile.find_last_of( wxFileName::GetPathSeparator() );
+				FileName = p_strFile.substr( l_index + 1 );
+			}
 
-		File( const File & p_file )
-			: FileName( p_file.FileName )
-			, Open( p_file.Open )
-			, Saved( p_file.Saved )
-			, ItemId( p_file.ItemId )
-			, FolderId( p_file.FolderId )
-			, Filetype( p_file.Filetype )
-			, CfgFile( std::make_unique< ConfigFile >( p_file.CfgFile->GetName(), p_file.CfgFile->GetOwner() ) )
-			, EditPanel( p_file.EditPanel )
-			, IdOnglet( p_file.IdOnglet )
-			, m_scene( p_file.m_scene )
-			, m_compiled( p_file.m_compiled )
-		{
-		}
-
-		~File()
-		{
-		}
-
-		wxString FileName;
-		bool Open;
-		bool Saved;
-		wxTreeItemId ItemId;
-		wxTreeItemId FolderId;
-		FileType Filetype;
-		std::unique_ptr< ConfigFile > CfgFile;
-		Troll::GUI::wxStcTextEditor * EditPanel;
-		int IdOnglet;
-		Scene * m_scene;
-		bool m_compiled;
-	};
+			wxString FileName;
+			bool Open{ false };
+			bool Saved{ false };
+			wxTreeItemId ItemId{ 0 };
+			wxTreeItemId FolderId{ 0 };
+			FileType Filetype{ sceneFile };
+			std::shared_ptr< ConfigFile > CfgFile{ nullptr };
+			Troll::GUI::wxStcTextEditor * EditPanel{ nullptr };
+			int IdOnglet{ 0 };
+			Scene * m_scene{ nullptr };
+			bool m_compiled{ false };
+		};
+	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

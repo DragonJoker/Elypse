@@ -48,7 +48,7 @@ namespace Elypse
 		private:
 			GaussianListener * m_listener;
 		public:
-			PostEffect_GaussianBlur( const String & p_name, Viewport * p_viewport );
+			PostEffect_GaussianBlur( String const & p_name, Viewport * p_viewport );
 			virtual ~PostEffect_GaussianBlur();
 		};
 	}

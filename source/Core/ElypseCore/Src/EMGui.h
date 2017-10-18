@@ -26,7 +26,8 @@ namespace Elypse
 {
 	namespace Gui
 	{
-		class d_dll_export EMGui : d_noncopyable
+		class d_dll_export EMGui
+			: d_noncopyable
 		{
 		protected:
 			EMOverlayMap m_overlays;
@@ -41,7 +42,7 @@ namespace Elypse
 			Real m_aspectRatio;
 
 		public:
-			EMGui( const String & p_instanceKey, Real p_aspect );
+			EMGui( String const & p_instanceKey, Real p_aspect );
 			~EMGui();
 
 		public:
@@ -53,13 +54,13 @@ namespace Elypse
 
 			void SetAllOverlaysVisibility( bool p_visible )const;
 
-			void ClearAll() d_no_throw;
+			void ClearAll() noexcept;
 
-			EMOverlayGroup * CreateOverlayGroup( const String & p_name );
+			EMOverlayGroup * CreateOverlayGroup( String const & p_name );
 
-			void RemoveOverlay( const String & p_overlayName );
-			void DestroyOverlayGroup( const String & p_name );
-			void DestroyEMOverlay( const String & p_name );
+			void RemoveOverlay( String const & p_overlayName );
+			void DestroyOverlayGroup( String const & p_name );
+			void DestroyEMOverlay( String const & p_name );
 
 		public:
 			inline const OverlayGroupMap &	GetAllOverlays()const
@@ -70,23 +71,23 @@ namespace Elypse
 			{
 				return m_topmostOverlay;
 			}
-			inline const String & GetInstanceKey()const
+			inline String const & GetInstanceKey()const
 			{
 				return m_instanceKey;
 			}
 
-			inline EMOverlayGroup * GetOverlayGroup( const String & p_name )const
+			inline EMOverlayGroup * GetOverlayGroup( String const & p_name )const
 			{
 				return General::Utils::map::findOrNull( m_groups, p_name );
 			}
-			inline EMOverlay * GetElementByName( const String & p_elementName )const
+			inline EMOverlay * GetElementByName( String const & p_elementName )const
 			{
 				return General::Utils::map::findOrNull( m_overlays, p_elementName );
 			}
 
 		public:
 			Real GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )const;
-			Real GetWidth( const String & p_string, const FontPtr & p_font, Real p_fontSize )const;
+			Real GetWidth( String const & p_string, const FontPtr & p_font, Real p_fontSize )const;
 		};
 	}
 }

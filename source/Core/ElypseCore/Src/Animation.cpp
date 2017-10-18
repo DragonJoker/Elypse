@@ -23,23 +23,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseLogs.h"
 
-EMAnimation::EMAnimation( AnimatedObject * p_owner, AnimationState * p_animation )
-	: owned_by<AnimatedObject>	( p_owner ),
-		   named( p_animation->getAnimationName() ),
-		   m_animation( p_animation ),
-		   m_nextAnimation( NULL ),
-		   m_status( AS_STOPPED ),
-		   m_time( 0.0 ),
-		   m_length( 0.0 ),
-		   m_timescale( 1.0 ),
-		   m_maxTimeOut( 0.0 ),
-		   m_maxTimeIn( 0.0 ),
-		   m_timeOut( 0.0 ),
-		   m_weight( 0.0 ),
-		   m_reversed( false ),
-		   m_looped( false ),
-		   m_useTimeOut( false ),
-		   m_useTimeIn( false )
+EMAnimation::EMAnimation( AnimatedObject & p_owner, AnimationState * p_animation )
+	: owned_by<AnimatedObject>( p_owner )
+	, named( p_animation->getAnimationName() )
+	, m_animation( p_animation )
+	, m_nextAnimation( NULL )
+	, m_status( AS_STOPPED )
+	, m_time( 0.0 )
+	, m_length( 0.0 )
+	, m_timescale( 1.0 )
+	, m_maxTimeOut( 0.0 )
+	, m_maxTimeIn( 0.0 )
+	, m_timeOut( 0.0 )
+	, m_weight( 0.0 )
+	, m_reversed( false )
+	, m_looped( false )
+	, m_useTimeOut( false )
+	, m_useTimeIn( false )
 {
 	genlib_assert( m_animation );
 	m_animation->setEnabled( false );

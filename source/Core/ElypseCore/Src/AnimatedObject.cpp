@@ -29,9 +29,9 @@ http://www.gnu.org/copyleft/lesser.txt.
 using namespace General::Utils;
 using namespace Ogre;
 
-AnimatedObject::AnimatedObject( AnimatedObjectGroup * p_group, Entity * p_entity )
-	: owned_by <AnimatedObjectGroup>	( p_group ),
-		 m_entity( p_entity )
+AnimatedObject::AnimatedObject( AnimatedObjectGroup & p_group, Entity * p_entity )
+	: owned_by< AnimatedObjectGroup >( p_group )
+	, m_entity( p_entity )
 {
 	genlib_assert( m_entity != NULL );
 	_createAnimationMap();
@@ -51,7 +51,7 @@ AnimatedObject::~AnimatedObject()
 void AnimatedObject::_addAnimation( AnimationState * p_state )
 {
 	genlib_assert( p_state != NULL );
-	General::Utils::map::insert( m_animations, p_state->getAnimationName(), this, p_state );
+	General::Utils::map::insert( m_animations, p_state->getAnimationName(), *this, p_state );
 }
 
 void AnimatedObject::Update( Real p_timeStep )
@@ -107,11 +107,11 @@ void AnimatedObject::SetPauseAllAnimations( bool p_pause )
 	General::Utils::map::cycle( m_animations, & EMAnimation::SetPause, p_pause );
 }
 
-unsigned int AnimatedObject::GetNumPlayingAnimations()
+uint32_t AnimatedObject::GetNumPlayingAnimations()
 {
 	ConstEnabledAnimationStateIterator l_it = m_entity->getAllAnimationStates()->getEnabledAnimationStateIterator();
 	AnimationState * l_state;
-	unsigned int l_count = 0;
+	uint32_t l_count = 0;
 
 	while ( l_it.hasMoreElements() )
 	{
@@ -122,11 +122,11 @@ unsigned int AnimatedObject::GetNumPlayingAnimations()
 	return l_count;
 }
 
-const String & AnimatedObject::GetPlayingAnimationName( unsigned int p_index )
+String const & AnimatedObject::GetPlayingAnimationName( uint32_t p_index )
 {
 	ConstEnabledAnimationStateIterator l_it = m_entity->getAllAnimationStates()->getEnabledAnimationStateIterator();
 	AnimationState * l_state;
-	unsigned int l_count = 0;
+	uint32_t l_count = 0;
 
 	while ( l_it.hasMoreElements() && l_count < p_index )
 	{

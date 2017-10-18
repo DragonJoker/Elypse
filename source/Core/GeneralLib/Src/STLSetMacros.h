@@ -26,15 +26,14 @@ namespace General
 {
 	namespace Utils
 	{
-		class set
+		namespace set
 		{
-		public:
 			template< typename T, typename Func, typename ... Params >
 			static inline void cycle( const std::set< T * > & p_set, Func p_func, Params && ... p_params )
 			{
 				for ( auto && l_element : p_set )
 				{
-					( l_element->* p_func )( p_params... );
+					( l_element->* p_func )( std::forward< Params >( p_params )... );
 				}
 			}
 
@@ -50,7 +49,7 @@ namespace General
 			}
 
 			template< typename T >
-			static inline bool eraseValue( std::set< T > & p_set, const T & p_element )
+			static inline bool eraseValue( std::set< T > & p_set, T const & p_element )
 			{
 				auto && ifind = p_set.find( p_element );
 
@@ -72,13 +71,13 @@ namespace General
 			}
 
 			template< typename T >
-			static inline bool has( const std::set< T > & p_map, const T & p_key )
+			static inline bool has( std::set< T > const & p_map, T const & p_key )
 			{
 				return p_map.find( p_key ) != p_map.end();
 			}
 
 			template< typename T >
-			static std::set< T > get_intersection( const std::set< T > & p_setA, const std::set< T > & p_setB )
+			static std::set< T > get_intersection( std::set< T > const & p_setA, std::set< T > const & p_setB )
 			{
 				std::set< T > l_intersection;
 				std::insert_iterator <std::set< T > > l_insertIter( l_intersection, l_intersection.begin() );
@@ -87,7 +86,7 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static std::set< T > createFromMapKey( const std::map <T, U> & p_map )
+			static std::set< T > createFromMapKey( std::map< T, U > const & p_map )
 			{
 				std::set< T > l_set;
 
@@ -100,7 +99,7 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static std::set< U > createFromMapData( const std::map< T, U > & p_map )
+			static std::set< U > createFromMapData( std::map< T, U > const & p_map )
 			{
 				std::set< U > l_set;
 
@@ -111,7 +110,7 @@ namespace General
 
 				return l_set;
 			}
-		};
+		}
 	}
 }
 

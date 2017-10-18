@@ -63,7 +63,10 @@ SequenceManager::~SequenceManager()
 
 void SequenceManager::Update( Real p_time )
 {
-	General::Utils::map::cycle( m_objectMap, & Sequence::Update, p_time );
+	for ( auto l_it : m_objectMap )
+	{
+		l_it.second->Update( p_time );
+	}
 }
 
 StringArray SequenceManager::GetAvailablePonctualEvents()
@@ -94,22 +97,22 @@ StringArray SequenceManager::GetAvailableContinuousEvents()
 	return l_result;
 }
 
-void SequenceManager::RegisterInterpolator( const String & p_name, Vector3_Interpolator * p_interpolator )
+void SequenceManager::RegisterInterpolator( String const & p_name, Vector3_Interpolator * p_interpolator )
 {
 	m_interpolators_V3.insert( std::make_pair( p_name, p_interpolator ) );
 }
 
-void SequenceManager::RegisterInterpolator( const String & p_name, Quaternion_Interpolator * p_interpolator )
+void SequenceManager::RegisterInterpolator( String const & p_name, Quaternion_Interpolator * p_interpolator )
 {
 	m_interpolators_Q.insert( std::make_pair( p_name, p_interpolator ) );
 }
 
-void SequenceManager::RegisterInterpolator( const String & p_name, Real_Interpolator * p_interpolator )
+void SequenceManager::RegisterInterpolator( String const & p_name, Real_Interpolator * p_interpolator )
 {
 	m_interpolators_R.insert( std::make_pair( p_name, p_interpolator ) );
 }
 
-void SequenceManager::RegisterFactory( const String & p_name, BaseContinuousEventFactory * p_factory )
+void SequenceManager::RegisterFactory( String const & p_name, BaseContinuousEventFactory * p_factory )
 {
 	if ( General::Utils::map::has( m_continuousEventFactories, p_name ) )
 	{
@@ -119,7 +122,7 @@ void SequenceManager::RegisterFactory( const String & p_name, BaseContinuousEven
 	m_continuousEventFactories.insert( std::make_pair( p_name, p_factory ) );
 }
 
-void SequenceManager::RegisterFactory( const String & p_name, BasePonctualEventFactory * p_factory )
+void SequenceManager::RegisterFactory( String const & p_name, BasePonctualEventFactory * p_factory )
 {
 	if ( General::Utils::map::has( m_ponctualEventFactories, p_name ) )
 	{
@@ -129,7 +132,7 @@ void SequenceManager::RegisterFactory( const String & p_name, BasePonctualEventF
 	m_ponctualEventFactories.insert( std::make_pair( p_name, p_factory ) );
 }
 
-Vector3_Interpolator * SequenceManager::GetInterpolator_V3( const String & p_name )
+Vector3_Interpolator * SequenceManager::GetInterpolator_V3( String const & p_name )
 {
 	const V3InterpolatorMap::iterator & ifind = m_interpolators_V3.find( p_name );
 
@@ -141,7 +144,7 @@ Vector3_Interpolator * SequenceManager::GetInterpolator_V3( const String & p_nam
 	return Interpolators::V3_Linear;
 }
 
-Quaternion_Interpolator * SequenceManager::GetInterpolator_Q( const String & p_name )
+Quaternion_Interpolator * SequenceManager::GetInterpolator_Q( String const & p_name )
 {
 	const QInterpolatorMap::iterator & ifind = m_interpolators_Q.find( p_name );
 
@@ -153,7 +156,7 @@ Quaternion_Interpolator * SequenceManager::GetInterpolator_Q( const String & p_n
 	return Interpolators::Q_Linear;
 }
 
-Real_Interpolator * SequenceManager::GetInterpolator_R( const String & p_name )
+Real_Interpolator * SequenceManager::GetInterpolator_R( String const & p_name )
 {
 	const RInterpolatorMap::iterator & ifind = m_interpolators_R.find( p_name );
 
@@ -165,7 +168,7 @@ Real_Interpolator * SequenceManager::GetInterpolator_R( const String & p_name )
 	return Interpolators::R_Linear;
 }
 
-BasePonctualEvent * SequenceManager::CreatePonctualEvent( const String & p_name, const StringArray & p_params )
+BasePonctualEvent * SequenceManager::CreatePonctualEvent( String const & p_name, const StringArray & p_params )
 {
 	BasePonctualEventFactory * l_factory = General::Utils::map::findOrNull( m_ponctualEventFactories, p_name );
 
@@ -178,7 +181,7 @@ BasePonctualEvent * SequenceManager::CreatePonctualEvent( const String & p_name,
 	return l_factory->CreateEvent( p_params );
 }
 
-BaseContinuousEvent * SequenceManager::CreateContinuousEvent( const String & p_name )
+BaseContinuousEvent * SequenceManager::CreateContinuousEvent( String const & p_name )
 {
 	BaseContinuousEventFactory * l_factory = General::Utils::map::findOrNull( m_continuousEventFactories, p_name );
 

@@ -24,12 +24,12 @@ namespace Elypse
 {
 	namespace SpecialEffects
 	{
-		class d_dll_export MirrorMaterial : public named, public owned_by<Mirror>
+		class d_dll_export MirrorMaterial
+			: public named
+			, public owned_by< Mirror >
 		{
-			Real m_opacity;
-			TextureUnitState * m_tus;
 		public:
-			MirrorMaterial( const String & p_name, Mirror * p_owner );
+			MirrorMaterial( String const & p_name, Mirror & p_owner );
 			~MirrorMaterial();
 
 		public:
@@ -45,6 +45,10 @@ namespace Elypse
 				m_opacity = p_opacity;
 				_setOpacity();
 			}
+
+		private:
+			Real m_opacity;
+			TextureUnitState * m_tus;
 		};
 	}
 }

@@ -22,25 +22,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Module_Download.h"
 
 #include <Mutex.h>
-#include <Thread.h>
+#include <thread>
 #include <Condition.h>
 #include <Singleton.h>
+
+#include <OgreOverlaySystem.h>
 
 namespace Elypse
 {
 	namespace Main
 	{
-		class d_dll_export ElypseController : public General::Theory::Singleton <ElypseController>, public owned_by<ElypseInstance>
+		class d_dll_export ElypseController
+			: public General::Theory::Singleton< ElypseController >
+			, public owned_by< ElypseInstance >
 		{
 		private:
 			InstanceMap m_instances;
 			InstanceMultiMap m_links;
 			Root * m_root;
+			Ogre::OverlaySystem * m_overlaySystem;
 			Log * m_log;
 			RenderWindow * m_primaryRenderWindow;
 
 			DownloadManager * m_downloadManager;
-//		Thread * m_currentRenderingThread;
+//		std::thread * m_currentRenderingThread;
 			ElypseLoadingBar * m_loadingBar;
 //		ElypseInstance * m_currentOwner;
 
@@ -53,73 +58,72 @@ namespace Elypse
 			bool m_activeDebug;
 			bool m_vsync;
 
-			unsigned int m_numInstance;
+			uint32_t m_numInstance;
 
 			ControllerStatus m_status;
 
 			Path m_installDir;
 
-			Mutex m_mutex;
-			Mutex m_selfMutex;
-			Condition m_threadCurrentlyRendering;
-			Condition m_threadEnded;
+			std::mutex m_mutex;
+			std::mutex m_selfMutex;
+			std::condition_variable m_threadCurrentlyRendering;
+			std::condition_variable m_threadEnded;
 
 			StringPairArray m_availableRenderers;
 
 		public:
-			ElypseController();
+			ElypseController( ElypseInstance & p_owner );
 			~ElypseController();
 
 		private:
 			bool _getNextAvailableRenderer( String & p_pluginName, String & p_rendererName );
-			bool _loadRenderer( const String & p_pluginName, const String & p_rendererName );
+			bool _loadRenderer( String const & p_pluginName, String const & p_rendererName );
 
 		public:
 			void PreInit( bool p_useConsole, bool p_direct3D, bool p_download, const Path & p_installationDir );
 			void AddApplication( ElypseInstance * p_instance );
 			void Initialise();
 
-			RenderWindow * CreateRenderWindow( const String & p_name, unsigned int p_width, unsigned int p_height, const String & p_handle , unsigned int p_antialiasing, bool & p_mainWindow );
-			SceneManager * CreateSceneManager( const String & p_name );
+			RenderWindow * CreateRenderWindow( String const & p_name, uint32_t p_width, uint32_t p_height, String const & p_handle , uint32_t p_antialiasing, bool & p_mainWindow );
+			SceneManager * CreateSceneManager( String const & p_name );
 
-			void AddThread( ElypseInstance * p_parent );
+			void AddThread( ElypseInstance & p_parent );
 			void MainLoop();
 
 			void DeleteOgre();
 			void WaitForThreadEnded();
 
-			void InitialiseRessources( const String & p_prefix );
-			void UninitialiseRessources( const String & p_prefix );
+			void InitialiseRessources( String const & p_prefix );
+			void UninitialiseRessources( String const & p_prefix );
 
 			void CheckForUpdates();
 
-			void LinkInstanceTo( ElypseInstance * p_instance, const String & p_linkedToName );
+			void LinkInstanceTo( ElypseInstance * p_instance, String const & p_linkedToName );
 
 			bool ShowConsole();
 
-		public:
-			inline Root 		*		GetRoot()const
+			inline Root * GetRoot()const
 			{
 				return m_root;
 			}
-			inline DownloadManager *	GetDownloadManager()const
+			inline DownloadManager * GetDownloadManager()const
 			{
 				return m_downloadManager;
 			}
-			inline ElypseLoadingBar *	GetLoadingBar()const
+			inline ElypseLoadingBar * GetLoadingBar()const
 			{
 				return m_loadingBar;
 			}
-			inline Log 		*		GetLog()const
+			inline Log * GetLog()const
 			{
 				return m_log;
 			}
-			inline Path					GetInstallPath()const
+			inline Path GetInstallPath()const
 			{
 				return m_installDir;
 			}
 
-			inline unsigned int			GetNextAppIndex()
+			inline uint32_t GetNextAppIndex()
 			{
 				return m_numInstance ++;
 			}

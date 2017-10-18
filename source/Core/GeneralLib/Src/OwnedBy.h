@@ -26,8 +26,8 @@ namespace General
 		class owned_by
 		{
 		public:
-			owned_by( T * p_owner = NULL )
-				: m_owner( p_owner )
+			owned_by( T & p_owner )
+				: m_owner{ &p_owner }
 			{
 			}
 
@@ -40,9 +40,9 @@ namespace General
 				return m_owner;
 			}
 
-			inline void SetOwner( T * p_owner )
+			inline void ChangeOwner( T & p_owner )
 			{
-				m_owner = p_owner;
+				m_owner = &p_owner;
 			}
 
 		protected:

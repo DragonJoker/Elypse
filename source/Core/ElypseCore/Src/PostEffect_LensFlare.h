@@ -31,13 +31,12 @@ namespace Elypse
 	{
 		class PostEffect_LensFlare;
 
-		class LensFlareListener : public FrameListener
+		class LensFlareListener
+			: public FrameListener
+			, public owned_by< PostEffect_LensFlare >
 		{
-		private:
-			PostEffect_LensFlare * m_owner;
-
 		public:
-			LensFlareListener( PostEffect_LensFlare * p_owner );
+			LensFlareListener( PostEffect_LensFlare & p_owner );
 			virtual ~LensFlareListener();
 
 		public:
@@ -55,7 +54,7 @@ namespace Elypse
 			LensFlareListener * m_listener;
 
 		public:
-			PostEffect_LensFlare( const String & p_name, Viewport * p_viewport );
+			PostEffect_LensFlare( String const & p_name, Viewport * p_viewport );
 			virtual ~PostEffect_LensFlare();
 
 		public:

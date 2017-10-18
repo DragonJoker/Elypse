@@ -39,13 +39,13 @@ namespace Elypse
 
 		public:
 			DownloadManager( const General::Utils::Path & p_installPath,
-								ElypseLoadingBar * p_loadingBar,
-								bool p_downloadFiles );
+							 ElypseLoadingBar * p_loadingBar,
+							 bool p_downloadFiles );
 			~DownloadManager();
 
 		public:
 			MuseFile * StartDownloadFile( const General::Utils::Url & p_baseUrl, bool p_download = true );
-			inline MuseFile * GetMuseFile( const String & p_filename )const
+			inline MuseFile * GetMuseFile( String const & p_filename )const
 			{
 				return General::Utils::map::findOrNull( m_museFiles, p_filename );
 			}

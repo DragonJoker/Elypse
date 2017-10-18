@@ -52,16 +52,16 @@ namespace Elypse
 			void _retrieveUrl();
 
 		public:
-			PubObject( const String & p_name, ElypsePlugin * p_plugin );
+			PubObject( String const & p_name, ElypsePlugin * p_plugin );
 			virtual ~PubObject();
 
 		public:
 			PubInstance * CreateInstance( Entity * p_ent );
 			void RemoveInstance( PubInstance * p_instance );
 
-			void SetImageUrl( const String & p_url );
-			void SetLinkUrl( const String & p_url );
-			void SetUrl( const String & p_url );
+			void SetImageUrl( String const & p_url );
+			void SetLinkUrl( String const & p_url );
+			void SetUrl( String const & p_url );
 
 			void Finalise();
 
@@ -69,13 +69,13 @@ namespace Elypse
 
 		public:
 			void OnClick();
-			void ReleaseAllZone( const String & p_zoneName );
+			void ReleaseAllZone( String const & p_zoneName );
 
 		private:
 			static void _reloadCallback( void * p_data );
 
 		public:
-			inline bool HasEntity( const String & p_entName )
+			inline bool HasEntity( String const & p_entName )
 			{
 				return General::Utils::map::has( m_instances, p_entName );
 			}
@@ -83,11 +83,11 @@ namespace Elypse
 			{
 				m_clicked = false;
 			}
-			inline void SetImageURL( const String & p_url )
+			inline void SetImageURL( String const & p_url )
 			{
 				m_imageURL = p_url;
 			}
-			inline void SetLinkURL( const String & p_url )
+			inline void SetLinkURL( String const & p_url )
 			{
 				m_linkURL = p_url;
 			}

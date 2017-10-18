@@ -29,7 +29,9 @@ namespace Elypse
 {
 	namespace Media
 	{
-		class d_dll_export VideoFactory_GStreamer : public General::Theory::Singleton <VideoFactory_GStreamer>, public VideoFactory
+		class d_dll_export VideoFactory_GStreamer
+			: public General::Theory::Singleton< VideoFactory_GStreamer >
+			, public VideoFactory
 		{
 		private:
 			GList * m_factories;
@@ -41,7 +43,7 @@ namespace Elypse
 		private:
 			virtual void Initialise() {}
 			virtual void Update();
-			virtual VideoImplementation * Create( VideoObject * p_owner );
+			virtual VideoImplementation * Create( VideoObject & p_owner );
 
 		private:
 			void _initFactories();

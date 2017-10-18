@@ -27,6 +27,20 @@ namespace Elypse
 		class SequenceManager;
 		class Sequence;
 
+		enum class EventTargetType
+		{
+			SceneNode,
+			ScriptNode,
+			OverlayGroup,
+			Overlay,
+			OverlayElement,
+			Sequence,
+		};
+
+		class EventTargetBase;
+		template< EventTargetType Type >
+		class EventTarget;
+
 		class BasePonctualEvent;
 		class BaseContinuousEvent;
 

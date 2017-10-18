@@ -27,7 +27,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "ElypseInstance.h"
 #include "ElypseLogs.h"
 
-#include <Thread.h>
+#include <thread>
 #include <NeoCurl.h>
 
 struct StringFromUrlLauncher
@@ -47,9 +47,9 @@ struct StringFromUrlLauncher
 };
 
 ElypsePlugin::ElypsePlugin()
-	: m_graphicalStatus( StatusNone ),
-		m_curl( new CURLManager ),
-		m_baseCursor( ArrowCursor )
+	: m_graphicalStatus( StatusNone )
+	, m_curl( new CURLManager )
+	, m_baseCursor( ArrowCursor )
 {
 //	m_curl->Initialise();
 }
@@ -59,9 +59,9 @@ ElypsePlugin::~ElypsePlugin()
 	delete m_curl;
 }
 
-void ElypsePlugin::SetSessionCookie( const String & p_cookieParams )
+void ElypsePlugin::SetSessionCookie( String const & p_cookieParams )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 //	std::cout <<"SetSessionCookie : " << p_cookieParams << std::endl;
 	CURLcode l_code = m_curl->SetCookieString( p_cookieParams.c_str() );
 
@@ -71,9 +71,9 @@ void ElypsePlugin::SetSessionCookie( const String & p_cookieParams )
 	}
 }
 
-String ElypsePlugin::GetStringFromUrl( const String & p_url, const String & p_postParams )
+String ElypsePlugin::GetStringFromUrl( String const & p_url, String const & p_postParams )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
+	auto l_lock = make_unique_lock( m_mutex );
 	String l_contents;
 	CURLcode l_code = m_curl->GetStringFromUrl( p_url, l_contents, p_postParams );
 
@@ -85,7 +85,7 @@ String ElypsePlugin::GetStringFromUrl( const String & p_url, const String & p_po
 	return l_contents;
 }
 
-void ElypsePlugin::ThreadedStringFromUrl( const String & p_url, const String  & p_postParams,
+void ElypsePlugin::ThreadedStringFromUrl( String const & p_url, const String  & p_postParams,
 		ScriptNode * p_caller, ScriptNode * p_execAtAnd )
 {
 	genlib_assert( p_caller != NULL );
@@ -95,7 +95,7 @@ void ElypsePlugin::ThreadedStringFromUrl( const String & p_url, const String  & 
 	l_launcher.caller = p_caller;
 	l_launcher.execAtEnd = p_execAtAnd;
 	l_launcher.instance = this;
-	Thread * l_thread;
-	l_thread = new Thread( l_launcher );
+	std::thread * l_thread;
+	l_thread = new std::thread( l_launcher );
 	delete l_thread;
 }

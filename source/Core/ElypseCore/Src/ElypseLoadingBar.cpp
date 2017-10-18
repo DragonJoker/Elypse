@@ -30,18 +30,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <OgreStringConverter.h>
 
 ElypseLoadingBar::ElypseLoadingBar()
-	: m_window( NULL ),
-		m_loadOverlay( NULL ),
-		m_loadingBarElement( NULL ),
-		m_loadingDescriptionElement( NULL ),
-		m_loadingPercentElement( NULL ),
-
-		m_loadingOverlayName( "Core/LoadOverlay" ),
-		m_loadingBarProgressName( "Core/LoadPanel/Bar/Progress" ),
-		m_loadingBarPercentageName( "Core/LoadPanel/Bar/Percentage" ),
-		m_loadingBarName( "Core/LoadPanel/Bar" ),
-		m_loadingBarOffset( 22 ),
-		m_started( false )
+	: m_window( NULL )
+	, m_loadOverlay( NULL )
+	, m_loadingBarElement( NULL )
+	, m_loadingDescriptionElement( NULL )
+	, m_loadingPercentElement( NULL )
+	, m_loadingOverlayName( "Core/LoadOverlay" )
+	, m_loadingBarProgressName( "Core/LoadPanel/Bar/Progress" )
+	, m_loadingBarPercentageName( "Core/LoadPanel/Bar/Percentage" )
+	, m_loadingBarName( "Core/LoadPanel/Bar" )
+	, m_loadingBarOffset( 22 )
+	, m_started( false )
 {
 }
 
@@ -63,7 +62,7 @@ void ElypseLoadingBar::finish()
 	}
 }
 
-void ElypseLoadingBar::start( unsigned short p_numGroupsInit, unsigned short p_numGroupsLoad, Real p_initProportion )
+void ElypseLoadingBar::start( uint16_t p_numGroupsInit, uint16_t p_numGroupsLoad, Real p_initProportion )
 {
 	if ( p_numGroupsInit == 0 )
 	{
@@ -119,21 +118,21 @@ void ElypseLoadingBar::UpdateBar()
 	_updateWindow();
 }
 
-void ElypseLoadingBar::resourceGroupScriptingStarted( const String & p_name , size_t scriptCount )
+void ElypseLoadingBar::resourceGroupScriptingStarted( String const & p_name , size_t scriptCount )
 {
-	m_progressBarInc = m_progressBarMaxSize * m_initProportion / static_cast <Real>( scriptCount );
+	m_progressBarInc = m_progressBarMaxSize * m_initProportion / Real( scriptCount );
 	m_progressBarInc /= m_numGroupsInit;
 	_updateWindow();
 }
 
-void ElypseLoadingBar::scriptParseEnded( const String & p_name )
+void ElypseLoadingBar::scriptParseEnded( String const & p_name )
 {
 	UpdateBar();
 }
 
-void ElypseLoadingBar::resourceGroupLoadStarted( const String & p_name, size_t resourceCount )
+void ElypseLoadingBar::resourceGroupLoadStarted( String const & p_name, size_t resourceCount )
 {
-	m_progressBarInc = m_progressBarMaxSize * ( 1 - m_initProportion ) / static_cast <Real>( resourceCount );
+	m_progressBarInc = m_progressBarMaxSize * ( 1 - m_initProportion ) / Real( resourceCount );
 	m_progressBarInc /= m_numGroupsLoad;
 	_updateWindow();
 }
@@ -144,7 +143,7 @@ void ElypseLoadingBar::resourceLoadEnded()
 	UpdateBar();
 }
 
-void ElypseLoadingBar::resourceDownloadStarted( const String & p_name )
+void ElypseLoadingBar::resourceDownloadStarted( String const & p_name )
 {
 	m_dlres = p_name;
 }

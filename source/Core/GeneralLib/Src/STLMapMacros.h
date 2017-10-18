@@ -25,22 +25,22 @@ namespace General
 {
 	namespace Utils
 	{
-		class map
+		namespace map
 		{
-		public:
 			template< typename T, typename U >
-			static inline void deleteAll( std::map< T, U * > & p_map )
+			inline void deleteAll( std::map< T, U * > & p_map )
 			{
-				for ( auto && i : p_map )
+				for ( auto & i : p_map )
 				{
 					delete i.second;
+					i.second = nullptr;
 				}
 
 				p_map.clear();
 			}
 
 			template< typename T, typename U >
-			static inline U * findOrNull( const std::map< T, U * > & p_map, const T & p_key )
+			inline U * findOrNull( std::map< T, U * > const & p_map, T const & p_key )
 			{
 				auto && ifind = p_map.find( p_key );
 
@@ -53,7 +53,7 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static inline U findOrNull( const std::map< T, U > & p_map, const T & p_key )
+			inline U findOrNull( std::map< T, U > const & p_map, T const & p_key )
 			{
 				auto && ifind = p_map.find( p_key );
 
@@ -66,13 +66,13 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static inline bool has( const std::map< T, U > & p_map, const T & p_key )
+			inline bool has( std::map< T, U > const & p_map, T const & p_key )
 			{
 				return p_map.find( p_key ) != p_map.cend();
 			}
 
 			template< typename T, typename U >
-			static inline bool erase( const std::map< T, U > & p_map, const T & p_key )
+			inline bool erase( std::map< T, U > const & p_map, T const & p_key )
 			{
 				auto && ifind = p_map.find( p_key );
 
@@ -86,7 +86,7 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static inline void eraseIterator( std::map< T, U > & p_map, typename std::map< T, U > ::iterator & p_where )
+			inline void eraseIterator( std::map< T, U > & p_map, typename std::map< T, U > ::iterator & p_where )
 			{
 				auto && l_erase = p_where;
 				++ p_where;
@@ -94,7 +94,7 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static inline bool deleteValue( std::map< T, U * > & p_map, const T & p_key )
+			inline bool deleteValue( std::map< T, U * > & p_map, T const & p_key )
 			{
 				bool l_return = false;
 				auto && ifind = p_map.find( p_key );
@@ -110,7 +110,7 @@ namespace General
 			}
 
 			template< typename T, typename U >
-			static inline bool deleteValue( std::map< T *, U * > & p_map, T * p_key )
+			inline bool deleteValue( std::map< T *, U * > & p_map, T * p_key )
 			{
 				bool l_return = false;
 
@@ -130,7 +130,7 @@ namespace General
 			}
 
 			template< typename U >
-			static inline bool deleteValue( std::map< std::string, U * > & p_map, const std::string & p_key )
+			inline bool deleteValue( std::map< std::string, U * > & p_map, std::string const & p_key )
 			{
 				bool l_return = false;
 
@@ -150,7 +150,7 @@ namespace General
 			}
 
 			template< typename T, typename U, typename ... Params >
-			static inline U * insert( std::map< T, U * > & p_map, const T & p_key, Params && ... p_params )
+			inline U * insert( std::map< T, U * > & p_map, T const & p_key, Params && ... p_params )
 			{
 				auto && ifind = p_map.find( p_key );
 				U * l_object = NULL;
@@ -169,16 +169,16 @@ namespace General
 			}
 
 			template< typename T, typename U, typename Func, typename ... Params >
-			static inline void cycle( const std::map <T, U *> & p_map, Func p_func, Params && ... p_params )
+			inline void cycle( std::map <T, U *> const & p_map, Func p_func, Params && ... p_params )
 			{
 				for ( auto && i : p_map )
 				{
-					( i.second->* p_func )( p_params... );
+					( i.second->* p_func )( std::forward< Params >( p_params )... );
 				}
 			}
 
 			template< typename T, typename U >
-			static inline std::map< T, U > get_intersection( const std::map< T, U > & p_mapA, const std::map< T, U > & p_mapB )
+			inline std::map< T, U > get_intersection( std::map< T, U > const & p_mapA, std::map< T, U > const & p_mapB )
 			{
 				std::map< T, U > l_map;
 
@@ -214,7 +214,7 @@ namespace General
 
 				return l_map;
 			}
-		};
+		}
 	}
 }
 

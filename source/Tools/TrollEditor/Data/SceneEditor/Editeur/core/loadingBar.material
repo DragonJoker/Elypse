@@ -1,0 +1,31 @@
+material LoadingBar/Full
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture loading_bar_full.jpg
+			}
+		}
+	}
+}
+
+material LoadingBar/Void
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				texture loading_bar_void.jpg
+			}
+		}
+	}
+}

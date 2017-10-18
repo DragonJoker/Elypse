@@ -22,7 +22,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Module_Main.h>
 
-BEGIN_ELYPSE_BINARY_NAMESPACE
+namespace ElypseBinary
 {
 	class ElypseApp
 		: public wxApp
@@ -30,23 +30,22 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 	private:
 		ElypseFrame * m_frame;
 		ElypseCtrl * m_control;
-		COMMON_GUI_NAMESPACE::wxElypsePluginSPtr m_plugin;
+		GuiCommon::wxElypsePluginSPtr m_plugin;
 		std::shared_ptr< ElypseInstance > m_elypse;
 
-		unsigned int m_width;
-		unsigned int m_height;
+		uint32_t m_width;
+		uint32_t m_height;
 
 	private:
-		void _readConfigFile( const String & p_filepath );
+		void _readConfigFile( String const & p_filepath );
 
 	public:
 		virtual bool OnInit();
-		virtual bool InitParams( const String & p_filepath );
+		virtual bool InitParams( String const & p_filepath );
 		virtual int OnExit();
 
 		void Close();
 	};
 }
-END_ELYPSE_BINARY_NAMESPACE
 
 #endif

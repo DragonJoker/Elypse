@@ -20,31 +20,16 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Module_Sequences.h"
 
+#include "BaseEvent.h"
+
 namespace Elypse
 {
 	namespace Sequences
 	{
 		class d_dll_export Sequence : public named, noncopyable
 		{
-		protected:
-			void * m_target;
-
-			Real m_totalLength;
-			Real m_currentTime;
-
-			bool m_looped;
-
-			SequenceInstanceStatus m_status;
-			ContinuousEventSet m_currentEvents;
-
-			PonctualEventMap m_ponctualEvents;
-			ContinuousEventMap m_continuousEvents;
-
-			PonctualEventMap::iterator m_ponctualIterator;
-			ContinuousEventMap::iterator m_continuousIterator;
-
 		public:
-			Sequence( const String & p_name );
+			Sequence( String const & p_name );
 			~Sequence();
 
 		public:
@@ -62,7 +47,13 @@ namespace Elypse
 			void Stop();
 			virtual void Update( Real p_deltaTime );
 
-			void SetTarget( void * p_target );
+			template< typename T >
+			inline void SetTarget( T * p_target )
+			{
+				m_target = make_target( p_target );
+				multimap::cycle( m_ponctualEvents, &BasePonctualEvent::SetTarget< T >, p_target );
+				multimap::cycle( m_continuousEvents, &BaseContinuousEvent::SetTarget< T >, p_target );
+			}
 
 		public:
 			inline void	SetLooped( bool p_looped )
@@ -70,22 +61,39 @@ namespace Elypse
 				m_looped = p_looped;
 			}
 
-			inline Real					GetTotalLength()const
+			inline Real GetTotalLength()const
 			{
 				return m_totalLength;
 			}
-			inline bool					IsLooped()const
+			inline bool IsLooped()const
 			{
 				return m_looped;
 			}
-			inline PonctualEventMap		GetPonctualEvents()const
+			inline PonctualEventMap GetPonctualEvents()const
 			{
 				return m_ponctualEvents;
 			}
-			inline ContinuousEventMap	GetContinuousEvents()const
+			inline ContinuousEventMap GetContinuousEvents()const
 			{
 				return m_continuousEvents;
 			}
+
+		protected:
+			void * m_target;
+
+			Real m_totalLength;
+			Real m_currentTime;
+
+			bool m_looped;
+
+			SequenceInstanceStatus m_status;
+			ContinuousEventSet m_currentEvents;
+
+			PonctualEventMap m_ponctualEvents;
+			ContinuousEventMap m_continuousEvents;
+
+			PonctualEventMap::iterator m_ponctualIterator;
+			ContinuousEventMap::iterator m_continuousIterator;
 		};
 	}
 }

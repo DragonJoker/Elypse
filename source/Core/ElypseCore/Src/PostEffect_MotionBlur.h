@@ -37,7 +37,7 @@ namespace Elypse
 			}
 			static void Initialise();
 		public:
-			PostEffect_MotionBlur( const String & p_name, Viewport * p_viewport );
+			PostEffect_MotionBlur( String const & p_name, Viewport * p_viewport );
 			virtual ~PostEffect_MotionBlur();
 		};
 	}

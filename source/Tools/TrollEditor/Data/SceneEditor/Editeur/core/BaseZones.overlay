@@ -1,0 +1,36 @@
+template element TextArea(TextZone)
+{
+	metrics_mode pixels
+	font_name ComicBold
+	char_height 16
+	colour_top 1 1 1 1
+	colour_bottom 1 1 1 1
+}
+
+template element BorderPanel(BorderPanelZone)
+{
+	metrics_mode pixels
+	left 0
+	top 0
+	width 64
+	height 64
+	material Base/LowAlphaBlack
+	border_size 2 2 2 2
+	border_material Base/MediumAlphaDarkRed
+}
+
+template element Panel(PanelZone)
+{
+	metrics_mode pixels
+	left 0
+	top 0
+	width 64
+	height 64
+	material Base/LowAlphaBlack
+}
+
+template element Panel(GroupZone)
+{
+	metrics_mode pixels
+	transparent true
+}

@@ -33,23 +33,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-Mirror::Mirror( const String & p_name )
-	: named( p_name ),
-		m_camera( NULL ),
-		m_texture( NULL ),
-		m_planeNode( NULL ),
-		m_mainCamera( NULL ),
-		m_plane( NULL ),
-		m_render( NULL ),
-		m_viewport( NULL ),
-		m_needUpdate( true ),
-		m_autoUpdate( false ),
-		m_alwaysRedraw( false ),
-		m_position( Vector3::ZERO ),
-		m_normal( Vector3::UNIT_Y ),
-		m_background( ColourValue::Black ),
-		m_texWidth( 512 ),
-		m_texHeight( 512 )
+Mirror::Mirror( String const & p_name )
+	: named( p_name )
+	, m_camera( NULL )
+	, m_texture( NULL )
+	, m_planeNode( NULL )
+	, m_mainCamera( NULL )
+	, m_plane( NULL )
+	, m_render( NULL )
+	, m_viewport( NULL )
+	, m_needUpdate( true )
+	, m_autoUpdate( false )
+	, m_alwaysRedraw( false )
+	, m_position( Vector3::ZERO )
+	, m_normal( Vector3::UNIT_Y )
+	, m_background( ColourValue::Black )
+	, m_texWidth( 512 )
+	, m_texHeight( 512 )
 {
 }
 
@@ -83,7 +83,7 @@ Mirror::~Mirror()
 	}
 }
 
-void Mirror::Initialise( const String & p_instanceKey, SceneManager * p_sceneManager )
+void Mirror::Initialise( String const & p_instanceKey, SceneManager * p_sceneManager )
 {
 	m_manager = p_sceneManager;
 	m_planeNode = m_manager->getRootSceneNode()->createChildSceneNode( "___INTERNAL_MirrorPlaneNode_" + m_name );
@@ -152,19 +152,19 @@ void Mirror::Update()
 	}
 }
 
-void Mirror::AddMaterial( const String & p_materialName, Real p_opacity )
+void Mirror::AddMaterial( String const & p_materialName, Real p_opacity )
 {
 	EMUSE_MESSAGE_DEBUG( "Mirror::AddMaterial : " + m_name + String( " -> " ) + p_materialName );
-	MirrorMaterial * l_mat = General::Utils::map::insert( m_materials, p_materialName, p_materialName, this );
+	MirrorMaterial * l_mat = General::Utils::map::insert( m_materials, p_materialName, p_materialName, *this );
 	l_mat->SetOpacity( p_opacity );
 }
 
-void Mirror::RemoveMaterial( const String & p_materialName )
+void Mirror::RemoveMaterial( String const & p_materialName )
 {
 	General::Utils::map::deleteValue( m_materials, p_materialName );
 }
 
-void Mirror::ChangeMaterialAlpha( const String & p_materialName, Real p_opacity )
+void Mirror::ChangeMaterialAlpha( String const & p_materialName, Real p_opacity )
 {
 	MirrorMaterial * l_mat = General::Utils::map::findOrNull( m_materials, p_materialName );
 

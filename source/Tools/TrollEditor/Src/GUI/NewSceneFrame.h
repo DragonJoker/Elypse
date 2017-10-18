@@ -25,38 +25,43 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/dialog.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	enum NewSceneFrameIDs
+	namespace GUI
 	{
-		ID_clBtn,
-		ID_okBtn,
-		ID_snETxt,
-	};
+		enum NewSceneFrameIDs
+		{
+			ID_clBtn,
+			ID_okBtn,
+			ID_snETxt,
+		};
 
-	class NewSceneFrame : public wxDialog
-	{
-	private:
-		// GUI controls
-		wxTextCtrl * m_sceneName;
-		wxButton * m_okBtn;
-		wxButton * m_cancelBtn;
+		class NewSceneFrame : public wxDialog
+		{
+		private:
+			// GUI controls
+			wxTextCtrl * m_sceneName;
+			wxButton * m_okBtn;
+			wxButton * m_cancelBtn;
 
-	public:
-		NewSceneFrame( wxWindow * p_parent, const wxString & title = wxT( "Nouvelle Scène" ), const wxPoint & pos = wxDefaultPosition );
-		~NewSceneFrame();
+		public:
+			NewSceneFrame( ProjectFrame * p_parent, wxString const & title = wxT( "Nouvelle Scène" ), wxPoint const & pos = wxDefaultPosition );
+			~NewSceneFrame();
 
-		wxString GetSceneName();
+			wxString GetSceneName();
 
-	private:
-		void _onSceneChange( wxCommandEvent & p_event );
-		void _onOK( wxCommandEvent & p_event );
-		void _onCancel( wxCommandEvent & p_event );
+		private:
+			void _onSceneChange( wxCommandEvent & p_event );
+			void _onOK( wxCommandEvent & p_event );
+			void _onCancel( wxCommandEvent & p_event );
 
-		DECLARE_EVENT_TABLE()
-	};
+			DECLARE_EVENT_TABLE()
+
+		private:
+			ProjectFrame * m_projectFrame;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

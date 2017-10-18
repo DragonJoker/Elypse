@@ -25,28 +25,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using std::ifstream;
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	class TrollScriptBlock
-		: public Elypse::Script::ScriptBlock
+	namespace ElypseRW
 	{
-		friend TrollScriptCompiler;
-		TrollScriptCompiler * m_trollCompiler;
+		class TrollScriptBlock
+			: public Elypse::Script::ScriptBlock
+		{
+			friend TrollScriptCompiler;
+			TrollScriptCompiler * m_trollCompiler;
 
-	public:
-		TrollScriptBlock();
-		virtual ~TrollScriptBlock();
-		virtual ScriptBlock * _initialise(	Elypse::Script::ScriptCompiler * p_compiler, BlockType p_type, unsigned int p_lineNum, unsigned int p_depth, ScriptBlock * p_parent );
+		public:
+			TrollScriptBlock();
+			virtual ~TrollScriptBlock();
+			virtual ScriptBlock * _initialise( Elypse::Script::ScriptCompiler * p_compiler, BlockType p_type, uint32_t p_lineNum, uint32_t p_depth, ScriptBlock * p_parent );
 
-	private:
-		virtual bool _parseNumeral();
-		virtual bool _parseString();
+		private:
+			virtual bool _parseNumeral();
+			virtual bool _parseString();
 
-		virtual bool _parseOperator();
-		virtual bool _parseSimpleQuote();
-		virtual bool _parseDoubleQuote();
-	};
+			virtual bool _parseOperator();
+			virtual bool _parseSimpleQuote();
+			virtual bool _parseDoubleQuote();
+		};
+	}
 }
-END_TROLL_ELYPSE_NAMESPACE
 
 #endif

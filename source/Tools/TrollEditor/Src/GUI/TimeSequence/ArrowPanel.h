@@ -22,38 +22,44 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class ArrowPanel
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		ArrowPanel( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-		~ArrowPanel();
-
-		inline void SetBoundPanel( wxPanel * p_panel )
+		namespace Time
 		{
-			m_boundPanel = p_panel;
-		}
-		inline void SetMouseLeftDown( bool p_leftDown )
-		{
-			m_mouseLeftDown = p_leftDown;
-		}
+			class ArrowPanel
+				: public wxPanel
+			{
+			public:
+				ArrowPanel( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
+				~ArrowPanel();
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnPaint( wxPaintEvent & p_event );
-		void OnMouseLeftDown( wxMouseEvent & p_event );
-		void OnMouseLeftUp( wxMouseEvent & p_event );
-		void OnMouseMove( wxMouseEvent & p_event );
-		void OnMouseLeave( wxMouseEvent & p_event );
-		void OnKillFocus( wxFocusEvent & p_event );
+				inline void SetBoundPanel( wxPanel * p_panel )
+				{
+					m_boundPanel = p_panel;
+				}
+				inline void SetMouseLeftDown( bool p_leftDown )
+				{
+					m_mouseLeftDown = p_leftDown;
+				}
 
-	private:
-		bool m_mouseLeftDown;
-		wxPanel * m_boundPanel;
-	};
+			private:
+				DECLARE_EVENT_TABLE()
+				void OnPaint( wxPaintEvent & p_event );
+				void OnMouseLeftDown( wxMouseEvent & p_event );
+				void OnMouseLeftUp( wxMouseEvent & p_event );
+				void OnMouseMove( wxMouseEvent & p_event );
+				void OnMouseLeave( wxMouseEvent & p_event );
+				void OnKillFocus( wxFocusEvent & p_event );
+
+			private:
+				bool m_mouseLeftDown;
+				wxPanel * m_boundPanel;
+				ProjectFrame * m_projectFrame;
+			};
+		}
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

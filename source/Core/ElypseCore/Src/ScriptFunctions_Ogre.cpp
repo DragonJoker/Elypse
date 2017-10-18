@@ -121,7 +121,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_SetSubMaterial )
 		{
 			if ( l_index >= 0 && static_cast <size_t>( l_index ) < ( l_entity->getNumSubEntities() ) )
 			{
-				l_entity->getSubEntity( static_cast <unsigned int>( l_index ) )->setMaterialName( l_materialName );
+				l_entity->getSubEntity( static_cast <uint32_t>( l_index ) )->setMaterialName( l_materialName );
 			}
 			else
 			{
@@ -287,7 +287,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_GetSubMaterialName )
 	{
 		if ( static_cast <size_t>( l_index ) < l_entity->getNumSubEntities() )
 		{
-			RETURN_AS( String ) l_entity->getSubEntity( static_cast <unsigned int>( l_index ) )->getMaterialName();
+			RETURN_AS( String ) l_entity->getSubEntity( static_cast <uint32_t>( l_index ) )->getMaterialName();
 		}
 		else
 		{
@@ -1788,7 +1788,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Bil_RemoveIndex )
 	if ( ScriptEngine::GetContext()->sceneManager->hasBillboardSet( p_name ) )
 	{
 		BillboardSet * l_bill = ScriptEngine::GetContext()->sceneManager->getBillboardSet( p_name );
-		l_bill->removeBillboard( static_cast <unsigned int>( p_index ) );
+		l_bill->removeBillboard( static_cast <uint32_t>( p_index ) );
 	}
 	else
 	{

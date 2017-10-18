@@ -33,6 +33,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "SequenceManager.h"
 #include "Module_Network.h"
 
+#include "BaseEvent.h"
+
 #include <OgreColourValue.h>
 
 namespace Elypse
@@ -41,118 +43,110 @@ namespace Elypse
 	{
 		struct Context
 		{
-			SceneManager		*	 sceneManager;
-			ScriptEngine		*	 scriptEngine;
-			DownloadManager		*	 downloadManager;
-			EMGui			*		 gui;
-			MirrorManager		*	 mirrorManager;
-			PhysicsEngine		*	 physicsEngine;
-			CamTexManager		*	 camTexManager;
-			UniverseManager		*	 universeManager;
-			PostEffectManager		* postEffectManager;
-			ObjectMaterialManager	* objectMaterialManager;
-			ScriptTimerManager		* timerManager;
-			SceneFileParser		*	 sceneFileParser;
-			AnimationManager		* animationManager;
-			ElypsePlugin			*	 plugin;
-			ElypseInstance		*	 emuseInstance;
-			SequenceManager		*	 sequenceManager;
-			NetworkManager		*	 network;
-			String					  lastSceneFile;
-			String					  instanceNum;
-			String					  lastDataRep;
+			SceneManager * sceneManager{ nullptr };
+			ScriptEngine * scriptEngine{ nullptr };
+			DownloadManager * downloadManager{ nullptr };
+			EMGui * gui{ nullptr };
+			MirrorManager * mirrorManager{ nullptr };
+			PhysicsEngine * physicsEngine{ nullptr };
+			CamTexManager * camTexManager{ nullptr };
+			UniverseManager * universeManager{ nullptr };
+			PostEffectManager * postEffectManager{ nullptr };
+			ObjectMaterialManager * objectMaterialManager{ nullptr };
+			ScriptTimerManager * timerManager{ nullptr };
+			SceneFileParser * sceneFileParser{ nullptr };
+			AnimationManager * animationManager{ nullptr };
+			ElypsePlugin * plugin{ nullptr };
+			ElypseInstance * emuseInstance{ nullptr };
+			SequenceManager * sequenceManager{ nullptr };
+			Network::NetworkManager * network{ nullptr };
+			String lastSceneFile;
+			String instanceNum;
+			String lastDataRep;
 
-			MuseFile			*	 currentMuseFile;
+			MuseFile * currentMuseFile{ nullptr };
 
-			Camera			*		 mainCamera;
-			Viewport			*	 mainViewport;
-			Real					  frameTime;
+			Camera * mainCamera{ nullptr };
+			Viewport * mainViewport{ nullptr };
+			Real frameTime{ 0.0 };
 
-			bool					  m_continue;
-			bool					  m_breakOne;
-			bool					  m_return;
+			bool m_continue{ false };
+			bool m_breakOne{ false };
+			bool m_return{ false };
 
-			ScriptNode			*	 m_currentFunction;
+			ScriptNode * m_currentFunction{ nullptr };
 
-			ScriptSection			section;
+			ScriptSection section;
 
-			String 					groupName;
-			String 					filename;
-			String 					fullLine;
-			String 					baseDirectory;
-			Url						baseURL;
-			String 					imageDir;
-			String 					general_string_a;
-			String 					general_string_b;
-			String 					general_string_c;
+			String groupName;
+			String filename;
+			String fullLine;
+			String baseDirectory;
+			Url baseURL;
+			String imageDir;
+			String general_string_a;
+			String general_string_b;
+			String general_string_c;
 
-			String					autoPhysicsPreName;
-			String					autoPhysicsPostName;
+			String autoPhysicsPreName;
+			String autoPhysicsPostName;
 
-			unsigned int			lineNo;
-			int						general_int;
+			uint32_t lineNo{ 0 };
+			int general_int{ 0 };
 
-			Real 					currentReal;
+			Real currentReal{ 0.0 };
 
-			bool 					usingShadow;
-			bool 					forceShadows;
-			bool					autoPhysics;
+			bool usingShadow{ false };
+			bool forceShadows{ false };
+			bool autoPhysics{ false };
 
-			SceneNode			*	 sceneNode;
-			Entity			*		 object;
-			SubEntity			*	 subObject;
-			Light			*		 light;
-			Camera			*		 camera;
-			EMOverlay			*	 overlay;
-			EMOverlayGroup		*	 overlayGroup;
+			SceneNode * sceneNode{ nullptr };
+			Entity * object{ nullptr };
+			SubEntity * subObject{ nullptr };
+			Light * light{ nullptr };
+			Camera * camera{ nullptr };
+			EMOverlay * overlay{ nullptr };
+			EMOverlayGroup * overlayGroup{ nullptr };
 
-			Mirror			*		 mirror;
-			ColourValue				  CurrentBackground;
-			Zone			*		 scene;
+			std::shared_ptr< Mirror > mirror;
+			ColourValue CurrentBackground;
+			Zone * scene{ nullptr };
 
-			EMAnimation			*	 animation;
-			AnimatedObject		*	 animatedObject;
-			AnimatedObjectGroup		* animatedObjectGroup;
+			EMAnimation * animation{ nullptr };
+			AnimatedObject * animatedObject{ nullptr };
+			std::shared_ptr< AnimatedObjectGroup > animatedObjectGroup;
 
-			PhysicsObject		*	 physicsObject;
+			PhysicsObject * physicsObject{ nullptr };
 
-			Universe			*	 universe;
-			ParticleSystem		*	 particleSystem;
-			PhysicsMaterial		*	 physicsMaterial;
-			PhysicsSimulation		* physicsSimulation;
-			BoundingShape		*	 boundingShape;
-			Space			*		 physicsSpace;
+			std::shared_ptr< Universe > universe;
+			ParticleSystem * particleSystem{ nullptr };
+			PhysicsMaterial * physicsMaterial{ nullptr };
+			PhysicsSimulation * physicsSimulation{ nullptr };
+			BoundingShape * boundingShape{ nullptr };
+			Space * physicsSpace{ nullptr };
 
-			SoundPlaylist		*	 soundPlaylist;
-			SoundObject			*	 soundObject;
-			SoundInstance		*	 soundInstance;
+			SoundPlaylist * soundPlaylist{ nullptr };
+			SoundObject * soundObject{ nullptr };
+			SoundInstance * soundInstance{ nullptr };
 
-			Portal			*		 portal;
-			BillboardSet		*	 billboardSet;
+			Portal * portal{ nullptr };
+			BillboardSet * billboardSet{ nullptr };
 
-			ClickableShape		*	 clickableShape;
-			VideoObject			*	 videoObject;
+			ClickableShape * clickableShape{ nullptr };
+			VideoObject * videoObject{ nullptr };
 
-			Sequence			*	 sequence;
-			SequenceTrackType		sequenceTrackType;
-			BaseContinuousEvent		* sequenceTrack;
-			BaseContinuousV3Event	* sequenceTrack_V3;
-			BaseContinuousQEvent	* sequenceTrack_Q;
-			BaseContinuousREvent	* sequenceTrack_R;
+			std::shared_ptr< Sequence > sequence;
+			SequenceTrackType sequenceTrackType;
+			BaseContinuousEvent * sequenceTrack{ nullptr };
+			BaseContinuousV3Event * sequenceTrack_V3{ nullptr };
+			BaseContinuousQEvent * sequenceTrack_Q{ nullptr };
+			BaseContinuousREvent * sequenceTrack_R{ nullptr };
 
-			PubObject			*	 pubObject;
+			PubObject * pubObject{ nullptr };
 
-			void			*		 sequenceTarget;
+			std::unique_ptr< EventTargetBase > sequenceTarget;
 
-			std::ifstream			configFile;
-
-			Context()
-				: m_continue( false ),
-					m_breakOne( false ),
-					m_return( false ),
-					m_currentFunction( NULL )
-			{
-			}
+			std::ifstream configFile;
 		};
 	}
 }

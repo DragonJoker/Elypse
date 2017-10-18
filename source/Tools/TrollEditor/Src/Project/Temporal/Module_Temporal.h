@@ -23,36 +23,34 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/string.h>
 #include <map>
 
-#define TROLL_PROJECT_TEMPORAL_NAMESPACE TROLL_PROJECT_NAMESPACE::Temporal
-#define BEGIN_TROLL_PROJECT_TEMPORAL_NAMESPACE BEGIN_TROLL_PROJECT_NAMESPACE { namespace Temporal
-#define END_TROLL_PROJECT_TEMPORAL_NAMESPACE END_TROLL_PROJECT_NAMESPACE }
-
-BEGIN_TROLL_PROJECT_NAMESPACE
+namespace Troll
 {
-	namespace Temporal
+	namespace ProjectComponents
 	{
-		class TemporalObject;
+		namespace Temporal
+		{
+			class TemporalObject;
 
-		class TrollAnimationGroup;
-		class TrollAnimatedObject;
-		class TrollAnimation;
+			class TrollAnimationGroup;
+			class TrollAnimatedObject;
+			class TrollAnimation;
 
-		class TrollSequence;
-		class TrollPonctualEvent;
-		class TrollContinuousEvent;
-		class TrollKeyFrame;
+			class TrollSequence;
+			class TrollPonctualEvent;
+			class TrollContinuousEvent;
+			class TrollKeyFrame;
 
-		typedef std::map< wxString, wxString > StrStrMap;
-		typedef std::map< wxString, TrollAnimationGroup * > TrollAnimationGroupStrMap;
-		typedef std::map< wxString, TrollAnimation * > TrollAnimationStrMap;
-		typedef std::map< wxString, TrollAnimatedObject * > TrollAnimatedObjectStrMap;
-		typedef std::multimap< float, TrollSequence * > TrollSequenceRealMap;
-		typedef std::multimap< float, TrollPonctualEvent * > TrollPonctualEventMap;
-		typedef std::multimap< float, TrollContinuousEvent * > TrollContinuousEventMap;
-		typedef std::map< float, TrollKeyFrame * > TrollKeyFrameMap;
-		typedef std::map< wxString, TrollSequence * > TrollSequenceStrMap;
+			typedef std::map< wxString, wxString > StrStrMap;
+			typedef std::map< wxString, TrollAnimationGroup * > TrollAnimationGroupStrMap;
+			typedef std::map< wxString, TrollAnimation * > TrollAnimationStrMap;
+			typedef std::map< wxString, TrollAnimatedObject * > TrollAnimatedObjectStrMap;
+			typedef std::multimap< float, TrollSequence * > TrollSequenceRealMap;
+			typedef std::multimap< float, TrollPonctualEvent * > TrollPonctualEventMap;
+			typedef std::multimap< float, TrollContinuousEvent * > TrollContinuousEventMap;
+			typedef std::map< float, TrollKeyFrame * > TrollKeyFrameMap;
+			typedef std::map< wxString, TrollSequence * > TrollSequenceStrMap;
+		}
 	}
 }
-END_TROLL_PROJECT_NAMESPACE
 
 #endif

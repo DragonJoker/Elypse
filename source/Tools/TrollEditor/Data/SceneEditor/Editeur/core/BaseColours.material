@@ -1,0 +1,1214 @@
+material Base/PureRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 0.0 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaPureRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaPureRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaPureRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/BrightRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.0 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaBrightRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaBrightRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaBrightRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/Red
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.0 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/DarkRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.0 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaDarkRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaDarkRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaDarkRed
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+
+material Base/PureGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 1.0 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaPureGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 1.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaPureGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 1.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaPureGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 1.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/BrightGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.75 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaBrightGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.75 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaBrightGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.75 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaBrightGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.75 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/Green
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.5 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.5 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.5 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.5 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/DarkGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.25 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaDarkGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.25 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaDarkGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.25 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaDarkGreen
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.25 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+
+
+material Base/PureBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 1.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaPureBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 1.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaPureBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 1.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaPureBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 1.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/BrightBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.75
+			}
+		}
+	}
+}
+
+material Base/HighAlphaBrightBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.75
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaBrightBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.75
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaBrightBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.75
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/Blue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.5
+			}
+		}
+	}
+}
+
+material Base/HighAlphaBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.5
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.5
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.5
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/DarkBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.25
+			}
+		}
+	}
+}
+
+material Base/HighAlphaDarkBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.25
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaDarkBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.25
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaDarkBlue
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.25
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+
+
+material Base/PureWhite
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 1.0 1.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaPureWhite
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 1.0 1.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaPureWhite
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 1.0 1.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaPureWhite
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 1.0 1.0 1.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/BrightGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.75 0.75
+			}
+		}
+	}
+}
+
+material Base/HighAlphaBrightGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.75 0.75
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaBrightGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.75 0.75
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaBrightGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.75 0.75 0.75
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/Grey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.5 0.5
+			}
+		}
+	}
+}
+
+material Base/HighAlphaGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.5 0.5
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.5 0.5
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.5 0.5 0.5
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/DarkGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.25 0.25
+			}
+		}
+	}
+}
+
+material Base/HighAlphaDarkGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.25 0.25
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaDarkGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.25 0.25
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaDarkGrey
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.25 0.25 0.25
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/Black
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.0
+			}
+		}
+	}
+}
+
+material Base/HighAlphaBlack
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.75
+			}
+		}
+	}
+}
+
+material Base/MediumAlphaBlack
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.5
+			}
+		}
+	}
+}
+
+material Base/LowAlphaBlack
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.25
+			}
+		}
+	}
+}
+
+material Base/Invisible
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_check off
+			scene_blend alpha_blend
+			texture_unit
+			{
+				colour_op_ex source1 src_manual src_current 0.0 0.0 0.0
+				alpha_op_ex source1 src_manual src_current 0.0
+			}
+		}
+	}
+}

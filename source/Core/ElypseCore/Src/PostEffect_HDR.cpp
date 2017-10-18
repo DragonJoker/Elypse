@@ -26,7 +26,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-PostEffect_HDR::PostEffect_HDR( const String & p_name, Viewport * p_viewport )
+PostEffect_HDR::PostEffect_HDR( String const & p_name, Viewport * p_viewport )
 	: PostEffect( p_name, p_viewport, 0 )
 {
 	if ( m_instance != NULL )
@@ -62,12 +62,12 @@ void HDR_Listener::notifyCompositor( CompositorInstance * instance )
 	try
 	{
 		// Get some RTT dimensions for later calculations
-		Ogre::CompositionTechnique::TextureDefinitionIterator defIter = 
+		Ogre::CompositionTechnique::TextureDefinitionIterator defIter =
 			instance->getTechnique()->getTextureDefinitionIterator();
 
 		while ( defIter.hasMoreElements() )
 		{
-			Ogre::CompositionTechnique::TextureDefinition * def = 
+			Ogre::CompositionTechnique::TextureDefinition * def =
 				defIter.getNext();
 
 			if ( def->name == "rt_bloom0" )
@@ -81,7 +81,7 @@ void HDR_Listener::notifyCompositor( CompositorInstance * instance )
 				mBloomTexOffsetsHorz[0][1] = 0.0f;
 				mBloomTexOffsetsVert[0][0] = 0.0f;
 				mBloomTexOffsetsVert[0][1] = 0.0f;
-				mBloomTexWeights[0][0] = mBloomTexWeights[0][1] = 
+				mBloomTexWeights[0][0] = mBloomTexWeights[0][1] =
 											 mBloomTexWeights[0][2] = Ogre::Math::gaussianDistribution( 0, 0, deviation );
 				mBloomTexWeights[0][3] = 1.0f;
 
@@ -99,7 +99,7 @@ void HDR_Listener::notifyCompositor( CompositorInstance * instance )
 				// 'post' samples
 				for ( int i = 8; i < 15; ++i )
 				{
-					mBloomTexWeights[i][0] = mBloomTexWeights[i][1] = 
+					mBloomTexWeights[i][0] = mBloomTexWeights[i][1] =
 												 mBloomTexWeights[i][2] = mBloomTexWeights[i - 7][0];
 					mBloomTexWeights[i][3] = 1.0f;
 					mBloomTexOffsetsHorz[i][0] = -mBloomTexOffsetsHorz[i - 7][0];
@@ -136,7 +136,7 @@ void HDR_Listener::notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
 		{
 			// horizontal bloom
 			mat->load();
-			Ogre::GpuProgramParametersSharedPtr fparams = 
+			Ogre::GpuProgramParametersSharedPtr fparams =
 				mat->getBestTechnique()->getPass( 0 )->getFragmentProgramParameters();
 //				const Ogre::String& progName = mat->getBestTechnique()->getPass(0)->getFragmentProgramName();
 			fparams->setNamedConstant( "sampleOffsets", mBloomTexOffsetsHorz[0], 15 );
@@ -148,7 +148,7 @@ void HDR_Listener::notifyMaterialSetup( uint32 pass_id, MaterialPtr & mat )
 		{
 			// vertical bloom
 			mat->load();
-			Ogre::GpuProgramParametersSharedPtr fparams = 
+			Ogre::GpuProgramParametersSharedPtr fparams =
 				mat->getTechnique( 0 )->getPass( 0 )->getFragmentProgramParameters();
 //				const Ogre::String& progName = mat->getBestTechnique()->getPass(0)->getFragmentProgramName();
 			fparams->setNamedConstant( "sampleOffsets", mBloomTexOffsetsVert[0], 15 );

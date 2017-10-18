@@ -24,39 +24,40 @@ namespace Elypse
 {
 	namespace Animation
 	{
-		class d_dll_export  AnimatedObjectGroup : public General::Theory::named,
-			public General::Theory::owned_by<AnimationManager>,
-			d_noncopyable
+		class d_dll_export  AnimatedObjectGroup
+			: public General::Theory::named
+			, public General::Theory::owned_by<AnimationManager>
+			, d_noncopyable
 		{
 		protected:
 			AnimatedObjectMap m_objects;
 			RealMap m_commonAnimationsTime;
 
 		public:
-			AnimatedObjectGroup( const String & p_name, AnimationManager * p_owner );
+			AnimatedObjectGroup( String const & p_name, AnimationManager & p_owner );
 			~AnimatedObjectGroup();
 
 		public:
 			void Update( Real p_timeStep );
 			AnimatedObject * AddEntity( Ogre::Entity * p_timeStep );
 
-			void StartAnimation( const String & p_animationName );
-			void StopAnimation( const String & p_animationName );
-			void PauseAnimation( const String & p_animationName );
-			void SetTimeAnimation( const String & p_animationName, Real p_timeIndex );
-			void SetWeightAnimation( const String & p_animationName, Real p_weight );
-			void SetAnimationTimeOut( const String & p_animationName, Real p_timeOut );
-			void SetAnimationTimeIn( const String & p_animationName, Real p_timeIn );
-			void SetAnimationLooped( const String & p_animationName, bool p_looped );
-			void SetAnimationReversed( const String & p_animationName, bool p_reversed );
+			void StartAnimation( String const & p_animationName );
+			void StopAnimation( String const & p_animationName );
+			void PauseAnimation( String const & p_animationName );
+			void SetTimeAnimation( String const & p_animationName, Real p_timeIndex );
+			void SetWeightAnimation( String const & p_animationName, Real p_weight );
+			void SetAnimationTimeOut( String const & p_animationName, Real p_timeOut );
+			void SetAnimationTimeIn( String const & p_animationName, Real p_timeIn );
+			void SetAnimationLooped( String const & p_animationName, bool p_looped );
+			void SetAnimationReversed( String const & p_animationName, bool p_reversed );
 
-			void SetTimeScaleAnimation( const String & p_animationName, Real p_timescale );
+			void SetTimeScaleAnimation( String const & p_animationName, Real p_timescale );
 
-			void ChainAnimation( const String & p_animName, const String & p_chainedAnimationName );
+			void ChainAnimation( String const & p_animName, String const & p_chainedAnimationName );
 
-			void RemoveObject( const String & p_objectName );
+			void RemoveObject( String const & p_objectName );
 
-			Real GetAnimationTime( const String & p_animationName )const;
+			Real GetAnimationTime( String const & p_animationName )const;
 
 			void StopAllAnimations();
 
@@ -71,11 +72,11 @@ namespace Elypse
 			{
 				return m_objects.size();
 			}
-			inline AnimatedObject * GetObjectByName( const String & p_objectName )const
+			inline AnimatedObject * GetObjectByName( String const & p_objectName )const
 			{
 				return General::Utils::map::findOrNull( m_objects, p_objectName );
 			}
-			inline bool HasAnimation( const String & p_name )
+			inline bool HasAnimation( String const & p_name )
 			{
 				return General::Utils::map::has( m_commonAnimationsTime, p_name );
 			}

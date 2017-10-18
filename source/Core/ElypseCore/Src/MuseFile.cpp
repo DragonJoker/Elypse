@@ -21,7 +21,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "DataFile.h"
 #include "ConfigFile.h"
 
-#include "MuseDownloader.h"
 #include "ElypseController.h"
 #include "ElypseLoadingBar.h"
 
@@ -29,20 +28,19 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <Utils.h>
 
-MuseFile::MuseFile( const String & p_name )
+MuseFile::MuseFile( String const & p_name )
 	: named( p_name )
+	, m_downloader( *this, p_name )
 {
-	m_downloader = new MuseDownloader( this, p_name );
 }
 
 MuseFile::~MuseFile()
 {
 	General::Utils::map::deleteAll( m_dataFiles );
 	General::Utils::map::deleteAll( m_configFiles );
-	delete m_downloader;
 }
 
-bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
+bool MuseFile::WaitForFile( String const & p_filename, bool p_useLoadingBar )
 {
 	genlib_assert( ! p_filename.empty() );
 
@@ -51,17 +49,17 @@ bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
 		ElypseController::GetSingletonPtr()->GetLoadingBar()->StartDownloadOfFile();
 	}
 
-	while ( ! m_downloader->IsInitialised() )
+	while ( ! m_downloader.IsInitialised() )
 	{
 		GENLIB_SLEEP( 5 );
 	}
 
-	if ( m_downloader->CantDownload() )
+	if ( m_downloader.CantDownload() )
 	{
 		return false;
 	}
 
-	size_t l_index = m_downloader->GetFileIndex( p_filename );
+	size_t l_index = m_downloader.GetFileIndex( p_filename );
 
 	if ( l_index == String::npos )
 	{
@@ -74,13 +72,13 @@ bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
 		return false;
 	}
 
-	while ( ! m_downloader->IsDownloadFinished( uint32_t( l_index ) ) )
+	while ( ! m_downloader.IsDownloadFinished( uint32_t( l_index ) ) )
 	{
 		GENLIB_SLEEP( 50 );
 
 		if ( p_useLoadingBar )
 		{
-			ElypseController::GetSingletonPtr()->GetLoadingBar()->setPercent( m_downloader->GetPercent(), m_downloader->GetDownloadSpeed() );
+			ElypseController::GetSingletonPtr()->GetLoadingBar()->setPercent( m_downloader.GetPercent(), m_downloader.GetDownloadSpeed() );
 		}
 	}
 
@@ -90,18 +88,18 @@ bool MuseFile::WaitForFile( const String & p_filename, bool p_useLoadingBar )
 
 Path MuseFile::GetCompletePath()const
 {
-	return ElypseController::GetSingletonPtr()->GetInstallPath() / "rsc" / m_downloader->GetPath();
+	return ElypseController::GetSingletonPtr()->GetInstallPath() / "rsc" / m_downloader.GetPath();
 }
 
-DataFile * MuseFile::GetDataFile( const String & p_filename )
+DataFile * MuseFile::GetDataFile( String const & p_filename )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
-	return General::Utils::map::insert( m_dataFiles, p_filename, p_filename, this );
+	auto l_lock = make_unique_lock( m_mutex );
+	return General::Utils::map::insert( m_dataFiles, p_filename, p_filename, *this );
 }
 
-ConfigFile * MuseFile::GetConfigFile( const String & p_filename )
+ConfigFile * MuseFile::GetConfigFile( String const & p_filename )
 {
-	GENLIB_AUTO_SCOPED_LOCK();
-	ConfigFile * l_configFile = General::Utils::map::insert( m_configFiles, p_filename, p_filename, this );
+	auto l_lock = make_unique_lock( m_mutex );
+	ConfigFile * l_configFile = General::Utils::map::insert( m_configFiles, p_filename, p_filename, *this );
 	return l_configFile;
 }

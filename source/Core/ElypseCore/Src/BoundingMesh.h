@@ -33,11 +33,11 @@ namespace Elypse
 			Ogre::Vector3 * m_vertices;
 			Ode::dVector3 * m_odeVertices;
 
-			unsigned int * m_odeIndices;
-			unsigned int * m_indices;
+			uint32_t * m_odeIndices;
+			uint32_t * m_indices;
 
-			unsigned int m_indexCount;
-			unsigned int m_vertexCount;
+			uint32_t m_indexCount;
+			uint32_t m_vertexCount;
 			Ode::dTriMeshDataID m_triID;
 
 		public:
@@ -46,7 +46,7 @@ namespace Elypse
 
 		private:
 			void _addVertexData( Ogre::VertexData * p_data );
-			void _addIndexData( Ogre::IndexData * p_data, unsigned int p_offset = 0 );
+			void _addIndexData( Ogre::IndexData * p_data, uint32_t p_offset = 0 );
 			void _createTriMesh();
 
 			virtual BoundingShape * Clone();

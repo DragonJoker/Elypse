@@ -20,13 +20,13 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseBinaryPrerequisites.h"
 
-BEGIN_ELYPSE_BINARY_NAMESPACE
+namespace ElypseBinary
 {
 	class ElypseFrame
 		: public wxFrame
 	{
 	public:
-		ElypseFrame( const wxString & p_title, const wxSize & p_size )
+		ElypseFrame( wxString const & p_title, wxSize const & p_size )
 			: wxFrame( NULL, -1, p_title, wxPoint( 0, 0 ), p_size, wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxMINIMIZE_BOX )
 		{
 			Centre();
@@ -39,6 +39,5 @@ BEGIN_ELYPSE_BINARY_NAMESPACE
 		}
 	};
 }
-END_ELYPSE_BINARY_NAMESPACE
 
 #endif

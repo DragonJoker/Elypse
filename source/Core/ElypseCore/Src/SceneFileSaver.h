@@ -46,14 +46,14 @@ namespace Elypse
 			void _writeCode();
 			void _writeSounds();
 
-			void _ntabs( unsigned int p_numTabs );
+			void _ntabs( uint32_t p_numTabs );
 
 		public:
 			SceneFileSaver( SceneManager * p_manager, ScriptEngine * p_engine, EMGui * p_gui );
 			~SceneFileSaver();
 
 		public:
-			void SaveAll( const String & p_filename );
+			void SaveAll( String const & p_filename );
 		};
 	}
 }

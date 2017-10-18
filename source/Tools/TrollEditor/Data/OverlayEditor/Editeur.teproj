@@ -1,7 +1,11 @@
-Editeur
-Colour
-white
-Scene
-Editeur
-LoadScriptFiles
-OverlayEditor.emscript
+project Editeur
+{
+	colour 1 1 1
+	scene Editeur
+	{
+		load_script_files
+		{
+			OverlayEditor.emscript
+		}
+	}
+}

@@ -32,10 +32,10 @@ namespace Elypse
 			VariableTypeArray m_params;
 
 		public:
-			Function( const String & p_name )
-				: named( p_name ),
-					m_function( NULL ),
-					m_return( NULL )
+			Function( String const & p_name )
+				: named( p_name )
+				, m_function( NULL )
+				, m_return( NULL )
 			{
 			}
 		};
@@ -47,10 +47,10 @@ namespace Elypse
 			bool m_pre;
 
 		public:
-			OperatorFunction( const String & p_name )
-				: Function( p_name ),
-					m_unary( false ),
-					m_pre( false )
+			OperatorFunction( String const & p_name )
+				: Function( p_name )
+				, m_unary( false )
+				, m_pre( false )
 			{
 			}
 		};
@@ -70,12 +70,12 @@ namespace Elypse
 			ScriptNodeMap m_localVars;
 
 		public:
-			UserFunction( const String & p_name )
-				: Function( p_name ),
-					m_node( NULL ),
-					m_returnNode( NULL ),
-					m_finalNode( NULL ),
-					m_initialised( false )
+			UserFunction( String const & p_name )
+				: Function( p_name )
+				, m_node( NULL )
+				, m_returnNode( NULL )
+				, m_finalNode( NULL )
+				, m_initialised( false )
 			{}
 
 			~UserFunction();

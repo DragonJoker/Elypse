@@ -22,27 +22,29 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <ElypseFrameListener.h>
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	class TrollFrameListener
-		: public ElypseFrameListener
+	namespace ElypseRW
 	{
-	public:
-		TrollFrameListener( TrollInstance * p_oa, RenderWindow * m_window, const String & p_baseURL, const String & p_installPath, const String & p_appStringIndex );
-		TrollFrameListener( TrollInstance * p_oa, TrollFrameListener * p_ofl, RenderWindow * p_window, const String & p_instanceNum );
-		virtual ~TrollFrameListener();
+		class TrollFrameListener
+			: public ElypseFrameListener
+		{
+		public:
+			TrollFrameListener( TrollInstance & p_instance, RenderWindow * m_window, String const & p_baseURL, String const & p_installPath, String const & p_appStringIndex );
+			TrollFrameListener( TrollInstance & p_instance, TrollFrameListener * p_ofl, RenderWindow * p_window, String const & p_instanceNum );
+			virtual ~TrollFrameListener();
 
-		virtual void Initialise();
-		bool frameStarted( Real p_timeSinceLastFrame );
+			virtual void Initialise();
+			bool frameStarted( Real p_timeSinceLastFrame );
 
-	protected:
-		virtual void _setupInterfaces();
-		virtual void _setupScript();
+		protected:
+			virtual void _setupInterfaces();
+			virtual void _setupScript();
 
-	protected:
-		TrollInstance * m_ogre;
-	};
+		protected:
+			TrollInstance * m_ogre;
+		};
+	}
 }
-END_TROLL_ELYPSE_NAMESPACE
 
 #endif

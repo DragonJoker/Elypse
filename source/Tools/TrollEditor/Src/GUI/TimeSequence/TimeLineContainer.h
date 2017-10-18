@@ -22,23 +22,29 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/scrolwin.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class TimeLineContainer
-		: public wxScrolledWindow
+	namespace GUI
 	{
-	public:
-		TimeLineContainer( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
-		~TimeLineContainer();
+		namespace Time
+		{
+			class TimeLineContainer
+				: public wxScrolledWindow
+			{
+			public:
+				TimeLineContainer( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
+				~TimeLineContainer();
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnScroll( wxScrollWinEvent & p_event );
+			private:
+				DECLARE_EVENT_TABLE()
+				void OnScroll( wxScrollWinEvent & p_event );
 
-	protected:
-		int m_precPosition;
-	};
+			protected:
+				int m_precPosition;
+				ProjectFrame * m_projectFrame;
+			};
+		}
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

@@ -34,7 +34,7 @@ namespace Elypse
 		private:
 			virtual void Initialise();
 			virtual void Update();
-			virtual VideoImplementation * Create( VideoObject * p_owner );
+			virtual VideoImplementation * Create( VideoObject & p_owner );
 		};
 	}
 }

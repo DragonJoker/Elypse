@@ -38,7 +38,7 @@ namespace Elypse
 			bool m_looped;
 			bool m_waiting;
 
-			unsigned int m_nbUse;
+			uint32_t m_nbUse;
 			int m_currentPlaying;
 			SoundType m_type;
 
@@ -54,23 +54,23 @@ namespace Elypse
 
 		private:
 			void _randomise();
-			void _logMessage( const String & p_msg );
+			void _logMessage( String const & p_msg );
 			void _updateTime( Real p_tslf );
 			void _update3D( Real p_tslf );
 
 		public:
-			SoundPlaylist( const String & p_name, Real p_SFXVolume, Real p_musicVolume, const String & p_zoneName );
+			SoundPlaylist( String const & p_name, Real p_SFXVolume, Real p_musicVolume, String const & p_zoneName );
 			~SoundPlaylist();
 
 			void AddSoundObject( SoundObject * p_soundObject );
-			void SetNode( SceneNode * p_node, const String & p_zone );
+			void SetNode( SceneNode * p_node, String const & p_zone );
 
 			void Play();
 			void Pause();
 			void Stop();
 			void Next();
 
-			void ReleaseAllZone( const String & p_zone );
+			void ReleaseAllZone( String const & p_zone );
 			void Update( Real p_tslf );
 
 			inline void SetRandom( bool p_rand )
@@ -130,11 +130,11 @@ namespace Elypse
 			{
 				return m_volumePercent;
 			}
-			inline const String &	GetName()const
+			inline String const &	GetName()const
 			{
 				return m_name;
 			}
-			inline unsigned int		GetUse()const
+			inline uint32_t		GetUse()const
 			{
 				return m_nbUse;
 			}

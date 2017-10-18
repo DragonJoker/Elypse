@@ -25,7 +25,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #endif
 
 #if defined(OGRE_USE_STATIC_PLUGINS)
-#	include <OgreCgPlugin.h>
+//#	include <OgreCgPlugin.h>
 #	include <OgreParticleFXPlugin.h>
 #	if ELYPSE_WINDOWS
 #		ifndef ____GENLIB_NO_MEMORY_DEBUG____
@@ -37,7 +37,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #		endif
 #		pragma comment( lib, "RenderSystem_Direct3D9Static.lib")
 #		pragma comment( lib, "Plugin_ParticleFXStatic.lib")
-#		pragma comment( lib, "Plugin_CgProgramManagerStatic.lib")
+//#		pragma comment( lib, "Plugin_CgProgramManagerStatic.lib")
 #	else
 #		include <OgreGLPlugin.h>
 #	endif
@@ -64,13 +64,13 @@ namespace Elypse
 #endif
 		public:
 			PluginLoader();
-			
-			bool load( const String & p_installPath, Root * p_root );
+
+			bool load( String const & p_installPath, Root * p_root );
 			void unload();
 
 		private:
-			void loadStatic( const String & p_installPath, Root * p_root );
-			void loadDynamic( const String & p_installPath, Root * p_root );
+			void loadStatic( String const & p_installPath, Root * p_root );
+			void loadDynamic( String const & p_installPath, Root * p_root );
 		};
 	}
 }

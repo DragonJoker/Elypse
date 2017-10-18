@@ -23,28 +23,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/log.h>
 #include <wx/listbox.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	// A log target which just redirects the messages to a listbox
-	class wxLogListBox
-		: public wxLog
+	namespace GUI
 	{
-	public:
-		wxLogListBox( wxListBox * p_list );
+		// A log target which just redirects the messages to a listbox
+		class wxLogListBox
+			: public wxLog
+		{
+		public:
+			wxLogListBox( wxListBox * p_list );
 
-		virtual ~wxLogListBox();
+			virtual ~wxLogListBox();
 
-	private:
-		// implement sink functions
-		virtual void DoLog( wxLogLevel p_level, const wxChar * p_line, time_t p_time );
+		private:
+			// implement sink functions
+			virtual void DoLogTextAtLevel( wxLogLevel p_level, wxString const & p_msg );
 
-		virtual void DoLogString( const wxChar * p_line, time_t p_time );
+			virtual void DoLogText( wxString const & p_msg );
 
-	private:
-		// the control we use
-		wxListBox * m_list;
-	};
+		private:
+			// the control we use
+			wxListBox * m_list;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif

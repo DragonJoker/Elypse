@@ -25,23 +25,16 @@ namespace General
 		class noncopyable
 		{
 		protected:
-			noncopyable()
-			{
-			}
-
-			~noncopyable()
-			{
-			}
-
-		private:
+			noncopyable() = default;
+			~noncopyable() = default;
 			noncopyable( const noncopyable & ) = delete;
-			const noncopyable & operator = ( const noncopyable & ) = delete;
+			const noncopyable & operator=( const noncopyable & ) = delete;
 		};
 	}
 }
 
-#define d_noncopyable	private General::Theory::noncopyable
-#define d_unique		private General::Theory::noncopyable
+#define d_noncopyable private General::Theory::noncopyable
+#define d_unique private General::Theory::noncopyable
 #define d_debug_check_noncopyable
 
 #endif

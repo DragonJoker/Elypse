@@ -2,3 +2,7 @@ build/
 binaries/
 setup/
 *.gch
+*.muse
+*.zip
+*.emsnd
+*.emcfg

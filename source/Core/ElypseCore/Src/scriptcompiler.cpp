@@ -52,18 +52,17 @@ http://www.gnu.org/copyleft/lesser.txt.
 	_log( "Compiler Warning [ " + _getScriptFileName()										\
 							+ " @ L# " + StringConverter::toString( p_block->m_lineNumBegin)	\
 							+ " ] -> " + p_desc );												\
- 
 
 GENLIB_INIT_SINGLETON( Elypse::Script::ScriptCompiler );
 
 Elypse::Script::ScriptCompiler::ScriptCompiler( const Path & p_path )
-	: m_currentLine( 0 ),
-		m_path( p_path ),
-		m_currentFileStream( NULL ),
-		m_currentUserFunction( NULL ),
-		m_currentStructure( NULL ),
-		m_numWarnings( 0 ),
-		m_numErrors( 0 )
+	: m_currentLine( 0 )
+	, m_path( p_path )
+	, m_currentFileStream( NULL )
+	, m_currentUserFunction( NULL )
+	, m_currentStructure( NULL )
+	, m_numWarnings( 0 )
+	, m_numErrors( 0 )
 {
 	m_nodePool.Allocate( 200 );
 	m_blockPool.Allocate( 16 );
@@ -74,7 +73,7 @@ Elypse::Script::ScriptCompiler::ScriptCompiler( const Path & p_path )
 	m_keyboardBinds[2] = new ScriptNode * [NUM_KEYS];
 	m_keyboardBinds[3] = new ScriptNode * [NUM_KEYS];
 
-	for ( unsigned int i = 0; i < NUM_KEYS; ++i )
+	for ( uint32_t i = 0; i < NUM_KEYS; ++i )
 	{
 		m_keyboardBinds[0][i] = NULL;
 		m_keyboardBinds[1][i] = NULL;
@@ -91,7 +90,7 @@ Elypse::Script::ScriptCompiler::~ScriptCompiler()
 {
 	delete [] m_buffer;
 
-	for ( unsigned int j = 0 ; j < NUM_KEYS ; j ++ )
+	for ( uint32_t j = 0 ; j < NUM_KEYS ; j ++ )
 	{
 		if ( m_keyboardBinds[0][j] )
 		{
@@ -144,7 +143,7 @@ Elypse::Script::ScriptCompiler::~ScriptCompiler()
 	General::Utils::map::cycle( m_realFlyweight, &ScriptNode::Delete );
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::GetUsableFunctionNode( const String & p_functionName )const
+ScriptNode * Elypse::Script::ScriptCompiler::GetUsableFunctionNode( String const & p_functionName )const
 {
 	UserFunction * l_function = GetUserFunction( p_functionName );
 
@@ -179,12 +178,12 @@ void Elypse::Script::ScriptCompiler::Initialise()
 	_initialiseOperatorMap();
 }
 
-void Elypse::Script::ScriptCompiler::_log( const String & p_message )
+void Elypse::Script::ScriptCompiler::_log( String const & p_message )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( p_message );
 }
 
-const String & Elypse::Script::ScriptCompiler::_getScriptFileName()const
+String const & Elypse::Script::ScriptCompiler::_getScriptFileName()const
 {
 	if ( m_currentScriptFile != NULL )
 	{
@@ -194,7 +193,7 @@ const String & Elypse::Script::ScriptCompiler::_getScriptFileName()const
 	return EMPTY_STRING;
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::GetProgramConstant( const String & p_variableName )const
+ScriptNode * Elypse::Script::ScriptCompiler::GetProgramConstant( String const & p_variableName )const
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_constants, p_variableName );
 
@@ -267,7 +266,7 @@ void Elypse::Script::ScriptCompiler::_putBack( char p_char )
 	}
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::CompileScript( const String & p_script )
+ScriptNode * Elypse::Script::ScriptCompiler::CompileScript( String const & p_script )
 {
 	m_currentScriptFile = NULL;
 	auto l_line = m_currentLine;
@@ -299,7 +298,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::CompileScriptFile( ConfigFile * p_s
 {
 	m_currentScriptFile = p_scriptFile;
 	String line;
-	const String & l_fileDescName = p_scriptFile->GetDescriptiveName();
+	String const & l_fileDescName = p_scriptFile->GetDescriptiveName();
 	m_currentLine = 1;
 	m_numWarnings = 0;
 	m_numErrors = 0;
@@ -366,7 +365,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::CompileScriptFile( ConfigFile * p_s
 	return l_scriptNode;
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::_createConstant( VariableBaseType p_type, const String & p_name )
+ScriptNode * Elypse::Script::ScriptCompiler::_createConstant( VariableBaseType p_type, String const & p_name )
 {
 	genlib_assert( ! General::Utils::map::has( m_constants, p_name ) );
 	ScriptNode * l_node = CreateScriptNode(); //new ScriptNode( NULL, 0);
@@ -399,7 +398,7 @@ void Elypse::Script::ScriptCompiler::_leaveUserFunction()
 	*/
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::_createUserVariable( const String & p_variableName, VariableType * p_variableType, bool p_functionParam )
+ScriptNode * Elypse::Script::ScriptCompiler::_createUserVariable( String const & p_variableName, VariableType * p_variableType, bool p_functionParam )
 {
 	if ( p_variableType == NULL )
 	{
@@ -439,7 +438,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::_createUserVariable( const String &
 	return l_node;
 }
 
-UserFunction  * Elypse::Script::ScriptCompiler::_createUserFunction( const String & p_functionName, VariableType * p_functionReturnType )
+UserFunction  * Elypse::Script::ScriptCompiler::_createUserFunction( String const & p_functionName, VariableType * p_functionReturnType )
 {
 	if ( p_functionReturnType == NULL )
 	{
@@ -469,7 +468,7 @@ UserFunction  * Elypse::Script::ScriptCompiler::_createUserFunction( const Strin
 	return l_function;
 }
 
-void Elypse::Script::ScriptCompiler::_creaFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
+void Elypse::Script::ScriptCompiler::_creaFunc( String const & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
 {
 	General::Utils::map::deleteValue( m_functions, p_functionName );
 	Function * l_scriptFunction = new Function( p_functionName );
@@ -489,7 +488,7 @@ void Elypse::Script::ScriptCompiler::_creaFunc( const String & p_functionName, R
 	m_functions.insert( std::make_pair( p_functionName, l_scriptFunction ) );
 }
 
-void Elypse::Script::ScriptCompiler::_classFunc( const String & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
+void Elypse::Script::ScriptCompiler::_classFunc( String const & p_functionName, RawFunction * p_function, VariableBaseType p_returnValue, ... )
 {
 	va_list l_vl;
 	va_start( l_vl, p_returnValue );
@@ -512,7 +511,7 @@ void Elypse::Script::ScriptCompiler::_classFunc( const String & p_functionName, 
 	m_classFunctions[l_param1].insert( std::make_pair( p_functionName, l_scriptFunction ) );
 }
 
-void Elypse::Script::ScriptCompiler::_createOperator( const String & p_name, RawFunction * p_func, VariableBaseType p_returnType,
+void Elypse::Script::ScriptCompiler::_createOperator( String const & p_name, RawFunction * p_func, VariableBaseType p_returnType,
 		VariableBaseType p_left, VariableBaseType p_right )
 {
 	OperatorFunction * l_scriptFunction = new OperatorFunction( p_name );
@@ -875,7 +874,7 @@ void Elypse::Script::ScriptCompiler::_initialiseVariableMap()
 	_constantGroup( "String" );
 	_createConstant( EMVT_STRING, "endl" )->set<String>( "\n" );
 	_createConstant( EMVT_STRING, "EMPTY_STRING" )->set<String>( EMPTY_STRING );
-	_createConstant( EMVT_INT, "npos" )->set<int>( static_cast<int>( String::npos ) );
+	_createConstant( EMVT_INT, "npos" )->set<int>( int( String::npos ) );
 	_constantGroup( "Keycode" );
 	_createConstant( EMVT_INT, "KEYCODE_NP_0" )->set<int>( 0x60 );
 	_createConstant( EMVT_INT, "KEYCODE_NP_1" )->set<int>( 0x61 );
@@ -949,7 +948,7 @@ void Elypse::Script::ScriptCompiler::_initialiseVariableMap()
 	_createConstant( EMVT_INT, "KEYCODE_F11" )->set<int>( 122 );
 	_createConstant( EMVT_INT, "KEYCODE_F12" )->set<int>( 123 );
 
-	for ( unsigned int i = 0 ; i < 26 ; i ++ )
+	for ( uint32_t i = 0 ; i < 26 ; i ++ )
 	{
 		_createConstant( EMVT_INT, String( "KEYCODE_" ) + static_cast <char>( 65 + i ) )->set<int>( 65 + i );
 	}
@@ -1544,7 +1543,7 @@ void Elypse::Script::ScriptCompiler::_initialiseFunctionMap()
 	_creaFunc( "Billboard_Destroy", Bil_Destroy, EMVT_NULL, EMVT_STRING, EMVT_NULL );
 }
 
-Function * Elypse::Script::ScriptCompiler::_getClassFunction( VariableType * p_class, const String & p_functionName )const
+Function * Elypse::Script::ScriptCompiler::_getClassFunction( VariableType * p_class, String const & p_functionName )const
 {
 	VariableBaseType l_base = p_class->GetBase();
 	const ClassFunctionMap::const_iterator & l_classMapIter = m_classFunctions.find( l_base );
@@ -1557,12 +1556,12 @@ Function * Elypse::Script::ScriptCompiler::_getClassFunction( VariableType * p_c
 	return NULL;
 }
 
-unsigned int Elypse::Script::ScriptCompiler::_getTypeList( ScriptBlockArray & p_childs ) const
+uint32_t Elypse::Script::ScriptCompiler::_getTypeList( ScriptBlockArray & p_childs ) const
 {
-	unsigned int l_typeList = 0;
-	unsigned int imax = static_cast <unsigned int>( p_childs.size() );
+	uint32_t l_typeList = 0;
+	uint32_t imax = static_cast <uint32_t>( p_childs.size() );
 
-	for ( unsigned int i = 0 ; i < imax ; i ++ )
+	for ( uint32_t i = 0 ; i < imax ; i ++ )
 	{
 		l_typeList |= p_childs[i]->m_type;
 	}
@@ -1579,7 +1578,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::CreateScriptNode()
 	return l_node;
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::CreateScriptNode( unsigned int p_lineNum )
+ScriptNode * Elypse::Script::ScriptCompiler::CreateScriptNode( uint32_t p_lineNum )
 {
 	ScriptNode * l_node = m_nodePool.Get();
 	l_node->_reinit();
@@ -1588,7 +1587,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::CreateScriptNode( unsigned int p_li
 	return l_node;
 }
 
-VariableType * Elypse::Script::ScriptCompiler::FindType( const String & p_name )const
+VariableType * Elypse::Script::ScriptCompiler::FindType( String const & p_name )const
 {
 	VariableType * l_type = General::Utils::map::findOrNull( m_typedefs, p_name );
 
@@ -1617,7 +1616,7 @@ ScriptNode * Elypse::Script::ScriptCompiler::GetFlyweight( char p_value )
 	return l_node;
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::GetFlyweight( const String & p_value )
+ScriptNode * Elypse::Script::ScriptCompiler::GetFlyweight( String const & p_value )
 {
 	ScriptNode * l_node = General::Utils::map::findOrNull( m_stringFlyweight, p_value ); ;
 
@@ -1674,7 +1673,7 @@ void Elypse::Script::ScriptCompiler::_releaseNode( ScriptNode * p_node )
 	m_nodePool.Release( p_node );
 }
 
-ScriptNode * Elypse::Script::ScriptCompiler::_getUserVariable( const String & p_variableName )
+ScriptNode * Elypse::Script::ScriptCompiler::_getUserVariable( String const & p_variableName )
 {
 	if ( m_currentUserFunction != NULL )
 	{
@@ -1728,7 +1727,7 @@ void Elypse::Script::ScriptCompiler::ReleaseScriptNode( ScriptNode * p_node )
 }
 
 
-UserFunction * Elypse::Script::ScriptCompiler::GetUserFunction( const String & p_functionName )const
+UserFunction * Elypse::Script::ScriptCompiler::GetUserFunction( String const & p_functionName )const
 {
 	if ( _isInStructDecla() )
 	{

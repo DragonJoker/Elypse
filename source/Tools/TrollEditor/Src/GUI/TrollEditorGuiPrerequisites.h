@@ -23,10 +23,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/treebase.h>
 #include <Memory.h>
 
-#define TROLL_GUI_NAMESPACE TROLL_NAMESPACE::GUI
-#define BEGIN_TROLL_GUI_NAMESPACE BEGIN_TROLL_NAMESPACE { namespace GUI
-#define END_TROLL_GUI_NAMESPACE END_TROLL_NAMESPACE }
-
 class wxButton;
 class wxCheckBox;
 class wxComboBox;
@@ -42,7 +38,7 @@ class wxTextCtrl;
 class wxTextEvent;
 class wxWindow;
 
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	namespace ProjectComponents
 	{
@@ -69,6 +65,7 @@ BEGIN_TROLL_NAMESPACE
 		static const wxString TE_SAVE = _( "Save" );
 
 		class MainFrame;
+		class ProjectFrame;
 		class NewOverlayFrame;
 		class NewSceneFrame;
 		class ElypseContainer;
@@ -88,22 +85,20 @@ BEGIN_TROLL_NAMESPACE
 		class SceneDependenciesFrame;
 		class FilesTree;
 
-		wxPanel * BuildPanel( wxWindow * p_parent, const wxPoint & p_position, const wxSize & p_size, int p_id, const wxColour & p_colour, long p_style );
-		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id, const wxString & p_caption, const wxString & p_value = wxEmptyString );
-		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id, const wxString & p_caption, float p_value );
-		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id, const wxString & p_caption, int p_value );
-		wxComboBox * BuildComboBox( wxWindow * p_parent, const wxPoint & p_position, int p_id, const wxString & p_caption, const wxArrayString & p_values, const wxString & p_value );
-		wxListCtrl * BuildListBox( wxWindow * p_parent, const wxPoint & p_position, int p_id, const wxArrayString & p_captions, const wxArrayString & p_values );
-		wxButton * BuildButton( wxWindow * p_parent, const wxPoint & p_position, int p_id, const wxString & p_caption, const wxString & p_value );
+		wxPanel * BuildPanel( wxWindow * p_parent, wxPoint const & p_position, wxSize const & p_size, int p_id, const wxColour & p_colour, long p_style );
+		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, wxString const & p_caption, wxString const & p_value = wxEmptyString );
+		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, wxString const & p_caption, float p_value );
+		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, wxString const & p_caption, int p_value );
+		wxComboBox * BuildComboBox( wxWindow * p_parent, wxPoint const & p_position, int p_id, wxString const & p_caption, const wxArrayString & p_values, wxString const & p_value );
+		wxListCtrl * BuildListBox( wxWindow * p_parent, wxPoint const & p_position, int p_id, const wxArrayString & p_captions, const wxArrayString & p_values );
+		wxButton * BuildButton( wxWindow * p_parent, wxPoint const & p_position, int p_id, wxString const & p_caption, wxString const & p_value );
 
-		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id, const String & p_caption, const String & p_value = "" );
-		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id, const String & p_caption, float p_value );
-		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, const wxPoint & p_position, int p_id, const String & p_caption, int p_value );
-		wxButton * BuildButton( wxWindow * p_parent, const wxPoint & p_position, int p_id, const String & p_caption, const String & p_value );
+		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, String const & p_caption, String const & p_value = "" );
+		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, String const & p_caption, float p_value );
+		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, String const & p_caption, int p_value );
+		wxButton * BuildButton( wxWindow * p_parent, wxPoint const & p_position, int p_id, String const & p_caption, String const & p_value );
 
-		wxArrayString Split( const wxString & p_toSplit, const wxString & p_delims, unsigned int p_maxSplits = 10 );
-
-		struct SceneItem;
+		wxArrayString Split( wxString const & p_toSplit, wxString const & p_delims, uint32_t p_maxSplits = 10 );
 
 		struct TreeItemObject
 		{
@@ -119,14 +114,13 @@ BEGIN_TROLL_NAMESPACE
 			TreeItemObject ItemObject;
 			RecursiveTreeItemObjectPtrMap Childs;
 
-			RecursiveTreeItemObject * RecursiveIsIn( const wxString & p_name );
+			RecursiveTreeItemObject * RecursiveIsIn( wxString const & p_name );
 			RecursiveTreeItemObject * RecursiveIsIn( wxTreeItemIdValue p_index );
 
 			~RecursiveTreeItemObject();
 		};
-		
+
 		typedef std::map< wxTreeItemIdValue, TreeItemObject > TreeItemObjectMap;
-		typedef std::map< wxString, SceneItem > TreeItemMap;
 		typedef std::map< wxString, wxTreeItemId > TreeItemIdMap;
 		typedef std::map< wxString, wxTreeItemId > MapTypeFile;
 		typedef std::vector< wxString > StrArray;
@@ -138,7 +132,5 @@ BEGIN_TROLL_NAMESPACE
 		typedef std::map< wxString, wxTreeItemId > ItemStrMap;
 	}
 }
-END_TROLL_NAMESPACE
 
 #endif
-

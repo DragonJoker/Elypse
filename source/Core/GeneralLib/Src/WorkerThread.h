@@ -18,7 +18,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #ifndef ___WORKER_THREAD_H___
 #define ___WORKER_THREAD_H___
 
-#include "Thread.h"
+#include <thread>
 #include "Mutex.h"
 #include "Condition.h"
 
@@ -30,9 +30,9 @@ namespace General
 		{
 		public:
 			WorkerThread()
-				: m_stopThread( false )
+				: m_stopThread{ false }
+				, m_thread{ [this](){ DoMainLoop(); } }
 			{
-				m_boostThread = Thread( GENLIB_THREAD_CLASS_FUNCTOR( this, WorkerThread, DoMainLoop ) );
 			}
 			~WorkerThread()
 			{
@@ -46,8 +46,8 @@ namespace General
 				do
 				{
 					{
-						GENLIB_AUTO_SCOPED_LOCK();
-						GENLIB_CONDITION_WAIT( m_condition, m_mutex );
+						auto l_lock = make_unique_lock( m_mutex );
+						m_condition.wait( l_lock );
 					}
 
 					if ( m_functor )
@@ -56,11 +56,11 @@ namespace General
 					}
 
 					{
-						GENLIB_AUTO_SCOPED_LOCK();
+						auto l_lock = make_unique_lock( m_mutex );
 						l_stopThread = m_stopThread;
 					}
 				}
-				while ( ! l_stopThread );
+				while ( !l_stopThread );
 			}
 
 		public:
@@ -68,33 +68,33 @@ namespace General
 			{
 				if ( p_functor )
 				{
-					GENLIB_AUTO_SCOPED_LOCK();
+					auto l_lock = make_unique_lock( m_mutex );
 					m_functor = p_functor;
-					GENLIB_CONDITION_NOTIFY_ONE( m_condition );
+					m_condition.notify_one();
 				}
 			}
 
 			void StopNoWait()
 			{
-				GENLIB_AUTO_SCOPED_LOCK();
+				auto l_lock = make_unique_lock( m_mutex );
 				m_stopThread = true;
 			}
 
 			void Stop()
 			{
 				{
-					GENLIB_AUTO_SCOPED_LOCK();
+					auto l_lock = make_unique_lock( m_mutex );
 					m_stopThread = true;
-					GENLIB_CONDITION_NOTIFY_ONE( m_condition );
+					m_condition.notify_one();
 				}
-				m_boostThread.join();
+				m_thread.join();
 			}
 
 		private:
-			Condition m_condition;
-			Mutex m_mutex;
+			std::condition_variable m_condition;
+			std::mutex m_mutex;
 			bool m_stopThread;
-			Thread m_boostThread;
+			std::thread m_thread;
 			std::function< void() > m_functor;
 		};
 	}

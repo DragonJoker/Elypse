@@ -31,18 +31,18 @@ http://www.gnu.org/copyleft/lesser.txt.
 GENLIB_INIT_SINGLETON( SoundManager );
 
 SoundManager::SoundManager( const String  & p_basePath )
-	: m_basePath( p_basePath ),
-		m_musicVolume( 0.0 ),
-		m_SFXVolume( 0.0 ),
-		m_musicMuted( false ),
-		m_SFXMuted( false ),
-		m_initialised( false ),
-		m_musicGroup( NULL ),
-		m_SFXGroup( NULL ),
-		m_system( NULL )
+	: m_basePath( p_basePath )
+	, m_musicVolume( 0.0 )
+	, m_SFXVolume( 0.0 )
+	, m_musicMuted( false )
+	, m_SFXMuted( false )
+	, m_initialised( false )
+	, m_musicGroup( NULL )
+	, m_SFXGroup( NULL )
+	, m_system( NULL )
 {
 	GENLIB_SET_SINGLETON();
-	unsigned int l_version;
+	uint32_t l_version;
 	srand( uint32_t( time( NULL ) ) );
 	FMOD_VECTOR l_up = { 0.0f, 0.0f, 0.0f };
 	FMOD_VECTOR l_forward = { 0.0f, 0.0f, 0.0f };
@@ -85,7 +85,7 @@ SoundManager::SoundManager( const String  & p_basePath )
 	}
 
 #if ELYPSE_LINUX
-	FMOD_OUTPUTTYPE l_outputMode[5] = 
+	FMOD_OUTPUTTYPE l_outputMode[5] =
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
 		FMOD_OUTPUTTYPE_ALSA,
@@ -106,7 +106,7 @@ SoundManager::SoundManager( const String  & p_basePath )
 	}
 
 #elif ELYPSE_WINDOWS
-	FMOD_OUTPUTTYPE l_outputMode[7] = 
+	FMOD_OUTPUTTYPE l_outputMode[7] =
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
 		FMOD_OUTPUTTYPE_DSOUND,
@@ -175,7 +175,7 @@ void SoundManager::AddPlaylist( SoundPlaylist * p_playlist )
 	m_playlists.insert( std::make_pair( p_playlist->GetName(), p_playlist ) );
 }
 
-SoundObject * SoundManager::CreateSound( const String & p_name )
+SoundObject * SoundManager::CreateSound( String const & p_name )
 {
 	if ( ! m_initialised )
 	{
@@ -195,7 +195,7 @@ SoundObject * SoundManager::CreateSound( const String & p_name )
 	return l_sound;
 }
 
-void SoundManager::RemoveSoundObject( const String & p_name )
+void SoundManager::RemoveSoundObject( String const & p_name )
 {
 	if ( ! m_initialised )
 	{
@@ -234,7 +234,7 @@ void SoundManager::RegisterInstance( SoundInstance * p_instance )
 	ifind->second.insert( p_instance );
 }
 
-void SoundManager::RemoveNode( const String & p_nodeName )
+void SoundManager::RemoveNode( String const & p_nodeName )
 {
 	if ( ! m_initialised )
 	{
@@ -261,7 +261,7 @@ void SoundManager::RemoveNode( const String & p_nodeName )
 }
 
 
-void SoundManager::SetVolumePercent( const String & p_nodeName, Real p_percent )
+void SoundManager::SetVolumePercent( String const & p_nodeName, Real p_percent )
 {
 	if ( ! m_initialised )
 	{
@@ -287,7 +287,7 @@ void SoundManager::SetVolumePercent( const String & p_nodeName, Real p_percent )
 }
 
 /*
-bool SoundManager::IsSoundObject( const String &  p_name)
+bool SoundManager::IsSoundObject( String const &  p_name)
 {
 	SoundObjectMap::iterator l_it = m_objectList.begin();
 	const SoundObjectMap::iterator & l_end = m_objectList.end();
@@ -403,9 +403,9 @@ void SoundManager::Mute( bool p_mute, SoundType p_type )
 }
 
 void SoundManager::Update( const Vector3 & p_position,
-							const Real * p_up,
-							const Real * p_forward,
-							Real p_updateTime )
+						   const Real * p_up,
+						   const Real * p_forward,
+						   Real p_updateTime )
 {
 	if ( ! m_initialised )
 	{
@@ -446,19 +446,19 @@ void SoundManager::_update( Real p_time )
 	General::Utils::map::cycle( m_playlists, &SoundPlaylist::Update, p_time );
 }
 
-void SoundManager::_logMessage( const String & p_msg )
+void SoundManager::_logMessage( String const & p_msg )
 {
 	EMUSE_MESSAGE_RELEASE( p_msg );
 }
 
-bool SoundManager::CheckFMODError( FMOD_RESULT p_result, unsigned int p_line, const char * p_file )
+bool SoundManager::CheckFMODError( FMOD_RESULT p_result, uint32_t p_line, char const * const p_file )
 {
 	if ( p_result == FMOD_OK )
 	{
 		return true;
 	}
 
-	const char * l_errorString = FMOD_ErrorString( p_result );
+	char const * const l_errorString = FMOD_ErrorString( p_result );
 	String l_msg = String( "FMOD error (" ) + StringConverter::toString( p_result ) + ") : [ " + l_errorString + "] in \"" + p_file + "\"@" + StringConverter::toString( p_line );
 	SoundManager::GetSingletonPtr()->_logMessage( l_msg );
 	return false;
@@ -486,14 +486,8 @@ const String SoundManager::OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
 	case FMOD_OUTPUTTYPE_ASIO:
 		return "ASIO";
 
-	case FMOD_OUTPUTTYPE_OSS:
-		return "OSS";
-
 	case FMOD_OUTPUTTYPE_ALSA:
 		return "ALSA";
-
-	case FMOD_OUTPUTTYPE_ESD:
-		return "ESD";
 
 	case FMOD_OUTPUTTYPE_COREAUDIO:
 		return "Core Audio";
@@ -507,18 +501,25 @@ const String SoundManager::OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
 	case FMOD_OUTPUTTYPE_WAVWRITER_NRT:
 		return "Non real-time Wave writer";
 
-	case FMOD_OUTPUTTYPE_XBOX360:
-		return "XBox 360";
-
 	case FMOD_OUTPUTTYPE_PS3:
 		return "Playstation 3";
+
+#if FMOD_VERSION > 0x00010906
+	case FMOD_OUTPUTTYPE_OSS:
+		return "OSS";
+
+	case FMOD_OUTPUTTYPE_ESD:
+		return "ESD";
+
+	case FMOD_OUTPUTTYPE_XBOX360:
+		return "XBox 360";
 
 	case FMOD_OUTPUTTYPE_WII:
 		return "Wii";
 
 	case FMOD_OUTPUTTYPE_PSP:
 		return "PSP";
-#if defined( _WIN32 )
+#elif defined( _WIN32 )
 //		case FMOD_OUTPUTTYPE_OPENAL: return "OpenAL";
 //		case FMOD_OUTPUTTYPE_SOUNDMANAGER: return "Sound Manager";
 //		case FMOD_OUTPUTTYPE_XBOX: return "XBox";

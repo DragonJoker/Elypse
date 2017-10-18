@@ -22,11 +22,11 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 using namespace Ogre;
 
-MirrorMaterial::MirrorMaterial( const String & p_name, Mirror * p_owner )
-	: named( p_name ),
-		owned_by<Mirror>	( p_owner ),
-		m_opacity( 0.0 ),
-		m_tus( NULL )
+MirrorMaterial::MirrorMaterial( String const & p_name, Mirror & p_owner )
+	: named( p_name )
+	, owned_by< Mirror >( p_owner )
+	, m_opacity( 0.0 )
+	, m_tus( NULL )
 {
 //	std::cout << "Mirror material ; " << p_name << std::endl;
 }
@@ -64,9 +64,9 @@ void MirrorMaterial::Apply()
 
 	if ( l_material != NULL )
 	{
-		m_tus = l_material->getTechnique( 0 )->getPass( 0 )->createTextureUnitState( "__INTERNAL_MirrorTexture_" + m_owner->GetName() );
+		m_tus = l_material->getTechnique( 0 )->getPass( 0 )->createTextureUnitState( "__INTERNAL_MirrorTexture_" + GetOwner()->GetName() );
 		m_tus->setColourOperationEx( LBX_BLEND_MANUAL, LBS_TEXTURE, LBS_CURRENT, ColourValue::White, ColourValue::White, m_opacity );
 		m_tus->setTextureAddressingMode( TextureUnitState::TAM_CLAMP );
-		m_tus->setProjectiveTexturing( true, m_owner->GetCamera() );
+		m_tus->setProjectiveTexturing( true, GetOwner()->GetCamera() );
 	}
 }

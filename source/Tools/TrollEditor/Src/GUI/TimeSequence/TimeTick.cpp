@@ -22,31 +22,37 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "TimePanel.h"
 
 #include "TimeLinePanel.h"
-#include "GUI/MainFrame.h"
+#include "GUI/ProjectFrame.h"
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	BEGIN_EVENT_TABLE( TimeTick, wxPanel )
-		EVT_LEFT_DOWN( TimeTick::OnLeftMouseDown )
-		EVT_LEFT_UP( TimeTick::OnLeftMouseUp )
-	END_EVENT_TABLE()
-
-	TimeTick::TimeTick( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
-		: wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_NONE )
+	namespace GUI
 	{
-		m_panel = static_cast <TimePanel *>( p_parent );
-		SetBackgroundColour( wxColour( 0, 0, 0 ) );
-	}
+		namespace Time
+		{
+			TimeTick::TimeTick( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id, wxPoint const & p_position, wxSize const & p_size )
+				: wxPanel( p_parent, p_id, p_position, p_size, wxBORDER_NONE )
+				, m_projectFrame{ p_projectFrame }
+			{
+				m_panel = static_cast < TimePanel * >( p_parent );
+				SetBackgroundColour( wxColour( 0, 0, 0 ) );
+			}
 
-	void TimeTick::OnLeftMouseDown( wxMouseEvent & p_event )
-	{
-		m_panel->SetLeftDown( true );
-	}
+			BEGIN_EVENT_TABLE( TimeTick, wxPanel )
+				EVT_LEFT_DOWN( TimeTick::OnLeftMouseDown )
+				EVT_LEFT_UP( TimeTick::OnLeftMouseUp )
+			END_EVENT_TABLE()
 
-	void TimeTick::OnLeftMouseUp( wxMouseEvent & p_event )
-	{
-		m_panel->SetLeftDown( false );
+			void TimeTick::OnLeftMouseDown( wxMouseEvent & p_event )
+			{
+				m_panel->SetLeftDown( true );
+			}
+
+			void TimeTick::OnLeftMouseUp( wxMouseEvent & p_event )
+			{
+				m_panel->SetLeftDown( false );
+			}
+		}
 	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 

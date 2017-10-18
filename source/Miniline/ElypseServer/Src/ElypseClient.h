@@ -38,7 +38,7 @@ namespace Elypse
 			{
 			}
 
-			virtual bool CallbackReaderError( const boost::system::error_code & p_err )
+			virtual bool CallbackReaderError( boost::system::error_code const & p_err )
 			{
 				std::shared_ptr< ElypseTcpService > l_service = m_elypseService.lock();
 
@@ -56,7 +56,7 @@ namespace Elypse
 				return false;
 			}
 
-			virtual bool CallbackWriterError( const boost::system::error_code & p_err )
+			virtual bool CallbackWriterError( boost::system::error_code const & p_err )
 			{
 				std::shared_ptr< ElypseTcpService > l_service = m_elypseService.lock();
 

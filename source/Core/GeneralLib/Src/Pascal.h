@@ -24,33 +24,31 @@ namespace General
 {
 	namespace Math
 	{
-		template< unsigned int tp_class, typename T_floatingType = float >
+		template< uint32_t tp_class, typename T_floatingType = float >
 		class Pascal
 		{
 		public:
 			Pascal()
 			{
-				m_values = new T_floatingType[tp_class + 1];
 				T_floatingType n = m_factorials.Get( tp_class );
 
-				for ( unsigned int i = 0 ; i < tp_class + 1; i ++ )
+				for ( uint32_t i = 0 ; i < tp_class + 1; i ++ )
 				{
 					m_values[i] = n / ( m_factorials.Get( i ) * m_factorials.Get( tp_class - i ) );
 				}
 			}
 			~Pascal()
 			{
-				delete [] m_values;
 			}
-		public:
-			inline T_floatingType Get( unsigned int p_num )
+
+			inline T_floatingType Get( uint32_t p_num )
 			{
 				return m_values[p_num];
 			}
 
 		private:
-			T_floatingType * m_values;
-			RuntimeFactorial <tp_class, T_floatingType> m_factorials;
+			std::array < T_floatingType, tp_class + 1 > m_values;
+			Factorial< tp_class, T_floatingType > m_factorials;
 		};
 	}
 }

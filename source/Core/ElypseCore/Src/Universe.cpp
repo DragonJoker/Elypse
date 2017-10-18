@@ -30,17 +30,14 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "ElypseLogs.h"
 
-Universe::Universe( const String & p_universeName, const String & p_instanceKey )
-	: named( p_universeName ),
-		m_manager( NULL ),
-		m_renderTarget( NULL ),
-		m_viewport( NULL )
+Universe::Universe( String const & p_universeName, String const & p_instanceKey )
+	: named{ p_universeName }
 {
-	genlib_assert( ! m_name.empty() );
+	genlib_assert( !m_name.empty() );
 	m_manager = ElypseController::GetSingletonPtr()->CreateSceneManager( "ElypsePlayer" + p_instanceKey );
-	genlib_assert( m_manager != NULL );
+	genlib_assert( m_manager != nullptr );
 	m_camera = m_manager->createCamera( "RootCamera" );
-	genlib_assert( m_camera != NULL );
+	genlib_assert( m_camera != nullptr );
 	EMUSE_LOG_MESSAGE_RELEASE( "Universe create : " + m_name );
 }
 
@@ -55,7 +52,7 @@ Universe::~Universe()
 
 void Universe::AddZone( Zone * p_zone )
 {
-	genlib_assert( p_zone != NULL );
+	genlib_assert( p_zone != nullptr );
 
 	if ( ! General::Utils::map::has( m_zones, p_zone->GetName() ) )
 	{
@@ -65,17 +62,17 @@ void Universe::AddZone( Zone * p_zone )
 
 void Universe::SetRenderTarget( RenderTarget * p_rt )
 {
-	genlib_assert( p_rt != NULL );
+	genlib_assert( p_rt != nullptr );
 	EMUSE_MESSAGE_DEBUG( "Universe::SetRenderTarget -> " + m_name + " // " + p_rt->getName() );
 	m_renderTarget = p_rt;
 	m_viewport = m_renderTarget->addViewport( m_camera );
-	genlib_assert( m_viewport != NULL );
-	m_camera->setAspectRatio( static_cast <Real>( m_viewport->getActualWidth() ) / static_cast <Real>( m_viewport->getActualHeight() ) );
+	genlib_assert( m_viewport != nullptr );
+	m_camera->setAspectRatio( Real( m_viewport->getActualWidth() ) / Real( m_viewport->getActualHeight() ) );
 	m_viewport->setBackgroundColour( ColourValue::White );
 	m_renderTarget->update();
 }
 
-void Universe::ClearScene() d_no_throw
+void Universe::ClearScene() noexcept
 {
 	m_manager->clearScene();
 }

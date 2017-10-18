@@ -140,13 +140,13 @@ bool LocalFunction( char * p_char1, char * p_char2, char * p_char3 )
 }
 
 ClassName::ClassName()
-	: m_name( "DefaultClassName" ),
-		m_int( 0 )
+	: m_name( "DefaultClassName" )
+	, m_int( 0 )
 {
 	Print( m_name, m_int, m_name.c_str() );
 }
 
-void ClassName::Print( const String & p_string, int p_int, const char * p_charStar )
+void ClassName::Print( String const & p_string, int p_int, char const * const p_charStar )
 {
 	if ( p_charStar == NULL )
 	{
@@ -173,7 +173,7 @@ void ClassName::Print( const String & p_string, int p_int, const char * p_charSt
 	l_char1 = p_string.c_str();
 	p_int += 5;
 
-	for ( unsigned int i = 0 ; i < p_int ; i ++, j ++ )
+	for ( uint32_t i = 0 ; i < p_int ; i ++, j ++ )
 	{
 		if ( i == 3 )
 		{
@@ -184,7 +184,7 @@ void ClassName::Print( const String & p_string, int p_int, const char * p_charSt
 		if	( ( i == 3 || p_string == "DefaultClassName"
 				&& ( i == 4 || i == 5 ) ) && i == 9 )
 		{
-			std::cout << static_cast <unsigned int>( p_int );
+			std::cout << static_cast <uint32_t>( p_int );
 		}
 	}
 

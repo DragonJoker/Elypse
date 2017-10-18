@@ -20,35 +20,41 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "TimeLineContainer.h"
 
 #include "TimePanel.h"
-#include "GUI/MainFrame.h"
+#include "GUI/ProjectFrame.h"
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	BEGIN_EVENT_TABLE( TimeLineContainer, wxScrolledWindow )
-		EVT_SCROLLWIN( TimeLineContainer::OnScroll )
-	END_EVENT_TABLE()
-
-	TimeLineContainer::TimeLineContainer( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
-		: wxScrolledWindow( p_parent, p_id, p_position, p_size, wxBORDER_NONE )
-		, m_precPosition( 0 )
+	namespace GUI
 	{
-	}
-
-	TimeLineContainer::~TimeLineContainer()
-	{
-	}
-
-	void TimeLineContainer::OnScroll( wxScrollWinEvent & p_event )
-	{
-		wxScrolledWindow::HandleOnScroll( p_event );
-		int l_position = GetScrollPos( wxHORIZONTAL );
-		int l_diff = l_position - m_precPosition;
-
-		if ( l_diff != 0 )
+		namespace Time
 		{
-			GUI::MainFrame::GetInstance()->IncrementTimePanel( l_diff );
-			m_precPosition = l_position;
+			TimeLineContainer::TimeLineContainer( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id, wxPoint const & p_position, wxSize const & p_size )
+				: wxScrolledWindow( p_parent, p_id, p_position, p_size, wxBORDER_NONE )
+				, m_precPosition( 0 )
+				, m_projectFrame{ p_projectFrame }
+			{
+			}
+
+			TimeLineContainer::~TimeLineContainer()
+			{
+			}
+
+			BEGIN_EVENT_TABLE( TimeLineContainer, wxScrolledWindow )
+				EVT_SCROLLWIN( TimeLineContainer::OnScroll )
+			END_EVENT_TABLE()
+
+			void TimeLineContainer::OnScroll( wxScrollWinEvent & p_event )
+			{
+				wxScrolledWindow::HandleOnScroll( p_event );
+				int l_position = GetScrollPos( wxHORIZONTAL );
+				int l_diff = l_position - m_precPosition;
+
+				if ( l_diff != 0 )
+				{
+					m_projectFrame->IncrementTimePanel( l_diff );
+					m_precPosition = l_position;
+				}
+			}
 		}
 	}
 }
-END_TROLL_GUI_TIME_NAMESPACE

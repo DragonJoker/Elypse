@@ -27,18 +27,18 @@ namespace General
 		{
 		protected:
 			ReferenceCounted()
-				: m_count( 0 )
+				: m_count{ 0 }
 			{
 			}
 
 		public:
 			void Use()
 			{
-				m_count ++;
+				m_count++;
 			}
 			void Release()
 			{
-				m_count --;
+				m_count--;
 
 				if ( m_count == 0 )
 				{
@@ -47,7 +47,7 @@ namespace General
 			}
 
 		protected:
-			unsigned int m_count;
+			uint32_t m_count;
 		};
 
 		template< typename T >
@@ -55,7 +55,7 @@ namespace General
 		{
 		public:
 			ReferenceHolder( ReferenceCounted< T > * p_ref )
-				: m_ref( p_ref )
+				: m_ref{ p_ref }
 			{
 				m_ref->Use();
 			}
@@ -63,7 +63,7 @@ namespace General
 			~ReferenceHolder()
 			{
 				m_ref->Release();
-				m_ref = NULL;
+				m_ref = nullptr;
 			}
 
 		protected:

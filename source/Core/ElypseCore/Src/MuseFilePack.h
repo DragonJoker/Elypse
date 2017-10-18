@@ -27,38 +27,28 @@ namespace Elypse
 {
 	namespace Download
 	{
-		class d_dll_export MuseFilePack : public owned_by <MusePack>, d_noncopyable
+		class d_dll_export MuseFilePack
+			: public owned_by< MusePack >
+			, d_noncopyable
 		{
-		protected:
-			HeaderStatus m_status;
-			DataBlockType m_type;
-			String m_filename;
-			String m_md5;
-			size_t m_filenameSize;
-			FILE * m_fileDescriptor;
-			size_t m_fileSize;
-			size_t m_downloadedBytes;
-			bool m_finished;
-
 		public:
-			MuseFilePack( MusePack * p_pack )
-				: owned_by <MusePack>	( p_pack ),
-					m_status( HEADEREMPTY ),
-					m_fileDescriptor( NULL ),
-					m_downloadedBytes( 0 ),
-					m_finished( false )
+			MuseFilePack( MusePack & p_pack )
+				: owned_by< MusePack >( p_pack )
 			{}
 
 			~MuseFilePack()
 			{
-				if ( m_fileDescriptor != NULL )
+				if ( m_fileDescriptor )
 				{
 					fclose( m_fileDescriptor );
-					m_fileDescriptor = NULL;
+					m_fileDescriptor = nullptr;
 				}
 			}
 
-		public:
+			bool ReadHeader( size_t & p_indexBuffer, const DataArray & p_waitingDatas );
+			bool ReadContents( size_t & p_indexBuffer, const DataArray & p_waitingDatas );
+			void SetFinished();
+
 			inline bool IsFinished()const
 			{
 				return m_finished /*&& IsDownloadFinished()*/;
@@ -68,17 +58,10 @@ namespace Elypse
 				return m_fileSize == m_downloadedBytes;
 			}
 
-			inline void SetFilename( const char * p_buffer )
+			inline void SetFilename( char const * const p_buffer )
 			{
 				m_filename.assign( p_buffer, m_filenameSize );
 			}
-
-			bool ReadHeader( size_t & p_indexBuffer, const DataArray & p_waitingDatas );
-			bool ReadContents( size_t & p_indexBuffer, const DataArray & p_waitingDatas );
-
-			void SetFinished();
-
-		public:
 			inline void SetFilenameSize( size_t p_size )
 			{
 				m_filenameSize = p_size;
@@ -87,11 +70,11 @@ namespace Elypse
 			{
 				return m_status == HEADERCOMPLETE;
 			}
-			inline const String & GetFilename()const
+			inline String const & GetFilename()const
 			{
 				return m_filename;
 			}
-			inline const String & GetMD5()const
+			inline String const & GetMD5()const
 			{
 				return m_md5;
 			}
@@ -111,24 +94,24 @@ namespace Elypse
 			{
 				return m_status;
 			}
+
+		protected:
+			HeaderStatus m_status{ HEADEREMPTY };
+			DataBlockType m_type{ EM_BLOCK_UNKNOWN };
+			String m_filename;
+			String m_md5;
+			size_t m_filenameSize{ 0 };
+			FILE * m_fileDescriptor{ nullptr };
+			size_t m_fileSize{ 0 };
+			size_t m_downloadedBytes{ 0 };
+			bool m_finished{ false };
 		};
 
 		struct EM_SndHeader
 		{
-			unsigned int fileSize;
-			unsigned short fileNameSize;
-			char * fileName;
-			inline EM_SndHeader()
-				: fileName( NULL )
-			{}
-			inline ~EM_SndHeader()
-			{
-				if ( fileName != NULL )
-				{
-					delete [] fileName;
-					fileName = NULL;
-				}
-			}
+			uint32_t fileSize{ 0 };
+			uint16_t fileNameSize{ 0 };
+			std::vector< char > fileName;
 		};
 	}
 }

@@ -43,21 +43,21 @@ http://www.gnu.org/copyleft/lesser.txt.
 #define COMPILE_WARNING_IN_BLOCK( p_desc , p_block )  m_compiler->_warning();EMUSE_MESSAGE_RELEASE( "Compiler Warning [ "+m_compiler->_getScriptFileName()+" @ L# "+ StringConverter::toString( p_block->m_lineNumBegin ) + " ] -> " + p_desc );
 
 ScriptBlock::ScriptBlock()
-	: m_parent( NULL ),
-		m_compiledScript( NULL ),
-		m_compiler( NULL ),
-		m_type( BT_INITIAL ),
-		m_subType( BST_NONE ),
-		m_operatorLevel( SO_NONE ),
-		m_variableType( NULL ),
-		m_lineNumBegin( 0 ),
-		m_depth( 0 ),
-		m_operator_rightToLeft( false )
+	: m_parent( NULL )
+	, m_compiledScript( NULL )
+	, m_compiler( NULL )
+	, m_type( BT_INITIAL )
+	, m_subType( BST_NONE )
+	, m_operatorLevel( SO_NONE )
+	, m_variableType( NULL )
+	, m_lineNumBegin( 0 )
+	, m_depth( 0 )
+	, m_operator_rightToLeft( false )
 {
 }
 
 ScriptBlock * ScriptBlock::_initialise( ScriptCompiler * p_compiler, BlockType p_type,
-										unsigned int p_lineNum, unsigned int p_depth,
+										uint32_t p_lineNum, uint32_t p_depth,
 										ScriptBlock * p_parent )
 {
 	genlib_assert( p_compiler != NULL );
@@ -76,7 +76,7 @@ ScriptBlock::~ScriptBlock()
 	Clear();
 }
 
-void ScriptBlock::Clear() d_no_throw
+void ScriptBlock::Clear() noexcept
 {
 	for ( auto & l_child : m_childs )
 	{
@@ -123,7 +123,10 @@ bool ScriptBlock::Parse()
 
 		case BT_BRACKETS:
 			return _parseBrackets();
-			d_no_default;
+
+		default:
+			assert( false );
+			break;
 		}
 	}
 	catch ( ... )
@@ -273,7 +276,7 @@ bool ScriptBlock::_parseInitial()
 		m_compiler->_leaveUserFunction();
 	}
 
-	unsigned int imax = static_cast <unsigned int>( l_nodeArray.size() );
+	uint32_t imax = static_cast <uint32_t>( l_nodeArray.size() );
 
 	if ( imax == 1 )
 	{
@@ -498,7 +501,7 @@ bool ScriptBlock::_parseBraces()
 	VERBOSE_COMPILATOR( "_parseBraces" );
 	ScriptNodeArray l_nodeArray;
 	ScriptBlockArray l_ifArray;
-	unsigned int l_lineNum = m_compiler->_getCurrentLine();
+	uint32_t l_lineNum = m_compiler->_getCurrentLine();
 
 	while ( ! m_compiler->_eof() )
 	{
@@ -582,7 +585,7 @@ bool ScriptBlock::_parseBraces()
 					_preCompiledCurrent( l_ifArray, l_nodeArray );
 				}
 
-				unsigned int imax = static_cast<unsigned int>( l_nodeArray.size() );
+				uint32_t imax = static_cast<uint32_t>( l_nodeArray.size() );
 
 				if ( imax == 1 )
 				{
@@ -594,7 +597,7 @@ bool ScriptBlock::_parseBraces()
 					m_compiledScript->SetType( VariableTypeManager::Get( EMVT_CODE ) );
 					m_compiledScript->SetFunction( Gen_MultiLineFunction );
 
-					for ( unsigned int i = 0 ; i < imax ; i ++ )
+					for ( uint32_t i = 0 ; i < imax ; i ++ )
 					{
 						m_compiledScript->AddChild( l_nodeArray[i] );
 					}
@@ -799,7 +802,7 @@ ScriptBlock * ScriptBlock::_delegate( char p_currentChar )
 	}
 
 	//function declaration
-	unsigned int l_typeList = m_compiler->_getTypeList( m_childs );
+	uint32_t l_typeList = m_compiler->_getTypeList( m_childs );
 
 	if ( l_block->m_type == BT_BRACES && ( l_typeList & BT_PARENTHESIS ) && ( l_typeList & BT_VARIABLE_TYPE ) && ( l_typeList & BT_STRING ) )
 	{

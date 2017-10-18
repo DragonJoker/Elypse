@@ -38,16 +38,16 @@ namespace Elypse
 			sm_strPrefix = p_strPrefix;
 		}
 
-		static void createResourceGroup( const String & name, const bool inGlobalPool = true );
-		static void initialiseResourceGroup( const String & name );
-		static void loadResourceGroup( const String & name, bool loadMainResources = true, bool loadWorldGeom = true );
-		static void unloadResourceGroup( const String & name, bool reloadableOnly = true );
-		static void clearResourceGroup( const String & name );
-		static void destroyResourceGroup( const String & name );
+		static void createResourceGroup( String const & name, const bool inGlobalPool = true );
+		static void initialiseResourceGroup( String const & name );
+		static void loadResourceGroup( String const & name, bool loadMainResources = true, bool loadWorldGeom = true );
+		static void unloadResourceGroup( String const & name, bool reloadableOnly = true );
+		static void clearResourceGroup( String const & name );
+		static void destroyResourceGroup( String const & name );
 
-		static void addResourceLocation( const String & name, const String & locType, const String & resGroup = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, bool recursive = false );
-		static void removeResourceLocation( const String & name, const String & resGroup = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );
-		static bool resourceLocationExists( const String & name, const String & resGroup = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );
+		static void addResourceLocation( String const & name, String const & locType, String const & resGroup = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, bool recursive = false );
+		static void removeResourceLocation( String const & name, String const & resGroup = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );
+		static bool resourceLocationExists( String const & name, String const & resGroup = ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME );
 	};
 }
 

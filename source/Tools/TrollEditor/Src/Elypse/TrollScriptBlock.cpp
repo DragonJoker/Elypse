@@ -49,95 +49,76 @@ http://www.gnu.org/copyleft/lesser.txt.
 													 + " @ L# "+ StringConverter::toString( p_block->m_lineNumBegin)\
 													 + " ] -> " + p_desc );
 
-BEGIN_TROLL_ELYPSE_NAMESPACE
+namespace Troll
 {
-	TrollScriptBlock::TrollScriptBlock()
-		:	ScriptBlock(),
-			m_trollCompiler( NULL )
+	namespace ElypseRW
 	{
-	}
-
-	TrollScriptBlock::~TrollScriptBlock()
-	{
-	}
-
-	ScriptBlock * TrollScriptBlock::_initialise( ScriptCompiler * p_compiler, BlockType p_type,
-			unsigned int p_lineNum , unsigned int p_depth,
-			ScriptBlock * p_parent )
-	{
-		m_trollCompiler = static_cast<TrollScriptCompiler *>( p_compiler );
-		m_compiler = p_compiler;
-		return ScriptBlock::_initialise( p_compiler, p_type, p_lineNum, p_depth, p_parent );
-	}
-
-	bool TrollScriptBlock::_parseString()
-	{
-		return ScriptBlock::_parseString();
-	}
-
-	bool TrollScriptBlock::_parseNumeral()
-	{
-		return ScriptBlock::_parseNumeral();
-	}
-
-	bool TrollScriptBlock::_parseOperator()
-	{
-		VERBOSE_COMPILATOR( "_parseOperator_TROLL" );
-		bool l_commented = false;
-		bool l_cStyleComment = false;
-		unsigned int l_begin;
-		char l_previousChar = '\0';
-
-		while ( ! m_trollCompiler->_eof() )
+		TrollScriptBlock::TrollScriptBlock()
+			: ScriptBlock()
+			, m_trollCompiler( NULL )
 		{
-			char l_currentChar = m_trollCompiler->_getNextChar();
+		}
 
-			if ( ! l_commented )
+		TrollScriptBlock::~TrollScriptBlock()
+		{
+		}
+
+		ScriptBlock * TrollScriptBlock::_initialise( ScriptCompiler * p_compiler, BlockType p_type, uint32_t p_lineNum, uint32_t p_depth, ScriptBlock * p_parent )
+		{
+			m_trollCompiler = static_cast< TrollScriptCompiler * >( p_compiler );
+			m_compiler = p_compiler;
+			return ScriptBlock::_initialise( p_compiler, p_type, p_lineNum, p_depth, p_parent );
+		}
+
+		bool TrollScriptBlock::_parseString()
+		{
+			return ScriptBlock::_parseString();
+		}
+
+		bool TrollScriptBlock::_parseNumeral()
+		{
+			return ScriptBlock::_parseNumeral();
+		}
+
+		bool TrollScriptBlock::_parseOperator()
+		{
+			VERBOSE_COMPILATOR( "_parseOperator_TROLL" );
+			bool l_commented = false;
+			bool l_cStyleComment = false;
+			uint32_t l_begin;
+			char l_previousChar = '\0';
+
+			while ( !m_trollCompiler->_eof() )
 			{
-				if ( _checkOperator( l_currentChar ) )
+				char l_currentChar = m_trollCompiler->_getNextChar();
+
+				if ( !l_commented )
 				{
-					if ( l_currentChar == '*' && l_previousChar == '/' )
+					if ( _checkOperator( l_currentChar ) )
 					{
-						l_begin = m_trollCompiler->GetCurrentCharIndex();
-						l_commented = true;
-						l_cStyleComment = false;
-						m_contents.erase( m_contents.end() - 1 );
-					}
-					else if ( l_currentChar == '/' && l_previousChar == '/' )
-					{
-						l_begin = m_trollCompiler->GetCurrentCharIndex();
-						l_commented = true;
-						l_cStyleComment = true;
-						m_contents.erase( m_contents.end() - 1 );
+						if ( l_currentChar == '*' && l_previousChar == '/' )
+						{
+							l_begin = m_trollCompiler->GetCurrentCharIndex();
+							l_commented = true;
+							l_cStyleComment = false;
+							m_contents.erase( m_contents.end() - 1 );
+						}
+						else if ( l_currentChar == '/' && l_previousChar == '/' )
+						{
+							l_begin = m_trollCompiler->GetCurrentCharIndex();
+							l_commented = true;
+							l_cStyleComment = true;
+							m_contents.erase( m_contents.end() - 1 );
+						}
+						else
+						{
+							m_contents.push_back( l_currentChar );
+						}
 					}
 					else
 					{
-						m_contents.push_back( l_currentChar );
-					}
-				}
-				else
-				{
-					m_trollCompiler->_putBack( l_currentChar );
+						m_trollCompiler->_putBack( l_currentChar );
 
-					if ( m_contents.empty() )
-					{
-						return false;
-					}
-					else
-					{
-						_compileOperatorBlock();
-						return true;
-					}
-				}
-			}
-			else
-			{
-				if ( l_currentChar == '\n' )
-				{
-					m_trollCompiler->_newLine();
-
-					if ( l_cStyleComment )
-					{
 						if ( m_contents.empty() )
 						{
 							return false;
@@ -145,81 +126,100 @@ BEGIN_TROLL_ELYPSE_NAMESPACE
 						else
 						{
 							_compileOperatorBlock();
-							return false;
+							return true;
 						}
 					}
 				}
-				else if ( !l_cStyleComment && l_currentChar == '/' && l_previousChar == '*' )
+				else
 				{
-					l_commented = false;
+					if ( l_currentChar == '\n' )
+					{
+						m_trollCompiler->_newLine();
+
+						if ( l_cStyleComment )
+						{
+							if ( m_contents.empty() )
+							{
+								return false;
+							}
+							else
+							{
+								_compileOperatorBlock();
+								return false;
+							}
+						}
+					}
+					else if ( !l_cStyleComment && l_currentChar == '/' && l_previousChar == '*' )
+					{
+						l_commented = false;
+					}
 				}
+
+				l_previousChar = l_currentChar;
 			}
 
-			l_previousChar = l_currentChar;
+			COMPILE_ERROR( "Unexpected end of file while parsing an operator block" );
+			return false;
 		}
 
-		COMPILE_ERROR( "Unexpected end of file while parsing an operator block" );
-		return false;
-	}
-
-	bool TrollScriptBlock::_parseSimpleQuote()
-	{
-		VERBOSE_COMPILATOR( "TrollScriptBlock _parseSimpleQuote" );
-		unsigned int l_begin = m_trollCompiler->GetCurrentCharIndex();
-
-		while ( ! m_trollCompiler->_eof() )
+		bool TrollScriptBlock::_parseSimpleQuote()
 		{
-			char l_currentChar = m_trollCompiler->_getNextChar();
+			VERBOSE_COMPILATOR( "TrollScriptBlock _parseSimpleQuote" );
+			uint32_t l_begin = m_trollCompiler->GetCurrentCharIndex();
 
-			if ( _checkSimpleQuote( l_currentChar ) )
+			while ( !m_trollCompiler->_eof() )
 			{
-				if ( m_contents.size() == 1 )
+				char l_currentChar = m_trollCompiler->_getNextChar();
+
+				if ( _checkSimpleQuote( l_currentChar ) )
 				{
-					m_compiledScript = m_trollCompiler->GetFlyweight( m_contents[0] );
-				}
-				else if ( m_contents.size() > 1 )
-				{
-					m_compiledScript = m_trollCompiler->GetFlyweight( m_contents );
+					if ( m_contents.size() == 1 )
+					{
+						m_compiledScript = m_trollCompiler->GetFlyweight( m_contents[0] );
+					}
+					else if ( m_contents.size() > 1 )
+					{
+						m_compiledScript = m_trollCompiler->GetFlyweight( m_contents );
+					}
+					else
+					{
+						COMPILE_ERROR( "Empty simple quotes ( '' )are not allowed." );
+					}
+
+					return true;
 				}
 				else
 				{
-					COMPILE_ERROR( "Empty simple quotes ( '' )are not allowed." );
+					m_contents.push_back( l_currentChar );
 				}
+			}
 
-				return true;
-			}
-			else
-			{
-				m_contents.push_back( l_currentChar );
-			}
+			COMPILE_ERROR( "Mismatched single quotes '' within file" );
+			return false;
 		}
 
-		COMPILE_ERROR( "Mismatched single quotes '' within file" );
-		return false;
-	}
-
-	bool TrollScriptBlock::_parseDoubleQuote()
-	{
-		VERBOSE_COMPILATOR( "TrollScriptBlock _parseDoubleQuote" );
-		unsigned int l_begin = m_trollCompiler->GetCurrentCharIndex();
-
-		while ( ! m_trollCompiler->_eof() )
+		bool TrollScriptBlock::_parseDoubleQuote()
 		{
-			char l_currentChar = m_trollCompiler->_getNextChar();
+			VERBOSE_COMPILATOR( "TrollScriptBlock _parseDoubleQuote" );
+			uint32_t l_begin = m_trollCompiler->GetCurrentCharIndex();
 
-			if ( _checkDoubleQuote( l_currentChar ) )
+			while ( !m_trollCompiler->_eof() )
 			{
-				m_compiledScript = m_trollCompiler->GetFlyweight( m_contents );
-				return true;
+				char l_currentChar = m_trollCompiler->_getNextChar();
+
+				if ( _checkDoubleQuote( l_currentChar ) )
+				{
+					m_compiledScript = m_trollCompiler->GetFlyweight( m_contents );
+					return true;
+				}
+				else
+				{
+					m_contents.push_back( l_currentChar );
+				}
 			}
-			else
-			{
-				m_contents.push_back( l_currentChar );
-			}
+
+			COMPILE_ERROR( "Mismatched double quotes \"\" within file" );
+			return false;
 		}
-
-		COMPILE_ERROR( "Mismatched double quotes \"\" within file" );
-		return false;
 	}
 }
-END_TROLL_ELYPSE_NAMESPACE

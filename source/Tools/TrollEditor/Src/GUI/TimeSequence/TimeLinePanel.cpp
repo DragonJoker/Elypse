@@ -24,112 +24,118 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "TimeLineContainer.h"
 #include "SequencePanel.h"
 #include "Project/Temporal/Sequence.h"
-#include "GUI/MainFrame.h"
+#include "GUI/ProjectFrame.h"
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	BEGIN_EVENT_TABLE( TimeLinePanel, wxPanel )
-	END_EVENT_TABLE()
-
-	TimeLinePanel::TimeLinePanel( wxWindow * p_parent, wxWindowID p_id, const wxPoint & p_position, const wxSize & p_size )
-		: wxPanel( p_parent, p_id, p_position, p_size )
-		, m_totalWidth( p_size.x )
-		, m_totalHeight( p_size.y )
-		, m_currentTop( 0 )
-		, m_currentLeft( 0 )
-		, m_displayedSequences( 0 )
+	namespace GUI
 	{
-		SequencePanel * l_sequencePanel;
-
-		for ( unsigned int i = 0 ; i < 20 ; i++ )
+		namespace Time
 		{
-			l_sequencePanel = new SequencePanel( this, wxID_ANY, wxPoint( 0, 0 ), wxSize( 200, 20 ) );
-			l_sequencePanel->Hide();
-			m_sequences.push_back( l_sequencePanel );
-		}
+			BEGIN_EVENT_TABLE( TimeLinePanel, wxPanel )
+			END_EVENT_TABLE()
 
-		SetBackgroundColour( wxColour( 255, 255, 255 ) );
-	}
-
-	TimeLinePanel::~TimeLinePanel()
-	{
-	}
-
-	void TimeLinePanel::UpdateSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence )
-	{
-		auto && l_it = m_alreadyAddedSequences.find( p_sequence->Object::GetObjectName() );
-
-		if ( l_it != m_alreadyAddedSequences.end() )
-		{
-			wxPoint l_position( int( p_sequence->GetStartTime() * 100 ), p_sequence->GetLinePanel()->GetPosition().y );
-			wxSize l_size( int( p_sequence->GetTotalLength() * 100 ), 80 );
-			l_it = m_alreadyAddedSequences.begin();
-			m_totalWidth = 0;
-
-			for ( ; l_it != m_alreadyAddedSequences.end() ; ++l_it )
+			TimeLinePanel::TimeLinePanel( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id, wxPoint const & p_position, wxSize const & p_size )
+				: wxPanel( p_parent, p_id, p_position, p_size )
+				, m_totalWidth( p_size.x )
+				, m_totalHeight( p_size.y )
+				, m_currentTop( 0 )
+				, m_currentLeft( 0 )
+				, m_displayedSequences( 0 )
+				, m_projectFrame{ p_projectFrame }
 			{
-				m_totalWidth = max <int>( m_totalWidth, l_it->second->GetLinePanel()->GetPosition().x + l_it->second->GetLinePanel()->GetSize().x );
+				SequencePanel * l_sequencePanel;
+
+				for ( uint32_t i = 0; i < 20; i++ )
+				{
+					l_sequencePanel = new SequencePanel( this, m_projectFrame, wxID_ANY, wxPoint( 0, 0 ), wxSize( 200, 20 ) );
+					l_sequencePanel->Hide();
+					m_sequences.push_back( l_sequencePanel );
+				}
+
+				SetBackgroundColour( wxColour( 255, 255, 255 ) );
 			}
 
-			GUI::MainFrame::GetInstance()->UpdateSequence( m_totalWidth, m_totalHeight );
-		}
-	}
-
-	void TimeLinePanel::UpdateSequences( float p_time )
-	{
-		auto && l_it = m_alreadyAddedSequences.begin();
-
-		for ( ; l_it != m_alreadyAddedSequences.end() ; ++l_it )
-		{
-			l_it->second->Update( p_time );
-		}
-	}
-
-	LinePanel * TimeLinePanel::GetSequencePanel( const wxString & p_name )
-	{
-		auto && l_it = m_alreadyAddedSequences.find( p_name );
-
-		if ( l_it != m_alreadyAddedSequences.end() )
-		{
-			return l_it->second->GetLinePanel();
-		}
-
-		return NULL;
-	}
-
-	TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * TimeLinePanel::AddSequence( TROLL_PROJECT_TEMPORAL_NAMESPACE::TrollSequence * p_sequence )
-	{
-		if ( m_displayedSequences >= 20 )
-		{
-			return NULL;
-		}
-
-		if ( m_alreadyAddedSequences.find( p_sequence->GetObjectName() ) == m_alreadyAddedSequences.end() )
-		{
-			SequencePanel * l_sequencePanel = m_sequences[m_displayedSequences++];
-			l_sequencePanel->SetSequence( p_sequence );
-			l_sequencePanel->SetPosition( wxPoint( m_currentLeft, m_currentTop ) );
-			wxSize l_size = l_sequencePanel->GetSize();
-			m_alreadyAddedSequences.insert( std::make_pair( p_sequence->GetObjectName(), p_sequence ) );
-			//m_currentLeft += l_size.x;
-			m_currentTop += l_size.y;
-
-			if ( m_currentLeft + l_size.x > m_totalWidth )
+			TimeLinePanel::~TimeLinePanel()
 			{
-				m_totalWidth = m_currentLeft + l_size.x;
 			}
 
-			if ( m_currentTop > m_totalHeight )
+			void TimeLinePanel::UpdateSequence( ProjectComponents::Temporal::TrollSequence * p_sequence )
 			{
-				m_totalHeight = m_currentTop;
+				auto && l_it = m_alreadyAddedSequences.find( p_sequence->Object::GetObjectName() );
+
+				if ( l_it != m_alreadyAddedSequences.end() )
+				{
+					wxPoint l_position( int( p_sequence->GetStartTime() * 100 ), p_sequence->GetLinePanel()->GetPosition().y );
+					wxSize l_size( int( p_sequence->GetTotalLength() * 100 ), 80 );
+					l_it = m_alreadyAddedSequences.begin();
+					m_totalWidth = 0;
+
+					for ( ; l_it != m_alreadyAddedSequences.end(); ++l_it )
+					{
+						m_totalWidth = max <int>( m_totalWidth, l_it->second->GetLinePanel()->GetPosition().x + l_it->second->GetLinePanel()->GetSize().x );
+					}
+
+					m_projectFrame->UpdateSequence( m_totalWidth, m_totalHeight );
+				}
 			}
 
-			std::cout << "TimeLinePanel::AddSequence - Total width : " << m_totalWidth << " - Total Height : " << m_totalHeight << "\n";
-			SetSize( m_totalWidth + 20, m_totalHeight );
-			return p_sequence;
-		}
+			void TimeLinePanel::UpdateSequences( float p_time )
+			{
+				auto && l_it = m_alreadyAddedSequences.begin();
 
-		return m_alreadyAddedSequences.find( p_sequence->GetObjectName() )->second;
+				for ( ; l_it != m_alreadyAddedSequences.end(); ++l_it )
+				{
+					l_it->second->Update( p_time );
+				}
+			}
+
+			LinePanel * TimeLinePanel::GetSequencePanel( wxString const & p_name )
+			{
+				auto && l_it = m_alreadyAddedSequences.find( p_name );
+
+				if ( l_it != m_alreadyAddedSequences.end() )
+				{
+					return l_it->second->GetLinePanel();
+				}
+
+				return NULL;
+			}
+
+			ProjectComponents::Temporal::TrollSequence * TimeLinePanel::AddSequence( ProjectComponents::Temporal::TrollSequence * p_sequence )
+			{
+				if ( m_displayedSequences >= 20 )
+				{
+					return NULL;
+				}
+
+				if ( m_alreadyAddedSequences.find( p_sequence->GetObjectName() ) == m_alreadyAddedSequences.end() )
+				{
+					SequencePanel * l_sequencePanel = m_sequences[m_displayedSequences++];
+					l_sequencePanel->SetSequence( p_sequence );
+					l_sequencePanel->SetPosition( wxPoint( m_currentLeft, m_currentTop ) );
+					wxSize l_size = l_sequencePanel->GetSize();
+					m_alreadyAddedSequences.insert( std::make_pair( p_sequence->GetObjectName(), p_sequence ) );
+					//m_currentLeft += l_size.x;
+					m_currentTop += l_size.y;
+
+					if ( m_currentLeft + l_size.x > m_totalWidth )
+					{
+						m_totalWidth = m_currentLeft + l_size.x;
+					}
+
+					if ( m_currentTop > m_totalHeight )
+					{
+						m_totalHeight = m_currentTop;
+					}
+
+					std::cout << "TimeLinePanel::AddSequence - Total width : " << m_totalWidth << " - Total Height : " << m_totalHeight << "\n";
+					SetSize( m_totalWidth + 20, m_totalHeight );
+					return p_sequence;
+				}
+
+				return m_alreadyAddedSequences.find( p_sequence->GetObjectName() )->second;
+			}
+		}
 	}
 }
-END_TROLL_GUI_TIME_NAMESPACE

@@ -104,7 +104,7 @@ void ScriptEngine::Execute( ScriptNode * p_node )
 	}
 }
 
-ScriptNode * ScriptEngine::GetKeyboardBind( unsigned int p_keyCode, unsigned int p_bindType )const
+ScriptNode * ScriptEngine::GetKeyboardBind( uint32_t p_keyCode, uint32_t p_bindType )const
 {
 	return m_compiler->m_keyboardBinds[p_bindType][p_keyCode];
 }
@@ -114,7 +114,7 @@ ScriptNode * ScriptEngine::CompileScript( String & p_scriptString )
 	return m_compiler->CompileScript( p_scriptString );
 }
 
-ScriptNode * ScriptEngine::GetVariable( const String & p_variableName )const
+ScriptNode * ScriptEngine::GetVariable( String const & p_variableName )const
 {
 	return m_compiler->GetProgramConstant( p_variableName );
 }
@@ -141,7 +141,7 @@ void ScriptEngine::LoadZone( Zone * p_zone )
 	{
 		m_loadingBar->SetWindow( m_context->emuseInstance->GetWindow() );
 		m_loadingBar->finish();
-		m_loadingBar->start( static_cast<unsigned short>( p_zone->m_dataFiles.size() ), static_cast<unsigned short>( p_zone->m_dataFiles.size() ), 0.1f );
+		m_loadingBar->start( uint16_t( p_zone->m_dataFiles.size() ), uint16_t( p_zone->m_dataFiles.size() ), 0.1f );
 	}
 
 	EMUSE_LOG_MESSAGE_DEBUG( "Load zone start2 : " + p_zone->GetName() );
@@ -178,7 +178,7 @@ void ScriptEngine::LoadZone( Zone * p_zone )
 	}
 
 	EMUSE_LOG_MESSAGE_DEBUG( "Load zone start3 : " + p_zone->GetName() );
-	m_context->universe = p_zone->GetOwner();
+	m_context->universe = p_zone->GetOwner()->shared_from_this();
 	m_context->scene = p_zone;
 	m_context->sceneManager = m_context->universe->GetManager();
 
@@ -238,7 +238,7 @@ void ScriptEngine::UnloadZone( Zone * p_zone )
 	}
 }
 
-void ScriptEngine::ScriptError( ScriptNode * p_node, const String & p_string )
+void ScriptEngine::ScriptError( ScriptNode * p_node, String const & p_string )
 {
 	EMUSE_LOG_MESSAGE_RELEASE( String( "Runtime Error Line # " ) + StringConverter::toString( p_node->m_createdAtLine ) + " @ file " + ( p_node->m_file != NULL ? p_node->m_file->GetName() : "none" ) + " : " + p_string );
 }
@@ -249,7 +249,7 @@ void ScriptEngine::UseContext()const
 	ScriptCompiler::SetSingleton( m_compiler );
 }
 
-ScriptNode * ScriptEngine::GetFunction( const String & p_functionName )const
+ScriptNode * ScriptEngine::GetFunction( String const & p_functionName )const
 {
 	return m_compiler->GetUsableFunctionNode( p_functionName );
 }

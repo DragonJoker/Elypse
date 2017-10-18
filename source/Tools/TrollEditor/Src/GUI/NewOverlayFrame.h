@@ -23,40 +23,42 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/frame.h>
 
 #include "Project/2D/Module_2D.h"
+#include "GUI/Properties/Module_Properties.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class NewOverlayFrame
-		: public wxFrame
+	namespace GUI
 	{
-	public:
-		NewOverlayFrame( wxWindow * p_parent, const wxPoint & p_position, EMOverlay * p_parentOverlay, const wxString & p_name );
-
-		inline bool MustBeClosed()const
+		class NewOverlayFrame
+			: public wxFrame
 		{
-			return m_mustBeClosed;
-		}
+		public:
+			NewOverlayFrame( ProjectFrame * p_parent, wxPoint const & p_position, EMOverlay * p_parentOverlay, wxString const & p_name );
 
-	private:
-		void _getOverlayTemplates( wxArrayString & p_array );
+			inline bool MustBeClosed()const
+			{
+				return m_mustBeClosed;
+			}
 
-		DECLARE_EVENT_TABLE()
-		void OnSelectTemplate( wxCommandEvent & p_event );
-		void OnOK( wxCommandEvent & p_event );
-		void OnCancel( wxCommandEvent & p_event );
+		private:
+			void _getOverlayTemplates( wxArrayString & p_array );
 
-	private:
-		TROLL_PROJECT_2D_NAMESPACE::TrollOverlay * m_overlay;
-		EMOverlay * m_parentOverlay;
-		EMOverlayGroup * m_parentGroup;
-		EMGui * m_gui;
-		wxPanel * m_propertiesPanel;
-		bool m_mustBeClosed;
-		wxString m_overlayName;
-	};
+			DECLARE_EVENT_TABLE()
+			void OnSelectTemplate( wxCommandEvent & p_event );
+			void OnOK( wxCommandEvent & p_event );
+			void OnCancel( wxCommandEvent & p_event );
+
+		private:
+			ProjectComponents::Objects2D::TrollOverlay * m_overlay;
+			EMOverlay * m_parentOverlay;
+			EMOverlayGroup * m_parentGroup;
+			EMGui * m_gui;
+			Properties::PropertiesHolder * m_propertiesPanel;
+			bool m_mustBeClosed;
+			wxString m_overlayName;
+			ProjectFrame * m_projectFrame;
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
-
 
 #endif
-

@@ -49,29 +49,29 @@ namespace General
 		public:
 			bool Initialise();
 			void Close();
-			CURLcode OpenUrl( const std::string & p_url, size_t ( * p_function )( void *, size_t, size_t, void * ), void * p_data, const std::string & p_postParams = std::string() );
+			CURLcode OpenUrl( std::string const & p_url, size_t ( * p_function )( void *, size_t, size_t, void * ), void * p_data, std::string const & p_postParams = std::string() );
 
-			CURLcode GetStringFromUrl( const std::string & p_url, std::string & p_contents, const std::string & p_postParams = std::string() );
-			CURLcode DownloadFile( const std::string & p_url, const std::string & p_filename, const std::string & p_postParams = std::string() );
+			CURLcode GetStringFromUrl( std::string const & p_url, std::string & p_contents, std::string const & p_postParams = std::string() );
+			CURLcode DownloadFile( std::string const & p_url, std::string const & p_filename, std::string const & p_postParams = std::string() );
 
 			std::string GetLastContentType();
-			std::string GetContentType( const std::string & p_url, const std::string & p_postParams = std::string() );
+			std::string GetContentType( std::string const & p_url, std::string const & p_postParams = std::string() );
 
-			CURLcode SetCookieFile( const char * p_filename );
-			CURLcode SetCookieString( const char * p_cookieString );
+			CURLcode SetCookieFile( char const * const p_filename );
+			CURLcode SetCookieString( char const * const p_cookieString );
 
 		public:
 			static std::string CurlError( CURLcode p_errorCode );
-			static std::string MimeEncode( const std::string & p_string );
+			static std::string MimeEncode( std::string const & p_string );
 
 		private:
-			static size_t _getString( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
-			static size_t _download( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
-			static size_t _null( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
+			static size_t doGetString( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
+			static size_t doDownload( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
+			static size_t doNull( void * p_buffer, size_t p_size, size_t p_numItems, void * p_data );
 
 		private:
-			CURL * m_handle;
-			bool m_initialised;
+			CURL * m_handle{ nullptr };
+			bool m_initialised{ false };
 		};
 	}
 }

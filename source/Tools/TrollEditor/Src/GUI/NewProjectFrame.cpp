@@ -1,254 +1,242 @@
-﻿/*
-This source file is part of ElypsePlayer (https://sourceforge.net/projects/elypse/)
+#include "NewProjectFrame.h"
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License along with
-the program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place - Suite 330, Boston, MA 02111-1307, USA, or go to
-http://www.gnu.org/copyleft/lesser.txt.
-*/
-#include "TrollEditorPch.h"
-
-#include "GUI/NewProjectFrame.h"
-
-#include "GUI/MainFrame.h"
+#include "Properties/Common/AdditionalProperties.h"
+#include "Properties/Common/SizeProperties.h"
+#include "ScriptDialog.h"
+#include "MainFrame.h"
 
 #include "Project/Project.h"
 
-BEGIN_TROLL_GUI_NAMESPACE
+#include "TrollEditorApplication.h"
+
+namespace Troll
 {
-	const wxString DEFAULT_PROJECT_NAME = _( "Project name" );
-	const wxString DEFAULT_SCENE_NAME = _( "Scene name" );
-	const wxString DEFAULT_FOLDER = _( "Path" );
+	using namespace ProjectComponents;
 
-	enum NewProjectFrameIDs
+	namespace GUI
 	{
-		ID_pfBtn,
-		ID_ppETxt,
-		ID_ppSTxt,
-		ID_clBtn,
-		ID_okBtn,
-		ID_pnETxt,
-		ID_pnSTxt,
-		ID_bgBtn,
-		ID_bgRBox,
-		ID_aaRBox,
-		ID_aaSTxt,
-		ID_msETxt,
-		ID_msSTxt,
-		ID_shCkb,
-		ID_bgSTxt,
-		ID_pwTxt,
-		ID_phTxt
-	};
+		using namespace Properties;
 
-	BEGIN_EVENT_TABLE( NewProjectFrame, wxDialog )
-		EVT_COMBOBOX( ID_bgRBox, NewProjectFrame::OnSelectBackgroundType )
-		EVT_BUTTON( ID_bgBtn, NewProjectFrame::OnSelectBackgroundButton )
-		EVT_CHECKBOX( ID_shCkb, NewProjectFrame::OnShadowsChange )
-		EVT_COMBOBOX( ID_aaRBox, NewProjectFrame::OnAntiAliasingChange )
-		EVT_BUTTON( ID_okBtn, NewProjectFrame::OnOK )
-		EVT_BUTTON( ID_clBtn, NewProjectFrame::OnCancel )
-		EVT_BUTTON( ID_pfBtn, NewProjectFrame::OnBrowse )
-	END_EVENT_TABLE()
-	
-	NewProjectFrame::NewProjectFrame( wxWindow * p_parent, const wxString & title, const wxPoint & pos )
-		: wxDialog( p_parent, -1, title, pos, wxSize( 220, 300 ) )
-		, m_antiAliasing( TROLL_PROJECT_NAMESPACE::aa0 )
-		, m_shadows( false )
-		, m_backgroundType( TROLL_PROJECT_NAMESPACE::bgColour )
-		, m_bgColour( wxT( "black" ) )
-	{
-		SetClientSize( 240, 270 );
-		wxSize l_size = GetClientSize();
-		wxPoint l_position( l_size.x / 2, 10 );
-		wxPoint l_ptOffset( 0, 25 );
-		wxArrayString l_values;
-		l_values.Add( _( "Colour" ) );
-		l_values.Add( _( "Image" ) );
-		wxString l_strValue = _( "Colour" );
-		wxArrayString l_aaChoices;
-		l_aaChoices.Add( _( "None" ) );
-		l_aaChoices.Add( _( "2x" ) );
-		l_aaChoices.Add( _( "4x" ) );
-		wxString l_strAaValue = _( "None" );
-		m_projectName = BuildTextCtrl( this, l_position, ID_pnETxt, _( "Project Nmae:" ), DEFAULT_PROJECT_NAME );
-		l_position += l_ptOffset;
-		m_folderButton = BuildButton( this, l_position, ID_pfBtn, _( "Project Folder" ), _( "Browse..." ) );
-		l_position += l_ptOffset;
-		m_projectFolder = new wxTextCtrl( this, ID_ppETxt, DEFAULT_FOLDER, l_position - wxPoint( ( l_size.x / 2 ) - 5, 0 ), wxSize( l_size.x - 10, 20 ), wxBORDER_SIMPLE | wxTE_PROCESS_ENTER );
-		l_position += l_ptOffset;
-		m_bgRBox = BuildComboBox( this, l_position, ID_bgRBox, _( "Background Type:" ), l_values, l_strValue );
-		l_position += l_ptOffset;
-		m_bgSelect = BuildButton( this, l_position, ID_bgBtn, _( "Choose" ), l_strValue );
-		l_position += l_ptOffset;
-		m_mainSceneName = BuildTextCtrl( this, l_position, ID_msETxt, _( "Main Scene" ), DEFAULT_SCENE_NAME );
-		l_position += l_ptOffset;
-		m_shCkb = new wxCheckBox( this, ID_shCkb, _( "Shadows" ), l_position - wxPoint( ( l_size.x / 2 ) - 5, 0 ) );
-		l_position += l_ptOffset;
-		m_antiAlias = BuildComboBox( this, l_position, ID_aaRBox, _( "Anti Aliasing : " ), l_aaChoices, l_strAaValue );
-		l_position += l_ptOffset;
-		wxStaticText * l_text = new wxStaticText( this, wxID_ANY, _( "Dimensions" ), wxPoint( 0, l_position.y + 3 ) );
-		m_width = new wxTextCtrl( this, ID_pwTxt, wxT( "640" ), wxPoint( 70, l_position.y ), wxSize( 30, 20 ), wxBORDER_SIMPLE | wxTE_PROCESS_ENTER );
-		wxStaticText * l_x = new wxStaticText( this, wxID_ANY, wxT( "x" ), wxPoint( 105, l_position.y + 3 ) );
-		m_height = new wxTextCtrl( this, ID_phTxt, wxT( "480" ), wxPoint( 115, l_position.y ), wxSize( 30, 20 ), wxBORDER_SIMPLE | wxTE_PROCESS_ENTER );
-		l_position.x = 20;
-		m_okBtn = new wxButton( this, ID_okBtn, _( "OK" ), l_position += wxPoint( 0, 25 ), wxSize( 70, 20 ) );
-		m_cancelBtn = new wxButton( this, ID_clBtn, _( "Cancel" ), l_position += wxPoint( 90, 0 ), wxSize( 70, 20 ) );
-	}
-
-
-
-	NewProjectFrame::~NewProjectFrame()
-	{
-	}
-
-
-
-	void NewProjectFrame::OnSelectBackgroundType( wxCommandEvent & p_event )
-	{
-		if ( m_bgRBox->GetValue() == _( "Colour" ) )
+		namespace
 		{
-			m_backgroundType = TROLL_PROJECT_NAMESPACE::bgColour;
-		}
-		else
-		{
-			m_backgroundType = TROLL_PROJECT_NAMESPACE::bgImage;
-		}
+			wxString PROPERTY_CATEGORY_PROJECT;
+			wxString PROPERTY_PROJECT_RESOLUTION;
+			wxString PROPERTY_PROJECT_BACKGROUND_TYPE;
+			std::array< wxString, BackgroundTypeCount > PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS;
+			std::array< int, BackgroundTypeCount > PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES;
+			wxString PROPERTY_PROJECT_BACKGROUND_SELECT;
+			wxString PROPERTY_PROJECT_SHADOWS;
+			wxString PROPERTY_PROJECT_ANTIALIASING;
+			std::array< wxString, AntialiasingCount > PROPERTY_PROJECT_ANTIALIASING_TEXTS;
+			std::array< int, AntialiasingCount > PROPERTY_PROJECT_ANTIALIASING_VALUES;
+			wxString PROPERTY_PROJECT_CONSOLE;
+			wxString PROPERTY_PROJECT_SHOW_FPS;
+			wxString PROPERTY_PROJECT_STARTUP_SCRIPT;
+			wxString PROPERTY_PROJECT_NAME;
+			wxString PROPERTY_PROJECT_MAIN_SCENE_NAME;
+			wxString PROPERTY_PROJECT_FOLDER;
 
-		m_bgSelect->SetLabel( m_bgRBox->GetValue() );
-	}
+			const wxString DEFAULT_PROJECT_NAME = _( "Project name" );
+			const wxString DEFAULT_SCENE_NAME = _( "Scene name" );
+			const wxString DEFAULT_FOLDER = _( "Path" );
 
-
-
-	void NewProjectFrame::OnSelectBackgroundButton( wxCommandEvent & p_event )
-	{
-		if ( m_backgroundType == TROLL_PROJECT_NAMESPACE::bgColour )
-		{
-			wxColourDialog l_colourDialor( this );
-
-			if ( l_colourDialor.ShowModal() )
+			ProjectComponents::Project & doCreateProject( ProjectComponents::ProjectSPtr & project )
 			{
-				wxColourData retData = l_colourDialor.GetColourData();
-				m_bgColour = retData.GetColour().GetAsString();
+				project = std::make_shared< ProjectComponents::Project >();
+				return *project;
 			}
 		}
-		else
-		{
-			wxString l_imagePath = wxFileSelector( _( "Choose an image" ), wxEmptyString, wxEmptyString, wxEmptyString,
-												   wxString() << _( "BMP Files" ) << wxT( " (*.bmp)|*.bmp|" ) << _( "PNG Files" ) << wxT( " (*.png)|*.png|" ) << _( "JPEG Files" ) << wxT( " (*.jpg)|*.jpg" ) );
 
-			if ( ! l_imagePath.empty() )
+		NewProjectProperties::NewProjectProperties()
+			: ProjectProperties{ doCreateProject( m_project ) }
+			, m_name{ DEFAULT_PROJECT_NAME }
+			, m_sceneName{ DEFAULT_SCENE_NAME }
+			, m_path{ DEFAULT_FOLDER }
+		{
+			PROPERTY_CATEGORY_PROJECT = _( "New Project" );
+			PROPERTY_PROJECT_RESOLUTION = _( "Resolution" );
+			PROPERTY_PROJECT_BACKGROUND_TYPE = _( "Background type" );
+			PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS = { _( "Colour" ), _( "Image" ) };
+			PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES = { bgColour, bgImage };
+			PROPERTY_PROJECT_BACKGROUND_SELECT = _( "Choose" );
+			PROPERTY_PROJECT_SHADOWS = _( "Shadows" );
+			PROPERTY_PROJECT_ANTIALIASING = _( "Anti Aliasing" );
+			PROPERTY_PROJECT_ANTIALIASING_TEXTS = { _( "None" ), _( "2x" ), _( "4x" ) };
+			PROPERTY_PROJECT_ANTIALIASING_VALUES = { aa0, aa2x, aa4x };
+			PROPERTY_PROJECT_CONSOLE = _( "Console" );
+			PROPERTY_PROJECT_SHOW_FPS = _( "Show FPS" );
+			PROPERTY_PROJECT_STARTUP_SCRIPT = _( "Startup Script" );
+			PROPERTY_PROJECT_NAME = _( "Project Name" );
+			PROPERTY_PROJECT_MAIN_SCENE_NAME = _( "Main Scene Name" );
+			PROPERTY_PROJECT_FOLDER = _( "Project Folder" );
+		}
+
+		NewProjectProperties::~NewProjectProperties()
+		{
+		}
+
+		bool NewProjectProperties::OnValidate( wxWindow * p_parent )
+		{
+			if ( m_name.empty() || m_name == DEFAULT_PROJECT_NAME )
 			{
-				m_bgImage = l_imagePath;
+				wxMessageBox( _( "Enter a project name" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, p_parent );
+				return false;
+			}
+
+			if ( m_sceneName.empty() || m_sceneName == DEFAULT_SCENE_NAME )
+			{
+				wxMessageBox( _( "Enter the main scene name" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, p_parent );
+				return false;
+			}
+
+			if ( m_path.empty() || m_path == DEFAULT_FOLDER )
+			{
+				wxMessageBox( _( "Choose the project's folder" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, p_parent );
+				return false;
+			}
+
+			if ( m_path[m_path.size() - 1] != wxT( '\\' ) && m_path[m_path.size() - 1] != wxT( '/' ) )
+			{
+				m_path.Append( wxFileName::GetPathSeparator() );
+			}
+
+			if ( !DirectoryExists( make_string( m_path ) ) )
+			{
+				DirectoryCreate( make_string( m_path ) );
+			}
+
+			if ( m_bgColour.empty() && m_bgImage.empty() )
+			{
+				wxMessageBox( _( "Choose a background colour or image" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, p_parent );
+				return false;
+			}
+
+			if ( m_backgroundType == ProjectComponents::bgColour )
+			{
+				wxGetApp().GetMainFrame()->SetProject( std::make_shared< ProjectComponents::Project >( m_name, m_sceneName, m_path, m_backgroundType, m_bgColour, m_shadows, m_antiAliasing, m_resolution ) );
+			}
+			else
+			{
+				wxGetApp().GetMainFrame()->SetProject( std::make_shared< ProjectComponents::Project >( m_name, m_sceneName, m_path, m_backgroundType, m_bgImage, m_shadows, m_antiAliasing, m_resolution ) );
+			}
+
+			return true;
+		}
+
+		void NewProjectProperties::DoCreateProperties( wxPGEditor * p_editor, wxPropertyGrid * p_grid )
+		{
+			wxPGChoices l_bgTypes{ make_wxArrayString( PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS ), make_wxArrayInt( PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES ) };
+			wxString l_bgType{ PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS[m_backgroundType] };
+			wxPGChoices l_aas{ make_wxArrayString( PROPERTY_PROJECT_ANTIALIASING_TEXTS ), make_wxArrayInt( PROPERTY_PROJECT_ANTIALIASING_VALUES ) };
+			wxString l_aa{ PROPERTY_PROJECT_ANTIALIASING_TEXTS[m_antiAliasing] };
+
+			p_grid->Append( new wxPropertyCategory( PROPERTY_CATEGORY_PROJECT ) );
+			p_grid->Append( new wxStringProperty( PROPERTY_PROJECT_NAME, PROPERTY_PROJECT_NAME ) )->SetValue( m_name );
+			p_grid->Append( new wxStringProperty( PROPERTY_PROJECT_MAIN_SCENE_NAME, PROPERTY_PROJECT_MAIN_SCENE_NAME ) )->SetValue( m_sceneName );
+			p_grid->Append( CreateProperty( PROPERTY_PROJECT_FOLDER, PROPERTY_PROJECT_FOLDER, static_cast< ButtonEventMethod >( &NewProjectProperties::DoSelectFolder ), this, p_editor ) );
+			p_grid->Append( new wxSizeProperty( PROPERTY_PROJECT_RESOLUTION, PROPERTY_PROJECT_RESOLUTION, m_resolution ) );
+			p_grid->Append( new wxEnumProperty( PROPERTY_PROJECT_BACKGROUND_TYPE, PROPERTY_PROJECT_BACKGROUND_TYPE, l_bgTypes ) )->SetValue( l_bgType );
+			p_grid->Append( CreateProperty( PROPERTY_PROJECT_BACKGROUND_SELECT, PROPERTY_PROJECT_BACKGROUND_SELECT, static_cast< ButtonEventMethod >( &NewProjectProperties::DoSelectBackground ), this, p_editor ) );
+			p_grid->Append( new wxBoolProperty( PROPERTY_PROJECT_SHADOWS, PROPERTY_PROJECT_SHADOWS ) )->SetValue( m_shadows );
+			p_grid->Append( new wxEnumProperty( PROPERTY_PROJECT_ANTIALIASING, PROPERTY_PROJECT_ANTIALIASING, l_aas ) )->SetValue( l_aa );
+			p_grid->Append( new wxBoolProperty( PROPERTY_PROJECT_CONSOLE, PROPERTY_PROJECT_CONSOLE ) )->SetValue( m_showDebug );
+			p_grid->Append( new wxBoolProperty( PROPERTY_PROJECT_SHOW_FPS, PROPERTY_PROJECT_SHOW_FPS ) )->SetValue( m_showFps );
+			p_grid->Append( CreateProperty( PROPERTY_PROJECT_STARTUP_SCRIPT, PROPERTY_PROJECT_STARTUP_SCRIPT, static_cast< ButtonEventMethod >( &NewProjectProperties::DoChangeStartupScript ), this, p_editor ) );
+		}
+
+		void NewProjectProperties::DoPropertyChange( wxPropertyGridEvent & p_event )
+		{
+			wxPGProperty * l_property = p_event.GetProperty();
+
+			if ( l_property )
+			{
+				if ( l_property->GetName() == PROPERTY_PROJECT_NAME )
+				{
+					m_name = l_property->GetValueAsString();
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_MAIN_SCENE_NAME )
+				{
+					m_sceneName = l_property->GetValueAsString();
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_RESOLUTION )
+				{
+					m_resolution = wxSizeRefFromVariant( l_property->GetValue() );
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_BACKGROUND_TYPE )
+				{
+					m_backgroundType = ProjectComponents::BackgroundType( GetValue< int >( l_property->GetValue() ) );
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_SHADOWS )
+				{
+					m_shadows = l_property->GetValue();
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_ANTIALIASING )
+				{
+					m_antiAliasing = ProjectComponents::AntiAliasing( GetValue< int >( l_property->GetValue() ) );
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_CONSOLE )
+				{
+					m_showDebug = l_property->GetValue();
+				}
+				else if ( l_property->GetName() == PROPERTY_PROJECT_SHOW_FPS )
+				{
+					m_showFps = l_property->GetValue();
+				}
 			}
 		}
-	}
 
-	void NewProjectFrame::OnShadowsChange( wxCommandEvent & p_event )
-	{
-		m_shadows = m_shCkb->IsChecked();
-	}
+		bool NewProjectProperties::DoSelectFolder( wxPGProperty * p_property )
+		{
+			wxDirDialog l_dialog( NULL, _( "Choose a directory" ) );
 
-	void NewProjectFrame::OnAntiAliasingChange( wxCommandEvent & p_event )
-	{
-		if ( m_antiAlias->GetValue() == _( "None" ) )
-		{
-			m_antiAliasing = TROLL_PROJECT_NAMESPACE::aa0;
-		}
-		else if ( m_antiAlias->GetValue() == _( "2x" ) )
-		{
-			m_antiAliasing = TROLL_PROJECT_NAMESPACE::aa2x;
-		}
-		else
-		{
-			m_antiAliasing = TROLL_PROJECT_NAMESPACE::aa4x;
-		}
-	}
+			if ( l_dialog.ShowModal() == wxID_OK )
+			{
+				m_path = l_dialog.GetPath();
+			}
 
-	void NewProjectFrame::OnOK( wxCommandEvent & p_event )
-	{
-		wxString l_projectName = m_projectName->GetLineText( 0 );
-
-		if ( l_projectName.empty() || l_projectName == DEFAULT_PROJECT_NAME )
-		{
-			wxMessageBox( _( "Enter a project name" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, this );
-			return;
+			return false;
 		}
 
-		wxString l_mainSceneName = m_mainSceneName->GetLineText( 0 );
-
-		if ( l_mainSceneName.empty() || l_mainSceneName == DEFAULT_SCENE_NAME )
+		bool NewProjectProperties::DoSelectBackground( wxPGProperty * p_property )
 		{
-			wxMessageBox( _( "Enter the main scene name" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, this );
-			return;
+			if ( m_backgroundType == ProjectComponents::bgColour )
+			{
+				wxColourDialog l_colourDialor;
+
+				if ( l_colourDialor.ShowModal() )
+				{
+					wxColourData retData = l_colourDialor.GetColourData();
+					m_bgColour = retData.GetColour().GetAsString();
+				}
+			}
+			else
+			{
+				wxString l_imagePath = wxFileSelector( _( "Choose an image" ), wxEmptyString, wxEmptyString, wxEmptyString,
+													   wxString() << _( "BMP files" ) << wxT( " (*.bmp)|*.bmp|" ) << _( "PNG files" ) << wxT( " (*.png)|*.png|" ) << _( "JPEG files" ) << wxT( " (*.jpg)|*.jpg" ) );
+
+				if ( !l_imagePath.empty() )
+				{
+					m_bgImage = l_imagePath;
+				}
+			}
+
+			return false;
 		}
 
-		wxString l_projectPath = m_projectFolder->GetLineText( 0 );
-
-		if ( l_projectPath.empty() || l_projectPath == DEFAULT_FOLDER )
+		bool NewProjectProperties::DoChangeStartupScript( wxPGProperty * p_property )
 		{
-			wxMessageBox( _( "Choose the project's folder" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, this );
-			return;
-		}
+			wxString l_value{ m_startupScript };
+			l_value.Replace( ';', ";\n" );
+			ScriptDialog l_dialog{ nullptr, _( "Startup Script" ), _( "Modify the startup script" ), l_value };
 
-		if ( l_projectPath[l_projectPath.size() - 1] != wxT( '\\' ) && l_projectPath[l_projectPath.size() - 1] != wxT( '/' ) )
-		{
-			l_projectPath.Append( wxFileName::GetPathSeparator() );
-		}
+			if ( l_dialog.ShowModal() == wxID_OK )
+			{
+				l_value = l_dialog.GetValue();
+				l_value.Replace( ";\n", ";" );
+				m_startupScript = l_value;
+			}
 
-		if ( ! DirectoryExists( make_string( l_projectPath ) ) )
-		{
-			DirectoryCreate( make_string( l_projectPath ) );
-		}
-
-		if ( m_bgColour.empty() && m_bgImage.empty() )
-		{
-			wxMessageBox( _( "Choose a background colour or image" ), TROLL_EDITOR_ERROR, wxOK | wxICON_EXCLAMATION, this );
-			return;
-		}
-
-		wxSize l_resolution;
-		long l_width, l_height;
-		m_width->GetValue().ToLong( & l_width );
-		m_height->GetValue().ToLong( & l_height );
-		l_resolution = wxSize( l_width, l_height );
-
-		if ( m_backgroundType == TROLL_PROJECT_NAMESPACE::bgColour )
-		{
-			GUI::MainFrame::GetInstance()->SetProject( l_projectName, l_projectPath, l_mainSceneName, m_backgroundType, m_bgColour, m_shadows, m_antiAliasing, l_resolution );
-		}
-		else
-		{
-			GUI::MainFrame::GetInstance()->SetProject( l_projectName, l_projectPath, l_mainSceneName, m_backgroundType, m_bgImage, m_shadows, m_antiAliasing, l_resolution );
-		}
-
-		Hide();
-	}
-
-	void NewProjectFrame::OnCancel( wxCommandEvent & p_event )
-	{
-		Destroy();
-	}
-
-	void NewProjectFrame::OnBrowse( wxCommandEvent & p_event )
-	{
-		wxDirDialog l_dialog( NULL, _( "Choose a directory" ) );
-
-		if ( l_dialog.ShowModal() == wxID_OK )
-		{
-			m_path = l_dialog.GetPath();
-			m_projectFolder->Clear();
-			m_projectFolder->AppendText( m_path );
+			return false;
 		}
 	}
 }
-END_TROLL_GUI_NAMESPACE

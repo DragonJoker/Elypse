@@ -24,21 +24,36 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "GUI/TrollEditorGuiPrerequisites.h"
 
-BEGIN_TROLL_NAMESPACE
+namespace Troll
 {
 	class Application
 		: public wxApp
 	{
+		friend class ProjectFrame;
+
 	public:
 		Application();
 		~Application();
 
 		virtual bool OnInit();
+		virtual int OnExit();
+
+		GUI::MainFrame * GetMainFrame()const
+		{
+			return m_mainFrame;
+		}
+
+		GUI::ProjectFrame * GetProjectFrame()const
+		{
+			return m_projectFrame;
+		}
 
 	public:
-		GUI::MainFrame * m_mainFrame;
+		GUI::MainFrame * m_mainFrame{ nullptr };
+		GUI::ProjectFrame * m_projectFrame{ nullptr };
 	};
 }
-END_TROLL_NAMESPACE
+
+wxDECLARE_APP( Troll::Application );
 
 #endif

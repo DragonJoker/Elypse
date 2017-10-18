@@ -23,22 +23,24 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class TEScrollablePanel
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		TEScrollablePanel( wxWindow * p_parent, wxWindowID p_id, wxPoint p_position, wxSize p_size );
-		~TEScrollablePanel();
+		class TEScrollablePanel
+			: public wxPanel
+		{
+		public:
+			TEScrollablePanel( wxWindow * p_parent, wxWindowID p_id, wxPoint p_position, wxSize p_size );
+			~TEScrollablePanel();
 
-	private:
-		void OnScroll( wxScrollEvent & p_event );
+		private:
+			void OnScroll( wxScrollEvent & p_event );
 
-		DECLARE_EVENT_TABLE()
-	};
+			DECLARE_EVENT_TABLE()
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

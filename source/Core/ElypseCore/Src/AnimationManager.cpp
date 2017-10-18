@@ -30,5 +30,8 @@ AnimationManager::~AnimationManager()
 
 void AnimationManager::Update( Real p_delta )const
 {
-	General::Utils::map::cycle( m_objectMap, & AnimatedObjectGroup::Update, p_delta );
+	for ( auto l_it : m_objectMap )
+	{
+		l_it.second->Update( p_delta );
+	}
 }

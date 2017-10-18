@@ -39,7 +39,7 @@ namespace Elypse
 			bool m_ownsMaterial;
 
 		public:
-			CamTex( const String & p_name, SceneManager * p_sceneManager, Camera * p_camera, unsigned int p_textureWidth, unsigned int p_textureHeight );
+			CamTex( String const & p_name, SceneManager * p_sceneManager, Camera * p_camera, uint32_t p_textureWidth, uint32_t p_textureHeight );
 			~CamTex();
 
 		public:

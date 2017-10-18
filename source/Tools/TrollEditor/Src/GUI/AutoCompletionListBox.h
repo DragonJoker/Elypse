@@ -22,21 +22,23 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/listbox.h>
 
-BEGIN_TROLL_GUI_NAMESPACE
+namespace Troll
 {
-	class AutoCompletionListBox
-		: public wxListBox
+	namespace GUI
 	{
-	public:
-		AutoCompletionListBox( wxWindow * parent, wxWindowID id, const wxPoint & pos, const wxSize & size, const wxArrayString & choices );
+		class AutoCompletionListBox
+			: public wxListBox
+		{
+		public:
+			AutoCompletionListBox( wxWindow * parent, wxWindowID id, wxPoint const & pos, wxSize const & size, const wxArrayString & choices );
 
-	private:
-		DECLARE_EVENT_TABLE()
-		void OnMouseLeftDown( wxMouseEvent & p_event );
-		void OnKeyDown( wxKeyEvent & p_event );
-	};
+		private:
+			DECLARE_EVENT_TABLE()
+			void OnMouseLeftDown( wxMouseEvent & p_event );
+			void OnKeyDown( wxKeyEvent & p_event );
+		};
+	}
 }
-END_TROLL_GUI_NAMESPACE
 
 #endif
 

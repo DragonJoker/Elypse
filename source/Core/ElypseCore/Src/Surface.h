@@ -34,23 +34,23 @@ namespace Elypse
 
 		public:
 			Surface();
-			Surface( const String & p_name, SceneManager * p_manager );
+			Surface( String const & p_name, SceneManager * p_manager );
 			~Surface();
 
 		public:
-			void CreateFromHeightMap( Real * p_heightMap, unsigned int p_width, unsigned int p_height, const String & p_materialName );
+			void CreateFromHeightMap( Real * p_heightMap, uint32_t p_width, uint32_t p_height, String const & p_materialName );
 			void CreateFromSpaceMap( Vector3 * p_spaceMap,
-										unsigned int p_width,
-										unsigned int p_height,
-										const String & p_materialName,
-										bool p_seamNorth = false,
-										bool p_seamEast = false,
-										bool p_seamSouth = false,
-										bool p_seamWest = false );
+									 uint32_t p_width,
+									 uint32_t p_height,
+									 String const & p_materialName,
+									 bool p_seamNorth = false,
+									 bool p_seamEast = false,
+									 bool p_seamSouth = false,
+									 bool p_seamWest = false );
 			void Clear();
 
 		public:
-			inline const String & GetName() const
+			inline String const & GetName() const
 			{
 				return m_name;
 			}

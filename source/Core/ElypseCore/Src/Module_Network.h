@@ -29,7 +29,6 @@ namespace Elypse
 	}
 }
 
-typedef std::map <String, Elypse::Network::ElypseTcpClient *> ElypseTcpClientStrMap;
-using namespace Elypse::Network;
+typedef std::map< String, std::unique_ptr< Elypse::Network::ElypseTcpClient > > ElypseTcpClientStrMap;
 
 #endif

@@ -30,7 +30,7 @@ namespace Elypse
 		public:
 			virtual ~MaterialTarget() {}
 		public:
-			virtual void Apply( const String & p_materialName ) = 0;
+			virtual void Apply( String const & p_materialName ) = 0;
 		};
 
 		class MaterialTarget_Entity : public MaterialTarget
@@ -46,7 +46,7 @@ namespace Elypse
 			virtual ~MaterialTarget_Entity() {}
 
 		public:
-			virtual void Apply( const String & p_materialName );
+			virtual void Apply( String const & p_materialName );
 		};
 
 		class MaterialTarget_SubEntity : public MaterialTarget
@@ -62,7 +62,7 @@ namespace Elypse
 			virtual ~MaterialTarget_SubEntity() {}
 
 		public:
-			virtual void Apply( const String & p_materialName );
+			virtual void Apply( String const & p_materialName );
 		};
 
 		class MaterialTarget_Overlay : public MaterialTarget
@@ -78,7 +78,7 @@ namespace Elypse
 			virtual ~MaterialTarget_Overlay() {}
 
 		public:
-			virtual void Apply( const String & p_materialName );
+			virtual void Apply( String const & p_materialName );
 		};
 	}
 }

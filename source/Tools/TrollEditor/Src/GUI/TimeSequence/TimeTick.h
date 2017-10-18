@@ -22,24 +22,30 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include <wx/panel.h>
 
-BEGIN_TROLL_GUI_TIME_NAMESPACE
+namespace Troll
 {
-	class TimeTick
-		: public wxPanel
+	namespace GUI
 	{
-	public:
-		TimeTick( wxWindow * p_parent, wxWindowID p_id = wxID_ANY, const wxPoint & p_position = wxDefaultPosition, const wxSize & p_size = wxDefaultSize );
+		namespace Time
+		{
+			class TimeTick
+				: public wxPanel
+			{
+			public:
+				TimeTick( wxWindow * p_parent, ProjectFrame * p_projectFrame, wxWindowID p_id = wxID_ANY, wxPoint const & p_position = wxDefaultPosition, wxSize const & p_size = wxDefaultSize );
 
-	private:
-		void OnLeftMouseDown( wxMouseEvent & p_event );
-		void OnLeftMouseUp( wxMouseEvent & p_event );
+			private:
+				void OnLeftMouseDown( wxMouseEvent & p_event );
+				void OnLeftMouseUp( wxMouseEvent & p_event );
 
-		DECLARE_EVENT_TABLE()
+				DECLARE_EVENT_TABLE()
 
-	protected:
-		TimePanel * m_panel;
-	};
+			protected:
+				TimePanel * m_panel;
+				ProjectFrame * m_projectFrame;
+			};
+		}
+	}
 }
-END_TROLL_GUI_TIME_NAMESPACE
 
 #endif

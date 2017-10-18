@@ -25,13 +25,12 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <ode/collision_space.h>
 #include <ode/collision.h>
 
-Space::Space( const String & p_name, PhysicsSimulation * p_simulation, bool p_autoUpdated )
-	: named( p_name ),
-		owned_by<PhysicsSimulation>	( p_simulation ),
-		m_autoUpdated( p_autoUpdated ),
-		m_internalCollisions( true )
+Space::Space( String const & p_name, PhysicsSimulation & p_simulation, bool p_autoUpdated )
+	: named( p_name )
+	, owned_by< PhysicsSimulation >( p_simulation )
+	, m_autoUpdated( p_autoUpdated )
+	, m_internalCollisions( true )
 {
-	genlib_assert( m_owner != NULL );
 	m_space = dSimpleSpaceCreate( 0 );
 	dGeomSetData( reinterpret_cast <dGeomID>( m_space ), this );
 }
@@ -42,7 +41,7 @@ Space::~Space()
 	dSpaceDestroy( m_space );
 }
 
-void Space::Clear() d_no_throw
+void Space::Clear() noexcept
 {
 	dSpaceClean( m_space );
 	m_objects.clear();
@@ -73,9 +72,9 @@ const AxisAlignedBox & Space::GetBoundingBox()
 {
 	dReal aabb[6];
 	dGeomGetAABB( GetSpaceAsGeomID(), aabb );
-	m_box.setExtents( static_cast <Real>( aabb[0] ), static_cast <Real>( aabb[2] ),
-						static_cast <Real>( aabb[4] ), static_cast <Real>( aabb[1] ),
-						static_cast <Real>( aabb[3] ), static_cast <Real>( aabb[5] ) );
+	m_box.setExtents( Real( aabb[0] ), Real( aabb[2] ),
+					  Real( aabb[4] ), Real( aabb[1] ),
+					  Real( aabb[3] ), Real( aabb[5] ) );
 	return m_box;
 }
 
