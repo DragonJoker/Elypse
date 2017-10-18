@@ -9,6 +9,10 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	1 )
 set( ${PROJECT_NAME}_VERSION_MINOR	0 )
 set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 
+include_directories(
+	${CMAKE_SOURCE_DIR}/Miniline/ElypseServer/Src
+)
+
 add_target(
 	${PROJECT_NAME}
 	bin_dos

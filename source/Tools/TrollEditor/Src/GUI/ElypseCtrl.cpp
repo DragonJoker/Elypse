@@ -842,7 +842,7 @@ namespace Troll
 				}
 
 				l_tempPath = m_installPath + String( "\\AppData\\Roaming\\" );
-				m_installPath += "\\AppData\\Roaming\\FDSSoftMedia\\Elypse\\";
+			m_installPath += "\\AppData\\Roaming\\DragonJoker\\Elypse\\";
 			}
 			else if ( osvi.dwMajorVersion > 5 )
 			{
@@ -858,7 +858,7 @@ namespace Troll
 				}
 
 				l_tempPath = m_installPath + String( "\\AppData\\LocalLow\\" );
-				m_installPath += "\\AppData\\LocalLow\\FDSSoftMedia\\Elypse\\";
+			m_installPath += "\\AppData\\LocalLow\\DragonJoker\\Elypse\\";
 			}
 			else
 			{
@@ -873,7 +873,7 @@ namespace Troll
 				}
 
 				l_tempPath = m_installPath;
-				m_installPath += String( "\\FDSSoftMedia\\Elypse\\" );
+			m_installPath += String( "\\DragonJoker\\Elypse\\" );
 			}
 
 			if ( !m_fucked )
@@ -884,7 +884,7 @@ namespace Troll
 
 				if ( _access( l_tempString.c_str(), 0 ) == -1 )
 				{
-					l_tempPath += "\\FDSSoftMedia\\";
+				l_tempPath += "\\DragonJoker\\";
 					l_res = CreateDirectoryA( l_tempPath.c_str(), NULL );
 					l_res = CreateDirectoryA( l_tempString.c_str(), NULL );
 				}

@@ -68,7 +68,7 @@ namespace General
 			_string_t GetStringValue( _string_t const & p_valueName );
 
 		private:
-			std::unique_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
+			std::shared_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
 			bool m_exists;
 		};
 
@@ -96,7 +96,7 @@ namespace General
 			_string_t GetStringValue( _string_t const & p_valueName );
 
 		private:
-			std::unique_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
+			std::shared_ptr< RegistryKeyBaseImpl< _string_t > > m_impl;
 			bool m_exists;
 		};
 	}

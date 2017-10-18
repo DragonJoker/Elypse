@@ -19,7 +19,6 @@ function( MinilineBuild )
 		endif()
 
 		if ( Boost_FOUND )
-			include_directories( Miniline/ElypseServer/Src )
 
 			if ( WIN32 )
 				add_definitions( -D_WINSOCK_DEPRECATED_NO_WARNINGS )

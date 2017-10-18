@@ -52,7 +52,7 @@ namespace Elypse
 		void Ope_MulEqual< int, Real >( ScriptNode * caller )
 		{
 			std::tuple< int *, Real * > ret = GetAndExecParams< int, Real >( caller );
-			ReturnAs< int >( caller, *std::get< 0 >( ret ) = int( *std::get< 0 >( ret ) * *std::get< 1 >( ret ) ) );
+			ReturnAs< int >( caller, *std::get< 0 >( ret ) = int( *std::get< 0 >( ret ) ** std::get< 1 >( ret ) ) );
 		}
 
 		template<typename T, typename U>

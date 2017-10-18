@@ -2470,7 +2470,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_ImportMesh )
 	CFileDialog FileOpenDialog( TRUE, NULL, NULL,
 								OFN_ALLOWMULTISELECT | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_PATHMUSTEXIST,
 								"Mesh Files (*.mesh)|*.mesh|", NULL );
-	FileOpenDialog.m_ofn.lpstrInitialDir = l_dir.c_str();//"C:\\Program Files\\FDSSoftMedia\\Elypse\\rsc\\";
+	FileOpenDialog.m_ofn.lpstrInitialDir = l_dir.c_str();//"C:\\Program Files\\DragonJoker\\Elypse\\rsc\\";
 
 	if ( FileOpenDialog.DoModal() == IDOK )
 	{

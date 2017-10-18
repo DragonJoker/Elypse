@@ -91,9 +91,9 @@ namespace General
 			}
 
 		private:
-			uint32_t m_numScreens{ ::GetSystemMetrics( SM_CMONITORS ) };
-			uint32_t m_mainScreenX{ ::GetSystemMetrics( SM_CXSCREEN ) };
-			uint32_t m_mainScreenY{ ::GetSystemMetrics( SM_CYSCREEN ) };
+			uint32_t m_numScreens{ uint32_t( ::GetSystemMetrics( SM_CMONITORS ) ) };
+			uint32_t m_mainScreenX{ uint32_t( ::GetSystemMetrics( SM_CXSCREEN ) ) };
+			uint32_t m_mainScreenY{ uint32_t( ::GetSystemMetrics( SM_CYSCREEN ) ) };
 			OSVERSIONINFO m_operatingSystem{ 0 };
 			MEMORYSTATUSEX m_memoryStatus{ 0 };
 		};

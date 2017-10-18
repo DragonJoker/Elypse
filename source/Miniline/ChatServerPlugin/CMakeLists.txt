@@ -21,6 +21,7 @@ if ( DATABASE_FOUND )
 
 	include_directories(
 		${Database_INCLUDE_DIR}
+		${CMAKE_SOURCE_DIR}/Miniline/ElypseServer/Src
 	)
 
 	add_target(

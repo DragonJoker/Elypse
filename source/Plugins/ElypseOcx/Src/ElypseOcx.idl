@@ -1,0 +1,52 @@
+// Iplay.idl : type library source for ActiveX Control project.
+
+// This file will be processed by the MIDL compiler tool to
+// produce the type library (Iplay.tlb) that will become a resource in
+// Iplay.ocx.
+
+#include <olectl.h>
+#include <idispids.h>
+
+[
+	uuid( EA1FD3FC-EBF5-4FBC-A9B8-910944657E97 ),
+	version( 1.0 ),
+	helpstring("ElypsePlayer ActiveX Control module"),
+	control
+]
+library ElypsePlayerLib
+{
+	importlib( STDOLE_TLB );
+
+	[
+		uuid( ED75F1E4-D316-42CA-A48C-3A0F04F0D746 ),
+		helpstring("Dispatch interface for ElypsePlayer Control")
+	]
+	dispinterface ElypsePlayerDispatch
+	{
+		properties:
+		methods:
+			[id( 11 ), helpstring("method script ExecuteScript")] HRESULT ExecuteScript( [in] char * p_text );
+	};
+
+	[
+		uuid( 59EA608D-5F7C-4EDE-B72C-A88B587DDB34 ),
+		helpstring("Event interface for ElypsePlayer Control")
+	]
+	dispinterface ElypsePlayerEvent
+	{
+		properties:
+		methods:
+	};
+
+	[
+		uuid( C528A14C-C066-4FDB-A9BF-D4B6625A0A61 ),
+		licensed,
+		helpstring( "ElypsePlayer Control" ),
+		control
+	]
+	coclass ElypsePlayer
+	{
+		[default] dispinterface ElypsePlayerDispatch;
+		[default, source] dispinterface ElypsePlayerEvent;
+	};
+};
