@@ -48,7 +48,7 @@ namespace Elypse
 			bool AddFolder( const std::string  & p_folder, DataBlockType p_eType );
 			void ListFiles( const std::string  & p_folder );
 			int CompressFile( const std::string  & p_infilename, const std::string  & p_outfilename );
-			bool CompressFolder( const Path  & p_outFolder, const Path & p_outPath, DataBlockType p_eType );
+			bool CompressFolder( Path const & p_outFolder, Path const & p_outPath, DataBlockType p_eType );
 			/**
 				Writes the final file using p_filename as the file name ( ;) )
 					@params : p_filename :[in/out]the name of the final file, mustn't contain extenxion

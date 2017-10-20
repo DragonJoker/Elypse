@@ -78,14 +78,14 @@ namespace Elypse
 		static const std::string  DataTypeExtension[] =
 		{
 			"",
-			".zip", // EM_BLOCK_ZIPDATA = 1, /* .zip files */
-			".gzip", // EM_BLOCK_GZIPDATA = 2, /* unused */
-			".emscene", // EM_BLOCK_SCENE = 3, /* .emscene files */
-			".emscript", // EM_BLOCK_INTERACTIONS = 4, /* .emscript files */
-			".snd", // EM_BLOCK_SNDDATA = 5, /* unused */
-			".cfg", // EM_BLOCK_CONFIG = 6, /* unused */
-			".emsnd", // EM_BLOCK_ZIPSNDDATA = 7, /* .emsnd files */
-			".emcfg", // EM_BLOCK_EMCONFIG = 8, /* unused */
+			".zip",			// EM_BLOCK_ZIPDATA			= 1,	/* .zip files */
+			".gzip",		// EM_BLOCK_GZIPDATA		= 2,	/* unused */
+			".emscene",		// EM_BLOCK_SCENE			= 3,	/* .emscene files */
+			".emscript",	// EM_BLOCK_INTERACTIONS	= 4,	/* .emscript files */
+			".snd",			// EM_BLOCK_SNDDATA			= 5,	/* unused */
+			".cfg",			// EM_BLOCK_CONFIG			= 6,	/* unused */
+			".emsnd",		// EM_BLOCK_ZIPSNDDATA		= 7,	/* .emsnd files */
+			".emcfg",		// EM_BLOCK_EMCONFIG		= 8,	/* unused */
 		};
 
 		struct EM_Block

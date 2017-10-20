@@ -111,13 +111,13 @@ bool CDataStreamer::ReadHeader()
 		}
 
 		Read( m_nbBlocks );
-		m_log->AppendString( wxString( _( "Blocs count: " ) ) << m_nbBlocks );
+		m_log->AppendString( wxString( _( "Blocks count: " ) ) << m_nbBlocks );
 		int l_index = 0;
 
 		// retrieve all the blocks informations
 		while ( l_index < m_nbBlocks )
 		{
-			m_log->AppendString( wxString( _( "Bloc index : " ) ) << l_index );
+			m_log->AppendString( wxString( _( "Block index : " ) ) << l_index );
 			// retrieve block type
 			int8_t l_blockType = 0;
 			Read( l_blockType );
@@ -146,7 +146,7 @@ bool CDataStreamer::ReadHeader()
 			// retrieve block's size
 			int l_blocksize = 0;
 			Read( l_blocksize );
-			m_log->AppendString( wxString( _( "  Bloc size: " ) ) << l_blocksize << _( " octets" ) );
+			m_log->AppendString( wxString( _( "  Block size: " ) ) << l_blocksize << _( " octets" ) );
 
 			if ( l_blocksize <= 0 )
 			{
@@ -159,7 +159,7 @@ bool CDataStreamer::ReadHeader()
 			{
 				// retrieve block's hash
 				Read( reinterpret_cast< uint8_t * >( l_hash.data() ), 32 );
-				m_log->AppendString( wxString( _( "  Bloc hash: " ) ) << make_wxString( l_hash.data() ) );
+				m_log->AppendString( wxString( _( "  Block hash: " ) ) << make_wxString( l_hash.data() ) );
 			}
 
 			// write these infos into the struct deserved to it
@@ -174,7 +174,7 @@ bool CDataStreamer::ReadHeader()
 	}
 	catch ( std::runtime_error & p_exc )
 	{
-		m_log->AppendString( _( "Erreur de lecture: " ) + make_wxString( p_exc.what() ) );
+		m_log->AppendString( _( "Read error: " ) + make_wxString( p_exc.what() ) );
 	}
 
 	return l_result;

@@ -254,7 +254,7 @@ namespace Elypse
 
 		int DataWriter::CompressFile( std::string const & p_infilename, std::string const & p_outfilename )
 		{
-			int l_totalWritten = -1;
+			size_t l_totalWritten = ~size_t( 0 );
 			FILE * l_infile = fopen( p_infilename.c_str(), "rb" );
 
 			if ( l_infile )
@@ -268,11 +268,11 @@ namespace Elypse
 				else
 				{
 					uint8_t l_buffer[128];
-					unsigned int l_nbBytesRead = 0;
+					size_t l_nbBytesRead = 0u;
 					size_t l_totalRead = 0;
 					l_totalWritten = 0;
 
-					while ( ( l_nbBytesRead = static_cast< unsigned int >( fread( l_buffer, sizeof( uint8_t ), sizeof( l_buffer ), l_infile ) ) ) > 0 )
+					while ( ( l_nbBytesRead = fread( l_buffer, sizeof( uint8_t ), sizeof( l_buffer ), l_infile ) ) > 0 )
 					{
 						l_totalRead += l_nbBytesRead;
 						l_totalWritten += gzwrite( l_outfile, l_buffer, l_nbBytesRead );
@@ -282,7 +282,7 @@ namespace Elypse
 					gzclose( l_outfile );
 					l_infile = fopen( p_outfilename.c_str(), "rb" );
 					fseek( l_infile, 0, SEEK_END );
-					l_totalWritten = int( ftell( l_infile ) );
+					l_totalWritten = ftell( l_infile );
 					fclose( l_infile );
 				}
 			}
@@ -290,7 +290,7 @@ namespace Elypse
 			return l_totalWritten;
 		}
 
-		bool DataWriter::CompressFolder( const Path & p_outFolder, const Path & p_outPath, DataBlockType p_eType )
+		bool DataWriter::CompressFolder( Path const & p_outFolder, Path const & p_outPath, DataBlockType p_eType )
 		{
 			ZipBlockList l_zipHeader;
 			std::string l_fileName, l_extension, l_outFile, l_outpath;
