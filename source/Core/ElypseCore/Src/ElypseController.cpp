@@ -52,7 +52,7 @@ using namespace Ogre;
 
 namespace
 {
-	char const * const c_installWebsiteUrl = "http://www.fordev-studio.com/Elypse/Install/";
+	char const * const c_installWebsiteUrl = "http://localhost/Elypse/Install/";
 
 	std::wstring ToWChar( std::string const & src )
 	{

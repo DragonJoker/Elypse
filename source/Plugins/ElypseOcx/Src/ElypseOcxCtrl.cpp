@@ -129,9 +129,6 @@ void ElypseOcxCtrl::DoGetClientSite()
 	}
 
 	std::cout << "base directory : " << m_baseDirectory << std::endl;
-	//m_ogre->SetFilePath( "D:\\Prog\\ElypseOcx\\EMusePlayer_Secondary\\musinance\\" );
-//			m_ogre->SetFilePath("http://jeux.sport4fun.com/jouer/rugby-fordev/");
-//			m_ogre->SetFilePath( m_baseDirectory);
 	m_plugin->SetBaseUrl( m_baseDirectory );
 	m_ogre->SetCurrentDirectory( m_baseDirectory );
 	l_clientSite->Release();

@@ -206,7 +206,7 @@ void ElypsePlugin_Firefox :: Paint()
 
 	case StatusErrorDirectories :
 	{
-		_printText( "Elypse Player : \nUne erreur est survenue\nVeuillez reinstaller l'application !\nwww.fdssoftmedia.com" );
+		_printText( "Elypse Player : \nUne erreur est survenue\nVeuillez reinstaller l'application !" );
 		break;
 	}
 
