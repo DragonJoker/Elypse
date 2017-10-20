@@ -1,4 +1,4 @@
-﻿#include "ProjectProperties.h"
+#include "ProjectProperties.h"
 
 #include "GUI/Properties/Common/AdditionalProperties.h"
 #include "GUI/Properties/Common/SizeProperties.h"
@@ -16,7 +16,7 @@ namespace Troll
 		namespace Properties
 		{
 			ProjectProperties::ProjectProperties( ProjectComponents::Project & p_project )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_PROJECT }
+				: ObjectProperty{ DataType::Project }
 				, m_project{ p_project }
 			{
 			}
@@ -89,8 +89,11 @@ namespace Troll
 				}
 				else
 				{
-					wxString l_imagePath = wxFileSelector( _( "Choose an image" ), wxEmptyString, wxEmptyString, wxEmptyString,
-														   wxString() << _( "BMP files" ) << wxT( " (*.bmp)|*.bmp|" ) << _( "PNG files" ) << wxT( " (*.png)|*.png|" ) << _( "JPEG files" ) << wxT( " (*.jpg)|*.jpg" ) );
+					wxString l_imagePath = wxFileSelector( _( "Choose an image" )
+						, wxEmptyString
+						, wxEmptyString
+						, wxEmptyString
+						, wxString() << _( "BMP files" ) << wxT( " (*.bmp)|*.bmp|" ) << _( "PNG files" ) << wxT( " (*.png)|*.png|" ) << _( "JPEG files" ) << wxT( " (*.jpg)|*.jpg" ) );
 
 					if ( !l_imagePath.empty() )
 					{

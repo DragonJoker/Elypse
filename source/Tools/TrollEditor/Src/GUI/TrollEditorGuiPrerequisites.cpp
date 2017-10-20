@@ -21,6 +21,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "Project/Object.h"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -36,8 +38,17 @@ namespace Troll
 		{
 			wxSize l_size = p_parent->GetClientSize() - wxSize( 10, 0 );
 			wxStaticText * l_text = new wxStaticText( p_parent, wxID_ANY, p_caption, wxPoint( 5, p_position.y + 3 ) );
-			return new wxTextCtrl( p_parent, p_id, p_value, p_position, wxSize( l_size.x - p_position.x, 20 ),
-								   wxBORDER_SIMPLE | wxTE_PROCESS_ENTER );
+			l_text->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_text->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			auto l_result = new wxTextCtrl( p_parent
+				, p_id
+				, p_value
+				, p_position
+				, wxSize( l_size.x - p_position.x, 20 )
+				, wxBORDER_SIMPLE | wxTE_PROCESS_ENTER );
+			l_result->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_result->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			return l_result;
 		}
 
 		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, wxString const & p_caption, float p_value )
@@ -58,7 +69,12 @@ namespace Troll
 		{
 			wxSize l_size = p_parent->GetClientSize() - wxSize( 10, 0 );
 			wxStaticText * l_text = new wxStaticText( p_parent, wxID_ANY, p_caption, wxPoint( 5, p_position.y + 3 ) );
-			return new wxComboBox( p_parent, p_id, p_value, p_position, wxSize( l_size.x - p_position.x, 20 ), p_values, wxBORDER_SIMPLE | wxCB_READONLY );
+			l_text->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_text->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			auto l_result = new wxComboBox( p_parent, p_id, p_value, p_position, wxSize( l_size.x - p_position.x, 20 ), p_values, wxBORDER_SIMPLE | wxCB_READONLY );
+			l_result->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_result->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			return l_result;
 		}
 
 		wxListCtrl * BuildListBox( wxWindow * p_parent, wxPoint const & p_position, int p_id, const wxArrayString & p_captions, const wxArrayString & p_values )
@@ -66,7 +82,11 @@ namespace Troll
 			wxSize l_size = p_parent->GetClientSize() - wxSize( 10, 0 );
 			uint32_t l_linesNumber = uint32_t( p_values.GetCount() );
 			wxListCtrl * l_captions = new wxListCtrl( p_parent, wxID_ANY, wxPoint( 5, p_position.y ), wxSize( l_size.x / 2, int( l_linesNumber * 20 ) ), wxLC_LIST | wxLC_SINGLE_SEL | wxBORDER_NONE );
+			l_captions->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_captions->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			wxListCtrl * l_values = new wxListCtrl( p_parent, p_id, p_position, wxSize( l_size.x - p_position.x, int( l_linesNumber * 20 ) ), wxLC_LIST | wxLC_EDIT_LABELS | wxLC_SINGLE_SEL | wxBORDER_NONE );
+			l_values->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_values->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			for ( uint32_t i = 0; i < l_linesNumber; i++ )
 			{
@@ -81,8 +101,9 @@ namespace Troll
 		{
 			wxSize l_size = p_parent->GetClientSize() - wxSize( 10, 0 );
 			wxStaticText * l_text = new wxStaticText( p_parent, wxID_ANY, p_caption, wxPoint( 5, p_position.y + 3 ) );
-			wxButton * l_button = new wxButton( p_parent, p_id, p_value, p_position, wxSize( l_size.x - p_position.x, 20 ), wxBORDER_SIMPLE | wxBU_LEFT );
-			return l_button;
+			l_text->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_text->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			return new GuiCommon::GradientButton( p_parent, p_id, p_value, p_position, wxSize( l_size.x - p_position.x, 20 ), wxBORDER_SIMPLE | wxBU_LEFT );
 		}
 
 		wxTextCtrl * BuildTextCtrl( wxWindow * p_parent, wxPoint const & p_position, int p_id, String const & p_caption, String const & p_value )

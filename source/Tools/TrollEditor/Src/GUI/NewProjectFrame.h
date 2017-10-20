@@ -35,7 +35,7 @@ namespace Troll
 			: public Properties::ProjectProperties
 		{
 		public:
-			NewProjectProperties();
+			NewProjectProperties( ProjectComponents::ProjectSPtr project = std::make_shared< ProjectComponents::Project >() );
 			~NewProjectProperties();
 			/**
 			 *\copydoc		Troll::GUI::Properties::ObjectProperty::OnValidate

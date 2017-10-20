@@ -224,7 +224,7 @@ namespace Troll
 				, wxT( "simple precision float" )
 				, wxT( "double precision float" )
 				, wxT( "long double precision float" )
-#if CASTOR_USE_DOUBLE
+#if OGRE_DOUBLE_PRECISION == 1
 				, wxT( "double precision float" )
 #else
 				, wxT( "simple precision float" )

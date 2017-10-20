@@ -21,6 +21,16 @@ namespace Troll
 				}
 
 				Connect( wxEVT_PG_CHANGED, wxEVENT_HANDLER_CAST( wxPropertyGridEventFunction, PropertiesHolder::OnPropertyChange ) );
+				SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+				SetForegroundColour( GuiCommon::PanelForegroundColour );
+				SetCaptionBackgroundColour( GuiCommon::PanelBackgroundColour );
+				SetCaptionTextColour( GuiCommon::PanelForegroundColour );
+				SetSelectionBackgroundColour( GuiCommon::ActiveTabColour );
+				SetSelectionTextColour( GuiCommon::ActiveTextColour );
+				SetCellBackgroundColour( GuiCommon::InactiveTabColour );
+				SetCellTextColour( GuiCommon::InactiveTextColour );
+				SetLineColour( GuiCommon::BorderColour );
+				SetMarginColour( GuiCommon::BorderColour );
 			}
 
 			PropertiesHolder::~PropertiesHolder()

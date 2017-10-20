@@ -57,8 +57,8 @@ namespace Troll
 
 		AuiTabArt::AuiTabArt()
 		{
-			wxAuiDefaultTabArt::SetColour( INACTIVE_TAB_COLOUR );
-			wxAuiDefaultTabArt::SetActiveColour( ACTIVE_TAB_COLOUR );
+			wxAuiDefaultTabArt::SetColour( GuiCommon::InactiveTabColour );
+			wxAuiDefaultTabArt::SetActiveColour( GuiCommon::ActiveTabColour );
 			wxAuiDefaultTabArt::SetMeasuringFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ) );
 			wxAuiDefaultTabArt::SetNormalFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ) );
 			wxAuiDefaultTabArt::SetSelectedFont( wxFont( 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false ) );
@@ -255,11 +255,11 @@ namespace Troll
 			// draw tab text
 			if ( pane.active )
 			{
-				dc.SetTextForeground( ACTIVE_TEXT_COLOUR );
+				dc.SetTextForeground( GuiCommon::ActiveTextColour );
 			}
 			else
 			{
-				dc.SetTextForeground( INACTIVE_TEXT_COLOUR );
+				dc.SetTextForeground( GuiCommon::InactiveTextColour );
 			}
 
 			dc.SetFont( m_normalFont );

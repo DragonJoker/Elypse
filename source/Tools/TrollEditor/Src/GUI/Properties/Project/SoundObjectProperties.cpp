@@ -9,7 +9,7 @@ namespace Troll
 		namespace Properties
 		{
 			SoundObjectProperties::SoundObjectProperties( ProjectComponents::Media::TrollSoundObject & p_soundObject )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_SOUND_OBJECT }
+				: ObjectProperty{ DataType::SoundObject }
 				, m_soundObject{ p_soundObject }
 			{
 			}

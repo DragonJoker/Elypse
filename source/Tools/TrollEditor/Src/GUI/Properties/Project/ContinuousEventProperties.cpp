@@ -20,7 +20,7 @@ namespace Troll
 		namespace Properties
 		{
 			ContinuousEventProperties::ContinuousEventProperties( ProjectComponents::Temporal::TrollContinuousEvent & p_event )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_CONTINUOUS_EVENT }
+				: ObjectProperty{ DataType::ContinuousEvent }
 				, m_event{ p_event }
 			{
 			}

@@ -64,8 +64,8 @@ namespace Troll
 			: wxTreeCtrl{ parent, TreeObjects_Ctrl, pos, size, style }
 			, m_projectFrame{ projectFrame }
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 			CreateImageList();
 		}
 
@@ -142,7 +142,7 @@ namespace Troll
 			int l_image, l_imageSel;
 			//l_image = (wxGetApp().ShowImages() ? ObjectsTreeIcon_Folder : -1);
 			l_image = ObjectsTreeIcon_Folder;
-			m_root = AddRoot( _( "Objects" ), l_image, l_image, new TETreeItemData( wxT( " Root item" ), TITObjectsRoot ) );
+			m_root = AddRoot( _( "Objects" ), l_image, l_image, new TreeItemData( wxT( " Root item" ), TreeItemType::ObjectsRoot ) );
 
 			if ( l_image != -1 )
 			{
@@ -151,7 +151,7 @@ namespace Troll
 
 			l_image = ObjectsTreeIcon_Folder;
 			l_imageSel = l_image + 1;
-			l_id = AppendItem( m_root, _( "Scene Nodes" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITNodes ) );
+			l_id = AppendItem( m_root, _( "Scene Nodes" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Nodes ) );
 			m_idParent = l_id;
 			m_folders[_( "Scene Nodes" )] = l_id;
 			Expand( m_root );
@@ -161,7 +161,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Objects" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITObjects ) );
+			l_id = AppendItem( m_root, _( "Objects" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Objects ) );
 			m_idParent = l_id;
 			m_folders[_( "Objects" )] = l_id;
 
@@ -170,7 +170,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Lights" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITLights ) );
+			l_id = AppendItem( m_root, _( "Lights" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Lights ) );
 			m_idParent = l_id;
 			m_folders[_( "Lights" )] = l_id;
 
@@ -179,7 +179,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Cameras" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITCameras ) );
+			l_id = AppendItem( m_root, _( "Cameras" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Cameras ) );
 			m_idParent = l_id;
 			m_folders[_( "Cameras" )] = l_id;
 
@@ -188,7 +188,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Overlays" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITOverlays ) );
+			l_id = AppendItem( m_root, _( "Overlays" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Overlays ) );
 			m_idParent = l_id;
 			m_folders[_( "Overlays" )] = l_id;
 
@@ -197,7 +197,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Animation Groups" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITAnimationGroups ) );
+			l_id = AppendItem( m_root, _( "Animation Groups" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::AnimationGroups ) );
 			m_idParent = l_id;
 			m_folders[_( "Animation Groups" )] = l_id;
 
@@ -206,7 +206,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Sounds" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITSounds ) );
+			l_id = AppendItem( m_root, _( "Sounds" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Sounds ) );
 			m_idParent = l_id;
 			m_folders[_( "Sounds" )] = l_id;
 
@@ -215,7 +215,7 @@ namespace Troll
 				SetItemImage( m_idParent, ObjectsTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_id = AppendItem( m_root, _( "Videos" ), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, TITVideos ) );
+			l_id = AppendItem( m_root, _( "Videos" ), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, TreeItemType::Videos ) );
 			m_idParent = l_id;
 			m_folders[_( "Videos" )] = l_id;
 
@@ -238,7 +238,7 @@ namespace Troll
 
 			if ( p_parentName.empty() )
 			{
-				l_id = AppendItem( m_folders.find( _( "Scene Nodes" ) )->second, l_node->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITNode ) );
+				l_id = AppendItem( m_folders.find( _( "Scene Nodes" ) )->second, l_node->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Node ) );
 				l_added = true;
 				l_item->ItemObject.ItemID = l_id;
 				m_sceneNodes[wxTreeItemIdValue( l_id.m_pItem )] = l_item;
@@ -257,7 +257,7 @@ namespace Troll
 				if ( l_parentItem )
 				{
 					std::clog << "TreeCtrl::AddSceneNode - Parent " << p_parentName << " for " << p_name << " found in list\n";
-					l_id = AppendItem( l_parentItem->ItemObject.ItemID, l_node->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITNode ) );
+					l_id = AppendItem( l_parentItem->ItemObject.ItemID, l_node->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Node ) );
 					l_added = true;
 					l_item->ItemObject.ItemID = l_id;
 					l_parentItem->Childs[wxTreeItemIdValue( l_id.m_pItem )] = l_item;
@@ -300,7 +300,7 @@ namespace Troll
 
 			if ( p_parentName.empty() )
 			{
-				l_id = AppendItem( m_folders.find( _( "Overlays" ) )->second, l_overlay->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITOverlay ) );
+				l_id = AppendItem( m_folders.find( _( "Overlays" ) )->second, l_overlay->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Overlay ) );
 				l_added = true;
 				l_item->ItemObject.ItemID = l_id;
 				m_overlays.insert( std::make_pair( wxTreeItemIdValue( l_id.m_pItem ), l_item ) );
@@ -317,7 +317,7 @@ namespace Troll
 
 				if ( l_parentItem )
 				{
-					l_id = AppendItem( l_parentItem->ItemObject.ItemID, l_overlay->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITOverlay ) );
+					l_id = AppendItem( l_parentItem->ItemObject.ItemID, l_overlay->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Overlay ) );
 					l_added = true;
 					l_item->ItemObject.ItemID = l_id;
 					l_parentItem->Childs.insert( std::make_pair( wxTreeItemIdValue( l_id.m_pItem ), l_item ) );
@@ -405,7 +405,7 @@ namespace Troll
 
 			if ( p_object->Get3DObjectType() == ProjectComponents::Objects3D::ttEntity )
 			{
-				l_id = AppendItem( m_folders.find( _( "Objects" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITObject ) );
+				l_id = AppendItem( m_folders.find( _( "Objects" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Object ) );
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
 				m_objects[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
@@ -414,7 +414,7 @@ namespace Troll
 			}
 			else if ( p_object->Get3DObjectType() == ProjectComponents::Objects3D::ttLight )
 			{
-				l_id = AppendItem( m_folders.find( _( "Lights" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITLight ) );
+				l_id = AppendItem( m_folders.find( _( "Lights" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Light ) );
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
 				m_lights[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
@@ -422,7 +422,7 @@ namespace Troll
 			}
 			else if ( p_object->Get3DObjectType() == ProjectComponents::Objects3D::ttCamera )
 			{
-				l_id = AppendItem( m_folders.find( _( "Cameras" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITCamera ) );
+				l_id = AppendItem( m_folders.find( _( "Cameras" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Camera ) );
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
 				m_cameras[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
@@ -451,7 +451,7 @@ namespace Troll
 
 			if ( p_object->GetTemporalObjectType() == ProjectComponents::Temporal::ttAnimationGroup )
 			{
-				l_id = AppendItem( m_folders.find( _( "Animation Groups" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITAnimationGroup ) );
+				l_id = AppendItem( m_folders.find( _( "Animation Groups" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::AnimationGroup ) );
 				TreeItemObject l_object;
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
@@ -484,7 +484,7 @@ namespace Troll
 				if ( l_found )
 				{
 					std::clog << "TETreeCtrl::AddSceneObject - Group found\n";
-					l_id = AppendItem( l_parentId, l_animatedObject->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITAnimatedObject ) );
+					l_id = AppendItem( l_parentId, l_animatedObject->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::AnimatedObject ) );
 					TreeItemObject l_object;
 					l_object.ItemID = l_id;
 					l_object.Object = p_object;
@@ -520,7 +520,7 @@ namespace Troll
 
 			if ( p_object->GetMediaObjectType() == ProjectComponents::Media::ttSound )
 			{
-				l_id = AppendItem( m_folders.find( _( "Sounds" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITSound ) );
+				l_id = AppendItem( m_folders.find( _( "Sounds" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Sound ) );
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
 				m_sounds[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
@@ -558,7 +558,7 @@ namespace Troll
 				if ( l_found )
 				{
 					std::clog << "TETreeCtrl::AddSceneObject - Parent node found\n";
-					l_id = AppendItem( l_parentId, l_soundObject->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITSoundObject ) );
+					l_id = AppendItem( l_parentId, l_soundObject->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::SoundObject ) );
 					TreeItemObject l_object;
 					l_object.ItemID = l_id;
 					l_object.Object = p_object;
@@ -568,7 +568,7 @@ namespace Troll
 			}
 			else if ( p_object->GetMediaObjectType() == ProjectComponents::Media::ttSoundPlaylist )
 			{
-				l_id = AppendItem( m_folders.find( _( "Sounds" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITSoundPlaylist ) );
+				l_id = AppendItem( m_folders.find( _( "Sounds" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::SoundPlaylist ) );
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
 				m_sounds[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
@@ -576,7 +576,7 @@ namespace Troll
 			}
 			else if ( p_object->GetMediaObjectType() == ProjectComponents::Media::ttVideo )
 			{
-				l_id = AppendItem( m_folders.find( _( "Videos" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITVideo ) );
+				l_id = AppendItem( m_folders.find( _( "Videos" ) )->second, p_object->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::Video ) );
 				l_object.ItemID = l_id;
 				l_object.Object = p_object;
 				m_videos[wxTreeItemIdValue( l_id.m_pItem )] = l_object;
@@ -613,7 +613,7 @@ namespace Troll
 				if ( l_found )
 				{
 					std::clog << "TETreeCtrl::AddSceneObject - Parent node found\n";
-					l_id = AppendItem( l_parentId, l_videoObject->GetObjectName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, TITVideoObject ) );
+					l_id = AppendItem( l_parentId, l_videoObject->GetObjectName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, TreeItemType::VideoObject ) );
 					TreeItemObject l_object;
 					l_object.ItemID = l_id;
 					l_object.Object = p_object;
@@ -642,7 +642,7 @@ namespace Troll
 		void ObjectsTree::OnObjectLClic( wxTreeEvent & p_event )
 		{
 			wxTreeItemId l_item = p_event.GetItem();
-			TETreeItemData * l_itemData = reinterpret_cast < TETreeItemData * >( GetItemData( l_item ) );
+			TreeItemData * l_itemData = reinterpret_cast < TreeItemData * >( GetItemData( l_item ) );
 			wxString l_itemType = l_itemData->GetDesc();
 
 			if ( l_itemType != ITEM_DESC_FOLDER )

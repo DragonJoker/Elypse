@@ -14,6 +14,8 @@
 #include "Project/Project.h"
 #include "Project/Scene.h"
 
+#include <GradientButton.h>
+
 using namespace Ogre;
 
 namespace Troll
@@ -43,6 +45,9 @@ namespace Troll
 			, m_overlayName( p_name )
 			, m_projectFrame( p_parent )
 		{
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
+
 			if ( m_overlayName.empty() )
 			{
 				static int sl_number = 0;
@@ -58,7 +63,7 @@ namespace Troll
 
 				if ( l_parentTrollOverlay->GetTextInfos() != NULL )
 				{
-					wxMessageBox( _( "Can't create an aoverlay in a text" ), TROLL_EDITOR_ERROR, wxID_OK );
+					wxMessageBox( _( "Can't create an overlay in a text" ), TROLL_EDITOR_ERROR, wxID_OK );
 					m_mustBeClosed = true;
 				}
 			}
@@ -71,8 +76,10 @@ namespace Troll
 			wxArrayString l_choices;
 			_getOverlayTemplates( l_choices );
 			wxComboBox * l_box = BuildComboBox( this, wxPoint( 100, 10 ), noIdTemplate, _( "Template" ), l_choices, ( l_choices.size() > 0 ? l_choices[0] : wxT( "" ) ) );
-			wxButton * l_button = new wxButton( this, noIdOK, _( "OK" ), wxPoint( 10, 370 ), wxSize( 100, 20 ), wxBORDER_SIMPLE );
-			l_button = new wxButton( this, noIdCancel, _( "Cancel" ), wxPoint( 135, 370 ), wxSize( 100, 20 ), wxBORDER_SIMPLE );
+			l_box->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_box->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			new GuiCommon::GradientButton( this, noIdOK, TE_OK, wxPoint( 10, 370 ), wxSize( 100, 20 ), wxBORDER_SIMPLE );
+			new GuiCommon::GradientButton( this, noIdCancel, TE_CANCEL, wxPoint( 135, 370 ), wxSize( 100, 20 ), wxBORDER_SIMPLE );
 			m_propertiesPanel = new Properties::PropertiesHolder{ this, wxPoint( 5, 35 ), wxSize( l_size.x - 10, l_size.y - 80 ) };
 		}
 

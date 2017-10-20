@@ -41,8 +41,6 @@ namespace Troll
 		private:
 			// GUI controls
 			wxTextCtrl * m_sceneName;
-			wxButton * m_okBtn;
-			wxButton * m_cancelBtn;
 
 		public:
 			NewSceneFrame( ProjectFrame * p_parent, wxString const & title = wxT( "Nouvelle Scène" ), wxPoint const & pos = wxDefaultPosition );

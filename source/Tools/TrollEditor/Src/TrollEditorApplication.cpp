@@ -46,8 +46,8 @@ namespace Troll
 		wxAppConsole::SetVendorDisplayName( wxT( "DragonJoker" ) );
 #endif
 		wxCmdLineParser l_parser( argc, argv );
-		l_parser.AddSwitch(	wxT( "h" ), wxT( "help" ), _( "Displays this help" ) );
-		l_parser.AddSwitch(	wxT( "d" ), wxT( "debug" ), _( "Displays debug logs in console log" ) );
+		l_parser.AddSwitch(	wxT( "h" ), _( "help" ), _( "Displays this help" ) );
+		l_parser.AddSwitch(	wxT( "d" ), _( "debug" ), _( "Displays debug logs in console log" ) );
 		l_parser.AddParam( wxT( "project file" ), wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL );
 		l_parser.Parse();
 

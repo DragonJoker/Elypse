@@ -117,6 +117,9 @@ namespace Troll
 			wxString const TE_LOG_MESSAGES = _( "Messages" );
 			wxString const TE_LOG_ERRORS = _( "Errors" );
 
+			wxString const TE_SAVE_CONFIRM = _( "Would you like to save your modifications" );
+			wxString const TE_CONFIRM = _( "Confirm" );
+
 			bool wxCopyDir( wxString sFrom, wxString sTo )
 			{
 				if ( sFrom[sFrom.Len() - 1] != '\\' && sFrom[sFrom.Len() - 1] != '/' )
@@ -462,8 +465,8 @@ namespace Troll
 
 			auto toolBar = new wxAuiToolBar{ this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_PLAIN_BACKGROUND | wxAUI_TB_HORIZONTAL };
 			toolBar->SetArtProvider( new AuiToolBarArt );
-			toolBar->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			toolBar->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			toolBar->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			toolBar->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			toolBar->SetToolBitmapSize( wxSize( l_width, l_height ) );
 			toolBar->AddTool( Menu_NewProject, TE_NEW, l_bitmaps[Tool_new], TE_PROJECT_NEW );
 			toolBar->AddTool( Menu_OpenProject, TE_OPEN, l_bitmaps[Tool_open], TE_PROJECT_OPEN );
@@ -482,13 +485,29 @@ namespace Troll
 			wxSize l_size = GetClientSize();
 			// main tabs (contains text editor, test panel...)
 			m_projectFrameContainer = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE );
-			m_projectFrameContainer->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_projectFrameContainer->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_manager.AddPane( m_projectFrameContainer, wxAuiPaneInfo().CaptionVisible( false ).Center().CloseButton( false ).Name( wxT( "Render" ) ).MinSize( l_size.x, l_size.y - m_logsHeight ).Layer( 0 ).Movable( false ).PaneBorder( false ).Dockable( false ) );
+			m_projectFrameContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_projectFrameContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_manager.AddPane( m_projectFrameContainer, wxAuiPaneInfo()
+				.CaptionVisible( false )
+				.Center()
+				.CloseButton( false )
+				.Name( _( "Render" ) )
+				.MinSize( l_size.x, l_size.y - m_logsHeight )
+				.Layer( 0 )
+				.Movable( false )
+				.PaneBorder( false )
+				.Dockable( false ) );
 			//logs tabs (contains debug log, compilation log...)
 			m_logTabsContainer = new wxAuiNotebook{ this, wxID_ANY };
 			m_logTabsContainer->SetArtProvider( new AuiTabArt );
-			m_manager.AddPane( m_logTabsContainer, wxAuiPaneInfo().BottomDockable().Bottom().CaptionVisible( false ).Dock().MinSize( 0, m_logsHeight ).Resizable( true ).Show() );
+			m_manager.AddPane( m_logTabsContainer, wxAuiPaneInfo()
+				.BottomDockable()
+				.Bottom()
+				.CaptionVisible( false )
+				.Dock()
+				.MinSize( 0, m_logsHeight )
+				.Resizable( true )
+				.Show() );
 		}
 
 		void MainFrame::DoInitialiseLogs()
@@ -496,8 +515,8 @@ namespace Troll
 			auto && l_creator = [this]( wxString const & p_name, LogCtrl *& p_ctrl, wxLog *& p_log )
 			{
 				p_ctrl = new LogCtrl( m_logTabsContainer, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER );
-				p_ctrl->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-				p_ctrl->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+				p_ctrl->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+				p_ctrl->SetForegroundColour( GuiCommon::PanelForegroundColour );
 				p_ctrl->SetFont( wxFont( 10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL ) );
 				p_log = new wxLogListBox( p_ctrl );
 				m_logTabsContainer->AddPage( p_ctrl, p_name, true );
@@ -514,8 +533,8 @@ namespace Troll
 
 		void MainFrame::DoInitialise()
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 #if wxCHECK_VERSION( 2, 9, 0 )
 			SetMinClientSize( wxSize( 800, 600 ) );
@@ -530,8 +549,8 @@ namespace Troll
 			SetBackgroundColour( wxColour( 255, 255, 255 ) );
 			CreateStatusBar( 2 );
 			SetStatusText( TE_TEXT_WELCOME );
-			GetStatusBar()->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			GetStatusBar()->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			GetStatusBar()->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			GetStatusBar()->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			DoSetMenuBar();
 			DoPopulateToolbar();
@@ -547,12 +566,9 @@ namespace Troll
 		void MainFrame::DoSetMenuBar()
 		{
 			m_menuBar = new wxMenuBar( wxMB_DOCKABLE );
-			m_menuBar->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_menuBar->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_menuBar->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_menuBar->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			m_menuFile = new wxMenu;
-			m_menuHelp = new wxMenu;
-			m_menuProject = new wxMenu;
-			m_menuEdition = new wxMenu;
 			m_menuFile->Append( Menu_NewProject, wxString() << TE_PROJECT_NEW );
 			m_menuFile->Append( Menu_OpenProject, wxString() << TE_PROJECT_OPEN );
 			m_menuFile->Append( Menu_OpenFile, wxString() << TE_FILE_OPEN );
@@ -563,10 +579,12 @@ namespace Troll
 			m_menuFile->Append( Menu_SaveFileAs, wxString() << TE_FILE_SAVE_AS << wxT( "\tCtrl+Shift+S" ) );
 			m_menuFile->AppendSeparator();
 			m_menuFile->Append( Menu_Quit, wxString() << TE_EXIT << wxT( "\tCtrl+Q" ) );
+			m_menuEdition = new wxMenu;
 			m_menuEdition->Append( Menu_GoToLine, wxString() << TE_FILE_GOTO_LINE << wxT( "\tCtrl+G" ) );
 			m_menuEdition->Append( Menu_SearchNext, wxString() << TE_FILE_FIND_NEXT << wxT( "\tF3" ) );
 			m_menuEdition->Append( Menu_SearchPrevious, wxString() << TE_FILE_FIND_PREVIOUS << wxT( "\tShift+F3" ) );
 			m_menuEdition->Append( Menu_Replace, wxString() << TE_FILE_REPLACE << wxT( "\tCtrl+H" ) );
+			m_menuProject = new wxMenu;
 			m_menuProject->Append( Menu_SceneDependencies, wxString() << TE_SCENE_DEPENDENCIES << wxT( "\tF5" ) );
 			m_menuProject->Append( Menu_CompileFile, wxString() << TE_PROJECT_COMPILE << wxT( "\tF6" ) );
 			m_menuProject->Append( Menu_Musinate, wxString() << TE_PROJECT_MUSINATE << wxT( "\tF7" ) );
@@ -575,6 +593,7 @@ namespace Troll
 			m_menuEditOverlays = m_menuProject->Append( Menu_EditOverlays, wxString() << TE_EDIT_OVERLAYS << wxT( "\tF10" ) );
 			m_menuTestProject = m_menuProject->Append( Menu_TestProject, wxString() << TE_PROJECT_TEST << wxT( "\tF11" ) );
 			m_menuProject->Append( Menu_ProjectProperties, wxString() << TE_PROJECT_PROPERTIES << wxT( "\tCtrl+P" ) );
+			m_menuHelp = new wxMenu;
 			m_menuHelp->Append( Menu_About, wxString() << TE_ABOUT );
 			m_menuBar->Append( m_menuFile, wxString() << TE_MENU_FILE );
 			m_menuBar->Append( m_menuEdition, wxString() << TE_MENU_EDIT );
@@ -610,8 +629,11 @@ namespace Troll
 
 		void MainFrame::OnOpenProject( wxCommandEvent & p_event )
 		{
-			wxString l_fileName = wxFileSelector( TE_TEXT_SELECT_PROJECT_FILE, wxEmptyString, wxEmptyString, wxEmptyString,
-												  wxString() << TE_TEXT_PROJECT_FILES << wxT( " (*.teproj)|*.teproj" ) );
+			wxString l_fileName = wxFileSelector( TE_TEXT_SELECT_PROJECT_FILE
+				, wxEmptyString
+				, wxEmptyString
+				, wxEmptyString
+				, wxString() << TE_TEXT_PROJECT_FILES << wxT( " (*.teproj)|*.teproj" ) );
 			OpenProjectFile( l_fileName );
 		}
 
@@ -626,6 +648,7 @@ namespace Troll
 		void MainFrame::OnNewProject( wxCommandEvent & p_event )
 		{
 			PropertyDialog l_dialog{ this, TE_TEXT_NEW_PROJECT, new NewProjectProperties };
+
 			l_dialog.ShowModal();
 		}
 
@@ -635,7 +658,7 @@ namespace Troll
 
 			if ( m_projectFrame->GetProject()->IsModified() )
 			{
-				int l_answer = wxMessageBox( _( "Would you like to save your modifications" ), _( "Confirm" ), wxYES_NO | wxCANCEL, this );
+				int l_answer = wxMessageBox( TE_SAVE_CONFIRM, TE_CONFIRM, wxYES_NO | wxCANCEL, this );
 
 				if ( l_answer == wxYES )
 				{

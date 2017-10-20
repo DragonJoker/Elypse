@@ -29,7 +29,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <wx/textfile.h>
 #include <wx/stattext.h>
 
-#include <GuiCommonPrerequisites.h>
+#include <GradientButton.h>
 
 namespace
 {
@@ -88,6 +88,9 @@ namespace
 MuseWriterDlg::MuseWriterDlg()
 	: wxDialog( NULL, wxID_ANY, _( "Muse file generator" ) )
 {
+	SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	SetForegroundColour( GuiCommon::PanelForegroundColour );
+
 	int l_width = 640;
 	int l_height = 480;
 	SetClientSize( wxSize( l_width, l_height ) );
@@ -100,42 +103,76 @@ MuseWriterDlg::MuseWriterDlg()
 	int l_top = OFFSET;
 
 	wxSize l_size = GetClientSize();
-	new wxStaticText( this, wxID_ANY, _( "Files" ), wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, STATIC_HEIGHT ) );
-	new wxStaticText( this, wxID_ANY, _( "Log" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	auto files = new wxStaticText( this, wxID_ANY, _( "Files" ), wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, STATIC_HEIGHT ) );
+	files->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	files->SetForegroundColour( GuiCommon::PanelForegroundColour );
+	auto log = new wxStaticText( this, wxID_ANY, _( "Log" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	log->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	log->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += STATIC_HEIGHT;
 	m_files = new wxListBox( this, eIDC_FILESLIST, wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, l_listHeight ) );
+	m_files->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_files->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	m_log = new wxListBox( this, eIDC_LISTLOG, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, l_listHeight ) );
+	m_log->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_log->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += OFFSET + l_listHeight;
 	l_left = OFFSET;
-	new wxButton( this, eIDC_BUTTONUP, _( "Up" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto up = new GuiCommon::GradientButton( this, eIDC_BUTTONUP, _( "Up" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	up->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	up->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left += OFFSET + BUTTON_SIZE.x;
-	new wxButton( this, eIDC_BUTTONDOWN, _( "Down" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto down = new GuiCommon::GradientButton( this, eIDC_BUTTONDOWN, _( "Down" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	down->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	down->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left += OFFSET + BUTTON_SIZE.x;
-	new wxButton( this, eIDC_BTNDEL, _( "Delete" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto remove = new GuiCommon::GradientButton( this, eIDC_BTNDEL, _( "Delete" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	remove->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	remove->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left += OFFSET + BUTTON_SIZE.x;
-	new wxButton( this, eIDC_BUTTONADD, _( "Add file(s)" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto addFiles = new GuiCommon::GradientButton( this, eIDC_BUTTONADD, _( "Add file(s)" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	addFiles->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	addFiles->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left += OFFSET + BUTTON_SIZE.x;
-	new wxButton( this, eIDC_BTNFOLDER, _( "Add Folder" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto addFolder = new GuiCommon::GradientButton( this, eIDC_BTNFOLDER, _( "Add Folder" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	addFolder->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	addFolder->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left = OFFSET;
 	l_top += OFFSET + BUTTON_SIZE.y;
-	new wxStaticText( this, wxID_ANY, _( "Config file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	auto config = new wxStaticText( this, wxID_ANY, _( "Config file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	config->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	config->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += STATIC_HEIGHT;
 	m_editCfg = new wxTextCtrl( this, eIDC_EDITCFGFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ) );
+	m_editCfg->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_editCfg->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left += l_rightListWidth;
-	new wxButton( this, eIDC_BTNCFGFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto ibrowse = new GuiCommon::GradientButton( this, eIDC_BTNCFGFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	ibrowse->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	ibrowse->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left = OFFSET;
 	l_top += BUTTON_SIZE.y;
-	new wxStaticText( this, wxID_ANY, _( "Output file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	auto output = new wxStaticText( this, wxID_ANY, _( "Output file:" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	output->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	output->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += STATIC_HEIGHT;
 	m_editOut = new wxTextCtrl( this, eIDC_EDITOUTFILE, wxEmptyString, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, BUTTON_SIZE.y ) );
+	m_editOut->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_editOut->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_left += l_rightListWidth;
-	new wxButton( this, eIDC_BTNOUTFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto obrowse = new GuiCommon::GradientButton( this, eIDC_BTNOUTFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	obrowse->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	obrowse->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 	l_left = l_width - OFFSET - BUTTON_SIZE.x;
 	l_top = l_height - ( OFFSET + BUTTON_SIZE.y ) * 2;
-	new wxButton( this, eIDC_BTNOK, _( "Generate" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto generate = new GuiCommon::GradientButton( this, eIDC_BTNOK, _( "Generate" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	generate->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	generate->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += OFFSET + BUTTON_SIZE.y;
-	new wxButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto exit = new GuiCommon::GradientButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	exit->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	exit->SetForegroundColour( GuiCommon::PanelForegroundColour );
 }
 
 MuseWriterDlg::~MuseWriterDlg()

@@ -20,6 +20,7 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "GUI/FolderList.h"
 
 #include <File.h>
+#include <GradientButton.h>
 
 namespace Troll
 {
@@ -42,8 +43,8 @@ namespace Troll
 			, m_folder( p_folder )
 			, m_filesList( NULL )
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			//std::cout << "FolderList::FolderList - " << m_folder << "\n";
 			wxSize l_size = GetClientSize();
@@ -52,12 +53,12 @@ namespace Troll
 			int l_iOffset = 5;
 			int l_iBtnX = l_iOffset;
 			int l_iBtnY = l_size.y - ( l_iOffset + l_iBtnCy ) * 2;
-			wxButton * l_buttonDel = new wxButton( this, Supprimer, TE_REMOVE, wxPoint( l_iBtnX, l_iBtnY ), wxSize( l_iBtnCx, l_iBtnCy ), wxBORDER_SIMPLE );
+			new GuiCommon::GradientButton( this, Supprimer, TE_REMOVE, wxPoint( l_iBtnX, l_iBtnY ), wxSize( l_iBtnCx, l_iBtnCy ), wxBORDER_SIMPLE );
 			l_iBtnX = l_size.x - l_iBtnCx - l_iOffset;
-			wxButton * l_buttonAdd = new wxButton( this, Ajouter, _( "Add" ), wxPoint( l_iBtnX, l_iBtnY ), wxSize( l_iBtnCx, l_iBtnCy ), wxBORDER_SIMPLE );
+			new GuiCommon::GradientButton( this, Ajouter, _( "Add" ), wxPoint( l_iBtnX, l_iBtnY ), wxSize( l_iBtnCx, l_iBtnCy ), wxBORDER_SIMPLE );
 			l_iBtnX = ( l_size.x - l_iBtnCx ) / 2;
 			l_iBtnY += l_iOffset + l_iBtnCy;
-			wxButton * l_buttonQuit = new wxButton( this, wxID_CANCEL, _( "Back" ), wxPoint( l_iBtnX, l_iBtnY ), wxSize( l_iBtnCx, l_iBtnCy ), wxBORDER_SIMPLE );
+			new GuiCommon::GradientButton( this, wxID_CANCEL, _( "Back" ), wxPoint( l_iBtnX, l_iBtnY ), wxSize( l_iBtnCx, l_iBtnCy ), wxBORDER_SIMPLE );
 			_listFolder();
 		}
 
@@ -112,17 +113,20 @@ namespace Troll
 				wxPoint l_position( 0, 0 );
 				wxSize l_size = GetClientSize();
 				m_filesList = new wxListBox( this, Liste, l_position, wxSize( l_size.x, l_size.y - 70 ), l_files, wxLB_EXTENDED | wxLB_NEEDED_SB );
-				m_filesList->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-				m_filesList->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+				m_filesList->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+				m_filesList->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			}
 		}
 
 		void FolderList::OnAddFile( wxCommandEvent & p_event )
 		{
-			wxFileDialog l_dialog( this, _( "Choose one or more files to open" ), wxT( "" ), wxT( "" ), wxString() << _( "All" ) << wxT( "|*.*" ),
-								   wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
-			l_dialog.SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			l_dialog.SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			wxFileDialog l_dialog( this, _( "Choose one or more files to open" )
+				, wxEmptyString
+				, wxEmptyString
+				, wxString() << _( "All" ) << wxT( "|*.*" )
+				, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
+			l_dialog.SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_dialog.SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			if ( l_dialog.ShowModal() == wxID_OK )
 			{
@@ -138,7 +142,7 @@ namespace Troll
 
 		void FolderList::OnDelFile( wxCommandEvent & p_event )
 		{
-			if ( m_filesList == NULL )
+			if ( !m_filesList )
 			{
 				return;
 			}

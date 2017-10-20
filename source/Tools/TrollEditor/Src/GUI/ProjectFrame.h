@@ -211,6 +211,7 @@ namespace Troll
 			void OnKillFocus( wxFocusEvent & p_event );
 			void OnActivate( wxActivateEvent & p_event );
 			void OnNotebook( wxNotebookEvent & p_event );
+			void OnNotebookPageClosed( wxAuiNotebookEvent & p_event );
 			void OnNotebookMiddleDown( wxMouseEvent & p_event );
 
 			void OnSearch( wxCommandEvent & p_event );

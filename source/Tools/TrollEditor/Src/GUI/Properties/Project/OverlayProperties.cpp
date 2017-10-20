@@ -25,7 +25,7 @@ namespace Troll
 		namespace Properties
 		{
 			OverlayProperties::OverlayProperties( TrollOverlay & p_overlay )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_OVERLAY }
+				: ObjectProperty{ DataType::Overlay }
 				, m_overlay( p_overlay )
 			{
 			}

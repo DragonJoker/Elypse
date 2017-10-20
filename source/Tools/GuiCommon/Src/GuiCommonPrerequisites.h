@@ -52,6 +52,14 @@ namespace GuiCommon
 	bool GetReal( String const & p_value, float p_min, float p_max, float & p_res );
 	bool GetInt( String const & p_value, int & p_res );
 	bool GetInt( String const & p_value, int p_min, int p_max, int & p_res );
+
+	static const wxColour PanelBackgroundColour = wxColour( 30, 30, 30 );
+	static const wxColour PanelForegroundColour = wxColour( 220, 220, 220 );
+	static const wxColour BorderColour = wxColour( 90, 90, 90 );
+	static const wxColour InactiveTabColour = wxColour( 60, 60, 60 );
+	static const wxColour InactiveTextColour = wxColour( 200, 200, 200 );
+	static const wxColour ActiveTabColour = wxColour( 51, 153, 255, 255 );
+	static const wxColour ActiveTextColour = wxColour( 255, 255, 255, 255 );
 }
 
 #endif

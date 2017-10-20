@@ -64,9 +64,9 @@ namespace Troll
 			void LoadScene( ProjectComponents::ScenePtr p_scene );
 			TreeScene & AddSceneToProject( ProjectComponents::ScenePtr p_scene );
 			wxTreeItemId AddFolderToScene( wxString const & p_sceneName, wxString const & p_folderName );
-			wxTreeItemId AddFileToFolder( wxTreeItemId const & p_item, wxString const & idFile, TETreeItemType p_type, bool p_exists );
-			void ShowContextMenuFichier( wxPoint const & pos, TETreeItemData * p_item );
-			wxTreeItemId AddExistingFileToProjet( wxTreeItemId const & item, TETreeItemType p_type, const wxString idFile );
+			wxTreeItemId AddFileToFolder( wxTreeItemId const & p_item, wxString const & idFile, TreeItemType p_type, bool p_exists );
+			void ShowContextMenuFichier( wxPoint const & pos, TreeItemData * p_item );
+			wxTreeItemId AddExistingFileToProjet( wxTreeItemId const & item, TreeItemType p_type, const wxString idFile );
 
 			wxTreeItemId GetFolderId( wxString const & p_name );
 			wxTreeItemId GetItemByName( wxString const & p_name );

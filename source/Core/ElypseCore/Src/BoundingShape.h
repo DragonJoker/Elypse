@@ -31,21 +31,6 @@ namespace Elypse
 	{
 		class d_dll_export BoundingShape : d_noncopyable
 		{
-		protected:
-			Ogre::AxisAlignedBox		m_box;
-
-			BoundingShapeClass	m_class;
-			Real				m_radius;
-			bool				m_enabled;
-			Ogre::Vector3				m_position;
-			uint32_t		m_maxContacts;
-
-			Ode::dGeomID				m_geom;
-			Space 		*		m_space;
-			PhysicsObject 	*	m_parentObject;
-			Ode::dContact 	*		m_contacts;
-
-
 		public:
 			BoundingShape( BoundingShapeClass p_class );
 			virtual ~BoundingShape();
@@ -79,26 +64,40 @@ namespace Elypse
 				m_enabled = p_enabled;
 			}
 
-			inline Real						GetRadius()const
+			inline Real GetRadius()const
 			{
 				return m_radius;
 			}
-			inline bool						IsEnabled()const
+			inline bool IsEnabled()const
 			{
 				return m_enabled;
 			}
-			inline Ode::dGeomID				GetGeomID()const
+			inline Ode::dGeomID GetGeomID()const
 			{
 				return m_geom;
 			}
-			inline Space 		*			GetSpace()const
+			inline Space * GetSpace()const
 			{
 				return m_space;
 			}
-			inline BoundingShapeClass		GetClass()const
+			inline BoundingShapeClass GetClass()const
 			{
 				return m_class;
 			}
+
+		protected:
+			Ogre::AxisAlignedBox m_box;
+
+			BoundingShapeClass m_class;
+			Real m_radius;
+			bool m_enabled;
+			Ogre::Vector3 m_position;
+			uint32_t m_maxContacts;
+
+			Ode::dGeomID m_geom;
+			Space * m_space;
+			PhysicsObject * m_parentObject;
+			Ode::dContact * m_contacts;
 		};
 	}
 }

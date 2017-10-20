@@ -21,6 +21,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "GUI/StcTextEditor.h"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -45,34 +47,28 @@ namespace Troll
 			, m_textPanel( p_textPanel )
 			, m_first( true )
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 			wxPoint l_position( 10, 5 );
 			wxSize l_size( GetClientSize().x - 20, 20 );
 			wxPanel * l_panel = new wxPanel( this, wxID_ANY, wxPoint( 0, 0 ), GetClientSize() );
-			l_panel->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			l_panel->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			l_panel->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_panel->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			wxStaticText * l_stTxt = new wxStaticText( l_panel, wxID_ANY, _( "Find the text..." ), l_position );
-			l_stTxt->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			l_stTxt->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			l_stTxt->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_stTxt->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			m_textToReplace = new wxTextCtrl( l_panel, rdTextToReplace, wxEmptyString, l_position += wxPoint( 0, 15 ), l_size, wxBORDER_SIMPLE );
-			m_textToReplace->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_textToReplace->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_textToReplace->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_textToReplace->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			l_stTxt = new wxStaticText( l_panel, wxID_ANY, _( "Replace with..." ), l_position += wxPoint( 0, 25 ) );
-			l_stTxt->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			l_stTxt->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			l_stTxt->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_stTxt->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			m_replacementText = new wxTextCtrl( l_panel, rdReplacementText, wxEmptyString, l_position += wxPoint( 0, 15 ), l_size, wxBORDER_SIMPLE );
-			m_replacementText->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_replacementText->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_find = new wxButton( l_panel, rdFind, _( "Next" ), l_position += wxPoint( 0, 25 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
-			m_find->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_find->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_replace = new wxButton( l_panel, rdReplace, _( "Replace" ), l_position += wxPoint( 95, 0 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
-			m_replace->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_replace->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_replaceAll = new wxButton( l_panel, rdReplaceAll, _( "Replace All" ), l_position += wxPoint( 0, 25 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
-			m_replaceAll->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_replaceAll->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_replacementText->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_replacementText->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			new GuiCommon::GradientButton( l_panel, rdFind, _( "Next" ), l_position += wxPoint( 0, 25 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
+			new GuiCommon::GradientButton( l_panel, rdReplace, _( "Replace" ), l_position += wxPoint( 95, 0 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
+			new GuiCommon::GradientButton( l_panel, rdReplaceAll, _( "Replace All" ), l_position += wxPoint( 0, 25 ), wxSize( 85, 20 ), wxBORDER_SIMPLE );
 		}
 
 		void ReplaceDialog::OnFind( wxCommandEvent & p_event )

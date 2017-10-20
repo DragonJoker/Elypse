@@ -12,7 +12,7 @@ namespace Troll
 		namespace Properties
 		{
 			SceneNodeProperties::SceneNodeProperties( ProjectComponents::Objects3D::TrollSceneNode & p_sceneNode )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_SCENE_NODE }
+				: ObjectProperty{ DataType::SceneNode }
 				, m_sceneNode{ p_sceneNode }
 			{
 			}

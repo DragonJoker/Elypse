@@ -23,9 +23,6 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include <vector>
 #include <map>
 
-#define BEGIN_TROLL_NAMESPACE BEGIN_ELYPSE_NAMESPACE { namespace Troll
-#define END_TROLL_NAMESPACE } END_ELYPSE_NAMESPACE
-
 class wxWindow;
 
 namespace Troll
@@ -41,14 +38,8 @@ namespace Troll
 	static const wxString GRAPHIC_DATA_FOLDERS = _( "Graphic (2D and 3D) data folders" );
 	static const wxString OTHER_DATA_FOLDERS = _( "Non graphic data folders" );
 	static const wxString TROLL_EDITOR_ERROR = _( "TrollEditor Error" );
-
-	static const wxColour PANEL_BACKGROUND_COLOUR = wxColour( 30, 30, 30 );
-	static const wxColour PANEL_FOREGROUND_COLOUR = wxColour( 220, 220, 220 );
-	static const wxColour BORDER_COLOUR = wxColour( 90, 90, 90 );
-	static const wxColour INACTIVE_TAB_COLOUR = wxColour( 60, 60, 60 );
-	static const wxColour INACTIVE_TEXT_COLOUR = wxColour( 200, 200, 200 );
-	static const wxColour ACTIVE_TAB_COLOUR = wxColour( 51, 153, 255, 255 );
-	static const wxColour ACTIVE_TEXT_COLOUR = wxColour( 255, 255, 255, 255 );
+	static const wxString TE_OK = _( "OK" );
+	static const wxString TE_CANCEL = _( "Cancel" );
 
 	void LogDebug( wxString const & p_message );
 	void LogMessage( wxString const & p_message );
@@ -68,105 +59,6 @@ namespace Troll
 	{
 		LogError( make_wxString( p_message ) );
 	}
-}
-
-#undef TROLL_HAS_MAKE_UNIQUE
-
-#if defined( _MSC_VER)
-#	if _MSC_VER >= 1800
-#		define TROLL_HAS_MAKE_UNIQUE				1
-#	elif _MSC_VER >= 1700
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	elif _MSC_VER >= 1600
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	elif _MSC_VER > 1500
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	else
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	endif
-#elif defined( __clang__)
-#	define TROLL_HAS_MAKE_UNIQUE					__has_feature(cxx_variadic_templates)
-#elif defined( __GNUG__)
-#	define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#	if GCC_VERSION >= 40900
-#		if defined( _WIN32 )
-#			define TROLL_HAS_MAKE_UNIQUE			1
-#		elif GCC_VERSION >= 40500
-#			define TROLL_HAS_MAKE_UNIQUE			0
-#		else
-#			define TROLL_HAS_MAKE_UNIQUE			0
-#		endif
-#	elif GCC_VERSION >= 40600
-#		if defined( _WIN32 )
-#			define TROLL_HAS_MAKE_UNIQUE			0
-#		else
-#			define TROLL_HAS_MAKE_UNIQUE			0
-#		endif
-#	elif GCC_VERSION >= 40400
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	elif GCC_VERSION >= 40300
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	else
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	endif
-#elif defined( __BORLANDC__ )
-#	warning "Theoretically supported compiler, but untested yet"
-#	if __BORLANDC__ >= 0x621
-#		define TROLL_HAS_MAKE_UNIQUE				0
-#	endif
-#else
-#	error "Yet unsupported compiler"
-#endif
-
-namespace std
-{
-#if !TROLL_HAS_MAKE_UNIQUE
-	template< class T >
-	unique_ptr< T > make_unique()
-	{
-		return unique_ptr< T >( new T );
-	}
-	template< class T, typename Arg1 >
-	unique_ptr< T > make_unique( Arg1 && arg1 )
-	{
-		return unique_ptr< T >( new T( arg1 ) );
-	}
-	template< class T, typename Arg1, typename Arg2 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2 ) );
-	}
-	template< class T, typename Arg1, typename Arg2, typename Arg3 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2, Arg3 && arg3 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2, arg3 ) );
-	}
-	template< class T, typename Arg1, typename Arg2, typename Arg3, typename Arg4 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2, Arg3 && arg3, Arg4 && arg4 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2, arg3, arg4 ) );
-	}
-	template< class T, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2, Arg3 && arg3, Arg4 && arg4, Arg5 && arg5 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2, arg3, arg4, arg5 ) );
-	}
-	template< class T, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2, Arg3 && arg3, Arg4 && arg4, Arg5 && arg5, Arg6 && arg6 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2, arg3, arg4, arg5, arg6 ) );
-	}
-	template< class T, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2, Arg3 && arg3, Arg4 && arg4, Arg5 && arg5, Arg6 && arg6, Arg7 && arg7 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2, arg3, arg4, arg5, arg6, arg7 ) );
-	}
-	template< class T, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6, typename Arg7, typename Arg8 >
-	unique_ptr< T > make_unique( Arg1 && arg1, Arg2 && arg2, Arg3 && arg3, Arg4 && arg4, Arg5 && arg5, Arg6 && arg6, Arg7 && arg7, Arg8 && arg8 )
-	{
-		return unique_ptr< T >( new T( arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8 ) );
-	}
-#endif
 }
 
 #endif

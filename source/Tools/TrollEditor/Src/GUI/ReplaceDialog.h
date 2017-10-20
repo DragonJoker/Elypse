@@ -43,9 +43,6 @@ namespace Troll
 			wxStcTextEditor * m_textPanel;
 			wxTextCtrl * m_textToReplace;
 			wxTextCtrl * m_replacementText;
-			wxButton * m_find;
-			wxButton * m_replace;
-			wxButton * m_replaceAll;
 			bool m_first;
 			wxString m_text;
 		};

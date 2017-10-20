@@ -39,16 +39,11 @@ namespace Troll
 			const wxString DEFAULT_PROJECT_NAME = _( "Project name" );
 			const wxString DEFAULT_SCENE_NAME = _( "Scene name" );
 			const wxString DEFAULT_FOLDER = _( "Path" );
-
-			ProjectComponents::Project & doCreateProject( ProjectComponents::ProjectSPtr & project )
-			{
-				project = std::make_shared< ProjectComponents::Project >();
-				return *project;
-			}
 		}
 
-		NewProjectProperties::NewProjectProperties()
-			: ProjectProperties{ doCreateProject( m_project ) }
+		NewProjectProperties::NewProjectProperties( ProjectComponents::ProjectSPtr project )
+			: ProjectProperties{ *project }
+			, m_project{ project }
 			, m_name{ DEFAULT_PROJECT_NAME }
 			, m_sceneName{ DEFAULT_SCENE_NAME }
 			, m_path{ DEFAULT_FOLDER }
@@ -211,8 +206,11 @@ namespace Troll
 			}
 			else
 			{
-				wxString l_imagePath = wxFileSelector( _( "Choose an image" ), wxEmptyString, wxEmptyString, wxEmptyString,
-													   wxString() << _( "BMP files" ) << wxT( " (*.bmp)|*.bmp|" ) << _( "PNG files" ) << wxT( " (*.png)|*.png|" ) << _( "JPEG files" ) << wxT( " (*.jpg)|*.jpg" ) );
+				wxString l_imagePath = wxFileSelector( _( "Choose an image" )
+					, wxEmptyString
+					, wxEmptyString
+					, wxEmptyString
+					, wxString() << _( "BMP files" ) << wxT( " (*.bmp)|*.bmp|" ) << _( "PNG files" ) << wxT( " (*.png)|*.png|" ) << _( "JPEG files" ) << wxT( " (*.jpg)|*.jpg" ) );
 
 				if ( !l_imagePath.empty() )
 				{

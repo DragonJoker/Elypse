@@ -67,11 +67,24 @@ using namespace Ogre;
 namespace
 {
 	char const * const c_installWebsiteUrl = "http://www.fordev-studio.com/Elypse/Install/";
-}
 
-void OdeErrorCallback( int p_errnum, char const * const p_msg, va_list ap )
-{
-	EMUSE_MESSAGE_RELEASE( "ERROR( " + StringConverter::toString( p_errnum ) + " ) -> " + String( p_msg ) );
+	std::wstring ToWChar( std::string const & src )
+	{
+		std::vector< wchar_t > dst;
+		dst.resize( src.size() + 1u );
+		int length = MultiByteToWideChar( CP_UTF8
+			, 0
+			, src.c_str()
+			, int( src.size() )
+			, dst.data()
+			, int( dst.size() ) );
+		return std::wstring( dst.data(), dst.data() + length + 1 );
+	}
+
+	void OdeErrorCallback( int p_errnum, char const * const p_msg, va_list ap )
+	{
+		EMUSE_MESSAGE_RELEASE( "ERROR( " + StringConverter::toString( p_errnum ) + " ) -> " + String( p_msg ) );
+	}
 }
 
 GENLIB_INIT_SINGLETON( ElypseController );
@@ -379,7 +392,10 @@ void ElypseController::InitialiseRessources( String const & p_prefix )
 	if ( ! FileExists( m_installDir / "cfg" / "core.zip" ) )
 	{
 #if ELYPSE_WINDOWS
-		MessageBoxA( NULL, "Le player ne trouve pas certains fichiers nécessaires\nVeuillez réinstaller le player\nhttp://www.fdsstudio.com", "Player mal installé", 0 );
+		MessageBoxW( NULL
+			, ToWChar( "Le player ne trouve pas certains fichiers nécessaires\nVeuillez réinstaller le player" ).c_str()
+			, ToWChar( "Player mal installé" ).c_str()
+			, 0 );
 #else
 		//
 #endif

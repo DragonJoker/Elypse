@@ -36,8 +36,8 @@ namespace Troll
 			ElypsePanel( wxWindow * p_parent, wxPoint const & p_position, wxSize const & p_size )
 				: wxPanel( p_parent, wxID_ANY, p_position, p_size, wxWANTS_CHARS )
 			{
-				SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-				SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+				SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+				SetForegroundColour( GuiCommon::PanelForegroundColour );
 			}
 
 			~ElypsePanel()

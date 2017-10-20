@@ -34,6 +34,11 @@ namespace Troll
 {
 	using namespace ProjectComponents;
 
+	namespace
+	{
+		wxString const TE_SAVE_AS = _( "Save as ..." );
+	}
+
 	void ProjectSaver::SaveProject( Project & p_project )
 	{
 		wxString l_fileName;
@@ -44,8 +49,12 @@ namespace Troll
 		}
 		else
 		{
-			l_fileName = wxFileSelector( _( "Save as ..." ), p_project.GetPath(), p_project.GetName() + wxT( ".teproj" ), wxEmptyString,
-										 _( "TrollEditor Project file" ) + wxString( wxT( " (*.teproj)|*.teproj" ) ), wxFD_SAVE );
+			l_fileName = wxFileSelector( TE_SAVE_AS
+				, p_project.GetPath()
+				, p_project.GetName() + wxT( ".teproj" )
+				, wxEmptyString
+				, _( "TrollEditor Project file" ) + wxString( wxT( " (*.teproj)|*.teproj" ) )
+				, wxFD_SAVE );
 			LogDebug( l_fileName );
 			p_project.SetProjectFileName( l_fileName );
 		}
@@ -113,19 +122,31 @@ namespace Troll
 		switch ( p_file.Filetype )
 		{
 		case sceneFile:
-			l_fileName = wxFileSelector( _( "Save as ..." ), p_project.GetPath(),
-										 wxEmptyString, wxEmptyString, _( "Elypse Scene file" ) + wxString( wxT( " (*.emscene)|*.emscene" ) ), wxFD_SAVE );
+			l_fileName = wxFileSelector( TE_SAVE_AS
+				, p_project.GetPath()
+				, wxEmptyString
+				, wxEmptyString
+				, _( "Elypse Scene file" ) + wxString( wxT( " (*.emscene)|*.emscene" ) )
+				, wxFD_SAVE );
 			break;
 
 		case loadScriptFile:
 		case unloadScriptFile:
-			l_fileName = wxFileSelector( _( "Save as ..." ), p_project.GetPath(),
-										 wxEmptyString, wxEmptyString, _( "Elypse Script file" ) + wxString( wxT( " (*.emscript)|*.emscript" ) ), wxFD_SAVE );
+			l_fileName = wxFileSelector( TE_SAVE_AS
+				, p_project.GetPath()
+				, wxEmptyString
+				, wxEmptyString
+				, _( "Elypse Script file" ) + wxString( wxT( " (*.emscript)|*.emscript" ) )
+				, wxFD_SAVE );
 			break;
 
 		case dataFile:
-			l_fileName = wxFileSelector( _( "Save as ..." ), p_project.GetPath(),
-										 wxEmptyString, wxEmptyString, _( "Zip file" ) + wxString( wxT( " (*.zip)|*.zip" ) ), wxFD_SAVE );
+			l_fileName = wxFileSelector( TE_SAVE_AS
+				, p_project.GetPath()
+				, wxEmptyString
+				, wxEmptyString
+				, _( "Zip file" ) + wxString( wxT( " (*.zip)|*.zip" ) )
+				, wxFD_SAVE );
 			break;
 
 		default:

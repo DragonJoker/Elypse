@@ -24,6 +24,19 @@ namespace Troll
 {
 	namespace GUI
 	{
+		ElypseFrame::ElypseFrame( wxWindow * p_parent, wxPoint const & p_position, wxSize const & p_size )
+			: wxFrame( p_parent, wxID_ANY, _( "Elypse Window" ), p_position, p_size, wxWANTS_CHARS | wxSYSTEM_MENU | wxCAPTION )
+			, m_elypseCtrl( NULL )
+		{
+			SetClientSize( p_size );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
+		}
+
+		ElypseFrame::~ElypseFrame()
+		{
+		}
+
 		BEGIN_EVENT_TABLE( ElypseFrame, wxFrame )
 			EVT_SET_FOCUS( ElypseFrame::OnSetFocus )
 			EVT_KILL_FOCUS( ElypseFrame::OnKillFocus )
@@ -47,19 +60,6 @@ namespace Troll
 			EVT_ENTER_WINDOW( ElypseFrame::OnMouseEnter )
 			EVT_LEAVE_WINDOW( ElypseFrame::OnMouseLeave )
 		END_EVENT_TABLE()
-
-		ElypseFrame::ElypseFrame( wxWindow * p_parent, wxPoint const & p_position, wxSize const & p_size )
-			: wxFrame( p_parent, wxID_ANY, _( "Elypse Window" ), p_position, p_size, wxWANTS_CHARS | wxSYSTEM_MENU | wxCAPTION )
-			, m_elypseCtrl( NULL )
-		{
-			SetClientSize( p_size );
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-		}
-
-		ElypseFrame::~ElypseFrame()
-		{
-		}
 
 		void ElypseFrame::OnSetFocus( wxFocusEvent & p_event )
 		{

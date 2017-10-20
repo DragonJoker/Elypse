@@ -23,6 +23,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "xpm/BMPKeumar.xpm"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -44,11 +46,13 @@ namespace Troll
 			: wxFrame( parent, wxID_ANY, _( "About Troll Editor" ), wxDefaultPosition, wxSize( 240, 155 ), wxFRAME_TOOL_WINDOW | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT )
 			, m_easterEggFrame( NULL )
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			wxSize l_size = GetClientSize();
 			wxPanel * l_panel = new wxPanel( this, wxID_ANY, wxPoint( 0, 0 ), l_size, wxBORDER_NONE );
+			l_panel->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_panel->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			wxBitmap l_bitmap = wxBITMAP( BMPKeumar );
 
 			if ( l_bitmap.IsOk() )
@@ -60,9 +64,13 @@ namespace Troll
 			}
 
 			wxPoint l_position( 20, 20 );
-			wxStaticText * l_line1 = new wxStaticText( l_panel, wxID_ANY, _( "Troll Editor, ZE Elypse Project Creator" ), l_position );
+			wxStaticText * l_line1 = new wxStaticText( l_panel, wxID_ANY, _( "Troll Editor, The Elypse Project Creator" ), l_position );
+			l_line1->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_line1->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			wxStaticText * l_line2 = new wxStaticText( l_panel, wxID_ANY, wxT( "Version : 0.1.0.0" ), l_position += wxPoint( 0, 40 ) );
-			m_back = new wxButton( l_panel, afBack, _( "OK" ), wxPoint( ( l_size.x / 2 ) - 35, l_size.y - 25 ), wxSize( 70, 20 ) );
+			l_line2->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			l_line2->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_back = new GuiCommon::GradientButton( l_panel, afBack, TE_OK, wxPoint( ( l_size.x / 2 ) - 35, l_size.y - 25 ), wxSize( 70, 20 ) );
 			m_word.clear();
 		}
 

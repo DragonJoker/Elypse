@@ -30,8 +30,8 @@ namespace Troll
 		TEScrollablePanel::TEScrollablePanel( wxWindow * p_parent, wxWindowID p_id, wxPoint p_position, wxSize p_size )
 			: wxPanel( p_parent, p_id, p_position, p_size, wxVSCROLL | wxALWAYS_SHOW_SB )
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 		}
 
 		TEScrollablePanel::~TEScrollablePanel()

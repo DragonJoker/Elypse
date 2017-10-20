@@ -17,7 +17,7 @@ namespace Troll
 		namespace Properties
 		{
 			EntityProperties::EntityProperties( ProjectComponents::Objects3D::TrollEntity & p_entity )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_ENTITY }
+				: ObjectProperty{ DataType::Entity }
 				, m_entity{ p_entity }
 			{
 			}

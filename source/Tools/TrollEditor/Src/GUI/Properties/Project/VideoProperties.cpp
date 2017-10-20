@@ -12,7 +12,7 @@ namespace Troll
 		namespace Properties
 		{
 			VideoProperties::VideoProperties( ProjectComponents::Media::TrollVideo & p_video )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_VIDEO }
+				: ObjectProperty{ DataType::Video }
 				, m_video{ p_video }
 			{
 			}
@@ -59,8 +59,11 @@ namespace Troll
 
 			bool VideoProperties::OnEditUrl( wxPGProperty * p_property )
 			{
-				wxFileDialog l_dialog( wxGetApp().GetProjectFrame(), _( "Choose a video file" ), wxEmptyString, wxEmptyString,
-									   wxString() << _( "Video files" ) << wxT( " (*.mpeg;*.avi;*.ogm;*.wmv)|*.mpeg;*.avi;*.ogm;*.wmv" ) );
+				wxFileDialog l_dialog( wxGetApp().GetProjectFrame()
+					, _( "Choose a video file" )
+					, wxEmptyString
+					, wxEmptyString
+					, wxString() << _( "Video files" ) << wxT( " (*.mpeg;*.avi;*.ogm;*.wmv)|*.mpeg;*.avi;*.ogm;*.wmv" ) );
 
 				if ( l_dialog.ShowModal() )
 				{

@@ -125,7 +125,7 @@ namespace Troll
 				return l_return;
 			}
 
-			void AddFileToTree( FileType p_type, wxTreeItemId p_id, GUI::TETreeItemType p_treeType, Scene * p_scene, wxString const & p_strFile, GUI::FilesTree * p_tree, FileArray & p_array )
+			void AddFileToTree( FileType p_type, wxTreeItemId p_id, GUI::TreeItemType p_treeType, Scene * p_scene, wxString const & p_strFile, GUI::FilesTree * p_tree, FileArray & p_array )
 			{
 				File l_file{ p_scene, p_type, p_strFile, p_scene->GetMuseFile(), p_id };
 				std::clog << "AddFileToTree - " << l_file.m_scene->GetName() << " - " << l_file.FileName << "\n";

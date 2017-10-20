@@ -15,8 +15,8 @@ namespace Troll
 				: wxPGProperty( label, name )
 			{
 				SetValueI( value );
-				AddPrivateChild( new wxIntProperty( _( "X" ), wxPG_LABEL, value.x ) );
-				AddPrivateChild( new wxIntProperty( _( "Y" ), wxPG_LABEL, value.y ) );
+				AddPrivateChild( new wxIntProperty( wxT( "X" ), wxPG_LABEL, value.x ) );
+				AddPrivateChild( new wxIntProperty( wxT( "Y" ), wxPG_LABEL, value.y ) );
 			}
 
 			wxPointProperty::~wxPointProperty()

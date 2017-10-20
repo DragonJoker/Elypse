@@ -10,7 +10,7 @@ namespace Troll
 		namespace Properties
 		{
 			KeyFrameProperties::KeyFrameProperties( ProjectComponents::Temporal::TrollKeyFrame & p_keyFrame )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_ENTITY }
+				: ObjectProperty{ DataType::Entity }
 				, m_key{ p_keyFrame }
 			{
 			}

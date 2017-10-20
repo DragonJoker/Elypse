@@ -6,7 +6,7 @@ namespace Troll
 	{
 		namespace Properties
 		{
-			ObjectProperty::ObjectProperty( ePROPERTY_DATA_TYPE p_type )
+			ObjectProperty::ObjectProperty( DataType p_type )
 				: m_type{ p_type }
 			{
 			}

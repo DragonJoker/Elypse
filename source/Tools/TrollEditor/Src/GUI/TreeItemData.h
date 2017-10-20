@@ -26,53 +26,53 @@ namespace Troll
 {
 	namespace GUI
 	{
-		enum TETreeItemType
+		enum class TreeItemType
 		{
-			TITProjectRoot,
-			TITSceneRoot,
-			TITSceneFile,
-			TITLoadScriptFile,
-			TITUnloadScriptFile,
-			TITDataFile,
-			TITDataFolder,
-			TITFunctionTitle,
-			TITFunction,
-			TITClassFunction,
-			TITFunctionsRoot,
-			TITObjectsRoot,
-			TITNodes,
-			TITNode,
-			TITObjects,
-			TITObject,
-			TITLights,
-			TITLight,
-			TITCameras,
-			TITCamera,
-			TITOverlays,
-			TITOverlay,
-			TITAnimationGroups,
-			TITAnimationGroup,
-			TITAnimatedObject,
-			TITSounds,
-			TITSound,
-			TITSoundObject,
-			TITSoundPlaylist,
-			TITVideos,
-			TITVideo,
-			TITVideoObject,
-			TITConstant,
-			TITConstantTitle
+			ProjectRoot,
+			SceneRoot,
+			SceneFile,
+			LoadScriptFile,
+			UnloadScriptFile,
+			DataFile,
+			DataFolder,
+			FunctionTitle,
+			Function,
+			ClassFunction,
+			FunctionsRoot,
+			ObjectsRoot,
+			Nodes,
+			Node,
+			Objects,
+			Object,
+			Lights,
+			Light,
+			Cameras,
+			Camera,
+			Overlays,
+			Overlay,
+			AnimationGroups,
+			AnimationGroup,
+			AnimatedObject,
+			Sounds,
+			Sound,
+			SoundObject,
+			SoundPlaylist,
+			Videos,
+			Video,
+			VideoObject,
+			Constant,
+			ConstantTitle
 		};
 
-		class TETreeItemData
+		class TreeItemData
 			: public wxTreeItemData
 		{
 		private:
 			wxString m_desc;
-			TETreeItemType m_fileType;
+			TreeItemType m_fileType;
 
 		public:
-			TETreeItemData( wxString const & desc, TETreeItemType p_type )
+			TreeItemData( wxString const & desc, TreeItemType p_type )
 				: m_desc( desc )
 				, m_fileType( p_type )
 			{
@@ -80,7 +80,7 @@ namespace Troll
 
 		public:
 
-			inline TETreeItemType GetFileType()const
+			inline TreeItemType GetFileType()const
 			{
 				return m_fileType;
 			}

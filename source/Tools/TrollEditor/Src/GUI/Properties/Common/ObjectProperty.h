@@ -41,23 +41,23 @@ namespace Troll
 			\~french
 			\brief		Les type d'objets supportés, dans les propriétés, et à l'affichage
 			*/
-			typedef enum ePROPERTY_DATA_TYPE
+			enum class DataType
 			{
-				ePROPERTY_DATA_TYPE_PROJECT,
-				ePROPERTY_DATA_TYPE_OVERLAY,
-				ePROPERTY_DATA_TYPE_CAMERA,
-				ePROPERTY_DATA_TYPE_CONTINUOUS_EVENT,
-				ePROPERTY_DATA_TYPE_ENTITY,
-				ePROPERTY_DATA_TYPE_KEY_FRAME,
-				ePROPERTY_DATA_TYPE_LIGHT,
-				ePROPERTY_DATA_TYPE_PONCTUAL_EVENT,
-				ePROPERTY_DATA_TYPE_SCENE_NODE,
-				ePROPERTY_DATA_TYPE_SEQUENCE,
-				ePROPERTY_DATA_TYPE_SOUND_OBJECT,
-				ePROPERTY_DATA_TYPE_SOUND,
-				ePROPERTY_DATA_TYPE_VIDEO_OBJECT,
-				ePROPERTY_DATA_TYPE_VIDEO,
-			}	ePROPERTY_DATA_TYPE;
+				Project,
+				Overlay,
+				Camera,
+				ContinuousEvent,
+				Entity,
+				KeyFrame,
+				Light,
+				PonctualEvent,
+				SceneNode,
+				Sequence,
+				SoundObject,
+				Sound,
+				VideoObject,
+				Video,
+			};
 			/*!
 			\author 	Sylvain DOREMUS
 			\date 		24/08/2015
@@ -85,7 +85,7 @@ namespace Troll
 				 *\param[in]	p_editable	Dit si les propriétés sont modifiables
 				 *\param[in]	p_type		Le type d'objet
 				 */
-				ObjectProperty( ePROPERTY_DATA_TYPE p_type );
+				ObjectProperty( DataType p_type );
 				/**
 				 *\~english
 				 *\brief		Destructor
@@ -128,7 +128,7 @@ namespace Troll
 				 *\brief		Récupère le type d'objet
 				 *\return		La valeur
 				 */
-				inline ePROPERTY_DATA_TYPE GetType()const
+				inline DataType GetType()const
 				{
 					return m_type;
 				}
@@ -351,7 +351,7 @@ namespace Troll
 				}
 
 			private:
-				ePROPERTY_DATA_TYPE const m_type;
+				DataType const m_type;
 				std::map< wxString, PropertyChangeAction > m_actions;
 				std::map< wxPGProperty *, ValueUpdateAction > m_updates;
 				wxPropertyGrid * m_grid{ nullptr };

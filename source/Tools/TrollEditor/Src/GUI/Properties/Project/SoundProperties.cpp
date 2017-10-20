@@ -16,7 +16,7 @@ namespace Troll
 		namespace Properties
 		{
 			SoundProperties::SoundProperties( TrollSound & p_sound )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_SOUND }
+				: ObjectProperty{ DataType::Sound }
 				, m_sound{ p_sound }
 			{
 			}
@@ -108,9 +108,11 @@ namespace Troll
 
 			bool SoundProperties::OnEditUrl( wxPGProperty * p_property )
 			{
-				wxFileDialog l_dialog( wxGetApp().GetProjectFrame(), _( "Choose an audio file" ), wxEmptyString,
-									   wxEmptyString,
-									   wxString() << _( "Audio files" ) << wxT( " (*.wav;*.mp3;*.ogg;*.wma)|*.wav;*.mp3;*.ogg;*.wma" ) );
+				wxFileDialog l_dialog( wxGetApp().GetProjectFrame()
+					, _( "Choose an audio file" )
+					, wxEmptyString
+					, wxEmptyString
+					, wxString() << _( "Audio files" ) << wxT( " (*.wav;*.mp3;*.ogg;*.wma)|*.wav;*.mp3;*.ogg;*.wma" ) );
 
 				if ( l_dialog.ShowModal() )
 				{
@@ -125,7 +127,7 @@ namespace Troll
 					wxString text = _( "Sounds" );
 					auto & l_file = wxGetApp().GetProjectFrame()->GetProject()->GetMainScene()->AddFile( dataFolder, text, true, false );
 					l_file.FolderId = wxGetApp().GetProjectFrame()->GetFilesList()->GetFolderId( OTHER_DATA_FOLDERS );
-					l_file.ItemId = wxGetApp().GetProjectFrame()->GetFilesList()->AddExistingFileToProjet( l_file.FolderId, TITDataFolder, text );
+					l_file.ItemId = wxGetApp().GetProjectFrame()->GetFilesList()->AddExistingFileToProjet( l_file.FolderId, TreeItemType::DataFolder, text );
 					FileCopy( l_filePath, l_folderPath / l_filePath.GetLeaf() );
 					Path l_relPath = make_string( wxGetApp().GetProjectFrame()->GetProject()->GetMainScene()->GetName() );
 					l_relPath /= "Sons/";

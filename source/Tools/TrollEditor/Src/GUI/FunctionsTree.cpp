@@ -196,7 +196,7 @@ namespace Troll
 		{
 			//int l_image = (wxGetApp().ShowImages() ? FunctionsTreeIcon_Folder : -1);
 			int l_image = FunctionsTreeIcon_Folder;
-			m_rootId = AddRoot( _( "Root" ), l_image, l_image, new TETreeItemData( wxT( " Root item" ), TITFunctionsRoot ) );
+			m_rootId = AddRoot( _( "Root" ), l_image, l_image, new TreeItemData( wxT( " Root item" ), TreeItemType::FunctionsRoot ) );
 			m_functionsId = AppendItem( m_rootId, _( "Functions" ) );
 			m_constantsId = AppendItem( m_rootId, _( "Constants" ) );
 
@@ -221,7 +221,7 @@ namespace Troll
 
 			for ( size_t i = 0; i < m_functionsGroups.size(); i++ )
 			{
-				l_id = AppendItem( m_functionsId, m_functionsGroups[i], l_groupImage, l_groupImageSel, new TETreeItemData( wxString() << _( "Functions for" ) << wxT( "[" ) << m_functionsGroups[i] << wxT( "]" ), TITFunctionTitle ) );
+				l_id = AppendItem( m_functionsId, m_functionsGroups[i], l_groupImage, l_groupImageSel, new TreeItemData( wxString() << _( "Functions for" ) << wxT( "[" ) << m_functionsGroups[i] << wxT( "]" ), TreeItemType::FunctionTitle ) );
 				m_functionGroupsItems.insert( std::make_pair( m_functionsGroups[i], l_id ) );
 			}
 
@@ -238,7 +238,7 @@ namespace Troll
 
 			for ( size_t i = 0; i < m_constantsGroups.size(); i++ )
 			{
-				l_id = AppendItem( m_constantsId, m_constantsGroups[i], l_groupImage, l_groupImageSel, new TETreeItemData( wxString() << _( "Constants for" ) << wxT( " [" ) << m_constantsGroups[i] << wxT( "]" ), TITConstantTitle ) );
+				l_id = AppendItem( m_constantsId, m_constantsGroups[i], l_groupImage, l_groupImageSel, new TreeItemData( wxString() << _( "Constants for" ) << wxT( " [" ) << m_constantsGroups[i] << wxT( "]" ), TreeItemType::ConstantTitle ) );
 				m_constantGroupsItems.insert( std::make_pair( m_constantsGroups[i], l_id ) );
 			}
 
@@ -258,7 +258,7 @@ namespace Troll
 
 				for ( size_t i = 0; i < l_constants.size(); i++ )
 				{
-					l_id = AppendItem( l_idParent, l_constants[i].first, l_image, l_selImage, new TETreeItemData( l_constants[i].second, TITConstant ) );
+					l_id = AppendItem( l_idParent, l_constants[i].first, l_image, l_selImage, new TreeItemData( l_constants[i].second, TreeItemType::Constant ) );
 				}
 
 				//if (p_image != -1)
@@ -284,7 +284,7 @@ namespace Troll
 
 				for ( size_t i = 0; i < l_functions.size(); i++ )
 				{
-					l_id = AppendItem( l_idParent, l_functions[i].first, p_image, p_imageSel, new TETreeItemData( l_functions[i].second, TITFunction ) );
+					l_id = AppendItem( l_idParent, l_functions[i].first, p_image, p_imageSel, new TreeItemData( l_functions[i].second, TreeItemType::Function ) );
 				}
 
 				//if (p_image != -1)
@@ -351,7 +351,7 @@ namespace Troll
 				size_t l_lastnull;
 				wxString l_ajout;
 				wxTreeItemId l_itemId = p_event.GetItem();
-				TETreeItemData * l_item = reinterpret_cast< TETreeItemData * >( GetItemData( l_itemId ) );
+				TreeItemData * l_item = reinterpret_cast< TreeItemData * >( GetItemData( l_itemId ) );
 
 				if ( l_item )
 				{

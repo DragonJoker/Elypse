@@ -20,6 +20,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "MuseReader.h"
 #include "MuseReaderDlg.h"
 
+#include <GradientButton.h>
+
 #include <wx/button.h>
 #include <wx/dirdlg.h>
 #include <wx/filedlg.h>
@@ -44,6 +46,8 @@ CMuseReaderDlg::CMuseReaderDlg( wxWindow * pParent )
 	: wxDialog( pParent, wxID_ANY, _( "Muse file reader" ) )
 	, m_dataStreamer( NULL )
 {
+	SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	SetForegroundColour( GuiCommon::PanelForegroundColour );
 	int l_width = 640;
 	int l_height = 480;
 	SetClientSize( wxSize( l_width, l_height ) );
@@ -55,29 +59,53 @@ CMuseReaderDlg::CMuseReaderDlg( wxWindow * pParent )
 	int l_left = l_leftListWidth + OFFSET * 2;
 	int l_top = OFFSET;
 
-	new wxStaticText( this, wxID_ANY, _( "Read files" ), wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, STATIC_HEIGHT ) );
-	new wxStaticText( this, wxID_ANY, _( "Log" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	auto read = new wxStaticText( this, wxID_ANY, _( "Read files" ), wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, STATIC_HEIGHT ) );
+	read->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	read->SetForegroundColour( GuiCommon::PanelForegroundColour );
+	auto log = new wxStaticText( this, wxID_ANY, _( "Log" ), wxPoint( l_left, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	log->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	log->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += STATIC_HEIGHT;
 	m_output = new wxListBox( this, wxID_ANY, wxPoint( OFFSET, l_top ), wxSize( l_leftListWidth, l_listHeight ) );
+	m_output->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_output->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	m_log = new wxListBox( this, wxID_ANY, wxPoint( l_left, l_top ), wxSize( l_rightListWidth, l_listHeight ) );
+	m_log->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_log->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 	l_left = l_rightListWidth + OFFSET * 2;
 	l_top += l_listHeight + OFFSET;
-	new wxStaticText( this, wxID_ANY, _( "File to read" ), wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	auto file = new wxStaticText( this, wxID_ANY, _( "File to read" ), wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	file->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	file->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += STATIC_HEIGHT;
 	m_inFile = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, EDIT_HEIGHT ) );
-	new wxButton( this, eBTNINFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	m_inFile->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_inFile->SetForegroundColour( GuiCommon::PanelForegroundColour );
+	auto browse = new GuiCommon::GradientButton( this, eBTNINFILE, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	browse->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	browse->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += EDIT_HEIGHT;
-	new wxStaticText( this, wxID_ANY, _( "Output folder" ), wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	auto output = new wxStaticText( this, wxID_ANY, _( "Output folder" ), wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, STATIC_HEIGHT ) );
+	output->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	output->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += STATIC_HEIGHT;
 	m_outFolder = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxPoint( OFFSET, l_top ), wxSize( l_rightListWidth, EDIT_HEIGHT ) );
-	new wxButton( this, eBTNOUTFOLDER, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	m_outFolder->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	m_outFolder->SetForegroundColour( GuiCommon::PanelForegroundColour );
+	auto obrowse = new GuiCommon::GradientButton( this, eBTNOUTFOLDER, _( "Browse" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	obrowse->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	obrowse->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 	l_left = l_width - OFFSET - BUTTON_SIZE.x;
 	l_top = l_height - ( BUTTON_SIZE.y + OFFSET ) * 2;
-	new wxButton( this, eBUTTON2, _( "Read" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto readb = new GuiCommon::GradientButton( this, eBUTTON2, _( "Read" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	readb->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	readb->SetForegroundColour( GuiCommon::PanelForegroundColour );
 	l_top += BUTTON_SIZE.y + OFFSET;
-	new wxButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	auto exit = new GuiCommon::GradientButton( this, wxID_CANCEL, _( "Exit" ), wxPoint( l_left, l_top ), BUTTON_SIZE );
+	exit->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+	exit->SetForegroundColour( GuiCommon::PanelForegroundColour );
 }
 
 BEGIN_EVENT_TABLE( CMuseReaderDlg, wxDialog )

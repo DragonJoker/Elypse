@@ -10,7 +10,7 @@ namespace Troll
 		namespace Properties
 		{
 			SequenceProperties::SequenceProperties( ProjectComponents::Temporal::TrollSequence & p_sequence )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_SEQUENCE }
+				: ObjectProperty{ DataType::Sequence }
 				, m_sequence{ p_sequence }
 			{
 			}

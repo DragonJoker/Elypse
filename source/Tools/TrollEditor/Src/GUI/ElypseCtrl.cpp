@@ -455,75 +455,65 @@ namespace Troll
 				m_emuse->GetFL()->MouseLDown( Real( l_point.x ), Real( l_point.y ) );
 			}
 
-			//RaySceneQuery * mRaySceneQuery;
 			//SceneManager * l_manager = m_emuse->GetSceneManager();
-			//mRaySceneQuery = l_manager->createRayQuery(Ray());
+			//auto raySceneQuery = l_manager->createRayQuery(Ray());
 			//Ray mouseRay = l_manager->getCamera( "RootCamera")->getCameraToViewportRay( l_point.x / m_width, l_point.y / m_height);
-			//mRaySceneQuery->setRay( mouseRay);
-			//mRaySceneQuery->setSortByDistance( true);
+			//raySceneQuery->setRay( mouseRay);
+			//raySceneQuery->setSortByDistance( true);
 
-			//RaySceneQueryResult & result = mRaySceneQuery->execute();
+			//auto & result = raySceneQuery->execute();
 
 			//bool l_found = false;
-			//RaySceneQueryResult::iterator itr = result.begin();
+			//auto itr = result.begin();
 
-			//if (itr != result.end())
+			//while ( itr != result.end() && !l_found )
 			//{
-			//	while (! l_found)
+			//	if (itr->movable->isVisible())
 			//	{
-			//		if (itr == result.end())
+			//		if (itr->movable != NULL && itr->movable->getParentSceneNode() != l_manager->getRootSceneNode())
 			//		{
-			//			l_found = true;
-			//		}
-			//		else
-			//		{
-			//			if (itr->movable->isVisible())
-			//			{
-			//				if (itr->movable != NULL && itr->movable->getParentSceneNode() != l_manager->getRootSceneNode())
-			//				{
-			//					Entity * l_entity = static_cast <Entity*>( itr->movable);
-			//					BoundingMesh * l_box = new BoundingMesh( l_entity->getMesh().getPointer());
-			//					////////////
-			//					l_box->SetBoundingSphere( l_entity->getWorldBoundingSphere().getRadius());
-			//					l_box->SetBoundingBox( l_entity->getWorldBoundingBox());
-			//					l_box->RequestTransform( l_entity->getParentSceneNode()->_getDerivedPosition(), l_entity->getParentSceneNode()->_getDerivedOrientation(),
-			//												l_entity->getParentSceneNode()->_getDerivedScale());
-			//					l_box->UpdateVertices();
-			//					l_box->RecalcBoundingBox();
+			//			Entity * l_entity = static_cast <Entity*>( itr->movable);
+			//			BoundingMesh * l_box = new BoundingMesh( l_entity->getMesh().getPointer());
+			//			////////////
+			//			l_box->SetRadius( l_entity->getWorldBoundingSphere().getRadius());
+			//			l_box->SetAABB( l_entity->getWorldBoundingBox());
+			//			l_box->RequestTransform( l_entity->getParentSceneNode()->_getDerivedPosition()
+			//				, l_entity->getParentSceneNode()->_getDerivedOrientation()
+			//				, l_entity->getParentSceneNode()->_getDerivedScale());
+			//			l_box->UpdateVertices();
+			//			l_box->RecalcBoundingBox();
 
-			//					if (l_box->RayTrace( mouseRay).first)
-			//					{
-			//						l_found = true;
-			//					}
-			//					else
-			//					{
-			//						itr++;
-			//					}
-			//					////////////
-			//					delete l_box;
-			//					itr++;
-			//				}
-			//				else
-			//				{
-			//					itr++;
-			//				}
+			//			if (l_box->RayTrace( mouseRay).first)
+			//			{
+			//				l_found = true;
 			//			}
 			//			else
 			//			{
 			//				itr++;
 			//			}
+			//			////////////
+			//			delete l_box;
+			//			itr++;
+			//		}
+			//		else
+			//		{
+			//			itr++;
 			//		}
 			//	}
-
-			//	if (itr != result.end())
+			//	else
 			//	{
-			//		wxString l_name = itr->movable->getName().c_str();
-			//		m_displayedObject = reinterpret_cast <Displayable *>( m_testedScene->GetEntity( l_name));
-			//		int l_height = m_displayedObject->BuildPanel( m_mainFrame->m_propertyDialog, m_mainFrame->m_propertyDialog->GetClientSize().x);
+			//		itr++;
 			//	}
 			//}
 
-			//l_manager->destroyQuery(mRaySceneQuery);
+			//if ( itr != result.end() )
+			//{
+			//	wxString l_name = itr->movable->getName().c_str();
+			//	m_displayedObject = reinterpret_cast <Displayable *>( m_testedScene->GetEntity( l_name ) );
+			//	int l_height = m_displayedObject->BuildPanel( m_mainFrame->m_propertyDialog, m_mainFrame->m_propertyDialog->GetClientSize().x );
+			//}
+
+			//l_manager->destroyQuery(raySceneQuery);
 		}
 
 		void ElypseCtrl::OnButtonLeftUp( wxMouseEvent & p_event )
@@ -769,7 +759,10 @@ namespace Troll
 			}
 
 			EMOverlay * l_overlay = ScriptEngine::GetContext()->scriptEngine->GetVariable( "editor_currentOverlay" )->get<EMOverlay *>();
-			wxTextEntryDialog l_dialog( this, _( "Choose the name for your overlay" ), _( "Overlay name" ), wxT( "NewOverlay" ) );
+			wxTextEntryDialog l_dialog( this
+				, _( "Choose the name for your overlay" )
+				, _( "Overlay name" )
+				, wxT( "NewOverlay" ) );
 
 			if ( l_dialog.ShowModal() == wxID_OK )
 			{

@@ -27,7 +27,7 @@ namespace Troll
 			{
 				// create and return a single button to be used as editor
 				// size and pos represent the entire value cell: use that to position the button
-				return wxPGWindowList( new GradientButton( p_propgrid, wxID_ANY, _( "Edit" ), p_pos, p_size ) );
+				return wxPGWindowList( new GuiCommon::GradientButton( p_propgrid, wxID_ANY, _( "Edit" ), p_pos, p_size ) );
 			}
 
 			// since the editor does not need to change the primary control (the button)

@@ -26,6 +26,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Project/Project.h"
 #include "Project/Scene.h"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -43,15 +45,15 @@ namespace Troll
 			: wxDialog{ p_parent, wxID_ANY, title, pos, wxSize( 200, 300 ), wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT | wxFRAME_TOOL_WINDOW }
 			, m_selectedScene{ p_scene }
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			wxArrayString l_values;
 			wxString l_value;
 			wxPoint l_position( GetClientSize().x / 2, 10 );
 			m_sceneSelector = BuildComboBox( this, l_position, sdfSceneSelector, _( "Scene" ), l_values, l_value );
-			m_sceneSelector->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_sceneSelector->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_sceneSelector->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_sceneSelector->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			m_sceneDependencies = new wxCheckListBox( this
 				, sdfSceneDependencies
@@ -59,14 +61,14 @@ namespace Troll
 				, wxSize( GetClientSize().x - 20, GetClientSize().y - 70 )
 				, wxArrayString{}
 				, wxLB_SINGLE | wxLB_NEEDED_SB );
-			m_sceneDependencies->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_sceneDependencies->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_sceneDependencies->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_sceneDependencies->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			DoInitialise();
 
 			auto l_sizerBtn = new wxBoxSizer( wxHORIZONTAL );
 			l_sizerBtn->AddStretchSpacer();
-			l_sizerBtn->Add( new wxButton( this, wxID_OK, _( "Close" ), wxPoint( 65, GetClientSize().y - 35 ), wxSize( 70, 25 ) ) );
+			l_sizerBtn->Add( new GuiCommon::GradientButton( this, wxID_OK, _( "Close" ), wxPoint( 65, GetClientSize().y - 35 ), wxSize( 70, 25 ) ) );
 			l_sizerBtn->AddStretchSpacer();
 
 			auto l_sizerAll = new wxBoxSizer( wxVERTICAL );

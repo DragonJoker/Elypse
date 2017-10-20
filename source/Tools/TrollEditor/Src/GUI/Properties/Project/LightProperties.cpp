@@ -14,7 +14,7 @@ namespace Troll
 		namespace Properties
 		{
 			LightProperties::LightProperties( ProjectComponents::Objects3D::TrollLight & p_light )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_LIGHT }
+				: ObjectProperty{ DataType::Light }
 				, m_light{ p_light }
 			{
 			}

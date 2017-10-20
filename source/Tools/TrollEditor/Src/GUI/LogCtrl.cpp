@@ -42,8 +42,8 @@ namespace Troll
 		LogCtrl::LogCtrl( wxWindow * parent, wxWindowID id, wxPoint const & pos, wxSize const & size, long style )
 			: wxListBox( parent, id, pos, size, wxArrayString(), style )
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 		}
 
 		void LogCtrl::OnDoubleClick( wxMouseEvent & p_event )

@@ -3,6 +3,8 @@
 #include "Properties/Common/ObjectProperty.h"
 #include "Properties/Common/PropertiesHolder.h"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -17,8 +19,8 @@ namespace Troll
 			, m_props{ p_props }
 		{
 			auto l_size = GetClientSize();
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			wxBoxSizer * l_sizerAll = new wxBoxSizer{ wxVERTICAL };
 			m_holder = new Properties::PropertiesHolder{ this };
@@ -27,9 +29,9 @@ namespace Troll
 			l_sizerAll->Add( m_holder, wxSizerFlags( 1 ).Expand().Border( wxTOP | wxBOTTOM | wxLEFT | wxRIGHT, 10 ) );
 
 			wxBoxSizer * l_sizerButtons = new wxBoxSizer{ wxHORIZONTAL };
-			l_sizerButtons->Add( new wxButton{ this, wxID_OK, _( "OK" ), wxDefaultPosition, wxSize{ 75, 25 }, wxBORDER_SIMPLE }, wxSizerFlags( 1 ).Border( wxLEFT, 10 ) );
+			l_sizerButtons->Add( new GuiCommon::GradientButton{ this, wxID_OK, TE_OK, wxDefaultPosition, wxSize{ 75, 25 }, wxBORDER_SIMPLE }, wxSizerFlags( 1 ).Border( wxLEFT, 10 ) );
 			l_sizerButtons->AddStretchSpacer();
-			l_sizerButtons->Add( new wxButton{ this, wxID_CANCEL, _( "Cancel" ), wxDefaultPosition, wxSize( 75, 25 ), wxBORDER_SIMPLE }, wxSizerFlags( 1 ).Border( wxRIGHT, 10 ) );
+			l_sizerButtons->Add( new GuiCommon::GradientButton{ this, wxID_CANCEL, TE_CANCEL, wxDefaultPosition, wxSize( 75, 25 ), wxBORDER_SIMPLE }, wxSizerFlags( 1 ).Border( wxRIGHT, 10 ) );
 			l_sizerAll->Add( l_sizerButtons, wxSizerFlags().Expand().Border( wxBOTTOM, 10 ) );
 
 			l_sizerAll->SetMinSize( l_size );

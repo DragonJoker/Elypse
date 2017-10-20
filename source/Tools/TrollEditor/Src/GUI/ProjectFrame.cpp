@@ -103,6 +103,29 @@ namespace Troll
 			wxString const TE_OVERLAYS_EDITION = _( "Overlays Edition" );
 			wxString const TE_SCENE_EDITION = _( "Scene Edition" );
 			wxString const TE_PROJECT_TESTING = _( "Project Testing" );
+			wxString const TE_NO_SELECTED_FILE = _( "No selected file" );
+			wxString const TE_NOT_COMPILABLE_TYPE = _( "Can't compile this file type" );
+			wxString const TE_FATAL_COMPILATION_ERROR = _( "Fatal error encountered while compiling this file" );
+			wxString const TE_PROJECT = _( "Project" );
+
+			wxString const TE_EDITOR = _( "Editor" );
+			wxString const TE_OBJECTS = _( "Objects" );
+			wxString const TE_COMPILING = _( "Compiling" );
+			wxString const TE_COMPILED = _( "compiled" );
+			wxString const TE_WARNINGS = _( "warnings" );
+			wxString const TE_ERRORS = _( "errors" );
+			wxString const TE_COMPILING_DURING_TEST = _( "Can't compile during a test or a scene edition" );
+			wxString const TE_COMPILING_UNSAVED = _( "Please save the file before compiling it" );
+			wxString const TE_PROJECT_FILES = _( "Project Files" );
+			wxString const TE_FUNCTIONS = _( "Functions" );
+			wxString const TE_PROJECT_LOAD_ERROR = _( "Problems during project loading:" );
+			wxString const TE_OPEN_FILE = _( "Choose a file to open" );
+			wxString const TE_ELYPSE_SCENE_FILE = _( "Elypse Scene files" );
+			wxString const TE_ELYPSE_SCRIPT_FILE = _( "Elypse Srcipt files" );
+			wxString const TE_NEW_PROJECT = _( "New Project" );
+			wxString const TE_FILE_SAVE_ERROR = _( "File Save error:" );
+			wxString const TE_CHOOSE_LINE = _( "Choose the line" );
+			wxString const TE_GO_TO = _( "Go to..." );
 		}
 
 		ProjectFrame::ProjectFrame( wxWindow * p_parent, ProjectComponents::ProjectSPtr p_project )
@@ -134,11 +157,11 @@ namespace Troll
 
 			if ( !GetProject()->FindFileInScenes( m_mainTabsContainer->GetPageText( m_mainTabsContainer->GetSelection() ), l_file, l_scene ) )
 			{
-				LogDebug( _( "No selected file" ) );
+				LogDebug( TE_NO_SELECTED_FILE );
 			}
 			else if ( !l_file->FileName.Contains( wxT( ".emscript" ) ) )
 			{
-				LogDebug( _( "Can't compile this file type" ) );
+				LogDebug( TE_NOT_COMPILABLE_TYPE );
 			}
 			else
 			{
@@ -150,7 +173,7 @@ namespace Troll
 				}
 				catch ( ... )
 				{
-					LogDebug( _( "Fatal error encountered while compiling this file" ) );
+					LogDebug( TE_FATAL_COMPILATION_ERROR );
 				}
 			}
 		}
@@ -167,7 +190,7 @@ namespace Troll
 			if ( project )
 			{
 				PropertyDialog dialog{ this
-					, _( "Project" )
+					, TE_PROJECT
 					, new Properties::ProjectProperties{ *project }
 					, wxDefaultPosition
 					, wxSize{ 300, 300 } };
@@ -177,7 +200,11 @@ namespace Troll
 
 		void ProjectFrame::SaveProject()
 		{
-			PropertyDialog l_dialog{ this, _( "Project" ), new Properties::ProjectProperties{ *GetProject() }, wxDefaultPosition, wxSize{ 300, 300 } };
+			PropertyDialog l_dialog{ this
+				, TE_PROJECT
+				, new Properties::ProjectProperties{ *GetProject() }
+				, wxDefaultPosition
+				, wxSize{ 300, 300 } };
 			l_dialog.ShowModal();
 		}
 
@@ -307,7 +334,7 @@ namespace Troll
 
 				for ( size_t i = 0; i < m_mainTabsContainer->GetPageCount(); i++ )
 				{
-					if ( m_mainTabsContainer->GetPageText( i ) == wxT( "Editeur" ) )
+					if ( m_mainTabsContainer->GetPageText( i ) == TE_EDITOR )
 					{
 						m_mainTabsContainer->RemovePage( i );
 						return;
@@ -352,28 +379,28 @@ namespace Troll
 		void ProjectFrame::DoInitEditLists()
 		{
 			m_objectsListContainer = new wxPanel( m_treeTabsContainer, wxID_ANY, wxPoint( 0, 0 ), m_treeTabsContainer->GetClientSize() );
-			m_objectsListContainer->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_objectsListContainer->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_treeTabsContainer->InsertPage( 2, m_objectsListContainer, _( "Objects" ), false );
+			m_objectsListContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_objectsListContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_treeTabsContainer->InsertPage( 2, m_objectsListContainer, TE_OBJECTS, false );
 
 			wxSize l_size = m_objectsListContainer->GetClientSize();
 			l_size.y /= 2;
 			m_objectsList = new ObjectsTree( m_objectsListContainer, this, wxDefaultPosition, l_size, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
-			m_objectsList->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_objectsList->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_objectsList->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_objectsList->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			m_objectsList->InitObjectList();
 
 			m_objectInfosContainer = new Properties::PropertiesHolder( m_objectsListContainer, wxPoint( 5, l_size.y + 5 ), wxSize( l_size.x - 10, l_size.y - 10 ) );
-			m_objectInfosContainer->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_objectInfosContainer->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_objectInfosContainer->SetCaptionBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_objectInfosContainer->SetCaptionTextColour( PANEL_FOREGROUND_COLOUR );
-			m_objectInfosContainer->SetSelectionBackgroundColour( ACTIVE_TAB_COLOUR );
-			m_objectInfosContainer->SetSelectionTextColour( ACTIVE_TEXT_COLOUR );
-			m_objectInfosContainer->SetCellBackgroundColour( INACTIVE_TAB_COLOUR );
-			m_objectInfosContainer->SetCellTextColour( INACTIVE_TEXT_COLOUR );
-			m_objectInfosContainer->SetLineColour( BORDER_COLOUR );
-			m_objectInfosContainer->SetMarginColour( BORDER_COLOUR );
+			m_objectInfosContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_objectInfosContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_objectInfosContainer->SetCaptionBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_objectInfosContainer->SetCaptionTextColour( GuiCommon::PanelForegroundColour );
+			m_objectInfosContainer->SetSelectionBackgroundColour( GuiCommon::ActiveTabColour );
+			m_objectInfosContainer->SetSelectionTextColour( GuiCommon::ActiveTextColour );
+			m_objectInfosContainer->SetCellBackgroundColour( GuiCommon::InactiveTabColour );
+			m_objectInfosContainer->SetCellTextColour( GuiCommon::InactiveTextColour );
+			m_objectInfosContainer->SetLineColour( GuiCommon::BorderColour );
+			m_objectInfosContainer->SetMarginColour( GuiCommon::BorderColour );
 		}
 
 		void ProjectFrame::DoInitElypse( ProjectSPtr p_project, wxString const & p_title, bool p_edit, int p_adjustY )
@@ -440,8 +467,15 @@ namespace Troll
 		void ProjectFrame::AddPonctualEvent( ProjectComponents::Temporal::TrollSequence * p_sequence, float p_fireTime )
 		{
 			StringArray l_tmp;
-			Elypse::Sequences::BasePonctualEvent * l_museEvent = ScriptEngine::GetContext()->sequenceManager->CreatePonctualEvent( "Overlay_Hide", l_tmp );
-			ProjectComponents::Temporal::TrollPonctualEvent * l_event = new ProjectComponents::Temporal::TrollPonctualEvent( p_sequence, l_museEvent, wxT( "overlay" ), wxT( "" ), p_fireTime, wxT( "" ), wxT( "Overlay_Hide" ), wxT( "" ) );
+			auto * l_museEvent = ScriptEngine::GetContext()->sequenceManager->CreatePonctualEvent( "Overlay_Hide", l_tmp );
+			auto * l_event = new ProjectComponents::Temporal::TrollPonctualEvent( p_sequence
+				, l_museEvent
+				, wxT( "overlay" )
+				, wxEmptyString
+				, p_fireTime
+				, wxEmptyString
+				, wxT( "Overlay_Hide" )
+				, wxEmptyString );
 			p_sequence->AddPonctualEvent( l_event );
 			Time::SequencePanel * l_panel = reinterpret_cast< GUI::Time::SequencePanel * >( m_timelineEditor->GetSequencePanel( p_sequence->GetObjectName() )->GetParent() );
 			l_panel->AddPonctualEvent( l_event, p_fireTime );
@@ -450,10 +484,13 @@ namespace Troll
 		void ProjectFrame::AddContinuousEvent( ProjectComponents::Temporal::TrollSequence * p_sequence, float p_fireTime )
 		{
 			StringArray l_tmp;
-			Overlay_Translate * l_museEvent = reinterpret_cast <Overlay_Translate *>( ScriptEngine::GetContext()->sequenceManager->CreateContinuousEvent( "Overlay_Translate" ) );
+			auto * l_museEvent = reinterpret_cast <Overlay_Translate *>( ScriptEngine::GetContext()->sequenceManager->CreateContinuousEvent( "Overlay_Translate" ) );
 			l_museEvent->SetInterpolator( ScriptEngine::GetContext()->sequenceManager->GetInterpolator_V3( "linear" ) );
 			l_museEvent->AddFrame( p_fireTime, Vector3( 0.0, 0.0, 0.0 ) );
-			ProjectComponents::Temporal::TrollContinuousEvent * l_event = new ProjectComponents::Temporal::TrollContinuousEvent( p_sequence, l_museEvent, wxT( "Overlay_Translate" ), wxT( "" ) );
+			auto * l_event = new ProjectComponents::Temporal::TrollContinuousEvent( p_sequence
+				, l_museEvent
+				, wxT( "Overlay_Translate" )
+				, wxEmptyString );
 			p_sequence->AddContinuousEvent( l_event );
 			l_event->AddKeyFrame( p_fireTime, wxT( "0.0 0.0 0.0" ) );
 			l_event->SetTargetType( wxT( "overlay" ) );
@@ -493,9 +530,11 @@ namespace Troll
 		{
 			wxString l_fileName = p_file.m_scene->GetName() + wxFileName::GetPathSeparator() + p_file.FileName;
 			wxString l_path = GetProject()->GetPath() + l_fileName;
-			LogMessage( wxString( _( "Compiling " ) ) << l_fileName );
+			LogMessage( wxString( TE_COMPILING ) << l_fileName );
 			ScriptNode * l_scriptNode = p_compiler.CompileScriptFile( p_file.CfgFile.get() );
-			LogMessage( l_fileName << wxString( _( " compiled - " ) ) << p_compiler.GetNumWarnings() << _( " warnings - " ) << p_compiler.GetNumErrors() << _( " errors" ) );
+			LogMessage( l_fileName << wxT( " " ) << TE_COMPILED
+				<< wxT( " - " ) << p_compiler.GetNumWarnings() << _( " " ) << TE_WARNINGS
+				<< wxT( " - " ) << p_compiler.GetNumErrors() << _( " " ) << TE_ERRORS );
 
 			if ( l_scriptNode )
 			{
@@ -535,7 +574,7 @@ namespace Troll
 		{
 			if ( m_elypseContainer )
 			{
-				LogMessage( _( "Can't compile during a test or a scene edition" ) );
+				LogMessage( TE_COMPILING_DURING_TEST );
 			}
 			else
 			{
@@ -543,7 +582,7 @@ namespace Troll
 
 				if ( !p_file.Saved || ( p_file.EditPanel && p_file.EditPanel->IsModified() ) )
 				{
-					LogMessage( _( "Please save the file before compiling it" ) );
+					LogMessage( TE_COMPILING_UNSAVED );
 				}
 				else
 				{
@@ -593,7 +632,7 @@ namespace Troll
 
 		void ProjectFrame::CloseElypse()
 		{
-			if ( m_elypseCtrl != nullptr && m_elypseCtrl->GetTrollInstance()->IsSceneCreated() )
+			if ( m_elypseCtrl != nullptr )
 			{
 				m_elypseCtrl->Close();
 				m_elypseContainer->Destroy();
@@ -734,13 +773,13 @@ namespace Troll
 			//trees tabs (contains files list, objects list...)
 			m_treeTabsContainer = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxSize{ m_treesWidth, l_size.y } );
 			m_treeTabsContainer->SetArtProvider( new AuiTabArt );
-			m_treeTabsContainer->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_treeTabsContainer->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_treeTabsContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_treeTabsContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			// main tabs (contains text editor, test panel...)
 			m_mainTabsContainer = new wxAuiNotebook( this, wxID_ANY, wxPoint{ m_treesWidth, 0 }, wxSize{ l_size.x - m_treesWidth, l_size.y }, wxBORDER_NONE | wxAUI_NB_MIDDLE_CLICK_CLOSE | wxAUI_NB_CLOSE_ON_ALL_TABS );
 			m_mainTabsContainer->SetArtProvider( new AuiTabArt );
-			m_mainTabsContainer->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_mainTabsContainer->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_mainTabsContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_mainTabsContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			auto l_sizer = new wxBoxSizer{ wxHORIZONTAL };
 			l_sizer->Add( m_treeTabsContainer, wxSizerFlags().Left() );
@@ -754,14 +793,14 @@ namespace Troll
 			wxSize l_size = m_mainTabsContainer->GetClientSize();
 			//files list
 			m_filesList = new FilesTree( m_treeTabsContainer, this, wxDefaultPosition, wxSize{ l_size.x - m_treesWidth, l_size.y }, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
-			m_filesList->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_filesList->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_treeTabsContainer->AddPage( m_filesList, _( "Project Files" ), true );
+			m_filesList->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_filesList->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_treeTabsContainer->AddPage( m_filesList, TE_PROJECT_FILES, true );
 			//functions list
 			m_functionsList = new FunctionsTree( m_treeTabsContainer, this, wxDefaultPosition, wxSize{ l_size.x - m_treesWidth, l_size.y }, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
-			m_functionsList->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_functionsList->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
-			m_treeTabsContainer->AddPage( m_functionsList, _( "Functions" ), false );
+			m_functionsList->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_functionsList->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_treeTabsContainer->AddPage( m_functionsList, TE_FUNCTIONS, false );
 			m_functionsList->AddFunctionsToTree();
 
 			ElypseRW::TrollScriptCompiler l_compiler( &m_stcContext, "", true );
@@ -799,7 +838,7 @@ namespace Troll
 			}
 			catch ( std::exception const & p_exc )
 			{
-				wxMessageBox( _( "Set project - Add problem:\n" ) + make_wxString( p_exc.what() ), TROLL_EDITOR_ERROR, wxOK | wxICON_ERROR, this );
+				wxMessageBox( TE_PROJECT_LOAD_ERROR + wxT( "\n" ) + make_wxString( p_exc.what() ), TROLL_EDITOR_ERROR, wxOK | wxICON_ERROR, this );
 			}
 
 			if ( m_editText )
@@ -815,12 +854,18 @@ namespace Troll
 			EVT_KILL_FOCUS( ProjectFrame::OnKillFocus )
 			EVT_ACTIVATE( ProjectFrame::OnActivate )
 			EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY, ProjectFrame::OnNotebook )
+			EVT_AUINOTEBOOK_PAGE_CLOSE( wxID_ANY, ProjectFrame::OnNotebookPageClosed )
 		END_EVENT_TABLE()
 
 		void ProjectFrame::OnOpenFile( wxCommandEvent & p_event )
 		{
-			wxString l_fileName = wxFileSelector( _( "Choose a file to open" ), wxEmptyString, wxEmptyString, wxEmptyString,
-												  wxString() << _( "Elypse Scene files" ) << wxT( "(*.emscene)|*.emscene|" ) << _( "Elypse Script files" ) << wxT( " (*.emscript)|*.emscript" ) );
+			wxString l_fileName = wxFileSelector( TE_OPEN_FILE
+				, wxEmptyString
+				, wxEmptyString
+				, wxEmptyString
+				, wxString()
+					<< TE_ELYPSE_SCENE_FILE << wxT( "(*.emscene)|*.emscene|" )
+					<< TE_ELYPSE_SCRIPT_FILE << wxT( " (*.emscript)|*.emscript" ) );
 
 			if ( l_fileName.empty() )
 			{
@@ -830,7 +875,7 @@ namespace Troll
 
 		void ProjectFrame::OnNew( wxCommandEvent & p_event )
 		{
-			PropertyDialog l_dialog{ this, _( "New Project" ), new NewProjectProperties };
+			PropertyDialog l_dialog{ this, TE_NEW_PROJECT, new NewProjectProperties };
 			l_dialog.ShowModal();
 		}
 
@@ -887,7 +932,7 @@ namespace Troll
 			}
 			catch ( General::Utils::GenException & p_exc )
 			{
-				wxMessageBox( wxString( _( "File save problem:" ) ) << "\n" << p_exc.what() );
+				wxMessageBox( wxString() << TE_FILE_SAVE_ERROR << "\n" << p_exc.what() );
 			}
 		}
 
@@ -955,7 +1000,7 @@ namespace Troll
 					m_elypseCtrl->KillCtrlFocus();
 				}
 
-				if ( l_book->GetName() == wxT( "Editeur" ) )
+				if ( l_book->GetName() == TE_EDITOR )
 				{
 					if ( m_filesList->GetSelectedScene() != nullptr )
 					{
@@ -970,6 +1015,16 @@ namespace Troll
 						}
 					}
 				}
+			}
+		}
+
+		void ProjectFrame::OnNotebookPageClosed( wxAuiNotebookEvent & p_event )
+		{
+			wxBookCtrlBase * l_book = wx_static_cast( wxBookCtrlBase *, p_event.GetEventObject() );
+
+			if ( l_book->GetName().find( TE_PROJECT_TESTING ) == 0 )
+			{
+				CloseElypse();
 			}
 		}
 
@@ -995,8 +1050,8 @@ namespace Troll
 
 			int l_maxLines = l_panel->GetLineCount();
 			wxString l_text;
-			l_text << _( "Choose the line" ) << wxT( " (1 - " ) << l_maxLines << wxT( ")" );
-			wxTextEntryDialog * l_dialog = new wxTextEntryDialog( this, l_text, _( "Go to..." ) );
+			l_text << TE_CHOOSE_LINE << wxT( " (1 - " ) << l_maxLines << wxT( ")" );
+			wxTextEntryDialog * l_dialog = new wxTextEntryDialog( this, l_text, TE_GO_TO );
 
 			if ( l_dialog->ShowModal() == wxID_OK )
 			{

@@ -13,7 +13,7 @@ namespace Troll
 		namespace Properties
 		{
 			PonctualEventProperties::PonctualEventProperties( ProjectComponents::Temporal::TrollPonctualEvent & p_event )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_PONCTUAL_EVENT }
+				: ObjectProperty{ DataType::PonctualEvent }
 				, m_event{ p_event }
 			{
 			}

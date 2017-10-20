@@ -22,7 +22,7 @@ namespace Troll
 		namespace Properties
 		{
 			CameraProperties::CameraProperties( TrollCamera & p_camera )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_CAMERA }
+				: ObjectProperty{ DataType::Camera }
 				, m_camera{ p_camera }
 			{
 			}
@@ -40,9 +40,19 @@ namespace Troll
 				wxString const PROPERTY_CAMERA_DIRECTION = _( "Direction" );
 				wxString const PROPERTY_CAMERA_ORIENTATION = _( "Orientation" );
 				wxString const PROPERTY_CAMERA_POLYGON_MODE = _( "Polygon Mode" );
-				std::array< wxString, 3 > const PROPERTY_CAMERA_POLYGON_MODE_TEXTS = { _( "Point" ), _( "Wireframe" ), _( "Solid" ) };
-				std::array< int, 3 > const PROPERTY_CAMERA_POLYGON_MODE_VALUES = { tcPoint, tcWireFrame, tcSolid };
 				wxString const PROPERTY_CAMERA_YFOV = _( "FovY" );
+				std::array< wxString, 3 > const PROPERTY_CAMERA_POLYGON_MODE_TEXTS
+				{
+					_( "Point" ),
+					_( "Wireframe" ),
+					_( "Solid" )
+				};
+				std::array< int, 3 > const PROPERTY_CAMERA_POLYGON_MODE_VALUES
+				{
+					tcPoint,
+					tcWireFrame,
+					tcSolid
+				};
 
 				wxString l_mode{ PROPERTY_CAMERA_POLYGON_MODE_TEXTS[m_camera.GetPolygonMode() - 1] };
 				m_nodesArray.clear();

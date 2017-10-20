@@ -20,9 +20,9 @@ namespace Troll
 				Vector3 l_axis;
 				Degree l_angle;
 				value.ToAngleAxis( l_angle, l_axis );
-				AddPrivateChild( new wxFloatProperty( _( "Axis X" ), wxPG_LABEL, l_axis.x ) );
-				AddPrivateChild( new wxFloatProperty( _( "Axis Y" ), wxPG_LABEL, l_axis.y ) );
-				AddPrivateChild( new wxFloatProperty( _( "Axis Z" ), wxPG_LABEL, l_axis.z ) );
+				AddPrivateChild( new wxFloatProperty( _( "X Axis" ), wxPG_LABEL, l_axis.x ) );
+				AddPrivateChild( new wxFloatProperty( _( "Y Axis" ), wxPG_LABEL, l_axis.y ) );
+				AddPrivateChild( new wxFloatProperty( _( "Y Axis" ), wxPG_LABEL, l_axis.z ) );
 				AddPrivateChild( new wxFloatProperty( _( "Angle" ), wxPG_LABEL, l_angle.valueDegrees() ) );
 			}
 

@@ -25,6 +25,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 #include "Project/Scene.h"
 #include "Project/Project.h"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -40,18 +42,18 @@ namespace Troll
 			: wxDialog( p_parent, -1, title, pos, wxSize( 200, 90 ) )
 			, m_projectFrame{ p_parent }
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			wxSize l_size = GetClientSize();
 			wxPoint l_position( l_size.x / 2, 10 );
 			m_sceneName = BuildTextCtrl( this, l_position, wxID_ANY, _( "Scene" ), DEFAULT_SCENE_NAME );
-			m_sceneName->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_sceneName->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_sceneName->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_sceneName->SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			l_position.x = 20;
-			m_okBtn = new wxButton( this, ID_okBtn, _( "OK" ), l_position += wxPoint( 0, 25 ), wxSize( 70, 20 ) );
-			m_cancelBtn = new wxButton( this, ID_clBtn, _( "Cancel" ), l_position += wxPoint( 90, 0 ), wxSize( 70, 20 ) );
+			new GuiCommon::GradientButton( this, ID_okBtn, TE_OK, l_position += wxPoint( 0, 25 ), wxSize( 70, 20 ) );
+			new GuiCommon::GradientButton( this, ID_clBtn, TE_CANCEL, l_position += wxPoint( 90, 0 ), wxSize( 70, 20 ) );
 		}
 
 		NewSceneFrame::~NewSceneFrame()

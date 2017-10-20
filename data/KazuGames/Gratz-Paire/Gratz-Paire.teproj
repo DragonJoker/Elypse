@@ -44,6 +44,7 @@ project Gratz-Paire
 		{
 			Gratzpaire
 			Interface
+			Sons
 		}
 		dependencies
 		{

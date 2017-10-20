@@ -23,6 +23,8 @@ http://www.gnu.org/copyleft/lesser.txt.
 
 #include "xpm/troll_editor.xpm"
 
+#include <GradientButton.h>
+
 namespace Troll
 {
 	namespace GUI
@@ -51,12 +53,12 @@ namespace Troll
 		SimpleTransientPopup::SimpleTransientPopup( wxWindow * p_parent )
 			: wxPopupTransientWindow( p_parent )
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
 			m_panel = new wxScrolledWindow( this, wxID_ANY );
-			m_panel->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_panel->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_panel->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_panel->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			// Keep this code to verify if mouse events work, they're required if
 			// you're making a control like a combobox where the items are highlighted
 			// under the cursor, the m_panel is set focus in the Popup() function
@@ -68,15 +70,15 @@ namespace Troll
 				wxT( "clicks the mouse outside it or if it\n" )
 				wxT( "(or its first child) loses focus in \n" )
 				wxT( "any other way." ) );
-			m_button = new wxButton( m_panel, Minimal_PopupButton, wxT( "Press Me" ) );
+			m_button = new GuiCommon::GradientButton( m_panel, Minimal_PopupButton, wxT( "Press Me" ) );
 			m_spinCtrl = new wxSpinCtrl( m_panel, Minimal_PopupSpinctrl, wxT( "Hello" ) );
-			m_spinCtrl->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_spinCtrl->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_spinCtrl->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_spinCtrl->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			m_mouseText = new wxStaticText( m_panel
 				, wxID_ANY
 				, wxT( "<- Test Mouse ->" ) );
-			m_mouseText->SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			m_mouseText->SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			m_mouseText->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			m_mouseText->SetForegroundColour( GuiCommon::PanelForegroundColour );
 			wxBoxSizer * topSizer = new wxBoxSizer( wxVERTICAL );
 			topSizer->Add( text, 0, wxALL, 5 );
 			topSizer->Add( m_button, 0, wxALL, 5 );

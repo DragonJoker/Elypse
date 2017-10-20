@@ -76,8 +76,8 @@ namespace Troll
 			: wxTreeCtrl{ parent, FilesTreeId, pos, size, style }
 			, m_projectFrame{ projectFrame }
 		{
-			SetBackgroundColour( PANEL_BACKGROUND_COLOUR );
-			SetForegroundColour( PANEL_FOREGROUND_COLOUR );
+			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			SetForegroundColour( GuiCommon::PanelForegroundColour );
 			CreateImageList();
 		}
 
@@ -143,7 +143,7 @@ namespace Troll
 			wxString const & l_name = p_project.GetName();
 			std::clog << "FilesTree::LoadProject - " << l_name << std::endl;
 			int l_image = FilesTreeIcon_Folder;
-			m_rootProjetId = AddRoot( l_name, l_image, l_image, new TETreeItemData( ITEM_DESC_ROOT, TITProjectRoot ) );
+			m_rootProjetId = AddRoot( l_name, l_image, l_image, new TreeItemData( ITEM_DESC_ROOT, TreeItemType::ProjectRoot ) );
 
 			if ( l_image != -1 )
 			{
@@ -178,31 +178,31 @@ namespace Troll
 			for ( auto & l_file : p_scene->GetSceneFiles() )
 			{
 				l_file.FolderId = l_scene.m_folderIds[sceneFile];
-				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TITSceneFile, true );
+				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TreeItemType::SceneFile, true );
 			}
 
 			for ( auto & l_file : p_scene->GetLoadScriptFiles() )
 			{
 				l_file.FolderId = l_scene.m_folderIds[loadScriptFile];
-				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TITLoadScriptFile, true );
+				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TreeItemType::LoadScriptFile, true );
 			}
 
 			for ( auto & l_file : p_scene->GetUnloadScriptFiles() )
 			{
 				l_file.FolderId = l_scene.m_folderIds[unloadScriptFile];
-				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TITUnloadScriptFile, true );
+				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TreeItemType::UnloadScriptFile, true );
 			}
 
 			for ( auto & l_file : p_scene->GetDataFiles() )
 			{
 				l_file.FolderId = l_scene.m_folderIds[dataFile];
-				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TITDataFile, true );
+				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TreeItemType::DataFile, true );
 			}
 
 			for ( auto & l_file : p_scene->GetDataFolders() )
 			{
 				l_file.FolderId = l_scene.m_folderIds[dataFolder];
-				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TITDataFolder, true );
+				l_file.ItemId = AddFileToFolder( l_file.FolderId, l_file.FileName, TreeItemType::DataFolder, true );
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace Troll
 
 			int l_image = FilesTreeIcon_Folder;
 			int l_imageSel = l_image + 1;
-			wxTreeItemId l_id = AppendItem( m_rootProjetId, p_scene->GetName(), l_image, l_imageSel, new TETreeItemData( ITEM_DESC_SCENE, TITSceneRoot ) );
+			wxTreeItemId l_id = AppendItem( m_rootProjetId, p_scene->GetName(), l_image, l_imageSel, new TreeItemData( ITEM_DESC_SCENE, TreeItemType::SceneRoot ) );
 			m_idParent = l_id;
 			l_it = m_scenes.insert( { p_scene->GetName(), TreeScene{ p_scene } } ).first;
 			l_it->second.m_sceneId = l_id;
@@ -243,26 +243,26 @@ namespace Troll
 
 			int l_image = FilesTreeIcon_Folder;
 			int l_imageSel = l_image + 1;
-			TETreeItemType l_titype = TITSceneFile;
+			TreeItemType l_titype = TreeItemType::SceneFile;
 
 			if ( p_folderName == LOAD_SCRIPT_FILES )
 			{
-				l_titype = TITLoadScriptFile;
+				l_titype = TreeItemType::LoadScriptFile;
 			}
 			else if ( p_folderName == UNLOAD_SCRIPT_FILES )
 			{
-				l_titype = TITUnloadScriptFile;
+				l_titype = TreeItemType::UnloadScriptFile;
 			}
 			else if ( p_folderName == GRAPHIC_DATA_FOLDERS )
 			{
-				l_titype = TITDataFile;
+				l_titype = TreeItemType::DataFile;
 			}
 			else if ( p_folderName == OTHER_DATA_FOLDERS )
 			{
-				l_titype = TITDataFolder;
+				l_titype = TreeItemType::DataFolder;
 			}
 
-			wxTreeItemId l_id = AppendItem( l_it->second.m_sceneId, p_folderName, l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FOLDER, l_titype ) );
+			wxTreeItemId l_id = AppendItem( l_it->second.m_sceneId, p_folderName, l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, l_titype ) );
 			m_folders.insert( { p_folderName, l_id } );
 			m_idParent = l_id;
 			Collapse( l_it->second.m_sceneId );
@@ -275,13 +275,13 @@ namespace Troll
 			return l_id;
 		}
 
-		wxTreeItemId FilesTree::AddFileToFolder( wxTreeItemId const & p_item, wxString const & p_idFile, TETreeItemType p_type, bool p_exists )
+		wxTreeItemId FilesTree::AddFileToFolder( wxTreeItemId const & p_item, wxString const & p_idFile, TreeItemType p_type, bool p_exists )
 		{
 			int l_image = FilesTreeIcon_File;
 			int l_imageSel = l_image + 1;
 			size_t l_index = min( p_idFile.find_last_of( wxT( '\\' ) ), p_idFile.find_last_of( wxT( '/' ) ) );
 			wxString l_filename = p_idFile.substr( l_index + 1 );
-			wxTreeItemId l_id = AppendItem( p_item, l_filename, l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, p_type ) );
+			wxTreeItemId l_id = AppendItem( p_item, l_filename, l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, p_type ) );
 			m_idParent = l_id;
 			Expand( p_item );
 
@@ -302,17 +302,17 @@ namespace Troll
 			return l_id;
 		}
 
-		wxTreeItemId FilesTree::AddExistingFileToProjet( wxTreeItemId const & p_itemParent, TETreeItemType p_type, const wxString p_idFile )
+		wxTreeItemId FilesTree::AddExistingFileToProjet( wxTreeItemId const & p_itemParent, TreeItemType p_type, const wxString p_idFile )
 		{
 			int l_image = FilesTreeIcon_File;
 			int l_imageSel = l_image + 1;
-			wxTreeItemId l_id = AppendItem( p_itemParent, p_idFile, l_image, l_imageSel, new TETreeItemData( ITEM_DESC_FILE, p_type ) );
+			wxTreeItemId l_id = AppendItem( p_itemParent, p_idFile, l_image, l_imageSel, new TreeItemData( ITEM_DESC_FILE, p_type ) );
 			m_idParent = l_id;
 			Expand( p_itemParent );
 			return l_id;
 		}
 
-		void FilesTree::ShowContextMenuFichier( wxPoint const & p_pos, TETreeItemData * p_item )
+		void FilesTree::ShowContextMenuFichier( wxPoint const & p_pos, TreeItemData * p_item )
 		{
 			wxMenu l_menu;
 
@@ -334,7 +334,7 @@ namespace Troll
 
 				if ( l_description == ITEM_DESC_FOLDER )
 				{
-					if ( l_type != TITDataFolder && l_type != TITDataFile )
+					if ( l_type != TreeItemType::DataFolder && l_type != TreeItemType::DataFile )
 					{
 						l_menu.Append( TreeMenu_AddNewFile, _( "Add a new file" ) );
 						l_menu.Append( TreeMenu_AddExistingFile, _( "Add an existing file" ) );
@@ -347,7 +347,7 @@ namespace Troll
 
 				if ( l_description == ITEM_DESC_FILE )
 				{
-					if ( l_type != TITDataFolder && l_type != TITDataFile )
+					if ( l_type != TreeItemType::DataFolder && l_type != TreeItemType::DataFile )
 					{
 						l_menu.Append( TreeMenu_OpenFile, _( "Open" ) );
 						l_menu.Append( TreeMenu_SaveSelectedFile, _( "Save" ) );
@@ -362,7 +362,7 @@ namespace Troll
 					l_menu.Append( TreeMenu_Remove, _( "Remove from the list" ) );
 					l_menu.Append( TreeMenu_Delete, _( "Delete from file system" ) );
 
-					if ( l_type != TITDataFolder )
+					if ( l_type != TreeItemType::DataFolder )
 					{
 						l_menu.AppendSeparator();			//*****************************//
 						l_menu.Append( TreeMenu_Close, _( "Close" ) );
@@ -448,10 +448,11 @@ namespace Troll
 				, m_scenes.end()
 				, [&p_item]( std::pair< wxString const, TreeScene > const & p_scene )
 				{
-					return p_scene.second.m_scene->HasFile( [p_item]( File const & p_file )
-					{
-						return p_file.ItemId == p_item;
-					} );
+					return p_scene.second.m_sceneId == p_item
+						|| p_scene.second.m_scene->HasFile( [p_item]( File const & p_file )
+						{
+							return p_file.ItemId == p_item;
+						} );
 				} );
 
 			if ( l_it == m_scenes.end() )
@@ -529,7 +530,7 @@ namespace Troll
 			wxPoint l_point = p_event.GetPoint();
 			m_selectedItem = p_event.GetItem();
 			SelectItem( m_selectedItem );
-			TETreeItemData * l_item = reinterpret_cast < TETreeItemData * >( GetItemData( m_selectedItem ) );
+			TreeItemData * l_item = reinterpret_cast < TreeItemData * >( GetItemData( m_selectedItem ) );
 			ShowContextMenuFichier( l_point, l_item );
 		}
 
@@ -537,7 +538,7 @@ namespace Troll
 		{
 			m_selectedItem = p_event.GetItem();
 			SelectItem( m_selectedItem );
-			TETreeItemData * l_item = reinterpret_cast < TETreeItemData * >( GetItemData( m_selectedItem ) );
+			TreeItemData * l_item = reinterpret_cast < TreeItemData * >( GetItemData( m_selectedItem ) );
 			wxString l_typeOfItem = l_item->GetDesc();
 
 			if ( l_typeOfItem == ITEM_DESC_FILE )
@@ -578,7 +579,7 @@ namespace Troll
 		void FilesTree::OnEndLabelEdit( wxTreeEvent & p_event )
 		{
 			auto && l_project = m_projectFrame->GetProject();
-			TETreeItemData * l_item = reinterpret_cast < TETreeItemData * >( GetItemData( m_selectedItem ) );
+			TreeItemData * l_item = reinterpret_cast < TreeItemData * >( GetItemData( m_selectedItem ) );
 			wxString l_typeOfItem = l_item->GetDesc();
 			std::clog << p_event.GetLabel() << std::endl;
 
@@ -637,12 +638,12 @@ namespace Troll
 				try
 				{
 					m_selectedScene = DoGetSceneForItem( m_selectedItem );
-					TETreeItemData * l_item = reinterpret_cast< TETreeItemData * >( GetItemData( m_selectedItem ) );
+					TreeItemData * l_item = reinterpret_cast< TreeItemData * >( GetItemData( m_selectedItem ) );
 					wxString l_typeOfItem = l_item->GetDesc();
 
 					if ( l_typeOfItem == ITEM_DESC_FILE )
 					{
-						if ( l_item->GetFileType() != TITDataFolder && l_item->GetFileType() != TITDataFile )
+						if ( l_item->GetFileType() != TreeItemType::DataFolder && l_item->GetFileType() != TreeItemType::DataFile )
 						{
 							auto l_itemId = l_item->GetId();
 							File & l_file = m_selectedScene->FindFile( [l_itemId]( File & p_file )
@@ -710,22 +711,22 @@ namespace Troll
 				wxTreeItemId l_folderId = GetSelected();
 				wxString l_str;
 				FileType l_fileType = DoGetFolderType( l_folderId );
-				TETreeItemType l_titype;
+				TreeItemType l_titype;
 
 				if ( l_fileType == sceneFile )
 				{
-					l_titype = TITSceneFile;
+					l_titype = TreeItemType::SceneFile;
 					l_str.Printf( wxT( "NewFile%d.emscene" ), m_numSceneFile++ );
 				}
 				else if ( l_fileType == loadScriptFile || l_fileType == unloadScriptFile )
 				{
 					if ( l_fileType == loadScriptFile )
 					{
-						l_titype = TITLoadScriptFile;
+						l_titype = TreeItemType::LoadScriptFile;
 					}
 					else
 					{
-						l_titype = TITUnloadScriptFile;
+						l_titype = TreeItemType::UnloadScriptFile;
 					}
 
 					l_str.Printf( wxT( "NewFile%d.emscript" ), m_numScriptFile++ );
@@ -751,12 +752,12 @@ namespace Troll
 				wxTreeItemId l_folderId = GetSelected();
 				wxString l_str;
 				FileType l_fileType = DoGetFolderType( l_folderId );
-				TETreeItemType l_titype;
+				TreeItemType l_titype;
 				wxString filename;
 
 				if ( l_fileType == dataFolder )
 				{
-					l_titype = TITDataFolder;
+					l_titype = TreeItemType::DataFolder;
 					wxDirDialog l_dialog( nullptr, _( "Select a directory" ), l_projectPath );
 
 					if ( l_dialog.ShowModal() == wxID_OK )
@@ -767,25 +768,33 @@ namespace Troll
 
 				if ( l_fileType == sceneFile )
 				{
-					l_titype = TITSceneFile;
-					filename = wxFileSelector( _( "Choose a file to open" ), l_projectPath, wxEmptyString, wxEmptyString, wxString() << _( "Elypse Scene files" ) << wxT( " (*.emscene)|*.emscene" ) );
+					l_titype = TreeItemType::SceneFile;
+					filename = wxFileSelector( _( "Choose a file to open" )
+						, l_projectPath
+						, wxEmptyString
+						, wxEmptyString
+						, wxString() << _( "Elypse Scene files" ) << wxT( " (*.emscene)|*.emscene" ) );
 				}
 				else if ( l_fileType == loadScriptFile || l_fileType == unloadScriptFile )
 				{
 					if ( l_fileType == loadScriptFile )
 					{
-						l_titype = TITLoadScriptFile;
+						l_titype = TreeItemType::LoadScriptFile;
 					}
 					else
 					{
-						l_titype = TITUnloadScriptFile;
+						l_titype = TreeItemType::UnloadScriptFile;
 					}
 
-					filename = wxFileSelector( _( "Choose a file to open" ), l_projectPath, wxEmptyString, wxEmptyString, wxString() << _( "Elypse Script Files" ) << wxT( " (*.emscript)|*.emscript" ) );
+					filename = wxFileSelector( _( "Choose a file to open" )
+						, l_projectPath
+						, wxEmptyString
+						, wxEmptyString
+						, wxString() << _( "Elypse Script Files" ) << wxT( " (*.emscript)|*.emscript" ) );
 				}
 				else if ( l_fileType == dataFile )
 				{
-					l_titype = TITDataFile;
+					l_titype = TreeItemType::DataFile;
 					wxDirDialog l_dialog( nullptr, _( "Choose a folder" ), l_projectPath );
 
 					if ( l_dialog.ShowModal() == wxID_OK )

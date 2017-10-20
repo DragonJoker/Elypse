@@ -9,7 +9,7 @@ namespace Troll
 		namespace Properties
 		{
 			VideoObjectProperties::VideoObjectProperties( ProjectComponents::Media::TrollVideoObject & p_videoObject )
-				: ObjectProperty{ ePROPERTY_DATA_TYPE_VIDEO_OBJECT }
+				: ObjectProperty{ DataType::VideoObject }
 				, m_videoObject{ p_videoObject }
 			{
 			}
