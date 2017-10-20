@@ -34,26 +34,26 @@ LRESULT CALLBACK ElypseOcxCtrl::MessageProc( int nCode, WPARAM wParam, LPARAM lP
 			if ( lpMsg->message == WM_KEYDOWN  && lpMsg->wParam != 116  && lpMsg->wParam != 122 )
 			{
 				TranslateMessage( lpMsg );
-				ElypseOcxCtrl::GetSingletonPtr()->OnKeyDown( lpMsg->wParam, HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
+				ElypseOcxCtrl::GetSingletonPtr()->OnKeyDown( UINT( lpMsg->wParam ), HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
 				break;
 			}
 
 			if ( lpMsg->message == WM_KEYUP  && lpMsg->wParam != 116  && lpMsg->wParam != 122 )
 			{
-				ElypseOcxCtrl::GetSingletonPtr()->OnKeyUp( lpMsg->wParam, HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
+				ElypseOcxCtrl::GetSingletonPtr()->OnKeyUp( UINT( lpMsg->wParam ), HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
 				break;
 
 			}
 
 			if ( lpMsg->message == WM_SYSKEYDOWN )
 			{
-				ElypseOcxCtrl::GetSingletonPtr()->OnSysKeyDown( lpMsg->wParam, HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
+				ElypseOcxCtrl::GetSingletonPtr()->OnSysKeyDown( UINT( lpMsg->wParam ), HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
 				break;
 			}
 
 			if ( lpMsg->message == WM_SYSKEYUP )
 			{
-				ElypseOcxCtrl::GetSingletonPtr()->OnSysKeyUp( lpMsg->wParam, HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
+				ElypseOcxCtrl::GetSingletonPtr()->OnSysKeyUp( UINT( lpMsg->wParam ), HIWORD( lpMsg->lParam ), LOWORD( lpMsg->lParam ) );
 				break;
 			}
 		}
