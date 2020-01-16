@@ -48,14 +48,11 @@ void HDR_Listener::notifyCompositor( CompositorInstance * instance )
 	try
 	{
 		// Get some RTT dimensions for later calculations
-		Ogre::CompositionTechnique::TextureDefinitionIterator defIter =
-			instance->getTechnique()->getTextureDefinitionIterator();
+		auto & defs =
+			instance->getTechnique()->getTextureDefinitions();
 
-		while ( defIter.hasMoreElements() )
+		for ( auto def : defs )
 		{
-			Ogre::CompositionTechnique::TextureDefinition * def =
-				defIter.getNext();
-
 			if ( def->name == "rt_bloom0" )
 			{
 				mBloomSize = ( int )def->width; // should be square

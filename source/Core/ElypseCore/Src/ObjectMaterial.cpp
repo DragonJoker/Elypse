@@ -3,7 +3,10 @@ See LICENSE file in root folder
 */
 #include "PrecompiledHeader.h"
 #include "ObjectMaterial.h"
+
+#include <OgreMaterial.h>
 #include <OgrePixelFormat.h>
+#include <OgreTechnique.h>
 #include <OgreTexture.h>
 #include <OgreColourValue.h>
 
@@ -14,9 +17,9 @@ ObjectMaterial::ObjectMaterial( String const & p_name )
 {
 	Ogre::ResourcePtr l_ptr = MaterialManager::getSingletonPtr()->getByName( m_name );
 
-	if ( ! l_ptr.isNull() )
+	if ( l_ptr )
 	{
-		m_material = static_cast <Material *>( l_ptr.getPointer() );
+		m_material = static_cast <Material *>( l_ptr.get() );
 	}
 }
 
@@ -32,7 +35,7 @@ ObjectMaterial::~ObjectMaterial()
 void ObjectMaterial::Create()
 {
 	m_created = true;
-	m_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->create( m_name, "Internal", true ).getPointer() );
+	m_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->create( m_name, "Internal", true ).get() );
 }
 
 void ObjectMaterial::CreateCopyFrom( String const & p_name )
@@ -40,12 +43,12 @@ void ObjectMaterial::CreateCopyFrom( String const & p_name )
 	m_created = true;
 	MaterialPtr l_ptr = MaterialManager::getSingletonPtr()->getByName( p_name );
 
-	if ( l_ptr.isNull() )
+	if ( !l_ptr )
 	{
 		return;
 	}
 
-	m_material = l_ptr->clone( m_name ).getPointer();
+	m_material = l_ptr->clone( m_name ).get();
 	Pass * l_pass = m_material->getTechnique( 0 )->getPass( 0 );
 
 	for ( uint16_t i = 0 ; i < l_pass->getNumTextureUnitStates() ; i ++ )
@@ -300,7 +303,7 @@ void ObjectMaterial::CopyTexture( uint32_t p_textureIndex, String const & p_text
 	Ogre::TexturePtr l_ptr = l_tus->_getTexturePtr();
 	Ogre::TexturePtr l_tempPtr = TextureManager::getSingletonPtr()->getByName( p_textureName );
 
-	if ( l_tempPtr.isNull() || l_ptr.isNull() )
+	if ( !l_tempPtr || !l_ptr )
 	{
 		return;
 	}

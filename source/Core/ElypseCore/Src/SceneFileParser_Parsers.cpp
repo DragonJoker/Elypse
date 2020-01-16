@@ -844,7 +844,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_AnimationEnd )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectMesh )
 {
-	if ( p_context->object != NULL )
+	if ( p_context->object )
 	{
 		//object already exists, so we ignore the "mesh" directive.
 		return false;
@@ -877,7 +877,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectMesh )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectMeshAndSkeleton )
 {
-	if ( p_context->object != NULL )
+	if ( p_context->object )
 	{
 		//object already exists, so we ignore the "mesh" directive.
 		return false;
@@ -908,23 +908,15 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectMeshAndSkeleton )
 		return false;
 	}
 
-	if ( SkeletonManager::getSingletonPtr()->getByName( l_params[1] ).isNull() )
+	if ( !SkeletonManager::getSingletonPtr()->getByName( l_params[1] ) )
 	{
 		StringVector l_groups = ResourceGroupManager::getSingletonPtr()->getResourceGroups();
-		Ogre::StringVectorPtr l_names;
 		bool l_found = false;
 
 		for ( size_t i = 0 ; i < l_groups.size() && ! l_found ; i++ )
 		{
-			l_names = ResourceGroupManager::getSingletonPtr()->listResourceNames( l_groups[i] );
-
-			for ( size_t j = 0 ; j < l_names.getPointer()->size() ; j++ )
-			{
-				if ( l_names.getPointer()->operator []( j ) == l_params[1] )
-				{
-					l_found = true;
-				}
-			}
+			auto & l_names = *ResourceGroupManager::getSingletonPtr()->listResourceNames( l_groups[i] );
+			l_found = l_names.end() != std::find( l_names.begin(), l_names.end(), l_params[1] );
 		}
 
 		if ( ! l_found )
@@ -959,7 +951,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectMeshAndSkeleton )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectShadow )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_ObjectShadow -> no object" );
 		return false;
@@ -975,7 +967,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectSubmesh )
 	p_context->subObject = NULL;
 	p_context->section = SS_SUBMESH;
 
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_ObjectSubmesh -> no object" );
 		return true;
@@ -1000,13 +992,13 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectSubmesh )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectMaterial )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_ObjectMaterial -> no object" );
 		return false;
 	}
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_ObjectMaterial -> material [" + p_params + "] not found" );
 		return false;
@@ -1018,7 +1010,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectMaterial )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectPhysics )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_ObjectPhysics -> Current Object is null" );
 		return true;
@@ -1041,7 +1033,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectPhysics )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectHidden )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_ObjecHidden -> no object" );
 		return false;
@@ -1053,7 +1045,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectHidden )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectAttach )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parser_AttachObject -> object NULL" );
 		return false;
@@ -1085,7 +1077,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectVideo )
 {
 	p_context->section = SS_OBJECT_VIDEO;
 
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parser_ObjectVideo -> No current object" );
 		return true;
@@ -1105,7 +1097,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectVideo )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectPub )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		PARSING_ERROR( "Parser_ObjectPub -> No Object" );
 		return false;
@@ -1142,7 +1134,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectPub )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectEnd )
 {
-	if ( p_context->object != NULL )
+	if ( p_context->object )
 	{
 		if ( ! p_context->object->isAttached() )
 		{
@@ -1155,7 +1147,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectEnd )
 			p_context->object->getMesh()->prepareForShadowVolume();
 		}
 
-		if ( p_context->autoPhysics && p_context->object->getUserObjectBindings().getUserAny().isEmpty() )
+		if ( p_context->autoPhysics && !p_context->object->getUserObjectBindings().getUserAny().has_value() )
 		{
 			String l_meshName = p_context->object->getMesh()->getName();
 			String l_groupName = ResourceGroupManager::getSingletonPtr()->findGroupContainingResource( l_meshName );
@@ -1169,12 +1161,12 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectEnd )
 
 				for ( size_t i = 0 ; i < filptr->size() ; i ++ )
 				{
-					String const & collName = filptr.getPointer()->at( i ).basename;
+					String const & collName = filptr.get()->at( i ).basename;
 					MeshPtr l_ptr = MeshManager::getSingletonPtr()->load( collName, l_groupName );
 
-					if ( ! l_ptr.isNull() )
+					if ( l_ptr )
 					{
-						l_object->AddBound( new BoundingMesh( l_ptr.getPointer() ) );
+						l_object->AddBound( new BoundingMesh( l_ptr.get() ) );
 					}
 				}
 			}
@@ -1202,7 +1194,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_SubMeshMaterial )
 		return false;
 	}
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_SubMeshMaterial -> material [" + p_params + "] not found" );
 		return false;
@@ -1834,7 +1826,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_OverlayMaterial )
 		return false;
 	}
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_OverlayMaterial -> material [" + p_params + "] does not exist" );
 		return false;
@@ -1852,7 +1844,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_OverlayBorderMaterial )
 		return false;
 	}
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_OverlayBorderMaterial -> material [" + p_params + "] does not exist" );
 		return false;
@@ -2150,7 +2142,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_OverlayMouseOverMaterial )
 		return false;
 	}
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_OverlayMouseOverMaterial -> material [" + p_params + "] does not exist" );
 		return false;
@@ -2168,7 +2160,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_OverlayClickedMaterial )
 		return false;
 	}
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_OverlayClickedMaterial -> material [" + p_params + "] does not exist" );
 		return false;
@@ -2230,7 +2222,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_OverlayFontName )
 		return false;
 	}
 
-	if ( FontManager::getSingletonPtr()->getByName( p_params ).isNull() )
+	if ( !FontManager::getSingletonPtr()->getByName( p_params ) )
 	{
 		PARSING_ERROR( "Parsing Error : Parser_OverlayFontName -> font [" + p_params + "] does not exist" );
 		return false;
@@ -3397,7 +3389,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectPhysicsBoundingMesh )
 	try
 	{
 		MeshManager::getSingletonPtr()->load( p_params, ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME );
-		Mesh * l_mesh = static_cast<MeshPtr>( MeshManager::getSingletonPtr()->getByName( p_params ) ).getPointer();
+		Mesh * l_mesh = static_cast<MeshPtr>( MeshManager::getSingletonPtr()->getByName( p_params ) ).get();
 
 		if ( l_mesh != NULL )
 		{
@@ -3533,7 +3525,7 @@ DEFINE_SCENE_FILE_PARSER( Parser_ObjectPhysicsMaterial )
 
 DEFINE_SCENE_FILE_PARSER( Parser_ObjectPhysicsEnd )
 {
-	if ( p_context->object == NULL )
+	if ( !p_context->object )
 	{
 		p_context->section = SS_NONE;
 	}
@@ -3790,13 +3782,13 @@ DEFINE_SCENE_FILE_PARSER( Parser_PortalTrigger )
 	String l_groupName = ResourceGroupManager::getSingletonPtr()->findGroupContainingResource( l_object->getMesh()->getName() );
 	Ogre::FileInfoListPtr filptr = ResourceGroupManager::getSingletonPtr()->findResourceFileInfo( l_groupName, "coll_tr_" + l_object->getMesh()->getName() );
 
-	if ( filptr.getPointer()->size() == 0 )
+	if ( filptr.get()->size() == 0 )
 	{
 		PARSING_ERROR( "Parsing Error : parsePortalTrigger -> BoundingMesh not found : coll_tr_" + l_object->getMesh()->getName() + " ? @ trigger : [" + p_params + "]" );
 		return false;
 	}
 
-	String MeshName = filptr.getPointer()->at( 0 ).basename;
+	String MeshName = filptr.get()->at( 0 ).basename;
 	PhysicsObject * l_obj = p_context->portal->GetTrigger();
 
 	if ( l_obj == NULL )
@@ -3809,9 +3801,9 @@ DEFINE_SCENE_FILE_PARSER( Parser_PortalTrigger )
 	MeshManager::getSingletonPtr()->load( MeshName, l_groupName );
 	MeshPtr l_mesh = MeshManager::getSingletonPtr()->getByName( MeshName );
 
-	if ( ! l_mesh.isNull() )
+	if ( l_mesh )
 	{
-		BoundingMesh * l_bmesh = new BoundingMesh( l_mesh.getPointer() );
+		BoundingMesh * l_bmesh = new BoundingMesh( l_mesh.get() );
 		l_obj->AddBound( l_bmesh );
 
 		if ( l_object->isAttached() )

@@ -366,11 +366,11 @@ namespace Troll
 					ProjectComponents::Objects3D::TrollSceneNode * l_parent = wxGetApp().GetMainFrame()->GetProject()->GetMainScene()->GetSceneNode( make_wxString( l_parentName ) );
 					l_entity->SetOgreEntity( p_context->object );
 					l_entity->AttachTo( l_parent );
-					Mesh * l_ogreMesh = p_context->object->getMesh().getPointer();
+					Mesh * l_ogreMesh = p_context->object->getMesh().get();
 					ProjectComponents::Objects3D::TrollMesh * l_mesh = wxGetApp().GetMainFrame()->GetProject()->GetMainScene()->AddMesh( make_wxString( l_ogreMesh->getName() ) );
-					uint16_t l_nbSubMesh = l_ogreMesh->getNumSubMeshes();
+					auto l_nbSubMesh = l_ogreMesh->getNumSubMeshes();
 
-					for ( uint16_t i = 0; i < l_nbSubMesh; i++ )
+					for ( auto i = 0u; i < l_nbSubMesh; i++ )
 					{
 						l_mesh->AddSubMaterial( make_wxString( l_ogreMesh->getSubMesh( i )->getMaterialName() ) );
 					}

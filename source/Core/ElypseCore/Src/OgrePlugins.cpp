@@ -95,7 +95,7 @@ namespace Elypse
 #	else
 			p_root->loadPlugin( l_pluginPath + "RenderSystem_GL" + l_debugSuffix );
 #	endif
-			p_root->loadPlugin( l_pluginPath + "Plugin_CgProgramManager" + l_debugSuffix );
+			//p_root->loadPlugin( l_pluginPath + "Plugin_CgProgramManager" + l_debugSuffix );
 			p_root->loadPlugin( l_pluginPath + "Plugin_ParticleFX" + l_debugSuffix );
 #endif
 		}

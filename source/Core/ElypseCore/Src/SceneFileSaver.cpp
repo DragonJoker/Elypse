@@ -68,13 +68,13 @@ void SceneFileSaver::_writeObjects()
 			m_buffer << "	attach_to " << l_entity->getParentSceneNode()->getName() << std::endl;
 		}
 
-		uint16_t l_numSubMeshes = l_entity->getMesh()->getNumSubMeshes();
+		auto & l_subMeshes = l_entity->getMesh()->getSubMeshes();
 
-		if ( l_numSubMeshes > 1 )
+		if ( l_subMeshes.size() > 1 )
 		{
-			for ( uint16_t i = 0 ; i < l_numSubMeshes ; i ++ )
+			for ( uint16_t i = 0 ; i < uint32_t( l_subMeshes.size() ); i ++ )
 			{
-				if ( l_entity->getSubEntity( i )->getMaterialName() != l_entity->getMesh()->getSubMesh( i )->getMaterialName() )
+				if ( l_entity->getSubEntity( i )->getMaterialName() != l_subMeshes[i]->getMaterialName() )
 				{
 					m_buffer << "	submesh " << i << std::endl;
 					m_buffer << "	{" << std::endl;
@@ -163,11 +163,11 @@ void SceneFileSaver::_writeSceneNodes( SceneNode * p_node )
 		m_buffer << std::endl;
 	}
 
-	Node::ChildNodeIterator iter = p_node->getChildIterator();
+	auto & l_children = p_node->getChildren();
 
-	while ( iter.hasMoreElements() )
+	for ( auto & l_child : l_children )
 	{
-		SceneNode * l_next = static_cast <SceneNode *>( iter.getNext() );
+		SceneNode * l_next = static_cast <SceneNode *>( l_child );
 		_writeSceneNodes( l_next );
 	}
 }
@@ -257,11 +257,11 @@ void SceneFileSaver::_writeLights()
 
 void SceneFileSaver::_writeCameras()
 {
-	SceneManager::CameraIterator iter = m_sceneManager->getCameraIterator();
+	auto & l_cameras = m_sceneManager->getCameras();
 
-	while ( iter.hasMoreElements() )
+	for ( auto & l_cameraIt : l_cameras )
 	{
-		Camera * l_camera = iter.getNext();
+		Camera * l_camera = l_cameraIt.second;
 		m_buffer << "camera " << l_camera->getName() << std::endl;
 		m_buffer << "{" << std::endl;
 		const Vector3 & l_position = l_camera->getPosition();

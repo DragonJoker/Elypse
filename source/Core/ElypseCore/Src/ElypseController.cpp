@@ -14,12 +14,14 @@ See LICENSE file in root folder
 #include <OgreRenderSystem.h>
 #include <OgreAnimation.h>
 #include <OgreStringConverter.h>
+#include <OgreMaterial.h>
 #include <OgreMaterialManager.h>
 #include <OgreMeshManager.h>
 #include <OgreRenderWindow.h>
 #include <OgreLogManager.h>
 #include <OgreParticleSystemManager.h>
 #include <OgreCompositorManager.h>
+#include <OgreTechnique.h>
 
 #include "DownloadManager.h"
 
@@ -36,6 +38,7 @@ See LICENSE file in root folder
 
 #include <ode/error.h>
 #include <ode/collision.h>
+#include <ode/odeinit.h>
 
 #include <PreciseTimer.h>
 #include <Utils.h>
@@ -105,7 +108,7 @@ ElypseController::ElypseController( ElypseInstance & p_owner )
 	//std::ios_base::sync_with_stdio(false);
 	//std::cin.tie(0);
 	EMUSE_MESSAGE_DEBUG( "ElypseController::ElypseController" );
-	dInitODE();
+	dInitODE2( 0u );
 	dSetErrorHandler( OdeErrorCallback );
 	dSetDebugHandler( OdeErrorCallback );
 	dSetMessageHandler( OdeErrorCallback );
@@ -163,7 +166,7 @@ bool ElypseController::_loadRenderer( String const & p_pluginName, String const 
 		m_root->loadPlugin( p_pluginName );
 		m_root->setRenderSystem( m_root->getRenderSystemByName( p_rendererName ) );
 		m_log->logMessage( "Initialisation RenderSystem : " + p_rendererName );
-		m_root->getRenderSystem()->_initialise( false );
+		m_root->getRenderSystem()->_initialise();
 		return true;
 	}
 	catch ( const Exception & p_exception )
@@ -477,111 +480,107 @@ void ElypseController::MainLoop()
 			VideoManager::GetSingletonPtr()->Update();
 		}
 
-		m_mutex.lock();
-		l_iterator = m_instances.begin();
-
-		while ( l_iterator != m_instances.end() )
+		auto l_lock = make_unique_lock( m_mutex );
 		{
-			l_ogreApp = l_iterator->second;
+			l_iterator = m_instances.begin();
 
-			if ( l_ogreApp->IsInitialised() )
+			while ( l_iterator != m_instances.end() )
 			{
-				if ( l_ogreApp->IsToDelete() )
-				{
-					m_log->logMessage( "CElypseController::Removing OgreApplication " + l_iterator->first );
-					InstanceMap::iterator j = l_iterator;
-					++ j;
-					m_instances.erase( l_iterator );
-					l_iterator = j;
+				l_ogreApp = l_iterator->second;
 
-					if ( m_instances.empty() )
+				if ( l_ogreApp->IsInitialised() )
+				{
+					if ( l_ogreApp->IsToDelete() )
 					{
-						l_ogreApp->Destroy();
-						m_log->logMessage( "CElypseController::OgreApplication removed, no more apps" );
-						//m_mutex.unlock();
-						m_stopThread = true;
-						break;
-					}
-					else
-					{
-						if ( l_ogreApp->IsMain() )
+						m_log->logMessage( "CElypseController::Removing OgreApplication " + l_iterator->first );
+						InstanceMap::iterator j = l_iterator;
+						++ j;
+						m_instances.erase( l_iterator );
+						l_iterator = j;
+
+						if ( m_instances.empty() )
 						{
-							GetOwner()->SetMain( false );
 							l_ogreApp->Destroy();
-							m_log->logMessage( "CElypseController::Removed the main OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
-//							m_threadCurrentlyRendering.notify_one();
+							m_log->logMessage( "CElypseController::OgreApplication removed, no more apps" );
+							//m_mutex.unlock();
 							m_stopThread = true;
 							break;
 						}
 						else
 						{
-							l_ogreApp->Destroy();
+							if ( l_ogreApp->IsMain() )
+							{
+								GetOwner()->SetMain( false );
+								l_ogreApp->Destroy();
+								m_log->logMessage( "CElypseController::Removed the main OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
+	//							m_threadCurrentlyRendering.notify_one();
+								m_stopThread = true;
+								break;
+							}
+							else
+							{
+								l_ogreApp->Destroy();
+							}
+
+							m_log->logMessage( "CElypseController::Removed OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
 						}
-
-						m_log->logMessage( "CElypseController::Removed OgreApplication, " + StringConverter::toString( m_instances.size() ) + " left" );
-					}
-				} // end if (ToDelete)
-				else
-				{
-					if ( l_ogreApp->HasFocus() )
+					} // end if (ToDelete)
+					else
 					{
-						l_hasFocus = true;
-					}
-
-					GetOwner()->GetPlugin()->LockGui();
-					l_ogreApp->RenderOneFrame();
-					GetOwner()->GetPlugin()->UnlockGui();
-					++ l_iterator;
-				}
-			} // end if (Initialised)
-			else// if (!l_ogreApp->IsDeleted())
-			{
-				++ l_iterator;
-				m_log->logMessage( "CElypseController::Initialising OgreApplication" );
-				l_ogreApp->Initialise();
-
-				if ( ! m_links.empty() )
-				{
-					InstanceMultiMap::iterator ifind;
-					ifind = m_links.find( l_ogreApp->GetName() );
-
-					if ( ifind != m_links.end() )
-					{
-						String l_name;
-						l_name = ifind->first;
-
-						while ( ifind != m_links.end() && l_name == ifind->first )
+						if ( l_ogreApp->HasFocus() )
 						{
-							ifind->second->LinkTo( l_ogreApp );
-							InstanceMultiMap::iterator j = ifind;
-							++ j;
-							m_links.erase( ifind );
-							ifind = j;
+							l_hasFocus = true;
+						}
+
+						GetOwner()->GetPlugin()->LockGui();
+						l_ogreApp->RenderOneFrame();
+						GetOwner()->GetPlugin()->UnlockGui();
+						++ l_iterator;
+					}
+				} // end if (Initialised)
+				else// if (!l_ogreApp->IsDeleted())
+				{
+					++ l_iterator;
+					m_log->logMessage( "CElypseController::Initialising OgreApplication" );
+					l_ogreApp->Initialise();
+
+					if ( ! m_links.empty() )
+					{
+						InstanceMultiMap::iterator ifind;
+						ifind = m_links.find( l_ogreApp->GetName() );
+
+						if ( ifind != m_links.end() )
+						{
+							String l_name;
+							l_name = ifind->first;
+
+							while ( ifind != m_links.end() && l_name == ifind->first )
+							{
+								ifind->second->LinkTo( l_ogreApp );
+								InstanceMultiMap::iterator j = ifind;
+								++ j;
+								m_links.erase( ifind );
+								ifind = j;
+							}
 						}
 					}
+
+					m_log->logMessage( "CElypseController::End of Initialisation" );
 				}
-
-				m_log->logMessage( "CElypseController::End of Initialisation" );
-			}
+			} // end while (i)
 		} // end while (i)
-
-		if ( !m_stopThread )
-		{
-			m_mutex.unlock();
-		}
 	} // end while (!m_stopThread)
 
-	//auto l_lock = make_unique_lock( m_mutex );
 	m_log->logMessage( "CElypseController::End of MainLoop" );
 
-	if ( ! m_instances.empty() )
+	if ( !m_instances.empty() )
 	{
-//		m_log->logMessage("CElypseController::MainLoop adopted by "+(m_instances.begin()->first));
+//			m_log->logMessage("CElypseController::MainLoop adopted by "+(m_instances.begin()->first));
 		EMUSE_MESSAGE_DEBUG( "ElypseController::Main Loop // ADOPTION" );
 		GetOwner()->SetMain( false );
 		m_threadCurrentlyRendering.notify_one();
-//		Start((m_instances.begin()->second)->GetThread() , (m_instances.begin()->second) );
-//		return;
+//			Start((m_instances.begin()->second)->GetThread() , (m_instances.begin()->second) );
+//			return;
 	}
 	else
 	{
@@ -590,7 +589,6 @@ void ElypseController::MainLoop()
 	}
 
 	m_status = CS_INITIALISED;
-	m_mutex.unlock();
 	m_threadEnded.notify_all();
 }
 

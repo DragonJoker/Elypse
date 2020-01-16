@@ -51,7 +51,7 @@ bool ElypsePlugin_Firefox :: OpenURL( const String & p_url , bool p_newWindow , 
 		}
 
 		l_postParams = String( "Content-Type:\tapplication/x-www-form-urlencoded\t\nContent-Length:\t" ) + ToString( l_postParams.size() ) + String( "\n\n" ) + l_postParams;
-		l_error = NPN_PostURLNotify( m_instance , l_url.c_str() , "_blank" , l_postParams.size() , l_postParams.c_str(), false, 0 );
+		l_error = NPN_PostURLNotify( m_instance , l_url.c_str() , "_blank" , uint32_t( l_postParams.size() ), l_postParams.c_str(), false, 0 );
 	}
 	else
 	{
@@ -81,7 +81,7 @@ NPString ToNPString( const String & qstr )
 {
 	NPString npstring;
 
-	npstring.UTF8Length = qstr.length();
+	npstring.UTF8Length = uint32_t( qstr.length() );
 	npstring.UTF8Characters = ( char * )NPN_MemAlloc( qstr.length() );
 	memcpy( ( char * )npstring.UTF8Characters, qstr.c_str(), qstr.length() );
 
@@ -183,7 +183,7 @@ void ElypsePlugin_Firefox :: _printText( const String & p_text )
 	Gdiplus::Font * l_font = new Gdiplus::Font( L"Times New Roman", 16 );
 	Gdiplus::SolidBrush l_brush( FONT_COLOUR );
 
-	l_graphics.DrawString( ToWString( p_text ).c_str(), p_text.length(), l_font, Gdiplus::PointF( 100, 100 ), &l_brush );
+	l_graphics.DrawString( ToWString( p_text ).c_str(), uint32_t( p_text.length() ), l_font, Gdiplus::PointF( 100, 100 ), &l_brush );
 
 	EndPaint( m_handle, & l_paintStruct );
 }

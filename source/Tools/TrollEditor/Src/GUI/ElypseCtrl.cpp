@@ -459,7 +459,7 @@ namespace Troll
 			//		if (itr->movable != NULL && itr->movable->getParentSceneNode() != l_manager->getRootSceneNode())
 			//		{
 			//			Entity * l_entity = static_cast <Entity*>( itr->movable);
-			//			BoundingMesh * l_box = new BoundingMesh( l_entity->getMesh().getPointer());
+			//			BoundingMesh * l_box = new BoundingMesh( l_entity->getMesh().get());
 			//			////////////
 			//			l_box->SetRadius( l_entity->getWorldBoundingSphere().getRadius());
 			//			l_box->SetAABB( l_entity->getWorldBoundingBox());

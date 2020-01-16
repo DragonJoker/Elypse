@@ -72,7 +72,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_SetMaterial )
 	VERBOSE_STARTFUNC( " Entity_SetMaterial " );
 	GET_AND_EXEC_TWO_PARAM( Entity *, p_entity, String, p_materialName );
 
-	if ( MaterialManager::getSingletonPtr()->getByName( p_materialName ).isNull() )
+	if ( !MaterialManager::getSingletonPtr()->getByName( p_materialName ) )
 	{
 		return SCRIPT_ERROR( "Error @ Entity_SetMaterial -> no such material exists (" + p_materialName + ")" );
 	}
@@ -99,7 +99,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_SetSubMaterial )
 	VERBOSE_STARTFUNC( " Entity_SetSubMaterial " );
 	GET_AND_EXEC_PARAM( String, l_materialName, 2 );
 
-	if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() == false )
+	if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 	{
 		GET_AND_EXEC_TWO_PARAM( Entity *, l_entity, int, l_index );
 
@@ -153,7 +153,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_Show )
 
 	l_entity->setVisible( true );
 
-	if ( !l_entity->getUserObjectBindings().getUserAny().isEmpty() )
+	if ( l_entity->getUserObjectBindings().getUserAny().has_value() )
 	{
 		PhysicsObject * l_object = Ogre::any_cast< PhysicsObject * > ( l_entity->getUserObjectBindings().getUserAny() );
 
@@ -176,7 +176,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_Hide )
 
 	l_entity->setVisible( false );
 
-	if ( !l_entity->getUserObjectBindings().getUserAny().isEmpty() )
+	if ( l_entity->getUserObjectBindings().getUserAny().has_value() )
 	{
 		PhysicsObject * l_object = Ogre::any_cast< PhysicsObject * > ( l_entity->getUserObjectBindings().getUserAny() );
 
@@ -321,7 +321,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_CreateWithSkeleton )
 		return;
 	}
 
-	if ( SkeletonManager::getSingletonPtr()->getByName( l_skeletonName ).isNull() )
+	if ( !SkeletonManager::getSingletonPtr()->getByName( l_skeletonName ) )
 	{
 		StringVector l_groups = ResourceGroupManager::getSingletonPtr()->getResourceGroups();
 		Ogre::StringVectorPtr l_names;
@@ -331,9 +331,9 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_CreateWithSkeleton )
 		{
 			l_names = ResourceGroupManager::getSingletonPtr()->listResourceNames( l_groups[i] );
 
-			for ( size_t j = 0 ; j < l_names.getPointer()->size() ; j++ )
+			for ( size_t j = 0 ; j < l_names.get()->size() ; j++ )
 			{
-				if ( l_names.getPointer()->operator []( j ) == l_skeletonName )
+				if ( l_names.get()->operator []( j ) == l_skeletonName )
 				{
 					l_found = true;
 				}
@@ -416,7 +416,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_CopyPhysicsObject )
 		return SCRIPT_ERROR( "Error @ Ent_CopyPhysicsObject -> Object is null" );
 	}
 
-	if ( !l_object->getUserObjectBindings().getUserAny().isEmpty() )
+	if ( l_object->getUserObjectBindings().getUserAny().has_value() )
 	{
 		return SCRIPT_ERROR( "Error @ Ent_CopyPhysicsObject -> Object already has a physics object" );
 	}
@@ -447,7 +447,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Ent_GetNumSubMaterials )
 		return SCRIPT_ERROR( "Error @ Ent_GetNumSubMaterials -> Object is null" );
 	}
 
-	RETURN_AS( int ) l_object->getNumSubEntities();
+	RETURN_AS( int ) int( l_object->getSubEntities().size() );
 }
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( ScN_GetByName )
@@ -1659,7 +1659,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Bil_SetMaterial )
 	{
 		BillboardSet * l_bill = ScriptEngine::GetContext()->sceneManager->getBillboardSet( p_name );
 
-		if ( MaterialManager::getSingletonPtr()->getByName( p_matName ).isNull() )
+		if ( !MaterialManager::getSingletonPtr()->getByName( p_matName ) )
 		{
 			SCRIPT_ERROR( "Error @ Bil_SetMaterial -> no such material exists (" + p_matName + ")" );
 			return;

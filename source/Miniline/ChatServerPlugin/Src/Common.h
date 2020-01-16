@@ -213,9 +213,4 @@ namespace Chat
 	};
 }
 
-#if defined( _MSC_VER )
-#	define snprintf sprintf_s
-#	define strncat( a, b, c)	strcat_s( a, c, b)
-#endif
-
 #endif

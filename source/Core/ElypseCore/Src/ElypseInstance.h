@@ -58,7 +58,7 @@ namespace Elypse
 			bool m_deactivated;
 			bool m_linked;
 
-			unsigned long m_lastFrameTime;
+			uint32_t m_lastFrameTime;
 
 			std::mutex m_mutex;
 			std::condition_variable m_condition;

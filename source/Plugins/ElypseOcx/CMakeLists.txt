@@ -16,10 +16,6 @@ find_package( GDI )
 find_package( GDIPlus )
 
 if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
-	message( STATUS "+ Found ATL" )
-	message( STATUS "+ Found GDI" )
-	message( STATUS "+ Found GDIPlus" )
-	
 	#ATL Libs
 	set( AtlLibraries "" )
 	FOREACH( Lib ${ATL_LIBRARIES} )

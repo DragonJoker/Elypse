@@ -20,6 +20,7 @@ See LICENSE file in root folder
 #include <OgreRenderSystem.h>
 #include <OgreRoot.h>
 #include <OgreException.h>
+#include <OgreTimer.h>
 
 #include "DataFile.h"
 #include "ScriptNode.h"
@@ -326,8 +327,8 @@ void ElypseInstance::RenderOneFrame()
 
 	EMUSE_CONSOLE_MESSAGE_DEBUG( "RenderOneFrame" );
 	Timer * l_timer = Root::getSingletonPtr()->getTimer();
-	unsigned long l_frameTime = l_timer->getMilliseconds();
-	unsigned long l_timeSinceLastFrame = l_frameTime - m_lastFrameTime;
+	auto l_frameTime = uint32_t( l_timer->getMilliseconds() );
+	auto l_timeSinceLastFrame = l_frameTime - m_lastFrameTime;
 	Real l_time = Real( l_timeSinceLastFrame / 1000.0 );
 	m_lastFrameTime = l_frameTime;
 

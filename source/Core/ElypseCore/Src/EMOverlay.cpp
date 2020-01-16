@@ -156,7 +156,7 @@ Material * EMOverlay::GetOrCopyMaterial()
 	{
 		MaterialPtr l_mat = MaterialManager::getSingletonPtr()->getByName( m_overlay->getMaterialName() );
 		l_mat = l_mat->clone( m_overlay->getMaterialName() + "_copyfor_" + m_name );
-		m_baseMaterialCopy = l_mat.getPointer();
+		m_baseMaterialCopy = l_mat.get();
 		m_overlay->setMaterialName( m_baseMaterialCopy->getName() );
 	}
 
@@ -454,8 +454,8 @@ void EMOverlay::_wrapWords()
 
 	String l_caption = m_overlay->getCaption().asUTF8();
 	size_t i = 0;
-	FontPtr l_font = FontManager::getSingleton().getByName( ( static_cast <TextAreaOverlayElement *>( m_overlay ) )->getFontName() );
-	genlib_assert( ! l_font.isNull() );
+	FontPtr l_font = static_cast <TextAreaOverlayElement *>( m_overlay )->getFont();
+	genlib_assert( l_font );
 	Real l_total = 0.0;
 	size_t l_lastPossibleIndex = l_caption.size();
 

@@ -16,6 +16,24 @@ See LICENSE file in root folder
 
 GENLIB_INIT_SINGLETON( SoundManager );
 
+namespace
+{
+	void normalize( FMOD_VECTOR  & p_vector )
+	{
+		auto norm = p_vector.x * p_vector.x
+			+ p_vector.y * p_vector.y
+			+ p_vector.z * p_vector.z;
+		norm = sqrt( norm );
+
+		if ( norm )
+		{
+			p_vector.x /= norm;
+			p_vector.y /= norm;
+			p_vector.z /= norm;
+		}
+	}
+}
+
 SoundManager::SoundManager( const String  & p_basePath )
 	: m_basePath( p_basePath )
 	, m_musicVolume( 0.0 )
@@ -95,8 +113,6 @@ SoundManager::SoundManager( const String  & p_basePath )
 	FMOD_OUTPUTTYPE l_outputMode[7] =
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
-		FMOD_OUTPUTTYPE_DSOUND,
-		FMOD_OUTPUTTYPE_WINMM,
 //		FMOD_OUTPUTTYPE_OPENAL,
 		FMOD_OUTPUTTYPE_WASAPI,
 		FMOD_OUTPUTTYPE_ASIO,
@@ -118,6 +134,8 @@ SoundManager::SoundManager( const String  & p_basePath )
 #endif
 	CHECKFMODERROR( m_system->createChannelGroup( "Music", & m_musicGroup ) );
 	CHECKFMODERROR( m_system->createChannelGroup( "SFX", & m_SFXGroup ) );
+	normalize( l_forward );
+	normalize( l_up );
 	CHECKFMODERROR( m_system->set3DListenerAttributes( 0, & m_listenerPos, & l_velocity, & l_forward, & l_up ) );
 }
 
@@ -460,12 +478,6 @@ const String SoundManager::OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
 	case FMOD_OUTPUTTYPE_NOSOUND:
 		return "No sound";
 
-	case FMOD_OUTPUTTYPE_DSOUND:
-		return "DirectSound";
-
-	case FMOD_OUTPUTTYPE_WINMM:
-		return "Windows Multimedia";
-
 	case FMOD_OUTPUTTYPE_WASAPI:
 		return "WASAPI";
 
@@ -486,32 +498,6 @@ const String SoundManager::OutputTypeToStr( FMOD_OUTPUTTYPE p_outputType )
 
 	case FMOD_OUTPUTTYPE_WAVWRITER_NRT:
 		return "Non real-time Wave writer";
-
-	case FMOD_OUTPUTTYPE_PS3:
-		return "Playstation 3";
-
-#if FMOD_VERSION > 0x00010906
-	case FMOD_OUTPUTTYPE_OSS:
-		return "OSS";
-
-	case FMOD_OUTPUTTYPE_ESD:
-		return "ESD";
-
-	case FMOD_OUTPUTTYPE_XBOX360:
-		return "XBox 360";
-
-	case FMOD_OUTPUTTYPE_WII:
-		return "Wii";
-
-	case FMOD_OUTPUTTYPE_PSP:
-		return "PSP";
-#elif defined( _WIN32 )
-//		case FMOD_OUTPUTTYPE_OPENAL: return "OpenAL";
-//		case FMOD_OUTPUTTYPE_SOUNDMANAGER: return "Sound Manager";
-//		case FMOD_OUTPUTTYPE_XBOX: return "XBox";
-//		case FMOD_OUTPUTTYPE_PS2: return "Playstation 2";
-//		case FMOD_OUTPUTTYPE_GC: return "GameCube";
-#endif
 
 	case FMOD_OUTPUTTYPE_UNKNOWN:
 		return "Unknown";

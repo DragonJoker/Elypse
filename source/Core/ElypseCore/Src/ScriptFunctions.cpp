@@ -39,6 +39,7 @@ See LICENSE file in root folder
 #include <OgreViewport.h>
 #include <OgreRenderTarget.h>
 #include <OgreFontManager.h>
+#include <OgreTechnique.h>
 
 #include <time.h>
 
@@ -853,7 +854,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetMouseOverMaterial )
 	{
 		GET_AND_EXEC_PARAM( String, l_materialName, 1 );
 
-		if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() == false )
+		if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 		{
 			l_overlay->SetMouseOverMaterial( l_materialName );
 		}
@@ -877,7 +878,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetMaterial )
 	{
 		GET_AND_EXEC_PARAM( String, p_materialName, 1 );
 
-		if ( ! MaterialManager::getSingletonPtr()->getByName( p_materialName ).isNull() )
+		if ( MaterialManager::getSingletonPtr()->getByName( p_materialName ) )
 		{
 			WebImage * l_image = WebImageManager::GetSingletonPtr()->GetWebImage( p_materialName );
 
@@ -912,7 +913,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( OvE_SetBorderMaterial )
 	{
 		GET_AND_EXEC_PARAM( String, l_materialName, 1 );
 
-		if ( ! MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() )
+		if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 		{
 			( static_cast <BorderPanelOverlayElement *>( l_overlay->GetOgreOverlayElement() ) )->setBorderMaterialName( l_materialName );
 		}
@@ -2417,7 +2418,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_ObjectDelete )
 			}
 		}
 
-		if ( ! l_entity->getUserObjectBindings().getUserAny().isEmpty() )
+		if ( ! l_entity->getUserObjectBindings().getUserAny().has_value() )
 		{
 			ScriptEngine::GetContext()->physicsSimulation->DestroyObject( any_cast<PhysicsObject *>( l_entity->getUserObjectBindings().getUserAny() ) );
 		}
@@ -2693,7 +2694,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_MousePickupObject )
 			if ( l_pobj == NULL )
 			{
 				l_pobj = ScriptEngine::GetContext()->physicsSimulation->CreateObject( l_entity, true, true );
-				l_pobj->AddBound( new BoundingMesh( l_entity->getMesh().getPointer() ) );
+				l_pobj->AddBound( new BoundingMesh( l_entity->getMesh().get() ) );
 				l_pobj->ReassertSpatialState();
 				l_pobj->SetSpace( ScriptEngine::GetContext()->physicsSimulation->GetPhantomSpace() );
 				l_pobj->SetFloating( true );
@@ -2903,12 +2904,10 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Spc_TestAllEntities )
 		while ( itResourceName != resourceNames->end() )
 		{
 			Entity * l_entity = ScriptEngine::GetContext()->sceneManager->createEntity( "mesh [ " + ( *itResourceName ) + " ]", ( *itResourceName ) );
-			uint32_t imax = l_entity->getNumSubEntities();
+			auto & l_subEntities = l_entity->getSubEntities();
 
-			for ( uint32_t i = 0 ; i < imax ; i ++ )
+			for ( auto & l_sub : l_subEntities )
 			{
-				SubEntity * l_sub = l_entity->getSubEntity( i );
-
 				if ( l_sub->getMaterialName().find( "_-_Default" ) != String::npos )
 				{
 					EMUSE_LOG_MESSAGE_RELEASE( "ERREUR_DATA : Nom de material foireux : " + l_sub->getMaterialName() + " dans " + ( *itResourceName ) );
@@ -4541,7 +4540,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( POb_AddBoundingMesh )
 		try
 		{
 			MeshPtr l_mesh = MeshManager::getSingletonPtr()->getByName( p_meshName );
-			BoundingMesh * l_bmesh = new BoundingMesh( l_mesh.getPointer() );
+			BoundingMesh * l_bmesh = new BoundingMesh( l_mesh.get() );
 			l_pobj->AddBound( l_bmesh );
 			l_bmesh->SetPosition( p_offset );
 		}
@@ -4810,7 +4809,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mat_GetByName )
 		return;
 	}
 
-	Material * l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_matName ).getPointer() );
+	Material * l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_matName ).get() );
 	RETURN_AS( Material * ) l_material;
 }
 
@@ -4838,7 +4837,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mat_Create )
 		return;
 	}
 
-	Material * l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->create( p_matName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME ).getPointer() );
+	Material * l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->create( p_matName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME ).get() );
 	RETURN_AS( Material * ) l_material;
 }
 
@@ -4879,16 +4878,16 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mat_CreateCopy )
 		return;
 	}
 
-	Material * l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_matName ).getPointer() );
+	Material * l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_matName ).get() );
 
 	if ( MaterialManager::getSingletonPtr()->resourceExists( p_newMatName ) )
 	{
 		SCRIPT_ERROR( "Error @ Material_CreateCopy : Material " + p_newMatName + " already exist" );
-		l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_newMatName ).getPointer() );
+		l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_newMatName ).get() );
 	}
 	else
 	{
-		l_material = l_material->clone( p_newMatName ).getPointer();
+		l_material = l_material->clone( p_newMatName ).get();
 	}
 
 	RETURN_AS( Material * ) l_material;
@@ -4916,11 +4915,11 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mat_CreateMatCopy )
 	if ( MaterialManager::getSingletonPtr()->resourceExists( p_newMatName ) )
 	{
 		SCRIPT_ERROR( "Error @ Material_CreateCopy : Material " + p_newMatName + " already exist" );
-		l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_newMatName ).getPointer() );
+		l_material = static_cast <Material *>( MaterialManager::getSingletonPtr()->getByName( p_newMatName ).get() );
 	}
 	else
 	{
-		l_material = p_material->clone( p_newMatName ).getPointer();
+		l_material = p_material->clone( p_newMatName ).get();
 	}
 
 	RETURN_AS( Material * ) l_material;

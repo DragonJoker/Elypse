@@ -12,41 +12,10 @@ function( ToolsInit )
 endfunction( ToolsInit )
 
 function( ToolsBuild )
-	set( wxWidgets_USE_STATIC OFF)
-
-	if (WIN32)
-		find_package( wxWidgets COMPONENTS core base stc aui adv propgrid net scintilla )
-	else ()
-		find_package( wxWidgets COMPONENTS core base stc aui adv propgrid net )
-	endif()
+	set( wxWidgets_USE_STATIC ON)
+	find_package( wxWidgets COMPONENTS core base stc aui adv propgrid net )
 
 	if ( wxWidgets_FOUND AND GTK2_FOUND )
-		message( STATUS "+ Found wxWidgets" )
-		include_directories( ${wxWidgets_INCLUDE_DIRS} )
-
-		set( wxWidgetsLibraries "" )
-		FOREACH( Lib ${wxWidgets_LIBRARIES} )
-			if ( wxWidgetsLibraries )
-				set( wxWidgetsLibraries "${wxWidgetsLibraries}|${Lib}" )
-			else()
-				set( wxWidgetsLibraries "${Lib}" )
-			endif()
-		ENDFOREACH()
-
-		#Few configuration for wxWidgets
-		string( COMPARE EQUAL "${wxWidgets_USE_DEBUG}" "ON" IsWxDebug )
-		add_definitions( -D_FILE_OFFSET_BITS=64 -D_LARGE_FILES )
-		if ( NOT WIN32 )
-			add_definitions( -D__WXGTK__ )
-		endif ()
-		if ( IsWxDebug )
-			add_definitions( -D__WXDEBUG__ )
-		endif ()
-		
-		set( BinariesLibraries
-			${wxWidgetsLibraries}
-		)
-		
 		if ( BUILD_TOOLS_ELYPSE_BINARY OR BUILD_TOOLS_MUSE_READER OR BUILD_TOOLS_MUSE_WRITER OR BUILD_TOOLS_TROLL_EDITOR )
 			set( Build ${GuiCommon} )
 			add_subdirectory( Tools/GuiCommon )

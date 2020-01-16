@@ -6,6 +6,8 @@ See LICENSE file in root folder
 #include "MirrorMaterial.h"
 #include "Mirror.h"
 
+#include <OgreTechnique.h>
+
 using namespace Ogre;
 
 MirrorMaterial::MirrorMaterial( String const & p_name, Mirror & p_owner )
@@ -46,7 +48,7 @@ void MirrorMaterial::Apply()
 		return;
 	}
 
-	Material * l_material = static_cast <MaterialPtr>( MaterialManager::getSingletonPtr()->getByName( m_name ) ).getPointer();
+	Material * l_material = static_cast <MaterialPtr>( MaterialManager::getSingletonPtr()->getByName( m_name ) ).get();
 
 	if ( l_material != NULL )
 	{

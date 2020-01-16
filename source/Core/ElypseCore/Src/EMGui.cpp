@@ -176,7 +176,7 @@ void EMGui::DestroyOverlayGroup( String const & p_name )
 
 Real EMGui::GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )const
 {
-	if ( p_font.isNull() )
+	if ( !p_font )
 	{
 		return 0.0;
 	}
@@ -191,7 +191,7 @@ Real EMGui::GetWidth( char p_char, const FontPtr & p_font, Real p_fontSize )cons
 
 Real EMGui::GetWidth( String const & p_string, const FontPtr & p_font, Real p_fontSize )const
 {
-	if ( p_font.isNull() )
+	if ( !p_font )
 	{
 		return 0.0;
 	}

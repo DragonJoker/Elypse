@@ -95,35 +95,24 @@ void AnimatedObject::SetPauseAllAnimations( bool p_pause )
 
 uint32_t AnimatedObject::GetNumPlayingAnimations()
 {
-	ConstEnabledAnimationStateIterator l_it = m_entity->getAllAnimationStates()->getEnabledAnimationStateIterator();
-	AnimationState * l_state;
-	uint32_t l_count = 0;
-
-	while ( l_it.hasMoreElements() )
-	{
-		l_state = l_it.getNext();
-		l_count++;
-	}
-
-	return l_count;
+	return uint32_t( m_entity->getAllAnimationStates()->getEnabledAnimationStates().size() );
 }
 
 String const & AnimatedObject::GetPlayingAnimationName( uint32_t p_index )
 {
-	ConstEnabledAnimationStateIterator l_it = m_entity->getAllAnimationStates()->getEnabledAnimationStateIterator();
-	AnimationState * l_state;
-	uint32_t l_count = 0;
+	auto & l_states = m_entity->getAllAnimationStates()->getEnabledAnimationStates();
+	auto l_count = 0u;
+	auto l_it = l_states.begin();
 
-	while ( l_it.hasMoreElements() && l_count < p_index )
+	while ( l_count < p_index && l_it != l_states.end() )
 	{
-		l_state = l_it.getNext();
-		l_count++;
+		++l_count;
+		++l_it;
 	}
 
-	if ( l_it.hasMoreElements() )
+	if ( l_it != l_states.end() )
 	{
-		l_state = l_it.getNext();
-		return l_state->getAnimationName();
+		return ( *l_it )->getAnimationName();
 	}
 
 	return EMPTY_STRING;

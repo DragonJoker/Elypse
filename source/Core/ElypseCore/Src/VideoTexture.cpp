@@ -16,6 +16,7 @@ See LICENSE file in root folder
 #include <OgreMaterialManager.h>
 #include <OgreHardwarePixelBuffer.h>
 #include <OgreStringConverter.h>
+#include <OgreTechnique.h>
 
 using namespace Ogre;
 
@@ -51,9 +52,9 @@ void VideoTexture::_createTexture( String const & p_materialName, String const &
 				GetOwner()->m_height,
 				0,
 				PF_R8G8B8,
-				TU_DYNAMIC_WRITE_ONLY_DISCARDABLE ).getPointer();
+				TU_DYNAMIC_WRITE_ONLY_DISCARDABLE ).get();
 
-	if ( l_pMaterial.isNull() )
+	if ( !l_pMaterial )
 	{
 		l_pMaterial = MaterialManager::getSingleton().create( p_materialName, p_groupName );
 		l_texUnitState = l_pMaterial->getTechnique( 0 )->getPass( 0 )->createTextureUnitState( p_materialName );
@@ -70,7 +71,7 @@ void VideoTexture::_createTexture( String const & p_materialName, String const &
 
 void VideoTexture::createDefinedTexture( String const & p_materialName, String const & p_groupName )
 {
-	if ( TextureManager::getSingleton().getByName( p_materialName ).isNull() )
+	if ( !TextureManager::getSingleton().getByName( p_materialName ) )
 	{
 		_createTexture( p_materialName, p_groupName, true );
 	}

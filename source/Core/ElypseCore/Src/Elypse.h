@@ -44,9 +44,12 @@ See LICENSE file in root folder
 #pragma warning( disable:4312 )
 #pragma warning( disable:4311 )
 #include <OgrePrerequisites.h>
-#include <OgreStringVector.h>
 #include <OgreArchive.h>
+#include <OgreFont.h>
+#include <OgreFontManager.h>
 #include <OgreOverlay.h>
+#include <OgreOverlayManager.h>
+#include <OgreStringVector.h>
 #pragma warning( pop )
 #include <vector>
 #include <map>
@@ -73,6 +76,8 @@ See LICENSE file in root folder
 #include <Named.h>
 #include <OwnedBy.h>
 #include <FunctionTracker.h>
+
+#define dIDESINGLE
 
 namespace Ogre
 {

@@ -10,6 +10,7 @@ See LICENSE file in root folder
 #include <OgreTextureManager.h>
 #include <OgreRenderTexture.h>
 #include <OgreMaterialManager.h>
+#include <OgreTechnique.h>
 #include <OgreHardwarePixelBuffer.h>
 
 using namespace Ogre;
@@ -31,7 +32,7 @@ CamTex::CamTex( String const & p_name, SceneManager * p_sceneManager, Camera * p
 	MaterialPtr l_material;
 	l_material = MaterialManager::getSingletonPtr()->getByName( m_name );
 
-	if ( ! l_material.isNull() )
+	if ( l_material )
 	{
 		m_ownsMaterial = false;
 		m_textureUnitState = l_material->getTechnique( 0 )->getPass( 0 )->createTextureUnitState( m_name );

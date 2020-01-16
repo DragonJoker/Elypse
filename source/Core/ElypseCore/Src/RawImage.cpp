@@ -17,7 +17,7 @@ RawImage::RawImage( String const & p_name )
 	m_height = l_ptr->getHeight();
 	m_data.resize( m_width * m_height );
 	const PixelBox & l_box = l_ptr->getBuffer()->lock( Box( 0, 0, m_width, m_height ), HardwareBuffer::HBL_READ_ONLY );
-	char * l_rawData = static_cast< char * >( l_box.data );
+	char * l_rawData = reinterpret_cast< char * >( l_box.data );
 	size_t imax = m_width * m_height;
 
 	for ( auto & l_colour : m_data )

@@ -75,7 +75,14 @@ void Mirror::Initialise( String const & p_instanceKey, SceneManager * p_sceneMan
 	m_planeNode = m_manager->getRootSceneNode()->createChildSceneNode( "___INTERNAL_MirrorPlaneNode_" + m_name );
 	m_plane = new MovablePlane( m_normal, m_position );
 	m_planeNode->attachObject( m_plane );
-	m_texture = TextureManager::getSingleton().createManual( "__INTERNAL_MirrorTexture_" + m_name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, TEX_TYPE_2D, m_texWidth, m_texHeight, 0, PF_R8G8B8, TU_RENDERTARGET ).getPointer();
+	m_texture = TextureManager::getSingleton().createManual( "__INTERNAL_MirrorTexture_" + m_name
+		, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+		, TEX_TYPE_2D
+		, m_texWidth
+		, m_texHeight
+		, 0
+		, PF_R8G8B8
+		, TU_RENDERTARGET ).get();
 	m_render = m_texture->getBuffer()->getRenderTarget();
 	m_render->setAutoUpdated( m_autoUpdate );
 	m_camera = m_manager->createCamera( "__INTERNAL_MirrorCamera_" + m_name );

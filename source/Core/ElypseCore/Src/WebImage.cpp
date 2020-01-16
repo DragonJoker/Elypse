@@ -10,6 +10,7 @@ See LICENSE file in root folder
 #include <OgreImage.h>
 #include <OgreImageCodec.h>
 #include <OgreMaterialManager.h>
+#include <OgreTechnique.h>
 
 #include <NeoCurl.h>
 #include <FastMath.h>
@@ -26,7 +27,7 @@ WebImage::WebImage( String const & p_name )
 	, m_ready( false )
 	, m_loading( false )
 {
-	m_material = static_cast <Material *>( MaterialManager::getSingleton().create( m_name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME ).getPointer() );
+	m_material = static_cast <Material *>( MaterialManager::getSingleton().create( m_name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME ).get() );
 }
 
 WebImage::~WebImage()
@@ -128,7 +129,7 @@ void WebImage::_setupImage()
 				static_cast <uint32_t>( l_image->getHeight() ),
 				0,
 				Ogre::PF_X8R8G8B8,
-				Ogre::TU_DEFAULT ).getPointer();
+				Ogre::TU_DEFAULT ).get();
 	m_texture->loadImage( * l_image );
 	l_tex->setTextureName( m_name );
 	delete l_image;
@@ -147,7 +148,7 @@ void WebImage::_loadFromMemory( String const & p_ext, String const & p_buffer, I
 	unsigned char * l_buffer = reinterpret_cast <unsigned char *>( CStrCopy( p_buffer ) );
 	Ogre::DataStreamPtr l_stream( new MemoryDataStream( l_buffer, p_buffer.size() - 1, false ) );
 	Codec::DecodeResult l_result = l_codec->decode( l_stream );
-	ImageCodec::ImageData * l_data = static_cast <ImageCodec::ImageData *>( l_result.second.getPointer() );
+	ImageCodec::ImageData * l_data = static_cast <ImageCodec::ImageData *>( l_result.second.get() );
 	p_image->loadRawData( ( DataStreamPtr & )( l_result.first ), l_data->width, l_data->height, l_data->depth, l_data->format, 1, l_data->num_mipmaps );
 	delete [] l_buffer;
 }

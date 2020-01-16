@@ -316,7 +316,7 @@ NPError NPP_SetValue( NPP instance, NPNVariable variable, void * value )
 	return rv;
 }
 
-int16	NPP_HandleEvent( NPP instance, void * event )
+int16_t	NPP_HandleEvent( NPP instance, void * event )
 {
 	if ( instance == NULL )
 	{

@@ -20,6 +20,8 @@ See LICENSE file in root folder
 
 #include <ElypseResourceGroupManager.h>
 
+#include <OgreTechnique.h>
+
 namespace Troll
 {
 	using namespace Gui;
@@ -36,7 +38,7 @@ namespace Troll
 			VERBOSE_STARTFUNC( " Troll_Entity_SetMaterial " );
 			GET_AND_EXEC_PARAM( String, l_materialName, 1 );
 
-			if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() == false )
+			if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 			{
 				GET_AND_EXEC_PARAM( Entity *, l_entity, 0 );
 
@@ -139,7 +141,7 @@ namespace Troll
 			{
 				GET_AND_EXEC_PARAM( String, l_materialName, 1 );
 
-				if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() == false )
+				if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 				{
 					l_overlay->SetMouseOverMaterial( l_materialName );
 					TrollOverlay * l_teOv = wxGetApp().GetMainFrame()->GetProject()->GetMainScene()->GetOverlay( make_wxString( l_overlay->GetName() ) );
@@ -171,7 +173,7 @@ namespace Troll
 			{
 				GET_AND_EXEC_PARAM( String, l_materialName, 1 );
 
-				if ( !MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() )
+				if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 				{
 					l_overlay->SetBaseMaterial( l_materialName );
 					TrollOverlay * l_teOv = wxGetApp().GetMainFrame()->GetProject()->GetMainScene()->GetOverlay( make_wxString( l_overlay->GetName() ) );
@@ -203,7 +205,7 @@ namespace Troll
 			{
 				GET_AND_EXEC_PARAM( String, l_materialName, 1 );
 
-				if ( !MaterialManager::getSingletonPtr()->getByName( l_materialName ).isNull() )
+				if ( MaterialManager::getSingletonPtr()->getByName( l_materialName ) )
 				{
 					( static_cast < BorderPanelOverlayElement * >( l_overlay->GetOgreOverlayElement() ) )->setBorderMaterialName( l_materialName.c_str() );
 				}
@@ -1046,8 +1048,8 @@ namespace Troll
 				l_entity = ScriptEngine::GetContext()->sceneManager->createEntity( l_entName, l_meshName );
 				l_node = ScriptEngine::GetContext()->sceneManager->getRootSceneNode()->createChildSceneNode( l_entName );
 				l_node->attachObject( l_entity );
-				Mesh * l_mesh = l_entity->getMesh().getPointer();
-				uint16_t l_nbSubmeshes = l_mesh->getNumSubMeshes();
+				Mesh * l_mesh = l_entity->getMesh().get();
+				auto l_nbSubmeshes = uint16_t( l_mesh->getNumSubMeshes() );
 				uint16_t l_nbTechniques, l_nbPasses, l_nbTextureUnits;
 				String l_fileName;
 				String l_materialName;
@@ -1061,7 +1063,7 @@ namespace Troll
 				{
 					l_submesh = l_mesh->getSubMesh( i );
 					l_materialName = l_submesh->getMaterialName();
-					l_material = reinterpret_cast < Material * >( MaterialManager::getSingletonPtr()->getByName( l_materialName ).getPointer() );
+					l_material = reinterpret_cast < Material * >( MaterialManager::getSingletonPtr()->getByName( l_materialName ).get() );
 
 					if ( l_material != NULL )
 					{
