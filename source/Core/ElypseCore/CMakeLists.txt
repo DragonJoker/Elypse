@@ -11,6 +11,8 @@ include_directories(  )
 add_target(
 	${PROJECT_NAME}
 	api_dll
+	${CMAKE_CURRENT_SOURCE_DIR}/Src
+	${CMAKE_CURRENT_SOURCE_DIR}/Src
 	""
 	""
 	"PrecompiledHeader.h"
@@ -18,12 +20,13 @@ add_target(
 )
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
-		${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src
+		${CMAKE_SOURCE_DIR}/Core/${PROJECT_NAME}/Src
 		${Ogre_INCLUDE_DIR}
 	PRIVATE
 		${Fmod_INCLUDE_DIR}
 		${OpenCV_INCLUDE_DIR}
 		${OpenCV_INCLUDE_DIRS}
+		${CMAKE_SOURCE_DIR}/Core/${PROJECT_NAME}/Src/Win32
 )
 target_link_libraries( ${PROJECT_NAME}
 	PUBLIC

@@ -9,15 +9,19 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	1 )
 set( ${PROJECT_NAME}_VERSION_MINOR	0 )
 set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/Miniline/ElypseServer/Src
-)
-
 add_target(
 	${PROJECT_NAME}
 	bin_dos
-	"GeneralLib;ElypseServer"
-	"GeneralLib;ElypseServer;${CMAKE_DL_LIBS};${BoostLibraries};${X11Libraries}"
+	${CMAKE_CURRENT_SOURCE_DIR}/Src
+	${CMAKE_CURRENT_SOURCE_DIR}/Src
+	""
+	""
+)
+target_link_libraries( ${PROJECT_NAME}
+	PRIVATE
+		GeneralLib
+		ElypseServer
+		${CMAKE_DL_LIBS}
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )

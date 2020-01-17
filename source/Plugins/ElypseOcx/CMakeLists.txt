@@ -6,43 +6,11 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	${VERSION_MAJOR} )
 set( ${PROJECT_NAME}_VERSION_MINOR	${VERSION_MINOR} )
 set( ${PROJECT_NAME}_VERSION_BUILD	${VERSION_BUILD} )
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/Core/ElypseCore/Src
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
-)
-
 find_package( ATL )
 find_package( GDI )
 find_package( GDIPlus )
 
 if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
-	#ATL Libs
-	set( AtlLibraries "" )
-	FOREACH( Lib ${ATL_LIBRARIES} )
-		if ( AtlLibraries )
-			set( AtlLibraries "${AtlLibraries}|${Lib}" )
-		else ()
-			set( AtlLibraries "${Lib}" )
-		endif ()
-	ENDFOREACH()
-	
-	#GDI Libs
-	set( GdiLibraries "" )
-	FOREACH( Lib ${GDI_LIBRARY} )
-		if ( GdiLibraries )
-			set( GdiLibraries "${GdiLibraries}|${Lib}" )
-		else ()
-			set( GdiLibraries "${Lib}" )
-		endif ()
-	ENDFOREACH()
-	FOREACH( Lib ${GDIPLUS_LIBRARY} )
-		if ( GdiLibraries )
-			set( GdiLibraries "${GdiLibraries}|${Lib}" )
-		else ()
-			set( GdiLibraries "${Lib}" )
-		endif ()
-	ENDFOREACH()
-
 	# Define IDL files
 	file( GLOB ${PROJECT_NAME}_IDL_FILES Src/*.idl )
 	file( GLOB ${PROJECT_NAME}_DEF_FILES Src/*.def )
@@ -61,8 +29,10 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	add_target(
 		${PROJECT_NAME}
 		dll
-		"GeneralLib;ElypseCore"
-		"GeneralLib;ElypseCore;${ElypseCoreLibraries};${AtlLibraries};${GdiLibraries}"
+		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		""
+		""
 		"ElypseOcxPch.h"
 		"ElypseOcxPch.cpp"
 		""
@@ -70,7 +40,19 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 		""
 		"${${PROJECT_NAME}_ADDITIONAL_FILES}"
 	)
-	
+	target_include_directories( ${PROJECT_NAME}
+		PRIVATE
+			${CMAKE_CURRENT_SOURCE_DIR}/Src
+	)
+	target_link_libraries( ${PROJECT_NAME}
+		PRIVATE
+			GeneralLib
+			ElypseCore
+			${ATL_LIBRARIES}
+			${GDI_LIBRARY}
+			${GDIPLUS_LIBRARY}
+	)
+
 	# Copy tlb files into binaries directory.
 	add_custom_command( TARGET ${PROJECT_NAME}
 		POST_BUILD

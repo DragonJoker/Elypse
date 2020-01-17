@@ -9,26 +9,23 @@ find_package( MySQL REQUIRED client )
 find_package( Database )
 
 if ( DATABASE_FOUND )
-	#DatabaseEngine Libs
-	set( DatabaseLibraries "" )
-	foreach( Lib ${Database_LIBRARIES} )
-		if( DatabaseLibraries )
-			set( DatabaseLibraries "${DatabaseLibraries}|${Lib}" )
-		else()
-			set( DatabaseLibraries "${Lib}" )
-		endif()
-	endforeach()
-
-	include_directories(
-		${Database_INCLUDE_DIR}
-		${CMAKE_SOURCE_DIR}/Miniline/ElypseServer/Src
-	)
-
 	add_target(
 		${PROJECT_NAME}
 		dll
-		"GeneralLib;ElypseServer"
-		"GeneralLib;${BoostLibraries};${DatabaseLibraries};ElypseServer"
+		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		""
+		""
+	)
+	target_include_directories( ${PROJECT_NAME}
+		PUBLIC
+			${Database_INCLUDE_DIR}
+	)
+	target_link_libraries( ${PROJECT_NAME}
+		PUBLIC
+			GeneralLib
+			ElypseServer
+			${Database_LIBRARIES}
 	)
 
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )
