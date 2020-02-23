@@ -39,13 +39,13 @@ namespace Elypse
 
 			void Log( std::string const & p_name )
 			{
-				std::cout << p_name << std::endl;
+				std::clog << p_name << std::endl;
 			}
 
 			template< typename T >
 			void Log( std::string const & p_name, T const & p_value )
 			{
-				std::cout << "\t" << p_name << ":" << p_value << std::endl;
+				std::clog << "\t" << p_name << ":" << p_value << std::endl;
 			}
 
 			bool DecompressFile( std::string const & p_zipFileName, std::string const & p_fileName, int p_size )
@@ -221,7 +221,7 @@ namespace Elypse
 
 					if ( CompressFolder( l_folder, l_path, p_eType ) )
 					{
-						std::cout << "[" << l_path << "]" << std::endl;
+						std::clog << "[" << l_path << "]" << std::endl;
 						l_return = AddFile( l_path, p_eType );
 					}
 				}
@@ -401,10 +401,10 @@ namespace Elypse
 				{
 					char l_buffer[] = "MUSEFILE";
 					size_t l_nbBytes = fwrite( l_buffer, 1, strlen( l_buffer ), l_outfile );
-					std::cout << "Header written" ;
-					std::cout << ", from byte: " << l_nbBytes;
+					std::clog << "Header written" ;
+					std::clog << ", from byte: " << l_nbBytes;
 					WriteHeader( l_nbBytes, l_outfile );
-					std::cout << ", to byte: " << l_nbBytes << std::endl;
+					std::clog << ", to byte: " << l_nbBytes << std::endl;
 
 					for ( auto && l_block : m_header )
 					{
@@ -413,11 +413,11 @@ namespace Elypse
 
 						if ( l_infile )
 						{
-							std::cout << "Integrating file: " + l_block.m_name;
-							std::cout << ", from byte: " << l_nbBytes;
+							std::clog << "Integrating file: " + l_block.m_name;
+							std::clog << ", from byte: " << l_nbBytes;
 							int l_size = l_block.m_blocsize;
 							l_nbBytes += l_size;
-							std::cout << ", to byte: " << l_nbBytes << std::endl;
+							std::clog << ", to byte: " << l_nbBytes << std::endl;
 							std::vector< uint8_t > l_readBuffer( l_size );
 							fread( l_readBuffer.data(), 1, l_size, l_infile );
 							fwrite( l_readBuffer.data(), 1, l_size, l_outfile );

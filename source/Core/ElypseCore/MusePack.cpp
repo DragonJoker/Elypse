@@ -246,16 +246,16 @@ namespace Elypse::Download
 				}
 				else if ( l_curDownloaded == 0u && l_file.GetDownloadedBytes() )
 				{
-					EMUSE_LOG_MESSAGE_RELEASE( "MusePack(" + std::to_string( uintptr_t( this ) ) + ")::CurlCallback -> Started file [" + l_file.GetFilename() + "], from byte: " + std::to_string( l_offset ) );
+					EMUSE_MESSAGE_DEBUG( "MusePack(" + std::to_string( uintptr_t( this ) ) + ")::CurlCallback -> Started file [" + l_file.GetFilename() + "], from byte: " + std::to_string( l_offset ) );
 
 					if ( l_file.IsDownloadFinished() )
 					{
-						EMUSE_LOG_MESSAGE_RELEASE( "MusePack(" + std::to_string( uintptr_t( this ) ) + ")::CurlCallback -> Finished file [" + l_file.GetFilename() + "], at byte: " + std::to_string( l_offset + l_file.GetFileSize() ) );
+						EMUSE_MESSAGE_DEBUG( "MusePack(" + std::to_string( uintptr_t( this ) ) + ")::CurlCallback -> Finished file [" + l_file.GetFilename() + "], at byte: " + std::to_string( l_offset + l_file.GetFileSize() ) );
 					}
 				}
 				else if ( !l_curFinished && l_file.IsDownloadFinished() )
 				{
-					EMUSE_LOG_MESSAGE_RELEASE( "MusePack(" + std::to_string( uintptr_t( this ) ) + ")::CurlCallback -> Finished file [" + l_file.GetFilename() + "], at byte: " + std::to_string( l_offset + l_file.GetFileSize() ) );
+					EMUSE_MESSAGE_DEBUG( "MusePack(" + std::to_string( uintptr_t( this ) ) + ")::CurlCallback -> Finished file [" + l_file.GetFilename() + "], at byte: " + std::to_string( l_offset + l_file.GetFileSize() ) );
 				}
 
 				l_offset += l_file.GetFileSize();

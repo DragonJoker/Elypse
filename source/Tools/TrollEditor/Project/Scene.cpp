@@ -51,7 +51,7 @@ namespace Troll
 				{
 					auto const l_index = min( p_pathName.find_last_of( wxT( "\\" ) ), p_pathName.find_last_of( wxT( "/" ) ) );
 					File l_file{ p_scene, p_type, p_pathName.substr( l_index + 1 ), p_scene->GetMuseFile() };
-					std::cout << "Scene::AddFile - " << p_scene->GetName() << " - " << l_file.FileName << "\n";
+					std::clog << "Scene::AddFile - " << p_scene->GetName() << " - " << l_file.FileName << "\n";
 					l_file.Saved = p_saved;
 					l_file.Open = false;
 
@@ -612,7 +612,7 @@ namespace Troll
 			{
 				for ( auto l_overlaysIt : l_it.second->m_allOverlays )
 				{
-					//std::cout << "Scene::GetOverlaysNames - " << l_overlaysIt->first << "\n";
+					//std::clog << "Scene::GetOverlaysNames - " << l_overlaysIt->first << "\n";
 					if ( l_overlaysIt.first != wxT( "Core/DebugOverlay" ) && l_overlaysIt.first != wxT( "Core/LensFlare" ) && l_overlaysIt.first != wxT( "Core/LoadOverlay" ) )
 					{
 						p_list.Add( l_overlaysIt.first );
