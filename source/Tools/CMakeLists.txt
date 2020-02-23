@@ -18,7 +18,7 @@ function( ToolsBuild )
 	if ( wxWidgets_FOUND AND GTK2_FOUND )
 		if ( BUILD_TOOLS_ELYPSE_BINARY OR BUILD_TOOLS_MUSE_READER OR BUILD_TOOLS_MUSE_WRITER OR BUILD_TOOLS_TROLL_EDITOR )
 			set( Build ${GuiCommon} )
-			add_subdirectory( Tools/GuiCommon )
+			add_subdirectory( Tools/ElypseGuiCommon )
 			set( GuiCommon ${Build} PARENT_SCOPE )
 		endif ()
 		if ( BUILD_TOOLS_ELYPSE_BINARY )
@@ -113,18 +113,18 @@ function( ToolsSetup )
 		DEPENDS ElypseCore
 		INSTALL_TYPES Developer Full
 	)
-	cpack_add_component( GuiCommon
+	cpack_add_component( ElypseGuiCommon
 		DISPLAY_NAME "Common Elypse/wxWigets library"
 		DESCRIPTION "Used to develop wxWidgets applications using Elypse"
 		GROUP Tools
 		DEPENDS ElypseCore
 		INSTALL_TYPES Developer Full
 	)
-	cpack_add_component( GuiCommon_dev
+	cpack_add_component( ElypseGuiCommon_dev
 		DISPLAY_NAME "Common Elypse/wxWigets library SDK"
 		DESCRIPTION "Used to develop wxWidgets applications using Elypse"
 		GROUP Development
-		DEPENDS GuiCommon
+		DEPENDS ElypseGuiCommon
 		INSTALL_TYPES Developer Full
 	)
 endfunction( ToolsSetup )
