@@ -209,11 +209,11 @@ namespace Troll
 				SetItemImage( m_idParent, FilesTreeIcon_FolderOpened, wxTreeItemIcon_Expanded );
 			}
 
-			l_it->second.m_folderIds[sceneFile] = AddFolderToScene( p_scene->GetName(), SCENE_FILES );
-			l_it->second.m_folderIds[loadScriptFile] = AddFolderToScene( p_scene->GetName(), LOAD_SCRIPT_FILES );
-			l_it->second.m_folderIds[unloadScriptFile] = AddFolderToScene( p_scene->GetName(), UNLOAD_SCRIPT_FILES );
-			l_it->second.m_folderIds[dataFile] = AddFolderToScene( p_scene->GetName(), GRAPHIC_DATA_FOLDERS );
-			l_it->second.m_folderIds[dataFolder] = AddFolderToScene( p_scene->GetName(), OTHER_DATA_FOLDERS );
+			AddFolderToScene( p_scene->GetName(), SCENE_FILES );
+			AddFolderToScene( p_scene->GetName(), LOAD_SCRIPT_FILES );
+			AddFolderToScene( p_scene->GetName(), UNLOAD_SCRIPT_FILES );
+			AddFolderToScene( p_scene->GetName(), GRAPHIC_DATA_FOLDERS );
+			AddFolderToScene( p_scene->GetName(), OTHER_DATA_FOLDERS );
 			Collapse( l_id );
 			return l_it->second;
 		}
@@ -230,26 +230,32 @@ namespace Troll
 			int l_image = FilesTreeIcon_Folder;
 			int l_imageSel = l_image + 1;
 			TreeItemType l_titype = TreeItemType::SceneFile;
+			FileType l_fileType = FileType::sceneFile;
 
 			if ( p_folderName == LOAD_SCRIPT_FILES )
 			{
+				l_fileType = FileType::loadScriptFile;
 				l_titype = TreeItemType::LoadScriptFile;
 			}
 			else if ( p_folderName == UNLOAD_SCRIPT_FILES )
 			{
+				l_fileType = FileType::unloadScriptFile;
 				l_titype = TreeItemType::UnloadScriptFile;
 			}
 			else if ( p_folderName == GRAPHIC_DATA_FOLDERS )
 			{
+				l_fileType = FileType::dataFile;
 				l_titype = TreeItemType::DataFile;
 			}
 			else if ( p_folderName == OTHER_DATA_FOLDERS )
 			{
+				l_fileType = FileType::dataFolder;
 				l_titype = TreeItemType::DataFolder;
 			}
 
 			wxTreeItemId l_id = AppendItem( l_it->second.m_sceneId, p_folderName, l_image, l_imageSel, new TreeItemData( ITEM_DESC_FOLDER, l_titype ) );
 			m_folders.insert( { p_folderName, l_id } );
+			l_it->second.m_folderIds[size_t( l_fileType )] = l_id;
 			m_idParent = l_id;
 			Collapse( l_it->second.m_sceneId );
 
@@ -435,6 +441,9 @@ namespace Troll
 				, [&p_item]( std::pair< wxString const, TreeScene > const & p_scene )
 				{
 					return p_scene.second.m_sceneId == p_item
+						|| p_scene.second.m_folderIds.end() != std::find( p_scene.second.m_folderIds.begin()
+							, p_scene.second.m_folderIds.end()
+							, p_item )
 						|| p_scene.second.m_scene->HasFile( [p_item]( File const & p_file )
 						{
 							return p_file.ItemId == p_item;
