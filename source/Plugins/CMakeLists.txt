@@ -17,6 +17,10 @@ function( PluginsBuild )
 		add_subdirectory( Plugins/ElypseFirefox )
 		set( ElpsFfx ${Build} PARENT_SCOPE )
 	endif ()
+	set( OPTIONAL_PROJECTS
+		${OPTIONAL_PROJECTS}
+		PARENT_SCOPE
+	)
 endfunction( PluginsBuild )
 
 function( PluginsSummary msg )

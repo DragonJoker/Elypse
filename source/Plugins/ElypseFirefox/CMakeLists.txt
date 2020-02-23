@@ -21,6 +21,10 @@ if ( GDI_FOUND AND GDIPLUS_FOUND )
 		""
 		""
 	)
+	add_library( elypse::${PROJECT_NAME}
+		ALIAS
+		${PROJECT_NAME}
+	)
 	target_include_directories( ${PROJECT_NAME}
 		PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR}
@@ -34,10 +38,16 @@ if ( GDI_FOUND AND GDIPLUS_FOUND )
 	)
 
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Plugins" )
-	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
 	parse_subdir_files( Elypse "Elypse" )
 	parse_subdir_files( Firefox "Firefox" )
 	parse_subdir_files( NpApi "NpApi" )
+
+	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+	set( OPTIONAL_PROJECTS
+		${OPTIONAL_PROJECTS}
+		${PROJECT_NAME}
+		PARENT_SCOPE
+	)
 endif ()

@@ -21,30 +21,30 @@ function( ToolsBuild )
 			add_subdirectory( Tools/GuiCommon )
 			set( GuiCommon ${Build} PARENT_SCOPE )
 		endif ()
-		
 		if ( BUILD_TOOLS_ELYPSE_BINARY )
 			set( Build ${ElpsBinry} )
 			add_subdirectory( Tools/ElypseBinary )
 			set( ElpsBinry ${Build} PARENT_SCOPE )
 		endif ()
-		
 		if ( BUILD_TOOLS_MUSE_READER )
 			set( Build ${MuseReadr} )
 			add_subdirectory( Tools/MuseReader )
 			set( MuseReadr ${Build} PARENT_SCOPE )
 		endif ()
-		
 		if ( BUILD_TOOLS_MUSE_WRITER )
 			set( Build ${MuseWritr} )
 			add_subdirectory( Tools/MuseWriter )
 			set( MuseWritr ${Build} PARENT_SCOPE )
 		endif ()
-		
 		if ( BUILD_TOOLS_TROLL_EDITOR )
 			set( Build ${TrollEdtr} )
 			add_subdirectory( Tools/TrollEditor )
 			set( TrollEdtr ${Build} PARENT_SCOPE )
 		endif ()
+		set( OPTIONAL_PROJECTS
+			${OPTIONAL_PROJECTS}
+			PARENT_SCOPE
+		)
 	else()
 		set( _TXT "No (missing: " )
 		set( SEP "" )

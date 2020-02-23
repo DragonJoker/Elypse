@@ -55,6 +55,10 @@ function( MinilineBuild )
 			set( ElpsSvBin "No (missing: Boost library)" )
 			set( ClientTst "No (missing: Boost library)" )
 		endif ()
+		set( OPTIONAL_PROJECTS
+			${OPTIONAL_PROJECTS}
+			PARENT_SCOPE
+		)
 	endif ()
 endfunction( MinilineBuild )
 

@@ -14,8 +14,8 @@ add_target(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	""
 	""
-	"${CMAKE_CURRENT_SOURCE_DIR}/TrollEditorPch.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/TrollEditorPch.cpp"
+	${CMAKE_CURRENT_SOURCE_DIR}/TrollEditorPch.h
+	${CMAKE_CURRENT_SOURCE_DIR}/TrollEditorPch.cpp
 )
 target_include_directories( ${PROJECT_NAME}
 	PRIVATE
@@ -33,7 +33,6 @@ set_target_properties(${PROJECT_NAME}
 		FOLDER "Tools"
 )
 
-set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
 file( GLOB_RECURSE Parser_languages ${CMAKE_CURRENT_SOURCE_DIR}/Data/*.lang )
@@ -53,3 +52,10 @@ parse_subdir_files( Project/2D "Project\\\\2D" )
 parse_subdir_files( Project/3D "Project\\\\3D" )
 parse_subdir_files( Project/Media "Project\\\\Media" )
 parse_subdir_files( Project/Temporal "Project\\\\Temporal" )
+
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+set( OPTIONAL_PROJECTS
+	${OPTIONAL_PROJECTS}
+	${PROJECT_NAME}
+	PARENT_SCOPE
+)

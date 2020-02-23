@@ -17,6 +17,10 @@ if ( DATABASE_FOUND )
 		""
 		""
 	)
+	add_library( elypse::${PROJECT_NAME}
+		ALIAS
+		${PROJECT_NAME}
+	)
 	target_include_directories( ${PROJECT_NAME}
 		PUBLIC
 			${Database_INCLUDE_DIR}
@@ -29,7 +33,6 @@ if ( DATABASE_FOUND )
 	)
 
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )
-	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
 	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
@@ -45,6 +48,13 @@ if ( DATABASE_FOUND )
 		copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/../lib/DatabaseConnector/DatabasePluginMySqld.lib Debug )
 		copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/../lib/DatabaseConnector/DatabasePluginMySql.lib  Release )
 	endif ()
+
+	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+	set( OPTIONAL_PROJECTS
+		${OPTIONAL_PROJECTS}
+		${PROJECT_NAME}
+		PARENT_SCOPE
+	)
 else ()
 	set( Build "No (missing DatabaseEngine library" )
 endif ()

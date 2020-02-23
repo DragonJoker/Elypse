@@ -40,6 +40,10 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 		""
 		"${${PROJECT_NAME}_ADDITIONAL_FILES}"
 	)
+	add_library( elypse::${PROJECT_NAME}
+		ALIAS
+		${PROJECT_NAME}
+	)
 	target_include_directories( ${PROJECT_NAME}
 		PRIVATE
 			${CMAKE_CURRENT_SOURCE_DIR}
@@ -71,6 +75,11 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
 	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+	set( OPTIONAL_PROJECTS
+		${OPTIONAL_PROJECTS}
+		${PROJECT_NAME}
+		PARENT_SCOPE
+	)
 else ()
 	set( Build "no (missing ATL libraries)" )
 endif ()

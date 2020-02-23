@@ -208,6 +208,10 @@ add_target_min(
 	${PROJECT_NAME}
 	lib
 )
+add_library( elypse::${PROJECT_NAME}
+	ALIAS
+	${PROJECT_NAME}
+)
 target_compile_definitions( ${PROJECT_NAME}
 	PUBLIC
 		UNICODE
@@ -216,8 +220,9 @@ target_compile_definitions( ${PROJECT_NAME}
 )
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_INCLUDE_DIR}>
+		$<INSTALL_INTERFACE:include>
 		${Boost_INCLUDE_DIR}
-		${CMAKE_CURRENT_INCLUDE_DIR}
 	PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/Win32
 )
@@ -229,21 +234,9 @@ target_link_libraries( ${PROJECT_NAME}
 		CURL::libcurl
 )
 
+install_target( ${PROJECT_NAME} api_dll ${CMAKE_CURRENT_INCLUDE_DIR} )
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
-set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
-
-# copy_dll( ${PROJECT_NAME} ${ZLIB_LIBRARY} Debug )
-# copy_dll( ${PROJECT_NAME} ${ZLIB_LIBRARY} Release )
-# copy_dll( ${PROJECT_NAME} ${LIBZIP_LIBRARY} Debug )
-# copy_dll( ${PROJECT_NAME} ${LIBZIP_LIBRARY} Release )
-# copy_dll( ${PROJECT_NAME} ${CURL_LIBRARY} Debug )
-# copy_dll( ${PROJECT_NAME} ${CURL_LIBRARY} Release )
-# if ( WIN32 )
-	# get_filename_component( _Path ${FREETYPE_LIBRARY} PATH )
-	# get_filename_component( _Path ${_Path} PATH )
-	# copy_dll( ${PROJECT_NAME} ${_Path}/bin/freetype6.dll Debug )
-	# copy_dll( ${PROJECT_NAME} ${_Path}/bin/freetype6.dll Release )
-# endif ()
+target_add_doc( ${PROJECT_NAME} "" "*.h *.hpp" )
 
 set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )

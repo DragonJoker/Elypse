@@ -476,12 +476,17 @@ source_group( "Source Files\\Zone" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
 add_target_min(
 	${PROJECT_NAME}
 	api_dll
-	"${CMAKE_CURRENT_INCLUDE_DIR}/PrecompiledHeader.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeader.cpp"
+	${CMAKE_CURRENT_INCLUDE_DIR}/PrecompiledHeader.h
+	${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeader.cpp
+)
+add_library( elypse::${PROJECT_NAME}
+	ALIAS
+	${PROJECT_NAME}
 )
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
-		${CMAKE_CURRENT_INCLUDE_DIR}
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_INCLUDE_DIR}>
+		$<INSTALL_INTERFACE:include>
 		${Ogre_INCLUDE_DIR}
 	PRIVATE
 		${Fmod_INCLUDE_DIR}
@@ -503,9 +508,10 @@ target_link_libraries( ${PROJECT_NAME}
 		${CMAKE_DL_LIBS}
 )
 
+install_target( ${PROJECT_NAME} api_dll ${CMAKE_CURRENT_INCLUDE_DIR} )
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
-set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
+target_add_doc( ${PROJECT_NAME} "" "*.h *.hpp *.dox" )
 
 get_filename_component( OGRE_LIBRARY_DIR_DEBUG ${OGRE_LIBRARY_DIRS} PATH )
 set( OGRE_LIBRARY_DIR ${OGRE_LIBRARY_DIRS} )

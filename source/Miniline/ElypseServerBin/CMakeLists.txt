@@ -25,6 +25,11 @@ target_link_libraries( ${PROJECT_NAME}
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )
-set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+set( OPTIONAL_PROJECTS
+	${OPTIONAL_PROJECTS}
+	${PROJECT_NAME}
+	PARENT_SCOPE
+)

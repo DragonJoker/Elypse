@@ -11,8 +11,8 @@ add_target(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	""
 	""
-	"${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/stdafx.cpp"
+	${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+	${CMAKE_CURRENT_SOURCE_DIR}/stdafx.cpp
 )
 target_include_directories( ${PROJECT_NAME}
 	PRIVATE
@@ -29,5 +29,11 @@ set_target_properties(${PROJECT_NAME}
 		FOLDER "Tools"
 )
 
-set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
+
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+set( OPTIONAL_PROJECTS
+	${OPTIONAL_PROJECTS}
+	${PROJECT_NAME}
+	PARENT_SCOPE
+)

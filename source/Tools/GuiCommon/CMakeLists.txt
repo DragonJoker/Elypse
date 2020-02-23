@@ -13,8 +13,12 @@ add_target(
 	${CMAKE_CURRENT_SOURCE_DIR}
 	""
 	""
-	"${CMAKE_CURRENT_INCLUDE_DIR}/GuiCommonPch.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/GuiCommonPch.cpp"
+	${CMAKE_CURRENT_INCLUDE_DIR}/GuiCommonPch.h
+	${CMAKE_CURRENT_SOURCE_DIR}/GuiCommonPch.cpp
+)
+add_library( elypse::${PROJECT_NAME}
+	ALIAS
+	${PROJECT_NAME}
 )
 target_compile_definitions( ${PROJECT_NAME}
 	PUBLIC
@@ -24,7 +28,8 @@ target_include_directories( ${PROJECT_NAME}
 	PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/Win32
 	PUBLIC
-		${CMAKE_CURRENT_INCLUDE_DIR}
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_INCLUDE_DIR}>
+		$<INSTALL_INTERFACE:include>
 		${wxWidgets_INCLUDE_DIR}
 )
 target_link_libraries( ${PROJECT_NAME}
@@ -35,5 +40,11 @@ target_link_libraries( ${PROJECT_NAME}
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Tools" )
-set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
+
+set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
+set( OPTIONAL_PROJECTS
+	${OPTIONAL_PROJECTS}
+	${PROJECT_NAME}
+	PARENT_SCOPE
+)
