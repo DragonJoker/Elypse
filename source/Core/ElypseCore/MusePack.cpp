@@ -45,7 +45,7 @@ namespace Elypse::Download
 	{
 		m_packPath = m_installPath / "rsc" / m_basePath.GetLeaf();
 		DirectoryCreate( m_packPath );
-		EMUSE_MESSAGE_RELEASE( "MusePack(" + std::to_string( uintptr_t( this ) ) + "), file [" + GetOwner()->GetOwner()->GetName() + "]" );
+		EMUSE_MESSAGE_DEBUG( "MusePack(" + std::to_string( uintptr_t( this ) ) + "), file [" + GetOwner()->GetOwner()->GetName() + "]" );
 		EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> pack path : " + m_packPath );
 		EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> install path : " + m_installPath );
 		EMUSE_MESSAGE_DEBUG( "MusePack::MusePack -> base path : " + m_basePath );
