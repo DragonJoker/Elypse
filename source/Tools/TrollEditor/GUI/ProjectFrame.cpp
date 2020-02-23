@@ -890,7 +890,7 @@ namespace Troll
 			EVT_SET_FOCUS( ProjectFrame::OnSetFocus )
 			EVT_KILL_FOCUS( ProjectFrame::OnKillFocus )
 			EVT_ACTIVATE( ProjectFrame::OnActivate )
-			EVT_NOTEBOOK_PAGE_CHANGED( wxID_ANY, ProjectFrame::OnNotebook )
+			EVT_AUINOTEBOOK_PAGE_CHANGED( wxID_ANY, ProjectFrame::OnNotebookPageChanged )
 			EVT_AUINOTEBOOK_PAGE_CLOSE( wxID_ANY, ProjectFrame::OnNotebookPageClose )
 		END_EVENT_TABLE()
 
@@ -996,13 +996,13 @@ namespace Troll
 			p_event.Skip();
 		}
 
-		void ProjectFrame::OnNotebook( wxNotebookEvent & p_event )
+		void ProjectFrame::OnNotebookPageChanged( wxAuiNotebookEvent & p_event )
 		{
 			int l_idx = p_event.GetSelection();
-			wxBookCtrlBase  * l_book = wx_static_cast( wxBookCtrlBase *, p_event.GetEventObject() );
+			auto * l_book = wx_static_cast( wxAuiNotebook *, p_event.GetEventObject() );
 			m_currentPage = l_book->GetPageText( l_idx );
 
-			if ( l_book->GetName().find( TE_PROJECT_TESTING ) == 0 )
+			if ( m_currentPage.find( TE_PROJECT_TESTING ) == 0 )
 			{
 				if ( m_elypseCtrl != nullptr )
 				{
@@ -1016,19 +1016,16 @@ namespace Troll
 					m_elypseCtrl->KillCtrlFocus();
 				}
 
-				if ( l_book->GetName() == TE_EDITOR )
+				if ( m_filesList->GetSelectedScene() != nullptr )
 				{
-					if ( m_filesList->GetSelectedScene() != nullptr )
+					try
 					{
-						try
-						{
-							File const & l_file = m_filesList->GetSelectedScene()->GetFile( m_currentPage );
-							m_editText = l_file.EditPanel;
-						}
-						catch ( std::exception const & p_exc )
-						{
-							std::cerr << "ProjectFrame::OnNotebook - " << p_exc.what() << "\n";
-						}
+						File const & l_file = m_filesList->GetSelectedScene()->GetFile( m_currentPage );
+						m_editText = l_file.EditPanel;
+					}
+					catch ( std::exception const & p_exc )
+					{
+						std::cerr << "ProjectFrame::OnNotebook - " << p_exc.what() << "\n";
 					}
 				}
 			}
@@ -1038,12 +1035,26 @@ namespace Troll
 
 		void ProjectFrame::OnNotebookPageClose( wxAuiNotebookEvent & p_event )
 		{
+			int l_idx = p_event.GetSelection();
 			auto * l_book = wx_static_cast( wxAuiNotebook *, p_event.GetEventObject() );
+			auto l_name = l_book->GetPageText( l_idx );
 
-			if ( l_book->GetPageText( p_event.GetSelection() ).find( TE_PROJECT_TESTING ) == 0 )
+			if ( l_name.find( TE_PROJECT_TESTING ) == 0 )
 			{
 				m_parent->GetEventHandler()->QueueEvent( new wxCommandEvent{ wxEVT_MENU, Menu_TestProject } );
 				p_event.Veto();
+			}
+			else if ( m_filesList->GetSelectedScene() != nullptr )
+			{
+				try
+				{
+					File & l_file = m_filesList->GetSelectedScene()->GetFile( m_currentPage );
+					l_file.EditPanel = nullptr;
+				}
+				catch ( std::exception const & p_exc )
+				{
+					std::cerr << "ProjectFrame::OnNotebook - " << p_exc.what() << "\n";
+				}
 			}
 
 			p_event.Skip();
