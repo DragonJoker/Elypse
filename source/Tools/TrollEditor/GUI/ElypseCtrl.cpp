@@ -169,7 +169,7 @@ namespace Troll
 				m_emuse->ShowFPS( m_project->GetShowFPS() );
 				m_emuse->SetAntialiasing( m_project->GetFSAA() );
 				m_emuse->SetDownloadFiles( true );
-				m_emuse->SetStartupScript( make_string( m_project->GetStartupScript() ) );
+				//m_emuse->SetStartupScript( make_string( m_project->GetStartupScript() ) );
 				m_plugin->SetSize( static_cast < uint32_t >( m_width ), static_cast < uint32_t >( m_height ) );
 				m_plugin->SetHandle( this );
 

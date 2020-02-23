@@ -180,6 +180,8 @@ namespace Troll::GUI
 		wxToolBar * m_extraToolBar{ nullptr };
 		wxToolBar * m_tbar{ nullptr };
 
+		wxStaticText * m_statusText{ nullptr };
+
 		int m_rows{ 1 };
 		size_t m_nPrint{ 1 };
 

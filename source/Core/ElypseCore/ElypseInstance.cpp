@@ -487,3 +487,13 @@ void ElypseInstance::WaitForDeletion()
 	m_condition.wait( l_lock );
 	EMUSE_MESSAGE_RELEASE( "ElypseInstance::WaitForDeletion -> deleted" );
 }
+
+void ElypseInstance::SetStartupScript( String const & p_script )
+{
+	m_startupScript = p_script;
+
+	if ( m_frameListener )
+	{
+		m_frameListener->SetStartupScript( m_startupScript );
+	}
+}

@@ -299,9 +299,10 @@ namespace Elypse::Download
 				return false;
 			}
 
-			String l_md5 = MD5::HashFile( m_packPath / m_files[i]->GetFilename() );
+			String l_expected = MD5::HashFile( m_packPath / m_files[i]->GetFilename() );
+			String l_retrieved = m_files[i]->GetMD5();
 
-			if ( m_files[i]->GetMD5() != l_md5 )
+			if ( l_retrieved != l_expected )
 			{
 				return false;
 			}

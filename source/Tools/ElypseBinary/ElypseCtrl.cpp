@@ -58,14 +58,6 @@ namespace ElypseBinary
 		l_screenStr = l_screenStr.substr( l_screenStr.find( "." ) + 1, l_screenStr.size() );
 		l_str << reinterpret_cast <unsigned long>( l_display ) << ':' << l_screenStr << ':' << l_wid;
 		return String( l_str.str() );
-
-		//GtkWidget * l_gtkWidget = this->GetHandle();
-		//gtk_widget_realize( l_gtkWidget );
-		//Display * l_display = GDK_WINDOW_XDISPLAY( l_gtkWidget->window );
-		//std::stringstream l_str;
-		//String l_screenStr = DisplayString( l_display );
-		//l_screenStr = l_screenStr.substr( 1, ( l_screenStr.find( ".", 0 ) - 1 ) );
-		//return l_screenStr;
 #else
 #	error Not supported on this platform.
 #endif

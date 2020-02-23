@@ -549,9 +549,10 @@ namespace Troll
 			SetIcon( wxIcon( troll_editor_xpm ) );
 			SetBackgroundColour( wxColour( 255, 255, 255 ) );
 			CreateStatusBar( 2 );
-			SetStatusText( TE_TEXT_WELCOME );
 			GetStatusBar()->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 			GetStatusBar()->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			m_statusText = new wxStaticText( GetStatusBar(), wxID_ANY, TE_TEXT_WELCOME, wxPoint( 10, 5 ), wxDefaultSize, 0 );
+			m_statusText->Show( true );
 
 			DoSetMenuBar();
 			DoPopulateToolbar();

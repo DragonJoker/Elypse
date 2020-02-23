@@ -80,6 +80,7 @@ namespace Elypse
 			void RenderOneFrame();
 			bool IsActive();
 			void WaitForDeletion();
+			void SetStartupScript( String const & p_script );
 
 		public:
 			virtual void CreateScene();
@@ -131,11 +132,6 @@ namespace Elypse
 			inline void	SetFocus( bool p_focus )
 			{
 				m_hasFocus = p_focus;
-			}
-
-			inline void	SetStartupScript( String const & p_script )
-			{
-				m_startupScript = p_script;
 			}
 
 			inline void	Deactivate()
