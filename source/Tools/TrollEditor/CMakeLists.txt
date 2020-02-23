@@ -10,16 +10,17 @@ include_directories(
 add_target(
 	${PROJECT_NAME}
 	bin
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}
 	""
 	""
-	"TrollEditorPch.h"
-	"TrollEditorPch.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TrollEditorPch.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TrollEditorPch.cpp"
 )
 target_include_directories( ${PROJECT_NAME}
 	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		${CMAKE_CURRENT_SOURCE_DIR}
+		${CMAKE_CURRENT_SOURCE_DIR}/Win32
 		${Fmod_INCLUDE_DIR}
 )
 target_link_libraries( ${PROJECT_NAME}
@@ -40,15 +41,15 @@ copy_target_files( ${PROJECT_NAME} "" ${Parser_languages} )
 copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/OverlayEditor OverlayEditor )
 copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/SceneEditor SceneEditor )
 
-parse_subdir_files( Src/Elypse "Elypse" )
-parse_subdir_files( Src/GUI "GUI" )
-parse_subdir_files( Src/GUI/Aui "GUI\\\\Aui" )
-parse_subdir_files( Src/GUI/Properties "GUI\\\\Properties" )
-parse_subdir_files( Src/GUI/Properties/Common "GUI\\\\Properties\\\\Common" )
-parse_subdir_files( Src/GUI/Properties/Project "GUI\\\\Properties\\\\Project" )
-parse_subdir_files( Src/GUI/TimeSequence "GUI\\\\TimeSequence" )
-parse_subdir_files( Src/Project "Project" )
-parse_subdir_files( Src/Project/2D "Project\\\\2D" )
-parse_subdir_files( Src/Project/3D "Project\\\\3D" )
-parse_subdir_files( Src/Project/Media "Project\\\\Media" )
-parse_subdir_files( Src/Project/Temporal "Project\\\\Temporal" )
+parse_subdir_files( Elypse "Elypse" )
+parse_subdir_files( GUI "GUI" )
+parse_subdir_files( GUI/Aui "GUI\\\\Aui" )
+parse_subdir_files( GUI/Properties "GUI\\\\Properties" )
+parse_subdir_files( GUI/Properties/Common "GUI\\\\Properties\\\\Common" )
+parse_subdir_files( GUI/Properties/Project "GUI\\\\Properties\\\\Project" )
+parse_subdir_files( GUI/TimeSequence "GUI\\\\TimeSequence" )
+parse_subdir_files( Project "Project" )
+parse_subdir_files( Project/2D "Project\\\\2D" )
+parse_subdir_files( Project/3D "Project\\\\3D" )
+parse_subdir_files( Project/Media "Project\\\\Media" )
+parse_subdir_files( Project/Temporal "Project\\\\Temporal" )

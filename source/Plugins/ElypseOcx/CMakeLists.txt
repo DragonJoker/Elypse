@@ -12,8 +12,8 @@ find_package( GDIPlus )
 
 if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	# Define IDL files
-	file( GLOB ${PROJECT_NAME}_IDL_FILES Src/*.idl )
-	file( GLOB ${PROJECT_NAME}_DEF_FILES Src/*.def )
+	file( GLOB ${PROJECT_NAME}_IDL_FILES *.idl )
+	file( GLOB ${PROJECT_NAME}_DEF_FILES *.def )
 
 	# MIDL compiler
 	add_com_interfaces( ${PROJECT_NAME}_SOURCES_IDL_FILES ${${PROJECT_NAME}_IDL_FILES} )
@@ -29,8 +29,8 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	add_target(
 		${PROJECT_NAME}
 		dll
-		${CMAKE_CURRENT_SOURCE_DIR}/Src
-		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		${CMAKE_CURRENT_SOURCE_DIR}
+		${CMAKE_CURRENT_SOURCE_DIR}
 		""
 		""
 		"ElypseOcxPch.h"
@@ -42,7 +42,7 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	)
 	target_include_directories( ${PROJECT_NAME}
 		PRIVATE
-			${CMAKE_CURRENT_SOURCE_DIR}/Src
+			${CMAKE_CURRENT_SOURCE_DIR}
 	)
 	target_link_libraries( ${PROJECT_NAME}
 		PRIVATE

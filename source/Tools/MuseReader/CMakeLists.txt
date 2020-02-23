@@ -7,16 +7,17 @@ set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 add_target(
 	${PROJECT_NAME}
 	bin
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}
 	""
 	""
-	"stdafx.h"
-	"stdafx.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/stdafx.cpp"
 )
 target_include_directories( ${PROJECT_NAME}
 	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		${CMAKE_CURRENT_SOURCE_DIR}
+		${CMAKE_CURRENT_SOURCE_DIR}/Win32
 )
 target_link_libraries( ${PROJECT_NAME}
 	PRIVATE

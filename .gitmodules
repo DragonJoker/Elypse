@@ -1,3 +1,6 @@
-[submodule "source/CMake"]
-	path = source/CMake
-	url = git@github.com:DragonJoker/CMakeUtils.git
+[submodule "CMake"]
+	path = CMake
+	url = https://github.com/DragonJoker/CMakeUtils.git
+[submodule "data"]
+	path = data
+	url = https://github.com/DragonJoker/ElypseData.git

@@ -12,14 +12,14 @@ set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 add_target(
 	${PROJECT_NAME}
 	lib
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}
 	""
 	""
 )
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
-		${CMAKE_SOURCE_DIR}/Miniline/ElypseServer/Src
+		${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_link_libraries( ${PROJECT_NAME}
 	PRIVATE

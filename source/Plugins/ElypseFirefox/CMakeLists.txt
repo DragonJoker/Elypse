@@ -16,14 +16,14 @@ if ( GDI_FOUND AND GDIPLUS_FOUND )
 	add_target(
 		${PROJECT_NAME}
 		dll
-		${CMAKE_CURRENT_SOURCE_DIR}/Src
-		${CMAKE_CURRENT_SOURCE_DIR}/Src
+		${CMAKE_CURRENT_SOURCE_DIR}
+		${CMAKE_CURRENT_SOURCE_DIR}
 		""
 		""
 	)
 	target_include_directories( ${PROJECT_NAME}
 		PRIVATE
-			${CMAKE_CURRENT_SOURCE_DIR}/Src
+			${CMAKE_CURRENT_SOURCE_DIR}
 	)
 	target_link_libraries( ${PROJECT_NAME}
 		PRIVATE
@@ -37,7 +37,7 @@ if ( GDI_FOUND AND GDIPLUS_FOUND )
 	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
-	parse_subdir_files( Src/Elypse "Elypse" )
-	parse_subdir_files( Src/Firefox "Firefox" )
-	parse_subdir_files( Src/NpApi "NpApi" )
+	parse_subdir_files( Elypse "Elypse" )
+	parse_subdir_files( Firefox "Firefox" )
+	parse_subdir_files( NpApi "NpApi" )
 endif ()

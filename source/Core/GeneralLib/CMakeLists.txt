@@ -4,6 +4,8 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	${VERSION_MAJOR} )
 set( ${PROJECT_NAME}_VERSION_MINOR	${VERSION_MINOR} )
 set( ${PROJECT_NAME}_VERSION_BUILD	${VERSION_BUILD} )
 
+set( CMAKE_CURRENT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/Core/${PROJECT_NAME} )
+
 if ( MSVC )
 	set( MSVC_DEFINITIONS
 		_CRT_SECURE_NO_WARNINGS
@@ -12,13 +14,199 @@ if ( MSVC )
 	)
 endif ()
 
-add_target(
+set( ${PROJECT_NAME}_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/Config.h
+)
+set( ${PROJECT_NAME}_SRC_FILES
+)
+source_group( "Header Files" FILES ${${PROJECT_NAME}_HDR_FILES} )
+source_group( "Source Files" FILES ${${PROJECT_NAME}_SRC_FILES} )
+
+set( ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/AutoSingleton.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/CircularQueue.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Named.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/NonCopyable.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/OwnedBy.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ReferenceCounted.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Singleton.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/SlottedArrayPool.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/SlottedObjectPool.h
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Theory" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/Bezier.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Factorial.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/FastMath.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Pascal.h
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Math" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/Condition.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/MultiThreadConfig.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Mutex.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/MutexManager.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Thread.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ThreadedQueue.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/WorkerThread.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ThreadPool.h
+)
+file( GLOB ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/ThreadPool.cpp
+)
+set( ${PROJECT_NAME}_SRC_FILES
+	${${PROJECT_NAME}_SRC_FILES}
+	${${PROJECT_NAME}_FOLDER_SRC_FILES}
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\MultiThreading" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+source_group( "Source Files\\MultiThreading" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/CompInfo.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/FileVersion.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/InfoCpu.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/RegistryKey.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/RegistryManager.h
+)
+file( GLOB ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/FileVersion.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RegistryKey.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/RegistryManager.cpp
+)
+set( ${PROJECT_NAME}_SRC_FILES
+	${${PROJECT_NAME}_SRC_FILES}
+	${${PROJECT_NAME}_FOLDER_SRC_FILES}
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Computer" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+source_group( "Source Files\\Computer" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/Buffer.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Manager.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Memory.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Memory_Impl.h
+)
+file( GLOB ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/Memory.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Memory_Impl.cpp
+)
+set( ${PROJECT_NAME}_SRC_FILES
+	${${PROJECT_NAME}_SRC_FILES}
+	${${PROJECT_NAME}_FOLDER_SRC_FILES}
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Templates" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+source_group( "Source Files\\Templates" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/DownloadableFile.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/File.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/FileManager.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/NeoCurl.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ZipArchive.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ZipBase.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ZipDirectory.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/ZipFile.h
+)
+file( GLOB ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/DownloadableFile.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/File.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FileManager.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/NeoCurl.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ZipArchive.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/ZipFile.cpp
+)
+set( ${PROJECT_NAME}_SRC_FILES
+	${${PROJECT_NAME}_SRC_FILES}
+	${${PROJECT_NAME}_FOLDER_SRC_FILES}
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Files" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+source_group( "Source Files\\Files" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/TcpAcceptor.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/TcpConnector.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/TcpReader.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/TcpWriter.h
+)
+file( GLOB ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/TcpAcceptor.cpp
+)
+set( ${PROJECT_NAME}_SRC_FILES
+	${${PROJECT_NAME}_SRC_FILES}
+	${${PROJECT_NAME}_FOLDER_SRC_FILES}
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Network" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+source_group( "Source Files\\Network" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
+
+file( GLOB ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_INCLUDE_DIR}/Assertion.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/DynamicLibrary.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Exception.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Execute.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/MD5.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/MinMax.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/MinMax.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Path.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/PreciseTimer.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/STLMacros.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/STLMapMacros.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/STLSetMacros.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/StringConverter.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/StringUtils.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Url.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/Utils.h
+)
+file( GLOB ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/Execute.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/MD5.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Path.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/PreciseTimer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/StringConverter.cpp
+)
+set( ${PROJECT_NAME}_SRC_FILES
+	${${PROJECT_NAME}_SRC_FILES}
+	${${PROJECT_NAME}_FOLDER_SRC_FILES}
+)
+set( ${PROJECT_NAME}_HDR_FILES
+	${${PROJECT_NAME}_HDR_FILES}
+	${${PROJECT_NAME}_FOLDER_HDR_FILES}
+)
+source_group( "Header Files\\Utils" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
+source_group( "Source Files\\Utils" FILES ${${PROJECT_NAME}_FOLDER_SRC_FILES} )
+
+add_target_min(
 	${PROJECT_NAME}
 	lib
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
-	${CMAKE_CURRENT_SOURCE_DIR}/Src
-	""
-	""
 )
 target_compile_definitions( ${PROJECT_NAME}
 	PUBLIC
@@ -29,9 +217,9 @@ target_compile_definitions( ${PROJECT_NAME}
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
 		${Boost_INCLUDE_DIR}
-		${CMAKE_SOURCE_DIR}/Core/${PROJECT_NAME}/Src
+		${CMAKE_CURRENT_INCLUDE_DIR}
 	PRIVATE
-		${CMAKE_SOURCE_DIR}/Core/${PROJECT_NAME}/Src/Win32
+		${CMAKE_CURRENT_SOURCE_DIR}/Win32
 )
 target_link_libraries( ${PROJECT_NAME}
 	PUBLIC
@@ -40,167 +228,6 @@ target_link_libraries( ${PROJECT_NAME}
 		ZLIB::ZLIB
 		CURL::libcurl
 )
-
-file( GLOB ${PROJECT_NAME}_Theory_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Singleton*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Singleton*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Named*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Named*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*NonCopyable*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*NonCopyable*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*OwnedBy*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*OwnedBy*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Reference*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Reference*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Pool*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Pool*.inl
-)
-file( GLOB ${PROJECT_NAME}_Theory_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Singleton*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Named*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*NonCopyable*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*OwnedBy*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Reference*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Pool*.cpp
-)
-source_group( "Header Files\\Theory" FILES ${${PROJECT_NAME}_Theory_HEADER_FILES} )
-source_group( "Source Files\\Theory" FILES ${${PROJECT_NAME}_Theory_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_Math_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Bezier*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Bezier*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Factorial*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Factorial*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Math*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Math*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Pascal*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Pascal*.inl
-)
-file( GLOB ${PROJECT_NAME}_Math_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Bezier*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Factorial*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Math*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Pascal*.cpp
-)
-source_group( "Header Files\\Math" FILES ${${PROJECT_NAME}_Math_HEADER_FILES} )
-source_group( "Source Files\\Math" FILES ${${PROJECT_NAME}_Math_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_MultiThreading_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Condition*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Condition*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Thread*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Thread*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Mutex*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Mutex*.inl
-)
-file( GLOB ${PROJECT_NAME}_MultiThreading_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Condition*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Thread*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Mutex*.cpp
-)
-source_group( "Header Files\\MultiThreading" FILES ${${PROJECT_NAME}_MultiThreading_HEADER_FILES} )
-source_group( "Source Files\\MultiThreading" FILES ${${PROJECT_NAME}_MultiThreading_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_Computer_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Info*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Info*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*FileVersion*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*FileVersion*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Registry*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Registry*.inl
-)
-file( GLOB ${PROJECT_NAME}_Computer_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Info*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*FileVersion*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Registry*.cpp
-)
-source_group( "Header Files\\Computer" FILES ${${PROJECT_NAME}_Computer_HEADER_FILES} )
-source_group( "Source Files\\Computer" FILES ${${PROJECT_NAME}_Computer_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_Templates_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Buffer*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Buffer*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*LocklessQueue*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*LocklessQueue*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Manager*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Manager*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Memory*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Memory*.inl
-)
-file( GLOB ${PROJECT_NAME}_Templates_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Buffer*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*LocklessQueue*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Manager*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Memory*.cpp
-)
-source_group( "Header Files\\Templates" FILES ${${PROJECT_NAME}_Templates_HEADER_FILES} )
-source_group( "Source Files\\Templates" FILES ${${PROJECT_NAME}_Templates_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_Files_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*File*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*File*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*NeoCurl*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*NeoCurl*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Zip*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Zip*.inl
-)
-file( GLOB ${PROJECT_NAME}_Files_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*File*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*NeoCurl*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Zip*.cpp
-)
-source_group( "Header Files\\Files" FILES ${${PROJECT_NAME}_Files_HEADER_FILES} )
-source_group( "Source Files\\Files" FILES ${${PROJECT_NAME}_Files_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_Network_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Tcp*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Tcp*.inl
-)
-file( GLOB ${PROJECT_NAME}_Network_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Tcp*.cpp
-)
-source_group( "Header Files\\Network" FILES ${${PROJECT_NAME}_Network_HEADER_FILES} )
-source_group( "Source Files\\Network" FILES ${${PROJECT_NAME}_Network_SOURCE_FILES} )
-
-file( GLOB ${PROJECT_NAME}_Utils_HEADER_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Assertion*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Assertion*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Library*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Library*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Exception*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Exception*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Execute*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Execute*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Tracker*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Tracker*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*MinMax*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*MinMax*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Path*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Path*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*PreciseTimer*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*PreciseTimer*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/STL*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/STL*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/String*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/String*.inl
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Url*.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Url*.inl
-)
-file( GLOB ${PROJECT_NAME}_Utils_SOURCE_FILES
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Assertion*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Library*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Exception*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Execute*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Tracker*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*MinMax*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Path*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*PreciseTimer*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/STL*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/String*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Src/*Url*.cpp
-)
-source_group( "Header Files\\Utils" FILES ${${PROJECT_NAME}_Utils_HEADER_FILES} )
-source_group( "Source Files\\Utils" FILES ${${PROJECT_NAME}_Utils_SOURCE_FILES} )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
 set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
