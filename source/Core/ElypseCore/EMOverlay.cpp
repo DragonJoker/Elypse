@@ -83,17 +83,8 @@ bool EMOverlay::Initialise( String const & p_className )
 		return false;
 	}
 
-	m_overlay = OverlayManager::getSingletonPtr()->createOverlayElementFromTemplate( p_className, "", m_name /* + GetOwner()->GetOwner()->GetInstanceKey() */, false );
-	/*
-		if (m_overlay->getTypeName() == "TextArea")
-		{
-			m_overlay->setMetricsMode( GMM_PIXELS);
-		}
-		else
-		{
-	*/
+	m_overlay = OverlayManager::getSingletonPtr()->createOverlayElementFromTemplate( p_className, "", m_name, false );
 	m_overlay->setMetricsMode( GMM_RELATIVE );
-//	}
 	m_baseMaterialName = m_overlay->getMaterialName();
 	GetOwner()->_finaliseAddElement( this );
 
@@ -177,15 +168,6 @@ void EMOverlay::SetClickedScript( ScriptNode * p_script )
 		m_clickedScript->Use();
 	}
 }
-
-/*
-void EMOverlay::AddChild( EMOverlay * p_child)
-{
-	genlib_assert( p_child != nullptr );
-
-	m_childs.push_back( p_child);
-}
-*/
 
 void EMOverlay::Reset()
 {
@@ -410,7 +392,10 @@ void EMOverlay::SetCaption( String const & p_caption )
 {
 	if ( m_overlay )
 	{
-		static_cast <TextAreaOverlayElement *>( m_overlay )->setCaption( ToWString( p_caption ) );
+		auto l_textOverlay = static_cast< TextAreaOverlayElement * >( m_overlay );
+		l_textOverlay->setCaption( ToWString( p_caption ) );
+		l_textOverlay->setSpaceWidth( 0.02 );
+
 	}
 
 	_wrapWords();
