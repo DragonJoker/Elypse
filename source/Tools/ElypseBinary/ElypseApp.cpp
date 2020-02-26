@@ -57,7 +57,6 @@ namespace ElypseBinary
 
 	bool ElypseApp::OnInit()
 	{
-		ElypseController::GetSingletonPtr()->ShowConsole();
 		wxStandardPathsBase & l_paths = wxStandardPaths::Get();
 		Path l_installPath = make_string( l_paths.GetExecutablePath() );
 		Path l_userPath = make_string( l_paths.GetUserDataDir() );
