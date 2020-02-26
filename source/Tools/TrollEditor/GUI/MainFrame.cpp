@@ -493,7 +493,7 @@ namespace Troll
 				.Center()
 				.CloseButton( false )
 				.Name( _( "Render" ) )
-				.MinSize( l_size.x, l_size.y - m_logsHeight )
+				.MinSize( l_size.x, l_size.y )
 				.Layer( 0 )
 				.Movable( false )
 				.PaneBorder( false )
@@ -506,8 +506,8 @@ namespace Troll
 				.Bottom()
 				.CaptionVisible( false )
 				.Dock()
-				.MinSize( 0, m_logsHeight )
 				.Resizable( true )
+				.Floatable( true )
 				.Show() );
 		}
 

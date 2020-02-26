@@ -313,7 +313,8 @@ namespace Troll::GUI
 		if ( p_file.Saved && !p_file.Open )
 		{
 			wxPanel * l_editTextContainer = new wxPanel{ m_mainTabsContainer, wxID_ANY, wxPoint( 0, 0 ) };
-			m_mainTabsContainer->AddPage( l_editTextContainer, p_file.FileName, true );
+			m_mainTabsContainer->AddPage( l_editTextContainer, p_scene.GetName() + "/" + p_file.FileName, true );
+			m_mainTabsContainer->GetCurrentPage()->SetClientData( &p_file );
 			l_editTextContainer->SetSize( 0, 22, m_mainTabsContainer->GetClientSize().x, m_mainTabsContainer->GetClientSize().y - 22 );
 			m_editText = new wxStcTextEditor{ &p_file, m_stcContext, l_editTextContainer, wxID_ANY, wxPoint( 0, 0 ), l_editTextContainer->GetClientSize() };
 			wxString l_path = GetProject()->GetPath() + p_file.m_scene->GetName() + wxFileName::GetPathSeparator();
@@ -347,12 +348,23 @@ namespace Troll::GUI
 			if ( m_mainTabsContainer->GetPageText( i ) == p_file.FileName )
 			{
 				p_file.Open = false;
+
+				if ( m_editText == p_file.EditPanel )
+				{
+					m_editText = nullptr;
+				}
+
 				p_file.EditPanel = nullptr;
 				m_mainTabsContainer->DeletePage( i );
 				l_found = true;
 			}
 
 			i++;
+		}
+
+		if ( l_found )
+		{
+			doUpdateEditPanel();
 		}
 	}
 
@@ -890,6 +902,37 @@ namespace Troll::GUI
 		}
 	}
 
+	File * ProjectFrame::doFindFile( wxString const & pageName )
+	{
+		try
+		{
+			auto l_index = pageName.find( "/" );
+			auto l_sceneName = pageName.substr( 0u, l_index );
+			auto l_scene = m_project->GetScene( l_sceneName );
+
+			if ( l_scene )
+			{
+				return &l_scene->GetFile( pageName.substr( l_index + 1u ) );
+			}
+		}
+		catch ( std::exception const & p_exc )
+		{
+		}
+
+		return nullptr;
+	}
+
+	void ProjectFrame::doUpdateEditPanel()
+	{
+		auto l_page = m_mainTabsContainer->GetCurrentPage();
+		auto l_pageName = m_mainTabsContainer->GetPageText( m_mainTabsContainer->GetSelection() );
+
+		if ( l_page && !IsElypsePage( l_pageName ) )
+		{
+			m_editText = static_cast< wxStcTextEditor * >( l_page->GetChildren().front() );
+		}
+	}
+
 	BEGIN_EVENT_TABLE( ProjectFrame, wxPanel )
 		EVT_CLOSE( ProjectFrame::OnClose )
 		EVT_SHOW( ProjectFrame::OnShow )
@@ -898,6 +941,7 @@ namespace Troll::GUI
 		EVT_ACTIVATE( ProjectFrame::OnActivate )
 		EVT_AUINOTEBOOK_PAGE_CHANGED( wxID_ANY, ProjectFrame::OnNotebookPageChanged )
 		EVT_AUINOTEBOOK_PAGE_CLOSE( wxID_ANY, ProjectFrame::OnNotebookPageClose )
+		EVT_AUINOTEBOOK_PAGE_CLOSED( wxID_ANY, ProjectFrame::OnNotebookPageClosed )
 	END_EVENT_TABLE()
 
 	void ProjectFrame::OnOpenFile( wxCommandEvent & p_event )
@@ -1006,9 +1050,9 @@ namespace Troll::GUI
 	{
 		int l_idx = p_event.GetSelection();
 		auto * l_book = wx_static_cast( wxAuiNotebook *, p_event.GetEventObject() );
-		m_currentPage = l_book->GetPageText( l_idx );
+		auto l_page = l_book->GetPageText( l_idx );
 
-		if ( IsElypsePage( m_currentPage ) )
+		if ( IsElypsePage( l_page ) )
 		{
 			if ( m_elypseCtrl != nullptr )
 			{
@@ -1022,17 +1066,11 @@ namespace Troll::GUI
 				m_elypseCtrl->KillCtrlFocus();
 			}
 
-			if ( m_filesList->GetSelectedScene() != nullptr )
+			auto l_file = doFindFile( l_page );
+
+			if ( l_file )
 			{
-				try
-				{
-					File const & l_file = m_filesList->GetSelectedScene()->GetFile( m_currentPage );
-					m_editText = l_file.EditPanel;
-				}
-				catch ( std::exception const & p_exc )
-				{
-					std::cerr << "ProjectFrame::OnNotebook - " << p_exc.what() << "\n";
-				}
+				m_editText = l_file->EditPanel;
 			}
 		}
 
@@ -1043,26 +1081,30 @@ namespace Troll::GUI
 	{
 		int l_idx = p_event.GetSelection();
 		auto * l_book = wx_static_cast( wxAuiNotebook *, p_event.GetEventObject() );
-		auto l_name = l_book->GetPageText( l_idx );
+		auto l_page = l_book->GetPageText( l_idx );
 
-		if ( IsElypsePage( l_name ) )
+		if ( IsElypsePage( l_page ) )
 		{
 			m_parent->GetEventHandler()->QueueEvent( new wxCommandEvent{ wxEVT_MENU, Menu_TestProject } );
 			p_event.Veto();
 		}
-		else if ( m_filesList->GetSelectedScene() != nullptr )
+		else
 		{
-			try
+			m_editText = nullptr;
+			auto l_file = doFindFile( l_page );
+
+			if ( l_file )
 			{
-				File & l_file = m_filesList->GetSelectedScene()->GetFile( m_currentPage );
-				l_file.EditPanel = nullptr;
-			}
-			catch ( std::exception const & p_exc )
-			{
-				std::cerr << "ProjectFrame::OnNotebook - " << p_exc.what() << "\n";
+				l_file->EditPanel = nullptr;
 			}
 		}
 
+		p_event.Skip();
+	}
+
+	void ProjectFrame::OnNotebookPageClosed( wxAuiNotebookEvent & p_event )
+	{
+		doUpdateEditPanel();
 		p_event.Skip();
 	}
 

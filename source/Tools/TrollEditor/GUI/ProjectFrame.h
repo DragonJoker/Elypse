@@ -170,6 +170,8 @@ namespace Troll
 			void DoInitialise();
 			void DoInitEditLists();
 			void DoInitElypse( ProjectComponents::ProjectSPtr p_project, wxString const & p_title, bool p_edit, int p_adjustY = 0 );
+			ProjectComponents::File * doFindFile( wxString const & pageName );
+			void doUpdateEditPanel();
 
 			DECLARE_EVENT_TABLE()
 			void OnOpenFile( wxCommandEvent & p_event );
@@ -198,6 +200,7 @@ namespace Troll
 			void OnActivate( wxActivateEvent & p_event );
 			void OnNotebookPageChanged( wxAuiNotebookEvent & p_event );
 			void OnNotebookPageClose( wxAuiNotebookEvent & p_event );
+			void OnNotebookPageClosed( wxAuiNotebookEvent & p_event );
 			void OnNotebookMiddleDown( wxMouseEvent & p_event );
 
 			void OnSearch( wxCommandEvent & p_event );
@@ -254,7 +257,6 @@ namespace Troll
 			size_t m_nPrint{ 1 };
 
 			wxString m_pathBmp{};
-			wxString m_currentPage{};
 
 			ProjectComponents::ProjectSPtr m_project{ nullptr };
 			ProjectComponents::Scene * m_selectedScene{ nullptr };
