@@ -18,12 +18,6 @@ GENLIB_INIT_SINGLETON( SoundManager );
 
 namespace
 {
-	template< typename T, size_t N >
-	size_t countOf( T const ( &value )[N] )
-	{
-		return N;
-	}
-
 	void normalize( FMOD_VECTOR  & p_vector )
 	{
 		auto norm = p_vector.x * p_vector.x
@@ -95,7 +89,7 @@ SoundManager::SoundManager( const String  & p_basePath )
 	}
 
 #if ELYPSE_LINUX
-	FMOD_OUTPUTTYPE l_outputMode[5] =
+	FMOD_OUTPUTTYPE l_outputModes[5] =
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
 		FMOD_OUTPUTTYPE_ALSA,
@@ -104,7 +98,7 @@ SoundManager::SoundManager( const String  & p_basePath )
 		FMOD_OUTPUTTYPE_NOSOUND
 	};
 #elif ELYPSE_WINDOWS
-	FMOD_OUTPUTTYPE l_outputMode[7] =
+	FMOD_OUTPUTTYPE l_outputModes[7] =
 	{
 		FMOD_OUTPUTTYPE_AUTODETECT,
 		//FMOD_OUTPUTTYPE_OPENAL,
@@ -114,13 +108,14 @@ SoundManager::SoundManager( const String  & p_basePath )
 	};
 #endif
 
-	for ( size_t i = 0 ; i < countOf( l_outputMode ); i ++ )
+	for ( auto l_outputMode : l_outputModes )
 	{
-		CHECKFMODERROR( m_system->setOutput( l_outputMode[i] ) );
+		CHECKFMODERROR( m_system->setOutput( l_outputMode ) );
 
 		if ( CHECKFMODERROR( m_system->init( MAXCHANNEL, FMOD_INIT_NORMAL, 0 ) ) )
 		{
-			_logMessage( "FMOD is initialized with Output type : [" + SoundManager::OutputTypeToStr( l_outputMode[i] ) + "]" );
+			m_initialised = true;
+			_logMessage( "FMOD is initialized with Output type : [" + SoundManager::OutputTypeToStr( l_outputMode ) + "]" );
 			break;
 		}
 	}
