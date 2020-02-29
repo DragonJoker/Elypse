@@ -1256,6 +1256,12 @@ ScriptNode * Elypse::Script::ScriptCompiler::_compileReturn( ScriptBlockArray & 
 	ScriptBlockArray l_array( p_childs.begin() + 1, p_childs.end() );
 	ScriptNode * l_node = _compileSentence( l_array );
 
+	if ( !l_node )
+	{
+		COMPILE_ERROR_IN_BLOCK( "Unexpected null node while compiling.", p_childs[0] );
+		return nullptr;
+	}
+
 	if ( m_currentUserFunction->m_returnNode->GetType() != l_node->GetType() )
 	{
 		COMPILE_ERROR_IN_BLOCK( "return operator : expected " + m_currentUserFunction->m_returnNode->GetType()->GetDesc()
