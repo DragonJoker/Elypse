@@ -151,10 +151,6 @@ namespace Troll
 			{
 				return m_functionsList;
 			}
-			inline wxAuiNotebook * GetMainTabsContainer()const
-			{
-				return m_mainTabsContainer;
-			}
 			inline wxStcTextEditor * GetCurrentEdit()
 			{
 				return m_editText;
@@ -163,6 +159,9 @@ namespace Troll
 			{
 				return m_filesList;
 			}
+
+			static String GetFileName( String const & p_pageName );
+			static String GetSceneName( String const & p_pageName );
 
 		private:
 			void DoInitialiseMainContainers();

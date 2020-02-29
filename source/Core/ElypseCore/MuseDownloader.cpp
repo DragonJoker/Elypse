@@ -110,6 +110,7 @@ namespace Elypse::Download
 		}
 
 		EMUSE_LOG_MESSAGE_RELEASE( "MuseDownloader - " + m_url + " finished, downloaded in " + StringConverter::toString( Real( l_timer.Time() ) ) + " seconds" );
+		m_downloaded = true;
 	}
 
 	String MuseDownloader::GetExtension( String const & p_fileurl )

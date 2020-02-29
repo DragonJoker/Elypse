@@ -535,6 +535,7 @@ namespace Elypse
 		EMUSE_SCRIPT_FUNCTION_DEFINE( Mus_StartDownload )
 		EMUSE_SCRIPT_FUNCTION_DEFINE( Mus_DownloadSeparable )
 		EMUSE_SCRIPT_FUNCTION_DEFINE( Mus_GetDirectory )
+		EMUSE_SCRIPT_FUNCTION_DEFINE( Mus_IsDownloaded )
 
 		EMUSE_SCRIPT_FUNCTION_DEFINE( Spc_ObjectDuplicate )
 		EMUSE_SCRIPT_FUNCTION_DEFINE( Spc_ObjectDelete )

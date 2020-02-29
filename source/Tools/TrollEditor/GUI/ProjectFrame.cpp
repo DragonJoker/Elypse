@@ -147,18 +147,22 @@ namespace Troll::GUI
 	{
 		ScenePtr l_scene{ nullptr };
 		File * l_file{ nullptr };
+		auto l_pageName = m_mainTabsContainer->GetPageText( m_mainTabsContainer->GetSelection() );
+		auto l_sceneName = GetSceneName( l_pageName );
+		auto l_fileName = GetFileName( l_pageName );
 
-		if ( !GetProject()->FindFileInScenes( m_mainTabsContainer->GetPageText( m_mainTabsContainer->GetSelection() ), l_file, l_scene ) )
+		if ( !GetProject()->FindFileInScene( l_fileName, l_sceneName, l_file, l_scene ) )
 		{
 			LogDebug( TE_NO_SELECTED_FILE );
 		}
-		else if ( !l_file->FileName.Contains( wxT( ".emscript" ) ) )
+		else if ( l_file->Filetype != FileType::loadScriptFile
+			&& l_file->Filetype != FileType::unloadScriptFile )
 		{
 			LogDebug( TE_NOT_COMPILABLE_TYPE );
 		}
 		else
 		{
-			std::clog << m_mainTabsContainer->GetPageText( m_mainTabsContainer->GetSelection() ) << "\n";
+			std::clog << l_pageName << "\n";
 
 			try
 			{
@@ -345,7 +349,7 @@ namespace Troll::GUI
 
 		while ( i <= m_mainTabsContainer->GetPageCount() && !l_found )
 		{
-			if ( m_mainTabsContainer->GetPageText( i ) == p_file.FileName )
+			if ( GetFileName( m_mainTabsContainer->GetPageText( i ) ) == p_file.FileName )
 			{
 				p_file.Open = false;
 
@@ -375,6 +379,30 @@ namespace Troll::GUI
 			m_sceneDependencies.SetScene( m_filesList->GetSelectedScene() );
 			m_sceneDependencies.Show();
 		}
+	}
+
+	String ProjectFrame::GetSceneName( String const & p_pageName )
+	{
+		auto l_index = p_pageName.find( "/" );
+
+		if ( l_index == String::npos )
+		{
+			return String{};
+		}
+
+		return p_pageName.substr( 0u, l_index );
+	}
+
+	String ProjectFrame::GetFileName( String const & p_pageName )
+	{
+		auto l_index = p_pageName.find( "/" );
+
+		if ( l_index == String::npos )
+		{
+			return String{};
+		}
+
+		return p_pageName.substr( l_index + 1u );
 	}
 
 	void ProjectFrame::DoInitEditLists()
@@ -803,8 +831,10 @@ namespace Troll::GUI
 	{
 		//std::cout << "ProjectFrame::OnSaveFileAs\n";
 		int l_selectedPage = m_mainTabsContainer->GetSelection();
-		wxString l_fileName = m_mainTabsContainer->GetPageText( l_selectedPage );
-		auto l_scene = m_filesList->GetSelectedScene();
+		auto l_pageName = m_mainTabsContainer->GetPageText( l_selectedPage );
+		String l_fileName = GetFileName( l_pageName );
+		String l_sceneName = GetSceneName( l_pageName );
+		auto l_scene = GetProject()->GetScene( l_sceneName );
 
 		try
 		{

@@ -33,6 +33,7 @@ namespace Troll
 			void SetBackgroundImage( wxString const & p_img );
 			void SetBackgroundColour( wxString const & p_colour );
 
+			bool FindFileInScene( wxString const & p_fileName, wxString const & p_sceneName, File *& p_file, ScenePtr & p_scene );
 			bool FindFileInScenes( wxString const & p_fileName, File *& p_file, ScenePtr & p_scene );
 
 			inline ScenePtr GetMainScene()const

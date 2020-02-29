@@ -1288,9 +1288,10 @@ void Elypse::Script::ScriptCompiler::_initialiseFunctionMap()
 	_creaFunc( "Video_InitialiseOverlay", Vid_InitialiseOverlay, EMVT_NULL, EMVT_STRING, EMVT_OVERLAY, EMVT_NULL );
 	_creaFunc( "Video_SetVolumePercent", Vid_SetVolumePercent, EMVT_NULL, EMVT_STRING, EMVT_REAL, EMVT_NULL );
 	_functionGroup( "Muse" );
-	_creaFunc( "StartDownloadingMuseFile", Mus_StartDownload, EMVT_NULL, EMVT_STRING, EMVT_NULL );
-	_creaFunc( "DownloadSeparateMuseFile", Mus_DownloadSeparable, EMVT_NULL, EMVT_STRING, EMVT_CODE, EMVT_NULL );
-	_creaFunc( "GetMuseFileDirectory", Mus_GetDirectory, EMVT_STRING, EMVT_NULL );
+	_creaFunc( "Muse_StartDownloading", Mus_StartDownload, EMVT_NULL, EMVT_STRING, EMVT_NULL );
+	_creaFunc( "Muse_DownloadSeparate", Mus_DownloadSeparable, EMVT_NULL, EMVT_STRING, EMVT_CODE, EMVT_NULL );
+	_creaFunc( "Muse_GetDirectory", Mus_GetDirectory, EMVT_STRING, EMVT_NULL );
+	_creaFunc( "Muse_IsDownloaded", Mus_IsDownloaded, EMVT_BOOL, EMVT_STRING, EMVT_NULL );
 	_functionGroup( "Miscellaneous" );
 	_creaFunc( "GetCurrentSecond", Tim_GetCurrentSecond, EMVT_INT, EMVT_NULL );
 	_creaFunc( "GetCurrentMinute", Tim_GetCurrentMinute, EMVT_INT, EMVT_NULL );

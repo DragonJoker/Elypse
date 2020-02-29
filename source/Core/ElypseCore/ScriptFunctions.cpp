@@ -2356,9 +2356,33 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Vid_InitialiseOverlay )
 	l_overlay->Initialise( p_ovName );
 }
 
+EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_IsDownloaded )
+{
+	VERBOSE_STARTFUNC( "Muse_IsDownloaded" );
+	GET_AND_EXEC_PARAM( String, p_name, 0 );
+
+	if ( !p_name.empty() )
+	{
+		MuseFile * l_file = ScriptEngine::GetContext()->downloadManager->GetMuseFile( p_name );
+
+		if ( l_file == nullptr )
+		{
+			RETURN_AS( bool ) false;
+		}
+		else
+		{
+			RETURN_AS( bool ) l_file->GetDownloader().IsDownloaded();
+		}
+	}
+	else
+	{
+		RETURN_AS( bool ) false;
+	}
+}
+
 EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_StartDownload )
 {
-	VERBOSE_STARTFUNC( "Mus_StartDownload" );
+	VERBOSE_STARTFUNC( "Muse_StartDownloading" );
 	GET_AND_EXEC_PARAM( String, p_name, 0 );
 	ScriptNode * l_sCode = caller->m_childs[1];
 
@@ -2368,7 +2392,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_StartDownload )
 
 		if ( l_file == nullptr )
 		{
-			return SCRIPT_ERROR( "StartDownloadMuseFile : muse file named [" + p_name + "] does not exist" );
+			return SCRIPT_ERROR( "Muse_StartDownloading : muse file named [" + p_name + "] does not exist" );
 		}
 
 		l_file->GetDownloader().StartDownload();
@@ -2377,7 +2401,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_StartDownload )
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_DownloadSeparable )
 {
-	VERBOSE_STARTFUNC( "Mus_DownloadSeparable" );
+	VERBOSE_STARTFUNC( "Muse_DownloadSeparate" );
 	GET_AND_EXEC_PARAM( String, p_name, 0 );
 	ScriptNode * l_sCode = caller->m_childs[1];
 
@@ -2391,7 +2415,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_DownloadSeparable )
 
 		if ( l_file == nullptr )
 		{
-			return SCRIPT_ERROR( "StartDownloadMuseFile : muse file named [" + p_name + "] was not found" );
+			return SCRIPT_ERROR( "Muse_DownloadSeparate : muse file named [" + p_name + "] was not found" );
 		}
 
 		
@@ -2412,6 +2436,7 @@ EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_DownloadSeparable )
 
 EMUSE_SCRIPT_FUNCTION_DECLARE( Mus_GetDirectory )
 {
+	VERBOSE_STARTFUNC( "Muse_GetDirectory" );
 	RETURN_AS( String ) ScriptEngine::GetContext()->baseURL.GetDirectory();
 }
 

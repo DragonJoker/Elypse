@@ -221,6 +221,34 @@ namespace Troll
 			m_modified = true;
 		}
 
+		bool Project::FindFileInScene( wxString const & p_fileName, wxString const & p_sceneName, File *& p_file, ScenePtr & p_scene )
+		{
+			try
+			{
+				p_scene = GetScene( p_sceneName );
+			}
+			catch ( std::exception & exc )
+			{
+				std::cerr << "Couldn't find scene [" << p_sceneName << "]" << std::endl;
+				return false;
+			}
+
+			if ( p_scene )
+			{
+				try
+				{
+					p_file = &p_scene->GetFile( p_fileName );
+				}
+				catch ( std::exception & exc )
+				{
+					std::cerr << "Couldn't find file [" << p_fileName << "] in scene [" << p_sceneName << "]" << std::endl;
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		bool Project::FindFileInScenes( wxString const & p_fileName, File *& p_file, ScenePtr & p_scene )
 		{
 			bool l_return = false;

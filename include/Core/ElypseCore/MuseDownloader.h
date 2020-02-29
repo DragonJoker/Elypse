@@ -7,6 +7,7 @@ See LICENSE file in root folder
 #include "Module_Download.h"
 #include "Module_Data.h"
 
+#include <atomic>
 #include <thread>
 
 #include <NeoCurl.h>
@@ -43,6 +44,10 @@ namespace Elypse::Download
 		inline bool IsInitialised()const
 		{
 			return m_initialised || m_cantDownload;
+		}
+		inline bool IsDownloaded()const
+		{
+			return m_downloaded;
 		}
 		inline bool DownloadFiles()const
 		{
@@ -89,7 +94,7 @@ namespace Elypse::Download
 		General::Utils::Path m_basePath;
 		General::Utils::Path m_installPath;
 
-		std::function< void( MuseFile * ) > m_onEnd{ nullptr };
+		std::atomic_bool m_downloaded{ false };
 	};
 }
 

@@ -510,7 +510,6 @@ DEFINE_SCENE_FILE_PARSER( Parser_RootUniverse )
 
 	if ( l_universe == nullptr )
 	{
-//		l_universe = new Universe( p_params);
 		l_universe = p_context->universeManager->CreateUniverse( p_params );
 		p_context->sceneManager = l_universe->GetManager();
 	}
