@@ -300,7 +300,7 @@ void ElypseController::Initialise()
 		m_log = LogManager::getSingletonPtr()->createLog( l_directory / "Emuse.log", false, false, false );
 		m_log->logMessage( "EmuseController Initialisation Started" );
 		m_downloadManager = new  DownloadManager( m_installDir, m_loadingBar, m_downloadFiles );
-		EMUSE_LOG_MESSAGE_RELEASE( "miaou 1" );
+		EMUSE_LOG_MESSAGE_DEBUG( "miaou 1" );
 
 		if ( ! PluginLoader::GetSingletonPtr()->load( m_installDir, m_root ) )
 		{
@@ -317,11 +317,11 @@ void ElypseController::Initialise()
 		if ( m_root->getRenderSystem() )
 		{
 			std::cout << "named : " << m_root->getRenderSystem()->getName() << std::endl;
-			EMUSE_LOG_MESSAGE_RELEASE( "miaou 7" );
+			EMUSE_LOG_MESSAGE_DEBUG( "miaou 7" );
 			EMUSE_MESSAGE_DEBUG( "ElypseController::Initialisation 6" );
 			m_root->initialise( false );
-			EMUSE_LOG_MESSAGE_RELEASE( "miaou 8" );
-			EMUSE_LOG_MESSAGE_RELEASE( "miaou 9" );
+			EMUSE_LOG_MESSAGE_DEBUG( "miaou 8" );
+			EMUSE_LOG_MESSAGE_DEBUG( "miaou 9" );
 			m_log->logMessage( "CElypseController::Root Initialisation Started" );
 			EMUSE_MESSAGE_DEBUG( "ElypseController::Initialisation 7" );
 			new SoundManager( m_installDir / "rsc" );

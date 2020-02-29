@@ -81,6 +81,7 @@ namespace ElypseBinary
 		}
 		else
 		{
+			l_userPath = l_userPath.GetPath();
 			l_userPath /= "DragonJoker";
 
 			if ( !DirectoryExists( l_userPath ) )
@@ -107,12 +108,16 @@ namespace ElypseBinary
 
 			if ( argc <= 1 )
 			{
+#if defined( ElypseBin_MuseFile )
+				l_fileName = ElypseBin_MuseFile;
+#else
 				l_fileName = make_string( wxFileSelector( CHOOSE_MUSE_FILE
 					, wxEmptyString
 					, wxEmptyString
 					, wxEmptyString
 					, MUSE_FILES_NAME + MUSE_FILES_WILDCARD
 					, wxFD_OPEN ) );
+#endif
 			}
 			else
 			{
@@ -138,7 +143,11 @@ namespace ElypseBinary
 
 			if ( InitParams( l_fileName ) )
 			{
+#if defined( ElypseBin_Name )
+				m_frame = new ElypseFrame( ElypseBin_Name, wxSize( m_width, m_height ) );
+#else
 				m_frame = new ElypseFrame( ELYPSE_PLAYER, wxSize( m_width, m_height ) );
+#endif
 				m_control = new ElypseCtrl( *this, m_frame, m_plugin, m_elypse );
 
 				m_plugin->SetHandle( m_control );

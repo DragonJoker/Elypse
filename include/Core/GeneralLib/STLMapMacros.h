@@ -109,6 +109,21 @@ namespace General
 				return l_return;
 			}
 
+			template< typename T, typename U, typename D >
+			inline bool deleteValue( std::map< T, std::unique_ptr< U, D > > & p_map, T const & p_key )
+			{
+				bool l_return = false;
+				auto && ifind = p_map.find( p_key );
+
+				if ( ifind != p_map.cend() )
+				{
+					p_map.erase( ifind );
+					l_return = true;
+				}
+
+				return l_return;
+			}
+
 			template< typename T, typename U >
 			inline bool deleteValue( std::map< T *, U * > & p_map, T * p_key )
 			{
@@ -129,6 +144,25 @@ namespace General
 				return l_return;
 			}
 
+			template< typename T, typename U, typename D >
+			inline bool deleteValue( std::map< T *, std::unique_ptr< U, D > > & p_map, T * p_key )
+			{
+				bool l_return = false;
+
+				if ( p_key )
+				{
+					auto && ifind = p_map.find( p_key );
+
+					if ( ifind != p_map.cend() )
+					{
+						p_map.erase( ifind );
+						l_return = true;
+					}
+				}
+
+				return l_return;
+			}
+
 			template< typename U >
 			inline bool deleteValue( std::map< std::string, U * > & p_map, std::string const & p_key )
 			{
@@ -141,6 +175,25 @@ namespace General
 					if ( ifind != p_map.cend() )
 					{
 						delete ifind->second;
+						p_map.erase( ifind );
+						l_return = true;
+					}
+				}
+
+				return l_return;
+			}
+
+			template< typename U, typename D >
+			inline bool deleteValue( std::map< std::string, std::unique_ptr< U, D > > & p_map, std::string const & p_key )
+			{
+				bool l_return = false;
+
+				if ( !p_key.empty() )
+				{
+					auto && ifind = p_map.find( p_key );
+
+					if ( ifind != p_map.cend() )
+					{
 						p_map.erase( ifind );
 						l_return = true;
 					}
@@ -180,6 +233,16 @@ namespace General
 				}
 
 				return ifind->second.get();
+			}
+
+			template< typename T, typename U, typename D, typename Func, typename ... Params >
+			inline void cycle( std::map <T, std::unique_ptr< U, D > > const & p_map, Func p_func, Params && ... p_params )
+			{
+				for ( auto & i : p_map )
+				{
+					auto * l_ptr = i.second.get();
+					( l_ptr->* p_func )( std::forward< Params >( p_params )... );
+				}
 			}
 
 			template< typename T, typename U, typename Func, typename ... Params >

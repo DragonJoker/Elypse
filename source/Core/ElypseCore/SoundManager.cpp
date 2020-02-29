@@ -406,6 +406,8 @@ void SoundManager::Update( const Vector3 & p_position,
 
 	FMOD_VECTOR l_up = { p_up[0], p_up[1], p_up[2] };
 	FMOD_VECTOR l_forward = { p_forward[0], p_forward[1], p_forward[2] };
+	normalize( l_forward );
+	normalize( l_up );
 	FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
 	m_listenerPos.x = p_position.x / 100;
 	m_listenerPos.y = p_position.y / 100;

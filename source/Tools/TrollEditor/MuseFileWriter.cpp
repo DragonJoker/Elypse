@@ -141,12 +141,6 @@ namespace Troll
 		{
 			auto l_startScene = GetStartScene( p_project );
 			wxString l_mainFileName = p_project.GetPath() + p_scene->GetName() + wxT( "/main.emcfg" );
-
-			if ( l_startScene == p_scene )
-			{
-				l_mainFileName = p_project.GetPath() + wxT( "main.emcfg" );
-			}
-
 			wxFileOutputStream l_fileOutput( l_mainFileName );
 			wxTextOutputStream l_textStream( l_fileOutput );
 			WriteBackgroundInMain( p_project, l_textStream );
@@ -356,24 +350,24 @@ namespace Troll
 					auto l_mainFile = DoCreateMain( l_scene, p_project, p_withScripts );
 					DoAddSceneToMuse( p_project, p_createMain, p_withScripts, *l_scene, *l_scene, l_mainFile );
 				}
-
-				return;
 			}
-
-			wxString l_mainFile;
-
-			if ( p_createMain )
+			else
 			{
-				l_mainFile = DoCreateMain( p_project, p_withScripts );
-			}
+				wxString l_mainFile;
 
-			DoAddSceneToMuse( p_project, p_createMain, p_withScripts, *l_startScene, *p_project.GetMainScene(), l_mainFile );
-
-			for ( auto const & l_scene : p_project.GetScenes() )
-			{
-				if ( l_startScene != l_scene )
+				if ( p_createMain )
 				{
-					DoAddSceneToMuse( p_project, p_createMain, p_withScripts, *l_scene, *p_project.GetMainScene(), l_mainFile );
+					l_mainFile = DoCreateMain( p_project, p_withScripts );
+				}
+
+				DoAddSceneToMuse( p_project, p_createMain, p_withScripts, *l_startScene, *p_project.GetMainScene(), l_mainFile );
+
+				for ( auto const & l_scene : p_project.GetScenes() )
+				{
+					if ( l_startScene != l_scene )
+					{
+						DoAddSceneToMuse( p_project, p_createMain, p_withScripts, *l_scene, *p_project.GetMainScene(), l_mainFile );
+					}
 				}
 			}
 		}

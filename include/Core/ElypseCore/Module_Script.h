@@ -5,6 +5,7 @@ See LICENSE file in root folder
 #define ___MODULE_SCRIPT_H___
 
 #include "Elypse.h"
+#include <memory>
 #include <queue>
 #include <cstdint>
 
@@ -155,7 +156,7 @@ namespace Elypse
 
 		typedef std::map <OverlayElement *, ScriptNode *>				OverlayActionMap;
 		typedef std::map <String, ScriptNode *>							ScriptNodeMap;
-		typedef std::map <String, ScriptTimer *>						TimerMap;
+		typedef std::map <String, ScriptTimer * >						TimerMap;
 		typedef std::vector <ScriptNode *>								ScriptNodeArray;
 		typedef std::vector <ScriptNodeArray>							ScriptNodeArrayArray;
 		typedef std::vector <VariableType *>							VariableTypeArray;
