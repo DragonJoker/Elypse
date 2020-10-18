@@ -6,7 +6,7 @@ See LICENSE file in root folder
 
 #include "Elypse.h"
 
-#include <OgreVector3.h>
+#include <OgreVector.h>
 
 #include <OgrePlane.h>
 #include <ode/common.h>

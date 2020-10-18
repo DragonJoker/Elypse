@@ -16,7 +16,7 @@ add_target(
 	${CMAKE_CURRENT_INCLUDE_DIR}/GuiCommonPch.h
 	${CMAKE_CURRENT_SOURCE_DIR}/GuiCommonPch.cpp
 )
-add_library( elypse::${PROJECT_NAME}
+add_library( elypse::GuiCommon
 	ALIAS
 	${PROJECT_NAME}
 )
@@ -34,11 +34,12 @@ target_include_directories( ${PROJECT_NAME}
 )
 target_link_libraries( ${PROJECT_NAME}
 	PUBLIC
-		ElypseCore
+		elypse::Core
 		${wxWidgets_LIBRARIES}
 		${OpenCV_LIBS}
 )
 
+target_install_headers( ${PROJECT_NAME} ${CMAKE_CURRENT_INCLUDE_DIR} )
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Tools" )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 

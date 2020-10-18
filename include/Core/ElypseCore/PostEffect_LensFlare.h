@@ -9,7 +9,7 @@ See LICENSE file in root folder
 #include "PostEffect.h"
 
 #include <OgreFrameListener.h>
-#include <OgreVector3.h>
+#include <OgreVector.h>
 
 namespace Elypse
 {

@@ -6,7 +6,7 @@ See LICENSE file in root folder
 
 #include "Module_Script.h"
 
-#include <OgreVector3.h>
+#include <OgreVector.h>
 #include <OgreColourValue.h>
 #include <OgreQuaternion.h>
 

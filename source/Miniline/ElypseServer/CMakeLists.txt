@@ -19,7 +19,7 @@ add_target(
 	""
 	""
 )
-add_library( elypse::${PROJECT_NAME}
+add_library( elypse::Server
 	ALIAS
 	${PROJECT_NAME}
 )
@@ -29,8 +29,8 @@ target_include_directories( ${PROJECT_NAME}
 		$<INSTALL_INTERFACE:include>
 )
 target_link_libraries( ${PROJECT_NAME}
-	PRIVATE
-		GeneralLib
+	PUBLIC
+		elypse::General
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )

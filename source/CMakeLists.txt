@@ -32,7 +32,7 @@ install(
 install( EXPORT Elypse
 	FILE ElypseConfig.cmake
 	NAMESPACE elypse::
-	DESTINATION share/Elypse/cmake
+	DESTINATION lib/cmake/elypse
 )
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file( ElypseConfigVersion.cmake

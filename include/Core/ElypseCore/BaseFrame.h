@@ -6,7 +6,7 @@ See LICENSE file in root folder
 
 #include "Module_Sequences.h"
 
-#include <OgreVector3.h>
+#include <OgreVector.h>
 #include <OgreQuaternion.h>
 
 namespace Elypse

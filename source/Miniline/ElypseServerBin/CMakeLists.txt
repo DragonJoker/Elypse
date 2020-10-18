@@ -19,8 +19,7 @@ add_target(
 )
 target_link_libraries( ${PROJECT_NAME}
 	PRIVATE
-		GeneralLib
-		ElypseServer
+		elypse::Server
 		${CMAKE_DL_LIBS}
 )
 

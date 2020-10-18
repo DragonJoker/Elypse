@@ -587,13 +587,13 @@ namespace Troll
 			m_menuEdition->Append( Menu_SearchPrevious, wxString() << TE_FILE_FIND_PREVIOUS << wxT( "\tShift+F3" ) );
 			m_menuEdition->Append( Menu_Replace, wxString() << TE_FILE_REPLACE << wxT( "\tCtrl+H" ) );
 			m_menuProject = new wxMenu;
-			m_menuProject->Append( Menu_SceneDependencies, wxString() << TE_SCENE_DEPENDENCIES << wxT( "\tF5" ) );
+			m_menuTestProject = m_menuProject->Append( Menu_TestProject, wxString() << TE_PROJECT_TEST << wxT( "\tF5" ) );
 			m_menuProject->Append( Menu_CompileFile, wxString() << TE_PROJECT_COMPILE << wxT( "\tF6" ) );
 			m_menuProject->Append( Menu_Musinate, wxString() << TE_PROJECT_MUSINATE << wxT( "\tF7" ) );
 			m_menuEditTimeLines = m_menuProject->Append( Menu_TimeLine, wxString() << TE_EDIT_TIMELINE << wxT( "\tF8" ) );
 			m_menuEditProject = m_menuProject->Append( Menu_EditScene, wxString() << TE_EDIT_SCENE << wxT( "\tF9" ) );
 			m_menuEditOverlays = m_menuProject->Append( Menu_EditOverlays, wxString() << TE_EDIT_OVERLAYS << wxT( "\tF10" ) );
-			m_menuTestProject = m_menuProject->Append( Menu_TestProject, wxString() << TE_PROJECT_TEST << wxT( "\tF11" ) );
+			m_menuProject->Append( Menu_SceneDependencies, wxString() << TE_SCENE_DEPENDENCIES << wxT( "\tF11" ) );
 			m_menuProject->Append( Menu_ProjectProperties, wxString() << TE_PROJECT_PROPERTIES << wxT( "\tCtrl+P" ) );
 			m_menuHelp = new wxMenu;
 			m_menuHelp->Append( Menu_About, wxString() << TE_ABOUT );

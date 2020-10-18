@@ -208,7 +208,7 @@ add_target_min(
 	${PROJECT_NAME}
 	lib
 )
-add_library( elypse::${PROJECT_NAME}
+add_library( elypse::General
 	ALIAS
 	${PROJECT_NAME}
 )
@@ -229,12 +229,12 @@ target_include_directories( ${PROJECT_NAME}
 target_link_libraries( ${PROJECT_NAME}
 	PUBLIC
 		${Boost_LIBRARIES}
-		libzip
+		libzip::zip
 		ZLIB::ZLIB
 		CURL::libcurl
 )
 
-install_target( ${PROJECT_NAME} api_dll ${CMAKE_CURRENT_INCLUDE_DIR} )
+target_install_headers( ${PROJECT_NAME} ${CMAKE_CURRENT_INCLUDE_DIR} )
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 target_add_doc( ${PROJECT_NAME} "" "*.h *.hpp" )

@@ -6,7 +6,7 @@ set( ${PROJECT_NAME}_VERSION_BUILD	${VERSION_BUILD} )
 
 set( CMAKE_CURRENT_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/Core/${PROJECT_NAME} )
 
-find_package( OpenCV CONFIG REQUIRED highgui core video )
+find_package( OpenCV ${EL_CONFIG} REQUIRED highgui core video )
 
 set( ${PROJECT_NAME}_HDR_FILES
 )
@@ -164,12 +164,17 @@ set( ${PROJECT_NAME}_HDR_FILES
 source_group( "Header Files\\Media" FILES ${${PROJECT_NAME}_FOLDER_HDR_FILES} )
 
 set( ${PROJECT_NAME}_FOLDER_HDR_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/FmodApi.h
+	${CMAKE_CURRENT_SOURCE_DIR}/OpenALApi.h
+	${CMAKE_CURRENT_INCLUDE_DIR}/SoundApi.h
 	${CMAKE_CURRENT_INCLUDE_DIR}/SoundInstance.h
 	${CMAKE_CURRENT_INCLUDE_DIR}/SoundManager.h
 	${CMAKE_CURRENT_INCLUDE_DIR}/SoundObject.h
 	${CMAKE_CURRENT_INCLUDE_DIR}/SoundPlaylist.h
 )
 set( ${PROJECT_NAME}_FOLDER_SRC_FILES
+	${CMAKE_CURRENT_SOURCE_DIR}/FmodApi.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/OpenALApi.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SoundInstance.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SoundManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/SoundObject.cpp
@@ -479,7 +484,7 @@ add_target_min(
 	${CMAKE_CURRENT_INCLUDE_DIR}/PrecompiledHeader.h
 	${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeader.cpp
 )
-add_library( elypse::${PROJECT_NAME}
+add_library( elypse::Core
 	ALIAS
 	${PROJECT_NAME}
 )
@@ -489,30 +494,49 @@ target_include_directories( ${PROJECT_NAME}
 		$<INSTALL_INTERFACE:include>
 		${Ogre_INCLUDE_DIR}
 	PRIVATE
-		${Fmod_INCLUDE_DIR}
 		${OpenCV_INCLUDE_DIR}
 		${OpenCV_INCLUDE_DIRS}
 		${CMAKE_SOURCE_DIR}/Core/${PROJECT_NAME}/Win32
 )
 target_link_libraries( ${PROJECT_NAME}
 	PUBLIC
-		GeneralLib
+		elypse::General
 		OgreMain
 		OgreOverlay
 		ODE::ODE
 	PRIVATE
-		${Fmod_LIBRARY}
 		opencv_core
 		opencv_highgui
 		opencv_video
 		${CMAKE_DL_LIBS}
 )
-
-install_target( ${PROJECT_NAME} api_dll ${CMAKE_CURRENT_INCLUDE_DIR} )
+if ( BUILD_USE_FMOD )
+	target_link_libraries( ${PROJECT_NAME}
+		PRIVATE
+			Fmod::Fmod
+	)
+	target_compile_definitions( ${PROJECT_NAME}
+		PRIVATE
+			ELYPSE_USE_FMOD
+	)
+else ()
+	target_link_libraries( ${PROJECT_NAME}
+		PRIVATE
+			OpenAL::OpenAL
+			SndFile::sndfile
+			mpg123::mpg123
+	)
+	target_compile_definitions( ${PROJECT_NAME}
+		PRIVATE
+			ELYPSE_USE_OPENAL
+	)
+endif ()
+target_install_headers( ${PROJECT_NAME} ${CMAKE_CURRENT_INCLUDE_DIR} )
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Core" )
 add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 target_add_doc( ${PROJECT_NAME} "" "*.h *.hpp *.dox" )
 
+# Copy otherwise unreferenced dlls to bin folder
 get_filename_component( OGRE_LIBRARY_DIR_DEBUG ${OGRE_LIBRARY_DIRS} PATH )
 set( OGRE_LIBRARY_DIR ${OGRE_LIBRARY_DIRS} )
 set( OGRE_LIBRARY_DIR_DEBUG ${OGRE_LIBRARY_DIR_DEBUG}/debug/lib )
@@ -536,11 +560,12 @@ copy_dll( ${PROJECT_NAME}
 	${OGRE_LIBRARY_DIR_DEBUG}/Codec_STBI_d.lib
 	${OGRE_LIBRARY_DIR}/Codec_STBI.lib
 )
-copy_dll( ${PROJECT_NAME}
-	${Fmod_LIBRARY_DIR}/fmod64.dll
-	${Fmod_LIBRARY_DIR}/fmod64.dll
-)
-
+if ( BUILD_USE_FMOD AND WIN32 )
+	copy_dll( ${PROJECT_NAME}
+		${Fmod_LIBRARY_DIR}/fmod.dll
+		${Fmod_LIBRARY_DIR}/fmod.dll
+	)
+endif ()
 copy_target_directory( ${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Data/cfg cfg )
 
 set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )

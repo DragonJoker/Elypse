@@ -9,7 +9,7 @@ See LICENSE file in root folder
 #include "ElypseLogs.h"
 
 #include <OgreSceneNode.h>
-#include <OgreVector3.h>
+#include <OgreVector.h>
 
 SoundInstance::SoundInstance( SoundObject & p_parent )
 	: owned_by< SoundObject >( p_parent )
@@ -27,20 +27,18 @@ SoundInstance::SoundInstance( SoundObject & p_parent )
 	, m_volumePercent( 1.0 )
 	, m_maxVolume( MAXVOLUME )
 	, m_volume( MAXVOLUME )
+	, m_channel( SoundManager::GetSingletonPtr()->CreateChannel( *GetOwner() ) )
 {
 	//_logMessage( "SoundObject - Media loaded - " + m_soundName);
-	uint32_t l_duration = 0;
-
-	if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( GetOwner()->GetFMODSound(), nullptr, true, & m_channel ) ) )
+	if ( !m_channel )
 	{
 		m_mediaTime = 0.0;
 		m_status = EM_STATUS_NONE;
-		EMUSE_MESSAGE_RELEASE( "Sound " + GetOwner()->GetName() + ", could not create the instance" );
 		return;
 	}
-
-	CHECKFMODERROR( GetOwner()->GetFMODSound()->getLength( & l_duration, FMOD_TIMEUNIT_MS ) );
-	m_mediaTime = Real( l_duration );
+	
+	uint32_t duration = GetOwner()->GetLength();
+	m_mediaTime = Real( duration );
 	m_status = EM_STATUS_READY;
 	EMUSE_MESSAGE_DEBUG( "SoundInstance create : " + GetOwner()->GetName() + ", timed : " + StringConverter::toString( m_mediaTime ) );
 }
@@ -49,7 +47,7 @@ SoundInstance::~SoundInstance()
 {
 	if ( m_status == EM_STATUS_PLAY || m_status == EM_STATUS_PAUSE )
 	{
-		CHECKFMODERROR( m_channel->stop() );
+		m_channel->Stop();
 	}
 }
 
@@ -67,19 +65,12 @@ void SoundInstance::SetNode( SceneNode * p_node )
 
 void SoundInstance::_set3D()
 {
-	//CHECKFMODERROR( GetOwner()->GetFMODSound()->setMode( FMOD_3D));
-	CHECKFMODERROR( m_channel->setMode( FMOD_3D ) );
-	FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
-	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
+	m_channel->Enable3D();
 }
 
 void SoundInstance::SetVelocity( const Vector3 & p_velocity )
 {
-	FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
-	l_velocity.x = p_velocity.x;
-	l_velocity.y = p_velocity.y;
-	l_velocity.z = p_velocity.z;
-	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
+	m_channel->SetVelocity( p_velocity );
 }
 
 void SoundInstance::SetLastPosition()
@@ -89,37 +80,28 @@ void SoundInstance::SetLastPosition()
 		return;
 	}
 
-	const Vector3 & l_lastPos = m_node->_getDerivedPosition();
-	m_lastPosition.x = l_lastPos.x / 100;
-	m_lastPosition.y = l_lastPos.y / 100;
-	m_lastPosition.z = l_lastPos.z / 100;
+	const Vector3 & lastPos = m_node->_getDerivedPosition();
+	m_channel->SetPosition( lastPos / 100 );
 }
 
-void SoundInstance::Update3D( Real p_time )
+void SoundInstance::Update3D( Real time )
 {
 	if ( ! Is3D() )
 	{
 		return;
 	}
 
-	FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
-	Vector3 l_posSound = m_node->_getDerivedPosition();
-	l_posSound.x /= 100;
-	l_posSound.y /= 100;
-	l_posSound.z /= 100;
-	l_velocity.x = ( l_posSound.x - m_lastPosition.x ) / p_time;
-	l_velocity.y = ( l_posSound.y - m_lastPosition.y ) / p_time;
-	l_velocity.z = ( l_posSound.z - m_lastPosition.z ) / p_time;
-	m_lastPosition.x = l_posSound.x;
-	m_lastPosition.y = l_posSound.y;
-	m_lastPosition.z = l_posSound.z;
-	CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
+	Vector3 posSound = m_node->_getDerivedPosition();
+	posSound.x /= 100;
+	posSound.y /= 100;
+	posSound.z /= 100;
+	m_channel->Update3D( posSound / 100, time );
 }
 
-void SoundInstance::Mute( bool p_mute )
+void SoundInstance::Mute( bool mute )
 {
-	m_mute = p_mute;
-	CHECKFMODERROR( m_channel->setMute( p_mute ) );
+	m_mute = mute;
+	m_channel->Mute( mute );
 }
 
 void SoundInstance::UpdateFade( Real p_time, bool p_muted )
@@ -135,17 +117,17 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 
 	if ( m_status != EM_STATUS_LOOP && m_currentTime < m_mediaTime )
 	{
-		uint32_t l_time = 0;
+		uint32_t time = 0;
 
-		if ( ! CHECKFMODERROR( m_channel->getPosition( & l_time, FMOD_TIMEUNIT_MS ) ) )
+		if ( !m_channel->GetTimePosition( time ) )
 		{
 			m_status = EM_STATUS_NONE;
 			return;
 		}
 
-		m_currentTime = Real( l_time );
+		m_currentTime = Real( time );
 
-		if ( l_time == 0 && ! m_looped )
+		if ( time == 0 && ! m_looped )
 		{
 			m_status = EM_STATUS_STOP;
 			return;
@@ -156,7 +138,7 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 	{
 		if ( ! m_looped )
 		{
-			if ( CHECKFMODERROR( m_channel->stop() ) )
+			if ( m_channel->Stop() )
 			{
 				m_status = EM_STATUS_STOP;
 			}
@@ -173,13 +155,13 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 				return;
 			}
 
-			if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( GetOwner()->GetFMODSound(), nullptr, false, & m_channel ) ) )
+			if ( !m_channel->Restart() )
 			{
 				m_status = EM_STATUS_NONE;
 				return;
 			}
 
-			CHECKFMODERROR( m_channel->setMute( m_mute ) );
+			m_channel->Mute( m_mute );
 
 			if ( Is3D() )
 			{
@@ -195,11 +177,11 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 	{
 		if ( m_fadeInTime == 0 )
 		{
-			CHECKFMODERROR( m_channel->setVolume( m_volume ) );
+			m_channel->SetVolume( m_volume );
 			return;
 		}
 
-		CHECKFMODERROR( m_channel->setVolume( m_volume * m_currentTime / m_fadeInTime ) );
+		m_channel->SetVolume( m_volume * m_currentTime / m_fadeInTime );
 		return;
 	}
 
@@ -210,11 +192,11 @@ void SoundInstance::UpdateFade( Real p_time, bool p_muted )
 			return;
 		}
 
-		CHECKFMODERROR( m_channel->setVolume( m_volume * ( m_mediaTime - m_currentTime ) / m_fadeOutTime ) );
+		m_channel->SetVolume( m_volume * ( m_mediaTime - m_currentTime ) / m_fadeOutTime );
 		return;
 	}
 
-	CHECKFMODERROR( m_channel->setVolume( m_volume ) );
+	m_channel->SetVolume( m_volume );
 }
 
 void SoundInstance::Pause()
@@ -224,7 +206,7 @@ void SoundInstance::Pause()
 		return;
 	}
 
-	if ( CHECKFMODERROR( m_channel->setPaused( true ) ) )
+	if ( m_channel->Pause( true ) )
 	{
 		m_status = EM_STATUS_PAUSE;
 	}
@@ -237,9 +219,9 @@ void SoundInstance::Stop()
 		return;
 	}
 
-	if ( CHECKFMODERROR( m_channel->setPaused( true ) ) )
+	if ( m_channel->Pause( true ) )
 	{
-		CHECKFMODERROR( m_channel->setPosition( 0, FMOD_TIMEUNIT_MS ) );
+		m_channel->SetTimePosition( 0 );
 		m_status = EM_STATUS_STOP;
 		m_currentTime = 0;
 	}
@@ -254,7 +236,7 @@ void SoundInstance::Play()
 
 	if ( m_looped )
 	{
-		if ( ! CHECKFMODERROR( m_channel->setPaused( false ) ) )
+		if ( !m_channel->Pause( false ) )
 		{
 			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + GetOwner()->GetName() );
 			return;
@@ -262,21 +244,19 @@ void SoundInstance::Play()
 	}
 	else
 	{
-		if ( ! CHECKFMODERROR( SoundManager::GetSingletonPtr()->GetFMODSystem()->playSound( GetOwner()->GetFMODSound(), nullptr, false, & m_channel ) ) )
+		if ( !m_channel->Restart() )
 		{
 			SoundManager::GetSingletonPtr()->LogMessage( String( "SoundObject::Play - can't play " ) + GetOwner()->GetName() );
 			return;
 		}
 
-		CHECKFMODERROR( m_channel->setVolume( m_volume ) );
+		m_channel->SetVolume( m_volume );
 		m_currentTime = 0.0;
 
 		if ( Is3D() )
 		{
-			_set3D();
 			SetLastPosition();
-			FMOD_VECTOR l_velocity = { 0.0f, 0.0f, 0.0f };
-			CHECKFMODERROR( m_channel->set3DAttributes( & m_lastPosition, & l_velocity ) );
+			_set3D();
 		}
 	}
 
@@ -286,13 +266,5 @@ void SoundInstance::Play()
 void SoundInstance::SetLooped( bool p_looped )
 {
 	m_looped = p_looped;
-
-	if ( p_looped && m_timerTime == 0 )
-	{
-		CHECKFMODERROR( m_channel->setMode( FMOD_LOOP_NORMAL ) );
-	}
-	else
-	{
-		CHECKFMODERROR( m_channel->setMode( FMOD_LOOP_OFF ) );
-	}
+	m_channel->Loop( m_looped && m_timerTime == 0 );
 }

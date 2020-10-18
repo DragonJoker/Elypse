@@ -6,9 +6,9 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	${VERSION_MAJOR} )
 set( ${PROJECT_NAME}_VERSION_MINOR	${VERSION_MINOR} )
 set( ${PROJECT_NAME}_VERSION_BUILD	${VERSION_BUILD} )
 
-find_package( ATL )
-find_package( GDI )
-find_package( GDIPlus )
+find_package( ATL QUIET )
+find_package( GDI QUIET )
+find_package( GDIPlus QUIET )
 
 if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	# Define IDL files
@@ -50,8 +50,7 @@ if ( ATL_FOUND AND GDI_FOUND AND GDIPLUS_FOUND )
 	)
 	target_link_libraries( ${PROJECT_NAME}
 		PRIVATE
-			GeneralLib
-			ElypseCore
+			elypse::Core
 			${ATL_LIBRARIES}
 			${GDI_LIBRARY}
 			${GDIPLUS_LIBRARY}

@@ -4,10 +4,10 @@ cmake_minimum_required( VERSION 3.15 )
 set( MAIN_PROJECT_NAME "ElypsePlayer" )
 
 # Set project version numbers
-set( VERSION_MAJOR	0		)
-set( VERSION_MINOR	9		)
-set( VERSION_BUILD	4		)
-set( VERSION_YEAR	2014	)
+set( VERSION_MAJOR 0 )
+set( VERSION_MINOR 9 )
+set( VERSION_BUILD 5 )
+set( VERSION_YEAR 2020 )
 
 # Used to look for external modules
 set( CMAKE_MODULE_PATH
@@ -34,29 +34,41 @@ include( CompilationFlags )
 include( AStyleUtils )
 include( ExternalDependencies )
 
+if ( VCPKG_TARGET_TRIPLET )
+	set( EL_CONFIG CONFIG )
+endif ()
+
 if ( MSVC OR NOT "${CMAKE_BUILD_TYPE}" STREQUAL "" )
 	# Organize projects into folders
 	set_property( GLOBAL PROPERTY USE_FOLDERS ON )
 
+	option( BUILD_USE_FMOD "Use FMOD audio API instead of OpenAL" OFF )
+
 	#--------------------------------------------------------------------------------------------------
 	#	Looking for needed libraries
 	#--------------------------------------------------------------------------------------------------
-	find_package( Boost REQUIRED date_time filesystem system )
-	find_package( CURL CONFIG REQUIRED )
+	find_package( Boost QUIET REQUIRED date_time filesystem system )
+	find_package( CURL ${EL_CONFIG} QUIET REQUIRED )
+	find_package( ODE ${EL_CONFIG} QUIET REQUIRED )
 	if ( WIN32 )
-		find_package( Ogre CONFIG REQUIRED OgreMain OgreOverlay Codec_STBI )
+		find_package( Ogre ${EL_CONFIG} QUIET REQUIRED OgreMain OgreOverlay Codec_STBI )
 	else ()
-		find_package( Ogre CONFIG REQUIRED OgreMain OgreOverlay Plugin_ParticleFX RenderSystem_GL Codec_STBI )
+		find_package( Ogre ${EL_CONFIG} QUIET REQUIRED OgreMain OgreOverlay Plugin_ParticleFX RenderSystem_GL Codec_STBI )
 	endif ()
-	find_package( ODE CONFIG REQUIRED )
-	find_package( Fmod REQUIRED )
-	find_package( zlib REQUIRED )
-	find_package( libzip REQUIRED )
-	find_package( Freetype CONFIG REQUIRED )
+	if ( BUILD_USE_FMOD )
+		find_package( Fmod QUIET REQUIRED )
+	else ()
+		find_package( OpenAL ${EL_CONFIG} QUIET REQUIRED )
+		find_package( SndFile ${EL_CONFIG} QUIET REQUIRED )
+		find_package( mpg123 QUIET REQUIRED )
+	endif ()
+	find_package( zlib QUIET REQUIRED )
+	find_package( libzip ${EL_CONFIG} QUIET REQUIRED )
+	find_package( Freetype ${EL_CONFIG} QUIET REQUIRED )
 
 	if ( NOT WIN32 )
-		find_package( GTK2 )
-		find_package( X11 )
+		find_package( GTK2 QUIET )
+		find_package( X11 QUIET )
 	else ()
 		set( GTK2_FOUND TRUE )
 	endif ( NOT WIN32 )

@@ -215,6 +215,8 @@ namespace Troll
 			wxMenuItem * m_menuTestProject{ nullptr };
 			AutoCompletionListBox * m_listBox{ nullptr };
 
+			wxAuiManager m_manager;
+
 			// TREES
 			wxAuiNotebook * m_treeTabsContainer{ nullptr };
 			FilesTree * m_filesList{ nullptr };

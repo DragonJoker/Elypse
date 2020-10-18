@@ -69,6 +69,13 @@ namespace Troll
 			return new AuiTabArt( *this );
 		}
 
+		void AuiTabArt::DrawBorder( wxDC & dc
+			, wxWindow * wnd
+			, wxRect const & rect )
+		{
+			DrawBackground( dc, wnd, rect );
+		}
+
 		void AuiTabArt::DrawBackground( wxDC & dc
 			, wxWindow * window
 			, wxRect const & rect )

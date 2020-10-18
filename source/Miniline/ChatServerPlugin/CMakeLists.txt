@@ -4,11 +4,10 @@ set( ${PROJECT_NAME}_VERSION_MAJOR	1 )
 set( ${PROJECT_NAME}_VERSION_MINOR	0 )
 set( ${PROJECT_NAME}_VERSION_BUILD	0 )
 
-find_package( Boost 1.55 REQUIRED locale system )
-find_package( MySQL REQUIRED client )
-find_package( Database )
+find_package( Boost QUIET REQUIRED locale system )
+find_package( database-connector ${EL_CONFIG} QUIET REQUIRED Database DatabasePluginMySql )
 
-if ( DATABASE_FOUND )
+if ( database-connector_FOUND )
 	add_target(
 		${PROJECT_NAME}
 		dll
@@ -27,26 +26,30 @@ if ( DATABASE_FOUND )
 	)
 	target_link_libraries( ${PROJECT_NAME}
 		PUBLIC
-			GeneralLib
-			ElypseServer
-			${Database_LIBRARIES}
+			elypse::Server
+			dbConnector::Database
+
+		PRIVATE
+			dbConnector::DatabasePluginMySql
 	)
 
 	set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )
 	add_target_astyle( ${PROJECT_NAME} ".h;.hpp;.inl;.cpp" )
 
-	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
-	copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_RELEASE} Release )
-	copy_dll( ${PROJECT_NAME} ${MySQL_client_LIBRARY_DEBUG} Debug )
-	copy_dll( ${PROJECT_NAME} ${MySQL_client_LIBRARY_RELEASE} Release )
-	copy_dll( ${PROJECT_NAME} ${Boost_LOCALE_LIBRARY_DEBUG} Debug )
-	copy_dll( ${PROJECT_NAME} ${Boost_LOCALE_LIBRARY_RELEASE} Release )
-	copy_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_DEBUG} Debug )
-	copy_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_RELEASE} Release )
-	
-	if ( WIN32 )
-		copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/../lib/DatabaseConnector/DatabasePluginMySqld.lib Debug )
-		copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/../lib/DatabaseConnector/DatabasePluginMySql.lib  Release )
+	if ( NOT VCPKG_TARGET_TRIPLET )
+		copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DEBUG} Debug )
+		copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_RELEASE} Release )
+		copy_dll( ${PROJECT_NAME} ${MySQL_client_LIBRARY_DEBUG} Debug )
+		copy_dll( ${PROJECT_NAME} ${MySQL_client_LIBRARY_RELEASE} Release )
+		copy_dll( ${PROJECT_NAME} ${Boost_LOCALE_LIBRARY_DEBUG} Debug )
+		copy_dll( ${PROJECT_NAME} ${Boost_LOCALE_LIBRARY_RELEASE} Release )
+		copy_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_DEBUG} Debug )
+		copy_dll( ${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY_RELEASE} Release )
+		
+		if ( WIN32 )
+			copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/../lib/DatabaseConnector/DatabasePluginMySqld.lib Debug )
+			copy_dll( ${PROJECT_NAME} ${Database_LIBRARY_DIR}/../lib/DatabaseConnector/DatabasePluginMySql.lib  Release )
+		endif ()
 	endif ()
 
 	set( Build "yes (version ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_BUILD})" PARENT_SCOPE )
@@ -56,5 +59,5 @@ if ( DATABASE_FOUND )
 		PARENT_SCOPE
 	)
 else ()
-	set( Build "No (missing DatabaseEngine library" )
+	set( Build "No (missing DatabaseConnector library)" PARENT_SCOPE )
 endif ()

@@ -19,8 +19,7 @@ add_target(
 )
 target_link_libraries( ${PROJECT_NAME}
 	PRIVATE
-		GeneralLib
-		ElypseServer
+		elypse::Server
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "Miniline" )

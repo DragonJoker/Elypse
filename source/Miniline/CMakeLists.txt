@@ -15,7 +15,7 @@ function( MinilineBuild )
 		endif()
 
 		if( NOT WIN32 )
-			find_package( X11 )
+			find_package( X11 QUIET )
 		endif()
 
 		if ( Boost_FOUND )

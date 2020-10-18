@@ -5,8 +5,8 @@ set( ${PROJECT_NAME}_VERSION_MINOR	${VERSION_MINOR} )
 set( ${PROJECT_NAME}_VERSION_BUILD	${VERSION_BUILD} )
 
 if ( WIN32 )
-	find_package( GDI )
-	find_package( GDIPlus )
+	find_package( GDI QUIET )
+	find_package( GDIPlus QUIET )
 else ()
 	set( GDI_FOUND ON )
 	set( GDIPLUS_FOUND ON )
@@ -31,8 +31,7 @@ if ( GDI_FOUND AND GDIPLUS_FOUND )
 	)
 	target_link_libraries( ${PROJECT_NAME}
 		PRIVATE
-			GeneralLib
-			ElypseCore
+			elypse::Core
 			${GDI_LIBRARY}
 			${GDIPLUS_LIBRARY}
 	)

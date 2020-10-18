@@ -35,6 +35,9 @@ See LICENSE file in root folder
 #include "GUI/FolderList.h"
 #include "GUI/AboutFrame.h"
 #include "GUI/ReplaceDialog.h"
+#include "GUI/LanguageParser.h"
+#include "GUI/StcContext.h"
+#include "GUI/StcContext.h"
 #include "GUI/Properties/Project/ProjectProperties.h"
 #include "GUI/Properties/Common/PropertiesHolder.h"
 #include "GUI/TimeSequence/TimeLinePanel.h"
@@ -42,9 +45,7 @@ See LICENSE file in root folder
 #include "GUI/TimeSequence/TimeLineContainer.h"
 #include "GUI/TimeSequence/LinePanel.h"
 #include "GUI/TimeSequence/SequencePanel.h"
-#include "GUI/LanguageParser.h"
-#include "GUI/StcContext.h"
-#include "GUI/StcContext.h"
+#include "GUI/Aui/AuiDockArt.h"
 #include "GUI/Aui/AuiTabArt.h"
 #include "Project/ProjectFileWriter.h"
 
@@ -854,23 +855,44 @@ namespace Troll::GUI
 
 	void ProjectFrame::DoInitialiseMainContainers()
 	{
+		m_manager.SetArtProvider( new AuiDockArt );
+		m_manager.SetManagedWindow( this );
+
 		wxSize l_size = GetClientSize();
 		//trees tabs (contains files list, objects list...)
 		m_treeTabsContainer = new wxAuiNotebook( this, wxID_ANY, wxDefaultPosition, wxSize{ m_treesWidth, l_size.y } );
 		m_treeTabsContainer->SetArtProvider( new AuiTabArt );
 		m_treeTabsContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 		m_treeTabsContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
+		m_manager.AddPane( m_treeTabsContainer, wxAuiPaneInfo()
+			.LeftDockable()
+			.RightDockable()
+			.Left()
+			.CaptionVisible( false )
+			.Dock()
+			.Resizable( true )
+			.Floatable( true )
+			.Show() );
+
 		// main tabs (contains text editor, test panel...)
 		m_mainTabsContainer = new wxAuiNotebook( this, wxID_ANY, wxPoint{ m_treesWidth, 0 }, wxSize{ l_size.x - m_treesWidth, l_size.y }, wxBORDER_NONE | wxAUI_NB_MIDDLE_CLICK_CLOSE | wxAUI_NB_CLOSE_ON_ALL_TABS );
 		m_mainTabsContainer->SetArtProvider( new AuiTabArt );
 		m_mainTabsContainer->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 		m_mainTabsContainer->SetForegroundColour( GuiCommon::PanelForegroundColour );
+		m_manager.AddPane( m_mainTabsContainer, wxAuiPaneInfo()
+			.Center()
+			.CaptionVisible( false )
+			.Resizable( true )
+			.Floatable( false )
+			.Show() );
 
 		auto l_sizer = new wxBoxSizer{ wxHORIZONTAL };
 		l_sizer->Add( m_treeTabsContainer, wxSizerFlags().Left() );
 		l_sizer->Add( m_mainTabsContainer, wxSizerFlags( 1 ).Expand() );
 		l_sizer->SetSizeHints( this );
 		SetSizer( l_sizer );
+
+		m_manager.Update();
 	}
 
 	void ProjectFrame::DoInitialiseTrees()
@@ -1017,6 +1039,7 @@ namespace Troll::GUI
 
 	void ProjectFrame::OnClose( wxCloseEvent & p_event )
 	{
+		m_manager.UnInit();
 		CloseElypse();
 		p_event.Skip();
 	}

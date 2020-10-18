@@ -87,7 +87,7 @@ See LICENSE file in root folder
 #include <OgreTexture.h>
 #include <OgreTextureManager.h>
 #include <OgreTextAreaOverlayElement.h>
-#include <OgreVector3.h>
+#include <OgreVector.h>
 #include <OgreViewport.h>
 
 #pragma warning( pop )

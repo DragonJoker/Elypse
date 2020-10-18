@@ -6,7 +6,7 @@ See LICENSE file in root folder
 #include "ParametricLayer.h"
 #include "Surface.h"
 
-#include <OgreVector3.h>
+#include <OgreVector.h>
 #include <OgreAxisAlignedBox.h>
 #include <OgreManualObject.h>
 #include <OgreCamera.h>

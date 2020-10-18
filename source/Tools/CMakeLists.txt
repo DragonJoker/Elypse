@@ -12,8 +12,7 @@ function( ToolsInit )
 endfunction( ToolsInit )
 
 function( ToolsBuild )
-	set( wxWidgets_USE_STATIC ON)
-	find_package( wxWidgets COMPONENTS core base stc aui adv propgrid net )
+	find_package( wxWidgets QUIET REQUIRED core base stc aui adv propgrid net )
 
 	if ( wxWidgets_FOUND AND GTK2_FOUND )
 		if ( BUILD_TOOLS_ELYPSE_BINARY OR BUILD_TOOLS_MUSE_READER OR BUILD_TOOLS_MUSE_WRITER OR BUILD_TOOLS_TROLL_EDITOR )

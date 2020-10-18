@@ -7,14 +7,6 @@ See LICENSE file in root folder
 #include "Elypse.h"
 #include "Module_Gui.h"
 
-namespace FMOD
-{
-	class System;
-	class ChannelGroup;
-	class Channel;
-	class Sound;
-}
-
 namespace Elypse
 {
 	namespace Media
@@ -63,17 +55,32 @@ namespace Elypse
 
 		class VideoImplementation;
 
-		typedef std::map	<String, VideoObject *>			VideoObjectMap;
-		typedef std::map	<EMOverlay *, VideoOverlay *>	VideoOverlayMap;
-		typedef std::map	<Entity *, VideoInstance *>		VideoInstanceMap;
-		typedef std::map	<String, SoundObject *>			SoundObjectMap;
-		typedef std::map	<String, SoundInstance *>		SoundInstanceMap;
-		typedef std::map	<String, SoundPlaylist *>		SoundPlaylistMap;
-		typedef std::set	<SoundInstance *>				SoundInstanceSet;
-		typedef std::map	<String, SoundInstanceSet>		SoundNodeMap;
-		typedef std::vector	<SoundObject *>					EMSoundsPosition;
+		using VideoObjectMap = std::map< String, VideoObject *>;
+		using VideoOverlayMap = std::map< EMOverlay *, VideoOverlay * >;
+		using VideoInstanceMap = std::map< Entity *, VideoInstance * >;
+		using SoundObjectMap = std::map< String, SoundObject * >;
+		using SoundInstanceMap = std::map< String, SoundInstance * >;
+		using SoundPlaylistMap = std::map< String, SoundPlaylist * >;
+		using SoundInstanceSet = std::set< SoundInstance *>;
+		using SoundNodeMap = std::map< String, SoundInstanceSet >;
+		using EMSoundsPosition = std::vector< SoundObject * >;
 
-		typedef std::map	<String, VideoFactory *>			VideoFactoryMap;
+		using VideoFactoryMap = std::map	<String, VideoFactory *>;
+
+		namespace api
+		{
+			class SoundSystem;
+			class Sound;
+			class SoundChannel;
+
+			using SoundSystemPtr = std::unique_ptr< SoundSystem >;
+			using SoundPtr = std::unique_ptr< Sound >;
+			using SoundChannelPtr = std::unique_ptr< SoundChannel >;
+		}
+
+		using SoundSystemPtr = api::SoundSystemPtr;
+		using SoundPtr = api::SoundPtr;
+		using SoundChannelPtr = api::SoundChannelPtr;
 	}
 }
 

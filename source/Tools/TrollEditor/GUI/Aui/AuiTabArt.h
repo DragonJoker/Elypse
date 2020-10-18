@@ -39,17 +39,14 @@ namespace Troll
 
 			virtual wxAuiTabArt * Clone()override;
 
+			void DrawBorder( wxDC & dc
+				, wxWindow * wnd
+				, wxRect const & rect )override;
+
 			void DrawBackground( wxDC & dc
 				, wxWindow * window
 				, wxRect const & rect )override;
-			// DrawTab() draws an individual tab.
-			//
-			// dc       - output dc
-			// in_rect  - rectangle the tab should be confined to
-			// caption  - tab's caption
-			// active   - whether or not the tab is active
-			// out_rect - actual output rectangle
-			// x_extent - the advance x; where the next tab should start
+
 			void DrawTab( wxDC & dc
 				, wxWindow * wnd
 				, const wxAuiNotebookPage & pane
