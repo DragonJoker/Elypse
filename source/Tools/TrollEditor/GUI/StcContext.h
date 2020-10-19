@@ -407,29 +407,13 @@ namespace Troll
 			StcContext();
 			virtual ~StcContext();
 
-			void ParseFile( wxString const & p_strFileName );
-			LanguagesConstIterator Find( wxString const & p_strName )const;
-			LanguagesIterator Find( wxString const & p_strName );
+			void ParseFile( wxString const & fileName );
+			LanguagesConstIterator find( wxString const & name )const;
+			LanguagesIterator find( wxString const & name );
 
 			inline std::size_t GetNbLanguages()const
 			{
 				return m_arrayLanguages.size();
-			}
-			inline LanguagesIterator Begin()
-			{
-				return m_arrayLanguages.begin();
-			}
-			inline LanguagesConstIterator Begin()const
-			{
-				return m_arrayLanguages.begin();
-			}
-			inline LanguagesConstIterator End()const
-			{
-				return m_arrayLanguages.end();
-			}
-			inline LanguagesIterator End()
-			{
-				return m_arrayLanguages.end();
 			}
 			inline bool GetWhiteSpaceEnable()const
 			{
@@ -522,6 +506,26 @@ namespace Troll
 			inline void SetWhiteSpaceEnable( bool val )
 			{
 				m_bWhiteSpaceEnable = val;
+			}
+			inline std::size_t size()const
+			{
+				return m_arrayLanguages.size();
+			}
+			inline LanguagesIterator begin()
+			{
+				return m_arrayLanguages.begin();
+			}
+			inline LanguagesConstIterator begin()const
+			{
+				return m_arrayLanguages.begin();
+			}
+			inline LanguagesConstIterator end()const
+			{
+				return m_arrayLanguages.end();
+			}
+			inline LanguagesIterator end()
+			{
+				return m_arrayLanguages.end();
 			}
 
 		private:

@@ -667,8 +667,11 @@ namespace Troll
 
 		void MainFrame::OnNewProject( wxCommandEvent & p_event )
 		{
-			PropertyDialog l_dialog{ this, TE_TEXT_NEW_PROJECT, new NewProjectProperties };
-
+			PropertyDialog l_dialog{ this
+				, TE_TEXT_NEW_PROJECT
+				, new NewProjectProperties
+				, wxDefaultPosition
+				, wxSize{ 300, 338 } };
 			l_dialog.ShowModal();
 		}
 

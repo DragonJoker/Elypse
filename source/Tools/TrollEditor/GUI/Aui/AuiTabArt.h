@@ -37,11 +37,11 @@ namespace Troll
 		public:
 			AuiTabArt();
 
-			virtual wxAuiTabArt * Clone()override;
+			wxAuiTabArt * Clone()override;
 
 			void DrawBorder( wxDC & dc
 				, wxWindow * wnd
-				, wxRect const & rect )override;
+				, const wxRect & rect )override;
 
 			void DrawBackground( wxDC & dc
 				, wxWindow * window

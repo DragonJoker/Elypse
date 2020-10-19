@@ -317,6 +317,11 @@ namespace Troll
 					return m_grid->Append( CreateProperty( p_name, p_name, p_buttonEvent, p_handler, p_editor ) );
 				}
 
+				inline wxPropertyGrid * DoGetGrid()const
+				{
+					return m_grid;
+				}
+
 			private:
 				/**
 				 *\~english

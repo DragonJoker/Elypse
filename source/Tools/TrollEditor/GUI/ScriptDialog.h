@@ -5,6 +5,8 @@ See LICENSE file in root folder
 #define ___TROLL_GUI_SCRIPT_DIALOG_H___
 
 #include "GUI/TrollEditorGuiPrerequisites.h"
+#include "GUI/StcContext.h"
+#include "GUI/StcTextEditor.h"
 
 #include <wx/dialog.h>
 
@@ -16,7 +18,10 @@ namespace Troll
 			: public wxDialog
 		{
 		public:
-			ScriptDialog( wxWindow * p_parent, wxString const & p_title, wxString const & p_caption, wxString const & p_value );
+			ScriptDialog( wxWindow * parent
+				, wxString const & title
+				, wxString const & caption
+				, wxString const & value );
 
 			inline wxString GetValue()const
 			{
@@ -25,11 +30,12 @@ namespace Troll
 
 		private:
 			DECLARE_EVENT_TABLE()
-			void OnOK( wxCommandEvent & p_event );
-			void OnCancel( wxCommandEvent & p_event );
+			void OnOK( wxCommandEvent & event );
+			void OnCancel( wxCommandEvent & event );
 
 		private:
-			wxTextCtrl * m_script;
+			wxStcTextEditor * m_script;
+			StcContext m_stcContext{};
 		};
 	}
 }

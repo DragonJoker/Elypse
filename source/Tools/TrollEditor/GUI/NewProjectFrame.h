@@ -32,11 +32,7 @@ namespace Troll
 			/**
 			 *\copydoc		Troll::GUI::Properties::ObjectProperty::DoCreateProperties
 			 */
-			virtual void DoCreateProperties( wxPGEditor * p_editor, wxPropertyGrid * p_grid );
-			/**
-			 *\copydoc		Troll::GUI::Properties::ObjectProperty::DoPropertyChange
-			 */
-			virtual void DoPropertyChange( wxPropertyGridEvent & p_event );
+			void DoCreateProperties( wxPGEditor * p_editor )override;
 
 		private:
 			bool DoSelectFolder( wxPGProperty * p_property );
@@ -55,6 +51,7 @@ namespace Troll
 			bool m_shadows{ false };
 			bool m_showDebug{ false };
 			bool m_showFps{ false };
+			bool m_separable{ false };
 			ProjectComponents::AntiAliasing m_antiAliasing{ ProjectComponents::aa0 };
 			ProjectComponents::BackgroundType m_backgroundType{ ProjectComponents::bgColour };
 		};

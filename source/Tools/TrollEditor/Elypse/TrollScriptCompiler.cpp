@@ -167,9 +167,9 @@ namespace Troll
 
 			if ( l_context )
 			{
-				auto && l_it = l_context->Find( wxT( "emscript" ) );
+				auto && l_it = l_context->find( wxT( "emscript" ) );
 
-				if ( l_it != l_context->End() )
+				if ( l_it != l_context->end() )
 				{
 					( *l_it )->AddWord( GUI::eSTC_TYPE_WORD2, make_wxString( p_functionName ) );
 				}
@@ -228,9 +228,9 @@ namespace Troll
 
 			if ( l_context )
 			{
-				auto && l_it = l_context->Find( wxT( "emscript" ) );
+				auto && l_it = l_context->find( wxT( "emscript" ) );
 
-				if ( l_it != l_context->End() )
+				if ( l_it != l_context->end() )
 				{
 					( *l_it )->AddWord( GUI::eSTC_TYPE_WORD2, make_wxString( p_functionName ) );
 				}
@@ -283,9 +283,9 @@ namespace Troll
 
 			if ( l_context )
 			{
-				auto && l_it = l_context->Find( wxT( "emscript" ) );
+				auto && l_it = l_context->find( wxT( "emscript" ) );
 
-				if ( l_it != l_context->End() )
+				if ( l_it != l_context->end() )
 				{
 					( *l_it )->AddWord( GUI::eSTC_TYPE_PREPROCESSOR, make_wxString( p_name ) );
 				}

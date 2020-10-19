@@ -19,30 +19,30 @@ namespace Troll
 			: public wxDialog
 		{
 		public:
-			SceneDependenciesFrame( wxWindow * p_parent
-				, ProjectComponents::ScenePtr p_scene = nullptr
+			SceneDependenciesFrame( wxWindow * parent
+				, ProjectComponents::ScenePtr scene = nullptr
 				, wxString const & title = _( "Scenes dependencies" )
 				, wxPoint const & pos = wxDefaultPosition );
 			~SceneDependenciesFrame();
 
-			void SetScene( ProjectComponents::ScenePtr p_scene );
+			void SetScene( ProjectComponents::ScenePtr scene );
 
 		private:
 			void DoInitialise();
 			void DoPopulateSceneDependencies();
 
 			DECLARE_EVENT_TABLE()
-			void OnClose( wxCloseEvent & p_event );
-			void OnCheckScene( wxCommandEvent & p_event );
-			void OnSelectScene( wxCommandEvent & p_event );
-			void OnOK( wxCommandEvent & p_event );
+			void OnClose( wxCloseEvent & event );
+			void OnCheckScene( wxCommandEvent & event );
+			void OnSelectScene( wxCommandEvent & event );
+			void OnOK( wxCommandEvent & event );
 
 		private:
-			wxComboBox * m_sceneSelector{ nullptr };
-			wxCheckListBox * m_sceneDependencies{ nullptr };
+			wxComboBox * m_sceneSelector{};
+			wxListBox * m_sceneDependencies{};
 
 			ProjectComponents::SceneMap m_scenes;
-			ProjectComponents::ScenePtr m_selectedScene{ nullptr };
+			ProjectComponents::ScenePtr m_selectedScene;
 		};
 	}
 }

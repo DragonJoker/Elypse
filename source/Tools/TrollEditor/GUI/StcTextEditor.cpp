@@ -83,33 +83,25 @@ namespace Troll
 		{
 			wxFont font( 10, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL );
 			SetTabWidth( m_iTabSpaces );
-			SetSelAlpha( 127 );
-			SetSelBackground( true, wxColour( 51, 153, 255, 127 ) );
 			SetViewEOL( m_context.GetDisplayEOLEnable() );
 			SetIndentationGuides( m_context.GetIndentGuideEnable() );
 			SetEdgeMode( m_context.GetLongLineOnEnable() ? wxSTC_EDGE_LINE : wxSTC_EDGE_NONE );
+			SetWhitespaceForeground( m_context.GetWhiteSpaceEnable(), GuiCommon::ActiveTabColour );
 			SetViewWhiteSpace( m_context.GetWhiteSpaceEnable() ? wxSTC_WS_VISIBLEALWAYS : wxSTC_WS_INVISIBLE );
 			SetOvertype( m_context.GetOverTypeInitial() );
 			SetReadOnly( m_context.GetReadOnlyInitial() );
 			SetWrapMode( m_context.GetWrapModeInitial() ? wxSTC_WRAP_WORD : wxSTC_WRAP_NONE );
-			StyleSetFont( wxSTC_STYLE_DEFAULT, font );
-			InitializePrefs( DEFAULT_LANGUAGE );
 			// set visibility
 			SetVisiblePolicy( wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1 );
 			SetXCaretPolicy( wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1 );
 			SetYCaretPolicy( wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1 );
-			// markers
-			MarkerDefine( wxSTC_MARKNUM_FOLDER, wxSTC_MARK_DOTDOTDOT, wxT( "BLACK" ), wxT( "BLACK" ) );
-			MarkerDefine( wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, wxT( "BLACK" ), wxT( "BLACK" ) );
-			MarkerDefine( wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, wxT( "BLACK" ), wxT( "BLACK" ) );
-			MarkerDefine( wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_DOTDOTDOT, wxT( "BLACK" ), wxT( "WHITE" ) );
-			MarkerDefine( wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, wxT( "BLACK" ), wxT( "WHITE" ) );
-			MarkerDefine( wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, wxT( "BLACK" ), wxT( "BLACK" ) );
-			MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, wxT( "BLACK" ), wxT( "BLACK" ) );
 			// miscellaneous
 			m_iLineNrMargin = TextWidth( wxSTC_STYLE_LINENUMBER, wxT( "_999999" ) );
 			m_iFoldingMargin = 16;
+			CmdKeyClear( wxSTC_KEY_TAB, 0 ); // this is done by the menu accelerator key
 			SetLayoutCache( wxSTC_CACHE_PAGE );
+
+			InitializePrefs( DEFAULT_LANGUAGE );
 		}
 
 		wxStcTextEditor::~wxStcTextEditor()
@@ -148,59 +140,54 @@ namespace Troll
 			return ( GetModify() && !GetReadOnly() );
 		}
 
-		wxString wxStcTextEditor::DeterminePrefs( wxString const & p_strFilename )
+		wxString wxStcTextEditor::DeterminePrefs( wxString const & filename )
 		{
-			LanguageInfoPtr l_pCurInfo;
-			wxString l_strReturn;
-			wxString l_strFilepattern;
-			wxString l_strCur;
-
-			for ( LanguagesConstIterator l_it = m_context.Begin(); l_it != m_context.End() && l_strReturn.empty(); ++l_it )
-			{
-				l_pCurInfo = *l_it;
-				l_strFilepattern = l_pCurInfo->GetFilePattern();
-				l_strFilepattern.Lower();
-
-				while ( !l_strFilepattern.empty() && l_strReturn.empty() )
+			wxString result;
+			( void )std::find_if( m_context.begin()
+				, m_context.end()
+				, [&filename, &result]( LanguageInfoPtr const & lookup )
 				{
-					l_strCur = l_strFilepattern.BeforeFirst( ';' );
+					auto filepattern = lookup->GetFilePattern();
+					filepattern.Lower();
 
-					if ( ( l_strCur == p_strFilename ) || ( l_strCur == ( p_strFilename.BeforeLast( '.' ) + wxT( ".*" ) ) ) || ( l_strCur == ( wxT( "*." ) + p_strFilename.AfterLast( '.' ) ) ) )
+					while ( !filepattern.empty() && result.empty() )
 					{
-						l_strReturn = l_pCurInfo->GetName();
-					}
-					else
-					{
-						l_strFilepattern = l_strFilepattern.AfterFirst( ';' );
-					}
-				}
-			}
+						auto cur = filepattern.BeforeFirst( ';' );
 
-			return l_strReturn;
+						if ( ( cur == filename )
+							|| ( cur == ( filename.BeforeLast( '.' ) + wxT( ".*" ) ) )
+							|| ( cur == ( wxT( "*." ) + filename.AfterLast( '.' ) ) ) )
+						{
+							result = lookup->GetName();
+						}
+						else
+						{
+							filepattern = filepattern.AfterFirst( ';' );
+						}
+					}
+
+					return !result.empty();
+				} );
+			return result;
 		}
 
-		bool wxStcTextEditor::InitializePrefs( wxString const & p_strName )
+		bool wxStcTextEditor::InitializePrefs( wxString const & languageName )
 		{
 			StyleClearAll();
-			LanguageInfoPtr l_pCurInfo;
-			bool l_bFound = false;
-
-			for ( LanguagesConstIterator l_it = m_context.Begin(); l_it != m_context.End() && !l_bFound; ++l_it )
-			{
-				l_pCurInfo = *l_it;
-
-				if ( l_pCurInfo->GetName().c_str() == p_strName )
+			auto it = std::find_if( m_context.begin()
+				, m_context.end()
+				, [&languageName]( LanguageInfoPtr const & lookup )
 				{
-					l_bFound = true;
-				}
-			}
+					return lookup->GetName().c_str() == languageName;
+				} );
 
-			if ( l_bFound )
+			if ( it != m_context.end() )
 			{
 				// set lexer and language
-				SetLexer( l_pCurInfo->GetLexerID() );
-				m_pLanguage = l_pCurInfo;
-				StyleInfoPtr const & l_stDefaultStyle = l_pCurInfo->GetStyle( eSTC_TYPE_DEFAULT );
+				LanguageInfoPtr curInfo = *it;
+				SetLexer( curInfo->GetLexerID() );
+				m_pLanguage = curInfo;
+				StyleInfoPtr const & l_stDefaultStyle = curInfo->GetStyle( eSTC_TYPE_DEFAULT );
 				auto const & bgColour = l_stDefaultStyle->GetBackground();
 				auto const & fgColour = l_stDefaultStyle->GetForeground();
 				wxFont l_font( l_stDefaultStyle->GetFontSize(), wxMODERN, wxNORMAL, wxNORMAL, false, l_stDefaultStyle->GetFontName() );
@@ -219,21 +206,23 @@ namespace Troll
 
 				SetBackgroundColour( bgColour );
 				SetForegroundColour( fgColour );
+				SetSelAlpha( 127 );
+				SetSelBackground( true, wxColour( 51, 153, 255, 127 ) );
+				SetFoldMarginColour( true, bgColour );
+				SetFoldMarginHiColour( true, bgColour );
 				// Lines numbers
 				StyleSetForeground( wxSTC_STYLE_LINENUMBER, fgColour );
 				StyleSetBackground( wxSTC_STYLE_LINENUMBER, bgColour );
-				m_iLineNrMargin = 50;
 				SetMarginType( 0, wxSTC_MARGIN_NUMBER );
-				SetMarginWidth( 0, m_iLineNrMargin );
+				SetMarginWidth( 0, 50 );
 				// Symbols
-				m_iFoldingMargin = 16;
 				SetMarginType( 1, wxSTC_MARGIN_SYMBOL );
-				SetMarginWidth( 1, m_iFoldingMargin );
+				SetMarginWidth( 1, 16 );
 				// Folding Markers
 				SetMarginType( 2, wxSTC_MARGIN_SYMBOL );
 				SetMarginMask( 2, wxSTC_MASK_FOLDERS );
 				SetMarginSensitive( 2, true );
-				SetMarginWidth( 2, m_iFoldingMargin );
+				SetMarginWidth( 2, 16 );
 				// Markers
 				MarkerDefine( wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, fgColour, bgColour );
 				MarkerDefine( wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS, fgColour, bgColour );
@@ -242,6 +231,13 @@ namespace Troll
 				MarkerDefine( wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED, fgColour, bgColour );
 				MarkerDefine( wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER, fgColour, bgColour );
 				MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDER, wxSTC_MARK_DOTDOTDOT, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_DOTDOTDOT, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, fgColour, bgColour );
+				MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, fgColour, bgColour );
 
 				MarkerSetBackground( wxSTC_MARKNUM_FOLDER, bgColour );
 				MarkerSetForeground( wxSTC_MARKNUM_FOLDER, fgColour );
@@ -297,13 +293,13 @@ namespace Troll
 					int l_iNbKeywords = 0;
 					int l_iStyle;
 					eSTC_TYPE l_eType;
-					LexerStylesAssoc l_lexerAssoc( l_pCurInfo->GetLexerID() );
+					LexerStylesAssoc l_lexerAssoc( curInfo->GetLexerID() );
 
 					for ( int j = eSTC_TYPE_DEFAULT; j < eSTC_TYPE_COUNT; ++j )
 					{
 						l_eType = eSTC_TYPE( j );
 						l_iStyle = l_lexerAssoc[l_eType];
-						StyleInfoPtr l_stCurType = l_pCurInfo->GetStyle( l_eType );
+						StyleInfoPtr l_stCurType = curInfo->GetStyle( l_eType );
 
 						if ( !l_stCurType )
 						{
@@ -329,20 +325,20 @@ namespace Troll
 						StyleSetVisible( l_iStyle, ( l_stCurType->GetFontStyle() & eSTC_STYLE_HIDDEN ) == 0 );
 						StyleSetCase( l_iStyle, ( l_stCurType->GetLetterCase() ) );
 
-						if ( !l_pCurInfo->GetWords( l_eType ).empty() )
+						if ( !curInfo->GetWords( l_eType ).empty() )
 						{
 							switch ( l_eType )
 							{
 							case eSTC_TYPE_WORD1:
-								SetKeyWords( 0, l_pCurInfo->GetWords( l_eType ).c_str() );
+								SetKeyWords( 0, curInfo->GetWords( l_eType ).c_str() );
 								break;
 
 							case eSTC_TYPE_WORD2:
-								SetKeyWords( 1, l_pCurInfo->GetWords( l_eType ).c_str() );
+								SetKeyWords( 1, curInfo->GetWords( l_eType ).c_str() );
 								break;
 
 							case eSTC_TYPE_WORD3:
-								SetKeyWords( 3, l_pCurInfo->GetWords( l_eType ).c_str() );
+								SetKeyWords( 3, curInfo->GetWords( l_eType ).c_str() );
 								break;
 							}
 
@@ -353,16 +349,16 @@ namespace Troll
 
 				if ( m_context.GetFoldEnable() )
 				{
-					SetMarginWidth( m_iFoldingID, ( ( l_pCurInfo->GetFoldFlags() != 0 ) ? m_iFoldingMargin : 0 ) );
-					SetMarginSensitive( m_iFoldingID, ( ( l_pCurInfo->GetFoldFlags() != 0 ) ) );
-					SetProperty( wxT( "fold" ), ( ( l_pCurInfo->GetFoldFlags() != 0 ) ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.comment" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_COMMENT ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.compact" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_COMPACT ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.preprocessor" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_PREPROC ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.html" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_HTML ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.html.preprocessor" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_HTMLPREP ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.comment.python" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_COMMENTPY ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
-					SetProperty( wxT( "fold.quotes.python" ), ( ( l_pCurInfo->GetFoldFlags() & eSTC_FOLD_QUOTESPY ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetMarginWidth( m_iFoldingID, ( ( curInfo->GetFoldFlags() != 0 ) ? m_iFoldingMargin : 0 ) );
+					SetMarginSensitive( m_iFoldingID, ( ( curInfo->GetFoldFlags() != 0 ) ) );
+					SetProperty( wxT( "fold" ), ( ( curInfo->GetFoldFlags() != 0 ) ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.comment" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_COMMENT ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.compact" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_COMPACT ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.preprocessor" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_PREPROC ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.html" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_HTML ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.html.preprocessor" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_HTMLPREP ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.comment.python" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_COMMENTPY ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
+					SetProperty( wxT( "fold.quotes.python" ), ( ( curInfo->GetFoldFlags() & eSTC_FOLD_QUOTESPY ) > 0 ? wxT( "1" ) : wxT( "0" ) ) );
 				}
 
 				SetFoldFlags( wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED );
@@ -383,13 +379,24 @@ namespace Troll
 				SetWrapMode( m_context.GetWrapModeInitial() ? wxSTC_WRAP_WORD : wxSTC_WRAP_NONE );
 			}
 
-			return l_bFound;
+			return it != m_context.end();
 		}
 
 		void wxStcTextEditor::UpdatePrefs()
 		{
-			wxFileName l_fileName( make_wxString( m_file->FileName ) );
-			InitializePrefs( DeterminePrefs( l_fileName.GetFullName() ) );
+			wxString file;
+
+			if ( m_file )
+			{
+				wxFileName fileName( make_wxString( m_file->FileName ) );
+				file = fileName.GetFullName();
+			}
+			else
+			{
+				file = wxT( "coin.emscript" );
+			}
+
+			InitializePrefs( DeterminePrefs( file ) );
 		}
 
 		void wxStcTextEditor::ReinitContext( StcContext const & p_context )
@@ -402,16 +409,15 @@ namespace Troll
 			return m_file ? m_file->m_scene->GetName() + m_file->FileName : wxT( "NULL" );
 		}
 
-		bool wxStcTextEditor::DoLoadFile( wxString const & p_strFilename )
+		bool wxStcTextEditor::DoLoadFile( wxString const & filename )
 		{
 			wxStyledTextCtrl::ClearAll();
 			wxStyledTextCtrl::SetEOLMode( wxSTC_EOL_LF );
-			m_fileName = p_strFilename;
-			wxFileName l_fileName = p_strFilename;
-			InitializePrefs( DeterminePrefs( l_fileName.GetFullName() ) );
-			wxStyledTextCtrl::LoadFile( p_strFilename );
+			m_fileName = filename;
+			wxStyledTextCtrl::LoadFile( filename );
 			wxStyledTextCtrl::ConvertEOLs( wxSTC_EOL_LF );
 			wxStyledTextCtrl::EmptyUndoBuffer();
+			InitializePrefs( DeterminePrefs( wxFileName{ filename }.GetFullName() ) );
 			return true;
 		}
 
@@ -510,7 +516,7 @@ namespace Troll
 
 		void wxStcTextEditor::OnHilightLang( wxCommandEvent & p_event )
 		{
-			InitializePrefs( ( *( m_context.Begin() + ( p_event.GetId() - gcID_HILIGHTFIRST ) ) )->GetName() );
+			InitializePrefs( ( *( m_context.begin() + ( p_event.GetId() - gcID_HILIGHTFIRST ) ) )->GetName() );
 		}
 
 		void wxStcTextEditor::OnDisplayEOL( wxCommandEvent & WXUNUSED( p_event ) )

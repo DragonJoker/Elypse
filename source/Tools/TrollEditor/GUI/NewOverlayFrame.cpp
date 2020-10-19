@@ -6,7 +6,6 @@
 #include "GUI/ElypseFrame.h"
 #include "GUI/ElypsePanel.h"
 #include "GUI/ProjectFrame.h"
-#include "GUI/ObjectsTree.h"
 #include "GUI/Properties/Common/PropertiesHolder.h"
 #include "Project/2D/Overlay.h"
 #include "Project/Project.h"

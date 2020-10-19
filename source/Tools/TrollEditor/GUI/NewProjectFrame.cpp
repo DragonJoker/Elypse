@@ -19,23 +19,6 @@ namespace Troll
 
 		namespace
 		{
-			wxString PROPERTY_CATEGORY_PROJECT;
-			wxString PROPERTY_PROJECT_RESOLUTION;
-			wxString PROPERTY_PROJECT_BACKGROUND_TYPE;
-			std::array< wxString, BackgroundTypeCount > PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS;
-			std::array< int, BackgroundTypeCount > PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES;
-			wxString PROPERTY_PROJECT_BACKGROUND_SELECT;
-			wxString PROPERTY_PROJECT_SHADOWS;
-			wxString PROPERTY_PROJECT_ANTIALIASING;
-			std::array< wxString, AntialiasingCount > PROPERTY_PROJECT_ANTIALIASING_TEXTS;
-			std::array< int, AntialiasingCount > PROPERTY_PROJECT_ANTIALIASING_VALUES;
-			wxString PROPERTY_PROJECT_CONSOLE;
-			wxString PROPERTY_PROJECT_SHOW_FPS;
-			wxString PROPERTY_PROJECT_STARTUP_SCRIPT;
-			wxString PROPERTY_PROJECT_NAME;
-			wxString PROPERTY_PROJECT_MAIN_SCENE_NAME;
-			wxString PROPERTY_PROJECT_FOLDER;
-
 			const wxString DEFAULT_PROJECT_NAME = _( "Project name" );
 			const wxString DEFAULT_SCENE_NAME = _( "Scene name" );
 			const wxString DEFAULT_FOLDER = _( "Path" );
@@ -48,22 +31,6 @@ namespace Troll
 			, m_sceneName{ DEFAULT_SCENE_NAME }
 			, m_path{ DEFAULT_FOLDER }
 		{
-			PROPERTY_CATEGORY_PROJECT = _( "New Project" );
-			PROPERTY_PROJECT_RESOLUTION = _( "Resolution" );
-			PROPERTY_PROJECT_BACKGROUND_TYPE = _( "Background type" );
-			PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS = { _( "Colour" ), _( "Image" ) };
-			PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES = { bgColour, bgImage };
-			PROPERTY_PROJECT_BACKGROUND_SELECT = _( "Choose" );
-			PROPERTY_PROJECT_SHADOWS = _( "Shadows" );
-			PROPERTY_PROJECT_ANTIALIASING = _( "Anti Aliasing" );
-			PROPERTY_PROJECT_ANTIALIASING_TEXTS = { _( "None" ), _( "2x" ), _( "4x" ) };
-			PROPERTY_PROJECT_ANTIALIASING_VALUES = { aa0, aa2x, aa4x };
-			PROPERTY_PROJECT_CONSOLE = _( "Console" );
-			PROPERTY_PROJECT_SHOW_FPS = _( "Show FPS" );
-			PROPERTY_PROJECT_STARTUP_SCRIPT = _( "Startup Script" );
-			PROPERTY_PROJECT_NAME = _( "Project Name" );
-			PROPERTY_PROJECT_MAIN_SCENE_NAME = _( "Main Scene Name" );
-			PROPERTY_PROJECT_FOLDER = _( "Project Folder" );
 		}
 
 		NewProjectProperties::~NewProjectProperties()
@@ -108,76 +75,93 @@ namespace Troll
 
 			if ( m_backgroundType == ProjectComponents::bgColour )
 			{
-				wxGetApp().GetMainFrame()->SetProject( std::make_shared< ProjectComponents::Project >( m_name, m_sceneName, m_path, m_backgroundType, m_bgColour, m_shadows, m_antiAliasing, m_resolution ) );
+				wxGetApp().GetMainFrame()->SetProject( std::make_shared< ProjectComponents::Project >( m_name
+					, m_sceneName
+					, m_path
+					, m_backgroundType
+					, m_bgColour
+					, m_shadows
+					, m_antiAliasing
+					, m_resolution ) );
 			}
 			else
 			{
-				wxGetApp().GetMainFrame()->SetProject( std::make_shared< ProjectComponents::Project >( m_name, m_sceneName, m_path, m_backgroundType, m_bgImage, m_shadows, m_antiAliasing, m_resolution ) );
+				wxGetApp().GetMainFrame()->SetProject( std::make_shared< ProjectComponents::Project >( m_name
+					, m_sceneName
+					, m_path
+					, m_backgroundType
+					, m_bgImage
+					, m_shadows
+					, m_antiAliasing
+					, m_resolution ) );
 			}
 
 			return true;
 		}
 
-		void NewProjectProperties::DoCreateProperties( wxPGEditor * p_editor, wxPropertyGrid * p_grid )
+		void NewProjectProperties::DoCreateProperties( wxPGEditor * editor )
 		{
-			wxPGChoices l_bgTypes{ make_wxArrayString( PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS ), make_wxArrayInt( PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES ) };
-			wxString l_bgType{ PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS[m_backgroundType] };
-			wxPGChoices l_aas{ make_wxArrayString( PROPERTY_PROJECT_ANTIALIASING_TEXTS ), make_wxArrayInt( PROPERTY_PROJECT_ANTIALIASING_VALUES ) };
-			wxString l_aa{ PROPERTY_PROJECT_ANTIALIASING_TEXTS[m_antiAliasing] };
+			wxString const PROPERTY_PROJECT_NAME = _( "Project Name" );
+			wxString const PROPERTY_PROJECT_FOLDER = _( "Project Folder" );
+			wxString const PROPERTY_PROJECT_MAIN_SCENE_NAME = _( "Main Scene Name" );
+			wxString const PROPERTY_PROJECT_SEPARABLE = _( "Separable scenes" );
+			wxString const PROPERTY_PROJECT_RESOLUTION = _( "Resolution" );
+			wxString const PROPERTY_PROJECT_BACKGROUND_TYPE = _( "Background type" );
+			std::array< wxString, BackgroundTypeCount > const PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS = { _( "Colour" ), _( "Image" ) };
+			std::array< int, BackgroundTypeCount > const PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES = { bgColour, bgImage };
+			wxString const PROPERTY_PROJECT_BACKGROUND_SELECT = _( "Choose" );
+			wxString const PROPERTY_PROJECT_SHADOWS = _( "Shadows" );
+			wxString const PROPERTY_PROJECT_ANTIALIASING = _( "Anti Aliasing" );
+			std::array< wxString, AntialiasingCount > const PROPERTY_PROJECT_ANTIALIASING_TEXTS = { _( "None" ), _( "2x" ), _( "4x" ) };
+			std::array< int, AntialiasingCount > const PROPERTY_PROJECT_ANTIALIASING_VALUES = { aa0, aa2x, aa4x };
+			wxString const PROPERTY_PROJECT_CONSOLE = _( "Console" );
+			wxString const PROPERTY_PROJECT_SHOW_FPS = _( "Show FPS" );
+			wxString const PROPERTY_PROJECT_STARTUP_SCRIPT = _( "Startup Script" );
 
-			p_grid->Append( new wxPropertyCategory( PROPERTY_CATEGORY_PROJECT ) );
-			p_grid->Append( new wxStringProperty( PROPERTY_PROJECT_NAME, PROPERTY_PROJECT_NAME ) )->SetValue( m_name );
-			p_grid->Append( new wxStringProperty( PROPERTY_PROJECT_MAIN_SCENE_NAME, PROPERTY_PROJECT_MAIN_SCENE_NAME ) )->SetValue( m_sceneName );
-			p_grid->Append( CreateProperty( PROPERTY_PROJECT_FOLDER, PROPERTY_PROJECT_FOLDER, static_cast< ButtonEventMethod >( &NewProjectProperties::DoSelectFolder ), this, p_editor ) );
-			p_grid->Append( new wxSizeProperty( PROPERTY_PROJECT_RESOLUTION, PROPERTY_PROJECT_RESOLUTION, m_resolution ) );
-			p_grid->Append( new wxEnumProperty( PROPERTY_PROJECT_BACKGROUND_TYPE, PROPERTY_PROJECT_BACKGROUND_TYPE, l_bgTypes ) )->SetValue( l_bgType );
-			p_grid->Append( CreateProperty( PROPERTY_PROJECT_BACKGROUND_SELECT, PROPERTY_PROJECT_BACKGROUND_SELECT, static_cast< ButtonEventMethod >( &NewProjectProperties::DoSelectBackground ), this, p_editor ) );
-			p_grid->Append( new wxBoolProperty( PROPERTY_PROJECT_SHADOWS, PROPERTY_PROJECT_SHADOWS ) )->SetValue( m_shadows );
-			p_grid->Append( new wxEnumProperty( PROPERTY_PROJECT_ANTIALIASING, PROPERTY_PROJECT_ANTIALIASING, l_aas ) )->SetValue( l_aa );
-			p_grid->Append( new wxBoolProperty( PROPERTY_PROJECT_CONSOLE, PROPERTY_PROJECT_CONSOLE ) )->SetValue( m_showDebug );
-			p_grid->Append( new wxBoolProperty( PROPERTY_PROJECT_SHOW_FPS, PROPERTY_PROJECT_SHOW_FPS ) )->SetValue( m_showFps );
-			p_grid->Append( CreateProperty( PROPERTY_PROJECT_STARTUP_SCRIPT, PROPERTY_PROJECT_STARTUP_SCRIPT, static_cast< ButtonEventMethod >( &NewProjectProperties::DoChangeStartupScript ), this, p_editor ) );
-		}
+			wxPGChoices bgTypes{ make_wxArrayString( PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS ), make_wxArrayInt( PROPERTY_PROJECT_BACKGROUND_TYPE_VALUES ) };
+			wxString bgType{ PROPERTY_PROJECT_BACKGROUND_TYPE_TEXTS[m_backgroundType] };
+			wxPGChoices aas{ make_wxArrayString( PROPERTY_PROJECT_ANTIALIASING_TEXTS ), make_wxArrayInt( PROPERTY_PROJECT_ANTIALIASING_VALUES ) };
+			wxString aa{ PROPERTY_PROJECT_ANTIALIASING_TEXTS[m_antiAliasing] };
 
-		void NewProjectProperties::DoPropertyChange( wxPropertyGridEvent & p_event )
-		{
-			wxPGProperty * l_property = p_event.GetProperty();
-
-			if ( l_property )
-			{
-				if ( l_property->GetName() == PROPERTY_PROJECT_NAME )
+			DoAddProperty( PROPERTY_PROJECT_NAME, m_name, [this]( wxPGProperty * property )
 				{
-					m_name = l_property->GetValueAsString();
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_MAIN_SCENE_NAME )
+					m_name = property->GetValue().GetString();
+				} );
+			DoAddProperty( PROPERTY_PROJECT_FOLDER, ButtonEventHandler( NewProjectProperties::DoSelectFolder ), this, editor );
+			DoAddProperty( PROPERTY_PROJECT_MAIN_SCENE_NAME, m_sceneName, [this]( wxPGProperty * property )
 				{
-					m_sceneName = l_property->GetValueAsString();
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_RESOLUTION )
+					m_sceneName = property->GetValue().GetString();
+				} );
+			DoAddProperty( PROPERTY_PROJECT_SEPARABLE, m_project->GetSeparable(), [this]( wxPGProperty * property )
 				{
-					m_resolution = wxSizeRefFromVariant( l_property->GetValue() );
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_BACKGROUND_TYPE )
+					m_separable = property->GetValue();
+				} );
+			DoAddProperty( PROPERTY_PROJECT_RESOLUTION, m_project->GetResolution(), [this]( wxPGProperty * property )
 				{
-					m_backgroundType = ProjectComponents::BackgroundType( GetValue< int >( l_property->GetValue() ) );
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_SHADOWS )
+					m_resolution = wxSizeRefFromVariant( property->GetValue() );
+				} );
+			DoAddProperty( PROPERTY_PROJECT_BACKGROUND_TYPE, bgTypes, bgType, [this]( wxPGProperty * property )
 				{
-					m_shadows = l_property->GetValue();
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_ANTIALIASING )
+					m_backgroundType = ProjectComponents::BackgroundType( GetValue< int >( property->GetValue() ) );
+				} );
+			DoAddProperty( PROPERTY_PROJECT_BACKGROUND_SELECT, ButtonEventHandler( NewProjectProperties::DoSelectBackground ), this, editor );
+			DoAddProperty( PROPERTY_PROJECT_SHADOWS, m_project->GetShadows(), [this]( wxPGProperty * property )
 				{
-					m_antiAliasing = ProjectComponents::AntiAliasing( GetValue< int >( l_property->GetValue() ) );
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_CONSOLE )
+					m_shadows = property->GetValue();
+				} );
+			DoAddProperty( PROPERTY_PROJECT_ANTIALIASING, aas, aa, [this]( wxPGProperty * property )
 				{
-					m_showDebug = l_property->GetValue();
-				}
-				else if ( l_property->GetName() == PROPERTY_PROJECT_SHOW_FPS )
+					m_antiAliasing = ProjectComponents::AntiAliasing( GetValue< int >( property->GetValue() ) );
+				} );
+			DoAddProperty( PROPERTY_PROJECT_CONSOLE, m_project->GetShowDebug(), [this]( wxPGProperty * property )
 				{
-					m_showFps = l_property->GetValue();
-				}
-			}
+					m_showDebug = property->GetValue();
+				} );
+			DoAddProperty( PROPERTY_PROJECT_SHOW_FPS, m_project->GetShowFPS(), [this]( wxPGProperty * property )
+				{
+					m_showFps = property->GetValue();
+				} );
+			DoAddProperty( PROPERTY_PROJECT_STARTUP_SCRIPT, ButtonEventHandler( NewProjectProperties::DoChangeStartupScript ), this, editor );
 		}
 
 		bool NewProjectProperties::DoSelectFolder( wxPGProperty * p_property )
@@ -223,15 +207,15 @@ namespace Troll
 
 		bool NewProjectProperties::DoChangeStartupScript( wxPGProperty * p_property )
 		{
-			wxString l_value{ m_startupScript };
-			l_value.Replace( ';', ";\n" );
-			ScriptDialog l_dialog{ nullptr, _( "Startup Script" ), _( "Modify the startup script" ), l_value };
+			wxString value{ m_startupScript };
+			value.Replace( ';', ";\n" );
+			ScriptDialog dialog{ nullptr, _( "Startup Script" ), _( "Modify the startup script" ), value };
 
-			if ( l_dialog.ShowModal() == wxID_OK )
+			if ( dialog.ShowModal() == wxID_OK )
 			{
-				l_value = l_dialog.GetValue();
-				l_value.Replace( ";\n", ";" );
-				m_startupScript = l_value;
+				value = dialog.GetValue();
+				value.Replace( ";\n", ";" );
+				m_startupScript = value;
 			}
 
 			return false;

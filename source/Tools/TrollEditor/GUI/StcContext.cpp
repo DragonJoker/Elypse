@@ -144,40 +144,40 @@ namespace Troll
 			m_arrayLanguages.clear();
 		}
 
-		void StcContext::ParseFile( wxString const & p_strFileName )
+		void StcContext::ParseFile( wxString const & fileName )
 		{
-			LanguageFileParser l_parser( this );
-			l_parser.ParseFile( ( wxChar const * )p_strFileName.c_str() );
+			LanguageFileParser parser( this );
+			parser.ParseFile( ( wxChar const * )fileName.c_str() );
 		}
 
-		LanguagesConstIterator StcContext::Find( wxString const & p_strName )const
+		LanguagesConstIterator StcContext::find( wxString const & name )const
 		{
-			LanguagesConstIterator l_itReturn = End();
+			LanguagesConstIterator result = end();
 
-			for ( LanguagesConstIterator l_it = Begin(); l_it != End() && l_itReturn == End(); ++l_it )
+			for ( LanguagesConstIterator it = begin(); it != end() && result == end(); ++it )
 			{
-				if ( ( *l_it )->GetName() == p_strName )
+				if ( ( *it )->GetName() == name )
 				{
-					l_itReturn = l_it;
+					result = it;
 				}
 			}
 
-			return l_itReturn;
+			return result;
 		}
 
-		LanguagesIterator StcContext::Find( wxString const & p_strName )
+		LanguagesIterator StcContext::find( wxString const & name )
 		{
-			LanguagesIterator l_itReturn = End();
+			LanguagesIterator result = end();
 
-			for ( LanguagesIterator l_it = Begin(); l_it != End() && l_itReturn == End(); ++l_it )
+			for ( LanguagesIterator it = begin(); it != end() && result == end(); ++it )
 			{
-				if ( ( *l_it )->GetName() == p_strName )
+				if ( ( *it )->GetName() == name )
 				{
-					l_itReturn = l_it;
+					result = it;
 				}
 			}
 
-			return l_itReturn;
+			return result;
 		}
 	}
 }

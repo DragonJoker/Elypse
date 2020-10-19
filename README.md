@@ -1,3 +1,8 @@
+<p align="center">
+  <a href="https://github.com/DragonJoker/Elypse/actions?query=workflow%3ABuild+event%3Apush"><img alt="Build status" src="https://github.com/DragonJoker/Elypse/workflows/Build/badge.svg?event=push"></a>
+</p>
+
+
 Elypse
 ======
 

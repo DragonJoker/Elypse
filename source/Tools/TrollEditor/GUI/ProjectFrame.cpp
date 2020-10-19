@@ -25,7 +25,6 @@ See LICENSE file in root folder
 #include "GUI/ElypsePanel.h"
 #include "GUI/NewProjectFrame.h"
 #include "GUI/NewSceneFrame.h"
-#include "GUI/SceneDependenciesFrame.h"
 #include "GUI/LogListBox.h"
 #include "GUI/FunctionsTree.h"
 #include "GUI/FilesTree.h"
@@ -897,14 +896,14 @@ namespace Troll::GUI
 
 	void ProjectFrame::DoInitialiseTrees()
 	{
-		wxSize l_size = m_mainTabsContainer->GetClientSize();
-		//files list
-		m_filesList = new FilesTree( m_treeTabsContainer, this, wxDefaultPosition, wxSize{ l_size.x - m_treesWidth, l_size.y }, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
+		wxSize size = m_mainTabsContainer->GetClientSize();
+
+		m_filesList = new FilesTree( m_treeTabsContainer, this, wxDefaultPosition, wxSize{ size.x - m_treesWidth, size.y }, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSIMPLE_BORDER );
 		m_filesList->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 		m_filesList->SetForegroundColour( GuiCommon::PanelForegroundColour );
 		m_treeTabsContainer->AddPage( m_filesList, TE_PROJECT_FILES, true );
-		//functions list
-		m_functionsList = new FunctionsTree( m_treeTabsContainer, this, wxDefaultPosition, wxSize{ l_size.x - m_treesWidth, l_size.y }, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSUNKEN_BORDER );
+
+		m_functionsList = new FunctionsTree( m_treeTabsContainer, this, wxDefaultPosition, wxSize{ size.x - m_treesWidth, size.y }, wxTR_DEFAULT_STYLE | wxTR_EDIT_LABELS | wxSIMPLE_BORDER );
 		m_functionsList->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 		m_functionsList->SetForegroundColour( GuiCommon::PanelForegroundColour );
 		m_treeTabsContainer->AddPage( m_functionsList, TE_FUNCTIONS, false );
@@ -1279,7 +1278,7 @@ namespace Troll::GUI
 	{
 		//std::cout << "ProjectFrame::ShowObjectInfos\n";
 		m_objectInfosContainer->Clear();
-		auto l_properties = p_object->CreateProperties( m_objectInfosContainer );
+		p_object->CreateProperties( m_objectInfosContainer );
 		m_viewedObject = p_object;
 	}
 }

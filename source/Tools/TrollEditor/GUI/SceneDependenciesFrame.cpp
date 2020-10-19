@@ -18,96 +18,131 @@ namespace Troll
 {
 	namespace GUI
 	{
+		namespace
+		{
+			int constexpr MarginSize = 10;
+		}
+
 		enum SceneDependenciesFrameIDs
 		{
 			sdfSceneSelector,
 			sdfSceneDependencies,
 		};
 
-		SceneDependenciesFrame::SceneDependenciesFrame( wxWindow * p_parent
-			, ProjectComponents::ScenePtr p_scene
+		SceneDependenciesFrame::SceneDependenciesFrame( wxWindow * parent
+			, ProjectComponents::ScenePtr scene
 			, wxString const & title
 			, wxPoint const & pos )
-			: wxDialog{ p_parent, wxID_ANY, title, pos, wxSize( 200, 300 ), wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT | wxFRAME_TOOL_WINDOW }
-			, m_selectedScene{ p_scene }
+			: wxDialog{ parent, wxID_ANY, title, pos, wxSize{ 200, 300 }, wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxFRAME_FLOAT_ON_PARENT | wxFRAME_TOOL_WINDOW }
+			, m_selectedScene{ scene }
 		{
+			int const WindowWidth = GetClientSize().x;
+			int const WindowHeight = GetClientSize().y;
+			int const WindowHalfWidth = WindowWidth / 2;
+			int const ButtonWidth = 70;
+			int const ButtonHeight = 25;
+			int EditWidth = 40;
+			int const EditHeight = 25;
+			int ComboWidth = WindowWidth - EditWidth - ( 3 * MarginSize );
+			int const ListWidth = WindowWidth - ( 2 * MarginSize );
+			int const ListHeight = WindowHeight - ( 5 * MarginSize ) - ButtonHeight - EditHeight;
+
 			SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 			SetForegroundColour( GuiCommon::PanelForegroundColour );
 
-			wxArrayString l_values;
-			wxString l_value;
-			wxPoint l_position( GetClientSize().x / 2, 10 );
-			m_sceneSelector = BuildComboBox( this, l_position, sdfSceneSelector, _( "Scene" ), l_values, l_value );
+			auto top = MarginSize;
+			auto left = MarginSize;
+
+			wxStaticText * text = new wxStaticText{ this
+				, wxID_ANY
+				, _( "Scene" )
+				, wxPoint{ left, top }
+				, wxSize{ EditWidth, EditHeight }
+				, wxTE_MULTILINE };
+			text->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
+			text->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			auto textExtent = text->GetTextExtent( text->GetLabel() );
+			auto textH = textExtent.y;
+			EditWidth = textExtent.x;
+			ComboWidth = WindowWidth - EditWidth - ( 3 * MarginSize );
+			// Adjust vertical position, since no vertical alignment stlye for wxStaticText.
+			top += ( EditHeight - textH ) / 2;
+			text->SetPosition( wxPoint{ left, top } );
+			text->SetSize( wxSize{ EditWidth, EditHeight } );
+			top -= ( EditHeight - textH ) / 2;
+			left += EditWidth + MarginSize;
+			wxString value;
+			wxArrayString values;
+			m_sceneSelector = new wxComboBox{ this
+				, sdfSceneSelector
+				, value
+				, wxPoint{ left, top }
+				, wxSize{ ComboWidth, EditHeight }
+				, values
+				, wxBORDER_SIMPLE | wxCB_READONLY };
 			m_sceneSelector->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 			m_sceneSelector->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			top += EditHeight + MarginSize;
 
-			m_sceneDependencies = new wxCheckListBox( this
+			left = MarginSize;
+			m_sceneDependencies = new wxListBox{ this
 				, sdfSceneDependencies
-				, wxPoint( 10, 35 )
-				, wxSize( GetClientSize().x - 20, GetClientSize().y - 70 )
+				, wxPoint{ left, top }
+				, wxSize{ ListWidth, ListHeight }
 				, wxArrayString{}
-				, wxLB_SINGLE | wxLB_NEEDED_SB );
+				, wxLB_EXTENDED };
 			m_sceneDependencies->SetBackgroundColour( GuiCommon::PanelBackgroundColour );
 			m_sceneDependencies->SetForegroundColour( GuiCommon::PanelForegroundColour );
+			top += ListHeight + MarginSize;
+
+			left = WindowHalfWidth - ButtonWidth / 2;
+			new GuiCommon::GradientButton{ this
+				, wxID_OK
+				, _( "Close" )
+				, wxPoint{ left, top }
+				, wxSize{ ButtonWidth, ButtonHeight } };
+			top += ButtonHeight + MarginSize;
+			SetClientSize( wxSize{ WindowWidth, top } );
 
 			DoInitialise();
-
-			auto l_sizerBtn = new wxBoxSizer( wxHORIZONTAL );
-			l_sizerBtn->AddStretchSpacer();
-			l_sizerBtn->Add( new GuiCommon::GradientButton( this, wxID_OK, _( "Close" ), wxPoint( 65, GetClientSize().y - 35 ), wxSize( 70, 25 ) ) );
-			l_sizerBtn->AddStretchSpacer();
-
-			auto l_sizerAll = new wxBoxSizer( wxVERTICAL );
-			l_sizerAll->Add( m_sceneSelector, wxSizerFlags().Border( wxALL, 10 ) );
-			l_sizerAll->Add( m_sceneDependencies, wxSizerFlags().Border( wxLEFT | wxRIGHT | wxBOTTOM, 10 ) );
-			l_sizerAll->Add( l_sizerBtn, wxSizerFlags().Border( wxBOTTOM, 10 ) );
-
-			l_sizerAll->SetSizeHints( this );
-			SetSizer( l_sizerAll );
 		}
 
-		void SceneDependenciesFrame::SetScene( ProjectComponents::ScenePtr p_scene )
+		void SceneDependenciesFrame::SetScene( ProjectComponents::ScenePtr scene )
 		{
-			m_selectedScene = p_scene;
+			m_selectedScene = scene;
 			DoInitialise();
 		}
 
 		void SceneDependenciesFrame::DoInitialise()
 		{
-			if ( !wxGetApp().GetMainFrame()->GetProject() || !wxGetApp().GetMainFrame()->GetProject()->HasMainScene() )
+			auto mainFrame = wxGetApp().GetMainFrame();
+
+			if ( !mainFrame->GetProject() || !mainFrame->GetProject()->HasMainScene() )
 			{
 				return;
 			}
 
-			for ( auto & l_scene : wxGetApp().GetMainFrame()->GetProject()->GetScenes() )
+			auto project = mainFrame->GetProject();
+
+			for ( auto & scene : project->GetScenes() )
 			{
-				m_scenes.insert( { l_scene->GetName(), l_scene } );
+				m_scenes.emplace( scene->GetName(), scene );
 			}
 
-			m_scenes.insert( { wxGetApp().GetMainFrame()->GetProject()->GetMainScene()->GetName(), wxGetApp().GetMainFrame()->GetProject()->GetMainScene() } );
-			wxArrayString l_values;
-			wxString l_value;
+			m_scenes.emplace( project->GetMainScene()->GetName(), project->GetMainScene() );
 			m_sceneSelector->Clear();
 
-			if ( m_selectedScene )
+			if ( !m_selectedScene && !m_scenes.empty() )
 			{
-				l_value = m_selectedScene->GetName();
+				m_selectedScene = m_scenes.begin()->second;
 			}
 
-			for ( auto && l_it : m_scenes )
+			for ( auto it : m_scenes )
 			{
-				if ( l_value.empty() )
-				{
-					l_value = l_it.first;
-					m_selectedScene = l_it.second;
-				}
-
-				l_values.push_back( l_it.first );
-				m_sceneSelector->Insert( l_it.first, 0 );
+				m_sceneSelector->AppendString( it.first );
 			}
 
 			m_sceneSelector->SetSelection( 0 );
-			wxPoint l_position( GetClientSize().x / 2, 10 );
 			DoPopulateSceneDependencies();
 		}
 
@@ -118,85 +153,92 @@ namespace Troll
 
 		void SceneDependenciesFrame::DoPopulateSceneDependencies()
 		{
-			wxArrayString l_values;
-			auto && l_scenesThatNeedMe = m_selectedScene->GetScenesThatNeedMe();
+			wxArrayString values;
+			auto scenesThatNeedMe = m_selectedScene->GetScenesThatNeedMe();
 
-			for ( auto && l_it : m_scenes )
+			for ( auto it : m_scenes )
 			{
-				if ( l_it.second != m_selectedScene && std::find( l_scenesThatNeedMe.begin(), l_scenesThatNeedMe.end(), l_it.first ) == l_scenesThatNeedMe.end() )
+				if ( it.second != m_selectedScene
+					&& scenesThatNeedMe.end() == std::find( scenesThatNeedMe.begin()
+						, scenesThatNeedMe.end()
+						, it.first ) )
 				{
-					l_values.push_back( l_it.first );
+					values.push_back( it.first );
 				}
 			}
 
 			m_sceneDependencies->Clear();
-			m_sceneDependencies->Append( l_values );
-			uint32_t l_cpt = 0;
+			m_sceneDependencies->Append( values );
+			uint32_t cpt = 0;
 
-			for ( auto && l_it : m_scenes )
+			for ( auto it : m_scenes )
 			{
-				if ( l_it.second != m_selectedScene && std::find( l_scenesThatNeedMe.begin(), l_scenesThatNeedMe.end(), l_it.first ) == l_scenesThatNeedMe.end() )
+				if ( it.second != m_selectedScene
+					&& scenesThatNeedMe.end() == std::find( scenesThatNeedMe.begin()
+						, scenesThatNeedMe.end()
+						, it.first ) )
 				{
-					auto && l_scenesThatNeedMe2 = l_it.second->GetScenesThatNeedMe();
+					auto scenesThatNeedMe2 = it.second->GetScenesThatNeedMe();
 
-					if ( std::find( l_scenesThatNeedMe2.begin(), l_scenesThatNeedMe2.end(), m_selectedScene->GetName() ) != l_scenesThatNeedMe2.end() )
+					if ( scenesThatNeedMe2.end() != std::find( scenesThatNeedMe2.begin()
+						, scenesThatNeedMe2.end()
+						, m_selectedScene->GetName() ) )
 					{
-						m_sceneDependencies->Check( l_cpt, true );
+						m_sceneDependencies->Select( cpt );
 					}
 
-					l_cpt++;
+					cpt++;
 				}
 			}
 		}
 
 		BEGIN_EVENT_TABLE( SceneDependenciesFrame, wxDialog )
 			EVT_CLOSE( SceneDependenciesFrame::OnClose )
-			EVT_CHECKLISTBOX( sdfSceneDependencies, SceneDependenciesFrame::OnCheckScene )
+			EVT_LISTBOX( sdfSceneDependencies, SceneDependenciesFrame::OnCheckScene )
 			EVT_COMBOBOX( sdfSceneSelector, SceneDependenciesFrame::OnSelectScene )
 			EVT_BUTTON( wxID_OK, SceneDependenciesFrame::OnOK )
 		END_EVENT_TABLE()
 
-		void SceneDependenciesFrame::OnClose( wxCloseEvent & p_event )
+		void SceneDependenciesFrame::OnClose( wxCloseEvent & event )
 		{
 			Hide();
 		}
 
-		void SceneDependenciesFrame::OnCheckScene( wxCommandEvent & p_event )
+		void SceneDependenciesFrame::OnCheckScene( wxCommandEvent & event )
 		{
-			uint32_t l_count = m_sceneDependencies->GetCount();
-			wxString l_scene;
+			uint32_t count = m_sceneDependencies->GetCount();
 
-			for ( uint32_t i = 0; i < l_count; i++ )
+			for ( uint32_t i = 0; i < count; i++ )
 			{
-				l_scene = m_sceneDependencies->GetString( i );
-				auto && l_it = m_scenes.find( l_scene );
+				auto scene = m_sceneDependencies->GetString( i );
+				auto it = m_scenes.find( scene );
 
-				if ( l_it != m_scenes.end() )
+				if ( it != m_scenes.end() )
 				{
-					if ( m_sceneDependencies->IsChecked( i ) )
+					if ( m_sceneDependencies->IsSelected( i ) )
 					{
-						m_selectedScene->AddDependency( l_it->second );
+						m_selectedScene->AddDependency( it->second );
 					}
 					else
 					{
-						m_selectedScene->RemoveDependency( l_it->second );
+						m_selectedScene->RemoveDependency( it->second );
 					}
 				}
 			}
 		}
 
-		void SceneDependenciesFrame::OnSelectScene( wxCommandEvent & p_event )
+		void SceneDependenciesFrame::OnSelectScene( wxCommandEvent & event )
 		{
-			auto && l_it = m_scenes.find( m_sceneSelector->GetValue() );
+			auto it = m_scenes.find( m_sceneSelector->GetValue() );
 
-			if ( l_it != m_scenes.end() && l_it->second != m_selectedScene )
+			if ( it != m_scenes.end() && it->second != m_selectedScene )
 			{
-				m_selectedScene = l_it->second;
+				m_selectedScene = it->second;
 				DoPopulateSceneDependencies();
 			}
 		}
 
-		void SceneDependenciesFrame::OnOK( wxCommandEvent & p_event )
+		void SceneDependenciesFrame::OnOK( wxCommandEvent & event )
 		{
 			Hide();
 		}

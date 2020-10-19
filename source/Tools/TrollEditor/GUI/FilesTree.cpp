@@ -675,8 +675,8 @@ namespace Troll
 
 		void FilesTree::OnSceneDependencies( wxCommandEvent & p_event )
 		{
-			SceneDependenciesFrame l_frame{ this };
-			l_frame.Show();
+			SceneDependenciesFrame frame{ this };
+			frame.Show();
 		}
 
 		void FilesTree::OnDeleteScene( wxCommandEvent & p_event )
